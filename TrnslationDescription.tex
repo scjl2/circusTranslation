@@ -1,0 +1,15 @@
+In translating the SCJ program it is useful to start at the top of the program hierarchy (the Safelet) and work downwards. This methodology ensures that all the paradigm objects in the system are captured. The program is modelled by several tiers, which encapsulate several components. The Safelet Tier contains the program's safelet and any possible top level sequencers. A Mission Tier contains several Clusters, each of which is a mission and its schedulable objects. In order to identify the paradigm objects we must apply various rules, we describe these below.
+
+\subsection{Safelet Tier}
+
+Identifying the saflet is relatively simple because there is only one in the program. Therefore to capture the safelet we simply find the class that implements \texttt{javax.safetycritical.Safelet}. To capture the top level mission sequencers, we identify any class that implements \texttt{javax.safetycritical.MissionSequencer} and could be returned by the safelet's \texttt{getSequencer()} method. 
+
+\subsection{Mission Tier}
+
+Each program will have at least one tier (because a program must have at least one mission and one schedulable object) so our model always has Mission Tier 0 to represent this. There may be as many other Mission Tiers as needed to model the program. Each tier is composed of at least one cluster of a mission and its associated schedulables.
+
+To capture Tier 0 we find each mission that may be returned by a top level sequencer and each schedulable that may be registered in a Tier 0 mission's \texttt{initialize()} method. These processes are organised into clusters each mission with its associated schedulables. 
+
+The existence of other tiers is indicated by a Tier 0 cluster that contains a mission sequencer. To capture Tier 1, for example, we find any missions that may be returned by the \texttt{getNextMission()} method of a Tier 0 mission sequencer and their associated schedulables, which are any schedulables that may be registered in the \texttt{initialize()} method of these missions. Again, these mission and their associated schedulables are organised into clusters.  
+
+One thing to note is that 
