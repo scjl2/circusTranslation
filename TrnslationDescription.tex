@@ -12,4 +12,15 @@ To capture Tier 0 we find each mission that may be returned by a top level seque
 
 The existence of other tiers is indicated by a Tier 0 cluster that contains a mission sequencer. To capture Tier 1, for example, we find any missions that may be returned by the \texttt{getNextMission()} method of a Tier 0 mission sequencer and their associated schedulables, which are any schedulables that may be registered in the \texttt{initialize()} method of these missions. Again, these mission and their associated schedulables are organised into clusters.  
 
-One thing to note is that 
+One thing to note is that the clusters from the same mission sequencer will execute sequentially, whereas clusters from different missions in the same tier will execute in parallel. 
+
+\subsection{Example}
+
+As an example of the way we identify the tiers within a program we consider the Aircraft mode change example. Figure~\ref{AircraftDiagram} shows the processes in our model of the program. 
+
+\begin{figure}
+\input{AircraftStructure.png}
+\caption{The processes in the model of the Aircraft mode change application \lable{AircraftDiagram}}
+\end{figure}
+
+The ACSafelet and MainMissionSequencer are in the Safelet Tier. Tier 0 contains one cluster which pairs MainMission with the four handlers (EnvMoniotr, FlightSensors, ControlHandler, CommsHandler) and the nested mission sequencer (ACModeChanger). Tier 1 contains three clusters. Each cluster pairs one of the three missions with its associated schedulable objects. One cluster is the TakeOffMission with the TakfeOffMonitor, LandingGearHandler, and TakeOffFailureHandler. The second cluster is the CruiseMission with the NavigationHandler and BeginLandingMonitor. The final cluster is the LandMission with the SafeLandingHandler, LandingGearHandler, GroundDistanceMonitor, and InstrumentLandingSystemMonitor. 
