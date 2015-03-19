@@ -1,0 +1,87 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage{graphicx}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage{placeins}
+
+\newenvironment{ttSection}{\ttfamily}{\par}
+
+
+\begin{document}
+
+\section{Annotations}
+
+\section{Analysis Phase}
+
+\subsection{Paradigm Objects}
+Identifying the paradigm objects is done hierarchically, mirroring the program structure. Upon discovery, each object (apart from the safelet) is assigned a unique identifier based upon the class's name. Multiple instances of a class result in multiple identifiers. The location of the discovered objects within the program is important for the translation and is recorded.
+
+\subsubsection{Control Tier} 
+There is only one safelet in the system. To identify the program's safelet we find the class that implements \texttt{javax.safetycritical.Safelet}. To capture the top-level mission sequencers, we identify any class that extends \texttt{javax.safetycritical.MissionSequencer} and could be returned by the safelet's \texttt{getSequencer()} method. The safelet and the top-level mission sequencers are reordered as being part of the Control Tier.  \\
+
+\begin{ttSection}
+ControlTier = Safelet and TopLevelMissionSequencers
+\end{ttSection}
+
+\begin{ttSection}
+Safelet = findSafelet()\\
+
+findSafelet() = \\
+for each class in the system, \\
+if the class implements javax.safetycritical.Safelet then return it, else continue
+\end{ttSection}
+
+\begin{ttSection}
+TopLevelMissionSequencers = findTLMS(safelet)\\
+
+findTLMS(safelet) = each possible return value of safelet.getSequencer() that extends javax.safetycritical.MissionSequencer
+\end{ttSection}
+
+\subsubsection{Tier 0}
+Each class extends \texttt{javax.safetycritical.Mission} that may be returned by a top-level mission sequencer indicates a cluster in Tier 0. A cluster is a mission and its schedulables. To find the schedulables of a mission we find any class that implements \texttt{javax.safetycritical.ManagedSchedulable} that may be registered during that mission's \texttt{initialize()} method. 
+
+\begin{ttSection}
+Tier = a number of Clusters\\
+
+Cluster = Mission and Schedulables
+\end{ttSection}
+
+\begin{ttSection}
+Schedulables = findSchedulables(mission)\\
+
+findSchedulables(mission) = each class that implements \texttt{javax.safetycritical.ManagedSchedulable} and may be registered in mission.initialize
+\end{ttSection}
+
+\subsubsection{Nested Tiers}
+If there are one or more schedulables in the tier above that extends \texttt{javax.safetycritical.MissionSequencer} then a nested tier is needed. Nested tiers are composed of clusters in the same way as Tier 0. Each class that extends \texttt{javax.safetycritical.Mission} that may be returned by a mission sequencer in the tier above starts a new cluster. Again, to find the schedulables of a mission we find any class that implements \texttt{javax.safetycritical.ManagedSchedulable} that may be registered during that mission's \texttt{initialize()} method. If any of these schedulables are mission sequencers we begin the process for Nested Tiers again, else we have explored all of the program.
+
+\begin{ttSection}
+SchedulableMissionSequencers = findNestedMissionSequencers(Schedulables)
+
+findNestedMissionSequencers(schedulables) = \\
+for each schedulable in schedulables, \\
+if the schedulable extends \texttt{javax.safetycritical.MissionSequencer} then return it, else continue
+\end{ttSection}
+
+\begin{ttSection}
+Schedulables = findSchedulables(mission)\\
+
+findSchedulables(mission) = each class that implements \texttt{javax.safetycritical.ManagedSchedulable} and may be registered in mission.initialize
+\end{ttSection}
+
+\subsection{Non-Paradigm Objects}
+
+\ldots
+
+\subsection{Components making Non-paradigm Method Calls}
+Because we need to model them differently we must identify when components make non-paradigm method calls. A non-paradigm method call is when a method is called that is not specified in the infrastructure of SCJ, but is program-specific. They can only occur during program-specific code, so we check each method called in application code to see if the class it is declared in is in the SCJ API or not. For methods that are in the SCJ API, they are paradigm method calls. Methods that are declared in the program are non-paradigm method calls. 
+
+\begin{ttSection}
+applicationCode = MyClass.getMethodCalls(applicationMethod)\\
+
+For each methodCall in applicationCode, \\
+if MyClass.class.getMethod(methodCall).getDeclaredClass() is not javax.safetycritical.Mission then record it as non-paradigm, else continue
+\end{ttSection}
+
+\end{document}
