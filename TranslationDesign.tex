@@ -12,10 +12,17 @@
 
 \section{Annotations}
 
+\begin{itemize}
+\item \texttt{@NonParadigm(type)} : 'data' or 'active'
+
+\end{itemize}
+
 \section{Analysis Phase}
 
+The analysis phase explores the program hierarchically, mirroring its structure. This phase captures information about the tiers, the objects themselves, and generates a unique identifier for each object. This information is used by the next two phases.
+
 \subsection{Paradigm Objects}
-Identifying the paradigm objects is done hierarchically, mirroring the program structure. Upon discovery, each object (apart from the safelet) is assigned a unique identifier based upon the class's name. Multiple instances of a class result in multiple identifiers. The location of the discovered objects within the program is important for the translation and is recorded.
+Upon discovery, each object (apart from the safelet) is assigned a unique identifier based upon the class's name. Multiple instances of a class result in multiple identifiers. The location of the discovered objects within the program is important for the translation and is recorded.
 
 \subsubsection{Control Tier} 
 There is only one safelet in the system. To identify the program's safelet we find the class that implements \texttt{javax.safetycritical.Safelet}. To capture the top-level mission sequencers, we identify any class that extends \texttt{javax.safetycritical.MissionSequencer} and could be returned by the safelet's \texttt{getSequencer()} method. The safelet and the top-level mission sequencers are reordered as being part of the Control Tier.  \\
@@ -57,7 +64,7 @@ findSchedulables(mission) = each class that implements \texttt{javax.safetycriti
 If there are one or more schedulables in the tier above that extends \texttt{javax.safetycritical.MissionSequencer} then a nested tier is needed. Nested tiers are composed of clusters in the same way as Tier 0. Each class that extends \texttt{javax.safetycritical.Mission} that may be returned by a mission sequencer in the tier above starts a new cluster. Again, to find the schedulables of a mission we find any class that implements \texttt{javax.safetycritical.ManagedSchedulable} that may be registered during that mission's \texttt{initialize()} method. If any of these schedulables are mission sequencers we begin the process for Nested Tiers again, else we have explored all of the program.
 
 \begin{ttSection}
-SchedulableMissionSequencers = findNestedMissionSequencers(Schedulables)
+SchedulableMissionSequencers = findNestedMissionSequencers(Schedulables)\\
 
 findNestedMissionSequencers(schedulables) = \\
 for each schedulable in schedulables, \\
@@ -72,7 +79,9 @@ findSchedulables(mission) = each class that implements \texttt{javax.safetycriti
 
 \subsection{Non-Paradigm Objects}
 
-\ldots
+Non-paradigm objects are those objects in the program that do not extend classes or implement interfaces in the SCJ API. During the hierarchical exploration of the program, if any non-paradigm objects are instantiated then they are recorded separately for use in the next phase.
+
+
 
 \subsection{Components making Non-paradigm Method Calls}
 Because we need to model them differently we must identify when components make non-paradigm method calls. A non-paradigm method call is when a method is called that is not specified in the infrastructure of SCJ, but is program-specific. They can only occur during program-specific code, so we check each method called in application code to see if the class it is declared in is in the SCJ API or not. For methods that are in the SCJ API, they are paradigm method calls. Methods that are declared in the program are non-paradigm method calls. 
@@ -81,7 +90,69 @@ Because we need to model them differently we must identify when components make 
 applicationCode = MyClass.getMethodCalls(applicationMethod)\\
 
 For each methodCall in applicationCode, \\
-if MyClass.class.getMethod(methodCall).getDeclaredClass() is not javax.safetycritical.Mission then record it as non-paradigm, else continue
+if MyClass.class.getMethod(methodCall).getDeclaredClass() is not javax.safetycritical.Mission \\
+then record it as non-paradigm\\
+else\\
+continue
 \end{ttSection}
+
+\section{Low-Level Translation}
+
+The Low-Level Translation takes the set of paradigm object and the set of non-paradigm objects from the analysis. We iterate through these two sets, get the template for the type of object we are dealing with, build the data model for that object, and use the Freemarker template engine to combine these to produce the specification for that object. 
+
+\begin{ttSection}
+For each object in ParadigmObjects \\
+type = getParadigmObjectType(object) \\
+template - getTemplate(type) \\
+model = buildDataModel(object,type) \\
+combine(model, template)
+\end{ttSection}
+
+\begin{ttSection}
+For each object in NonParadigmObjects \\
+If (isDataObject(object)) \\
+template = getDataTemplate()\\
+model = buildDataModel(object, 'data')\\
+else\\
+template = getNonParadigmTemplate() \\
+model = buildDataModel(object, 'nonP'
+
+combine(model, template)
+\end{ttSection}
+
+For each paradigm object we extract the relevant methods and check for any program-specific methods, extracting them if they exist.  Extracting methods and translating expressions here can likely reuse previous work.\\
+
+The relevant methods for each paradigm object are: 
+\begin{itemize}
+\item Safelet
+\begin{itemize}
+\item initializeApplication
+\item getSequencer
+\end{itemize}
+\item Mission Sequencer
+\begin{itemize}
+\item getNextMission
+\end{itemize}
+\item Mission 
+\begin{itemize}
+\item initialize
+\item cleanUp
+\end{itemize}
+\item Handlers
+\begin{itemize}
+\item handleAsyncEvent
+\end{itemize}
+\item Managed Thread
+\begin{itemize}
+\item run
+\end{itemize}
+\end{itemize}
+
+
+\section{High-Level Translation}
+%don't forget vars
+
+
+
 
 \end{document}
