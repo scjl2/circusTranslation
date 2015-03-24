@@ -1,0 +1,71 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ DetectorControl ~ \parents ~ cdx\_preliminaries, cdx\_mock\_objects
+\end{zsection}
+\end{comment}
+
+%%Zword \DetectorControl DetectorControlClass
+
+\newcommand{\DetectorControl}{DetectorControl}
+
+%%Zword \idarg idarg
+
+\begin{circusflow}
+\begin{circus}
+  \circclass ~ \DetectorControl ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore DetectorControlState}
+  \circprivate idle : booleanArray
+\where
+  idle \neq \circnull
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ DetectorControlState
+\end{circusaction}
+\end{comment}
+%
+\begin{circusmethod}
+  \circinitial ~ DetectorControlInit ~ \circdef \circval n : int \circspot idle := \circnewM ~ booleanArray(n)
+\end{circusmethod}
+%
+\begin{circusmethod}
+  \circpublic ~ \circsync ~ start ~ \circdef
+  \\
+  \t1 \circfor index = 0 \circto idle~.~length~\emptytuple - 1 \circspot idle~.~setA(index, jfalse)
+\end{circusmethod}
+%
+\begin{circusmethod}
+  \circpublic ~ \circsync ~ notify ~ \circdef ~ \circval \idarg : int \circspot idle~.~setA(id - 1, jtrue) \circseq
+\end{circusmethod}
+%
+\begin{circusmethod}
+  \circfunction ~ \circsync ~ done ~ \circdef\\
+  \t1
+  \circblockopen
+    \circret := jtrue \circseq
+    \\
+    \circfor index = 0 \circto idle~.~length~\emptytuple - 1 \circspot
+    \\
+    \circif idle~.~getA(index) = jfalse \circthen \circret := jfalse
+    \\
+    \circelse ~ \lnot idle~.~getA(index) = jfalse \circthen \Skip
+    \\
+    \circfi
+  \circblockclose
+\end{circusmethod}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}
+%
+We note that the specification of the $done()$ method is not complete, only capturing changes made to data. As explained in~\cite{CWWWZ12}, we require a process / action model to give a full account of the active behaviour.

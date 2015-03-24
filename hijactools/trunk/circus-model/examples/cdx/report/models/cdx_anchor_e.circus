@@ -1,0 +1,64 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ cdx\_anchor\_e ~ \parents ~ cdx\_anchor\_o
+\end{zsection}
+\end{comment}
+
+\section{Anchor \name{E}}
+
+In this section, we present the models for the \name{E} anchor. This anchor consists of the following five phases.
+%
+\begin{enumerate}
+  \item \name{CP} (collapse parallelism)
+
+  \item \name{MS} (mission architecture)
+
+  \item \name{HS} (handler architecture)
+
+  \item \name{SH} (encapsulate shared data)
+
+  \item \name{AR} (algorithmic refinement)
+\end{enumerate}
+%
+In comparison to the serial line example in~\cite{CWWWZ12}, we subdivided the \name{MH} phase~(missions and handlers) into two separate phase, one for the missions~(\name{MS}) and one for the handlers~(\name{HS}). Moreover the order of the \name{SH} phase and former \name{MH} phase has been reversed. The reason for this is that the latter determines the design that gives rise to atomic data operations emerging during \name{SH}. In the {\CDx}, this is, in particular, access to the shared $collisions$ variable and also the refinement of a barrier mechanism that emerges during Stage 5 of \name{MH}. Clearly, we cannot refine those atomic operations before the design is in place, and for this reason \name{SH} has to be postponed until the missions and handlers design has fully emerged.
+
+The \name{MS}, \name{HS} and \name{SH} phases are additionally subdivided into a number of logical stages which are explained as we go along. This revealed a set of refinement patterns which, along with the respective laws, are presented in detail too; a cumulative list of all elementary laws and high-level laws is included in Appendix~\ref{app:laws}. The \name{E} anchor is overall the most challenging and interesting of the models and at the heart of the refinement approach; it also posses a few significant challenges for automation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Phase CP                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{cdx_anchor_e_cp.circus}
+
+%\revieweduntilhere
+
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Phase MH                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{cdx_anchor_e_mh.circus}
+
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Phase SH                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{cdx_anchor_e_sh.circus}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Phase AR                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{cdx_anchor_e_ar.circus}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\input{cdx_anchor_e_work.circus}

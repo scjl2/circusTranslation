@@ -1,0 +1,75 @@
+
+\begin{circus}
+  \circprocess ~ SpeedMonitorApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+  \circstate State ~ == ~ [this : \circreftype SpeedMonitorClass]
+\end{circusaction}
+%
+\begin{circusaction}
+  Init ~ == ~ SpeedMonitorInit~?~obj \then this := obj
+\end{circusaction}
+%
+\begin{circusaction}
+  Methods ~ \circdef ~ \Stop
+\end{circusaction}
+%
+\begin{circusaction}
+  handleAsyncEvent ~ \circdef ~
+  \\
+  \t1
+\circblockopen numberRotations := wheel\_shaft.getCount() ~ \circseq \\ \circvar difference : long \circspot difference := (numberRotations - lastNumberRotations) ~ \circseq \\ currentSpeed := \invalid ~ \circseq \\ lastNumberRotations := numberRotations ~ \circblockclose\end{circusaction}
+%
+\begin{circusaction}
+  Execute ~ \circdef ~ enter\_dispatch~.~SpeedMonitorHId \then
+  \\
+  \t1 (Dispatch \lpar \{this\} | \lchanset release\_handler \rchanset | \emptyset \rpar Release) 
+\end{circusaction}
+%
+\begin{circusaction}
+  Dispatch ~ \circdef ~ \\
+  \t1
+  \circblockopen
+    \circmu X \circspot
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          Methods ~ ~ \extchoice ~
+          \\
+          release\_handler~.~SpeedMonitorHId ~ \then
+          \\
+          handleAsyncEvent
+        \circblockclose
+        \circseq X
+      \circblockclose
+      \\
+      \extchoice
+      \\
+      leave\_dispatch~.~SpeedMonitorHId \then \Skip
+    \circblockclose
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  Release ~ \circdef ~ \\
+  \t1
+  \circblockopen
+    \circmu X \circspot
+    \circblockopen
+      release\_handler~.~SpeedMonitorHId \then \Skip \circseq
+      \\
+      \circwait this~.~period
+    \circblockclose
+  \circblockclose
+  \\
+  \t2 \circinterrupt ~ leave\_dispatch~.~SpeedMonitorHId \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot (\circmu X \circspot Init \circseq Execute \circseq X) \circinterrupt end\_mission\_fw \then \Skip
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+
+HIJAC_HOME=$(readlink -f $(dirname $0))
+
+if [ -z $JAVA_HOME ]; then
+   echo "JAVA_HOME must be set to run the hiJAC tools."
+   exit 1
+fi
+
+if [ -z $1 ]; then
+   echo "Usage: run <hiJAC application class>"
+   exit 1
+fi
+
+HIJAC_CLASSES=$HIJAC_HOME/target/classes
+
+HIJAC_LIB="$HIJAC_HOME/lib/local/*:$HIJAC_HOME/lib/*:$JAVA_HOME/../lib/tools.jar"
+
+CLASSPATH=$HIJAC_CLASSES:$HIJAC_LIB
+
+JAVA=$JAVA_HOME/bin/java
+
+JAVA_OPTS=-enableassertions
+
+$JAVA -version
+
+$JAVA $JAVA_OPTS -classpath $CLASSPATH hijac.tools.application.$1

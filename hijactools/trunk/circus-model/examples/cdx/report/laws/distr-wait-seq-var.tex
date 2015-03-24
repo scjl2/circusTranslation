@@ -1,0 +1,7 @@
+\begin{circustimelaw}{distr-wait-seq-var}
+\begin{circusaction*}
+  \circwait t_1 \upto t_2 \circseq \circvar x : T \circspot A ~ \equiv ~ \circvar x : T \circspot (\circwait t_1 \upto t_2 \circseq A) \;
+  \also
+  \provided \; x \notin \FV(t_1) \; \provand \; x \notin \FV(t_2)
+\end{circusaction*}
+\end{circustimelaw}

@@ -1,0 +1,18 @@
+\section{Notation}
+
+To highlight the channels that a process synchronises on we introduce a new clause $\circexposes$ as part of a process definition. An example of its use is given below.
+%
+\begin{circusbox}
+\nounparsedcolour
+\begin{circus*}
+  \circprocess ~ MainSafelet ~ \circdef
+  \\
+  \t1 (SafeletFW \lpar MainSafeletAppChan \rpar MainSafeletApp) \circhide MainSafeletAppChan
+\end{circus*}
+%
+\begin{circus*}
+    \circexposes ~ \lchanset start\_sequencer, done\_sequencer \rchanset
+\end{circus*}
+\end{circusbox}
+%
+The $\circexposes$ clause indicates that the process synchronises on the two channels $start\_sequencer$ and $done\_sequencer$. The clause is solely for documentary purposes and does not have any semantic impact.

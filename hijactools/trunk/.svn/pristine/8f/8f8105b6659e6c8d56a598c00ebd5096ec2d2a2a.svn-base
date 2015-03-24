@@ -1,0 +1,92 @@
+\begin{zsection}
+  \SECTION ~ Handler1App ~ \parents ~ Handler1MethChan, Handler1Class, HandlerIds, MissionIds,\\
+  \t1 Handler1\_MemoryEntry, MemoryArea, ImmortalMemory, RunnableClass
+\end{zsection}
+%
+\begin{circus}
+  \circprocess ~ Handler1App ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{Handler1AppState}
+  this : Handler1
+\end{schema}
+%
+\begin{circusaction}
+  \circstate Handler1AppState
+\end{circusaction}
+%
+% What about the following?
+%
+% (\circderef this).releaseTimes := args.releaseTimes
+%
+% We cannot assign to the component of a schema. Maybe that should be defined?
+%
+\begin{circusaction}
+  Handler1AppInit ~ \circdef\\
+  \t1 Handler1InitCall~.~Handler1Id~?~obj \then this := obj \circseq\\
+  \t1 Handler1InitRet~.~Handler1Id \then Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  Init ~ \circdef ~ Handler1AppInit
+\end{circusaction}
+%
+% It may be nice to invent some abbreviation for actions that correspond to method calls.
+%
+\red{The following method creates an active local object!}
+%
+\begin{circusaction}
+  handleEventMeth ~ \circdef\\
+  \t1 handleEventCall~.~Handler1Id \then Skip \circseq\\
+  \t1 \circif ~ \lnot (\circderef this).done = jfalse \circthen\\
+  \t2 (\circvar area : MemoryArea; entry : Runnable \circspot\\
+  \t3 ImmortalMemory\_instanceCall \then Skip \circseq\\
+  \t3 ImmortalMemory\_instanceRet~?~result \then area := result \circseq\\
+  \t3 entry := \circref (\circnew \red{Handler1\_MemoryEntryClass(this)}) \circseq\\
+  \t3 Handler1\_MemoryEntryInit~.~entry \then Skip\circseq\\
+  \t3 MemoryArea\_executeInAreaCall~.~area~!~entry \then Skip \circseq\\
+  \t3 MemoryArea\_executeInAreaRet~.~area \then Skip)\\
+  \t1 \circelse ~ \lnot \lnot (\circderef this).done = jfalse \circthen\\
+  \t2 requestTerminationCall~!~Mission1Id \then Skip \circseq\\
+  \t2 requestTerminationRet~!~Mission1Id \then Skip\\
+  \t1 \circfi \circseq\\
+  \t1 handleEventRet~.~Handler1Id \then Skip
+\end{circusaction}
+%
+\nid \blue{An implication of this modelling is that only one call to \code{void executeInArea(Runnable logic)} can be executed for a particular memory area at a time. This may be too restrictive. We can solve this problem by translating the call directly.}
+%
+\begin{circusaction}
+  handleEventMeth\_Mark2 ~ \circdef\\
+  \t1 handleEventCall~.~Handler1Id \then Skip \circseq\\
+  \t1 \circif ~ \lnot (\circderef this).done = jfalse \circthen\\
+  \t2 (\circvar area : MemoryArea; entry : Runnable \circspot\\
+  \t3 ImmortalMemory\_instanceCall \then Skip \circseq\\
+  \t3 ImmortalMemory\_instanceRet~?~result \then area := result \circseq\\
+  \t3 entry := \circref (\circnew \red{Handler1\_MemoryEntryClass(this)}) \circseq\\
+  \t3 Handler1\_MemoryEntryInit~.~entry \then Skip\circseq\\
+  \t3 Runnable\_runCall~.~entry \then Skip \circseq\\
+  \t3 Runnable\_runRet~.~entry \then Skip)\\
+  \t1 \circelse ~ \lnot \lnot (\circderef this).done = jfalse \circthen\\
+  \t2 requestTerminationCall~!~Mission1Id \then Skip \circseq\\
+  \t2 requestTerminationRet~!~Mission1Id \then Skip\\
+  \t1 \circfi \circseq\\
+  \t1 handleEventRet~.~Handler1Id \then Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  Methods ~ \circdef ~ \circmu X \circspot handleEventMeth \circseq X
+\end{circusaction}
+%
+\begin{circusaction}
+  StopHandler ~ \circdef ~ stop\_handler~.~Handler1Id \then Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot ~ (\circmu X \circspot Init \circseq (Methods \circinterrupt StopHandler)) \circinterrupt ~ end\_mission\_fw \then Skip
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+%
+\red{In the above spec does not model the call to the super constructor which sets the period of the handler.}

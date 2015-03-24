@@ -1,0 +1,58 @@
+\begin{zsection}
+  \SECTION ~ Handler1\_MemoryEntryApp ~ \parents\\
+  \t1 Handler1\_MemoryEntryClass, Handler1\_MemoryEntryMethChan, Handler1Class, RunnableMethChan
+\end{zsection}
+
+\begin{circus}
+  \circprocess ~ Handler1\_MemoryEntryApp ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{schema}{Handler1\_MemoryEntryAppState}
+  this : Handler1\_MemoryEntry
+\end{schema}
+
+\begin{circusaction}
+  \circstate Handler1\_MemoryEntryAppState
+\end{circusaction}
+
+\begin{circusaction}
+  Handler1\_MemoryEntryAppInit ~ \circdef\\
+  \t1 Handler1\_MemoryEntryInitCall~?~obj \then this := obj \circseq\\
+  \t1 Handler1\_MemoryEntryInitRet~.~this \then Skip
+\end{circusaction}
+
+\begin{circusaction}
+  Init ~ \circdef ~ Skip
+\end{circusaction}
+
+\begin{circusaction*}
+  runMeth \circdef ~\\
+  \t1 Runnable\_runCall~.~this \then Skip \circseq\\
+  \t1 \dots\\
+  \t1 Runnable\_runRet~.~this \then Skip
+\end{circusaction*}
+%
+\begin{circusaction}
+  Methods ~ \circdef ~ \circmu X \circspot runMeth \circseq X
+\end{circusaction}
+%
+\begin{circusaction}
+  Dispose ~ \circdef ~ Handler1\_MemoryEntryDispose~?~this \then Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot ~ (\circmu X \circspot Init \circseq (Methods \circinterrupt Dispose) \circseq X) \circinterrupt ~ end\_mission\_fw \then Skip
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\vspace{2em}
+
+\subsubsection*{Observations}
+
+\begin{itemize}
+\item \red{The $MemoryAreaFW$ has to generate the Dispose event, but to do so it needs to be aware of the object.}
+
+\item \red{Object creation via $\circnew$ needs to know about the memory area too.}
+\end{itemize}

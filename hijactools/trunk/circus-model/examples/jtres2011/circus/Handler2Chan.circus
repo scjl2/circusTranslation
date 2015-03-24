@@ -1,0 +1,7 @@
+\begin{zsection}
+  \SECTION ~ Handler2Chan ~ \parents ~ scj\_toolkit, scj\_library, Handler2Class, List
+\end{zsection}
+
+\begin{circus}
+  \circchannel ~ Handler2Init : \circreftype Handler2Class
+\end{circus}

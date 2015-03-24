@@ -1,0 +1,31 @@
+\begin{zsection}
+  \SECTION ~ RunnableClass ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{ohcircus}
+  \circclass ~ RunnableClass ~ \circdef ~ \circbegin
+\end{ohcircus}
+
+\begin{schema}{\circstateignore RunnableState}
+\end{schema}
+
+\begin{schema}{\circinitial RunnableInit}
+  RunnableState~'
+\end{schema}
+
+\begin{schema}{\circpublic Runnable\_run}
+  \Delta RunnableState
+\end{schema}
+
+\begin{ohcircus}
+  \circend
+\end{ohcircus}
+\vspace{0.5em}
+
+\begin{zed}
+  RunnableClass ~ == ~ RunnableState
+\end{zed}
+
+\begin{zed}
+  Runnable ~ == ~ \circreftype RunnableClass
+\end{zed}

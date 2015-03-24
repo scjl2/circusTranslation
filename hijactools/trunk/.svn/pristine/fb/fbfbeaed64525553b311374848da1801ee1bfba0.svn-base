@@ -1,0 +1,29 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[colour]{circus}
+\usepackage{hijac}
+
+\title{{\Circus} Model for Java Libraries}
+
+\author{Frank Zeyda}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\input{PrimitiveTypes.circus}
+
+\section{Java \code{util} Package}
+
+\subsection{Interface \code{java.util.List}}
+
+\begin{circusbox}
+\input{java_util_List.circus}
+\end{circusbox}
+
+\end{document}

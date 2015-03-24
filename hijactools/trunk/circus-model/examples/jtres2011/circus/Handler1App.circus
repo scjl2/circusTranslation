@@ -1,0 +1,67 @@
+\begin{zsection}
+  \SECTION ~ Handler1App ~ \parents ~ Handler1Class, Handler1Chan, Handler1Const, HandlerIds, Events
+\end{zsection}
+
+\begin{circus}
+  \circprocess ~ Handler1App ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore Handler1State}
+  this : \circreftype Handler1Class
+\end{schema}
+
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ Handler1State
+\end{circusaction}
+\end{comment}
+
+\begin{circusaction}
+  Init ~ \circdef ~ Handler1Init~?~obj \then this \circrefassign obj
+\end{circusaction}
+%\vspaceafterzpara
+
+%\begin{alert}
+%Below are two possibilities for specifying the $handleAsyncEvent$ methods. In one case we retain it as a pure data operation, albeit factoring out the code that reads the input, and in the second case we make it a {\Circus} action. I am not sure what is the best approach yet, discuss.
+%\end{alert}
+
+\begin{circusaction*}
+  handleAsyncEventMeth ~ \circdef\\
+  \t1 \circval x : \nat \circspot \circwait 1..Handler1Deadline \circseq this.handleAsyncLongEvent(x)
+\end{circusaction*}
+
+%\begin{circusaction*}
+%  \blue{handleAsyncEventMeth ~ \circdef ~ \circval x : \nat \circspot \circenter \green{mission\_memory} \circspot list.insert(x)}
+%\end{circusaction*}
+
+\begin{comment}
+\begin{circusaction}
+  handleAsyncEventMeth ~ \circdef ~ \circval x : \nat \circspot \Skip
+\end{circusaction}
+\end{comment}
+
+\begin{circusaction}
+  Execute ~ \circdef ~ enter\_dispatch ~ \then\\
+  \t1 (Dispatch \lpar \{this\} | \lchanset release\_handler \rchanset | \emptyset \rpar Release) \circhide \lchanset release\_handler \rchanset
+\end{circusaction}
+
+\begin{circusaction}
+  Dispatch ~ \circdef ~ \circmu X \circspot  (leave\_dispatch \then \Skip) ~ ~ \extchoice\\
+  \t1 (release\_handler \then (in~?~x \then handleAsyncEventMeth(x) \circdeadline 5) \circseq X)
+\end{circusaction}
+
+\begin{circusaction}
+  Release ~ \circdef ~ (\circmu X \circspot (release\_handler \then \Skip \circdeadline 0) \circseq \circwait 100 \circseq X) \circinterrupt leave\_dispatch \then \Skip
+\end{circusaction}
+
+\begin{circusaction}
+  Terminate ~ \circdef ~ done\_handler~.~Handler1Id \then \Skip
+\end{circusaction}
+
+\begin{circusaction}
+  \circspot (\circmu X \circspot Init \circseq Execute \circseq Terminate \circseq X) \circinterrupt ~ end\_mission\_fw \then \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

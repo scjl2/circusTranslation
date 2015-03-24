@@ -1,0 +1,144 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ RawFrame ~ \parents ~ cdx\_preliminaries, cdx\_mock\_objects
+\end{zsection}
+\end{comment}
+
+\begin{comment}
+\begin{axdef}
+  MAX\_PLANES : int;\\
+  MAX\_SIGNS : int
+\end{axdef}
+\end{comment}
+
+%%Zword \RawFrame RawFrameClass
+
+\newcommand{\RawFrame}{RawFrame}
+
+%%Zword \selfRawFrame {\circself[RawFrame]}
+
+\newcommand{\selfRawFrame}{\circself}
+
+\begin{circusflow}
+\begin{circus}
+  \circclass ~ \RawFrame ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstatics RawFrameStatics}
+  \circprivate MAX\_PLANES : int;\\
+  \circprivate MAX\_SIGNS : int
+\end{schema}
+%
+\begin{schema}{\circsinit RawFrameSInit}
+  RawFrameStatics~'
+\where
+  MAX\_PLANES' = 1000\\
+  MAX\_SIGNS' = 10 * MAX\_PLANES'
+\end{schema}
+%
+\begin{schema}{\circstateignore RawFrameState}
+  \circpublic lengths : intArray\\
+  \circpublic callsigns : byteArray\\
+  \circpublic positions : floatArray\\
+  \circpublic planeCnt : int
+\where
+  lengths \neq \circnull \land callsigns \neq \circnull \land positions \neq \circnull\\
+  lengths~.~length~\emptytuple = MAX\_PLANES\\
+  callsigns~.~length~\emptytuple = MAX\_SIGNS\\
+  positions~.~length~\emptytuple = 3 * MAX\_PLANES\\
+  0 \leq planeCnt \leq MAX\_PLANES
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ RawFrameState
+\end{circusaction}
+\end{comment}
+%
+\begin{schema*}{\circinitial RawFrameInit}
+  RawFrameState~'
+\where
+  lengths' = \circnewM intArray(MAX\_PLANES)\\
+  callsigns' = \circnewM byteArray(MAX\_SIGNS)\\
+  positions' = \circnewM floatArray(3 * MAX\_PLANES)\\
+  planeCnt' = 0
+\end{schema*}
+%
+\begin{schema}{\circlogical ~ \circfunction getCallSignOffset}
+  \Xi RawFrameState\\
+  plane? : int\\
+  result! : int
+\where
+  0 \leq plane? < planeCnt\\
+  result! = \Sigma ~ \{i : 0 \upto plane? - 1 @ i \mapsto lengths~.~getA(i) \}
+\end{schema}
+%
+\begin{schema}{\circlogical ~ \circfunction getCallSign}
+  \Xi RawFrameState\\
+  plane? : int\\
+  result! : \seq byte
+\where
+  0 \leq plane? < planeCnt\\
+  \# result! = lengths~.~getA(plane?)\\
+  \forall i : 1 \upto lengths~.~getA(plane?) @\\
+  \t1 result!(i) = callsigns~.~getA(\selfRawFrame~.~getCallSignOffset(plane?) + i - 1)
+\end{schema}
+%
+\begin{schema}{\circlogical \circfunction find}
+  \Xi RawFrameState\\
+  a? : Aircraft\\
+  result! : \num
+\where
+  result! =
+  \circblockopen
+    \IF ~ (\exists_1 i : 0 \upto (planeCnt - 1) @ \selfRawFrame~.~getCallSign(i) = a?)\\
+    \THEN ~ (\mu i : 0 \upto (planeCnt - 1) | \selfRawFrame~.~getCallSign(i) = a?)\\
+    \ELSE \negate 1
+  \circblockclose
+\end{schema}
+%
+\begin{circusmethod}
+  \circpublic copy(lengths : intArray, signs : byteArray, positions : floatArray) ~ \circdef\\
+  \t1
+  \circblockopen
+    \circvar pos1, pos2, pos3, pos4 : int \circspot\\
+    pos1 := 0 \circseq pos2 := 0 \circseq pos3 := 0 \circseq pos4 := 0 \circseq\\
+    \circblockopen
+      \circfor i = 0 \circto lengths~.~length~\emptytuple - 1 \circspot\\
+      \t1 \selfRawFrame ~.~lengths~.~setA(pos1, lengths~.~getA(i)) \circseq\\
+      \t1 pos1 := pos1 + 1 \circseq\\
+      \t1 \selfRawFrame~.~positions~.~setA(pos2, positions~.~getA(3 * i)) \circseq\\
+      \t1 pos2 := pos2 + 1 \circseq\\
+      \t1 \selfRawFrame~.~positions~.~setA(pos2, positions~.~getA(3 * i + 1)) \circseq\\
+      \t1 pos2 := pos2 + 1 \circseq\\
+      \t1 \selfRawFrame~.~positions~.~setA(pos2, positions~.~getA(3 * i + 2)) \circseq\\
+      \t1 pos2 := pos2 + 1 \circseq\\
+      \t1
+      \circblockopen
+        \circfor j = 0 \circto lengths~.~getA(i) - 1 \circspot\\
+        \t1 \selfRawFrame~.~callsigns~.~setA(pos3, signs~.~getA(pos4 + j) \circseq\\
+        \t1 pos3 := pos3 + 1
+      \circblockclose
+      \circseq\\
+      \t1 pos4 := pos4 + lengths.getA(i)
+    \circblockclose \circseq\\
+    planeCnt := lengths.length~\emptytuple
+  \circblockclose
+\end{circusmethod}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}
+%
+This class has only one non-logical method which is used to initialise the instance variables from a given set of arrays. It also introduces two static variables which, however, are merely used as constants. The remainder of the SCJ program accesses the fields of the class directly to obtain the position data of the aircrafts (all instance variables of the class are public).
+
+\begin{note}
+It seems that Kun Wai changed the implementation of $RawFrame$ to remove the feature of variable-length call signs. This means that the above class might need some alterations too. I am not sure though this modification was necessary, namely could we not just have set a bound for the length of a call sign? This would remain closer in terms of functionality to the original {\CDx}. I would rather recommend restoring \verb"RawFrame" in the code in case of doubt to be compliant with the above model.
+\end{note}

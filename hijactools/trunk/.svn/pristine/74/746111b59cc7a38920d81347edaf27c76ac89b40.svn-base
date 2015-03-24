@@ -1,0 +1,43 @@
+package hijac.tools.analysis.tasks;
+
+import com.sun.source.tree.CompilationUnitTree;
+
+import hijac.tools.analysis.AbstractAnalysisTask;
+import hijac.tools.analysis.SCJClassTag;
+import hijac.tools.analysis.SCJDataKey;
+import hijac.tools.config.Hijac;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import javax.lang.model.element.TypeElement;
+
+/**
+ * @author Frank Zeyda
+ * @version $Revision$
+ */
+public class ClassTagsTask extends AbstractAnalysisTask {
+   public static final SCJDataKey KEY1 = Hijac.key("ClassTags");
+   public static final SCJDataKey KEY2 = Hijac.key("TypeElements");
+   public static final SCJDataKey[] REQUIRES = { };
+   public static final SCJDataKey[] GENERATES = { KEY1, KEY2 };
+
+   public ClassTagsTask() {
+      super("ClassTagsTask", REQUIRES, GENERATES);
+   }
+
+   public void doTask() {
+      Map<TypeElement, SCJClassTag>
+         class_tags = new HashMap<TypeElement, SCJClassTag>();
+      for (CompilationUnitTree unit : ANALYSIS.getCompilationUnits()) {
+         ClassTagsVisitor visitor = new ClassTagsVisitor(ANALYSIS);
+         visitor.scan(unit, class_tags);
+      }
+      Set<TypeElement> classes = class_tags.keySet();
+      ANALYSIS.put(KEY1, class_tags);
+      ANALYSIS.put(KEY2, classes);
+      /*System.out.println("[All Types]");
+      System.out.println(class_tags.values());*/
+   }
+}

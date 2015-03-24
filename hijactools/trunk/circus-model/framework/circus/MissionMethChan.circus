@@ -1,0 +1,44 @@
+\begin{zsection}
+  \SECTION ~ MissionMethChan ~ \parents ~ MissionId, scj\_library
+\end{zsection}
+
+The following channels are declared for infrastructure methods of the \code{Mission} class.
+%
+\begin{circusflow}
+\begin{circus}
+  \circchannel ~ initializeCall, initializeRet : MissionId
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ cleanupCall, cleanupRet : MissionId
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ missionMemorySizeCall : MissionId
+  \also
+  \circchannel ~ missionMemorySizeRet : MissionId \cross long
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ requestTerminationCall
+  \also
+  \circchannel ~ requestTerminationRet
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ terminationPendingCall
+  \also
+  \circchannel ~ terminationPendingRet : boolean
+\end{circus}
+\end{circusflow}
+%
+For convenience, we introduce a channel set that includes all method channels.
+%
+\begin{circus}
+  \circchannelset ~ MissionMethChan ~ == ~\\
+  \t1 \lchanset initializeCall, initializeRet,\\
+  \t1 cleanupCall, cleanupRet,\\
+  \t1 missionMemorySizeCall, missionMemorySizeRet,\\
+  \t1 requestTerminationCall, requestTerminationRet,\\
+  \t1 terminationPendingCall, terminationPendingRet \rchanset
+\end{circus}

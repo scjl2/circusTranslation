@@ -1,0 +1,12 @@
+\begin{zsection}
+  \SECTION ~ HandlerChan ~ \parents ~ HandlerFWChan, HandlerMethChan, MissionChan
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circchannelset ~ HandlerAppSyncChan ~ == ~ \lchanset enter\_dispatch, leave\_dispatch, end\_mission\_fw \rchanset
+\end{circus}
+%
+\begin{circus}
+  \circchannelset ~ HandlerAppHideChan ~ == ~ \lchanset enter\_dispatch, leave\_dispatch \rchanset
+\end{circus}

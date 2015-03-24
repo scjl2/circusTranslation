@@ -1,0 +1,42 @@
+\begin{zsection}
+  \SECTION ~ Events ~ \parents ~ scj\_toolkit, scj\_library, EventIds, Constants
+\end{zsection}
+
+\paragraph{Sensor Events}
+
+\begin{circus}
+  \circchannel ~ wheel\_shaft
+  \also
+  \circchannel ~ engine : BOOL
+  \also
+  \circchannel ~ brake\_engaged, brake\_disengaged
+  \also
+  \circchannel ~ top\_gear\_engaged, top\_gear\_disengaged
+  \also
+  \circchannel ~ lever : LEVER
+\end{circus}
+%
+The $engine$ event has a parameter of type $BOOL$ and the $lever$ event has a parameter of type $LEVER$.
+%
+\begin{circus}
+  \circchannelset ~ SensorEvents ~ == ~ \lchanset wheel\_shaft, engine,\\
+  \t1 brake\_engaged, brake\_disengaged, top\_gear\_engaged, top\_gear\_disengaged, lever \rchanset
+\end{circus}
+
+\paragraph{Actuator Events}
+
+\begin{circus}
+  \circchannel ~ set\_voltage : VOLTAGE\_RANGE
+\end{circus}
+%
+The $set\_voltage$ event has an output of type $VOLTAGE\_RANGE$.
+%
+\begin{circus}
+  \circchannelset ~ ActuatorEvents ~ == ~ \lchanset set\_voltage \rchanset
+\end{circus}
+
+\paragraph{External Events}
+
+\begin{circus}
+  \circchannelset ~ Events ~ == ~ SensorEvents \cup ActuatorEvents
+\end{circus}

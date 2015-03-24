@@ -1,0 +1,16 @@
+\begin{circusbox}
+\begin{zsection}
+  \SECTION ~ System ~ \parents\\
+  \t1 StateMachine, InterArrivalTimes, SpeedMonitor, ThrottleControl, ThrottleTiming
+\end{zsection}
+
+\begin{circus}
+  \circprocess System ~ \circdef ~ (StateMachine \lpar SensorEvents \rpar InterArrivalTimes)\\
+  \t2 \lpar ThrottleControlEvents \rpar\\
+  \t1 (SpeedMonitor \lpar SpeedMonitorEvents \rpar\\
+  \t2 (ThrottleControl \lpar ThrottleTimingEvents \cup ActuatorEvents \rpar ThrottleTiming))\\
+  \t1 \circhide ~ SpecificationEvents
+\end{circus}
+\end{circusbox}
+%
+All specification events are hidden in the top-level model.

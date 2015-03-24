@@ -1,0 +1,119 @@
+package hijac.tools.analysis.tasks;
+
+import javacutils.TreeUtils;
+
+import com.sun.source.tree.AssertTree;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
+
+import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.analysis.utils.SCJTreePathScanner;
+import hijac.tools.collections.Maplet;
+import hijac.tools.collections.Relation;
+
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+
+/* The method dependency analysis considers methods as well as constructors.
+ * However, static and instance initializers are not considered yet as we
+ * cannot easily obtain an ExecutableElement for them in the model. If at
+ * some point we need to incorporate these into the analysis, it seems that
+ * we may need a different kind of object for the types of the Relation. */
+
+/**
+ * @author Frank Zeyda
+ * @version $Revision$
+ */
+public class MethodCallDepVisitor extends SCJTreePathScanner<
+      Relation<ExecutableElement, ExecutableElement>,
+      Relation<ExecutableElement, ExecutableElement>> {
+
+   protected BlockTree initializerBlock = null;
+
+   public MethodCallDepVisitor(SCJAnalysis analysis) {
+      super(analysis);
+   }
+
+   public void reset() {
+      initializerBlock = null;
+   }
+
+   protected void printContextWarning(Tree node) {
+      System.out.println(
+         "[WARNING] No method context for " + node + " in class " +
+            getEnclosingClass() + ".");
+   }
+
+   @Override
+   public Relation<ExecutableElement, ExecutableElement>
+      visitMethodInvocation(MethodInvocationTree node,
+         Relation<ExecutableElement, ExecutableElement> call_dep) {
+      ExecutableElement context = getEnclosingMethod();
+      ExecutableElement target = TreeUtils.elementFromUse(node);
+      if (context != null) {
+         call_dep.add(
+            new Maplet<ExecutableElement, ExecutableElement>(context, target));
+      }
+      else {
+         if (initializerBlock == null) {
+            printContextWarning(node);
+         }
+      }
+      return super.visitMethodInvocation(node, call_dep);
+   }
+
+   @Override
+   public Relation<ExecutableElement, ExecutableElement>
+      visitNewClass(NewClassTree node,
+         Relation<ExecutableElement, ExecutableElement> call_dep) {
+      ExecutableElement context = getEnclosingMethod();
+      ExecutableElement target = TreeUtils.elementFromUse(node);
+      if (context != null) {
+         call_dep.add(
+            new Maplet<ExecutableElement, ExecutableElement>(context, target));
+      }
+      else {
+         if (initializerBlock == null) {
+            printContextWarning(node);
+         }
+      }
+      return super.visitNewClass(node, call_dep);
+   }
+
+   @Override
+   public Relation<ExecutableElement, ExecutableElement>
+      visitBlock(BlockTree node,
+         Relation<ExecutableElement, ExecutableElement> call_dep) {
+      /* Test whether this is the node of an initializer. */
+      if (getEnclosingMethod() == null && initializerBlock == null) {
+         return visitInitializer(node, call_dep);
+      }
+      else {
+         return super.visitBlock(node, call_dep);
+      }
+   }
+
+   public Relation<ExecutableElement, ExecutableElement>
+      visitInitializer(BlockTree node,
+         Relation<ExecutableElement, ExecutableElement> call_dep) {
+      System.out.println(
+         "[WARNING] Class " + getEnclosingClass() + " has initialiser(s).");
+      try {
+         initializerBlock = node;
+         return super.visitBlock(node, call_dep);
+      }
+      finally {
+         initializerBlock = null;
+      }
+   }
+
+   @Override
+   public Relation<ExecutableElement, ExecutableElement>
+      visitAssert(AssertTree node,
+         Relation<ExecutableElement, ExecutableElement> call_dep) {
+      /* Do not traverse assert statements. */
+      return call_dep;
+   }
+}

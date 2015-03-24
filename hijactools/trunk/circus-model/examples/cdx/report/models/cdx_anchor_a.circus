@@ -1,0 +1,226 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ cdx\_anchor\_a ~ \parents ~ cdx\_preliminaries
+\end{zsection}
+\end{comment}
+
+\section{Anchor \name{A}}
+\label{sec:anchorA}
+
+In this section, we present the abstract model of the parallel {\CDx}.
+
+\subsection{Aircrafts}
+\label{sec:aircrafts}
+
+The type $Aircraft$ represents aircrafts as they may enter the radar.
+%
+\begin{zed}
+  Aircraft ~ == ~ \seq_1 byte
+\end{zed}
+%
+We identify aircrafts by their call sign which consists of a non-empty sequence of bytes.
+
+\begin{note}
+The program makes a further assumption that the length of a call sign is fixed.
+\end{note}
+
+\subsection{Frames}
+\label{sec:frames}
+
+A frame records the positions all of aircrafts in a radar frame. It is modelled by virtue of a (finite) partial function that maps aircrafts to vectors representing their positions in airspace. The number of aircrafts in a radar frame is restricted by a constant $MAX\_AIRCRAFTS$.
+%
+\begin{circusflow}
+\begin{axdef}
+  MAX\_AIRCRAFT : \nat_1
+\end{axdef}
+\extracircusvspace
+%
+\begin{zed}
+  Frame ~ == ~ \{f : Aircraft \ffun Vector | \# f \leq MAX\_AIRCRAFT\}
+\end{zed}
+\end{circusflow}
+%
+The domain of a function implicitly determines the aircrafts that are currently in view of the radar.
+
+\subsection{Collision Sets}
+\label{sec:collisionsets}
+
+\nid We introduce a utility function that calculates the collision set for a frame of aircraft positions and motions. This is the set of all colliding aircrafts.
+%
+\begin{axdef}
+  CalcCollisionSet : (Frame \cross Frame) \fun \finset ~ (Aircraft \cross Aircraft)
+\where
+  \forall posns, motions : Frame | \dom posns = \dom motions @
+  \\
+  \t1 CalcCollisionSet(posns, motions) =
+  \\
+  \t2
+  \biglcurly
+    a_1, a_2 : Aircraft | a_1 \in \dom posns \land a_2 \in \dom posns \land
+    \\
+    \t1 collide((posns~a_1, motions~a_1), (posns~a_2, motions~a_2))
+  \bigrcurly 
+\end{axdef}
+%
+By definition, this set is symmetric:~$(a_1, a_2) \in colldide(t_1, t_2) \iff (a_2, a_1) \in colldide(t_1, t_2)$.
+
+\subsection{Channels}
+\label{sec:channels}
+
+We require two channels for external interactions:~one channel $next\_frame$ to input the next radar frame and another channel $output\_collisions$ to output the number of collisions at the end of the cycle.
+%
+\begin{circus}
+  \circchannel ~ next\_frame : Frame
+  \also
+%  \circchannel ~ output\_collisions : \iseq ~ (AIRCRAFT \cross AIRCRAFT)
+  \circchannel ~ output\_collisions : \nat
+\end{circus}
+%
+We note that the value communicated by $output\_collisions$ is an upper bound for the exact number of collisions modulo symmetry. (Symmetry means $(a_1, a_2)$ and $(a_2, a_1$) are not viewed as separate collisions.) This is due to efficiency and the voxel algorithm we use. That is, voxel hashing in certain cases may record colliding aircraft pairs in more than one voxel, namely if both aircrafts are close to the boundary between those voxels. The original {\CDx} manually removes such duplicates but we decided not to do so in our parallel implementation to simplify the program~(another handler would be required for the removal step).
+
+\subsection{Constants}
+\label{sec:constants}
+
+The following three constants specify the duration of a detection cycle~($FRAME\_PERIOD$) as well as deadlines for the input~($INT\_DL$) and output~($OUT\_DL$) communications.
+%
+\begin{axdef}
+  FRAME\_PERIOD : TIME
+  \\
+  INP\_DL : TIME
+  \\
+  OUT\_DL : TIME
+\where
+  INP\_DL + OUT\_DL \leq FRAME\_PERIOD
+\end{axdef}
+%
+We leave the precise values of the constants implicit. The paper~\cite{KHPPTV09} specifies them in terms of frames per seconds rather than periods, but this is just a technicality as we can convert between these measurements.
+
+\newpage
+
+\subsection{System}
+
+Below is the process for the behavioural requirements of the parallel {\CDx}.
+%
+\begin{center}
+\begin{circusfbox}
+\begin{circus}
+  \circprocess ~ ABReqsCDx ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ AStateCDx}
+  posns : Frame\\
+  motions : Frame
+\where
+  \dom posns = \dom motions
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ AStateCDx
+\end{circusaction}
+\end{comment}
+%
+\begin{schema}{Init}
+  AStateCDx~'
+\where
+  posns' = \emptyset \land motions' = \emptyset
+\end{schema}
+%
+\begin{schema}{RecordFrame}
+  \Delta AStateCDx\\
+  frame? : Frame
+\where
+  posns' = frame?\\
+  motions' = \{a : \dom posns' @ a \mapsto \IF a \in \dom posns \THEN (posns' ~ a) \vminus (posns ~ a) \ELSE ZeroV\}
+\end{schema}
+%
+\begin{schema}{CalcCollisions}
+  \Xi AStateCDx\\
+  colls! : \nat
+\where
+  \exists collset : \finset ~ (Aircraft \cross Aircraft) | collset = CalcCollisionSet(posns, motions) @
+  \\
+  \t1 (\# collset = 0 \land colls! = 0) \lor (\# collset > 0 \land colls! \geq (\# collset) \div 2)
+\end{schema}
+%
+\begin{circusaction}
+  BReq1 ~ \circdef ~ next\_frame~?~frame ~ \then
+  \\
+  \t1
+  \circblockopen
+    RecordFrame \circseq
+    \\
+    \circvar colls : \nat \circspot CalcCollisions \circseq output\_collisions~!~colls \then BReq1
+  \circblockclose
+\end{circusaction}
+\extracircusvspace
+%
+\begin{circusaction}
+  \circspot \lschexpract Init \rschexpract \circseq BReq1
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusfbox}
+\end{center}
+
+\medskip
+
+\nid The process for the timing requirements of the parallel {\CDx} is as follows.
+%
+\begin{center}
+\begin{circusfbox}
+\begin{circus}
+  \circprocess ~ ATReqsCDx ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+  TReq1 ~ \circdef ~ (TReqCycle \circdeadlineterm FRAME\_PERIOD \interleave \circwait FRAME\_PERIOD) \circseq TReq1
+\end{circusaction}
+%
+\begin{circusaction}
+  TReqCycle ~ \circdef\\
+  \t1
+  \circblockopen
+    \circblockopen
+      next\_frame~?~frame~\circat~t ~ \then
+      \\
+      \circwait 0..(FRAME\_PERIOD - t - OUT\_DL)
+    \circblockclose
+    \circdeadlinesync INP\_DL
+    \circseq
+    \\
+    (output\_collisions~?~c \then \Skip) \circdeadlinesync OUT\_DL
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot TReq1
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusfbox}
+\end{center}
+
+\medskip
+
+\nid The requirements of the abstract system are specified by the $\circsystem$ process below.
+%
+\begin{circusbox}
+\begin{circus}
+  \circsystem ~ CDx ~ \circdef ~ ABReqsCDx \lpar \lchanset next\_frame, output\_collisions \rchanset \rpar ATReqsCDx
+\end{circus}
+\end{circusbox}
+%
+We have one behavioural requirement~($BReq1$) and one timing requirement~($TReq1$). The behavioural requirement specifies the result of the collision detection. It is defined by a recursion that inputs the next frame via a synchronisation on $next\_frame$, updates the process state while calculating the new aircraft motions~($RecordFrame$), computes the collisions and deposits them in the local variable $colls$~($CalcCollisions$), and outputs them on the channel $output\_collisions$. Any number greater than the precise number of collisions may be output unless there are no collisions (in that case 0 must be output). Since the collision set is symmetric, the actual number of collisions is obtained by dividing the cardinality of the set by 2. The calculation of the collision set makes use of the $CalcCollisionSet$ function defined earlier on in Section~\ref{sec:frames}.
+
+The time-wise behaviour in each cycle is captured by the local action $TReqCycle$. It is used in defining the overall timing requirement $TReq1$. Its specification states that $TReqCycle$ is executed once in each cycle and has to terminate within the period~($\dots \circdeadlineterm FRAME\_PERIOD$). The interleaving with $\circwait FRAME\_PERIOD$ ensures that moreover we do not terminate before the period expires.
+
+The specification of $TReqCycle$ imposes a deadline, too, ($INP\_DL$), namely on the input communication on $next\_frame$. This is an imposition on the environment to make the next frame available within a certain period of time once the program is ready to accept it. We record in $t$ the time it took to communicate the next frame from when the communication was first offered. The subsequent nondeterministic $\circwait$ provides freedom to the implementation to use up to $FRAME\_PERIOD - t - OUT\_DL$ units of time to calculate the collisions and then output the result on the $output\_collisions$ channel. The environment has to accept the output within $OUT\_DL$ time units from when it is offered by the program. This can prevent a situation in which the environment delays the communication on $output\_collisions$ right to the end of the cycle, and the infrastructure may thus not have time to initiate the next cycle.
+
+We note that using $\circwait FRAME\_PERIOD - t - OUT\_DL$ rather than $\circwait FRAME\_PERIOD - t$ is a modelling decision to ensure that the environment is potentially given not less that $OUT\_DL$ time units to accept the output, and that an implementation cannot restrict this allowance.
+
+The $CDx$ system process yields the specification of the entire system. This is a parallelism between the two requirement processes $ABReqsCDx$ and $ATReqsCDx$. The processes synchronise on both external channels $next\_frame$ and $output\_collisions$.

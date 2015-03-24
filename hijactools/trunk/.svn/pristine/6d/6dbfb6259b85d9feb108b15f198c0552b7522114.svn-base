@@ -1,0 +1,23 @@
+package hijac.tools.compiler;
+
+/**
+ * @author Frank Zeyda
+ * @version $Revision$
+ */
+public class SCJCompilationException extends Exception {
+   protected final SCJCompilationTask task;
+
+   public SCJCompilationException(SCJCompilationTask task) {
+      assert task != null;
+      assert !task.success();
+      this.task = task;
+   }
+
+   public SCJCompilationTask getTask() {
+      return task;
+   }
+
+   public JavacDiagnostics getDiagnostics() {
+      return task.getDiagnostics();
+   }
+}

@@ -1,0 +1,57 @@
+\begin{zsection}
+  \SECTION ~ BrakeApp ~ \parents ~ BrakeClass, BrakeMethChan, BrakeConst, HandlerIds, Events
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circprocess ~ BrakeApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore BrakeState}
+  this : BrakeClass
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ BrakeState
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  Init ~ \circdef ~ BrakeInit~?~obj \then this \circrefassign obj
+\end{circusaction}
+%
+\begin{circusaction*}
+  handleAsyncLongEventMeth ~ \circdef\\
+  \t1 \circval evt : EventId \circspot this.handleAsyncLongEvent(evt)
+\end{circusaction*}
+%
+\begin{comment}
+\begin{circusaction}
+  handleAsyncLongEventMeth ~ \circdef\\
+  \t1 \circval evt : EventId \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  Execute ~ \circdef ~ enter\_dispatch \then Dispatch
+\end{circusaction}
+%
+\begin{circusaction}
+  Dispatch ~ \circdef ~ \circmu X \circspot  (leave\_dispatch \then \Skip) ~ ~ \extchoice\\
+  \t1 ((brake\_engaged \then handleAsyncLongEventMeth(BrakeEngagedEvtId) ~ ~ \extchoice\\
+  \t1 ~~~~~ brake\_disengaged \then handleAsyncLongEventMeth(BrakeDisengagedEvtId)) \circseq\\
+  \t1 \circwait 0..BrakeDeadline \circseq X)
+\end{circusaction}
+%
+\begin{circusaction}
+  Terminate ~ \circdef ~ done\_handler~.~BrakeId \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot (\circmu X \circspot Init \circseq Execute \circseq Terminate \circseq X) \circinterrupt ~ end\_mission\_fw \then \Skip
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,7 @@
+\begin{circuslaw}{var-elim}
+\begin{circusaction*}
+  (\circvar v : T \circspot A) ~ \equiv ~ A
+  \also
+  \provided \; \mbox{$v$ is not free in A}
+\end{circusaction*}
+\end{circuslaw}

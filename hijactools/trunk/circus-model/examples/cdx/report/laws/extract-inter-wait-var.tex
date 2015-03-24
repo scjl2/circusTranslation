@@ -1,0 +1,7 @@
+\begin{circustimelaw}{extract-inter-wait-var}
+\begin{circusaction*}
+  \circvar x : T \circspot (A \interleave \circwait t) ~ \equiv ~ (\circvar x : T \circspot A) \interleave \circwait t
+  \also
+  \provided \; x \notin \FV(t)
+\end{circusaction*}
+\end{circustimelaw}

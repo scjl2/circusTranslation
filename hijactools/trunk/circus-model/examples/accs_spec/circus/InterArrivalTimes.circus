@@ -1,0 +1,41 @@
+\begin{zsection}
+  \SECTION ~ InterArrivalTimes ~ \parents ~ Preliminaries, GlobalConstants, Channels
+\end{zsection}
+
+\nid To simplify the specification, and also because we are not yet certain in what way real-time engineers think about and specify inter-arrival times, we assume there is a universal constant for the minimum inter-arrival time between any two sensor events. In more specific examples, I presume, this will be more qualified.
+%
+\begin{axdef}
+  MIN\_INTER\_ARRIVAL\_TIME : \nat_1
+\end{axdef}
+
+\nid The following process specifies a minimal inter-arrivel time for any two sensor interrupts.
+%
+\begin{circusbox}
+\begin{circus}
+  \circprocess InterArrivalTimes ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{circusaction}
+  SensorInterrupt ~ \circdef ~\\
+  (engine~?~b \then \Skip) ~~ \extchoice\\
+  (brake\_engaged \then \Skip) ~~ \extchoice\\
+  (brake\_disengaged \then \Skip) ~~ \extchoice\\
+  (top\_gear\_engaged \then \Skip) ~~ \extchoice\\
+  (top\_gear\_disengaged \then \Skip) ~~ \extchoice\\
+  (lever~?~l \then \Skip)
+\end{circusaction}
+
+\begin{circusaction}
+  TReq ~ \circdef ~ \circmu X \circspot SensorInterrupt \circseq \circwait MIN\_INTER\_ARRIVAL\_TIME \circseq X
+\end{circusaction}
+
+\begin{circusaction}
+  \circspot TReq
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusbox}
+
+\nid The relevance of inter-arrival times for the specification is to ensure that the system will be sufficiently responive:~namely the delay between external happenings such as pressing the brake pedal and corresponding interrupts being generated and delivered must be sufficiently short~(we observe that we do not model phyiscal happenings, and the only point of observation in our model is the interrupt itself). From the programmer's perspective, inter-arrival times ensure implementability of the system. That is because an implementation will need a certain amount of time to respond to each interrupt, and during this time it cannot deal with another interrupt, at least given the paragigm of \emph{perfect synchronicity} of the state machine.

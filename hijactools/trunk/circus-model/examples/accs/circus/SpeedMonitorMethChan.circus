@@ -1,0 +1,8 @@
+\begin{zsection}
+  \SECTION ~ SpeedMonitorMethChan ~ \parents ~ scj\_toolkit, scj\_library, SpeedMonitorClass
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circchannel ~ SpeedMonitorInit : SpeedMonitorClass
+\end{circus}

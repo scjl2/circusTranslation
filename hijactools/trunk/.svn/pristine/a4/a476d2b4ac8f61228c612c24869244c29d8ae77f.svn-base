@@ -1,0 +1,9 @@
+package hijac.tools.utils;
+
+/**
+ * @author Frank Zeyda
+ * @version $Revision$
+ */
+public interface StringConverter <T> {
+   public String toString(T o);
+}

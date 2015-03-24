@@ -1,0 +1,20 @@
+\begin{zsection}
+  \SECTION ~ MainMission ~ \parents ~ MissionFW, MainMissionApp
+\end{zsection}
+
+\begin{circus}
+  \circchannelset MainMissionSyncChan ~ == ~ \lchanset initializeCall, initializeRet, cleanupCall, cleanupRet,\\
+  \t1 register, stop\_handlers, end\_mission\_app \rchanset
+\end{circus}
+\vspaceafterzpara
+
+\red{Do we anticipate the \code{initialize()} and \code{cleanup()} methods to be called by other components?}
+%
+\begin{circus}
+  \circchannelset MainMissionHideChan ~ == ~ \lchanset register, stop\_handlers, end\_mission\_app \rchanset
+\end{circus}
+
+\begin{circus}
+  \circprocess ~ MainMission ~ \circdef\\
+  \t1 (MissionFW \lpar MainMissionSyncChan \rpar MainMissionApp) \circhide MainMissionHideChan
+\end{circus}

@@ -1,0 +1,34 @@
+package hijac.tools.analysis.utils;
+
+import com.sun.source.util.TreePathScanner;
+
+import hijac.tools.analysis.SCJAnalysis;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+
+/**
+ * @author Frank Zeyda
+ * @version $Revision: 198 $
+ */
+public class SCJTreePathScanner<R, P> extends TreePathScanner<R, P> {
+   protected final SCJAnalysis ANALYSIS;
+
+   public SCJTreePathScanner(SCJAnalysis analysis) {
+      assert analysis != null;
+      this.ANALYSIS = analysis;
+   }
+
+   protected Element getElement() {
+      return ANALYSIS.TREES.getElement(getCurrentPath());
+   }
+
+   protected TypeElement getEnclosingClass() {
+      return ANALYSIS.TREES.getScope(getCurrentPath()).getEnclosingClass();
+   }
+
+   protected ExecutableElement getEnclosingMethod() {
+      return ANALYSIS.TREES.getScope(getCurrentPath()).getEnclosingMethod();
+   }
+}

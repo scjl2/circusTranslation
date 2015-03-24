@@ -1,0 +1,5 @@
+\begin{circuslaw}{remove-var}
+\begin{circusaction*}
+  \circvar x : T \circspot A ~ \equiv ~ A \; \provided \; x \notin \FV(A)
+\end{circusaction*}
+\end{circuslaw}

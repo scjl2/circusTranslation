@@ -1,0 +1,91 @@
+\begin{circusbox}
+\begin{zsection}
+  \SECTION ~ ThrottleTiming ~ \parents ~ Channels
+\end{zsection}
+\vspaceafterzpara
+
+The following constants introduce various deadlines for the timing requirements.
+%
+\begin{axdef}
+  activate\_deadline : \nat\\
+  deactivate\_deadline : \nat\\
+  start\_accelerate\_deadline : \nat\\
+  stop\_accelerate\_deadline : \nat\\
+  resume\_deadline : \nat\\
+  set\_voltage\_max\_delay : \nat
+\end{axdef}
+\vspaceafterzpara
+
+The timing requirements for response times are specified by the following process.
+%
+\begin{circus}
+  \circprocess ~ ThrottleTiming ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{circusaction}
+  TReq1 ~ \circdef ~ \circmu X \circspot ((write\_voltage \then X) ~~ \extchoice\\
+  \t1 (lever~.~ACTIVATE \then (write\_voltage \then TReq6) \circdeadline activate\_deadline))\\
+  \t1 \circinterrupt ~~ (lever~?~l \prefixcolon (l \neq ACTIVATE) \then X)
+\end{circusaction}
+
+\begin{circusaction}
+  TReq2 ~ \circdef ~ \circmu X \circspot ((write\_voltage \then X) ~~ \extchoice\\
+  \t1 (lever~.~DEACTIVATE \then (write\_voltage \then X) \circdeadline deactivate\_deadline))\\
+  \t1 \circinterrupt ~~ (lever~?~l \prefixcolon (l \neq DEACTIVATE) \then X)
+\end{circusaction}
+
+\begin{circusaction}
+  TReq3 ~ \circdef ~ \circmu X \circspot ((write\_voltage \then X) ~~ \extchoice\\
+  \t1 (lever~.~START\_ACCELERATION ~ \then\\
+  \t2 (write\_voltage \then TReq6) \circdeadline start\_accelerate\_deadline))\\
+  \t1 \circinterrupt ~~ (lever~?~l \prefixcolon (l \neq START\_ACCELERATION) \then X)
+\end{circusaction}
+
+\begin{circusaction}
+  TReq4 ~ \circdef ~ \circmu X \circspot ((write\_voltage \then X) ~~ \extchoice\\
+  \t1 (lever~.~STOP\_ACCELERATION ~ \then\\
+  \t2 (write\_voltage \then TReq6) \circdeadline stop\_accelerate\_deadline))\\
+  \t1 \circinterrupt ~~ (lever~?~l \prefixcolon (l \neq STOP\_ACCELERATION) \then X)
+\end{circusaction}
+
+\begin{circusaction}
+  TReq5 ~ \circdef ~ \circmu X \circspot ((write\_voltage \then X) ~~ \extchoice\\
+  \t1 (lever~.~RESUME \then (write\_voltage \then TReq6) \circdeadline resume\_deadline))\\
+  \t2 \circinterrupt ~~ (lever~?~l \prefixcolon (l \neq RESUME) \then X)
+\end{circusaction}
+
+\begin{circusaction}
+  TReq6 ~ \circdef ~ \circmu X \circspot \circwait 0..set\_voltage\_max\_delay \circseq (write\_voltage \then X) \circdeadline 0
+\end{circusaction}
+
+\begin{circusaction}
+  TReqWriteVoltage ~ \circdef ~ \circmu X \circspot write\_voltage \then (set\_voltage~?~v \then X) \circdeadline 0
+\end{circusaction}
+
+%\begin{circusaction*}
+%  ComfortAccelTReq ~ \circdef\\
+%  \t1 \circval v1 : VOLTAGE \circspot set\_voltage~.~v2~@~u ~ \then\\
+%  \t2 \circif v2 > v1 \circthen (v2 - v1 \div u) \le 100 \mathbin{\rightarrow} \mathbf{magic} \circelse v1 \le v2 \circthen \Skip \circfi
+%\end{circusaction*}
+
+\begin{circusaction}
+  \circspot (((((TReq1\\
+  \t2 \lpar \emptyset | \lchanset lever, write\_voltage \rchanset | \emptyset \rpar TReq2)\\
+  \t2 \lpar \emptyset | \lchanset lever, write\_voltage \rchanset | \emptyset \rpar TReq3)\\
+  \t2 \lpar \emptyset | \lchanset lever, write\_voltage \rchanset | \emptyset \rpar TReq4)\\
+  \t2 \lpar \emptyset | \lchanset lever, write\_voltage \rchanset | \emptyset \rpar TReq5)\\
+  \t1 \lpar \emptyset | \lchanset set\_voltage, write\_voltage \rchanset| \emptyset \rpar TReqWriteVoltage)
+
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusbox}
+
+\nid Our assumption is that if the user deactivates cruise mode again after activation before expiry of the deadline, there is no requirement to observe that cruise mode has been activated (hence the interrupts). The same applies if the user switches between cruise and acceleration mode.
+
+\paragraph{Note}
+
+In the model I encoded all response requirements identified by Andy Wellings in our discussions. I factored them into five individual actions: $TReq1$ to $TReq5$. This alone, however, does not specify all that needs to be said about timing. In particular, I believe it is also important to ensure that voltage writes continue to take place at a certain rate once the system has taken control of the throttle. The exact time at which $set\_voltage$ events occur is not a concern of the specification. This requirement is captured by the $TReq6$ action, called by the actions $TReq1$, $TReq3$, $TReq4$, and $TReq5$.
+\vspace{0.5em}

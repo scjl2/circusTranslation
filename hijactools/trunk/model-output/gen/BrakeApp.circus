@@ -1,0 +1,58 @@
+
+\begin{circus}
+  \circprocess ~ BrakeApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+  \circstate State ~ == ~ [this : \circreftype BrakeClass]
+\end{circusaction}
+%
+\begin{circusaction}
+  Init ~ == ~ BrakeInit~?~obj \then this := obj
+\end{circusaction}
+%
+\begin{circusaction}
+  Methods ~ \circdef ~ \Stop
+\end{circusaction}
+%
+\begin{circusaction}
+  handleAsyncEvent ~ \circdef ~ 
+  \\
+  \t1
+\circblockopen \circvar event : int \circspot event := \invalid ~ \circseq \\ \circif ~ event = BRAKE\_ON ~ \then \\ \t1 \circblockopen cruise.brakePressed() \circseq \\ \Skip \circblockclose \\ \circelse ~ ~ event = BRAKE\_OFF ~ \then \\ \t1 \circblockopen cruise.brakeReleased() \circseq \\ \Skip \circblockclose \\ \circelse ~ ~ \lnot \circblockopen event = BRAKE\_ON \lor \\ event = BRAKE\_OFF \lor \\ false \circblockclose ~ \then \\ \t1 \circblockopen \Div \circblockclose \\ \circfi \circblockclose\end{circusaction}
+%
+\begin{circusaction}
+  Execute ~ \circdef ~ enter\_dispatch~.~BrakeHId \then Dispatch
+\end{circusaction}
+%
+\begin{circusaction}
+  Dispatch ~ \circdef ~ \\
+  \t1
+  \circblockopen
+    \circmu X \circspot
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          Methods ~ ~ \extchoice ~
+          \\
+          (brake\_pressed \then handleAsyncEvent) ~ ~ \extchoice ~ \\
+          \\
+          (brake\_released \then handleAsyncEvent)
+        \circblockclose
+        \circseq X
+      \circblockclose
+      \\
+      \extchoice
+      \\
+      leave\_dispatch~.~BrakeHId \then \Skip
+    \circblockclose
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot (\circmu X \circspot Init \circseq Execute \circseq X) \circinterrupt end\_mission\_fw \then \Skip
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

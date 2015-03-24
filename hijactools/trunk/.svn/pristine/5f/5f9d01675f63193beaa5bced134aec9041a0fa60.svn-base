@@ -1,0 +1,126 @@
+\begin{circusbox}
+\begin{zsection}
+  \SECTION ~ List ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{circus*}
+  \circclass ~ List ~ \circdef ~ \circbegin
+\end{circus*}
+
+\begin{schema*}{\circstateignore LState}
+  val : int\\
+  next : List\\
+  empty : boolean
+\end{schema*}
+%\vspaceafterzpara
+
+%\begin{schema*}{\circinitial Init}
+%  LState~'
+%\where
+%  next' = \circnull\\
+%  empty' = jfalse
+%\end{schema*}
+
+%\begin{note}
+%I specified the constructor as an {\OhCircus} method rather than a Z operation schema. 
+%\end{note}
+%
+\begin{circusaction*}
+  \circpublic \circinitial init ~ \circdef\\
+  \t1 next := \circnull \circseq\\
+  \t1 empty := jtrue
+\end{circusaction*}
+\vspace{2em}
+
+\subsubsection*{Public Methods}
+
+%\begin{note}
+The abstract $insert(\num)$ operation is implemented in terms of calls to two private (internal) synchronized methods $contains(int)$ and $clear()$. This is a choice made by the implementation.
+%\end{note}
+%
+\begin{circusaction*}
+  \circpublic \circsync insert ~ \circdef ~ \circval value : int \circspot\\
+  \t1 \circif ~ size() = 50 \circthen clear()\\
+  \t1 \circelse ~ \lnot size() = 50 \circthen \Skip\\
+  \t1 \circfi \circseq\\
+  \t1 \circif ~ contains(value) = jtrue \circthen insert(x)\\
+  \t1 \circelse ~ \lnot contains(value) = jtrue \circthen \Skip\\
+  \t1 \circfi
+\end{circusaction*}
+
+\begin{circusaction*}
+  \circpublic \circsync size ~ \circdef ~ \circres ret : int \circspot\\
+  \t1 \circvar size : int \circspot size := 0 \circseq\\
+  \t1 \circvar node : List \circspot node \circrefassign \circthis \circseq\\
+  \t1 \circmu X \circspot \circif ~ \lnot (node.empty = jtrue) \circthen\\
+  \t2 (node := node.next \circseq size := size + 1)\\
+  \t1 \circelse ~ \lnot \lnot (node.empty = jtrue) \circthen \Skip\\
+  \t1 \circfi \circseq\\
+  \t1 ret := size
+\end{circusaction*}
+\end{circusbox}
+
+\begin{circusbox}
+\subsubsection*{Private Methods}
+\vspace{-1em}
+
+\begin{circusaction*}
+  \circprivate \circsync contains ~ \circdef ~ \circval value : int; \circres ret : boolean \circspot\\
+  \t1 \circvar contains := jfalse \circseq\\
+  \t1 \circvar node : List \circspot node \circrefassign \circthis \circseq\\
+  \t1 \circmu X \circspot \circif ~ \lnot (node.empty = jtrue) \circthen\\
+  \t2 \circif ~ node.val = value \circthen contains := jtrue\\
+  \t2 \circelse ~ \lnot (node.val = value) \circthen (node := node.next \circseq X)\\
+  \t2 \circfi \circseq\\
+  \t1 \circelse ~ \lnot \lnot (node.empty = jtrue) \circthen \Skip\\
+  \t1 \circfi \circseq\\
+  \t1 ret := contains
+\end{circusaction*}
+\vspaceafterzpara
+
+%\begin{note}
+Below we use the $\circnewM$ construct to create an object in mission memory. Similarity we have $\circnewI$, $\circnewR$ and $\circnewP$ to create an object in immortal, per release and private memory, respectively.
+%\end{note}
+%
+\begin{circusaction*}
+  \circprivate \circsync append ~ \circdef ~ \circval value : int \circspot\\
+  \t1 \circvar node : List \circspot node \circrefassign \circthis \circseq\\
+  \t1 \circmu X \circspot \circif ~ \lnot (node.empty = jtrue) \circthen\\
+  \t2 (node := node.next)\\
+  \t1 \circelse ~ \lnot \lnot (node.empty = jtrue) \circthen \Skip\\
+  \t1 \circfi \circseq\\
+  \t1 node.val := value \circseq\\
+  \t1 \circif ~ node.next = \circnull \circthen node.next \circrefassign \circnewM List\\
+  \t1 \circelse ~ \lnot node.next = \circnull \circthen node.next.empty := jtrue\\
+  \t1 \circfi \circseq\\
+  \t1 node.empty := jfalse
+\end{circusaction*}
+
+\begin{circusaction*}
+  \circprivate \circsync clear ~ \circdef ~ empty := jtrue
+\end{circusaction*}
+\vspace{2em}
+
+\subsubsection*{Logical Methods}
+
+%\begin{note}
+Logical method to obtain the elements of the list as a set. May be needed for data refinement.
+%\end{note}
+%
+\begin{circusaction*}
+  \circlogical \circsync elems ~ \circdef ~ \circres col : \power int \circspot\\
+  \t1 \circif ~ node.empty = jtrue \circthen col := \emptyset\\
+  \t1 \circelse ~ \lnot node.empty = jtrue \circthen col := next.elems() \cup \{val\}\\
+  \t1 \circfi
+\end{circusaction*}
+
+\begin{circus*}
+  \circend
+\end{circus*}
+
+\begin{comment}
+\begin{zed}
+  [List]
+\end{zed}
+\end{comment}
+\end{circusbox}

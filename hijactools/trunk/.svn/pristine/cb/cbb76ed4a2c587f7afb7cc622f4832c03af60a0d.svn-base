@@ -1,0 +1,7 @@
+\begin{circuslaw}{distr-prefix-par-3}
+\begin{circusaction*}
+  c \then \Skip \circseq (\Skip \lpar ns_1 | cs | ns_2 \rpar A) ~ \equiv ~ \Skip \lpar ns_1 | cs | ns_2 \rpar (c \then A)
+  \also
+  \provided ~ c \notin cs
+\end{circusaction*}
+\end{circuslaw}

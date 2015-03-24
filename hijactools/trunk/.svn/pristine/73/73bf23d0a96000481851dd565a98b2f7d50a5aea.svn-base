@@ -1,0 +1,24 @@
+\begin{zsection}
+  \SECTION ~ MainMissionSequencer ~ \parents ~ MissionSequencerFW, MainMissionSequencerApp
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circchannelset MainMissionSequencerChan ~ == ~ MissionSequencerMethChan \cup \lchanset end\_sequencer\_app \rchanset
+\end{circus}
+
+\begin{circus}
+  \circprocess ~ MainMissionSequencer ~ \circdef\\
+  \t1
+  \circblockopen
+    MissionSequencerFW
+    \\
+    \t1 \lpar MainMissionSequencerChan \rpar
+    \\
+    MainMissionSequencerApp
+  \circblockclose
+  \circhide MainMissionSequencerChan
+\end{circus}
+\begin{circus*}
+  \circexposes ~ \lchanset start\_sequencer, done\_sequencer, start\_mission, done\_mission, end\_mission\_fw \rchanset
+\end{circus*}

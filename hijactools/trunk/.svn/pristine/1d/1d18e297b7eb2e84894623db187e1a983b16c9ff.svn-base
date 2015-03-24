@@ -1,0 +1,81 @@
+package hijac.tools.compiler;
+
+import hijac.tools.config.Config;
+import hijac.tools.utils.FileUtils;
+
+import java.io.File;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Frank Zeyda
+ * @version $Revision$
+ */
+public class SCJCompilationConfig {
+   protected final List<File> classpath;
+   protected final List<File> sourcepath;
+   protected final List<File> sourcefiles;
+
+   public SCJCompilationConfig(List<File> classpath, List<File> sourcepath,
+         List<File> sourcefiles) {
+      this.classpath = classpath;
+      this.sourcepath = sourcepath;
+      this.sourcefiles = sourcefiles;
+   }
+
+   public SCJCompilationConfig(List<File> classpath, List<File> sourcepath) {
+      this(classpath, sourcepath, scanSourcePath(sourcepath));
+   }
+
+   protected static List<File> scanSourcePath(List<File> sourcepath) {
+      List<File> sources = new ArrayList<File>();
+      for (File path : sourcepath) {
+         sources.addAll(FileUtils.scanFolder(path, FileUtils.JAVA_FILES));
+      }
+      return sources;
+   }
+
+   public static SCJCompilationConfig getDefault() {
+      List<File> lib = new ArrayList<File>();
+      String SCJ_LIB = Config.getSCJLib();
+      if (SCJ_LIB == null || SCJ_LIB.equals("")) {
+         System.err.println("[WARNING] No SCJ library specified in " +
+            Config.PROPERTIES_FILENAME + ".");
+      }
+      else {
+         lib.add(new File(SCJ_LIB));
+      }
+      String RTSJ_LIB = Config.getRTSJLib();
+      if (RTSJ_LIB == null || RTSJ_LIB.equals("")) {
+         /*System.err.println("[WARNING] No RTSJ library specified in " +
+            Config.PROPERTIES_FILENAME + ".");*/
+      }
+      else {
+         lib.add(new File(RTSJ_LIB));
+      }
+      List<File> src = new ArrayList<File>();
+      String[] SCJ_SRC = Config.getSCJSrc();
+      if (SCJ_SRC == null || SCJ_SRC.length == 0) {
+         System.err.println("[WARNING] No sources locations specified in " +
+            Config.PROPERTIES_FILENAME + ".");
+      }
+      for (String path : Config.getSCJSrc()) {
+         System.out.println(path);
+         src.add(new File(path));
+      }
+      return new SCJCompilationConfig(lib, src);
+   }
+
+   public List<File> getClassPath() {
+      return classpath;
+   }
+
+   public List<File> getSourcePath() {
+      return sourcepath;
+   }
+
+   public List<File> getSourceFiles() {
+      return sourcefiles;
+   }
+}

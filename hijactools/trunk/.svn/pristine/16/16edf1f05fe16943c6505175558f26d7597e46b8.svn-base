@@ -1,0 +1,13 @@
+\begin{zsection}
+  \SECTION ~ WheelShaft ~ \parents ~ WheelShaftFW, WheelShaftApp
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circprocess ~ WheelShaft ~ \circdef\\
+  \t1 (WheelShaftFW \lpar HandlerAppSyncChan \rpar WheelShaftApp) \circhide HandlerAppHideChan 
+\end{circus}
+\begin{circus*}
+  \circexposes ~ \lchanset wheel\_shaft,\\
+  \t1 start\_handler, stop\_handler, done\_handler, activate\_handlers, end\_mission\_fw \rchanset
+\end{circus*}

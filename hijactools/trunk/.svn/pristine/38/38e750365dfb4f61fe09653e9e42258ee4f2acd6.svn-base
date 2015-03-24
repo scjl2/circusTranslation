@@ -1,0 +1,50 @@
+\begin{zsection}
+  \SECTION ~ Events ~ \parents ~ scj\_toolkit, scj\_library, EventIds, Constants
+\end{zsection}
+
+\paragraph{Sensor Events}
+
+\begin{circus}
+  \circchannel ~ wheel\_shaft
+  \also
+  \circchannel ~ engine\_on, engine\_off
+  \also
+  \circchannel ~ brake\_engaged, brake\_disengaged
+  \also
+  \circchannel ~ top\_gear\_engaged, top\_gear\_disengaged
+  \also
+  \circchannel ~ activate
+  \also
+  \circchannel ~ deactivate
+  \also
+  \circchannel ~ resume
+  \also
+  \circchannel ~ start\_acceleration
+  \also
+  \circchannel ~ stop\_acceleration
+\end{circus}
+%
+\begin{circus}
+  \circchannelset ~ SensorEvents ~ == ~ \lchanset\\
+  \t1 wheel\_shaft,\\
+  \t1 engine\_on, engine\_off,\\
+  \t1 brake\_engaged, brake\_disengaged,\\
+  \t1 top\_gear\_engaged, top\_gear\_disengaged,\\
+  \t1 activate, deactivate, resume, start\_acceleration, stop\_acceleration \rchanset
+\end{circus}
+
+\paragraph{Actuator Events}
+
+\begin{circus}
+  \circchannel ~ set\_voltage : VOLTAGE\_RANGE
+\end{circus}
+%
+\begin{circus}
+  \circchannelset ~ ActuatorEvents ~ == ~ \lchanset set\_voltage \rchanset
+\end{circus}
+
+\paragraph{Cumulative Events}
+
+\begin{circus}
+  \circchannelset ~ Events ~ == ~ SensorEvents \cup ActuatorEvents
+\end{circus}

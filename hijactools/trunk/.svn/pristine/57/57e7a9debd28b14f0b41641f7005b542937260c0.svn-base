@@ -1,0 +1,26 @@
+###########################
+# Default Properties File #
+###########################
+
+####################################
+# General Configuration Properties #
+####################################
+
+SCJ_PACKAGE_PREFIX = javax.safetycritical
+RTSJ_PACKAGE_PREFIX = javax.realtime
+VALIDATE_OBJECTS = false
+USE_ANSI_COLOURS = true
+
+#################################
+# Configuration of the Analyser #
+#################################
+
+Analyser.TYPES_REPORT = true
+Analyser.METHODS_REPORT = true
+Analyser.METHOD_DEP_REPORT = true
+
+#########################################
+# Configuration of the Model Translator #
+#########################################
+
+ModelGen.PREFIX_WITH_PACKAGE = true

@@ -1,0 +1,5 @@
+\begin{circustimelaw}{zero-wait-intro}
+\begin{circusaction*}
+  A ~ \equiv ~ \circwait 0 \circseq A
+\end{circusaction*}
+\end{circustimelaw}

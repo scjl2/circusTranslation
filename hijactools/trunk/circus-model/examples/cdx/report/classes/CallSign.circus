@@ -1,0 +1,68 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ CallSign ~ \parents ~ cdx\_preliminaries, cdx\_mock\_objects
+\end{zsection}
+\end{comment}
+
+%%Zword \CallSign CallSignClass
+
+\newcommand{\CallSign}{CallSign}
+
+%%Zword \val value
+
+\newcommand{\val}{val}
+
+The class $CallSign$ is used to represent call sign objects in the program.
+%
+\begin{circusflow}
+\begin{circus}
+  \circclass ~ \CallSign ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore CallSignState}
+  \circprivate \val : byteArray
+\where
+  \val \neq \circnull
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ CallSignState
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  \circinitial Init ~ \circdef ~ \circval v : byteArray \circspot \val := v
+\end{circusaction}
+%
+\begin{circusaction*}
+  \circpublic hashCode ~ \circdef ~ \circret : boolean \circspot\\
+  \t1
+  \circblockopen
+    \circvar h \circspot h := 0 \circseq\\
+    (\circfor i = 0 \circto \val~.~length~\emptytuple - 1 \circspot h := h + \val~.~getA(i)) \circseq\\
+    \circret := h
+  \circblockclose
+\end{circusaction*}
+%
+\begin{circusaction}
+  \circpublic equals ~ \circdef \circval obj : Object; \circres ~ \circret : boolean \circspot\\
+  \t1 \circret := \IF ~ (\circself\hidemath{[Object]} = obj) ~ \THEN ~ jtrue ~ \ELSE ~ jfalse
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic compareTo ~ \circdef  ~ \circval obj : Object \circspot \dots
+\end{circusaction}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}
+%
+The definition of the $compareTo(obj : Object)$ method has been omitted; it is not central to the models presented in the report. Objects of $CallSign$ are used as map keys in $StateTable$. This class is immutable.

@@ -1,0 +1,67 @@
+\begin{zsection}
+  \SECTION ~ WheelShaftClass ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\subsubsection*{Class Definition}
+
+\begin{circusbox}
+\begin{circus}
+  \circclass ~ WheelShaftClassDef ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore WheelShaftState}
+  \circprivate count : long
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ WheelShaftState
+\end{circusaction}
+\end{comment}
+%
+\begin{circusnote}
+\red{Do the following two methods have to be synchronised?}
+\end{circusnote}
+%
+\begin{circusaction}
+  \circpublic getCallibration ~ \circdef ~ \circres result : \nat \circspot result := 100
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic getCount ~ \circdef ~ \circres result : long \circspot result := count
+\end{circusaction}
+%
+% Java code: while (getAndDecrementFireCount() > 0) { count ++; }
+%
+\begin{circusnote}
+\red{The implementation here executes \code{getAndDecrementFireCount()} to obtain the increment for \code{count}.}
+\end{circusnote}
+%
+\begin{circusaction}
+  \circpublic \circsync handleAsyncEvent ~ \circdef ~ \circval evt : EventId \circspot count := count + 1
+\end{circusaction}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusbox}
+
+\subsubsection*{Reference Type}
+
+\begin{comment}
+\begin{schema}{WheelShaftState}
+  \circprivate count : long
+\end{schema}
+\end{comment}
+
+\begin{circusbox}
+\begin{zed}
+  WheelShaftClass ~ == ~ \circreftype WheelShaftState
+\end{zed}
+\end{circusbox}

@@ -1,0 +1,7 @@
+\begin{zsection}
+  \SECTION ~ Handler1Const ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{axdef}
+  Handler1Deadline : \nat_1
+\end{axdef}

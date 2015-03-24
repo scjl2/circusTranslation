@@ -1,0 +1,215 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{sverb}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[colour]{circus}
+\usepackage{hijac}
+
+\title{{\Circus} Model for Memory Areas}
+
+\author{Frank Zeyda}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Framework Extensions}
+
+\subsection{Runnable}
+
+In this section we specify the $Runnable$ interface. It is used in the SCJ framework to execute code within particular memory areas. Namely, the \code{void executeInArea(Runnable logic)} method of the \code{MemoryArea} class takes a runnable object, and execute its \code{void run()} method within the respective memory area.
+
+\subsubsection{{\OhCircus} Class}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{RunnableClass.circus}
+\end{circusbox}
+\vspace{0.5em}
+
+\nid \red{Maybe the introduction of a data object is superfluous here.}
+
+\subsubsection{Method Channels}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{RunnableMethChan.circus}
+\end{circusbox}
+\vspace{0.5em}
+
+\nid Notice that we do not have a framework process for $Runnable$. The purpose of the {\OhCircus} class is in essence to be extended; particular process models of runnable objects should synchronise on the $Runnable\_runCall$ and $Runnable\_runRet$ methods, and this and thereby providing implementations of those.
+
+\subsection{MemoryArea}
+
+\subsubsection{{\OhCircus} Class}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{MemoryAreaClass.circus}
+\end{circusbox}
+
+\subsubsection{Method Channels}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{MemoryAreaMethChan.circus}
+\end{circusbox}
+
+\subsubsection{Application Process}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{MemoryAreaApp.circus}
+\end{circusbox}
+
+\subsubsection{Composite Process}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{MemoryArea.circus}
+\end{circusbox}
+
+\subsection{ImmortalMemory}
+
+\subsubsection{{\OhCircus} Class}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{ImmortalMemoryClass.circus}
+\end{circusbox}
+
+\subsubsection{Method Channels}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{ImmortalMemoryMethChan.circus}
+\end{circusbox}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Java Code}
+
+\subsection{Java Code for Mission Sequencer}
+
+\verbinput{MainMissionSequencer.java}
+
+\subsection{Java Code for Handlers}
+
+\subsubsection{Handler1}
+
+\verbinput{Handler1.java}
+
+\subsubsection{Handler2}
+
+The code for \code{Handler2.java} is in essence identical to the one for \code{Handler1.java} apart from the \code{handleAsyncEvent()} method which is given below.
+
+\begin{verbatim}
+      System.out.println("[Handler2] handleEvent() called");
+      if (!done) {
+         MemoryArea area = MemoryArea.getMemoryArea(this);
+         Handler2_MemoryEntry entry = new Handler2_MemoryEntry(this);
+         area.executeInArea(entry);
+         done = true;
+      }
+      else {
+         System.out.println("[Handler2] requesting termination");
+         Mission.getCurrentMission().requestTermination();         
+      }
+\end{verbatim}
+
+\subsubsection{Handler3}
+
+The code for \code{Handler2.java} is in essence identical to the one for \code{Handler1.java} apart from the \code{handleAsyncEvent()} method which is given below.
+
+\begin{verbatim}
+   public void handleEvent() {
+      System.out.println("[Handler3] handleEvent() called");
+      if (!done) {
+         MemoryArea area = RealtimeThread.getCurrentMemoryArea();
+         Handler3_MemoryEntry entry = new Handler3_MemoryEntry(this);
+         area.executeInArea(entry);
+         done = true;
+      }
+      else {
+         System.out.println("[Handler3] requesting termination");
+         Mission.getCurrentMission().requestTermination();         
+      }
+   }
+\end{verbatim}
+
+\subsection{Java Code for Inner Classes}
+
+\subsubsection{Handler1\_MemoryEntry}
+
+\verbinput{Handler1_MemoryEntry.java}
+
+\nid The code for \code{Handler2\_MemoryEntry.java} and \code{Handler3\_MemoryEntry.java} is analogous.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Application Model}
+
+\subsection{Mission Sequencer}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{MainMissionSequencerApp.circus}
+\end{circusbox}
+
+\subsection{Handler Processes}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{Handler1.circus}
+\end{circusbox}
+
+\subsubsection{{\OhCircus} Class}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{Handler1Class.circus}
+\end{circusbox}
+
+\subsubsection{Method Channels}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{Handler1MethChan.circus}
+\end{circusbox}
+
+\newpage
+
+%\begin{circusbox}
+\input{Handler1App.circus}
+%\end{circusbox}
+
+\subsection{Handler1\_MemoryEntry}
+
+\subsubsection{{\OhCircus} Class}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{Handler1_MemoryEntryClass.circus}
+\end{circusbox}
+
+\subsubsection{Method Channels}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{Handler1_MemoryEntryMethChan.circus}
+\end{circusbox}
+
+\subsubsection{Application Process}
+\vspace{-0.5em}
+
+\begin{circusbox}
+\input{Handler1_MemoryEntryApp.circus}
+\end{circusbox}
+
+\end{document}

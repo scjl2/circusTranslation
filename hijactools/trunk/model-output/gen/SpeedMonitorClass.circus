@@ -1,0 +1,34 @@
+
+\begin{circus}
+  \circclass ~ SpeedMonitorClass ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ State}
+  \circpublic ~ calibration : int\\
+  \circpublic ~ iterationsInOneHour : int\\
+  \circpublic ~ cmInKilometer : int\\
+  \circprivate ~ wheel\_shaft : WheelShaftClass\\
+  \circprivate ~ numberRotations : long\\
+  \circprivate ~ lastNumberRotations : long\\
+  \circprivate ~ currentSpeed : int
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ State
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ getCurrentSpeed ~ \circdef ~
+  \circres ~ ret : int \circspot
+  \\
+  \t1
+  \circblockopen
+  ret := currentSpeed
+  \circblockclose
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

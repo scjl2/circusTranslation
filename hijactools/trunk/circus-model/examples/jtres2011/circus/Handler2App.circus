@@ -1,0 +1,90 @@
+\begin{zsection}
+  \SECTION ~ Handler2App ~ \parents ~ Handler2Class, Handler2Chan, Handler2Const, HandlerIds, Events
+\end{zsection}
+
+\begin{circus}
+  \circprocess ~ Handler2App ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore Handler2State}
+  this : \circreftype Handler2Class
+\end{schema}
+
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ Handler2State
+\end{circusaction}
+\end{comment}
+
+\begin{circusaction}
+  Init ~ \circdef ~ Handler2Init~?~obj \then this \circrefassign obj
+\end{circusaction}
+%\vspaceafterzpara
+
+%\begin{alert}
+%An observation: the assignment $elems := this.elems()$ is a value assignment below, however in the code it would correspond to a reference assignment since the set is modelled as an instance of \code{java.util.Set}. Also, because of the output communication we cannot model the method as a data operation, even in parts.
+%\end{alert}
+%
+%\begin{circusaction*}
+%  handleAsyncEventMeth ~ \circdef ~ \circvar elems : \power ~ \num \circspot\\
+%  \t1 elems := this.elems() \circseq\\
+%  \t1 connect \then \Skip \circseq\\
+%  \t1 send~!~elems \then \Skip \circseq\\
+%  \t1 disconnect \then \Skip
+%\end{circusaction*}
+
+%\begin{note}
+%  We regard all communications in $handleAsyncEventMeth$ as instantaneous.
+%\end{note}
+%
+\begin{circusaction*}
+  handleAsyncEventMeth ~ \circdef\\
+  \t1 \circvar size : \nat \circspot\\
+  \t1 size := this.size() \circseq \circwait 0..7 \circseq\\
+  \t1 enable \then \Skip \circseq\\
+  \t1 (send~!~size \then \Skip \circseq\\
+  \t1 disable \then \Skip) \circdeadlineterm 15
+\end{circusaction*}
+
+\begin{comment}
+\begin{circusaction}
+  handleAsyncEventMeth ~ \circdef\\
+  \t1 \circvar size : \nat \circspot size := 0\circseq\\
+  \t1 \circwait 0..7 \circseq\\
+  \t1 enable \then \Skip \circseq\\
+  \t1 (send~!~size \then \Skip \circseq\\
+  \t1 disable \then \Skip) \circdeadlineterm 15
+\end{circusaction}
+\end{comment}
+
+\begin{circusaction}
+  Execute ~ \circdef ~ enter\_dispatch \then Dispatch
+\end{circusaction}
+
+% The following was taking out after discussion with Ana Cavalcanti.
+
+% \circseq \circwait 1..Handler2Deadline 
+
+\begin{circusaction*}
+  Dispatch ~ \circdef ~ \circmu X \circspot  (leave\_dispatch \then \Skip) ~ ~ \extchoice\\
+  \t1 (out \then handleAsyncEventMeth \circseq X)
+\end{circusaction*}
+
+\begin{comment}
+\begin{circusaction}
+  Dispatch ~ \circdef ~ \circmu X \circspot  (leave\_dispatch \then \Skip) ~ ~ \extchoice\\
+  \t1 (out \then handleAsyncEventMeth \circseq \circwait 0..Handler2Deadline \circseq X)
+\end{circusaction}
+\end{comment}
+
+\begin{circusaction}
+  Terminate ~ \circdef ~ done\_handler~.~Handler2Id \then \Skip
+\end{circusaction}
+
+\begin{circusaction}
+  \circspot (\circmu X \circspot Init \circseq Execute \circseq Terminate \circseq X) \circinterrupt ~ end\_mission\_fw \then \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

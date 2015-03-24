@@ -1,0 +1,36 @@
+\begin{zsection}
+  \SECTION ~ MissionSequencerFW ~ \parents ~ MissionSequencerChan, MissionChan
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circprocess ~ MissionSequencerFW ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+  Start ~ \circdef ~ start\_sequencer \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  Execute ~ \circdef ~ \circmu X \circspot
+  \\
+  \t1
+  \circblockopen
+    getNextMissionCall \then ~ getNextMissionRet~?~next \then\\
+    \t1 \circif next \neq nullMId \circthen start\_mission~.~next \then done\_mission~.~next \then X\\
+    \t1 \circelse ~ next = nullMId \circthen \Skip\\
+    \t1 \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  Finish ~ \circdef ~ end\_sequencer\_app \then end\_mission\_fw \then done\_sequencer \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot Start \circseq Execute \circseq Finish
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

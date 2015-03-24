@@ -1,0 +1,26 @@
+\begin{zsection}
+  \SECTION ~ ActuatorChannels ~ \parents ~ Preliminaries
+\end{zsection}
+
+\subsection{Throttle Actuator}
+
+We first introduce a constant to encode the permissible voltage outputs on the throttle. We thus encode the range from $0\volts$ to $8\volts$ as an integer. One increment corresponds to voltage difference of $0.1\volts$.
+%
+\begin{zed}
+  VOLTAGE ~ == ~ 0..80
+\end{zed}
+
+\nid
+The following channel of type $VOLTAGE$ is used to set the voltage of the throttle actuator.
+%
+\begin{circus}
+  \circchannel ~ set\_voltage : VOLTAGE
+\end{circus}
+
+\subsection{Channel Sets}
+
+We define a channel set for all actuator events of the cruise controller. Here, there is only one.
+%
+\begin{circus}
+  \circchannelset ActuatorEvents ~ == ~ \lchanset set\_voltage \rchanset
+\end{circus}
