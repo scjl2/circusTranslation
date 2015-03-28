@@ -118,35 +118,35 @@ public class TightRopeTest {
 
  
    
-   public static class SafeletLevel2Visitor implements ElementVisitor<Void,Void>
+   public static class SafeletLevel2Visitor implements ElementVisitor<Name[],Void>
    {
 
 	@Override
-	public Void visit(Element e) {
+	public Name[] visit(Element e) {
 //		System.out.println(e);
 		return null;
 	}
 
 	@Override
-	public Void visit(Element e, Void p) {
+	public Name[] visit(Element e, Void p) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Void visitExecutable(ExecutableElement e, Void p) {
+	public Name[] visitExecutable(ExecutableElement e, Void p) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Void visitPackage(PackageElement e, Void p) {
+	public Name[] visitPackage(PackageElement e, Void p) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Void visitType(TypeElement e, Void p) {
+	public Name[] visitType(TypeElement e, Void p) {
 		System.out.println(e);
 		
 		ClassTree ct = trees.getTree(e);
@@ -180,8 +180,8 @@ public class TightRopeTest {
 //  						 ((ReturnTree) st).getExpression()
   						 
 //  						 st.accept(new ReturnVisitor(), null);
-  						  
-  						//No use this name to get to the next thing I need to explore?
+  						  return new Name[] {id};
+  						//Now use this name to get to the next thing I need to explore?
   						 
   					  }
   				  }
@@ -195,24 +195,80 @@ public class TightRopeTest {
 	}
 
 	@Override
-	public Void visitTypeParameter(TypeParameterElement e, Void p) {
+	public Name[] visitTypeParameter(TypeParameterElement e, Void p) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Void visitUnknown(Element e, Void p) {
+	public Name[] visitUnknown(Element e, Void p) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Void visitVariable(VariableElement e, Void p) {
+	public Name[] visitVariable(VariableElement e, Void p) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	   
    }
+   
+   public static class MissionSequencerLevel2Visitor implements ElementVisitor<Name[],Void>
+   {
+
+	@Override
+	public Name[] visit(Element arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[] visit(Element arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[] visitExecutable(ExecutableElement arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[] visitPackage(PackageElement arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[] visitType(TypeElement arg0, Void arg1) {
+		
+		System.out.println(arg0);
+		
+		return null;
+	}
+
+	@Override
+	public Name[] visitTypeParameter(TypeParameterElement arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[] visitUnknown(Element arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[] visitVariable(VariableElement arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	   
+   }
+   
    
    protected static void setUncaughtExceptionHandler() {
       Thread.currentThread().setUncaughtExceptionHandler(
@@ -242,7 +298,7 @@ public class TightRopeTest {
       units = ANALYSIS.getCompilationUnits();
       type_elements = ANALYSIS.getTypeElements();
       
-      
+      Name[] names = null;
      
       //for all the types in the program
       for(TypeElement elem : type_elements) 
@@ -250,12 +306,15 @@ public class TightRopeTest {
 //    	  System.out.println(elem.toString());
     	  String elemID = elem.toString();
     	  //if the type we have is the safelet
+    	   	  
     	  if (elemID.equalsIgnoreCase("accs.ACCSafelet"))
     	  {
     		 System.out.println("Found Safelet");
     		  
     		  
-    		  elem.accept(new SafeletLevel2Visitor(), null);
+    		names = elem.accept(new SafeletLevel2Visitor(), null);
+    		
+    		
     		  
 //    		  SafeletModel sm = new SafeletModel(new SCJApplication(ANALYSIS), new ClassModel(new SCJApplication(ANALYSIS), elem));
 //    		  
@@ -320,8 +379,16 @@ public class TightRopeTest {
     		  
 //    		  
     	  }
+    	  else if (names != null && elemID.equalsIgnoreCase("accs."))
+          {
+        	 for(int i = 0; i< names.length;i++)
+        	 {
+        		 elem.accept(new MissionSequencerLevel2Visitor(), null);
+        	 }
+          }
 //    	  
       }
+     
       
 //      Level2Translator circus_trans = new Level2Translator();
 //     
