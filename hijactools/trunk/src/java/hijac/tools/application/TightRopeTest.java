@@ -246,7 +246,52 @@ public class TightRopeTest {
 		
 		System.out.println(arg0);
 		
-		return null;
+ClassTree ct = trees.getTree(arg0);
+		
+		List<StatementTree> members =  (List<StatementTree>) ct.getMembers();
+		Iterator<StatementTree> i = members.iterator();
+		while (i.hasNext())
+  		  {
+			i.next();
+			if(i instanceof MethodTree)
+			{
+  			 MethodTree o = (MethodTree) i.next();
+  			 System.out.println(o.getName());
+  			 
+  			 if (o.getName().contentEquals("getNextMission"))
+  			 {
+  				 System.out.println("in iterator");
+  				 List<StatementTree> s =  (List<StatementTree>) o.getBody().getStatements();
+  				 
+  				  Iterator j = s.iterator();
+  				  
+  				  while(j.hasNext())
+  				  {
+  					  StatementTree st =  (StatementTree) j.next();
+  					 
+  					  if(st instanceof ReturnTree )
+  					  {
+  						 System.out.println(((ReturnTree) st).getExpression() );
+  						 
+  						Name id = ((IdentifierTree) ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier()).getName() ;
+  						 
+  						 System.out.println("Kind: " + id
+  						);
+//  						 ((ReturnTree) st).getExpression()
+  						 
+//  						 st.accept(new ReturnVisitor(), null);
+  						  return new Name[] {id};
+  						//Now use this name to get to the next thing I need to explore?
+  						 
+  					  }
+  				  }
+  				 
+  			 }
+			}
+  		  }
+		
+		
+		return null;	
 	}
 
 	@Override
@@ -379,7 +424,8 @@ public class TightRopeTest {
     		  
 //    		  
     	  }
-    	  else if (names != null && elemID.equalsIgnoreCase("accs."))
+    	  //hack...bad
+    	  else if (names != null && elemID.equalsIgnoreCase("accs."+names[0]))
           {
         	 for(int i = 0; i< names.length;i++)
         	 {

@@ -43,6 +43,7 @@ public class TransCircus {
          ANALYSIS = SCJAnalysis.create(compiler);
       }
       catch(SCJCompilationException e) {
+    	  System.out.println("Failed to compile sources...");
          e.getDiagnostics().print(System.out);
          System.exit(-1);
       }
