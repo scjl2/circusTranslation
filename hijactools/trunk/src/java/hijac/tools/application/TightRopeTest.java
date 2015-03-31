@@ -168,22 +168,60 @@ public class TightRopeTest {
   				  while(j.hasNext())
   				  {
   					  StatementTree st =  (StatementTree) j.next();
+  					 System.out.println("Satement: "+st + " Kind: " + st.getKind());
+  					 if (st instanceof VariableTree)
+  					 {
+  						 System.out.println("Variable: " + ((VariableTree) st).getType());
+  					 }
   					 
-  					  if(st instanceof ReturnTree )
-  					  {
-  						 System.out.println(((ReturnTree) st).getExpression() );
-  						 
-  						Name id = ((IdentifierTree) ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier()).getName() ;
-  						 
-  						 System.out.println("Kind: " + id
-  						);
-//  						 ((ReturnTree) st).getExpression()
-  						 
-//  						 st.accept(new ReturnVisitor(), null);
-  						  return new Name[] {id};
-  						//Now use this name to get to the next thing I need to explore?
-  						 
-  					  }
+  					 if (st instanceof AssignmentTree)
+  					 {
+  						 System.out.println("Assignment: " + ((AssignmentTree) st).getExpression());
+  					 }
+  					 
+  					if (st instanceof NewClassTree)
+  					{
+  						System.out.println("New Class: " + ((NewClassTree) st).getIdentifier());
+  					}
+//					  {
+//						  Name id = ((IdentifierTree) ((NewClassTree) st).getIdentifier()).getName() ;
+//						  System.out.println("Kind: " + id );
+//						  
+//						  return new Name[] {id};
+//					  }
+  					  
+  				if(st instanceof ReturnTree )
+  				{
+  					System.out.println("Return Tree:");
+//  					System.out.println( ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier() );
+  				}
+//  					  {
+//  						 System.out.println(((ReturnTree) st).getExpression() );
+//  						 
+//  						 if (((ReturnTree) st).getExpression().getKind() == Tree.Kind.NEW_CLASS  )
+//  						 {
+//  						 
+//  						Name id = ((IdentifierTree) ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier()).getName() ;
+//
+//  								 
+//  						 
+//  						 System.out.println("Kind: " + id );
+////  						 ((ReturnTree) st).getExpression()
+//  						 
+////  						 st.accept(new ReturnVisitor(), null);
+//  						  return new Name[] {id};
+////  						return null;
+//  						//Now use this name to get to the next thing I need to explore?
+//  						 }
+//  						 else
+//  						 {
+//  							 System.out.println("Nope, not a New Class");
+//  							 
+//  						 }
+//  						
+//  					  }
+  					
+  						  
   				  }
   				 
   			 }
@@ -359,7 +397,7 @@ ClassTree ct = trees.getTree(arg0);
     		  
     		names = elem.accept(new SafeletLevel2Visitor(), null);
     		
-    		
+    		System.out.println(names == null);
     		  
 //    		  SafeletModel sm = new SafeletModel(new SCJApplication(ANALYSIS), new ClassModel(new SCJApplication(ANALYSIS), elem));
 //    		  
@@ -429,6 +467,7 @@ ClassTree ct = trees.getTree(arg0);
           {
         	 for(int i = 0; i< names.length;i++)
         	 {
+        		 System.out.println("Visiting: " + elem);
         		 elem.accept(new MissionSequencerLevel2Visitor(), null);
         	 }
           }

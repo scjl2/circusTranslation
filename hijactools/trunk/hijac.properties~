@@ -65,14 +65,15 @@ SCJ_SRC = demo/accs/src
 # Configuration of SCJ & RTSJ Libraries #
 #########################################
 
-#RTSJ_LIB = demo/lib/foundation.jar
+RTSJ_LIB = demo/lib/foundation.jar
 #RTSJ_LIB=/usr/local/pkg/rtsj-ri-1.0.2.6-noarch-1/lib/foundation.jar
 #RTSJ_LIB=demo/lib_src/javax/realtime/
+#RTSJ_LIB= demo/lib2/icecapSDK/bin/javax/realtime
 
-#SCJ_LIB = demo/lib/scj.jar
+SCJ_LIB = demo/lib/scj.jar
 #SCJ_LIB = demo/lib/ri_rtsjBased_j4.fix.jar
 #SCJ_LIB = demo/lib_src/javax/safetycritical/
-SCJ_LIB = demo/lib2/icecapSDK.jar
+#SCJ_LIB = demo/lib2/icecapSDK/bin/javax/safetycritical
 
 #################################
 # Configuration of the Analyser #
