@@ -494,8 +494,8 @@ System.out.println(arg0);
 //          Set<TypeElement> supers =     ANALYSIS.getAllSuperclasses(elem);
     	  
 //    	if(  ANALYSIS.TYPES.isSubtype( elem.asType(), safelet_type) )
-  
-    	  if (elemID.equalsIgnoreCase("accs.ACCSafelet") )
+  if(ANALYSIS.TYPES.isSubtype(elem.asType(), safelet_type) )
+//    	  if (elemID.equalsIgnoreCase("accs.ACCSafelet") )
     	  {
     		 System.out.println("Found Safelet");
     		 framework.put("Safelet", elem.getSimpleName());
