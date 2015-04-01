@@ -46,6 +46,8 @@ public class SCJCompilationConfig {
       else {
          lib.add(new File(SCJ_LIB));
       }
+      
+      System.out.println("COMPILATION: SCJ Library = " + SCJ_LIB );
       String RTSJ_LIB = Config.getRTSJLib();
       if (RTSJ_LIB == null || RTSJ_LIB.equals("")) {
          /*System.err.println("[WARNING] No RTSJ library specified in " +
@@ -61,9 +63,11 @@ public class SCJCompilationConfig {
             Config.PROPERTIES_FILENAME + ".");
       }
       for (String path : Config.getSCJSrc()) {
-         System.out.println(path);
+         System.out.println("COMPILATION: Source = " +path);
          src.add(new File(path));
       }
+     
+      
       return new SCJCompilationConfig(lib, src);
    }
 

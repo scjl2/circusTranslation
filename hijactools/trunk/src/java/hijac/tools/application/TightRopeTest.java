@@ -21,6 +21,7 @@ import hijac.tools.collections.RelationImpl;
 import hijac.tools.compiler.SCJCompilationConfig;
 import hijac.tools.compiler.SCJCompilationException;
 import hijac.tools.compiler.SCJCompilationTask;
+import hijac.tools.config.Hijac;
 import hijac.tools.config.Statics;
 
 import hijac.tools.application.UncaughtExceptionHandler;
@@ -42,12 +43,15 @@ import hijac.tools.scjmsafe.checker.*;
 import hijac.tools.tightrope.translators.Level2Translator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -115,7 +119,8 @@ public class TightRopeTest {
    static {
       Statics.kickstart();
    }
-
+ 
+   private static HashMap<String, Name> framework = new HashMap<String, Name>();
  
    
    public static class SafeletLevel2Visitor implements ElementVisitor<Name[],Void>
@@ -151,6 +156,8 @@ public class TightRopeTest {
 		
 		ClassTree ct = trees.getTree(e);
 		
+		 
+		
 		List<StatementTree> members =  (List<StatementTree>) ct.getMembers();
 		Iterator<StatementTree> i = members.iterator();
 		while (i.hasNext())
@@ -168,10 +175,12 @@ public class TightRopeTest {
   				  while(j.hasNext())
   				  {
   					  StatementTree st =  (StatementTree) j.next();
+  					  
   					 System.out.println("Satement: "+st + " Kind: " + st.getKind());
   					 if (st instanceof VariableTree)
   					 {
-  						 System.out.println("Variable: " + ((VariableTree) st).getType());
+  						 System.out.println("Variable: " + ((IdentifierTree) ((NewClassTree) ((VariableTree) st).getInitializer()).getIdentifier()).getName());
+  						 return new Name[]{ ((IdentifierTree) ((NewClassTree) ((VariableTree) st).getInitializer()).getIdentifier()).getName()};
   					 }
   					 
   					 if (st instanceof AssignmentTree)
@@ -284,7 +293,7 @@ public class TightRopeTest {
 		
 		System.out.println(arg0);
 		
-ClassTree ct = trees.getTree(arg0);
+		ClassTree ct = trees.getTree(arg0);
 		
 		List<StatementTree> members =  (List<StatementTree>) ct.getMembers();
 		Iterator<StatementTree> i = members.iterator();
@@ -352,11 +361,97 @@ ClassTree ct = trees.getTree(arg0);
 	   
    }
    
+   public static class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
+   {
+
+	@Override
+	public Name[][] visit(Element arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[][] visit(Element arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[][] visitExecutable(ExecutableElement arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[][] visitPackage(PackageElement arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[][] visitType(TypeElement arg0, Void arg1) {
+System.out.println(arg0);
+		
+		ClassTree ct = trees.getTree(arg0);
+		
+		List<StatementTree> members =  (List<StatementTree>) ct.getMembers();
+		Iterator<StatementTree> i = members.iterator();
+		while (i.hasNext())
+  		  {
+			i.next();
+			if(i instanceof MethodTree)
+			{
+  			 MethodTree o = (MethodTree) i.next();
+  			 System.out.println(o.getName());
+  			 		 
+  			 
+  			 if (o.getName().contentEquals("initialize"))
+  			 {
+  				 System.out.println("in iterator");
+  				 List<StatementTree> s =  (List<StatementTree>) o.getBody().getStatements();
+  				 
+  				  Iterator j = s.iterator();
+  				  
+  				  while(j.hasNext())
+  				  {
+  					  System.out.println(j.next());
+  				  }
+  				  
+  				 
+  			 }
+			}
+  		  }
+		
+		
+		return null;	
+	}
+
+	@Override
+	public Name[][] visitTypeParameter(TypeParameterElement arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[][] visitUnknown(Element arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Name[][] visitVariable(VariableElement arg0, Void arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	   
+   }
    
    protected static void setUncaughtExceptionHandler() {
       Thread.currentThread().setUncaughtExceptionHandler(
          new UncaughtExceptionHandler());
    }
+   
+   
 
    /* Main Program */
 
@@ -372,6 +467,7 @@ ClassTree ct = trees.getTree(arg0);
          ANALYSIS = SCJAnalysis.create(compiler);
       }
       catch(SCJCompilationException e) {
+    	  System.out.println("Failed to compile...");
          e.getDiagnostics().print(System.out);
          System.exit(-1);
       }
@@ -390,12 +486,26 @@ ClassTree ct = trees.getTree(arg0);
     	  String elemID = elem.toString();
     	  //if the type we have is the safelet
     	   	  
-    	  if (elemID.equalsIgnoreCase("accs.ACCSafelet"))
+    	  TypeMirror safelet_type = (TypeMirror)
+                  ANALYSIS.get(Hijac.key("SafeletType"));
+    	  
+//    	System.out.println(  safelet_type.toString() );
+                  
+//          Set<TypeElement> supers =     ANALYSIS.getAllSuperclasses(elem);
+    	  
+//    	if(  ANALYSIS.TYPES.isSubtype( elem.asType(), safelet_type) )
+  
+    	  if (elemID.equalsIgnoreCase("accs.ACCSafelet") )
     	  {
     		 System.out.println("Found Safelet");
-    		  
+    		 framework.put("Safelet", elem.getSimpleName());
     		  
     		names = elem.accept(new SafeletLevel2Visitor(), null);
+    		
+    		for (int i = 0; i<names.length;i++)
+    		{
+    			framework.put("TopLevelMissionSequencer", names[i]);
+    		}
     		
     		System.out.println(names == null);
     		  
@@ -462,19 +572,48 @@ ClassTree ct = trees.getTree(arg0);
     		  
 //    		  
     	  }
-    	  //hack...bad
-    	  else if (names != null && elemID.equalsIgnoreCase("accs."+names[0]))
-          {
-        	 for(int i = 0; i< names.length;i++)
-        	 {
-        		 System.out.println("Visiting: " + elem);
-        		 elem.accept(new MissionSequencerLevel2Visitor(), null);
-        	 }
-          }
+    	  
 //    	  
       }
      
+      Name[] missionNames = null;
       
+      if (names != null )
+      {
+    	  System.out.println("Mission Sequencer Visiting");
+    	 for(int i = 0; i< names.length;i++)
+    	 {
+    		TypeElement elem = ANALYSIS.getTypeElement("accs."+names[i]);
+    		 
+    		 System.out.println("Visiting: " + elem);
+    		missionNames = elem.accept(new MissionSequencerLevel2Visitor(), null);
+    	 }
+      }
+      
+      
+     
+      Name[][] clusters = null;
+      
+      System.out.println(missionNames == null);
+      
+      if (missionNames != null )
+      {
+    	  System.out.println("Mission Visiting");
+    	 for(int i = 0; i< missionNames.length;i++)
+    	 {
+    		 TypeElement elem = ANALYSIS.getTypeElement("accs."+missionNames[i]);
+    		 System.out.println("Visiting: " + elem);
+    		 
+    		clusters = elem.accept(new MissionLevel2Visitor(), null);
+    	 }
+      }
+      
+      
+      System.out.println("Framework Printing");
+      for(String s : framework.keySet())
+      {
+    	  System.out.println("Framework: "+ s+" = " +framework.get(s));
+      }
 //      Level2Translator circus_trans = new Level2Translator();
 //     
 //      circus_trans.setTarget((Target)t);
