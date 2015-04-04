@@ -81,13 +81,13 @@ public class SCJCompilationTask extends JavacTask {
       task.setProcessors(processors);
    }
 
-//   public void addTaskListener(TaskListener listener) {
-//      task.addTaskListener(listener);
-//   }
+   public void addTaskListener(TaskListener listener) {
+      task.addTaskListener(listener);
+   }
 
-//   public void removeTaskListener(TaskListener listener) {
-//      task.removeTaskListener(listener);
-//   }
+   public void removeTaskListener(TaskListener listener) {
+      task.removeTaskListener(listener);
+   }
 
    /* Implementation of JavacTask. */
 
@@ -142,4 +142,6 @@ public class SCJCompilationTask extends JavacTask {
    public JavacDiagnostics getDiagnostics() {
       return DIAGNOSTICS;
    }
+
+
 }

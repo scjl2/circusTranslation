@@ -41,6 +41,7 @@ import hijac.tools.modelgen.targets.ClassTarget;
 import hijac.tools.scjmsafe.translation.*;
 import hijac.tools.scjmsafe.checker.*;
 import hijac.tools.tightrope.translators.Level2Translator;
+import hijac.tools.tightrope.visitors.ReturnVisitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,8 +52,10 @@ import java.util.Set;
 import java.util.HashSet;
 
 import javax.lang.model.element.TypeElement;
+
 import javax.lang.model.type.TypeMirror;
 
+import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.ArrayTypeTree;
@@ -78,8 +81,11 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.IntersectionTypeTree;
 import com.sun.source.tree.LabeledStatementTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -96,6 +102,7 @@ import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
+
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
@@ -155,8 +162,7 @@ public class TightRopeTest {
 		System.out.println(e);
 		
 		ClassTree ct = trees.getTree(e);
-		
-		 
+			 
 		
 		List<StatementTree> members =  (List<StatementTree>) ct.getMembers();
 		Iterator<StatementTree> i = members.iterator();
@@ -177,22 +183,22 @@ public class TightRopeTest {
   					  StatementTree st =  (StatementTree) j.next();
   					  
   					 System.out.println("Satement: "+st + " Kind: " + st.getKind());
-  					 if (st instanceof VariableTree)
-  					 {
-  						 System.out.println("Variable: " + ((IdentifierTree) ((NewClassTree) ((VariableTree) st).getInitializer()).getIdentifier()).getName());
-  						 return new Name[]{ ((IdentifierTree) ((NewClassTree) ((VariableTree) st).getInitializer()).getIdentifier()).getName()};
-  					 }
-  					 
-  					 if (st instanceof AssignmentTree)
-  					 {
-  						 System.out.println("Assignment: " + ((AssignmentTree) st).getExpression());
-  					 }
-  					 
-  					if (st instanceof NewClassTree)
-  					{
-  						System.out.println("New Class: " + ((NewClassTree) st).getIdentifier());
-  					}
-//					  {
+//  					 if (st instanceof VariableTree)
+//  					 {
+//  						 System.out.println("Variable: " + ((IdentifierTree) ((NewClassTree) ((VariableTree) st).getInitializer()).getIdentifier()).getName());
+//  						 return new Name[]{ ((IdentifierTree) ((NewClassTree) ((VariableTree) st).getInitializer()).getIdentifier()).getName()};
+//  					 }
+//  					 
+//  					 if (st instanceof AssignmentTree)
+//  					 {
+//  						 System.out.println("Assignment: " + ((AssignmentTree) st).getExpression());
+//  					 }
+//  					 
+//  					if (st instanceof NewClassTree)
+//  					{
+//  						System.out.println("New Class: " + ((NewClassTree) st).getIdentifier());
+//  					}
+////					  {
 //						  Name id = ((IdentifierTree) ((NewClassTree) st).getIdentifier()).getName() ;
 //						  System.out.println("Kind: " + id );
 //						  
@@ -201,7 +207,8 @@ public class TightRopeTest {
   					  
   				if(st instanceof ReturnTree )
   				{
-  					System.out.println("Return Tree:");
+  					System.out.println("Return Tree Found");
+  					return st.accept(new ReturnVisitor(), null);
 //  					System.out.println( ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier() );
   				}
 //  					  {
@@ -241,6 +248,8 @@ public class TightRopeTest {
 		return null;
 	}
 
+
+	
 	@Override
 	public Name[] visitTypeParameter(TypeParameterElement e, Void p) {
 		// TODO Auto-generated method stub
@@ -268,6 +277,7 @@ public class TightRopeTest {
 	public Name[] visit(Element arg0) {
 		// TODO Auto-generated method stub
 		return null;
+		
 	}
 
 	@Override
@@ -291,48 +301,62 @@ public class TightRopeTest {
 	@Override
 	public Name[] visitType(TypeElement arg0, Void arg1) {
 		
-		System.out.println(arg0);
+		System.out.println("In MS Visitor for " + arg0);
 		
 		ClassTree ct = trees.getTree(arg0);
+		System.out.println("MS Visitor class tree: " + ct);
 		
 		List<StatementTree> members =  (List<StatementTree>) ct.getMembers();
+		System.out.println("MS Visitor members: " + members);
+		
 		Iterator<StatementTree> i = members.iterator();
 		while (i.hasNext())
   		  {
-			i.next();
-			if(i instanceof MethodTree)
+			Tree tlst = i.next();	
+			System.out.println("MS Visitor i="+i);
+			
+			if(tlst instanceof VariableTree)
 			{
-  			 MethodTree o = (MethodTree) i.next();
-  			 System.out.println(o.getName());
+				System.out.println("MS VIsitor: Variable Tree Found");
+			}
+						
+			if(tlst instanceof MethodTree) 
+			{
+  			 MethodTree o = (MethodTree)tlst;
+  			 System.out.println("MS Visitor Method Tree = "+o.getName());
   			 
   			 if (o.getName().contentEquals("getNextMission"))
   			 {
-  				 System.out.println("in iterator");
-  				 List<StatementTree> s =  (List<StatementTree>) o.getBody().getStatements();
+  				 System.out.println("Release the Visitor!");
+  				 o.accept(new ReturnVisitor(),null);
   				 
-  				  Iterator j = s.iterator();
-  				  
-  				  while(j.hasNext())
-  				  {
-  					  StatementTree st =  (StatementTree) j.next();
-  					 
-  					  if(st instanceof ReturnTree )
-  					  {
-  						 System.out.println(((ReturnTree) st).getExpression() );
-  						 
-  						Name id = ((IdentifierTree) ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier()).getName() ;
-  						 
-  						 System.out.println("Kind: " + id
-  						);
-//  						 ((ReturnTree) st).getExpression()
-  						 
-//  						 st.accept(new ReturnVisitor(), null);
-  						  return new Name[] {id};
-  						//Now use this name to get to the next thing I need to explore?
-  						 
-  					  }
-  				  }
-  				 
+//  				 System.out.println("in iterator");
+//  				 List<StatementTree> s =  (List<StatementTree>) o.getBody().getStatements();
+//  				 
+//  				  Iterator j = s.iterator();
+//  				  
+//  				  while(j.hasNext())
+//  				  {
+//  					  StatementTree st =  (StatementTree) j.next();
+//  					 System.out.println("MS Visitor: " + st);
+//  					  
+//  					  if(st instanceof ReturnTree )
+//  					  {
+//  						 System.out.println("Mission Sequencer Return Tree FOUND: "+ ((ReturnTree) st).getExpression() );
+//  						 
+////  						Name id = ((IdentifierTree) ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier()).getName() ;
+//  						 
+//  						 return st.accept(new ReturnVisitor(), null);
+////  						 System.out.println("Kind: " + id  );
+////  						 ((ReturnTree) st).getExpression()
+//  						 
+////  						 st.accept(new ReturnVisitor(), null);
+////  						  return new Name[] {id};
+//  						//Now use this name to get to the next thing I need to explore?
+//  						 
+//  					  }
+//  				  }
+//  				 
   			 }
 			}
   		  }
@@ -446,6 +470,10 @@ System.out.println(arg0);
 	   
    }
    
+ 
+   
+  
+   
    protected static void setUncaughtExceptionHandler() {
       Thread.currentThread().setUncaughtExceptionHandler(
          new UncaughtExceptionHandler());
@@ -478,6 +506,7 @@ System.out.println(arg0);
       type_elements = ANALYSIS.getTypeElements();
       
       Name[] names = null;
+      String packagePrefix = null;
      
       //for all the types in the program
       for(TypeElement elem : type_elements) 
@@ -486,18 +515,27 @@ System.out.println(arg0);
     	  String elemID = elem.toString();
     	  //if the type we have is the safelet
     	   	  
-    	  TypeMirror safelet_type = (TypeMirror)
-                  ANALYSIS.get(Hijac.key("SafeletType"));
+    	  TypeMirror safelet_type = (TypeMirror) ANALYSIS.get(Hijac.key("SafeletType"));
     	  
 //    	System.out.println(  safelet_type.toString() );
                   
 //          Set<TypeElement> supers =     ANALYSIS.getAllSuperclasses(elem);
-    	  
+//    	  System.out.println(elem.getInterfaces().toString());
 //    	if(  ANALYSIS.TYPES.isSubtype( elem.asType(), safelet_type) )
-  if(ANALYSIS.TYPES.isSubtype(elem.asType(), safelet_type) )
+    	 
+    			  
+    	  
+    	if( elem.getInterfaces().toString().contains("Safelet"))
 //    	  if (elemID.equalsIgnoreCase("accs.ACCSafelet") )
     	  {
     		 System.out.println("Found Safelet");
+    		 
+    		 packagePrefix = elem.getQualifiedName().toString();
+    		 int firstIndex = packagePrefix.indexOf(elem.getSimpleName().toString());
+    		 packagePrefix= packagePrefix.substring(0,firstIndex);
+    		 
+//    		 System.out.println("PACKAGE PREFIX: " +packagePrefix);
+    		 
     		 framework.put("Safelet", elem.getSimpleName());
     		  
     		names = elem.accept(new SafeletLevel2Visitor(), null);
@@ -583,7 +621,8 @@ System.out.println(arg0);
     	  System.out.println("Mission Sequencer Visiting");
     	 for(int i = 0; i< names.length;i++)
     	 {
-    		TypeElement elem = ANALYSIS.getTypeElement("accs."+names[i]);
+//    		 System.out.println(packagePrefix +names[i]);
+    		TypeElement elem = ANALYSIS.getTypeElement(packagePrefix +names[i]);
     		 
     		 System.out.println("Visiting: " + elem);
     		missionNames = elem.accept(new MissionSequencerLevel2Visitor(), null);
@@ -601,7 +640,7 @@ System.out.println(arg0);
     	  System.out.println("Mission Visiting");
     	 for(int i = 0; i< missionNames.length;i++)
     	 {
-    		 TypeElement elem = ANALYSIS.getTypeElement("accs."+missionNames[i]);
+    		 TypeElement elem = ANALYSIS.getTypeElement(packagePrefix +missionNames[i]);
     		 System.out.println("Visiting: " + elem);
     		 
     		clusters = elem.accept(new MissionLevel2Visitor(), null);
