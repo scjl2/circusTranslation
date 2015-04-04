@@ -708,11 +708,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="455.69475"
-     inkscape:cy="10.753098"
+     inkscape:zoom="0.9899495"
+     inkscape:cx="356.81626"
+     inkscape:cy="625.99267"
      inkscape:document-units="px"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1855"
      inkscape:window-height="1056"
@@ -907,26 +907,6 @@
        id="path3081-4-3"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
-    <rect
-       style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.57109386px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       id="rect2989-3-3-5"
-       width="227.72266"
-       height="43.974922"
-       x="258.18591"
-       y="360.25055" />
-    <text
-       xml:space="preserve"
-       style="font-size:20px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="262.15958"
-       y="407.77698"
-       id="text2991-0-8-9"
-       sodipodi:linespacing="125%"
-       transform="scale(1.0456519,0.95634121)"><tspan
-         sodipodi:role="line"
-         x="262.15958"
-         y="407.77698"
-         style="font-size:20px"
-         id="tspan3189">Visit Sequencer</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:1.14200866;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
        d="m 964.84225,405.16549 49.67955,-0.42128"
@@ -939,18 +919,18 @@
        width="198.68042"
        height="39.607956"
        x="272.70703"
-       y="540.35535" />
+       y="360.35535" />
     <text
        xml:space="preserve"
        style="font-size:38.25364685px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="277.46109"
-       y="591.90192"
+       y="403.68414"
        id="text2991-0-8-9-8"
        sodipodi:linespacing="125%"
        transform="scale(1.0456519,0.95634121)"><tspan
          sodipodi:role="line"
          x="277.46109"
-         y="591.90192"
+         y="403.68414"
          style="font-size:20px"
          id="tspan3253">Visit Sequencer</tspan></text>
     <path
@@ -1236,7 +1216,7 @@
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:none"
-       d="m 256.81329,993.0113 -101.5653,-0.052"
+       d="m 256.81329,813.0113 -101.5653,-0.052"
        id="path3079-6-5-6"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
@@ -1270,30 +1250,24 @@
        id="path2995-2-1-5"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:1.53755879;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
-       d="m 372.04724,404.50462 0,25.04167"
-       id="path2995-2-1-65"
-       inkscape:connector-type="polyline"
-       inkscape:connector-curvature="3" />
     <rect
        style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:0.51901752px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect2989-3-3-8"
        width="191.65311"
        height="43.156322"
        x="510.4809"
-       y="971.72229" />
+       y="791.72229" />
     <text
        xml:space="preserve"
        style="font-size:38.25364685px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="493.66321"
-       y="1043.0966"
+       y="854.87891"
        id="text2991-0-8-9-8-2"
        sodipodi:linespacing="125%"
        transform="scale(1.0456519,0.95634121)"><tspan
          sodipodi:role="line"
          x="493.66321"
-         y="1043.0966"
+         y="854.87891"
          style="font-size:20px"
          id="tspan3309">Visit Schedulable</tspan></text>
     <path
@@ -1527,47 +1501,9 @@
        id="path2995-2-1-5-5"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
-    <text
-       xml:space="preserve"
-       style="font-size:38.25364685px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="355.84805"
-       y="480.97449"
-       id="text2991-0-8-9-0-0"
-       sodipodi:linespacing="125%"
-       transform="scale(1.0456519,0.95634121)"><tspan
-         sodipodi:role="line"
-         x="359.03165"
-         y="480.97449"
-         style="font-size:20px;text-align:center;text-anchor:middle"
-         id="tspan3189-3-5">More </tspan><tspan
-         sodipodi:role="line"
-         x="355.84805"
-         y="505.97449"
-         style="font-size:20px;text-align:center;text-anchor:middle"
-         id="tspan3238-6">Sequencers?</tspan><tspan
-         sodipodi:role="line"
-         x="355.84805"
-         y="530.97449"
-         style="font-size:20px;text-align:center;text-anchor:middle"
-         id="tspan3236-4" /></text>
-    <rect
-       style="fill:none;stroke:#000000;stroke-width:0.73266852;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="rect2989-3-3-5-7-4"
-       width="127.58969"
-       height="129.13422"
-       x="-630.21704"
-       y="895.01172"
-       transform="matrix(0.95229958,-0.30516474,0.94984469,0.31272202,0,0)"
-       ry="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
-       d="m 372.04724,512.97905 0,25.04167"
-       id="path2995-2-1-65-2"
-       inkscape:connector-type="polyline"
-       inkscape:connector-curvature="3" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
-       d="m 372.04724,579.11565 0,25.04167"
+       d="m 372.04724,399.11565 0,25.04167"
        id="path2995-2-1-65-2-4"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
@@ -1577,41 +1513,41 @@
        width="178.92244"
        height="39.607956"
        x="282.58603"
-       y="736.10468" />
+       y="556.10468" />
     <text
        xml:space="preserve"
        style="font-size:38.25364685px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="282.86661"
-       y="797.64386"
+       y="609.42609"
        id="text2991-0-8-9-8-8"
        sodipodi:linespacing="125%"
        transform="scale(1.0456519,0.95634121)"><tspan
          sodipodi:role="line"
          x="282.86661"
-         y="797.64386"
+         y="609.42609"
          style="font-size:20px"
          id="tspan3253-74">Visit Mission</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:38.25364685px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="355.14493"
-       y="680.89478"
+       y="492.677"
        id="text2991-0-8-9-0-0-2"
        sodipodi:linespacing="125%"
        transform="scale(1.0456519,0.95634121)"><tspan
          sodipodi:role="line"
          x="358.32852"
-         y="680.89478"
+         y="492.677"
          style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan3238-6-2">Sequencer has </tspan><tspan
          sodipodi:role="line"
          x="355.14493"
-         y="705.89478"
+         y="517.677"
          style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan4403">more missions</tspan><tspan
          sodipodi:role="line"
          x="355.14493"
-         y="730.89478"
+         y="542.677"
          style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan3236-4-6" /></text>
     <rect
@@ -1619,19 +1555,19 @@
        id="rect2989-3-3-5-7-4-7"
        width="131.24432"
        height="133.01585"
-       x="-720.12402"
-       y="994.05475"
+       x="-485.28445"
+       y="758.28503"
        transform="matrix(0.9257818,-0.37805828,0.92212653,0.38688843,0,0)"
        ry="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
-       d="m 372.04724,707.44563 0,25.04167"
+       d="m 372.04724,527.44563 0,25.04167"
        id="path2995-2-1-65-2-4-9"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
-       d="m 372.04724,774.19558 0,26.41218"
+       d="m 372.04724,594.19558 0,26.41218"
        id="path2995-2-1-5-0"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
@@ -1639,23 +1575,23 @@
        xml:space="preserve"
        style="font-size:38.25364685px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="355.84805"
-       y="873.3075"
+       y="685.08972"
        id="text2991-0-8-9-0-2"
        sodipodi:linespacing="125%"
        transform="scale(1.0456519,0.95634121)"><tspan
          sodipodi:role="line"
          x="355.84805"
-         y="873.3075"
+         y="685.08972"
          style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan3236-2">Mission</tspan><tspan
          sodipodi:role="line"
          x="359.03165"
-         y="898.3075"
+         y="710.08972"
          style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan4510">has more </tspan><tspan
          sodipodi:role="line"
          x="355.84805"
-         y="923.3075"
+         y="735.08972"
          style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan4514">Schedulables</tspan></text>
     <rect
@@ -1663,13 +1599,13 @@
        id="rect2989-3-3-5-7-5"
        width="133.741"
        height="135.66464"
-       x="-873.71588"
-       y="1154.42"
+       x="-661.25916"
+       y="940.93347"
        transform="matrix(0.90849932,-0.41788633,0.90412244,0.42727346,0,0)"
        ry="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend)"
-       d="m 372.76153,915.6483 0,23.84614"
+       d="m 372.76153,735.6483 0,23.84614"
        id="path2995-2-1-5-5-5"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
@@ -1683,18 +1619,18 @@
        xml:space="preserve"
        style="font-size:38.25364685px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="357.94998"
-       y="1037.1616"
+       y="848.94397"
        id="text2991-0-8-9-0-2-2"
        sodipodi:linespacing="125%"
        transform="scale(1.0456519,0.95634121)"><tspan
          sodipodi:role="line"
          x="357.94998"
-         y="1037.1616"
+         y="848.94397"
          style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan4514-6">Schedulable is</tspan><tspan
          sodipodi:role="line"
          x="357.94998"
-         y="1062.1616"
+         y="873.94397"
          style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan4551">Sequencer</tspan></text>
     <rect
@@ -1702,67 +1638,67 @@
        id="rect2989-3-3-5-7-5-4"
        width="126.39961"
        height="128.17781"
-       x="-1070.0443"
-       y="1356.259"
+       x="-850.36938"
+       y="1135.5876"
        transform="matrix(0.9146902,-0.4041557,0.9105664,0.41336282,0,0)"
        ry="0" />
     <path
        style="fill:none;stroke:#000000;stroke-width:1.84438133;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mstart-8);marker-end:none"
-       d="m 507.91331,994.8704 -19.80421,-0.052"
+       d="m 507.91331,814.8704 -19.80421,-0.052"
        id="path3079-6-5-6-3"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:none"
-       d="m 607.14286,859.71919 0,111.79905"
+       d="m 607.14286,679.71919 0,111.79905"
        id="path2995-5-6-4-0"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend-43-5)"
-       d="m 607.65848,860.18191 -113.05055,0.1982"
+       d="m 607.65848,680.18191 -113.05055,0.1982"
        id="path3081-4-4-6"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:none"
-       d="m 156.6647,556.76488 0,437.08404"
+       d="m 156.6647,376.76488 0,437.08404"
        id="path2995-5-6-4-0-4"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend-43-5)"
-       d="m 156.14908,557.2276 113.05055,0.1982"
+       d="m 156.14908,377.2276 113.05055,0.1982"
        id="path3081-4-4-6-0"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:none"
-       d="m 250.6549,858.43212 -45.3182,-0.052"
+       d="m 250.6549,678.43212 -45.3182,-0.052"
        id="path3079-6-5-6-8"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:none"
-       d="m 204.54948,656.03052 0,204.24935"
+       d="m 204.54948,476.03052 0,204.24935"
        id="path2995-5-6-4-0-4-9"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Mend-43-5)"
-       d="m 205.20917,656.21986 44.26064,0.1982"
+       d="m 205.20917,476.21986 44.26064,0.1982"
        id="path3081-4-4-6-0-7"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:none"
-       d="m 490.86033,658.00747 101.0919,-0.0442"
+       d="m 490.86033,478.00747 101.0919,-0.0442"
        id="path3079-6-5-6-4"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
     <path
        style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:none"
-       d="m 591.00891,295.6775 0,363.04113"
+       d="m 591.00891,295.1699 0,183.7441"
        id="path2995-5-6-4-0-4-0"
        inkscape:connector-type="polyline"
        inkscape:connector-curvature="3" />
@@ -1845,61 +1781,61 @@
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="228.81378"
-       y="983.9046"
+       y="803.9046"
        id="text2991-3-9-3-7"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2993-0-8-0-4"
          x="228.81378"
-         y="983.9046"
+         y="803.9046"
          style="font-size:16px">Yes</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="481.45288"
-       y="984.33978"
+       y="804.33978"
        id="text2991-3-9-3-7-4"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2993-0-8-0-4-5"
          x="481.45288"
-         y="984.33978"
+         y="804.33978"
          style="font-size:16px">No</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="375.38684"
-       y="929.79156"
+       y="749.79156"
        id="text2991-3-9-3-7-0"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2993-0-8-0-4-2"
          x="375.38684"
-         y="929.79156"
+         y="749.79156"
          style="font-size:16px">Yes</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="231.21005"
-       y="848.97937"
+       y="668.97937"
        id="text2991-3-9-3-7-4-9"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2993-0-8-0-4-5-2"
          x="231.21005"
-         y="848.97937"
+         y="668.97937"
          style="font-size:16px">No</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="490.81924"
-       y="650.9895"
+       y="470.9895"
        id="text2991-3-9-3-7-4-8"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2993-0-8-0-4-5-3"
          x="490.81924"
-         y="650.9895"
+         y="470.9895"
          style="font-size:16px">No</tspan></text>
     <text
        xml:space="preserve"
@@ -1928,26 +1864,14 @@
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="378.41733"
-       y="530.78131"
-       id="text2991-3-9-3-7-0-9"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan2993-0-8-0-4-2-1"
-         x="378.41733"
-         y="530.78131"
-         style="font-size:16px">Yes</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="383.46808"
-       y="725.74078"
+       y="545.74078"
        id="text2991-3-9-3-7-0-8"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan2993-0-8-0-4-2-14"
          x="383.46808"
-         y="725.74078"
+         y="545.74078"
          style="font-size:16px">Yes</tspan></text>
   </g>
 </svg>

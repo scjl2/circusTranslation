@@ -19,17 +19,24 @@
 
 \section{Analysis Phase}
 
-The analysis phase explores the program hierarchically, mirroring its structure. This phase captures information about the tiers, the objects themselves, and generates a unique identifier for each object. This information is used by the next two phases.
+The current analysis phase takes an SCJ program, compiles it, and analyses it. The output of this section is a list of trees the represent the classes. Since this is SCJ agnostic, we intend to reuse this section. To check this, we have already compiled and analysed a Level~2 program using the current implementation of the tool. The list of trees is used during the translation phase, which we describe next.
 
-\subsection{Paradigm Objects}
-Upon discovery, each object (apart from the safelet) is assigned a unique identifier based upon the class's name. Multiple instances of a class result in multiple identifiers. The location of the discovered objects within the program is important for the translation and is recorded.
+\section{Translation}
 
-\subsubsection{Control Tier} 
-There is only one safelet in the system. To identify the program's safelet we find the class that implements \texttt{javax.safetycritical.Safelet}. To capture the top-level mission sequencers, we identify any class that extends \texttt{javax.safetycritical.MissionSequencer} and could be returned by the safelet's \texttt{getSequencer()} method. The safelet and the top-level mission sequencers are reordered as being part of the Control Tier.  \\
+The major difference between Level~1 and Level~2 programs is the ability to nest mission sequencers and so create a tiered program heirarchy, with clusters of missions and schedulables nested inside other missions. becasue of this key difference, we approach the translation in a heirarchical way. Figure~\ref{fig:translationFlow} shows a flowchart of the translation process. 
 
-\begin{ttSection}
-ControlTier = Safelet and TopLevelMissionSequencers
-\end{ttSection}
+\begin{figure}
+\includegraphics[scale=0.5]{translation.pdf}
+\caption{Flowchart of our Translation Process \label{fig:translationFlow} }
+\end{figure}
+
+At the top of the diagram we take in the SCJ Program and compile and analyse it, as we describe in the previous section. Then we begin the translation phase. Starting at the top of the program heirarchy, with the safelet, we find the tree belonging to each of the objects within the system. The safelet can be identified easily becasue there is only one in the program. The other objects are identified during the translation process, as we traverse the program's heirarchy, and are explored in that order to ensure that we caputre the heirarchy of the program correctly. beacsue eash class in the program is represented by a tree, we use the visitor pattern to traverse the different types of node that we might find in each tree and extract the information that we need for our translation.
+
+Upon discovery, each object (apart from the safelet) is assigned a unique identifier based upon the class's name. Multiple instances of a class result in multiple identifiers. This identifier is used in our model as a parameter to the processes representing that class. The location of the discovered objects within the program is important for the translation and is recorded.
+
+\subsection{Find and Visit Safelet}
+
+Becasue there is only one safelet in a program, to find the program's safelet we identify the class in the program that implements \texttt{javax.safetycritical.Safelet}.
 
 \begin{ttSection}
 Safelet = findSafelet()\\
@@ -39,13 +46,27 @@ for each class in the system, \\
 if the class implements javax.safetycritical.Safelet then return it, else continue
 \end{ttSection}
 
-\begin{ttSection}
-TopLevelMissionSequencers = findTLMS(safelet)\\
+Once the safelet is identified we visit it and extract the contents of the \texttt{initializeApplication()} and \texttt{getSequencer()} methods, as well as any program-defined methods. 
 
-findTLMS(safelet) = each possible return value of safelet.getSequencer() that extends javax.safetycritical.MissionSequencer
-\end{ttSection}
+The return values of the \texttt{getSequencer()} method are the top-level mission sequencers. The names of the classes that are top-level mission sequencers are collected and used in the next stage of the translation. 
 
-\subsubsection{Tier 0}
+Finally, the name of the safelet class is recorded for use in the translation of the high-level network of the processes in the model.
+
+\subsection{Visit Sequencer}
+
+This translation stage makes use of the top-level sequencer names recorded as the return values from the sfaelet's \texttt{getSequencer()} method. It is also used to translate any nested mission sequencers that are found during the visiting of schedulables. We discus this further in Section~\ref{sec:schedulables}.
+
+We explore all of the missions that a mission sequencer can return and then all of the schedulables that each of its missions can register before moving on to the next mission sequencer. 
+
+When visiting a mission sequencer
+
+
+\begin{itemize}
+\item getNextMission
+\end{itemize}
+
+\subsection{Visit Mission}
+
 Each class extends \texttt{javax.safetycritical.Mission} that may be returned by a top-level mission sequencer indicates a cluster in Tier 0. A cluster is a mission and its schedulables. To find the schedulables of a mission we find any class that implements \texttt{javax.safetycritical.ManagedSchedulable} that may be registered during that mission's \texttt{initialize()} method. 
 
 \begin{ttSection}
@@ -60,7 +81,14 @@ Schedulables = findSchedulables(mission)\\
 findSchedulables(mission) = each class that implements \texttt{javax.safetycritical.ManagedSchedulable} and may be registered in mission.initialize
 \end{ttSection}
 
-\subsubsection{Nested Tiers}
+\begin{itemize}
+\item initialize
+\item cleanUp
+\end{itemize}
+
+\subsection{Visit Schedulable}
+\label{sec:schedulables}
+
 If there are one or more schedulables in the tier above that extends \texttt{javax.safetycritical.MissionSequencer} then a nested tier is needed. Nested tiers are composed of clusters in the same way as Tier 0. Each class that extends \texttt{javax.safetycritical.Mission} that may be returned by a mission sequencer in the tier above starts a new cluster. Again, to find the schedulables of a mission we find any class that implements \texttt{javax.safetycritical.ManagedSchedulable} that may be registered during that mission's \texttt{initialize()} method. If any of these schedulables are mission sequencers we begin the process for Nested Tiers again, else we have explored all of the program.
 
 \begin{ttSection}
@@ -76,6 +104,50 @@ Schedulables = findSchedulables(mission)\\
 
 findSchedulables(mission) = each class that implements \texttt{javax.safetycritical.ManagedSchedulable} and may be registered in mission.initialize
 \end{ttSection}
+
+
+\item Handlers
+\begin{itemize}
+\item handleAsyncEvent
+\end{itemize}
+\item Managed Thread
+\begin{itemize}
+\item run
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Non-Paradigm Objects}
 
@@ -96,7 +168,10 @@ else\\
 continue
 \end{ttSection}
 
-\section{Low-Level Translation}
+
+\subsection{Translate}
+
+
 
 The Low-Level Translation takes the set of paradigm object and the set of non-paradigm objects from the analysis. We iterate through these two sets, get the template for the type of object we are dealing with, build the data model for that object, and use the Freemarker template engine to combine these to produce the specification for that object. 
 
@@ -119,40 +194,5 @@ model = buildDataModel(object, 'nonP'
 
 combine(model, template)
 \end{ttSection}
-
-For each paradigm object we extract the relevant methods and check for any program-specific methods, extracting them if they exist.  Extracting methods and translating expressions here can likely reuse previous work.\\
-
-The relevant methods for each paradigm object are: 
-\begin{itemize}
-\item Safelet
-\begin{itemize}
-\item initializeApplication
-\item getSequencer
-\end{itemize}
-\item Mission Sequencer
-\begin{itemize}
-\item getNextMission
-\end{itemize}
-\item Mission 
-\begin{itemize}
-\item initialize
-\item cleanUp
-\end{itemize}
-\item Handlers
-\begin{itemize}
-\item handleAsyncEvent
-\end{itemize}
-\item Managed Thread
-\begin{itemize}
-\item run
-\end{itemize}
-\end{itemize}
-
-
-\section{High-Level Translation}
-%don't forget vars
-
-
-
 
 \end{document}
