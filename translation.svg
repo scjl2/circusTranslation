@@ -13,7 +13,7 @@
    height="1052.3622"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.5 r10040"
+   inkscape:version="0.48.4 r9939"
    sodipodi:docname="translation.svg">
   <defs
      id="defs4">
@@ -708,15 +708,15 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="66.528995"
-     inkscape:cy="449.47872"
+     inkscape:zoom="1.979899"
+     inkscape:cx="455.69475"
+     inkscape:cy="10.753098"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer3"
      showgrid="false"
-     inkscape:window-width="1309"
-     inkscape:window-height="744"
-     inkscape:window-x="57"
+     inkscape:window-width="1855"
+     inkscape:window-height="1056"
+     inkscape:window-x="65"
      inkscape:window-y="24"
      inkscape:window-maximized="1" />
   <metadata
@@ -745,20 +745,20 @@
     <text
        xml:space="preserve"
        style="font-size:38.25364685px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="261.40665"
-       y="187.17557"
+       x="353.11539"
+       y="184.5349"
        id="text2991-0-8"
        sodipodi:linespacing="125%"
        transform="scale(1.0456519,0.95634121)"><tspan
          sodipodi:role="line"
-         x="261.40665"
-         y="187.17557"
-         style="font-size:20px"
+         x="353.11539"
+         y="184.5349"
+         style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan3101-7">Find and Visit</tspan><tspan
          sodipodi:role="line"
-         x="261.40665"
-         y="212.17557"
-         style="font-size:20px"
+         x="353.11539"
+         y="209.5349"
+         style="font-size:20px;text-align:center;text-anchor:middle"
          id="tspan3188">Safelet</tspan></text>
   </g>
   <g
@@ -854,7 +854,7 @@
          id="flowPara3266" /></flowRoot>    <text
        xml:space="preserve"
        style="font-size:38.25364685px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       x="325.31161"
+       x="366.13193"
        y="35.417713"
        id="text2991-0"
        sodipodi:linespacing="125%"
@@ -862,17 +862,17 @@
          sodipodi:role="line"
          x="325.31161"
          y="35.417713"
-         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Saab;-inkscape-font-specification:Saab"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Saab;-inkscape-font-specification:Saab;text-anchor:middle;text-align:center"
          id="tspan5941">Compile </tspan><tspan
          sodipodi:role="line"
          x="325.31161"
          y="60.417713"
-         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Saab;-inkscape-font-specification:Saab"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Saab;-inkscape-font-specification:Saab;text-anchor:middle;text-align:center"
          id="tspan3099">and </tspan><tspan
          sodipodi:role="line"
          x="325.31161"
          y="85.417709"
-         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Saab;-inkscape-font-specification:Saab"
+         style="font-size:20px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Saab;-inkscape-font-specification:Saab;text-anchor:middle;text-align:center"
          id="tspan3101">Analyse</tspan></text>
     <flowRoot
        xml:space="preserve"
