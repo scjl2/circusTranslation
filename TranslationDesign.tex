@@ -55,6 +55,32 @@ The output of this phase is a list of trees the represent the classes in the pro
 \label{sec:exploration}
 
 %RESTRICTIONS
+Further to the restrictions placed on input programs mentioned in Section~\ref{sec:analysis} there are restrictions that we place on programs to allow the exploration phase to extract the data we need.
+
+%based on Frank's
+
+% Needs
+\begin{itemize}
+\item Objects in separate files
+\item SCJ v 0.96 is what we model
+\end{itemize}
+
+%Helpful -- Simplification
+\begin{itemize}
+\item Inner and anonymous classes
+\item one-level of inheritance
+\item hardware interaction restricted to schedulables %downside, cannot read thigns directly into mission memoery, must use a schedulable to do it.
+\end{itemize}
+
+%Features not modelled
+\begin{itemize}
+\item Artefacts of SCJ implementation atop RTSJ, eg BoundAsyncEventHandler (not available to SCJ programs anyway
+\item classes in Scheduling and Realted activities, expect for Services.setCeiling which is modelled in teh mission
+\item Clock class and timing, aaprt from Absolute and Relative time (although all times in our models are relavtive.
+\item I/O classes, likce ConsoleConenction
+\item Java Native Interface
+
+\end{itemize}
 
 Because the analysis phase outputs a representation of each class in the program as tree, we use the visitor pattern to explore the different types of element that we might find in each tree and extract the variables, method contents, and names of the next classes to visit. This phase may make use of some annotations to speed up the discovery of information by packaging it in the annotations instead of requiring the tool to explore the program for it. These annotations are shown in Table~\ref{tab:annotations}.
 
