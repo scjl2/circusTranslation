@@ -58,28 +58,37 @@ The output of this phase is a list of trees the represent the classes in the pro
 
 Because the analysis phase outputs a representation of each class in the program as tree, we use the visitor pattern to explore the different types of element that we might find in each tree and extract the variables, method contents, and names of the next classes to visit. This phase may make use of some annotations to speed up the discovery of information by packaging it in the annotations instead of requiring the tool to explore the program for it. These annotations are shown in Table~\ref{tab:annotations}.
 
-\begin{tabular}{| l | l | l |}
- Annotation 											& Parameters																										& Used For \\
+\begin{table}[h]
+
+
+\begin{tabular}{| l | p{4cm} | p{5cm} |}
+\hline
+ Annotation 											& Parameters																	& Used For \\
  \hline
  
- \texttt{@returnsSequencers(names: String[])} 			& \texttt{names} --- an array of the names of the mission sequencers returned by a \texttt{getSequencer()} method 	& A safelet's \texttt{getSequencer()} method \\
+ \texttt{@returnsSequencers(names:String[])} 			& \texttt{names}: names of mission sequencers 								& safelet's {getSequencer()} method \\ 
  
- \texttt{@returnsMissions(names: String[])} 			& \texttt{names} --- an array of the names of the missions returned by a \texttt{getNextMission()} method			& A mission sequencer's \texttt{getNextMission()} method \\
+ \texttt{@returnsMissions(names:String[])} 				& \texttt{names}: names of the missions		 								& mission sequencer's {getNextMission()} method \\
  
- \texttt{@nonParadigm(type : classType)} 				& \texttt{type} --- the type of non-paradigm object, can be 'data' or 'active'										& Any non-paradigm object \\
+ \texttt{@nonParadigm(type:classType)} 					& \texttt{type}: type of object, `data' or `active'							& Non-paradigm objects \\
  
- \texttt{@createsNonParadigmObject(names : String[])} 	& \texttt{names} --- an array of the names of the non-paradigm objects a method creates								& Any method that creates non-paradigm objects \\
+ \texttt{@nonParadigmObjects(names:String[])} 	& \texttt{names}: names of non-paradigm objects created						& Method creating non-paradigm objects \\
  
- \texttt{@makesNonParadigmMethodCall(names: String[])} 	& \texttt{names} --- an array of the names of the non-paradigm objects a method calls								& Any method that calls a non-paradigm method \\
+ \texttt{@nonParadigmMethodCalls(names:String[])} 	& \texttt{names}: names of non-paradigm objects called						& Methods calling non-paradigm methods \\
  
- \texttt{@waits}										& 																													& Any method that calls \texttt{Object.wait()} \\
+ \texttt{@waits}										& 	None																	& Methods calling wait \\
  
- \texttt{@notifies} 									&																													& Any method that calls \texttt{Object.notify()} \\
+  \texttt{@notifies} 									&	None																	& Methods calling notify \\
  
- \texttt{@callsWaitMethod} 								&																													& Any method that calls a method annotated with \texttt{@waits}\\
+ \texttt{@callsWaitMethod} 								&	None																	& Methods calling methods annotated with \texttt{@waits}\\
  
- \texttt{@callsNotifyMethod} 							&																													& Any method that calls a method annotated with \texttt{@notifies} \\
+ \texttt{@callsNotifyMethod} 							&	None																	& Methods calling methods annotated with \texttt{@notifies} \\
+ 
+ \hline
 \end{tabular}
+\caption{Java annotations used to speed up the exploration phase}
+\label{tab:annotations}
+\end{table}
 
 
 These annotations may be omitted because the method detailed below can extract this information from the program itself. However, including with the annotations makes the exploration phase quicker. We intend to implement exploring annotated programs first, then implement the more complicated methods detailed below.  
@@ -147,7 +156,7 @@ While exploring the program, if we find a synchronised method which calls \textt
 \section{Translate}
 \label{sec:translation}
 
-The translation phase occurs in two stages. The low-level translation takes the information gathered about each of the classes in the program during the exploration phase and produces the application and framework processes that represent them in our model, for example the safeletApp and safeletFW processes. The high-level translation translates the information gathered about the program hierarchy and translates it into the clusters and tiers that make up the network of processes at the top-level of our model. This network takes the form $Application \interleave Framework$, where $Framework$ contains the framework processes arranged as a hierarchy according to the information found during the exploration phase and $Application$ contains the application processes and any program-specific method calls. 
+The translation phase occurs in two stages. The low-level translation takes the information gathered about each of the classes in the program during the exploration phase and produces the application and framework processes that represent them in our model, for example the safeletApp and safeletFW processes. The high-level translation translates the information gathered about the program hierarchy and translates it into the clusters and tiers that make up the network of processes at the top-level of our model. This network takes the form $Application \lpar sync \rpar Framework$, where $Framework$ contains the framework processes arranged as a hierarchy according to the information found during the exploration phase and $Application$ contains the application processes and any program-specific method calls. In this network, $sync$ contains the channels needed to allow the processes in $Application$ and $Framework$ to communicate and is also built from information found during the exploration phase.
 
 Both stages of the translation are achieved using the Freemarker template engine, which takes a data model and a template and combines them to produce output. For the low-level translation, the information gathered from visiting each class in the program (as we described in Section~\ref{sec:exploration}) is used to produce a data model for that class. The relevant template is loaded and combined with the data model to produce our model. For the high-level translation, the information record by each visitor about the position in the hierarchy of the class it is visiting is used to construct a data model of the tiers and clusters that make up the program, this is combined with the template for the network to produce the high-level network that controls the processes in our model.
 
