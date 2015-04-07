@@ -24,7 +24,7 @@ When it comes to translation, the key difference between Level~1 and Level~2 pro
 
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[scale=1]{AircraftStructure.png}
+\includegraphics[scale=0.7]{AircraftStructure.png}
 \caption{The hierarchy of classes in a program controlling an aircraft with multiple modes of operation. \label{fig:AircraftDiagram}}
 \end{center}
 \end{figure}
@@ -45,7 +45,7 @@ First, We take an SCJ program compile it and analyse it, described briefly in Se
 \section{Analysis}
 \label{sec:analysis}
 
-In the current tool, the analysis phase takes an SCJ program, compiles it and analyses it using the built-in Java Compiler API. Because the program is compiled using an SCJ implementation, we require that the programs input into our tool are valid SCJ programs that will compile. If compilation errors occur during this phase then the program will not be translated and the tool will show the compilation errors. Further restrictions on the program are required to ensure that the exploration phase can extract the information we require and we describe these in Section~\ref{sec:exploration}.
+In the current tool, the analysis phase takes an SCJ program, compiles it and analyses it using the built-in Java Compiler API. Because the program is compiled using an SCJ implementation, we require that the programs input into our tool are valid SCJ programs (according to v0.96 of the language specification) that will compile. If compilation errors occur during this phase then the program will not be translated and the tool will show the compilation errors. Further restrictions on the program are required to ensure that the exploration phase can extract the information we require and we describe these in Section~\ref{sec:exploration}.
 
 Since the compilation and analysis of programs is SCJ agnostic, and therefore not tied to any particular compliance level, we intend to reuse this functionality. To check that we can reuse this functionality without causing problems, we have compiled and analysed a simple Level~2 program using the current implementation of the tool. 
 
@@ -55,32 +55,26 @@ The output of this phase is a list of trees the represent the classes in the pro
 \label{sec:exploration}
 
 %RESTRICTIONS
-Further to the restrictions placed on input programs mentioned in Section~\ref{sec:analysis} there are restrictions that we place on programs to allow the exploration phase to extract the data we need.
-
-%based on Frank's
-
+Further to the restrictions placed on input programs mentioned in Section~\ref{sec:analysis} there are restrictions that we place on programs to allow the exploration phase to extract the data we need. We impose the following restrictions on the structure of the programs that we accept:
+\begin{enumerate}
 % Needs
-\begin{itemize}
-\item Objects in separate files
-\item SCJ v 0.96 is what we model
-\end{itemize}
-
+\item Classes must be in separate files
 %Helpful -- Simplification
-\begin{itemize}
-\item Inner and anonymous classes
-\item one-level of inheritance
-\item hardware interaction restricted to schedulables %downside, cannot read thigns directly into mission memoery, must use a schedulable to do it.
-\end{itemize}
-
+\item Inner and anonymous classes are banned
+\item Paradigm Objects must be a direct child class or child interface of their respective SCJ API class or interface
+\item Hardware interaction is restricted to schedulables %downside, cannot read thigns directly into mission memoery, must use a schedulable to do it.
+\end{enumerate}
+However, only item 1 on this list is a requirement of our exploration of the program. The other three items are simplifications that make the exploration simpler by ensuring a cleaner program structure.
 %Features not modelled
-\begin{itemize}
-\item Artefacts of SCJ implementation atop RTSJ, eg BoundAsyncEventHandler (not available to SCJ programs anyway
-\item classes in Scheduling and Realted activities, expect for Services.setCeiling which is modelled in teh mission
-\item Clock class and timing, aaprt from Absolute and Relative time (although all times in our models are relavtive.
-\item I/O classes, likce ConsoleConenction
-\item Java Native Interface
-
-\end{itemize}
+%\begin{itemize}
+%\item Artefacts of SCJ implementation atop RTSJ, eg BoundAsyncEventHandler (not available to SCJ programs anyway
+%\item classes in Scheduling and Realted activities, expect for Services.setCeiling which is modelled in teh mission
+%\item Clock class and timing, aaprt from Absolute and Relative time (although all times in our models are relavtive.
+%\item I/O classes, likce ConsoleConenction
+%\item Java Native Interface
+%
+%\end{itemize}
+%
 
 Because the analysis phase outputs a representation of each class in the program as tree, we use the visitor pattern to explore the different types of element that we might find in each tree and extract the variables, method contents, and names of the next classes to visit. This phase may make use of some annotations to speed up the discovery of information by packaging it in the annotations instead of requiring the tool to explore the program for it. These annotations are shown in Table~\ref{tab:annotations}.
 
