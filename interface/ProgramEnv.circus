@@ -1,0 +1,59 @@
+\begin{zsection}
+  \SECTION ~ ProgramEnv ~ \parents ~ scj\_prelude, MissionId, SchedulableId
+\end{zsection}
+%
+\begin{zed}
+	[name] \\
+	[type] \\
+	vars == \seq (name \cross type) \\
+	nonPMeths == \seq name \\
+	meths == \seq name 
+\end{zed}
+%
+\begin{zed}
+	ParadigmEnv == name \cross vars \cross nonPMeths \cross meths\\
+	NonParadigmEnv == name \cross vars \cross meths\\
+\end{zed}
+%
+\begin{zed}
+	SafeletEnv == ParadigmEnv \\
+	TopLevelMissionSequencerEnv == ParadigmEnv \\
+	MissionEnv == ParadigmEnv \\
+	PEHEnv == ParadigmEnv \\
+	APEHEnv == ParadigmEnv \\
+	OSEHEnv == ParadigmEnv \\
+	SMSEnv == ParadigmEnv \\
+	MTEnv == ParadigmEnv \\
+	NonParaObjectEnv == NonParadigmEnv
+\end{zed}
+%
+\begin{zed}
+	SchedulablesEnv == \\
+	\t1 \seq PEHEnv \cross \\
+	\t1 \seq APEHEnv \cross \\
+	\t1 \seq OSEHEnv \cross \\
+	\t1 \seq SMSEnv \cross \\
+	\t1 \seq MTEnv \\
+	
+	ClusterEnv 	== MissionEnv \cross SchedulablesEnv \\	
+	
+	TierEnv 	 == \seq ClusterEnv \\
+	
+	Tier0Env == TierEnv \\
+	NestedTiersEnv == TierEnv \\
+	
+	ControlTierEnv 	 == SafeletEnv \cross \seq TopLevelMissionSequencerEnv \\	
+	
+\end{zed}
+%
+\begin{zed}
+	FrameworkEnv == ControlTierEnv \cross Tier0Env \cross NestedTiersEnv \\	
+\end{zed}
+
+%
+\begin{zed}
+	[ClassTree]\\
+
+	ProgramEnv == FrameworkEnv \cross \seq NonParaObjectEnv \cross \seq ClassTree \\
+	%Program\_Locking == Program \cross LockingModel \\
+\end{zed}
