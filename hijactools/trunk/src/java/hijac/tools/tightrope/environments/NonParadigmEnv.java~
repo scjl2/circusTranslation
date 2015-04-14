@@ -1,0 +1,12 @@
+package hijac.tools.tightrope.environments;
+
+public class NonParadigmEnv
+{
+	Name name;
+	List<Name> vars; 
+	List<Name> nonPMeths;
+	
+	
+
+
+}
