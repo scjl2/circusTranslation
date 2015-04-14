@@ -8,12 +8,13 @@ import javax.lang.model.element.Name;
 
 public class FrameworkEnv
 {
-	ControlTierEnv controlTier;
-	TierEnv tier0;
-	NestedTiersEnv nestedTiers;
-//	List<TierEnv> nestedTiers;
+	private ControlTierEnv controlTier;
+	private TierEnv tier0;
+	private NestedTiersEnv nestedTiers;
 
-	private class ControlTierEnv
+	// List<TierEnv> nestedTiers;
+
+	class ControlTierEnv
 	{
 		ParadigmEnv safeletEnv;
 		ParadigmEnv topLevelMissionSequencerEnv;
@@ -60,7 +61,10 @@ public class FrameworkEnv
 			String output = "";
 			output += "Safelet: " + safeletEnv.getName();
 			output += System.getProperty("line.separator");
-			output += "Top-Level Mission Sequencer: " + topLevelMissionSequencerEnv.getName();
+			output += "Safelet Methods: " + safeletEnv.getMeths();
+			output += System.getProperty("line.separator");
+			output += "Top-Level Mission Sequencer: "
+					+ topLevelMissionSequencerEnv.getName();
 
 			return output;
 
@@ -70,7 +74,7 @@ public class FrameworkEnv
 	private class TierEnv
 	{
 		List<ClusterEnv> clusters;
-		
+
 		public TierEnv()
 		{
 			clusters = new ArrayList<ClusterEnv>();
@@ -85,43 +89,41 @@ public class FrameworkEnv
 		{
 			this.clusters = clusters;
 		}
-		
+
 		public String toString()
 		{
-			if(clusters.isEmpty())
+			if (clusters.isEmpty())
 			{
 				return "Tier Empty";
-			}
-			else
+			} else
 			{
 				return "Tier Present";
 			}
-			
+
 		}
 	}
 
 	private class NestedTiersEnv
 	{
 		List<TierEnv> nestedTiers;
-		
+
 		public NestedTiersEnv()
 		{
 			nestedTiers = new ArrayList<TierEnv>();
 		}
-		
+
 		public String toString()
 		{
 			if (nestedTiers.isEmpty())
 			{
 				return "No Nested Tiers";
-			}
-			else
+			} else
 			{
 				return "Nested Tiers Exist";
 			}
 		}
 	}
-	
+
 	private class ClusterEnv
 	{
 		ParadigmEnv missionEnv;
@@ -219,7 +221,7 @@ public class FrameworkEnv
 		this.nestedTiers = new NestedTiersEnv();
 	}
 
-	public ControlTierEnv getControlTier()
+	ControlTierEnv getControlTier()
 	{
 		return controlTier;
 	}
@@ -268,7 +270,7 @@ public class FrameworkEnv
 		output += controlTier.toString();
 		output += System.getProperty("line.separator");
 		output += "Tier 0:";
-		output += System.getProperty("line.separator");		
+		output += System.getProperty("line.separator");
 		output += tier0.toString();
 		output += System.getProperty("line.separator");
 		output += "Nested Tiers:";

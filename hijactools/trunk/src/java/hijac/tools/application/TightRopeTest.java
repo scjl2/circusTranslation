@@ -116,564 +116,615 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.tree.JCTree;
 
-public class TightRopeTest {
-   public static SCJAnalysis ANALYSIS;
+public class TightRopeTest
+{
+	public static SCJAnalysis ANALYSIS;
 
-   private static Trees trees;
-   private static Set<CompilationUnitTree> units;
-   private static Set<TypeElement> type_elements;
-   
-   private static ProgramEnv programEnv;
+	private static Trees trees;
+	private static Set<CompilationUnitTree> units;
+	private static Set<TypeElement> type_elements;
 
-   
-   static {
-      Statics.kickstart();
-   }
- 
-//   private static HashMap<String, Name> framework = new HashMap<String, Name>();
- 
-   
-   public static class SafeletLevel2Visitor implements ElementVisitor<Name[],Void>
-   {
+	private static ProgramEnv programEnv;
 
-	@Override
-	public Name[] visit(Element e) {
-//		System.out.println(e);
-		return null;
+	static
+	{
+		Statics.kickstart();
 	}
 
-	@Override
-	public Name[] visit(Element e, Void p) {
-		// TODO Auto-generated method stub
-		return null;
+	// private static HashMap<String, Name> framework = new HashMap<String,
+	// Name>();
+
+	public static class SafeletLevel2Visitor implements
+			ElementVisitor<Name[], Void>
+	{
+
+		@Override
+		public Name[] visit(Element e)
+		{
+			// System.out.println(e);
+			return null;
+		}
+
+		@Override
+		public Name[] visit(Element e, Void p)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitExecutable(ExecutableElement e, Void p)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitPackage(PackageElement e, Void p)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitType(TypeElement e, Void p)
+		{
+			// System.out.println(e);
+
+			ClassTree ct = trees.getTree(e);
+
+			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+			Iterator<StatementTree> i = members.iterator();
+			while (i.hasNext())
+			{
+				MethodTree o = (MethodTree) i.next();
+				// System.out.println(o.getName());
+
+				if (o.getName().contentEquals("initializeApplication"))
+				{
+					programEnv.getSafelet().addMeth(o.getName());
+				}
+
+				if (o.getName().contentEquals("getSequencer"))
+				{
+					// System.out.println("in iterator");
+					programEnv.getSafelet().addMeth(o.getName());
+					List<StatementTree> s = (List<StatementTree>) o.getBody()
+							.getStatements();
+
+					Iterator j = s.iterator();
+
+					while (j.hasNext())
+					{
+						StatementTree st = (StatementTree) j.next();
+
+						// System.out.println("Satement: "+st + " Kind: " +
+						// st.getKind());
+						// if (st instanceof VariableTree)
+						// {
+						// System.out.println("Variable: " + ((IdentifierTree)
+						// ((NewClassTree) ((VariableTree)
+						// st).getInitializer()).getIdentifier()).getName());
+						// return new Name[]{ ((IdentifierTree) ((NewClassTree)
+						// ((VariableTree)
+						// st).getInitializer()).getIdentifier()).getName()};
+						// }
+						//
+						// if (st instanceof AssignmentTree)
+						// {
+						// System.out.println("Assignment: " + ((AssignmentTree)
+						// st).getExpression());
+						// }
+						//
+						// if (st instanceof NewClassTree)
+						// {
+						// System.out.println("New Class: " + ((NewClassTree)
+						// st).getIdentifier());
+						// }
+						// // {
+						// Name id = ((IdentifierTree) ((NewClassTree)
+						// st).getIdentifier()).getName() ;
+						// System.out.println("Kind: " + id );
+						//
+						// return new Name[] {id};
+						// }
+
+						if (st instanceof ReturnTree)
+						{
+							// System.out.println("Return Tree Found");
+							return st.accept(new ReturnVisitor(), null);
+							// System.out.println( ((NewClassTree) ((ReturnTree)
+							// st).getExpression()).getIdentifier() );
+						}
+						// {
+						// System.out.println(((ReturnTree) st).getExpression()
+						// );
+						//
+						// if (((ReturnTree) st).getExpression().getKind() ==
+						// Tree.Kind.NEW_CLASS )
+						// {
+						//
+						// Name id = ((IdentifierTree) ((NewClassTree)
+						// ((ReturnTree)
+						// st).getExpression()).getIdentifier()).getName() ;
+						//
+						//
+						//
+						// System.out.println("Kind: " + id );
+						// // ((ReturnTree) st).getExpression()
+						//
+						// // st.accept(new ReturnVisitor(), null);
+						// return new Name[] {id};
+						// // return null;
+						// //Now use this name to get to the next thing I need
+						// to explore?
+						// }
+						// else
+						// {
+						// System.out.println("Nope, not a New Class");
+						//
+						// }
+						//
+						// }
+
+					}
+
+				}
+
+			}
+
+			return null;
+		}
+
+		@Override
+		public Name[] visitTypeParameter(TypeParameterElement e, Void p)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitUnknown(Element e, Void p)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitVariable(VariableElement e, Void p)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 
-	@Override
-	public Name[] visitExecutable(ExecutableElement e, Void p) {
-		// TODO Auto-generated method stub
-		return null;
+	public static class MissionSequencerLevel2Visitor implements
+			ElementVisitor<Name[], Void>
+	{
+
+		@Override
+		public Name[] visit(Element arg0)
+		{
+			// TODO Auto-generated method stub
+			return null;
+
+		}
+
+		@Override
+		public Name[] visit(Element arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitExecutable(ExecutableElement arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitPackage(PackageElement arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitType(TypeElement arg0, Void arg1)
+		{
+
+			System.out.println("In MS Visitor for " + arg0);
+
+			ClassTree ct = trees.getTree(arg0);
+			System.out.println("MS Visitor class tree: " + ct);
+
+			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+			System.out.println("MS Visitor members: " + members);
+
+			Iterator<StatementTree> i = members.iterator();
+			while (i.hasNext())
+			{
+				Tree tlst = i.next();
+				System.out.println("MS Visitor i=" + i);
+
+				if (tlst instanceof VariableTree)
+				{
+					System.out.println("MS VIsitor: Variable Tree Found");
+				}
+
+				if (tlst instanceof MethodTree)
+				{
+					MethodTree o = (MethodTree) tlst;
+					System.out.println("MS Visitor Method Tree = "
+							+ o.getName());
+
+					if (o.getName().contentEquals("getNextMission"))
+					{
+						System.out.println("Release the Visitor!");
+						o.accept(new ReturnVisitor(), null);
+
+						// System.out.println("in iterator");
+						// List<StatementTree> s = (List<StatementTree>)
+						// o.getBody().getStatements();
+						//
+						// Iterator j = s.iterator();
+						//
+						// while(j.hasNext())
+						// {
+						// StatementTree st = (StatementTree) j.next();
+						// System.out.println("MS Visitor: " + st);
+						//
+						// if(st instanceof ReturnTree )
+						// {
+						// System.out.println("Mission Sequencer Return Tree FOUND: "+
+						// ((ReturnTree) st).getExpression() );
+						//
+						// // Name id = ((IdentifierTree) ((NewClassTree)
+						// ((ReturnTree)
+						// st).getExpression()).getIdentifier()).getName() ;
+						//
+						// return st.accept(new ReturnVisitor(), null);
+						// // System.out.println("Kind: " + id );
+						// // ((ReturnTree) st).getExpression()
+						//
+						// // st.accept(new ReturnVisitor(), null);
+						// // return new Name[] {id};
+						// //Now use this name to get to the next thing I need
+						// to explore?
+						//
+						// }
+						// }
+						//
+					}
+				}
+			}
+
+			return null;
+		}
+
+		@Override
+		public Name[] visitTypeParameter(TypeParameterElement arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitUnknown(Element arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[] visitVariable(VariableElement arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 
-	@Override
-	public Name[] visitPackage(PackageElement e, Void p) {
-		// TODO Auto-generated method stub
-		return null;
+	public static class MissionLevel2Visitor implements
+			ElementVisitor<Name[][], Void>
+	{
+
+		@Override
+		public Name[][] visit(Element arg0)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[][] visit(Element arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[][] visitExecutable(ExecutableElement arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[][] visitPackage(PackageElement arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[][] visitType(TypeElement arg0, Void arg1)
+		{
+			System.out.println(arg0);
+
+			ClassTree ct = trees.getTree(arg0);
+
+			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+			Iterator<StatementTree> i = members.iterator();
+			while (i.hasNext())
+			{
+				i.next();
+				if (i instanceof MethodTree)
+				{
+					MethodTree o = (MethodTree) i.next();
+					System.out.println(o.getName());
+
+					if (o.getName().contentEquals("initialize"))
+					{
+						System.out.println("in iterator");
+						List<StatementTree> s = (List<StatementTree>) o
+								.getBody().getStatements();
+
+						Iterator j = s.iterator();
+
+						while (j.hasNext())
+						{
+							System.out.println(j.next());
+						}
+
+					}
+				}
+			}
+
+			return null;
+		}
+
+		@Override
+		public Name[][] visitTypeParameter(TypeParameterElement arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[][] visitUnknown(Element arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Name[][] visitVariable(VariableElement arg0, Void arg1)
+		{
+			// TODO Auto-generated method stub
+			return null;
+		}
+
 	}
 
-	@Override
-	public Name[] visitType(TypeElement e, Void p) {
-		System.out.println(e);
+	protected static void setUncaughtExceptionHandler()
+	{
+		Thread.currentThread().setUncaughtExceptionHandler(
+				new UncaughtExceptionHandler());
+	}
+
+	/* Main Program */
+
+	public static void main(String[] args) throws IOException
+	{
+		setUncaughtExceptionHandler();
+
+		SCJCompilationTask compiler = new SCJCompilationTask(
+				SCJCompilationConfig.getDefault());
+
+		System.out.println("Compiling SCJ sources...");
+
+		try
+		{
+			ANALYSIS = SCJAnalysis.create(compiler);
+		} catch (SCJCompilationException e)
+		{
+			System.out.println("Failed to compile...");
+			e.getDiagnostics().print(System.out);
+			System.exit(-1);
+		}
+
+		trees = ANALYSIS.TREES;
+		units = ANALYSIS.getCompilationUnits();
+		type_elements = ANALYSIS.getTypeElements();
+		programEnv = new ProgramEnv(ANALYSIS);
+
+		Name[] names = null;
+		String packagePrefix = null;
+
+		// for all the types in the program
+		for (TypeElement elem : type_elements)
+		{
+			// System.out.println(elem.toString());
+			String elemID = elem.toString();
+			// if the type we have is the safelet
+
+			TypeMirror safelet_type = (TypeMirror) ANALYSIS.get(Hijac
+					.key("SafeletType"));
+
+			// System.out.println( safelet_type.toString() );
+
+			// Set<TypeElement> supers = ANALYSIS.getAllSuperclasses(elem);
+			// System.out.println(elem.getInterfaces().toString());
+			// if( ANALYSIS.TYPES.isSubtype( elem.asType(), safelet_type) )
+
+			if (elem.getInterfaces().toString().contains("Safelet"))
+			// if (elemID.equalsIgnoreCase("accs.ACCSafelet") )
+			{
+				System.out.println("Found Safelet");
+
+				packagePrefix = elem.getQualifiedName().toString();
+				int firstIndex = packagePrefix.indexOf(elem.getSimpleName()
+						.toString());
+				packagePrefix = packagePrefix.substring(0, firstIndex);
+
+				// System.out.println("PACKAGE PREFIX: " +packagePrefix);
+
+				// framework.put("Safelet", elem.getSimpleName());
+				programEnv.addSafelet(elem.getSimpleName());
+
+				// add methods etc here
+				programEnv.getSafelet();
+
+				names = elem.accept(new SafeletLevel2Visitor(), null);
+
+				for (int i = 0; i < names.length; i++)
+				{
+					// framework.put("TopLevelMissionSequencer", names[i]);
+					programEnv.addTopLevelMissionSequencer(names[i]);
+				}
+
+				System.out.println(names == null);
+
+				// SafeletModel sm = new SafeletModel(new
+				// SCJApplication(ANALYSIS), new ClassModel(new
+				// SCJApplication(ANALYSIS), elem));
+				//
+				// SafeletTranslator st = new SafeletTranslator();
+				// st.setContext(new SCJApplication(ANALYSIS));
+				// st.setTarget(new ClassTarget(elem));
+				// st.setOutput(new Output());
+				//
+				// st.execute();
+
+				// System.out.println("printing safelet class tree");
+				// //get the class tree of the safelet
+				// ClassTree tree = trees.getTree(elem);
+				// System.out.println(tree.toString());
+				//
+				//
+				//
+				// System.out.println("Printing members class tree");
+				// //this is a sub set of above
+				// List<? extends Tree> members = tree.getMembers();
+				//
+				// System.out.println(members.toString());
+				//
+				//
+				//
+				// System.out.println("Iterator");
+				// Iterator<? extends Tree> i = members.iterator();
+				//
+				// while (i.hasNext())
+				// {
+				// MethodTree o = (MethodTree) i.next();
+				// System.out.println(o.getName());
+				//
+				// if (o.getName().contentEquals("getSequencer"))
+				// {
+				// System.out.println("in iterator");
+				// List<? extends StatementTree> s =
+				// o.getBody().getStatements();
+				//
+				// Iterator j = s.iterator();
+				//
+				// while(j.hasNext())
+				// {
+				// StatementTree st = (StatementTree) j.next();
+				//
+				// if(st instanceof ReturnTree )
+				// {
+				// System.out.println(((ReturnTree) st).getExpression() );
+				// }
+				// }
+				//
+				// }
+				//
+				// }
+				//
+
+				// SafeletTranslator st = new SafeletTranslator();
+				// // st.setTarget(elem);
+				// st.invoke();
+
+				// return super.visitClass(tree, p);
+
+				//
+			}
+
+			//
+		}
+
+		Name[] missionNames = null;
+
+		if (names != null)
+		{
+			System.out.println("Mission Sequencer Visiting");
+			for (int i = 0; i < names.length; i++)
+			{
+				// System.out.println(packagePrefix +names[i]);
+				TypeElement elem = ANALYSIS.getTypeElement(packagePrefix
+						+ names[i]);
+
+				System.out.println("Visiting: " + elem);
+				missionNames = elem.accept(new MissionSequencerLevel2Visitor(),
+						null);
+			}
+		}
+
+		Name[][] clusters = null;
+
+		System.out.println(missionNames == null);
+
+		if (missionNames != null)
+		{
+			System.out.println("Mission Visiting");
+			for (int i = 0; i < missionNames.length; i++)
+			{
+				TypeElement elem = ANALYSIS.getTypeElement(packagePrefix
+						+ missionNames[i]);
+				System.out.println("Visiting: " + elem);
+
+				clusters = elem.accept(new MissionLevel2Visitor(), null);
+			}
+		}
+
+		System.out.println("Framework Printing");
+		programEnv.output();
 		
-		ClassTree ct = trees.getTree(e);
-			 
 		
-		List<StatementTree> members =  (List<StatementTree>) ct.getMembers();
-		Iterator<StatementTree> i = members.iterator();
-		while (i.hasNext())
-  		  {
-  			  MethodTree o = (MethodTree) i.next();
-  			 System.out.println(o.getName());
-  			 
-  			 if (o.getName().contentEquals("getSequencer"))
-  			 {
-  				 System.out.println("in iterator");
-  				 List<StatementTree> s =  (List<StatementTree>) o.getBody().getStatements();
-  				 
-  				  Iterator j = s.iterator();
-  				  
-  				  while(j.hasNext())
-  				  {
-  					  StatementTree st =  (StatementTree) j.next();
-  					  
-  					 System.out.println("Satement: "+st + " Kind: " + st.getKind());
-//  					 if (st instanceof VariableTree)
-//  					 {
-//  						 System.out.println("Variable: " + ((IdentifierTree) ((NewClassTree) ((VariableTree) st).getInitializer()).getIdentifier()).getName());
-//  						 return new Name[]{ ((IdentifierTree) ((NewClassTree) ((VariableTree) st).getInitializer()).getIdentifier()).getName()};
-//  					 }
-//  					 
-//  					 if (st instanceof AssignmentTree)
-//  					 {
-//  						 System.out.println("Assignment: " + ((AssignmentTree) st).getExpression());
-//  					 }
-//  					 
-//  					if (st instanceof NewClassTree)
-//  					{
-//  						System.out.println("New Class: " + ((NewClassTree) st).getIdentifier());
-//  					}
-////					  {
-//						  Name id = ((IdentifierTree) ((NewClassTree) st).getIdentifier()).getName() ;
-//						  System.out.println("Kind: " + id );
-//						  
-//						  return new Name[] {id};
-//					  }
-  					  
-  				if(st instanceof ReturnTree )
-  				{
-  					System.out.println("Return Tree Found");
-  					return st.accept(new ReturnVisitor(), null);
-//  					System.out.println( ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier() );
-  				}
-//  					  {
-//  						 System.out.println(((ReturnTree) st).getExpression() );
-//  						 
-//  						 if (((ReturnTree) st).getExpression().getKind() == Tree.Kind.NEW_CLASS  )
-//  						 {
-//  						 
-//  						Name id = ((IdentifierTree) ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier()).getName() ;
-//
-//  								 
-//  						 
-//  						 System.out.println("Kind: " + id );
-////  						 ((ReturnTree) st).getExpression()
-//  						 
-////  						 st.accept(new ReturnVisitor(), null);
-//  						  return new Name[] {id};
-////  						return null;
-//  						//Now use this name to get to the next thing I need to explore?
-//  						 }
-//  						 else
-//  						 {
-//  							 System.out.println("Nope, not a New Class");
-//  							 
-//  						 }
-//  						
-//  					  }
-  					
-  						  
-  				  }
-  				 
-  			 }
-  			  
-  		  }
+		programEnv.getMethod("getSequencer");
 		
-		
-		return null;
-	}
-
-
 	
-	@Override
-	public Name[] visitTypeParameter(TypeParameterElement e, Void p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[] visitUnknown(Element e, Void p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[] visitVariable(VariableElement e, Void p) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	   
-   }
-   
-   public static class MissionSequencerLevel2Visitor implements ElementVisitor<Name[],Void>
-   {
-
-	@Override
-	public Name[] visit(Element arg0) {
-		// TODO Auto-generated method stub
-		return null;
 		
+		// Level2Translator circus_trans = new Level2Translator();
+		//
+		// circus_trans.setTarget((Target)t);
+		//
+		//
+		//
+		//
+		// circus_trans.setOutput(new Output());
+		//
+		// circus_trans.execute(new SCJApplication(ANALYSIS));
+		//
+		// PostProcessor post = new PostProcessor();
+		//
+		// post.execute();
+
+		System.exit(0);
 	}
-
-	@Override
-	public Name[] visit(Element arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[] visitExecutable(ExecutableElement arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[] visitPackage(PackageElement arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[] visitType(TypeElement arg0, Void arg1) {
-		
-		System.out.println("In MS Visitor for " + arg0);
-		
-		ClassTree ct = trees.getTree(arg0);
-		System.out.println("MS Visitor class tree: " + ct);
-		
-		List<StatementTree> members =  (List<StatementTree>) ct.getMembers();
-		System.out.println("MS Visitor members: " + members);
-		
-		Iterator<StatementTree> i = members.iterator();
-		while (i.hasNext())
-  		  {
-			Tree tlst = i.next();	
-			System.out.println("MS Visitor i="+i);
-			
-			if(tlst instanceof VariableTree)
-			{
-				System.out.println("MS VIsitor: Variable Tree Found");
-			}
-						
-			if(tlst instanceof MethodTree) 
-			{
-  			 MethodTree o = (MethodTree)tlst;
-  			 System.out.println("MS Visitor Method Tree = "+o.getName());
-  			 
-  			 if (o.getName().contentEquals("getNextMission"))
-  			 {
-  				 System.out.println("Release the Visitor!");
-  				 o.accept(new ReturnVisitor(),null);
-  				 
-//  				 System.out.println("in iterator");
-//  				 List<StatementTree> s =  (List<StatementTree>) o.getBody().getStatements();
-//  				 
-//  				  Iterator j = s.iterator();
-//  				  
-//  				  while(j.hasNext())
-//  				  {
-//  					  StatementTree st =  (StatementTree) j.next();
-//  					 System.out.println("MS Visitor: " + st);
-//  					  
-//  					  if(st instanceof ReturnTree )
-//  					  {
-//  						 System.out.println("Mission Sequencer Return Tree FOUND: "+ ((ReturnTree) st).getExpression() );
-//  						 
-////  						Name id = ((IdentifierTree) ((NewClassTree) ((ReturnTree) st).getExpression()).getIdentifier()).getName() ;
-//  						 
-//  						 return st.accept(new ReturnVisitor(), null);
-////  						 System.out.println("Kind: " + id  );
-////  						 ((ReturnTree) st).getExpression()
-//  						 
-////  						 st.accept(new ReturnVisitor(), null);
-////  						  return new Name[] {id};
-//  						//Now use this name to get to the next thing I need to explore?
-//  						 
-//  					  }
-//  				  }
-//  				 
-  			 }
-			}
-  		  }
-		
-		
-		return null;	
-	}
-
-	@Override
-	public Name[] visitTypeParameter(TypeParameterElement arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[] visitUnknown(Element arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[] visitVariable(VariableElement arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	   
-   }
-   
-   public static class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
-   {
-
-	@Override
-	public Name[][] visit(Element arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[][] visit(Element arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[][] visitExecutable(ExecutableElement arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[][] visitPackage(PackageElement arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[][] visitType(TypeElement arg0, Void arg1) {
-System.out.println(arg0);
-		
-		ClassTree ct = trees.getTree(arg0);
-		
-		List<StatementTree> members =  (List<StatementTree>) ct.getMembers();
-		Iterator<StatementTree> i = members.iterator();
-		while (i.hasNext())
-  		  {
-			i.next();
-			if(i instanceof MethodTree)
-			{
-  			 MethodTree o = (MethodTree) i.next();
-  			 System.out.println(o.getName());
-  			 		 
-  			 
-  			 if (o.getName().contentEquals("initialize"))
-  			 {
-  				 System.out.println("in iterator");
-  				 List<StatementTree> s =  (List<StatementTree>) o.getBody().getStatements();
-  				 
-  				  Iterator j = s.iterator();
-  				  
-  				  while(j.hasNext())
-  				  {
-  					  System.out.println(j.next());
-  				  }
-  				  
-  				 
-  			 }
-			}
-  		  }
-		
-		
-		return null;	
-	}
-
-	@Override
-	public Name[][] visitTypeParameter(TypeParameterElement arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[][] visitUnknown(Element arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Name[][] visitVariable(VariableElement arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	   
-   }
-   
- 
-   
-  
-   
-   protected static void setUncaughtExceptionHandler() {
-      Thread.currentThread().setUncaughtExceptionHandler(
-         new UncaughtExceptionHandler());
-   }
-   
-   
-
-   /* Main Program */
-
-   public static void main(String[] args) throws IOException {
-      setUncaughtExceptionHandler();
-
-      SCJCompilationTask compiler =
-         new SCJCompilationTask(SCJCompilationConfig.getDefault());
-
-      System.out.println("Compiling SCJ sources...");
-
-      try {
-         ANALYSIS = SCJAnalysis.create(compiler);
-      }
-      catch(SCJCompilationException e) {
-    	  System.out.println("Failed to compile...");
-         e.getDiagnostics().print(System.out);
-         System.exit(-1);
-      }
-
-     
-      trees = ANALYSIS.TREES;
-      units = ANALYSIS.getCompilationUnits();
-      type_elements = ANALYSIS.getTypeElements();
-      programEnv = new ProgramEnv();
-      
-      Name[] names = null;
-      String packagePrefix = null;
-     
-      //for all the types in the program
-      for(TypeElement elem : type_elements) 
-      {
-//    	  System.out.println(elem.toString());
-    	  String elemID = elem.toString();
-    	  //if the type we have is the safelet
-    	   	  
-    	  TypeMirror safelet_type = (TypeMirror) ANALYSIS.get(Hijac.key("SafeletType"));
-    	  
-//    	System.out.println(  safelet_type.toString() );
-                  
-//          Set<TypeElement> supers =     ANALYSIS.getAllSuperclasses(elem);
-//    	  System.out.println(elem.getInterfaces().toString());
-//    	if(  ANALYSIS.TYPES.isSubtype( elem.asType(), safelet_type) )
-    	 
-    			  
-    	  
-    	if( elem.getInterfaces().toString().contains("Safelet"))
-//    	  if (elemID.equalsIgnoreCase("accs.ACCSafelet") )
-    	  {
-    		 System.out.println("Found Safelet");
-    		 
-    		 packagePrefix = elem.getQualifiedName().toString();
-    		 int firstIndex = packagePrefix.indexOf(elem.getSimpleName().toString());
-    		 packagePrefix= packagePrefix.substring(0,firstIndex);
-    		 
-//    		 System.out.println("PACKAGE PREFIX: " +packagePrefix);
-    		 
-//    		 framework.put("Safelet", elem.getSimpleName());
-    		 programEnv.addSafelet(elem.getSimpleName());
-    		  
-    		names = elem.accept(new SafeletLevel2Visitor(), null);
-    		
-    		for (int i = 0; i<names.length;i++)
-    		{
-//    			framework.put("TopLevelMissionSequencer", names[i]);
-    			programEnv.addTopLevelMissionSequencer(names[i]);
-    		}
-    		
-    		System.out.println(names == null);
-    		  
-//    		  SafeletModel sm = new SafeletModel(new SCJApplication(ANALYSIS), new ClassModel(new SCJApplication(ANALYSIS), elem));
-//    		  
-//    		  SafeletTranslator st = new SafeletTranslator();
-//    		  st.setContext(new SCJApplication(ANALYSIS));
-//    		  st.setTarget(new ClassTarget(elem));
-//    		  st.setOutput(new Output());
-//    		  
-//    		  st.execute();
-    		 
-//    		 System.out.println("printing safelet class tree");
-//    		 //get the class tree of the safelet
-//    		  ClassTree tree = trees.getTree(elem);
-//    		  System.out.println(tree.toString());
-//    		     		
-//    		  
-//    		  
-//    		  System.out.println("Printing members class tree");
-//    		  //this is a sub set of above
-//    		  List<? extends Tree> members =  tree.getMembers();
-//    		  
-//    		  System.out.println(members.toString());
-//    		  
-//    		  
-//    		  
-//    		  System.out.println("Iterator");
-//    		  Iterator<? extends Tree> i = members.iterator();
-//    		  
-//    		  while (i.hasNext())
-//    		  {
-//    			  MethodTree o = (MethodTree) i.next();
-//    			 System.out.println(o.getName());
-//    			 
-//    			 if (o.getName().contentEquals("getSequencer"))
-//    			 {
-//    				 System.out.println("in iterator");
-//    				 List<? extends StatementTree> s =  o.getBody().getStatements();
-//    				 
-//    				  Iterator j = s.iterator();
-//    				  
-//    				  while(j.hasNext())
-//    				  {
-//    					  StatementTree st = (StatementTree) j.next();
-//    					 
-//    					  if(st instanceof ReturnTree )
-//    					  {
-//    						 System.out.println(((ReturnTree) st).getExpression() );
-//    					  }
-//    				  }
-//    				 
-//    			 }
-//    			  
-//    		  }
-//    	
-    		  
-//    		  SafeletTranslator st  = new SafeletTranslator();
-//    		//  st.setTarget(elem);
-//    		  st.invoke();
-    		  
-    		 
-//              return super.visitClass(tree, p);
-    		  
-//    		  
-    	  }
-    	  
-//    	  
-      }
-     
-      Name[] missionNames = null;
-      
-      if (names != null )
-      {
-    	  System.out.println("Mission Sequencer Visiting");
-    	 for(int i = 0; i< names.length;i++)
-    	 {
-//    		 System.out.println(packagePrefix +names[i]);
-    		TypeElement elem = ANALYSIS.getTypeElement(packagePrefix +names[i]);
-    		 
-    		 System.out.println("Visiting: " + elem);
-    		missionNames = elem.accept(new MissionSequencerLevel2Visitor(), null);
-    	 }
-      }
-      
-      
-     
-      Name[][] clusters = null;
-      
-      System.out.println(missionNames == null);
-      
-      if (missionNames != null )
-      {
-    	  System.out.println("Mission Visiting");
-    	 for(int i = 0; i< missionNames.length;i++)
-    	 {
-    		 TypeElement elem = ANALYSIS.getTypeElement(packagePrefix +missionNames[i]);
-    		 System.out.println("Visiting: " + elem);
-    		 
-    		clusters = elem.accept(new MissionLevel2Visitor(), null);
-    	 }
-      }
-      
-      
-      System.out.println("Framework Printing");
-      programEnv.output();
-//      Level2Translator circus_trans = new Level2Translator();
-//     
-//      circus_trans.setTarget((Target)t);
-//      
-//      
-//  
-//    
-//      circus_trans.setOutput(new Output());
-//
-//      circus_trans.execute(new SCJApplication(ANALYSIS));
-//
-//      PostProcessor post = new PostProcessor();
-//
-//      post.execute();
-
-            
-    
-      
-      System.exit(0);
-   }
 }

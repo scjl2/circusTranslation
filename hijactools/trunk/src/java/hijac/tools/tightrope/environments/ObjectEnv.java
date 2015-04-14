@@ -30,9 +30,9 @@ public class ObjectEnv
 		return vars;
 	}
 
-	public void setVars(List<Name> vars)
+	public void addVar(Name var)
 	{
-		this.vars = vars;
+		vars.add(var);
 	}
 
 }

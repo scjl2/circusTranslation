@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.analysis.SCJAnalysis;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,13 +13,13 @@ public class ProgramEnv
 {
 	FrameworkEnv frameworkEnv;
 	List<NonParadigmEnv> nonParadigmObjectEnvs;
-	List<ClassTree> context;
+	SCJAnalysis context;
 
-	public ProgramEnv()
+	public ProgramEnv(SCJAnalysis context)
 	{
 		this.frameworkEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
-		this.context = new ArrayList<ClassTree>();
+		this.context = context;
 	}
 
 	public FrameworkEnv getFrameworkEnv()
@@ -75,6 +77,20 @@ public class ProgramEnv
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 	{
 		frameworkEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
+	}
+
+	public ParadigmEnv getSafelet()
+	{
+		return frameworkEnv.getControlTier().getSafeletEnv();
+	}
+	
+	public void getMethod(String methodName)
+	{
+		Name n = getSafelet().getmethodName(methodName);
+		if (n != null)
+		{
+			
+		}
 	}
 
 }

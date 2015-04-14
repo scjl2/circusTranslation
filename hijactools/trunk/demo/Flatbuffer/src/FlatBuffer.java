@@ -8,7 +8,7 @@ import javax.scj.util.Const;
 public class FlatBuffer implements Safelet<Mission>
 {
 	
-			public Level getLevel()
+	public Level getLevel()
 	{
 		return Level.LEVEL_2;
 	}

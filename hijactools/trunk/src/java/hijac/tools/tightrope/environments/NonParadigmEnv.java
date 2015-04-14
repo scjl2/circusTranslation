@@ -21,9 +21,9 @@ public class NonParadigmEnv extends ObjectEnv
 		return nonPMeths;
 	}
 
-	public void setNonPMeths(List<Name> nonPMeths)
+	public void addNonPMeth(Name nonPMeth)
 	{
-		this.nonPMeths = nonPMeths;
+		nonPMeths.add(nonPMeth);
 	}
 	
 	
