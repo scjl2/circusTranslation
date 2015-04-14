@@ -40,6 +40,7 @@ import hijac.tools.modelgen.circus.visitors.AMethodVisitor;
 import hijac.tools.modelgen.targets.ClassTarget;
 import hijac.tools.scjmsafe.translation.*;
 import hijac.tools.scjmsafe.checker.*;
+import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.translators.Level2Translator;
 import hijac.tools.tightrope.visitors.ReturnVisitor;
 
@@ -121,13 +122,15 @@ public class TightRopeTest {
    private static Trees trees;
    private static Set<CompilationUnitTree> units;
    private static Set<TypeElement> type_elements;
+   
+   private static ProgramEnv programEnv;
 
    
    static {
       Statics.kickstart();
    }
  
-   private static HashMap<String, Name> framework = new HashMap<String, Name>();
+//   private static HashMap<String, Name> framework = new HashMap<String, Name>();
  
    
    public static class SafeletLevel2Visitor implements ElementVisitor<Name[],Void>
@@ -504,6 +507,7 @@ System.out.println(arg0);
       trees = ANALYSIS.TREES;
       units = ANALYSIS.getCompilationUnits();
       type_elements = ANALYSIS.getTypeElements();
+      programEnv = new ProgramEnv();
       
       Name[] names = null;
       String packagePrefix = null;
@@ -536,13 +540,15 @@ System.out.println(arg0);
     		 
 //    		 System.out.println("PACKAGE PREFIX: " +packagePrefix);
     		 
-    		 framework.put("Safelet", elem.getSimpleName());
+//    		 framework.put("Safelet", elem.getSimpleName());
+    		 programEnv.addSafelet(elem.getSimpleName());
     		  
     		names = elem.accept(new SafeletLevel2Visitor(), null);
     		
     		for (int i = 0; i<names.length;i++)
     		{
-    			framework.put("TopLevelMissionSequencer", names[i]);
+//    			framework.put("TopLevelMissionSequencer", names[i]);
+    			programEnv.addTopLevelMissionSequencer(names[i]);
     		}
     		
     		System.out.println(names == null);
@@ -649,10 +655,7 @@ System.out.println(arg0);
       
       
       System.out.println("Framework Printing");
-      for(String s : framework.keySet())
-      {
-    	  System.out.println("Framework: "+ s+" = " +framework.get(s));
-      }
+      programEnv.output();
 //      Level2Translator circus_trans = new Level2Translator();
 //     
 //      circus_trans.setTarget((Target)t);
