@@ -172,6 +172,8 @@ public class TightRopeTest
 			// System.out.println(e);
 
 			ClassTree ct = trees.getTree(e);
+			
+			programEnv.getSafelet().setClassTree(ct);
 
 			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 			Iterator<StatementTree> i = members.iterator();

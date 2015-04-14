@@ -86,40 +86,22 @@ public class ProgramEnv
 	
 	public void getMethod(String methodName)
 	{
+		ClassTree ct = getSafelet().getClassTree();
 		
-		
-//		Name n = getSafelet().getmethodName(;
-//		if (n != null)
-//		{
-		
-		TypeElement te = null;
-		
-		for (TypeElement e : context.getTypeElements())
+		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+		Iterator<StatementTree> i = members.iterator();
+		while (i.hasNext())
 		{
-			if (e.getSimpleName().contentEquals("FlatBuffer"))
+			MethodTree o = (MethodTree) i.next();
+			
+			if (o.getName().contentEquals(methodName))
 			{
-				te = e;
+				//explore it
+				System.out.println(o.getName());
+				System.out.println(o);
 			}
 		}
-				
-			
-			
-			ClassTree ct = context.TREES.getTree(te);
-			
-			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-			Iterator<StatementTree> i = members.iterator();
-			while (i.hasNext())
-			{
-				MethodTree o = (MethodTree) i.next();
-				if (o.getName().contentEquals("getSequencer"))
-				{
-//					o.accept(new AMethodVisitor(new SCJApplication(context)) , null);
-					
-				}
-			}
-			
-			
-//		}
+	
 	}
 
 }
