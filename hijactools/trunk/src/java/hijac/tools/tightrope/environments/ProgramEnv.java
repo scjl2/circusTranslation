@@ -1,13 +1,21 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.modelgen.circus.SCJApplication;
+import hijac.tools.modelgen.circus.visitors.AMethodVisitor;
+import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.lang.model.element.Name;
+import javax.lang.model.element.TypeElement;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.TreeVisitor;
 
 public class ProgramEnv
 {
@@ -43,15 +51,7 @@ public class ProgramEnv
 		this.nonParadigmObjectEnvs = nonParadigmObjectEnvs;
 	}
 
-	public List<ClassTree> getContext()
-	{
-		return context;
-	}
-
-	public void setContext(List<ClassTree> context)
-	{
-		this.context = context;
-	}
+	
 
 	public void output()
 	{
@@ -86,11 +86,40 @@ public class ProgramEnv
 	
 	public void getMethod(String methodName)
 	{
-		Name n = getSafelet().getmethodName(methodName);
-		if (n != null)
+		
+		
+//		Name n = getSafelet().getmethodName(;
+//		if (n != null)
+//		{
+		
+		TypeElement te = null;
+		
+		for (TypeElement e : context.getTypeElements())
 		{
-			
+			if (e.getSimpleName().contentEquals("FlatBuffer"))
+			{
+				te = e;
+			}
 		}
+				
+			
+			
+			ClassTree ct = context.TREES.getTree(te);
+			
+			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+			Iterator<StatementTree> i = members.iterator();
+			while (i.hasNext())
+			{
+				MethodTree o = (MethodTree) i.next();
+				if (o.getName().contentEquals("getSequencer"))
+				{
+//					o.accept(new AMethodVisitor(new SCJApplication(context)) , null);
+					
+				}
+			}
+			
+			
+//		}
 	}
 
 }
