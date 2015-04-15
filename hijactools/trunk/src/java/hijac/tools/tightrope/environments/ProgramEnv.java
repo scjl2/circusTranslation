@@ -86,10 +86,11 @@ public class ProgramEnv
 	
 	public void getMethod(String methodName)
 	{
-		ClassTree ct = getSafelet().getClassTree();
+//		ClassTree ct = getSafelet().getClassTree();
 		
-		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-		Iterator<StatementTree> i = members.iterator();
+//		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+		
+		Iterator<MethodTree> i = getSafelet().getMeths().iterator();
 		while (i.hasNext())
 		{
 			MethodTree o = (MethodTree) i.next();
@@ -101,6 +102,8 @@ public class ProgramEnv
 				System.out.println(o);
 			}
 		}
+		
+	
 	
 	}
 

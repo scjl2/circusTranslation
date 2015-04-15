@@ -1,6 +1,7 @@
 package hijac.tools.application;
 
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
@@ -26,7 +27,13 @@ import hijac.tools.config.Statics;
 
 import hijac.tools.application.UncaughtExceptionHandler;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import hijac.tools.modelgen.Output;
 import hijac.tools.modelgen.Target;
@@ -184,13 +191,13 @@ public class TightRopeTest
 
 				if (o.getName().contentEquals("initializeApplication"))
 				{
-					programEnv.getSafelet().addMeth(o.getName());
+					programEnv.getSafelet().addMeth(o);
 				}
 
 				if (o.getName().contentEquals("getSequencer"))
 				{
 					// System.out.println("in iterator");
-					programEnv.getSafelet().addMeth(o.getName());
+					programEnv.getSafelet().addMeth(o);
 					List<StatementTree> s = (List<StatementTree>) o.getBody()
 							.getStatements();
 
@@ -592,6 +599,8 @@ public class TightRopeTest
 				programEnv.getSafelet();
 
 				names = elem.accept(new SafeletLevel2Visitor(), null);
+				
+				programEnv.getSafelet().setTLMSNames(names);
 
 				for (int i = 0; i < names.length; i++)
 				{
@@ -710,6 +719,83 @@ public class TightRopeTest
 		
 		programEnv.getMethod("getSequencer");
 		
+		
+		  /* ------------------------------------------------------------------------ */    
+        /* You should do this ONLY ONCE in the whole application life-cycle:        */    
+    
+        /* Create and adjust the configuration singleton */
+        freemarker.template.Configuration cfg = new freemarker.template.Configuration();
+//        cfg.setDirectoryForTemplateLoading(new File("/home/matt/Uni/Translation/test/templates"));
+        cfg.setDirectoryForTemplateLoading(new File("/home/matt/Documents/Translation/test/templates"));
+        cfg.setDefaultEncoding("UTF-8");
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.IGNORE_HANDLER);
+
+        /* ------------------------------------------------------------------------ */    
+        
+
+        /* Create a data-model */
+        Map root = programEnv.getSafelet().toMap();
+//        root.put("author", "Matt");      
+//        root.put("title", "Matt's Awesome PDF");
+        
+
+        /* Get the template (uses cache internally) */
+        freemarker.template.Template temp = cfg.getTemplate("SafeletApp-Template.ftl");
+
+        
+        
+        /* Variables for writing output to a file */
+        File file = new File("/home/matt/Documents/Translation/test/output/SafeletApp.circus");
+        FileOutputStream fop = new FileOutputStream(file);
+		
+			
+        
+        /* Merge data-model with template */
+        Writer out = new OutputStreamWriter(fop);
+        try
+		{
+			temp.process(root, out);
+		} catch (TemplateException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        // Note: Depending on what `out` is, you may need to call `out.close()`.
+        // This is usually the case for file output, but not for servlet output.
+        
+        /* Execute pdflatex on the output */
+        try {
+        String s = null;
+        
+        
+        /* This executes pdflatex with the output directory of our translation on the latex file we've just written */
+        System.out.println("Generating PDF...");
+//        Process p = Runtime.getRuntime().exec("/usr/bin/pdflatex -output-directory /home/matt/Uni/Translation/test/output/ /home/matt/Uni/Translation/test/output/latexTest.tex");
+        Process p = Runtime.getRuntime().exec("/usr/bin/pdflatex -output-directory /home/matt/Documents/Translation/test/output/ /home/matt/Documents/Translation/test/output/SafeletApp.tex");
+
+        
+        BufferedReader stdInput = new BufferedReader(new
+        InputStreamReader(p.getInputStream()));
+
+        BufferedReader stdError = new BufferedReader(new
+        InputStreamReader(p.getErrorStream()));
+
+        // read the output from the command
+        System.out.println("Here is the standard output of the command:\n");
+        while ((s = stdInput.readLine()) != null) {
+        System.out.println(s);
+        }
+
+        // read any errors from the attempted command
+        System.out.println("Here is the standard error of the command (if any):\n");
+        while ((s = stdError.readLine()) != null) 
+        {
+        	System.out.println(s);
+        }
+
+   
+
+		
 	
 		
 		// Level2Translator circus_trans = new Level2Translator();
@@ -728,5 +814,11 @@ public class TightRopeTest
 		// post.execute();
 
 		System.exit(0);
+		
+        } catch (Exception e) {
+            System.out.println("exception happened - here's what I know: ");
+            e.printStackTrace();
+            System.exit(-1);
+        }
 	}
 }

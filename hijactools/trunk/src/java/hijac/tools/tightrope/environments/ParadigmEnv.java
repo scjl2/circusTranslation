@@ -1,21 +1,29 @@
 package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Name;
+
+import com.sun.source.tree.MethodTree;
+
 
 public class ParadigmEnv extends ObjectEnv
 {
 
 	List<Name> nonPMeths;
-	List<Name> meths;
+	List<MethodTree> meths;
+	
+	//temp
+	Name[] tlmsNames;
 
 	public ParadigmEnv()
 	{
 		super();
 		nonPMeths = new ArrayList<Name>();
-		meths = new ArrayList<Name>();
+		meths = new ArrayList<MethodTree>();
 	}
 
 	public List<Name> getNonPMeths()
@@ -28,28 +36,48 @@ public class ParadigmEnv extends ObjectEnv
 		nonPMeths.add(nonPMeth);
 	}
 
-	public List<Name> getMeths()
+	public List<MethodTree> getMeths()
 	{
 		return meths;
 	}
 
-	public void addMeth(Name meth)
+	public void addMeth(MethodTree meth)
 	{
 		meths.add(meth);
 	}
-	
-	public Name getmethodName(String methodName)
+
+	public Map toMap()
 	{
-		for(Name n : meths)
+		Map map = new HashMap();
+		map.put("ProcessName", name.toString());
+		map.put("initializeApplicationMethod", "");
+				
+		if (tlmsNames.length == 1)
 		{
-			if (n.contentEquals(methodName))
-			{
-				return n;
-			}
+			map.put("SchedulableID", tlmsNames[0]);
 		}
-		return null;
+			
+		
+		
+		return map;
 	}
-	
-	
+
+	public void setTLMSNames(Name[] names)
+	{
+		tlmsNames= names;
+		
+	}
+
+	// public Name getmethodName(String methodName)
+	// {
+	// for(Name n : meths)
+	// {
+	// if (n.contentEquals(methodName))
+	// {
+	// return n;
+	// }
+	// }
+	// return null;
+	// }
 
 }
