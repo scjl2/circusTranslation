@@ -1,40 +1,34 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.modelgen.circus.SCJApplication;
-import hijac.tools.modelgen.circus.visitors.AMethodVisitor;
-import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.lang.model.element.Name;
-import javax.lang.model.element.TypeElement;
 
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.TreeVisitor;
 
 public class ProgramEnv
 {
 	FrameworkEnv frameworkEnv;
 	List<NonParadigmEnv> nonParadigmObjectEnvs;
-<<<<<<< HEAD
-
-=======
-//	SCJAnalysis context;
->>>>>>> c0500f5fca2cf2a9a88dd42f5117b953bf5b30ce
 
 	public ProgramEnv(SCJAnalysis context)
 	{
 		this.frameworkEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
-<<<<<<< HEAD
-=======
-//		this.context = context;
->>>>>>> c0500f5fca2cf2a9a88dd42f5117b953bf5b30ce
+	}
+
+	public void addSafelet(Name safelet)
+	{
+		frameworkEnv.addSafelet(safelet);
+	}
+
+	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
+	{
+		frameworkEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 	}
 
 	public FrameworkEnv getFrameworkEnv()
@@ -42,23 +36,40 @@ public class ProgramEnv
 		return frameworkEnv;
 	}
 
-	public void setFrameworkEnv(FrameworkEnv frameworkEnv)
+	public void getMethod(String methodName)
 	{
-		this.frameworkEnv = frameworkEnv;
+		//		ClassTree ct = getSafelet().getClassTree();
+
+		//		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+
+		Iterator<MethodTree> i = getSafelet().getMeths().iterator();
+		while (i.hasNext())
+		{
+			MethodTree o = i.next();
+
+			if (o.getName().contentEquals(methodName))
+			{
+				//explore it
+				System.out.println(o.getName());
+				System.out.println(o);
+			}
+		}
+
+
+
 	}
+
+
 
 	public List<NonParadigmEnv> getNonParadigmObjectEnvs()
 	{
 		return nonParadigmObjectEnvs;
 	}
 
-	public void setNonParadigmObjectEnvs(
-			List<NonParadigmEnv> nonParadigmObjectEnvs)
+	public ParadigmEnv getSafelet()
 	{
-		this.nonParadigmObjectEnvs = nonParadigmObjectEnvs;
+		return frameworkEnv.getControlTier().getSafeletEnv();
 	}
-
-	
 
 	public void output()
 	{
@@ -76,42 +87,15 @@ public class ProgramEnv
 
 	}
 
-	public void addSafelet(Name safelet)
+	public void setFrameworkEnv(FrameworkEnv frameworkEnv)
 	{
-		frameworkEnv.addSafelet(safelet);
+		this.frameworkEnv = frameworkEnv;
 	}
 
-	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
+	public void setNonParadigmObjectEnvs(
+			List<NonParadigmEnv> nonParadigmObjectEnvs)
 	{
-		frameworkEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
-	}
-
-	public ParadigmEnv getSafelet()
-	{
-		return frameworkEnv.getControlTier().getSafeletEnv();
-	}
-	
-	public void getMethod(String methodName)
-	{
-//		ClassTree ct = getSafelet().getClassTree();
-		
-//		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-		
-		Iterator<MethodTree> i = getSafelet().getMeths().iterator();
-		while (i.hasNext())
-		{
-			MethodTree o = (MethodTree) i.next();
-			
-			if (o.getName().contentEquals(methodName))
-			{
-				//explore it
-				System.out.println(o.getName());
-				System.out.println(o);
-			}
-		}
-		
-	
-	
+		this.nonParadigmObjectEnvs = nonParadigmObjectEnvs;
 	}
 
 }
