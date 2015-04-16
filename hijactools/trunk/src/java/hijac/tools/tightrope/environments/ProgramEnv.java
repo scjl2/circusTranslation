@@ -21,13 +21,13 @@ public class ProgramEnv
 {
 	FrameworkEnv frameworkEnv;
 	List<NonParadigmEnv> nonParadigmObjectEnvs;
-	SCJAnalysis context;
+//	SCJAnalysis context;
 
 	public ProgramEnv(SCJAnalysis context)
 	{
 		this.frameworkEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
-		this.context = context;
+//		this.context = context;
 	}
 
 	public FrameworkEnv getFrameworkEnv()
