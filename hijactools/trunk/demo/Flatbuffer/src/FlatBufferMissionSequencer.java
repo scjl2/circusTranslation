@@ -16,6 +16,7 @@ public class FlatBufferMissionSequencer extends MissionSequencer<Mission>
 		returnedMission = false;
 	}
 
+	@ReturnsMission({"FlatBufferMission"})
 	protected Mission getNextMission()
 	{
 		System.out.println("FlatBufferMissionSequencer");

@@ -13,6 +13,7 @@ public class FlatBuffer implements Safelet<Mission>
 		return Level.LEVEL_2;
 	}
 
+	@ReturnsSequencer({"FlatBufferMissionSequencer"})
 	public MissionSequencer<Mission> getSequencer()
 	{
 		System.out.println("FlatBuffer");

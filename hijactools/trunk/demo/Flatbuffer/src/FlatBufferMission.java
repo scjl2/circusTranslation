@@ -19,6 +19,7 @@ public class FlatBufferMission extends Mission
 		System.out.println("FlatBufferMission");
 	}
 
+	@Registers({"Reader","Writer"})
 	protected void initialize()
 	{
 		StorageParameters storageParameters = new StorageParameters(1048576,
