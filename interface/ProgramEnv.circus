@@ -3,17 +3,26 @@
 \end{zsection}
 %
 \begin{zed}
-	[name] \\
-	[type] \\
-	vars == \seq (name \cross type) \\
-	nonPMeths == \seq name \\
-	meths == \seq name 
+	[Name] \\
+	[Method] \\
+	
+	MethodSet == \power Method 
 \end{zed}
 %
-\begin{zed}
-	ParadigmEnv == name \cross vars \cross nonPMeths \cross meths\\
-	NonParadigmEnv == name \cross vars \cross meths\\
-\end{zed}
+\begin{schema}{ObjectEnv}
+name : Name \\
+variables : \seq Name \\
+\end{schema}
+%
+\begin{schema}{ParadigmEnv}
+ObjectEnv \\
+methods : MethodSet\\
+nonSCJMethods : MethodSet \\
+\end{schema}
+%
+\begin{schema}{NonSCJEnv}
+methods : MethodSet
+\end{schema}
 %
 \begin{zed}
 	SafeletEnv == ParadigmEnv \\
@@ -24,36 +33,35 @@
 	OSEHEnv == ParadigmEnv \\
 	SMSEnv == ParadigmEnv \\
 	MTEnv == ParadigmEnv \\
-	NonParaObjectEnv == NonParadigmEnv
+	NonSCJObjectEnv == NonSCJEnv \\	
 \end{zed}
 %
 \begin{zed}
-	SchedulablesEnv == \\
+SchedulablesEnv == \\
 	\t1 \seq PEHEnv \cross \\
 	\t1 \seq APEHEnv \cross \\
 	\t1 \seq OSEHEnv \cross \\
 	\t1 \seq SMSEnv \cross \\
 	\t1 \seq MTEnv \\
-	
-	ClusterEnv 	== MissionEnv \cross SchedulablesEnv \\	
-	
-	TierEnv 	 == \seq ClusterEnv \\
-	
-	Tier0Env == TierEnv \\
-	NestedTiersEnv == TierEnv \\
-	
+\end{zed}
+%
+\begin{schema}{ClusterEnv}
+Mission : MissionEnv \\
+Schedulables : SchedulablesEnv \\
+\end{schema}
+%
+\begin{zed}
+	TierEnv 	 == \seq ClusterEnv \\		
 	ControlTierEnv 	 == SafeletEnv \cross \seq TopLevelMissionSequencerEnv \\	
-	
 \end{zed}
 %
-\begin{zed}
-	FrameworkEnv == ControlTierEnv \cross Tier0Env \cross NestedTiersEnv \\	
-\end{zed}
-
+\begin{schema}{StructureEnv}
+ControlTier : ControlTierEnv\\
+Tiers : \seq TierEnv \\	
+\end{schema}
 %
-\begin{zed}
-	[ClassTree]\\
+\begin{schema}{ProgramEnv}
+Structure : StructureEnv \\
+NonSCJObjects : \power NonSCJObjectEnv \\
 
-	ProgramEnv == FrameworkEnv \cross \seq NonParaObjectEnv \cross \seq ClassTree \\
-	%Program\_Locking == Program \cross LockingModel \\
-\end{zed}
+\end{schema}
