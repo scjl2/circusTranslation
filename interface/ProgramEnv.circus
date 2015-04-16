@@ -21,7 +21,8 @@ nonSCJMethods : MethodSet \\
 \end{schema}
 %
 \begin{schema}{NonSCJEnv}
-methods : MethodSet
+ObjectEnv \\
+methods : MethodSet \\
 \end{schema}
 %
 \begin{zed}
@@ -63,5 +64,4 @@ Tiers : \seq TierEnv \\
 \begin{schema}{ProgramEnv}
 Structure : StructureEnv \\
 NonSCJObjects : \power NonSCJObjectEnv \\
-
 \end{schema}
