@@ -29,6 +29,7 @@ import hijac.tools.application.UncaughtExceptionHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -490,8 +491,7 @@ public class TightRopeTest
 					if (o.getName().contentEquals("initialize"))
 					{
 						System.out.println("in iterator");
-						List<StatementTree> s = (List<StatementTree>) o
-								.getBody().getStatements();
+						List<StatementTree> s = (List<StatementTree>) o.getBody().getStatements();
 
 						Iterator j = s.iterator();
 
@@ -687,6 +687,7 @@ public class TightRopeTest
 			System.out.println("Mission Sequencer Visiting");
 			for (int i = 0; i < names.length; i++)
 			{
+				programEnv.addTopLevelMissionSequencer(names[i]);
 				// System.out.println(packagePrefix +names[i]);
 				TypeElement elem = ANALYSIS.getTypeElement(packagePrefix
 						+ names[i]);
@@ -699,13 +700,14 @@ public class TightRopeTest
 
 		Name[][] clusters = null;
 
-		System.out.println(missionNames == null);
+		
 
 		if (missionNames != null)
 		{
 			System.out.println("Mission Visiting");
 			for (int i = 0; i < missionNames.length; i++)
 			{
+				
 				TypeElement elem = ANALYSIS.getTypeElement(packagePrefix
 						+ missionNames[i]);
 				System.out.println("Visiting: " + elem);
@@ -714,14 +716,23 @@ public class TightRopeTest
 			}
 		}
 
+		
+		
 		System.out.println("Framework Printing");
 		programEnv.output();
 		
 		
-		programEnv.getMethod("getSequencer");
+//		programEnv.getMethod("getSequencer");
 		
 		
-		  /* ------------------------------------------------------------------------ */    
+//		  translateLatexAndExit();
+		System.exit(0);
+	}
+
+	private static void translateLatexAndExit() throws IOException,
+			FileNotFoundException
+	{
+		/* ------------------------------------------------------------------------ */    
         /* You should do this ONLY ONCE in the whole application life-cycle:        */    
     
         /* Create and adjust the configuration singleton */

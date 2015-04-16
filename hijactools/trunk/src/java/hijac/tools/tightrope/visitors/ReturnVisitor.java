@@ -62,6 +62,8 @@ import com.sun.source.tree.WildcardTree;
 
  public class ReturnVisitor implements TreeVisitor<Name[], Void>
    {
+	 
+	 private Tree save;
 
 	@Override
 	public Name[] visitAnnotation(AnnotationTree arg0, Void arg1) {
@@ -101,8 +103,23 @@ import com.sun.source.tree.WildcardTree;
 
 	@Override
 	public Name[] visitBlock(BlockTree arg0, Void arg1) {
-		// TODO Auto-generated method stub
+		System.out.println("Return Visitor: Visiting Block Tree");
+		
+		List<? extends StatementTree> s =   arg0.getStatements();
+		
+		Iterator<? extends StatementTree> j = s.iterator();
+		
+		while(j.hasNext())
+		{
+			StatementTree st =  j.next();
+			if(st instanceof ReturnTree)
+			{
+				return st.accept(this, null);
+			}
+		}
+		
 		return null;
+		
 	}
 
 	@Override
@@ -201,8 +218,24 @@ import com.sun.source.tree.WildcardTree;
 
 	@Override
 	public Name[] visitIf(IfTree arg0, Void arg1) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		
+		System.out.println("Return Visistor: visiting if tree");
+		if (save == arg0)
+		{
+			System.out.println("Visiting Else Branch");
+			save = null;
+			
+			
+			return arg0.getElseStatement().accept(this, null);
+		}
+		else
+		{
+			System.out.println("Visiting Then Branch");
+			save = arg0;
+					
+			return arg0.getThenStatement().accept(this, null);
+		}
 	}
 
 	@Override
@@ -254,6 +287,11 @@ import com.sun.source.tree.WildcardTree;
 				System.out.println("Founs Return Tree");
 				return st.accept(this, null);
 			  }
+			if(st instanceof IfTree)
+			{
+				System.out.println("Found If Tree");
+				return st.accept(this, null);
+			}
 		}
 		
 		return null;
