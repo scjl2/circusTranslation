@@ -5,6 +5,7 @@ import javax.safetycritical.Mission;
 import javax.safetycritical.StorageParameters;
 import javax.scj.util.Const;
 
+
 public class FlatBufferMission extends Mission
 {
 	private volatile int[] buffer;
@@ -19,7 +20,7 @@ public class FlatBufferMission extends Mission
 		System.out.println("FlatBufferMission");
 	}
 
-	@Registers({"Reader","Writer"})
+	//@Registers({"Reader","Writer"})
 	protected void initialize()
 	{
 		StorageParameters storageParameters = new StorageParameters(1048576,

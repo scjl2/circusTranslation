@@ -372,6 +372,12 @@ public class TightRopeTest
 
 					if (o.getName().contentEquals("getNextMission"))
 					{
+						for (AnnotationTree at : o.getModifiers().getAnnotations())
+						{
+							System.out.println("+++Mission Annotation Arguments");
+							System.out.println(at.getArguments().get(0));
+						}
+						
 						System.out.println("Release the Visitor!");
 						o.accept(new ReturnVisitor(), null);
 

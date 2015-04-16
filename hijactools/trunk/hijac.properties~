@@ -20,7 +20,7 @@ USE_ANSI_COLOURS = true
 
 ### Level 2
 SCJ_SRC = demo/Flatbuffer/src
-#SCJ_LIB = demo/libL2/icecapSDK.jar
+SCJ_LIB = demo/libL2/icecapSDK
 
 
 #SCJ_SRC = demo/test
@@ -77,7 +77,7 @@ SCJ_SRC = demo/Flatbuffer/src
 #SCJ_LIB = demo/lib/scj.jar
 #SCJ_LIB = demo/lib/ri_rtsjBased_j4.fix.jar
 #SCJ_LIB = demo/lib_src/javax/safetycritical/
-SCJ_LIB = demo/libL2/icecapSDK
+#SCJ_LIB = demo/libL2/icecapSDK
 
 #################################
 # Configuration of the Analyser #

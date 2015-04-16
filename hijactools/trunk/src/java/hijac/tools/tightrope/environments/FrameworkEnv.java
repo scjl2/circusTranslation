@@ -9,8 +9,10 @@ import javax.lang.model.element.Name;
 public class FrameworkEnv
 {
 	private ControlTierEnv controlTier;
-	private TierEnv tier0;
-	private NestedTiersEnv nestedTiers;
+//	private TierEnv tier0;
+//	private NestedTiersEnv nestedTiers;
+	
+	private List<TierEnv> tiers;
 
 	// List<TierEnv> nestedTiers;
 
@@ -78,6 +80,7 @@ public class FrameworkEnv
 		public TierEnv()
 		{
 			clusters = new ArrayList<ClusterEnv>();
+			clusters.add(new ClusterEnv());
 		}
 
 		public List<ClusterEnv> getClusters()
@@ -103,32 +106,38 @@ public class FrameworkEnv
 		}
 	}
 
-	private class NestedTiersEnv
-	{
-		List<TierEnv> nestedTiers;
-
-		public NestedTiersEnv()
-		{
-			nestedTiers = new ArrayList<TierEnv>();
-		}
-
-		public String toString()
-		{
-			if (nestedTiers.isEmpty())
-			{
-				return "No Nested Tiers";
-			} else
-			{
-				return "Nested Tiers Exist";
-			}
-		}
-	}
+//	private class NestedTiersEnv
+//	{
+//		List<TierEnv> nestedTiers;
+//
+//		public NestedTiersEnv()
+//		{
+//			nestedTiers = new ArrayList<TierEnv>();
+//		}
+//
+//		public String toString()
+//		{
+//			if (nestedTiers.isEmpty())
+//			{
+//				return "No Nested Tiers";
+//			} else
+//			{
+//				return "Nested Tiers Exist";
+//			}
+//		}
+//	}
 
 	private class ClusterEnv
 	{
 		ParadigmEnv missionEnv;
 		SchedulablesEnv schedulablesEnv;
 
+		public ClusterEnv()
+		{
+			missionEnv = new ParadigmEnv();
+			schedulablesEnv = new SchedulablesEnv();
+		}
+		
 		public ParadigmEnv getMissionEnv()
 		{
 			return missionEnv;
@@ -152,12 +161,16 @@ public class FrameworkEnv
 
 	private class SchedulablesEnv
 	{
+		
+
 		List<ParadigmEnv> periodEventHandlerEnvs;
 		List<ParadigmEnv> aperiodicEventHandlerEnvs;
 		List<ParadigmEnv> oneShotEventHandlerEnvs;
 		List<ParadigmEnv> schedulableMissionSequencerEnvs;
 		List<ParadigmEnv> managedThreadEnvs;
 
+		
+		
 		public List<ParadigmEnv> getPeriodEventHandlerEnvs()
 		{
 			return periodEventHandlerEnvs;
@@ -217,8 +230,8 @@ public class FrameworkEnv
 	{
 		super();
 		this.controlTier = new ControlTierEnv();
-		this.tier0 = new TierEnv();
-		this.nestedTiers = new NestedTiersEnv();
+		tiers = new ArrayList<TierEnv>();
+		tiers.add(new TierEnv());
 	}
 
 	ControlTierEnv getControlTier()
@@ -233,23 +246,10 @@ public class FrameworkEnv
 
 	public TierEnv getTier0()
 	{
-		return tier0;
+		return tiers.get(0);
 	}
 
-	public void setTier0(TierEnv tier0)
-	{
-		this.tier0 = tier0;
-	}
-
-	public NestedTiersEnv getNestedTiers()
-	{
-		return nestedTiers;
-	}
-
-	public void setNestedTiers(NestedTiersEnv nestedTiers)
-	{
-		this.nestedTiers = nestedTiers;
-	}
+	
 
 	public void addSafelet(Name safelet)
 	{
@@ -269,14 +269,19 @@ public class FrameworkEnv
 		output += System.getProperty("line.separator");
 		output += controlTier.toString();
 		output += System.getProperty("line.separator");
-		output += "Tier 0:";
-		output += System.getProperty("line.separator");
-		output += tier0.toString();
-		output += System.getProperty("line.separator");
-		output += "Nested Tiers:";
-		output += System.getProperty("line.separator");
-		output += nestedTiers.toString();
-
+		
+		int i = 0 ;
+		for (TierEnv tier : tiers)
+		{
+			output += "Tier "+i+":";
+			output += System.getProperty("line.separator");
+			output += tier.toString();
+			output += System.getProperty("line.separator");
+			
+			i++;
+			
+		}
+		
 		return output;
 	}
 

@@ -5,6 +5,7 @@ import javax.safetycritical.*;
 import javax.safetycritical.annotate.Level;
 import javax.scj.util.Const;
 
+
 public class FlatBuffer implements Safelet<Mission>
 {
 	
@@ -13,7 +14,7 @@ public class FlatBuffer implements Safelet<Mission>
 		return Level.LEVEL_2;
 	}
 
-	@ReturnsSequencer({"FlatBufferMissionSequencer"})
+	//@ReturnsSequencer({"FlatBufferMissionSequencer"})
 	public MissionSequencer<Mission> getSequencer()
 	{
 		System.out.println("FlatBuffer");

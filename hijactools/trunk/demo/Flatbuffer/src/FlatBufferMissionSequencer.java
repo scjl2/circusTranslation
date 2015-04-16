@@ -5,6 +5,7 @@ import javax.safetycritical.Mission;
 import javax.safetycritical.MissionSequencer;
 import javax.safetycritical.StorageParameters;
 
+
 public class FlatBufferMissionSequencer extends MissionSequencer<Mission>
 {
 	private boolean returnedMission;
@@ -16,7 +17,7 @@ public class FlatBufferMissionSequencer extends MissionSequencer<Mission>
 		returnedMission = false;
 	}
 
-	@ReturnsMission({"FlatBufferMission"})
+	//@ReturnsMission({"FlatBufferMission"})
 	protected Mission getNextMission()
 	{
 		System.out.println("FlatBufferMissionSequencer");
