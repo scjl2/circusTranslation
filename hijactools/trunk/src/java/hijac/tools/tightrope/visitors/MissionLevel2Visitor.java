@@ -18,6 +18,8 @@ import javax.lang.model.element.VariableElement;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
@@ -110,12 +112,26 @@ public class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
 						{
 							StatementTree st =  j.next();
 							
-							System.out.println("Mission Visistor: j = "+ st.toString());
+							System.out.println("Mission Visistor: j = "+ st.getKind());
 							
-							if (st instanceof MethodInvocationTree)
+							if (st instanceof ExpressionStatementTree)
 							{
-								System.out.println("Mission Visitor: Found Method Invocation");
-								System.out.println(((MethodInvocationTree) st).getMethodSelect());
+								if(((ExpressionStatementTree) st).getExpression() instanceof MethodInvocationTree)
+								{
+									System.out.println("Mission Visitor: Found Method Invocation");
+									MethodInvocationTree mit = (MethodInvocationTree) ((ExpressionStatementTree) st).getExpression();
+									
+									System.out.println(mit.getMethodSelect());
+									System.out.println(mit.getMethodSelect().getKind());
+									
+									if (mit.getMethodSelect() instanceof MemberSelectTree)
+									{
+										MemberSelectTree mst = (MemberSelectTree) mit.getMethodSelect();
+										
+										//get identifier
+										//if register then add
+									}
+								}
 							}
 							
 						}
