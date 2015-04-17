@@ -81,79 +81,82 @@ public class MissionLevel2Visitor implements ElementVisitor<Name[], Void>
 		public Name[] visitType(TypeElement arg0, Void arg1)
 		{
 //			System.out.println(arg0);
-			HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
+		
 			ArrayList<Name> schedulables = new ArrayList<Name>();
 			ClassTree ct = trees.getTree(arg0);
-
+						
 			List<Tree> members = (List<Tree>) ct.getMembers();
 			Iterator<Tree> i = members.iterator();
 			while (i.hasNext())
 			{
-				System.out.println("Mission Visitor: I itorator");
+				System.out.println("Mission Visitor: I Iterator");
 				
 				Tree tlst = i.next();
 				
-				if (tlst instanceof VariableTree)
-				{
-					System.out.println("Mission Visitor: Variable Tree Found");
-					System.out.println("-> " + tlst.toString());
-					
-					variables.put(((VariableTree) tlst).getName(), ((VariableTree) tlst).getType());
-					
-				}
+				tlst.accept(new RegistersVisitor(programEnv, analysis), null);
+//				
+			
+//				if (tlst instanceof VariableTree)
+//				{
+//					System.out.println("Mission Visitor: Variable Tree Found");
+//					System.out.println("-> " + tlst.toString());
+//					
+//					variables.put(((VariableTree) tlst).getName(), ((VariableTree) tlst).getType());
+//					
+//				}
 				
 //				System.out.println("Mission Visitor: i= " + ((Tree) i).getKind());
-				if (tlst instanceof MethodTree)
-				{
-					MethodTree o = (MethodTree) i.next();
-					System.out.println(o.getName());
-
-					if (o.getName().contentEquals("initialize"))
-					{
-						System.out.println("Mission Visitor: J iterator");
-						List<StatementTree> s = (List<StatementTree>) o.getBody().getStatements();
-
-						Iterator<StatementTree> j = s.iterator();
-
-						while (j.hasNext())
-						{
-							StatementTree st =  j.next();
-							
-							System.out.println("Mission Visistor: j = "+ st.getKind());
-							
-							if (st instanceof ExpressionStatementTree)
-							{
-								if(((ExpressionStatementTree) st).getExpression() instanceof MethodInvocationTree)
-								{
-									System.out.println("Mission Visitor: Found Method Invocation");
-									MethodInvocationTree mit = (MethodInvocationTree) ((ExpressionStatementTree) st).getExpression();
-									
-									System.out.println(mit.getMethodSelect());
-									System.out.println(mit.getMethodSelect().getKind());
-									
-									if (mit.getMethodSelect() instanceof MemberSelectTree)
-									{
-										MemberSelectTree mst = (MemberSelectTree) mit.getMethodSelect();
-										
-										if(mst.getIdentifier().contentEquals("register"))
-										{
-//											schedulables
-											
-											
-											schedulables.add( (Name) variables.get(mst.getExpression().getName()) );
-											
-										}
-										//get identifier
-										//if register then add
-									}
-								}
-							}
-							
+//				if (tlst instanceof MethodTree)
+//				{
+//					MethodTree o = (MethodTree) i.next();
+//					System.out.println(o.getName());
+//
+//					if (o.getName().contentEquals("initialize"))
+//					{
+//						System.out.println("Mission Visitor: J iterator");
+//						List<StatementTree> s = (List<StatementTree>) o.getBody().getStatements();
+//
+//						Iterator<StatementTree> j = s.iterator();
+//
+//						while (j.hasNext())
+//						{
+//							StatementTree st =  j.next();
+//							
+//							System.out.println("Mission Visistor: j = "+ st.getKind());
+//							
+//							if (st instanceof ExpressionStatementTree)
+//							{
+//								if(((ExpressionStatementTree) st).getExpression() instanceof MethodInvocationTree)
+//								{
+//									System.out.println("Mission Visitor: Found Method Invocation");
+//									MethodInvocationTree mit = (MethodInvocationTree) ((ExpressionStatementTree) st).getExpression();
+//									
+//									System.out.println(mit.getMethodSelect());
+//									System.out.println(mit.getMethodSelect().getKind());
+//									
+//									if (mit.getMethodSelect() instanceof MemberSelectTree)
+//									{
+//										MemberSelectTree mst = (MemberSelectTree) mit.getMethodSelect();
+//										
+//										if(mst.getIdentifier().contentEquals("register"))
+//										{
+////											schedulables
+//											
+//											
+//											schedulables.add( (Name) variables.get(((MethodTree) mst.getExpression()).getName()) );
+//											
+//										}
+//										//get identifier
+//										//if register then add
+//									}
+//								}
+//							}
+//							
 						}
-
-					}
-				}
-			}
+//
+//					}
+//				}
+//			}
 
 			return null;
 		}

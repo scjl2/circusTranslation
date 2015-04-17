@@ -90,6 +90,12 @@ public class ProgramEnv
 
 	}
 
+	public void addSchedulable(FrameworkEnv.schedulableType type, Name name)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 //	public void setFrameworkEnv(FrameworkEnv frameworkEnv)
 //	{
 //		this.frameworkEnv = frameworkEnv;

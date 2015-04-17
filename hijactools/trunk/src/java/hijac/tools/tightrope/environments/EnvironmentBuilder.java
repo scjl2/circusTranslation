@@ -139,7 +139,7 @@ public class EnvironmentBuilder
 						+ missionNames[i]);
 				System.out.println("Visiting: " + elem);
 
-				schedulables = elem.accept(new MissionLevel2Visitor(programEnv, analysis), null);
+				elem.accept(new MissionLevel2Visitor(programEnv, analysis), null);
 			}
 		}
 	}
