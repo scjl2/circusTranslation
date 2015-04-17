@@ -30,6 +30,11 @@ public class ProgramEnv
 	{
 		frameworkEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 	}
+	
+	public void addMission(Name mission)
+	{
+		frameworkEnv.addMission(mission);
+	}
 
 	public FrameworkEnv getFrameworkEnv()
 	{
@@ -54,8 +59,6 @@ public class ProgramEnv
 				System.out.println(o);
 			}
 		}
-
-
 
 	}
 
@@ -87,15 +90,15 @@ public class ProgramEnv
 
 	}
 
-	public void setFrameworkEnv(FrameworkEnv frameworkEnv)
-	{
-		this.frameworkEnv = frameworkEnv;
-	}
-
-	public void setNonParadigmObjectEnvs(
-			List<NonParadigmEnv> nonParadigmObjectEnvs)
-	{
-		this.nonParadigmObjectEnvs = nonParadigmObjectEnvs;
-	}
+//	public void setFrameworkEnv(FrameworkEnv frameworkEnv)
+//	{
+//		this.frameworkEnv = frameworkEnv;
+//	}
+//
+//	public void setNonParadigmObjectEnvs(
+//			List<NonParadigmEnv> nonParadigmObjectEnvs)
+//	{
+//		this.nonParadigmObjectEnvs = nonParadigmObjectEnvs;
+//	}
 
 }

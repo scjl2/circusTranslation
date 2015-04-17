@@ -13,6 +13,11 @@ public class FrameworkEnv
 //	private NestedTiersEnv nestedTiers;
 	
 	private List<TierEnv> tiers;
+	
+	private TierEnv currentTier;
+	private ClusterEnv currentCuster;
+	
+	public enum schedulableType {PEH, APEH, OSEH, SMS, MT};
 
 	// List<TierEnv> nestedTiers;
 
@@ -80,7 +85,8 @@ public class FrameworkEnv
 		public TierEnv()
 		{
 			clusters = new ArrayList<ClusterEnv>();
-			clusters.add(new ClusterEnv());
+			currentCuster = new ClusterEnv();
+			clusters.add(currentCuster);
 		}
 
 		public List<ClusterEnv> getClusters()
@@ -88,19 +94,32 @@ public class FrameworkEnv
 			return clusters;
 		}
 
-		public void setClusters(List<ClusterEnv> clusters)
+		public void addCluster(ClusterEnv cluster)
 		{
-			this.clusters = clusters;
+			this.clusters.add(cluster);
+		}
+		
+		public void addMission(Name mission)
+		{
+			currentCuster.getMissionEnv().setName(mission);
+			
+			//clusters.add(new ClusterEnv(missionEnv));
 		}
 
 		public String toString()
 		{
 			if (clusters.isEmpty())
-			{
+			{				
 				return "Tier Empty";
 			} else
 			{
-				return "Tier Present";
+				String output="";
+				for(ClusterEnv c : clusters)
+				{
+					output+= c.toString();
+				}
+				
+				return output;
 			}
 
 		}
@@ -157,20 +176,30 @@ public class FrameworkEnv
 		{
 			this.schedulablesEnv = schedulablesEnv;
 		}
+		
+		public String toString()
+		{
+			String output = "Cluster Environment:";
+			output += "Mission = " + missionEnv.getName();
+			output += schedulablesEnv.toString();
+			
+			return output;
+					
+		}
 	}
 
 	private class SchedulablesEnv
 	{
 		
 
-		List<ParadigmEnv> periodEventHandlerEnvs;
-		List<ParadigmEnv> aperiodicEventHandlerEnvs;
-		List<ParadigmEnv> oneShotEventHandlerEnvs;
-		List<ParadigmEnv> schedulableMissionSequencerEnvs;
-		List<ParadigmEnv> managedThreadEnvs;
+		List<ParadigmEnv> periodEventHandlerEnvs = new ArrayList<ParadigmEnv>();
+		List<ParadigmEnv> aperiodicEventHandlerEnvs= new ArrayList<ParadigmEnv>();
+		List<ParadigmEnv> oneShotEventHandlerEnvs= new ArrayList<ParadigmEnv>();
+		List<ParadigmEnv> schedulableMissionSequencerEnvs= new ArrayList<ParadigmEnv>();
+		List<ParadigmEnv> managedThreadEnvs= new ArrayList<ParadigmEnv>();
 
 		
-		
+		 
 		public List<ParadigmEnv> getPeriodEventHandlerEnvs()
 		{
 			return periodEventHandlerEnvs;
@@ -224,6 +253,64 @@ public class FrameworkEnv
 		{
 			this.managedThreadEnvs = managedThreadEnvs;
 		}
+		
+	
+		public String toString()
+		{
+			String output = "";
+			if(!periodEventHandlerEnvs.isEmpty())
+			{
+				output += "Periodic Event Handlers:";
+						
+				for(ParadigmEnv p : periodEventHandlerEnvs)
+				{
+					output+= p.getName();
+				}
+			}
+			
+			if(!aperiodicEventHandlerEnvs.isEmpty())
+			{
+				output+= "Aperidic Event Handlers:";
+				
+				for(ParadigmEnv p : aperiodicEventHandlerEnvs)
+				{
+					output += p.getName();
+				}
+			}
+			
+			if(!oneShotEventHandlerEnvs.isEmpty())
+			{
+				output = "OneShot Event Handlers:";
+				
+				for(ParadigmEnv p : oneShotEventHandlerEnvs)
+				{
+					output+= p.getName();
+				}
+			}
+			
+			if (!schedulableMissionSequencerEnvs.isEmpty())
+			{
+				output += "Schedulable Mission Sequencers:";
+				
+				for(ParadigmEnv p : schedulableMissionSequencerEnvs)
+				{
+					output += p.getName();
+				}
+			}
+			
+			if(!managedThreadEnvs.isEmpty())
+			{
+				output += "Managed Threads:";
+				
+				for(ParadigmEnv p : managedThreadEnvs)
+				{
+					output += p.getName();						
+							
+				}
+			}
+			
+			return output;
+		}
 	}
 
 	public FrameworkEnv()
@@ -249,8 +336,6 @@ public class FrameworkEnv
 		return tiers.get(0);
 	}
 
-	
-
 	public void addSafelet(Name safelet)
 	{
 		controlTier.addSafelet(safelet);
@@ -259,7 +344,36 @@ public class FrameworkEnv
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 	{
 		controlTier.addTopLevelMissionSequencer(topLevelMissionSequencer);
-
+		
+//		
+//		TierEnv tier = new TierEnv();
+//		currentTier = tier;
+//		
+//		ClusterEnv cluster = new ClusterEnv();
+//		currentCuster = cluster;
+//		
+//		tier.addCluster(cluster);
+//				
+//		tiers.add(tier);
+	}
+	
+	public void addMission(Name mission)
+	{
+		currentCuster.getMissionEnv().setName(mission);		
+	}
+	
+	public void newCluster()
+	{
+		currentCuster = new ClusterEnv();
+		
+		currentTier.addCluster(currentCuster);
+	}
+	
+	public void newTier()
+	{
+		currentTier = new TierEnv();
+		
+		tiers.add(currentTier);
 	}
 
 	public String toString()

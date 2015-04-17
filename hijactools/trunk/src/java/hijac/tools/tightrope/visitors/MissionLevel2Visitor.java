@@ -128,6 +128,10 @@ public class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
 									{
 										MemberSelectTree mst = (MemberSelectTree) mit.getMethodSelect();
 										
+										if(mst.getIdentifier().contentEquals("register"))
+										{
+											
+										}
 										//get identifier
 										//if register then add
 									}
