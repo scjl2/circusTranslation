@@ -134,7 +134,7 @@ public class EnvironmentBuilder
 			System.out.println("Mission Visiting");
 			for (int i = 0; i < missionNames.length; i++)
 			{
-				
+				programEnv.addMission(missionNames[i]);
 				TypeElement elem = analysis.getTypeElement(packagePrefix
 						+ missionNames[i]);
 				System.out.println("Visiting: " + elem);
