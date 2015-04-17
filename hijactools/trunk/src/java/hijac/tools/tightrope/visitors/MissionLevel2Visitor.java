@@ -3,6 +3,8 @@ package hijac.tools.tightrope.visitors;
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +29,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
-public class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
+public class MissionLevel2Visitor implements ElementVisitor<Name[], Void>
 {
 	ProgramEnv programEnv;
 	SCJAnalysis analysis;
@@ -48,38 +50,39 @@ public class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
 	}
 
 		@Override
-		public Name[][] visit(Element arg0)
+		public Name[] visit(Element arg0)
 		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public Name[][] visit(Element arg0, Void arg1)
+		public Name[] visit(Element arg0, Void arg1)
 		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public Name[][] visitExecutable(ExecutableElement arg0, Void arg1)
+		public Name[] visitExecutable(ExecutableElement arg0, Void arg1)
 		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public Name[][] visitPackage(PackageElement arg0, Void arg1)
+		public Name[] visitPackage(PackageElement arg0, Void arg1)
 		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public Name[][] visitType(TypeElement arg0, Void arg1)
+		public Name[] visitType(TypeElement arg0, Void arg1)
 		{
 //			System.out.println(arg0);
-
+			HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
+			ArrayList<Name> schedulables = new ArrayList<Name>();
 			ClassTree ct = trees.getTree(arg0);
 
 			List<Tree> members = (List<Tree>) ct.getMembers();
@@ -93,6 +96,10 @@ public class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
 				if (tlst instanceof VariableTree)
 				{
 					System.out.println("Mission Visitor: Variable Tree Found");
+					System.out.println("-> " + tlst.toString());
+					
+					variables.put(((VariableTree) tlst).getName(), ((VariableTree) tlst).getType());
+					
 				}
 				
 //				System.out.println("Mission Visitor: i= " + ((Tree) i).getKind());
@@ -130,6 +137,10 @@ public class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
 										
 										if(mst.getIdentifier().contentEquals("register"))
 										{
+//											schedulables
+											
+											
+											schedulables.add( (Name) variables.get(mst.getExpression().getName()) );
 											
 										}
 										//get identifier
@@ -148,21 +159,21 @@ public class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
 		}
 
 		@Override
-		public Name[][] visitTypeParameter(TypeParameterElement arg0, Void arg1)
+		public Name[] visitTypeParameter(TypeParameterElement arg0, Void arg1)
 		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public Name[][] visitUnknown(Element arg0, Void arg1)
+		public Name[] visitUnknown(Element arg0, Void arg1)
 		{
 			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public Name[][] visitVariable(VariableElement arg0, Void arg1)
+		public Name[] visitVariable(VariableElement arg0, Void arg1)
 		{
 			// TODO Auto-generated method stub
 			return null;

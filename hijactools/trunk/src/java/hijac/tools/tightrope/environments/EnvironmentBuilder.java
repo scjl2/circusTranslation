@@ -128,7 +128,7 @@ public class EnvironmentBuilder
 
 	private void buildMissions(String packagePrefix, Name[] missionNames)
 	{
-		Name[][] clusters;
+		Name[] schedulables;
 		if (missionNames != null)
 		{
 			System.out.println("Mission Visiting");
@@ -139,7 +139,7 @@ public class EnvironmentBuilder
 						+ missionNames[i]);
 				System.out.println("Visiting: " + elem);
 
-				clusters = elem.accept(new MissionLevel2Visitor(programEnv, analysis), null);
+				schedulables = elem.accept(new MissionLevel2Visitor(programEnv, analysis), null);
 			}
 		}
 	}
