@@ -90,7 +90,7 @@ import com.sun.source.util.Trees;
 			while (i.hasNext())
 			{
 				Tree tlst = i.next();
-				System.out.println("MS Visitor i=" + i);
+//				System.out.println("MS Visitor i=" + ((Tree) i).getKind());
 
 				if (tlst instanceof VariableTree)
 				{

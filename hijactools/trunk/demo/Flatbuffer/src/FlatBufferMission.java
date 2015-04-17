@@ -29,9 +29,12 @@ public class FlatBufferMission extends Mission
 
 		reader = new Reader(new PriorityParameters(5), storageParameters, this,
 				writer);
+		reader.register();
 
 		writer = new Writer(new PriorityParameters(5), storageParameters, this,
 				reader);
+
+		writer.register();
 
 		System.out.println("FlatBufferMission init");
 	}

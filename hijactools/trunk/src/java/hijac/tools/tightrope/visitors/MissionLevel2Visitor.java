@@ -18,8 +18,11 @@ import javax.lang.model.element.VariableElement;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
 public class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
@@ -73,30 +76,48 @@ public class MissionLevel2Visitor implements ElementVisitor<Name[][], Void>
 		@Override
 		public Name[][] visitType(TypeElement arg0, Void arg1)
 		{
-			System.out.println(arg0);
+//			System.out.println(arg0);
 
 			ClassTree ct = trees.getTree(arg0);
 
-			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-			Iterator<StatementTree> i = members.iterator();
+			List<Tree> members = (List<Tree>) ct.getMembers();
+			Iterator<Tree> i = members.iterator();
 			while (i.hasNext())
 			{
-				i.next();
-				if (i instanceof MethodTree)
+				System.out.println("Mission Visitor: I itorator");
+				
+				Tree tlst = i.next();
+				
+				if (tlst instanceof VariableTree)
+				{
+					System.out.println("Mission Visitor: Variable Tree Found");
+				}
+				
+//				System.out.println("Mission Visitor: i= " + ((Tree) i).getKind());
+				if (tlst instanceof MethodTree)
 				{
 					MethodTree o = (MethodTree) i.next();
 					System.out.println(o.getName());
 
 					if (o.getName().contentEquals("initialize"))
 					{
-						System.out.println("in iterator");
+						System.out.println("Mission Visitor: J iterator");
 						List<StatementTree> s = (List<StatementTree>) o.getBody().getStatements();
 
-						Iterator j = s.iterator();
+						Iterator<StatementTree> j = s.iterator();
 
 						while (j.hasNext())
 						{
-							System.out.println(j.next());
+							StatementTree st =  j.next();
+							
+							System.out.println("Mission Visistor: j = "+ st.toString());
+							
+							if (st instanceof MethodInvocationTree)
+							{
+								System.out.println("Mission Visitor: Found Method Invocation");
+								System.out.println(((MethodInvocationTree) st).getMethodSelect());
+							}
+							
 						}
 
 					}
