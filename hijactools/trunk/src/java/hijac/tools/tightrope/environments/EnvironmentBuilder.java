@@ -85,6 +85,7 @@ public class EnvironmentBuilder
 					for(int i = 0 ; i< n.length ; i++)
 					{
 						topLevelMissionSequencers.add(n[i]);
+						programEnv.addTopLevelMissionSequencer(n[i]);
 					}
 					
 					

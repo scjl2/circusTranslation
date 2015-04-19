@@ -90,6 +90,12 @@ public class ProgramEnv
 		System.out.println("___________________________");
 		System.out.println(nonParadigmObjectEnvs.toString());
 		System.out.println("--------------------------------");
+		System.out.println("Variables");
+		System.out.println("---------");
+		for(Name n : variables.keySet())
+		{
+			System.out.println(n + " -> " + variables.get(n));
+		}
 
 	}
 

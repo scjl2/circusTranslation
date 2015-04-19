@@ -187,6 +187,7 @@ public class FrameworkEnv
 		{
 			String output = "Cluster Environment:";
 			output += "Mission = " + missionEnv.getName();
+			output += System.getProperty("line.separator");
 			output += schedulablesEnv.toString();
 			
 			return output;
@@ -290,54 +291,65 @@ public class FrameworkEnv
 	
 		public String toString()
 		{
-			String output = "";
+			String output = "Schedulables:";
+			output += System.getProperty("line.separator");
 			if(!periodEventHandlerEnvs.isEmpty())
 			{
 				output += "Periodic Event Handlers:";
+				output += System.getProperty("line.separator");
 						
 				for(ParadigmEnv p : periodEventHandlerEnvs)
 				{
 					output+= p.getName();
+					output += System.getProperty("line.separator");
 				}
 			}
 			
 			if(!aperiodicEventHandlerEnvs.isEmpty())
 			{
 				output+= "Aperidic Event Handlers:";
+				output += System.getProperty("line.separator");
 				
 				for(ParadigmEnv p : aperiodicEventHandlerEnvs)
 				{
 					output += p.getName();
+					output += System.getProperty("line.separator");
 				}
 			}
 			
 			if(!oneShotEventHandlerEnvs.isEmpty())
 			{
 				output = "OneShot Event Handlers:";
+				output += System.getProperty("line.separator");
 				
 				for(ParadigmEnv p : oneShotEventHandlerEnvs)
 				{
 					output+= p.getName();
+					output += System.getProperty("line.separator");					
 				}
 			}
 			
 			if (!schedulableMissionSequencerEnvs.isEmpty())
 			{
 				output += "Schedulable Mission Sequencers:";
+				output += System.getProperty("line.separator");
 				
 				for(ParadigmEnv p : schedulableMissionSequencerEnvs)
 				{
 					output += p.getName();
+					output += System.getProperty("line.separator");
 				}
 			}
 			
 			if(!managedThreadEnvs.isEmpty())
 			{
 				output += "Managed Threads:";
+				output += System.getProperty("line.separator");
 				
 				for(ParadigmEnv p : managedThreadEnvs)
 				{
-					output += p.getName();						
+					output += p.getName();		
+					output += System.getProperty("line.separator");
 							
 				}
 			}
@@ -423,7 +435,7 @@ public class FrameworkEnv
 			output += "Tier "+i+":";
 			output += System.getProperty("line.separator");
 			output += tier.toString();
-			output += System.getProperty("line.separator");
+//			output += System.getProperty("line.separator");
 			
 			i++;
 			
