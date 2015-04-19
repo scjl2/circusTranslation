@@ -95,7 +95,7 @@ public class ProgramEnv
 
 	public void addSchedulable(FrameworkEnv.schedulableType type, Name name)
 	{
-		// TODO Auto-generated method stub
+		frameworkEnv.addSchedulable(type, name);
 		
 	}
 

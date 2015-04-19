@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.environments.FrameworkEnv.schedulableType;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -176,6 +178,10 @@ public class FrameworkEnv
 		{
 			this.schedulablesEnv = schedulablesEnv;
 		}
+		public void addSchedulable(schedulableType type, Name name)
+		{
+			schedulablesEnv.addSchedulable(type, name);
+		}
 		
 		public String toString()
 		{
@@ -252,6 +258,33 @@ public class FrameworkEnv
 		public void setManagedThreadEnvs(List<ParadigmEnv> managedThreadEnvs)
 		{
 			this.managedThreadEnvs = managedThreadEnvs;
+		}
+		
+		public void addSchedulable(schedulableType type, Name name)
+		{
+			ParadigmEnv p = new ParadigmEnv();
+			p.setName(name);
+			
+			if (type == schedulableType.MT)
+			{			
+				managedThreadEnvs.add(p);
+			}
+			if (type == schedulableType.PEH)
+			{			
+				periodEventHandlerEnvs.add(p);
+			}
+			if (type == schedulableType.APEH)
+			{			
+				aperiodicEventHandlerEnvs.add(p);
+			}
+			if (type == schedulableType.OSEH)
+			{			
+				oneShotEventHandlerEnvs.add(p);
+			}
+			if (type == schedulableType.SMS)
+			{			
+				schedulableMissionSequencerEnvs.add(p);
+			}
 		}
 		
 	
@@ -397,6 +430,11 @@ public class FrameworkEnv
 		}
 		
 		return output;
+	}
+
+	public void addSchedulable(schedulableType type, Name name)
+	{
+		currentCuster.addSchedulable(type, name);		
 	}
 
 }
