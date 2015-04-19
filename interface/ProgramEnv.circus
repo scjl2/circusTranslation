@@ -5,7 +5,7 @@
 \begin{zed}
 	[Name] \\
 	[Method] \\
-	
+	[Type] \\
 	MethodSet == \power Method 
 \end{zed}
 %
@@ -64,4 +64,5 @@ Tiers : \seq TierEnv \\
 \begin{schema}{ProgramEnv}
 Structure : StructureEnv \\
 NonSCJObjects : \power NonSCJObjectEnv \\
+Variables : Name \pfun Type
 \end{schema}

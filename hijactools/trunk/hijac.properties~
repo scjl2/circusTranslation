@@ -19,8 +19,10 @@ USE_ANSI_COLOURS = true
 
 
 ### Level 2
-SCJ_SRC = demo/level2/Flatbuffer/src
 SCJ_LIB = demo/libL2/icecapSDK.jar
+
+#SCJ_SRC = demo/level2/Flatbuffer/src
+SCJ_SRC = demo/level2/simplemodechange/src
 
 
 
