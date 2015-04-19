@@ -51,9 +51,12 @@ Mission : MissionEnv \\
 Schedulables : SchedulablesEnv \\
 \end{schema}
 %
+\begin{schema}{TierEnv}
+Clusters : \seq ClusterEnv 
+\end{schema}
+%
 \begin{zed}
-	TierEnv 	 == \seq ClusterEnv \\		
-	ControlTierEnv 	 == SafeletEnv \cross \seq TopLevelMissionSequencerEnv \\	
+	ControlTierEnv 	 == SafeletEnv \cross \seq TopLevelMissionSequencerEnv 	
 \end{zed}
 %
 \begin{schema}{StructureEnv}
