@@ -1,0 +1,26 @@
+//package scjlevel2examples.simplemodechange;
+
+import javax.realtime.PeriodicParameters;
+import javax.realtime.PriorityParameters;
+import javax.safetycritical.PeriodicEventHandler;
+import javax.safetycritical.StorageConfigurationParameters;
+import javax.safetycritical.Mission;
+
+public class SMCModeAHandler extends PeriodicEventHandler
+{
+	
+	public SMCModeAHandler(PriorityParameters priority, PeriodicParameters periodic,
+			StorageConfigurationParameters storage, long size)
+	{
+		super(priority, periodic, storage, size);			
+	}
+
+	
+	@Override
+	public void handleEvent()
+	{	
+		System.out.println("Mode A");			
+		
+	}
+
+}

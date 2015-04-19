@@ -1,0 +1,21 @@
+package scjlevel2examples.simplemodechange;
+
+import javax.safetycritical.Safelet;
+import javax.safetycritical.SafeletExecuter;
+
+//Application entry point, runs the Safelet
+public class SMCSafeletExecuter extends SafeletExecuter
+{
+
+	public SMCSafeletExecuter(Safelet arg0)
+	{
+		super(arg0);
+	}
+
+	public static void main (String [] args)
+	{
+		//System.out.println("HelloSafeletExecuter ");
+		//Run the safelet which starts the whole application
+		SMCSafeletExecuter.run(new SMCApplication());
+	}
+}

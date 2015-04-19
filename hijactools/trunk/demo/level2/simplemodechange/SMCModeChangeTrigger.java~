@@ -1,0 +1,47 @@
+//package scjlevel2examples.simplemodechange;
+
+import javax.realtime.PeriodicParameters;
+import javax.realtime.PriorityParameters;
+import javax.safetycritical.Mission;
+import javax.safetycritical.PeriodicEventHandler;
+import javax.safetycritical.StorageConfigurationParameters;
+
+//This handler is the trigger for the mode changes
+public class SMCModeChangeTrigger extends PeriodicEventHandler
+{
+	private final SMCModeChanger modeChanger;
+	private int count;
+	
+	public SMCModeChangeTrigger(PriorityParameters priority, PeriodicParameters periodic,
+			StorageConfigurationParameters storage, long size, SMCModeChanger modeChanger)
+	{
+		super(priority, periodic, storage, size);
+		this.modeChanger = modeChanger;		
+		count = 0;
+	}
+
+	//Change modes, normally this advaces the mode - toggling between modes A and B 
+	//Once the count reaches 10 an 'emergancy' is 'encountered' so the mode changes to mode C to deal with this situation
+	//By the time the count has reached 15 ModeC has fixed the problem and can continue it's important task of toggling between modes A and B again
+	@Override
+	public void handleEvent()
+	{	
+		count = count +1;
+		if(count >= 15)
+		{
+			modeChanger.changeToA();
+			count=0;
+		}
+		else if(count >= 10)
+		{	
+			//Emergancy!
+			modeChanger.changeToC();			
+		}		
+		else
+		{
+			//Just change to the next mode
+			modeChanger.advanceMode();			
+		}
+	}
+
+}

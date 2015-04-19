@@ -1,0 +1,31 @@
+package scjlevel2examples.simplemodechange;
+
+import javax.realtime.PeriodicParameters;
+import javax.realtime.PriorityParameters;
+import javax.realtime.RelativeTime;
+import javax.safetycritical.Mission;
+import javax.safetycritical.PriorityScheduler;
+import javax.safetycritical.StorageConfigurationParameters;
+
+//The Main Mission of the 
+public class SMCMainMission extends Mission
+{
+	@Override
+	protected void initialize()
+	{
+		//Load the Mode Changer (which is a MissionSequencer)
+		SMCModeChanger modeChanger = new SMCModeChanger(new PriorityParameters(5),
+								new StorageConfigurationParameters(1048576, 1048576, 1048576));
+		//Load the PEH which triggers the mode change
+		SMCModeChangeTrigger smcModeChangeTrigger = new SMCModeChangeTrigger(new PriorityParameters(10),
+								new PeriodicParameters(new RelativeTime(500, 0)),
+								new StorageConfigurationParameters(1000, 1000, 1000), 
+								1000, modeChanger);
+	}
+
+	@Override
+	public long missionMemorySize()
+	{
+		return 100000;
+	}
+}

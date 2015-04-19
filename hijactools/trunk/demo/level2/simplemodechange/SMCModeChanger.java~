@@ -1,0 +1,78 @@
+package scjlevel2examples.simplemodechange;
+
+import javax.realtime.PriorityParameters;
+import javax.safetycritical.Mission;
+import javax.safetycritical.MissionSequencer;
+import javax.safetycritical.StorageConfigurationParameters;
+
+//The mode changer, this is responsible for changing modes (mission) in the application, deallocating one and loading the next
+public class SMCModeChanger extends MissionSequencer implements ModeChanger
+{
+		
+	private Mode nextMission;
+	private final Mode modeA, modeB, modeC;
+	
+	public SMCModeChanger(PriorityParameters priorityParameters,
+			StorageConfigurationParameters storageConfigurationParameters)
+	{
+		super(priorityParameters, storageConfigurationParameters);	
+				
+		modeA = new SMCModeA();
+		modeB = new SMCModeB();
+		modeC = new SMCModeC();
+		//set default mode
+		changeToA();
+		
+	}
+	//Toggles between modes A and B
+	public void advanceMode()
+	{
+		if(nextMission == modeA)
+		{
+			changeToB();
+			((Mission)modeA).requestTermination();
+		}
+		else if(nextMission == modeB)
+		{
+			changeToA();
+			((Mission)modeB).requestTermination();
+		}
+	}
+
+	
+	@Override
+	public void changeTo(Mode next)
+	{
+		if(next instanceof Mission)
+		{
+			nextMission = next;
+		}
+	}
+
+	//**One changeTo method for each mode**
+	public void changeToA()
+	{
+		changeTo(modeA);
+		System.out.println("Change to Mode A");
+	}
+
+	public void changeToB()
+	{
+		changeTo(modeB);
+		System.out.println("Change to Mode B");
+	}
+
+	public void changeToC()
+	{
+		changeTo(modeC);
+		System.out.println("Change to Mode C");
+	}
+
+	//The next mission has been set by the methods above, so simply return the nextMission variable
+	@Override
+	protected Mission getNextMission()
+	{		
+		return (Mission)nextMission;
+	}	
+
+}
