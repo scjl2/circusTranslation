@@ -26,160 +26,152 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
-public class MissionLevel2Visitor implements ElementVisitor<Name[], Void>
+public class MissionLevel2Visitor implements
+		ElementVisitor<ArrayList<Name>, Void>
 {
 	ProgramEnv programEnv;
 	SCJAnalysis analysis;
-	
-	private  Trees trees;
-	private  Set<CompilationUnitTree> units;
-	private  Set<TypeElement> type_elements;
-	
+
+	private Trees trees;
+	private Set<CompilationUnitTree> units;
+	private Set<TypeElement> type_elements;
+
+	private RegistersVisitor registersVisitor;
+
 	public MissionLevel2Visitor(ProgramEnv programEnv, SCJAnalysis analysis)
 	{
 		this.analysis = analysis;
 		this.programEnv = programEnv;
-		
 
 		trees = analysis.TREES;
 		units = analysis.getCompilationUnits();
 		type_elements = analysis.getTypeElements();
+
+		registersVisitor = new RegistersVisitor(programEnv, analysis);
 	}
 
-		@Override
-		public Name[] visit(Element arg0)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
+	@Override
+	public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
+	{
+		// System.out.println(arg0);
 
-		@Override
-		public Name[] visit(Element arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
+		ArrayList<Name> schedulables = new ArrayList<Name>();
+		ClassTree ct = trees.getTree(arg0);
 
-		@Override
-		public Name[] visitExecutable(ExecutableElement arg0, Void arg1)
+		List<Tree> members = (List<Tree>) ct.getMembers();
+		Iterator<Tree> i = members.iterator();
+		while (i.hasNext())
 		{
-			// TODO Auto-generated method stub
-			return null;
-		}
+			System.out.println("Mission Visitor: I Iterator");
 
-		@Override
-		public Name[] visitPackage(PackageElement arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
+			Tree tlst = i.next();
 
-		@Override
-		public Name[] visitType(TypeElement arg0, Void arg1)
-		{
-//			System.out.println(arg0);
-		
-			ArrayList<Name> schedulables = new ArrayList<Name>();
-			ClassTree ct = trees.getTree(arg0);
-						
-			List<Tree> members = (List<Tree>) ct.getMembers();
-			Iterator<Tree> i = members.iterator();
-			while (i.hasNext())
+			// Name name = tlst.accept(registersVisitor,null);
+			//
+			// if (name != null)
+			// {
+			// schedulables.add(name);
+			// }
+			//
+
+			if (tlst instanceof VariableTree)
 			{
-				System.out.println("Mission Visitor: I Iterator");
-				
-				Tree tlst = i.next();
-				
-				tlst.accept(new RegistersVisitor(programEnv, analysis), null);
-//				
-			
-//				if (tlst instanceof VariableTree)
-//				{
-//					System.out.println("Mission Visitor: Variable Tree Found");
-//					System.out.println("-> " + tlst.toString());
-//					
-//					variables.put(((VariableTree) tlst).getName(), ((VariableTree) tlst).getType());
-//					
-//				}
-				
-//				System.out.println("Mission Visitor: i= " + ((Tree) i).getKind());
-//				if (tlst instanceof MethodTree)
-//				{
-//					MethodTree o = (MethodTree) i.next();
-//					System.out.println(o.getName());
-//
-//					if (o.getName().contentEquals("initialize"))
-//					{
-//						System.out.println("Mission Visitor: J iterator");
-//						List<StatementTree> s = (List<StatementTree>) o.getBody().getStatements();
-//
-//						Iterator<StatementTree> j = s.iterator();
-//
-//						while (j.hasNext())
-//						{
-//							StatementTree st =  j.next();
-//							
-//							System.out.println("Mission Visistor: j = "+ st.getKind());
-//							
-//							if (st instanceof ExpressionStatementTree)
-//							{
-//								if(((ExpressionStatementTree) st).getExpression() instanceof MethodInvocationTree)
-//								{
-//									System.out.println("Mission Visitor: Found Method Invocation");
-//									MethodInvocationTree mit = (MethodInvocationTree) ((ExpressionStatementTree) st).getExpression();
-//									
-//									System.out.println(mit.getMethodSelect());
-//									System.out.println(mit.getMethodSelect().getKind());
-//									
-//									if (mit.getMethodSelect() instanceof MemberSelectTree)
-//									{
-//										MemberSelectTree mst = (MemberSelectTree) mit.getMethodSelect();
-//										
-//										if(mst.getIdentifier().contentEquals("register"))
-//										{
-////											schedulables
-//											
-//											
-//											schedulables.add( (Name) variables.get(((MethodTree) mst.getExpression()).getName()) );
-//											
-//										}
-//										//get identifier
-//										//if register then add
-//									}
-//								}
-//							}
-//							
+				VariableTree vt = (VariableTree) tlst;
+				System.out.println("Mission Visitor: Variable Tree Found");
+				System.out.println("-> " + vt.toString());
+				System.out.println("-> Name:" + vt.getName());
+				System.out.println("-> Type: " + vt.getType());
+
+				programEnv.addVariable(vt.getName(), vt.getType());
+
+			}
+
+			if (tlst instanceof MethodTree)
+			{
+				MethodTree mt = (MethodTree) tlst;
+
+				if (mt.getName().contentEquals("initialize"))
+				{
+					System.out.println("Mission Visitor: J iterator");
+					List<StatementTree> s = (List<StatementTree>) mt.getBody()
+							.getStatements();
+
+					Iterator<StatementTree> j = s.iterator();
+
+					// iterate through the statements in the Init method
+					while (j.hasNext())
+					{
+						StatementTree st = j.next();
+
+						System.out.println("Register Visistor: j = "
+								+ st.getKind());
+
+						// ArrayList<Name> name =
+						Name name = st.accept(registersVisitor, null);
+
+						if (name != null)
+						{
+							schedulables.add(name);
 						}
-//
-//					}
-//				}
-//			}
-
-			return null;
+					}
+				}
+			}
 		}
-
-		@Override
-		public Name[] visitTypeParameter(TypeParameterElement arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Name[] visitUnknown(Element arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Name[] visitVariable(VariableElement arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
+		return schedulables;
 
 	}
+
+	@Override
+	public ArrayList<Name> visit(Element e, Void p)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visit(Element e)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitPackage(PackageElement e, Void p)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitVariable(VariableElement e, Void p)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitExecutable(ExecutableElement e, Void p)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitTypeParameter(TypeParameterElement e, Void p)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitUnknown(Element e, Void p)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

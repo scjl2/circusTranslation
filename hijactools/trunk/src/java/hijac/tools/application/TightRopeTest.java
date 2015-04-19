@@ -54,6 +54,8 @@ import hijac.tools.tightrope.translators.Level2Translator;
 import hijac.tools.tightrope.visitors.ReturnVisitor;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -134,6 +136,8 @@ public class TightRopeTest
 	private static Set<TypeElement> type_elements;
 
 	private static ProgramEnv programEnv;
+	
+	
 
 	static
 	{
@@ -158,6 +162,10 @@ public class TightRopeTest
 
 	public static void main(String[] args) throws IOException
 	{
+		
+		final long startTime = System.nanoTime();
+		final Calendar startTimeCal = Calendar.getInstance();
+		
 		setUncaughtExceptionHandler();
 
 		SCJCompilationTask compiler = new SCJCompilationTask(
@@ -178,7 +186,7 @@ public class TightRopeTest
 	
 		EnvironmentBuilder environmentBuilder = new EnvironmentBuilder(ANALYSIS);
 		
-		programEnv = environmentBuilder.build();
+		programEnv = environmentBuilder.explore();
 				
 				
 				
@@ -190,6 +198,13 @@ public class TightRopeTest
 		
 		
 //		  translateLatexAndExit();
+		final long duration = System.nanoTime() - startTime;
+		
+		System.out.println("Total Time: " + duration/1000000000+ "." + (duration % 1000000000)  + " seconds "   );
+		System.out.println(duration + " nanoseconds");
+		
+			
+		
 		System.exit(0);
 	}
 

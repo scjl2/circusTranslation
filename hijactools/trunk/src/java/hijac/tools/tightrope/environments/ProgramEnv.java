@@ -3,17 +3,20 @@ package hijac.tools.tightrope.environments;
 import hijac.tools.analysis.SCJAnalysis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.lang.model.element.Name;
 
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 
 public class ProgramEnv
 {
 	FrameworkEnv frameworkEnv;
 	List<NonParadigmEnv> nonParadigmObjectEnvs;
+	private HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
 
 	public ProgramEnv(SCJAnalysis context)
 	{
@@ -91,6 +94,28 @@ public class ProgramEnv
 	}
 
 	public void addSchedulable(FrameworkEnv.schedulableType type, Name name)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addVariable(Name name, Tree type)
+	{
+		variables.put(name, type);
+	}
+	
+	public Tree getVariable(Name name)
+	{
+		return variables.get(name);
+	}
+	
+	public void newTier()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void newCluster()
 	{
 		// TODO Auto-generated method stub
 		
