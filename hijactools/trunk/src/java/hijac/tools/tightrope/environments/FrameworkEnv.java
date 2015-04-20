@@ -107,6 +107,40 @@ public class FrameworkEnv
 			
 			//clusters.add(new ClusterEnv(missionEnv));
 		}
+		
+		public ArrayList<Name> getMissions()
+		{
+			ArrayList<Name> missions = new ArrayList<Name>();
+			
+			for(ClusterEnv c : clusters)
+			{
+				missions.add(c.getMissionEnv().getName());
+			}
+			
+			return missions;
+		}
+		
+		public ArrayList<Name> getMissionSequencers()
+		{
+			ArrayList<Name> misssionSequeners = new ArrayList<Name>();
+			
+			for(ClusterEnv c : clusters)
+			{
+				for(ParadigmEnv p : c.getSchedulablesEnv().getSchedulableMissionSequencerEnvs())
+				{
+					misssionSequeners.add(p.getName());
+				}
+			}
+			
+			if (misssionSequeners.isEmpty())
+			{
+				return null;
+			}
+			else
+			{
+				return misssionSequeners;
+			}
+		}
 
 		public String toString()
 		{
@@ -125,6 +159,8 @@ public class FrameworkEnv
 			}
 
 		}
+
+		
 	}
 
 //	private class NestedTiersEnv
@@ -366,7 +402,7 @@ public class FrameworkEnv
 		tiers.add(new TierEnv());
 	}
 
-	ControlTierEnv getControlTier()
+	public ControlTierEnv getControlTier()
 	{
 		return controlTier;
 	}
@@ -447,6 +483,36 @@ public class FrameworkEnv
 	public void addSchedulable(schedulableType type, Name name)
 	{
 		currentCuster.addSchedulable(type, name);		
+	}
+	
+	public ArrayList<Name> missionsBelow(TierEnv tier)
+	{
+		if (tiers.contains(tier))
+		{
+			int tierIndex = tiers.indexOf(tier);
+			if(tiers.size() != (tierIndex +1))
+			{
+				TierEnv tierBelow = tiers.get(tierIndex+1);
+				return tierBelow.getMissions();		
+			}
+		}
+		return null;
+	}
+	
+	public ArrayList<Name> sequencersAbove(TierEnv tier)
+	{
+		if(tiers.contains(tier))
+		{
+			int tierIndex = tiers.indexOf(tier);
+			if (tierIndex != 0)
+			{
+				TierEnv tierAbove = tiers.get(tierIndex-1);
+				return tierAbove.getMissionSequencers();
+			}
+					
+		}
+		
+		return null;
 	}
 
 }

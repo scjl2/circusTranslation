@@ -46,6 +46,7 @@ public class ParadigmEnv extends ObjectEnv
 		meths.add(meth);
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
 		Map map = new HashMap();
