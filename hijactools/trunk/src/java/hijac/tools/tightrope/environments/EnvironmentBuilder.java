@@ -79,13 +79,12 @@ public class EnvironmentBuilder
 	//				programEnv.a
 	
 					//TODO Hack, needs to return all the tlms
-					Name[] n = elem.accept(new SafeletLevel2Visitor(programEnv, analysis), null);
-					
-					topLevelMissionSequencers=	new ArrayList<Name>();
-					for(int i = 0 ; i< n.length ; i++)
+							
+					topLevelMissionSequencers=	elem.accept(new SafeletLevel2Visitor(programEnv, analysis), null);
+					for(Name n : topLevelMissionSequencers )
 					{
-						topLevelMissionSequencers.add(n[i]);
-						programEnv.addTopLevelMissionSequencer(n[i]);
+						topLevelMissionSequencers.add(n);
+						programEnv.addTopLevelMissionSequencer(n);
 					}
 					
 					
@@ -187,7 +186,7 @@ public class EnvironmentBuilder
 			// add methods etc here
 			programEnv.getSafelet();
 
-			names = elem.accept(new SafeletLevel2Visitor(programEnv, analysis), null);
+//			names = elem.accept(new SafeletLevel2Visitor(programEnv, analysis), null);
 			
 			programEnv.getSafelet().setTLMSNames(names);
 

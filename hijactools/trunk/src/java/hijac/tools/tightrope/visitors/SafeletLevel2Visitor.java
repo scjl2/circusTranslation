@@ -3,6 +3,7 @@ package hijac.tools.tightrope.visitors;
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +24,7 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.util.Trees;
 
-public class SafeletLevel2Visitor implements ElementVisitor<Name[], Void>
+public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Void>
 {
 
 	ProgramEnv programEnv;
@@ -44,35 +45,35 @@ public class SafeletLevel2Visitor implements ElementVisitor<Name[], Void>
 	}
 
 	@Override
-	public Name[] visit(Element e)
+	public ArrayList<Name> visit(Element e)
 	{
 		// System.out.println(e);
 		return null;
 	}
 
 	@Override
-	public Name[] visit(Element e, Void p)
+	public ArrayList<Name> visit(Element e, Void p)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Name[] visitExecutable(ExecutableElement e, Void p)
+	public ArrayList<Name> visitExecutable(ExecutableElement e, Void p)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Name[] visitPackage(PackageElement e, Void p)
+	public ArrayList<Name> visitPackage(PackageElement e, Void p)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Name[] visitType(TypeElement e, Void p)
+	public ArrayList<Name> visitType(TypeElement e, Void p)
 	{
 		// System.out.println(e);
 
@@ -191,21 +192,21 @@ public class SafeletLevel2Visitor implements ElementVisitor<Name[], Void>
 	}
 
 	@Override
-	public Name[] visitTypeParameter(TypeParameterElement e, Void p)
+	public ArrayList<Name> visitTypeParameter(TypeParameterElement e, Void p)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Name[] visitUnknown(Element e, Void p)
+	public ArrayList<Name> visitUnknown(Element e, Void p)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Name[] visitVariable(VariableElement e, Void p)
+	public ArrayList<Name> visitVariable(VariableElement e, Void p)
 	{
 		// TODO Auto-generated method stub
 		return null;
