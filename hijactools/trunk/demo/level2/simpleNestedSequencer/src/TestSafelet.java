@@ -41,7 +41,7 @@ public class TestSafelet implements Safelet<Mission>
 	@Override
 	public long immortalMemorySize()
 	{
-		return Const.IMMORTAL_MEM_SIZE_DEFAULT;
+		return 100000;
 	}
 
 	@Override

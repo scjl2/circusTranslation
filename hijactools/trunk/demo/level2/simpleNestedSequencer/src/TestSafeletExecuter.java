@@ -32,8 +32,8 @@ public class TestSafeletExecuter extends Launcher
 	 */
 	public static void main(String[] args)
 	{
-		Const.BACKING_STORE_SIZE=16000000 ;
-		Const.IMMORTAL_MEM_SIZE = Const.BACKING_STORE_SIZE /2 ;
+//		Const.BACKING_STORE_SIZE=16000000 ;
+//		Const.IMMORTAL_MEM_SIZE = Const.BACKING_STORE_SIZE /2 ;
 				
 				
 		Console.println("Launcher");
