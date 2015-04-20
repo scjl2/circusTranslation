@@ -110,7 +110,7 @@ public class EnvironmentBuilder
 		topLevelMissionSequencers=	safelet.accept(new SafeletLevel2Visitor(programEnv, analysis), null);
 		for(Name n : topLevelMissionSequencers )
 		{
-			topLevelMissionSequencers.add(n);
+			
 			programEnv.addTopLevelMissionSequencer(n);
 		}
 		return topLevelMissionSequencers;
@@ -120,17 +120,21 @@ public class EnvironmentBuilder
 	{
 		ArrayList<Name> missions = tlms.accept(new MissionSequencerLevel2Visitor(programEnv, analysis), null);
 	
-		if(missions.isEmpty())
+		if(missions == null )
 		{
 			System.out.println("No Missions");
 		}
+		else
+		{
+			for (Name n : missions)
+			{
+				buildMission(n);
+				programEnv.newCluster();
+			}
+		}
 	
 		
-		for (Name n : missions)
-		{
-			buildMission(n);
-			programEnv.newCluster();
-		}
+		
 		
 	}
 
