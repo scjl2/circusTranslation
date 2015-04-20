@@ -46,7 +46,7 @@ public class EnvironmentBuilder
 	
 	public ProgramEnv explore()
 	{		
-		ArrayList<Name> topLevelMissionSequners = getSafelet();
+		ArrayList<Name> topLevelMissionSequners = buildSafelet(getSafelet());
 		
 		for (Name n : topLevelMissionSequners)
 		{
@@ -60,32 +60,27 @@ public class EnvironmentBuilder
 	}
 	
 	
-	private ArrayList<Name> getSafelet()
+	private TypeElement getSafelet()
 		{
-			ArrayList<Name> topLevelMissionSequencers = null;
 			
+			TypeElement safelet = null;
 			for (TypeElement elem : type_elements)
 			{	
 				//TODO needs to be made safer. I think this might fall over if presented with multiple interfaces
 				if (elem.getInterfaces().toString().contains("Safelet"))
 				{
 					System.out.println("Found Safelet");
-	
+					safelet = elem;
 					packagePrefix = findPackagePrefix(elem);
 	
-					programEnv.addSafelet(elem.getSimpleName());
+					programEnv.addSafelet(safelet.getSimpleName());
 	
 					// add methods etc here
 	//				programEnv.a
 	
 					//TODO Hack, needs to return all the tlms
 							
-					topLevelMissionSequencers=	elem.accept(new SafeletLevel2Visitor(programEnv, analysis), null);
-					for(Name n : topLevelMissionSequencers )
-					{
-						topLevelMissionSequencers.add(n);
-						programEnv.addTopLevelMissionSequencer(n);
-					}
+					
 					
 					
 //					programEnv.addTopLevelMissionSequencers(topLevelMissionSequencer);
@@ -104,8 +99,22 @@ public class EnvironmentBuilder
 				}
 	
 			}
-			return topLevelMissionSequencers;
+			return safelet;
 		}
+
+
+
+	private ArrayList<Name> buildSafelet(TypeElement safelet)
+	{
+		ArrayList<Name> topLevelMissionSequencers;
+		topLevelMissionSequencers=	safelet.accept(new SafeletLevel2Visitor(programEnv, analysis), null);
+		for(Name n : topLevelMissionSequencers )
+		{
+			topLevelMissionSequencers.add(n);
+			programEnv.addTopLevelMissionSequencer(n);
+		}
+		return topLevelMissionSequencers;
+	}
 
 	private void buildTopLevelMissionSequencer(TypeElement tlms)
 	{
