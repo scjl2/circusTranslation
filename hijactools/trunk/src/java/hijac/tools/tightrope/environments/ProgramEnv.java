@@ -99,7 +99,7 @@ public class ProgramEnv
 
 	}
 
-	public void addSchedulable(FrameworkEnv.schedulableType type, Name name)
+	public void addSchedulable(SchedulableTypeE type, Name name)
 	{
 		frameworkEnv.addSchedulable(type, name);
 		

@@ -1,7 +1,5 @@
 package hijac.tools.tightrope.environments;
 
-import hijac.tools.tightrope.environments.FrameworkEnv.schedulableType;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,7 +17,7 @@ public class FrameworkEnv
 	private TierEnv currentTier;
 	private ClusterEnv currentCuster;
 	
-	public enum schedulableType {PEH, APEH, OSEH, SMS, MT};
+
 
 	// List<TierEnv> nestedTiers;
 
@@ -214,7 +212,7 @@ public class FrameworkEnv
 		{
 			this.schedulablesEnv = schedulablesEnv;
 		}
-		public void addSchedulable(schedulableType type, Name name)
+		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
 			schedulablesEnv.addSchedulable(type, name);
 		}
@@ -297,28 +295,28 @@ public class FrameworkEnv
 			this.managedThreadEnvs = managedThreadEnvs;
 		}
 		
-		public void addSchedulable(schedulableType type, Name name)
+		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
 			ParadigmEnv p = new ParadigmEnv();
 			p.setName(name);
-			
-			if (type == schedulableType.MT)
+					
+			if (type == SchedulableTypeE.MT)
 			{			
 				managedThreadEnvs.add(p);
 			}
-			if (type == schedulableType.PEH)
+			if (type == SchedulableTypeE.PEH)
 			{			
 				periodEventHandlerEnvs.add(p);
 			}
-			if (type == schedulableType.APEH)
+			if (type == SchedulableTypeE.APEH)
 			{			
 				aperiodicEventHandlerEnvs.add(p);
 			}
-			if (type == schedulableType.OSEH)
+			if (type == SchedulableTypeE.OSEH)
 			{			
 				oneShotEventHandlerEnvs.add(p);
 			}
-			if (type == schedulableType.SMS)
+			if (type == SchedulableTypeE.SMS)
 			{			
 				schedulableMissionSequencerEnvs.add(p);
 			}
@@ -327,8 +325,17 @@ public class FrameworkEnv
 	
 		public String toString()
 		{
+
+			if((periodEventHandlerEnvs.isEmpty()) && (aperiodicEventHandlerEnvs.isEmpty())   &&    
+					(oneShotEventHandlerEnvs.isEmpty()) && (schedulableMissionSequencerEnvs.isEmpty()) &&
+					(schedulableMissionSequencerEnvs.isEmpty()) )
+			{
+				return "No Schedulables";
+			}
+			
 			String output = "Schedulables:";
 			output += System.getProperty("line.separator");
+			
 			if(!periodEventHandlerEnvs.isEmpty())
 			{
 				output += "Periodic Event Handlers:";
@@ -480,7 +487,7 @@ public class FrameworkEnv
 		return output;
 	}
 
-	public void addSchedulable(schedulableType type, Name name)
+	public void addSchedulable(SchedulableTypeE type, Name name)
 	{
 		currentCuster.addSchedulable(type, name);		
 	}

@@ -94,8 +94,8 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 	public ArrayList<Name> visitIdentifier(IdentifierTree arg0, Void arg1)
 	{
 
-		System.out.println("Return Visitor: visiting Identifier Tree");
-		System.out.println(arg0.getName());
+		System.out.println("Return Visitor: visiting Identifier Tree: "+ arg0.getName());
+		
 		returns.add(arg0.getName());
 		return returns;
 	}
@@ -103,21 +103,50 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 	@Override
 	public ArrayList<Name> visitIf(IfTree arg0, Void arg1)
 	{
-
 		System.out.println("Return Visistor: visiting if tree");
-		if (save == arg0)
-		{
-			System.out.println("Visiting Else Branch");
-			save = null;
+		
+		ArrayList<StatementTree> branches = new ArrayList<StatementTree>();
 
-			return arg0.getElseStatement().accept(this, null);
-		} else
-		{
-			System.out.println("Visiting Then Branch");
-			save = arg0;
-
-			return arg0.getThenStatement().accept(this, null);
+		branches.add(arg0.getThenStatement());
+		branches.add(arg0.getElseStatement());
+		
+		for (StatementTree s : branches)
+		{			
+			System.out.println("Visiting " + s.getKind() + " branch");
+			ArrayList<Name> names = s.accept(this, null);
+						
+			if (names != null)
+			{
+				System.out.println("+++ size of names = " + names.size() + " +++");
+				for(Name n : names)
+				{
+					System.out.println("+++ names returned = " + n + " +++");
+				}
+				
+				returns.addAll(names);
+			}
 		}
+		
+//		if (save == arg0)
+//		{
+//			System.out.println("Visiting Else Branch");
+//			save = null;
+//
+//			return arg0.getElseStatement().accept(this, null);
+//		} else
+//		{
+//			System.out.println("Visiting Then Branch");
+//			save = arg0;
+//
+//			return arg0.getThenStatement().accept(this, null);
+//		}
+		System.out.println("+++ Size of Returns = " + returns.size() + " +++");
+		for(Name n : returns)
+		{
+			System.out.println("+++ in returns = " + n + " +++");
+		}
+		
+		return returns;
 	}
 
 	@Override

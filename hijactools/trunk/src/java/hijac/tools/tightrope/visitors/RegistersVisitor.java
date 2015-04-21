@@ -1,18 +1,9 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.tightrope.environments.FrameworkEnv;
-import hijac.tools.tightrope.environments.FrameworkEnv.schedulableType;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import javax.lang.model.element.Name;
-import javax.lang.model.element.TypeElement;
-
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -54,7 +45,6 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
@@ -72,9 +62,9 @@ import com.sun.source.tree.WildcardTree;
 public class RegistersVisitor implements TreeVisitor<Name, Void>
 {
 
-//	private HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
+	// private HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
 
-//	ArrayList<Name> schedulables = new ArrayList<Name>();
+	// ArrayList<Name> schedulables = new ArrayList<Name>();
 
 	ProgramEnv programEnv;
 	SCJAnalysis analysis;
@@ -86,25 +76,25 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 
 	}
 
-	private schedulableType getSchedulableType(Name name)
-	{
-		TypeElement element = null;
-
-		for (TypeElement t : analysis.getTypeElements())
-		{
-			if (t.getSimpleName() == name)
-			{
-				element = t;
-			}
-		}
-
-		if (element.getSuperclass().toString().contains("ManagedThread"))
-		{
-			return FrameworkEnv.schedulableType.MT;
-		}
-
-		return null;
-	}
+	// private schedulableType getSchedulableType(Name name)
+	// {
+	// TypeElement element = null;
+	//
+	// for (TypeElement t : analysis.getTypeElements())
+	// {
+	// if (t.getSimpleName() == name)
+	// {
+	// element = t;
+	// }
+	// }
+	//
+	// if (element.getSuperclass().toString().contains("ManagedThread"))
+	// {
+	// return FrameworkEnv.schedulableType.MT;
+	// }
+	//
+	// return null;
+	// }
 
 	@Override
 	public Name visitAnnotatedType(AnnotatedTypeTree arg0, Void arg1)
@@ -191,28 +181,26 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	}
 
 	@Override
-	public Name visitCompilationUnit(CompilationUnitTree arg0,
-			Void arg1)
-			{
+	public Name visitCompilationUnit(CompilationUnitTree arg0, Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
-	public Name visitCompoundAssignment(CompoundAssignmentTree arg0,
-			Void arg1)
-			{
+	public Name visitCompoundAssignment(CompoundAssignmentTree arg0, Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
-	public Name visitConditionalExpression(
-			ConditionalExpressionTree arg0, Void arg1)
-			{
+	public Name visitConditionalExpression(ConditionalExpressionTree arg0,
+			Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
 	public Name visitContinue(ContinueTree arg0, Void arg1)
@@ -229,20 +217,18 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	}
 
 	@Override
-	public Name visitEmptyStatement(EmptyStatementTree arg0,
-			Void arg1)
-			{
+	public Name visitEmptyStatement(EmptyStatementTree arg0, Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
-	public Name visitEnhancedForLoop(EnhancedForLoopTree arg0,
-			Void arg1)
-			{
+	public Name visitEnhancedForLoop(EnhancedForLoopTree arg0, Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
 	public Name visitErroneous(ErroneousTree arg0, Void arg1)
@@ -252,9 +238,8 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	}
 
 	@Override
-	public Name visitExpressionStatement(
-			ExpressionStatementTree arg0, Void arg1)
-			{
+	public Name visitExpressionStatement(ExpressionStatementTree arg0, Void arg1)
+	{
 		return arg0.getExpression().accept(this, null);
 		// if(((ExpressionStatementTree) st).getExpression() instanceof
 		// MethodInvocationTree)
@@ -283,7 +268,7 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 		// //if register then add
 		// }
 		// }
-			}
+	}
 
 	@Override
 	public Name visitForLoop(ForLoopTree arg0, Void arg1)
@@ -321,28 +306,25 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	}
 
 	@Override
-	public Name visitIntersectionType(IntersectionTypeTree arg0,
-			Void arg1)
-			{
+	public Name visitIntersectionType(IntersectionTypeTree arg0, Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
-	public Name visitLabeledStatement(LabeledStatementTree arg0,
-			Void arg1)
-			{
+	public Name visitLabeledStatement(LabeledStatementTree arg0, Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
-	public Name visitLambdaExpression(LambdaExpressionTree arg0,
-			Void arg1)
-			{
+	public Name visitLambdaExpression(LambdaExpressionTree arg0, Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
 	public Name visitLiteral(LiteralTree arg0, Void arg1)
@@ -352,12 +334,11 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	}
 
 	@Override
-	public Name visitMemberReference(MemberReferenceTree arg0,
-			Void arg1)
-			{
+	public Name visitMemberReference(MemberReferenceTree arg0, Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
 	public Name visitMemberSelect(MemberSelectTree arg0, Void arg1)
@@ -375,16 +356,17 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 					+ ((IdentifierTree) arg0.getExpression()).getName());
 
 			System.out.println("Registers Visitor: Returning "
-					+ programEnv.getVariable(((IdentifierTree) arg0.getExpression())
-							.getName()));
+					+ programEnv.getVariable(((IdentifierTree) arg0
+							.getExpression()).getName()));
 			// ArrayList<Name> a = new ArrayList<Name>();
 			// a.add( (Name) variables.get(((MethodTree)
 			// arg0.getExpression()).getName()) );
-			Name name = ((IdentifierTree) programEnv.getVariable(((IdentifierTree) arg0
-					.getExpression()).getName())).getName();
+			Name name = ((IdentifierTree) programEnv
+					.getVariable(((IdentifierTree) arg0.getExpression())
+							.getName())).getName();
 
-			programEnv.addSchedulable(getSchedulableType(name), name);
-			
+			// programEnv.addSchedulable(getSchedulableType(name), name);
+
 			return name;
 
 		}
@@ -395,75 +377,74 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	public Name visitMethod(MethodTree arg0, Void arg1)
 	{
 		System.out.println("Registers Visitor: Method Tree");
-		
-//		MethodTree o = arg0;
-//		System.out.println(o.getName());
-//
-//		if (o.getName().contentEquals("initialize"))
-//		{
-//			System.out.println("Mission Visitor: J iterator");
-//			List<StatementTree> s = (List<StatementTree>) o.getBody()
-//					.getStatements();
-//
-//			Iterator<StatementTree> j = s.iterator();
-//
-//			// iterate through the statements in the Init method
-//			while (j.hasNext())
-//			{
-//				StatementTree st = j.next();
-//
-//				System.out.println("Register Visistor: j = " + st.getKind());
-//
-//				// ArrayList<Name> name =
-//				st.accept(this, null);
-//
-//				// if(name != null)
-//				// {
-//				// schedulables.add(name);
-//				// }
-//				//
-//				// if (st instanceof ExpressionStatementTree)
-//				// {
-//				// if(((ExpressionStatementTree) st).getExpression() instanceof
-//				// MethodInvocationTree)
-//				// {
-//				// System.out.println("Mission Visitor: Found Method Invocation");
-//				// MethodInvocationTree mit = (MethodInvocationTree)
-//				// ((ExpressionStatementTree) st).getExpression();
-//				//
-//				// System.out.println(mit.getMethodSelect());
-//				// System.out.println(mit.getMethodSelect().getKind());
-//				//
-//				// if (mit.getMethodSelect() instanceof MemberSelectTree)
-//				// {
-//				// MemberSelectTree mst = (MemberSelectTree)
-//				// mit.getMethodSelect();
-//				//
-//				// if(mst.getIdentifier().contentEquals("register"))
-//				// {
-//				// // schedulables
-//				//
-//				//
-//				// schedulables.add( (Name) variables.get(((MethodTree)
-//				// mst.getExpression()).getName()) );
-//				//
-//				// }
-//				// //get identifier
-//				// //if register then add
-//				// }
-//				// }
-//				// }
-//
-//			}
-//
-//		}
+
+		// MethodTree o = arg0;
+		// System.out.println(o.getName());
+		//
+		// if (o.getName().contentEquals("initialize"))
+		// {
+		// System.out.println("Mission Visitor: J iterator");
+		// List<StatementTree> s = (List<StatementTree>) o.getBody()
+		// .getStatements();
+		//
+		// Iterator<StatementTree> j = s.iterator();
+		//
+		// // iterate through the statements in the Init method
+		// while (j.hasNext())
+		// {
+		// StatementTree st = j.next();
+		//
+		// System.out.println("Register Visistor: j = " + st.getKind());
+		//
+		// // ArrayList<Name> name =
+		// st.accept(this, null);
+		//
+		// // if(name != null)
+		// // {
+		// // schedulables.add(name);
+		// // }
+		// //
+		// // if (st instanceof ExpressionStatementTree)
+		// // {
+		// // if(((ExpressionStatementTree) st).getExpression() instanceof
+		// // MethodInvocationTree)
+		// // {
+		// // System.out.println("Mission Visitor: Found Method Invocation");
+		// // MethodInvocationTree mit = (MethodInvocationTree)
+		// // ((ExpressionStatementTree) st).getExpression();
+		// //
+		// // System.out.println(mit.getMethodSelect());
+		// // System.out.println(mit.getMethodSelect().getKind());
+		// //
+		// // if (mit.getMethodSelect() instanceof MemberSelectTree)
+		// // {
+		// // MemberSelectTree mst = (MemberSelectTree)
+		// // mit.getMethodSelect();
+		// //
+		// // if(mst.getIdentifier().contentEquals("register"))
+		// // {
+		// // // schedulables
+		// //
+		// //
+		// // schedulables.add( (Name) variables.get(((MethodTree)
+		// // mst.getExpression()).getName()) );
+		// //
+		// // }
+		// // //get identifier
+		// // //if register then add
+		// // }
+		// // }
+		// // }
+		//
+		// }
+		//
+		// }
 		return null;
 	}
 
 	@Override
-	public Name visitMethodInvocation(MethodInvocationTree arg0,
-			Void arg1)
-			{
+	public Name visitMethodInvocation(MethodInvocationTree arg0, Void arg1)
+	{
 
 		System.out.println("Registers Visitor: Method Invocation Tree");
 
@@ -490,7 +471,7 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 		// //get identifier
 		// //if register then add
 		// }
-			}
+	}
 
 	@Override
 	public Name visitModifiers(ModifiersTree arg0, Void arg1)
@@ -521,12 +502,11 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	}
 
 	@Override
-	public Name visitParameterizedType(ParameterizedTypeTree arg0,
-			Void arg1)
-			{
+	public Name visitParameterizedType(ParameterizedTypeTree arg0, Void arg1)
+	{
 		// TODO Auto-generated method stub
 		return null;
-			}
+	}
 
 	@Override
 	public Name visitParenthesized(ParenthesizedTree arg0, Void arg1)
@@ -609,12 +589,7 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	public Name visitVariable(VariableTree arg0, Void arg1)
 	{
 		System.out.println("Registers Visitor: Variable Tree Found");
-		// System.out.println("-> " + arg0.toString());
-		// System.out.println("-> Name:" + arg0.getName());
-		// System.out.println("-> Type: " + arg0.getType());
-		//
-		//
-		// variables.put( arg0.getName(), arg0.getType() );
+		programEnv.addVariable(arg0.getName(), arg0.getType());
 
 		return null;
 	}
