@@ -96,6 +96,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 		System.out.println("Return Visitor: visiting Identifier Tree: "+ arg0.getName());
 		
+		//This adds a mission to returns
 		returns.add(arg0.getName());
 		return returns;
 	}
@@ -113,6 +114,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 		for (StatementTree s : branches)
 		{			
 			System.out.println("Visiting " + s.getKind() + " branch");
+			//this may trigger a mission being added to returns (eg above) so we get the same one twice...but it might not happen.
 			ArrayList<Name> names = s.accept(this, null);
 						
 			if (names != null)
