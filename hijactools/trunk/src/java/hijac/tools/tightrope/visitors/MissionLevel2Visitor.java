@@ -69,7 +69,8 @@ public class MissionLevel2Visitor implements
 			System.out.println("Mission Visitor: I Iterator");
 
 			Tree tlst = i.next();
-
+			System.out.println("Mission Visistor: tlst = " + tlst.getKind());
+			
 			// Name name = tlst.accept(registersVisitor,null);
 			//
 			// if (name != null)

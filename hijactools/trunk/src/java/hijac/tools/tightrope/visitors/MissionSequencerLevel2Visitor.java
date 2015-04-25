@@ -83,11 +83,16 @@ import com.sun.source.util.Trees;
 
 			ClassTree ct = trees.getTree(arg0);
 			System.out.println("MS Visitor class tree: " + ct);
+			
+//			ReturnVisitor rv = new ReturnVisitor(ct);
+//			System.out.println("Retrun Visitor says... " +rv.getReturns());
 
 			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 			System.out.println("MS Visitor members: " + members);
 
 			Iterator<StatementTree> i = members.iterator();
+			
+			
 			while (i.hasNext())
 			{
 				Tree tlst = i.next();
@@ -96,6 +101,7 @@ import com.sun.source.util.Trees;
 				if (tlst instanceof VariableTree)
 				{
 					System.out.println("MS VIsitor: Variable Tree Found");
+					//need to add map of vars here
 				}
 
 				if (tlst instanceof MethodTree)
@@ -108,7 +114,7 @@ import com.sun.source.util.Trees;
 					{
 						
 						System.out.println("Release the Visitor!");
-						return o.accept(new ReturnVisitor(), null);
+						return o.accept(new ReturnVisitor(), false);
 
 						// System.out.println("in iterator");
 						// List<StatementTree> s = (List<StatementTree>)
@@ -118,7 +124,8 @@ import com.sun.source.util.Trees;
 						//
 						// while(j.hasNext())
 						// {
-						// StatementTree st = (StatementTree) j.next();
+						// StatementTree st = (StatementTree) j.next();// StatementTree st = (StatementTree) j.next();
+
 						// System.out.println("MS Visitor: " + st);
 						//
 						// if(st instanceof ReturnTree )

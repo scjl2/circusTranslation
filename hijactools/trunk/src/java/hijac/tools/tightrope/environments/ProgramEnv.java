@@ -33,7 +33,7 @@ public class ProgramEnv
 	{
 		frameworkEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 	}
-	
+
 	public void addMission(Name mission)
 	{
 		frameworkEnv.addMission(mission);
@@ -46,9 +46,9 @@ public class ProgramEnv
 
 	public void getMethod(String methodName)
 	{
-		//		ClassTree ct = getSafelet().getClassTree();
+		// ClassTree ct = getSafelet().getClassTree();
 
-		//		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+		// List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 
 		Iterator<MethodTree> i = getSafelet().getMeths().iterator();
 		while (i.hasNext())
@@ -57,15 +57,13 @@ public class ProgramEnv
 
 			if (o.getName().contentEquals(methodName))
 			{
-				//explore it
+				// explore it
 				System.out.println(o.getName());
 				System.out.println(o);
 			}
 		}
 
 	}
-
-
 
 	public List<NonParadigmEnv> getNonParadigmObjectEnvs()
 	{
@@ -92,7 +90,7 @@ public class ProgramEnv
 		System.out.println("--------------------------------");
 		System.out.println("Variables");
 		System.out.println("---------");
-		for(Name n : variables.keySet())
+		for (Name n : variables.keySet())
 		{
 			System.out.println(n + " -> " + variables.get(n));
 		}
@@ -102,40 +100,42 @@ public class ProgramEnv
 	public void addSchedulable(SchedulableTypeE type, Name name)
 	{
 		frameworkEnv.addSchedulable(type, name);
-		
+	}
+
+	public boolean containsScheudlable(Name name)
+	{
+		return frameworkEnv.containsSchedulable(name);
 	}
 
 	public void addVariable(Name name, Tree type)
 	{
 		variables.put(name, type);
 	}
-	
+
 	public Tree getVariable(Name name)
 	{
 		return variables.get(name);
 	}
-	
+
 	public void newTier()
 	{
-		// TODO Auto-generated method stub
-		
+		frameworkEnv.newTier();
 	}
 
 	public void newCluster()
 	{
-		// TODO Auto-generated method stub
-		
+		frameworkEnv.newCluster();
 	}
 
-//	public void setFrameworkEnv(FrameworkEnv frameworkEnv)
-//	{
-//		this.frameworkEnv = frameworkEnv;
-//	}
-//
-//	public void setNonParadigmObjectEnvs(
-//			List<NonParadigmEnv> nonParadigmObjectEnvs)
-//	{
-//		this.nonParadigmObjectEnvs = nonParadigmObjectEnvs;
-//	}
+	// public void setFrameworkEnv(FrameworkEnv frameworkEnv)
+	// {
+	// this.frameworkEnv = frameworkEnv;
+	// }
+	//
+	// public void setNonParadigmObjectEnvs(
+	// List<NonParadigmEnv> nonParadigmObjectEnvs)
+	// {
+	// this.nonParadigmObjectEnvs = nonParadigmObjectEnvs;
+	// }
 
 }

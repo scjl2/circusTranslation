@@ -11,6 +11,7 @@ import hijac.tools.tightrope.visitors.MissionLevel2Visitor;
 import hijac.tools.tightrope.visitors.MissionSequencerLevel2Visitor;
 import hijac.tools.tightrope.visitors.SafeletLevel2Visitor;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -43,43 +44,48 @@ public class EnvironmentBuilder
 
 	public SchedulableTypeE getSchedulableType(Name s)
 	{
-//		System.out.println("+++ getSchedulableType: Name = " + s + " +++");
+		// System.out.println("+++ getSchedulableType: Name = " + s + " +++");
 		for (TypeElement elem : type_elements)
 		{
-//			System.out.println("+++  simpleName = "+elem.getSimpleName()  +" +++");
+			// System.out.println("+++  simpleName = "+elem.getSimpleName()
+			// +" +++");
 			if (elem.getSimpleName().contentEquals(s))
 			{
 				TypeMirror superclass = elem.getSuperclass();
-				
-				
-				if(superclass.toString().contains("javax.safetycritical.ManagedThread"))
+
+				if (superclass.toString().contains(
+						"javax.safetycritical.ManagedThread"))
 				{
 					return SchedulableTypeE.MT;
 				}
-				
-				if(superclass.toString().contains(("javax.safetycritical.MissionSequencer")))
+
+				if (superclass.toString().contains(
+						("javax.safetycritical.MissionSequencer")))
 				{
 					return SchedulableTypeE.SMS;
 				}
-				
-				if(superclass.toString().contains("javax.safetycritical.PeriodicEventHandler"))
+
+				if (superclass.toString().contains(
+						"javax.safetycritical.PeriodicEventHandler"))
 				{
 					return SchedulableTypeE.PEH;
 				}
-				
-				if(superclass.toString().contains("javax.safetycritical.AperiodicEventHandler"))
+
+				if (superclass.toString().contains(
+						"javax.safetycritical.AperiodicEventHandler"))
 				{
 					return SchedulableTypeE.APEH;
 				}
-				
-				if(superclass.toString().contains("javax.safetycritical.OneShotEventHandler"))
+
+				if (superclass.toString().contains(
+						"javax.safetycritical.OneShotEventHandler"))
 				{
 					return SchedulableTypeE.OSEH;
 				}
 			}
 
 		}
-		
+
 		return null;
 
 	}
@@ -145,10 +151,11 @@ public class EnvironmentBuilder
 		ArrayList<Name> topLevelMissionSequencers;
 		topLevelMissionSequencers = safelet.accept(new SafeletLevel2Visitor(
 				programEnv, analysis), null);
-		
+
 		for (Name n : topLevelMissionSequencers)
 		{
-			System.out.println("+++ Exploring Top Level Sequencer " + n + " +++");
+			System.out.println("+++ Exploring Top Level Sequencer " + n
+					+ " +++");
 			programEnv.addTopLevelMissionSequencer(n);
 		}
 		return topLevelMissionSequencers;
@@ -164,11 +171,19 @@ public class EnvironmentBuilder
 			System.out.println("+++ No Missions +++");
 		} else
 		{
+			boolean newClusterNeeded = false;
 			for (Name n : missions)
 			{
 				System.out.println("+++ Exploring Mission " + n + " +++");
 				buildMission(n);
-				programEnv.newCluster();
+				if(newClusterNeeded)
+				{
+					newClusterNeeded = true;
+				}
+				else
+				{
+					programEnv.newCluster();
+				}
 			}
 		}
 
@@ -176,6 +191,10 @@ public class EnvironmentBuilder
 
 	private void buildMission(Name n)
 	{
+		System.out.println();
+		System.out.println("+++ Building Mission " + n + " +++");
+		System.out.println();
+
 		programEnv.addMission(n);
 
 		ArrayList<Name> schedulables = analysis.ELEMENTS.getTypeElement(
@@ -194,16 +213,66 @@ public class EnvironmentBuilder
 
 	private void buildSchedulables(ArrayList<Name> schedulables)
 	{
+
+		ArrayList<Name> nestedSequencers = new ArrayList<Name>();
 		for (Name s : schedulables)
 		{
+			SchedulableTypeE type = getSchedulableType(s);
 			System.out.println("+++ Adding Schedulable " + s + " +++");
-			programEnv.addSchedulable(getSchedulableType(s), s);
+			System.out.println("+++ schedulableType = " + type + " +++");
+
+			programEnv.addSchedulable(type, s);
+
+			assert (programEnv.containsScheudlable(s));
+
+			if (type == SchedulableTypeE.SMS)
+			{
+				nestedSequencers.add(s);
+			}
+
 			// schedulables's type element . accept(new
 			// SchedulableLevel2Visitor(programEnv, analysis), null);
 
 			// TODO check if its a mission sequencer, if it is then call
 			// programEnv.newTier and translate it...which will call build
 			// mission itself
+
+		}
+
+		if (!nestedSequencers.isEmpty())
+		{
+			buildSchedulableMissionSequencer(nestedSequencers);
+		}
+	}
+
+	private void buildSchedulableMissionSequencer(
+			ArrayList<Name> nestedSequencers)
+	{
+		System.out.println();
+		System.out.println("+++ Building Schedulable Mission Sequencers +++");
+		System.out.println();
+
+		for (Name sequencer : nestedSequencers)
+		{
+			programEnv.newTier();
+
+			ArrayList<Name> missions = (analysis.ELEMENTS
+					.getTypeElement(packagePrefix + sequencer).accept(
+					new MissionSequencerLevel2Visitor(programEnv, analysis),
+					null));
+
+			if (missions == null)
+			{
+				System.out.println("+++ No Missions +++");
+			} else
+			{
+				for (Name n : missions)
+				{
+					System.out.println("+++ Exploring Mission " + n + " +++");
+					buildMission(n);
+					programEnv.newCluster();
+				}
+			}
 
 		}
 	}

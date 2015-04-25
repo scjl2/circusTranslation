@@ -62,14 +62,43 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 
-public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
+public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 {
 
 	private Tree save;
 	private ArrayList<Name> returns = new ArrayList<Name>();
+	private ClassTree tree;
+	private Iterator<StatementTree> i ;
+	
+	public ReturnVisitor()
+	{
+		
+	}
+	
+	public ReturnVisitor(ClassTree tree)
+	{
+		this.tree = tree;
+		
+		List<StatementTree> members = (List<StatementTree>) tree.getMembers();
+		System.out.println("MS Visitor members: " + members);
+
+		i = members.iterator();
+	}
+	
+	public ArrayList<Name> getReturns()
+	{
+		while (i.hasNext())
+		{
+			Tree tlst = i.next();
+			
+			tlst.accept(this, false);
+		}
+		
+		return returns;
+	}
 
 	@Override
-	public ArrayList<Name> visitBlock(BlockTree arg0, Void arg1)
+	public ArrayList<Name> visitBlock(BlockTree arg0, Boolean arg1)
 	{
 		System.out.println("Return Visitor: Visiting Block Tree");
 
@@ -82,7 +111,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 			StatementTree st = j.next();
 			if (st instanceof ReturnTree)
 			{
-				return st.accept(this, null);
+				return st.accept(this, false);
 			}
 		}
 
@@ -91,20 +120,29 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 	}
 
 	@Override
-	public ArrayList<Name> visitIdentifier(IdentifierTree arg0, Void arg1)
+	public ArrayList<Name> visitIdentifier(IdentifierTree arg0, Boolean returnExpression)
 	{
 
 		System.out.println("Return Visitor: visiting Identifier Tree: "+ arg0.getName());
 		
 		//This adds a mission to returns
-		returns.add(arg0.getName());
-		return returns;
+		if(!returnExpression)
+		{
+			returns.add(arg0.getName());
+			return null;
+		}
+		else
+		{
+			ArrayList<Name> ids = new ArrayList<Name>(); ids.add(arg0.getName());
+			return ids;
+		}
 	}
 
 	@Override
-	public ArrayList<Name> visitIf(IfTree arg0, Void arg1)
+	public ArrayList<Name> visitIf(IfTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Visistor: visiting if tree");
+		System.out.println("Return Visistor: visiting if tree " + arg0.getCondition());
+		System.out.println("+++ Size of Returns = " + returns.size() + " +++");
 		
 		ArrayList<StatementTree> branches = new ArrayList<StatementTree>();
 
@@ -115,7 +153,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 		{			
 			System.out.println("Visiting " + s.getKind() + " branch");
 			//this may trigger a mission being added to returns (eg above) so we get the same one twice...but it might not happen.
-			ArrayList<Name> names = s.accept(this, null);
+			ArrayList<Name> names = s.accept(this, false);
 						
 			if (names != null)
 			{
@@ -127,6 +165,11 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 				
 				returns.addAll(names);
 			}
+			else
+			{
+				System.out.println("+++ twas a null return +++ ");
+			}
+			
 		}
 		
 //		if (save == arg0)
@@ -142,17 +185,17 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 //
 //			return arg0.getThenStatement().accept(this, null);
 //		}
-		System.out.println("+++ Size of Returns = " + returns.size() + " +++");
-		for(Name n : returns)
-		{
-			System.out.println("+++ in returns = " + n + " +++");
-		}
+//		System.out.println("+++ Size of Returns = " + returns.size() + " +++");
+//		for(Name n : returns)
+//		{
+//			System.out.println("+++ in returns = " + n + " +++");
+//		}
 		
 		return returns;
 	}
 
 	@Override
-	public ArrayList<Name> visitMethod(MethodTree arg0, Void arg1)
+	public ArrayList<Name> visitMethod(MethodTree arg0, Boolean arg1)
 	{
 		System.out.println("Return Tree: Visintg method tree");
 
@@ -167,12 +210,12 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 			if (st instanceof ReturnTree)
 			{
 				System.out.println("Founs Return Tree");
-				return st.accept(this, null);
+				return st.accept(this, false);
 			}
 			if (st instanceof IfTree)
 			{
 				System.out.println("Found If Tree");
-				return st.accept(this, null);
+				return st.accept(this, false);
 			}
 		}
 
@@ -180,97 +223,107 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 	}
 
 	@Override
-	public ArrayList<Name> visitNewClass(NewClassTree arg0, Void arg1)
+	public ArrayList<Name> visitNewClass(NewClassTree arg0, Boolean returnExpression)
 	{
 
 		// ((IdentifierTree) ((NewClassTree) ((ReturnTree)
 		// arg0).getExpression()).getIdentifier()).getName() ;
 		System.out.println("Return Visitor: New Clss Tree");
 		System.out.println(arg0);
-		return arg0.getIdentifier().accept(this, null);
+		if(returnExpression)
+		{
+			return arg0.getIdentifier().accept(this, true);
+		}
+		else
+		{
+			return arg0.getIdentifier().accept(this, false);
+		}
 	}
 
 	@Override
-	public ArrayList<Name> visitReturn(ReturnTree arg0, Void arg1)
+	public ArrayList<Name> visitReturn(ReturnTree arg0, Boolean arg1)
 	{
 
-		System.out.println("Return Visitor: visiting return tree");
-
-		return arg0.getExpression().accept(this, null);
+		System.out.println("Return Visitor: visiting return tree " + arg0);
+		
+		return arg0.getExpression().accept(this, true);
 	}
 
-	@Override
-	public ArrayList<Name> visitAnnotatedType(AnnotatedTypeTree arg0, Void arg1)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
-	public ArrayList<Name> visitAnnotation(AnnotationTree arg0, Void arg1)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitArrayAccess(ArrayAccessTree arg0, Void arg1)
+	public ArrayList<Name> visitAnnotatedType(AnnotatedTypeTree arg0,
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitArrayType(ArrayTypeTree arg0, Void arg1)
+	public ArrayList<Name> visitAnnotation(AnnotationTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitAssert(AssertTree arg0, Void arg1)
+	public ArrayList<Name> visitArrayAccess(ArrayAccessTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitAssignment(AssignmentTree arg0, Void arg1)
+	public ArrayList<Name> visitArrayType(ArrayTypeTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitBinary(BinaryTree arg0, Void arg1)
+	public ArrayList<Name> visitAssert(AssertTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitBreak(BreakTree arg0, Void arg1)
+	public ArrayList<Name> visitAssignment(AssignmentTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitCase(CaseTree arg0, Void arg1)
+	public ArrayList<Name> visitBinary(BinaryTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	@Override
+	public ArrayList<Name> visitBreak(BreakTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitCatch(CatchTree arg0, Void arg1)
+	public ArrayList<Name> visitCase(CaseTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitClass(ClassTree arg0, Void arg1)
+	public ArrayList<Name> visitCatch(CatchTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitClass(ClassTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -278,7 +331,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitCompilationUnit(CompilationUnitTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -286,7 +339,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitCompoundAssignment(CompoundAssignmentTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -294,21 +347,21 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitConditionalExpression(
-			ConditionalExpressionTree arg0, Void arg1)
+			ConditionalExpressionTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitContinue(ContinueTree arg0, Void arg1)
+	public ArrayList<Name> visitContinue(ContinueTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitDoWhileLoop(DoWhileLoopTree arg0, Void arg1)
+	public ArrayList<Name> visitDoWhileLoop(DoWhileLoopTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -316,7 +369,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitEmptyStatement(EmptyStatementTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -324,14 +377,14 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitEnhancedForLoop(EnhancedForLoopTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitErroneous(ErroneousTree arg0, Void arg1)
+	public ArrayList<Name> visitErroneous(ErroneousTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -339,28 +392,30 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitExpressionStatement(
-			ExpressionStatementTree arg0, Void arg1)
+			ExpressionStatementTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitForLoop(ForLoopTree arg0, Void arg1)
+	public ArrayList<Name> visitForLoop(ForLoopTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+
+	@Override
+	public ArrayList<Name> visitImport(ImportTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitImport(ImportTree arg0, Void arg1)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitInstanceOf(InstanceOfTree arg0, Void arg1)
+	public ArrayList<Name> visitInstanceOf(InstanceOfTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -368,7 +423,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitIntersectionType(IntersectionTypeTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -376,7 +431,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitLabeledStatement(LabeledStatementTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -384,14 +439,14 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitLambdaExpression(LambdaExpressionTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitLiteral(LiteralTree arg0, Void arg1)
+	public ArrayList<Name> visitLiteral(LiteralTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -399,43 +454,47 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitMemberReference(MemberReferenceTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitMemberSelect(MemberSelectTree arg0, Void arg1)
+	public ArrayList<Name> visitMemberSelect(MemberSelectTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 	@Override
 	public ArrayList<Name> visitMethodInvocation(MethodInvocationTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitModifiers(ModifiersTree arg0, Void arg1)
+	public ArrayList<Name> visitModifiers(ModifiersTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitNewArray(NewArrayTree arg0, Void arg1)
+	public ArrayList<Name> visitNewArray(NewArrayTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	
+
 	@Override
-	public ArrayList<Name> visitOther(Tree arg0, Void arg1)
+	public ArrayList<Name> visitOther(Tree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -443,98 +502,102 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Void>
 
 	@Override
 	public ArrayList<Name> visitParameterizedType(ParameterizedTypeTree arg0,
-			Void arg1)
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitParenthesized(ParenthesizedTree arg0, Void arg1)
+	public ArrayList<Name> visitParenthesized(ParenthesizedTree arg0,
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitPrimitiveType(PrimitiveTypeTree arg0, Void arg1)
+	public ArrayList<Name> visitPrimitiveType(PrimitiveTypeTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public ArrayList<Name> visitSwitch(SwitchTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitSwitch(SwitchTree arg0, Void arg1)
+	public ArrayList<Name> visitSynchronized(SynchronizedTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitSynchronized(SynchronizedTree arg0, Void arg1)
+	public ArrayList<Name> visitThrow(ThrowTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitThrow(ThrowTree arg0, Void arg1)
+	public ArrayList<Name> visitTry(TryTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitTry(TryTree arg0, Void arg1)
+	public ArrayList<Name> visitTypeCast(TypeCastTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitTypeCast(TypeCastTree arg0, Void arg1)
+	public ArrayList<Name> visitTypeParameter(TypeParameterTree arg0,
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitTypeParameter(TypeParameterTree arg0, Void arg1)
+	public ArrayList<Name> visitUnary(UnaryTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitUnary(UnaryTree arg0, Void arg1)
+	public ArrayList<Name> visitUnionType(UnionTypeTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitUnionType(UnionTypeTree arg0, Void arg1)
+	public ArrayList<Name> visitVariable(VariableTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitVariable(VariableTree arg0, Void arg1)
+	public ArrayList<Name> visitWhileLoop(WhileLoopTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitWhileLoop(WhileLoopTree arg0, Void arg1)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitWildcard(WildcardTree arg0, Void arg1)
+	public ArrayList<Name> visitWildcard(WildcardTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
