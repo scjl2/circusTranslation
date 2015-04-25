@@ -178,11 +178,12 @@ public class EnvironmentBuilder
 				buildMission(n);
 				if(newClusterNeeded)
 				{
-					newClusterNeeded = true;
+					programEnv.newCluster();
+				
 				}
 				else
 				{
-					programEnv.newCluster();
+					newClusterNeeded = true;
 				}
 			}
 		}
@@ -266,11 +267,19 @@ public class EnvironmentBuilder
 				System.out.println("+++ No Missions +++");
 			} else
 			{
+				boolean newClusterNeeded = false;
 				for (Name n : missions)
 				{
 					System.out.println("+++ Exploring Mission " + n + " +++");
 					buildMission(n);
-					programEnv.newCluster();
+					if(newClusterNeeded)
+					{
+						programEnv.newCluster();
+					}
+					else
+					{
+						newClusterNeeded = true;
+					}
 				}
 			}
 
