@@ -101,7 +101,14 @@ import com.sun.source.util.Trees;
 				if (tlst instanceof VariableTree)
 				{
 					System.out.println("MS VIsitor: Variable Tree Found");
-					//need to add map of vars here
+					
+					VariableTree vt = (VariableTree) tlst;
+			
+					System.out.println("-> " + vt.toString());
+					System.out.println("-> Name:" + vt.getName());
+					System.out.println("-> Type: " + vt.getType());
+
+					programEnv.addVariable(vt.getName(), vt.getType());
 				}
 
 				if (tlst instanceof MethodTree)

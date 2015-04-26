@@ -206,7 +206,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		while (j.hasNext())
 		{
 			StatementTree st = j.next();
-			System.out.println("Return Visitor: " + st);
+			System.out.println("Return Visitor: " + st + " is a " + st.getKind());
 			if (st instanceof ReturnTree)
 			{
 				System.out.println("Founs Return Tree");
@@ -215,6 +215,12 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 			if (st instanceof IfTree)
 			{
 				System.out.println("Found If Tree");
+				return st.accept(this, false);
+			}
+			
+			if( st instanceof ExpressionStatementTree)
+			{				
+				System.out.println("Found Expression Statement");
 				return st.accept(this, false);
 			}
 		}
@@ -473,7 +479,8 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	public ArrayList<Name> visitMethodInvocation(MethodInvocationTree arg0,
 			Boolean arg1)
 	{
-		// TODO Auto-generated method stub
+		System.out.println("Return Visitor: method Invocation Found : " + arg0);
+		
 		return null;
 	}
 
