@@ -119,11 +119,17 @@ public class ProgramEnv
 
 	public void newTier()
 	{
+		System.out.println("+++ New Tier +++");
+		System.out.println();
+		
 		frameworkEnv.newTier();
 	}
 
 	public void newCluster()
 	{
+		System.out.println("+++ New Cluster +++");
+		System.out.println();
+		
 		frameworkEnv.newCluster();
 	}
 

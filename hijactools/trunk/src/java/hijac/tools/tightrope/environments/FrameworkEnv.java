@@ -561,6 +561,7 @@ public class FrameworkEnv
 
 	public boolean containsSchedulable(Name name)
 	{
+		boolean present = false;
 		for (TierEnv t : tiers)
 		{
 			for (ClusterEnv c : t.clusters)
@@ -568,11 +569,11 @@ public class FrameworkEnv
 
 				SchedulablesEnv s = c.schedulablesEnv;
 
-				return s.containsSchedulable(name);
+				present= s.containsSchedulable(name);
 			}
 		}
 
-		return false;
+		return present;
 	}
 
 }

@@ -224,7 +224,7 @@ public class EnvironmentBuilder
 
 			programEnv.addSchedulable(type, s);
 
-			assert (programEnv.containsScheudlable(s));
+//			assert (programEnv.containsScheudlable(s));
 
 			if (type == SchedulableTypeE.SMS)
 			{
