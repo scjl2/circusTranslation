@@ -107,8 +107,30 @@ public class SPModeChanger extends MissionSequencer<Mission> implements
 	protected Mission getNextMission()
 	{
 		Console.println("Mode Changer: getNextMission");
-		advanceMode();
-		return (Mission) currentMode;
+		if (modesLeft == 3)
+		{
+			modesLeft--;
+			Console.println("Mode Changer: Advance To Launch Mode");
+			return launchMode;				
+		}
+		else if (modesLeft == 2)
+		{
+			modesLeft--;
+			Console.println("Mode Changer: Advance To Cruise Mode");
+			return cruiseMode;
+		}
+		else if (modesLeft == 1)
+		{
+			modesLeft--;
+			Console.println("Mode Changer: Advance To Land Mode");
+			return landMode;
+		}
+		else
+		{
+			return null;
+			Console.println("Mode Changer: FINISHED");
+			controllingMission.requestTermination();
+		}
 	}
 
 }
