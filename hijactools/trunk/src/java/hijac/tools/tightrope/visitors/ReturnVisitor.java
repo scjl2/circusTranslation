@@ -134,7 +134,9 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		//This adds a mission to returns
 		if(!returnExpression)
 		{
-			returns.add(arg0.getName());
+			Name t = ((IdentifierTree) varMap.get(arg0.getName())).getName();
+			
+			returns.add(t);
 			return null;
 		}
 		else
@@ -589,11 +591,13 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		
 		if (n != null)
 		{
-			System.out.println("Type Cast type= " + n);
-			returns.add(n);
+			System.out.println("T type= " + t.getKind());
+			IdentifierTree id = (IdentifierTree) t;
+			returns.add(id.getName());
 		}
 		
-		return arg0.getExpression().accept(this, arg1);
+//		return arg0.getExpression().accept(this, arg1);
+		return returns;
 	}
 
 	@Override
