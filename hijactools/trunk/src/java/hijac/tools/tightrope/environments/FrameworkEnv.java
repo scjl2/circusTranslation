@@ -21,32 +21,33 @@ public class FrameworkEnv
 
 	class ControlTierEnv
 	{
-		ParadigmEnv safeletEnv;
-		ParadigmEnv topLevelMissionSequencerEnv;
+		
+		SafeletEnv safeletEnv;
+		TopLevelMissionSequencerEnv topLevelMissionSequencerEnv;
 
 		public ControlTierEnv()
 		{
-			safeletEnv = new ParadigmEnv();
-			topLevelMissionSequencerEnv = new ParadigmEnv();
+			safeletEnv = new SafeletEnv();
+			topLevelMissionSequencerEnv = new TopLevelMissionSequencerEnv();
 		}
 
-		public ParadigmEnv getSafeletEnv()
+		public SafeletEnv getSafeletEnv()
 		{
 			return safeletEnv;
 		}
 
-		public void setSafeletEnv(ParadigmEnv safeletEnv)
+		public void setSafeletEnv(SafeletEnv safeletEnv)
 		{
 			this.safeletEnv = safeletEnv;
 		}
 
-		public ParadigmEnv getTopLevelMissionSequencerEnv()
+		public TopLevelMissionSequencerEnv getTopLevelMissionSequencerEnv()
 		{
 			return topLevelMissionSequencerEnv;
 		}
 
 		public void setTopLevelMissionSequencerEnv(
-				ParadigmEnv topLevelMissionSequencerEnv)
+				TopLevelMissionSequencerEnv topLevelMissionSequencerEnv)
 		{
 			this.topLevelMissionSequencerEnv = topLevelMissionSequencerEnv;
 		}
@@ -59,6 +60,7 @@ public class FrameworkEnv
 		public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 		{
 			this.topLevelMissionSequencerEnv.setName(topLevelMissionSequencer);
+			safeletEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 		}
 
 		public String toString()
@@ -181,21 +183,21 @@ public class FrameworkEnv
 
 	private class ClusterEnv
 	{
-		ParadigmEnv missionEnv;
+		MissionEnv missionEnv;
 		SchedulablesEnv schedulablesEnv;
 
 		public ClusterEnv()
 		{
-			missionEnv = new ParadigmEnv();
+			missionEnv = new MissionEnv();
 			schedulablesEnv = new SchedulablesEnv();
 		}
 
-		public ParadigmEnv getMissionEnv()
+		public MissionEnv getMissionEnv()
 		{
 			return missionEnv;
 		}
 
-		public void setMissionEnv(ParadigmEnv missionEnv)
+		public void setMissionEnv(MissionEnv missionEnv)
 		{
 			this.missionEnv = missionEnv;
 		}
@@ -234,8 +236,8 @@ public class FrameworkEnv
 		List<ParadigmEnv> periodEventHandlerEnvs = new ArrayList<ParadigmEnv>();
 		List<ParadigmEnv> aperiodicEventHandlerEnvs = new ArrayList<ParadigmEnv>();
 		List<ParadigmEnv> oneShotEventHandlerEnvs = new ArrayList<ParadigmEnv>();
-		List<ParadigmEnv> schedulableMissionSequencerEnvs = new ArrayList<ParadigmEnv>();
-		List<ParadigmEnv> managedThreadEnvs = new ArrayList<ParadigmEnv>();
+		List<NestedMissionSequencerEnv> schedulableMissionSequencerEnvs = new ArrayList<NestedMissionSequencerEnv>();
+		List<ManagedThreadEnv> managedThreadEnvs = new ArrayList<ManagedThreadEnv>();
 
 		public List<ParadigmEnv> getPeriodEventHandlerEnvs()
 		{
@@ -270,23 +272,23 @@ public class FrameworkEnv
 			this.oneShotEventHandlerEnvs = oneShotEventHandlerEnvs;
 		}
 
-		public List<ParadigmEnv> getSchedulableMissionSequencerEnvs()
+		public List<NestedMissionSequencerEnv> getSchedulableMissionSequencerEnvs()
 		{
 			return schedulableMissionSequencerEnvs;
 		}
 
-		public void setSchedulableMissionSequencerEnvs(
-				List<ParadigmEnv> schedulableMissionSequencerEnvs)
-		{
-			this.schedulableMissionSequencerEnvs = schedulableMissionSequencerEnvs;
-		}
+//		public void setSchedulableMissionSequencerEnvs(
+//				List<NestedMissionSequencerEnv> schedulableMissionSequencerEnvs)
+//		{
+//			this.schedulableMissionSequencerEnvs = schedulableMissionSequencerEnvs;
+//		}
 
-		public List<ParadigmEnv> getManagedThreadEnvs()
+		public List<ManagedThreadEnv> getManagedThreadEnvs()
 		{
 			return managedThreadEnvs;
 		}
 
-		public void setManagedThreadEnvs(List<ParadigmEnv> managedThreadEnvs)
+		public void setManagedThreadEnvs(List<ManagedThreadEnv> managedThreadEnvs)
 		{
 			this.managedThreadEnvs = managedThreadEnvs;
 		}
@@ -298,7 +300,9 @@ public class FrameworkEnv
 
 			if (type == SchedulableTypeE.MT)
 			{
-				managedThreadEnvs.add(p);
+				ManagedThreadEnv mtEnv = new ManagedThreadEnv();
+				mtEnv.setName(name);
+				managedThreadEnvs.add(mtEnv);
 			}
 			if (type == SchedulableTypeE.PEH)
 			{
@@ -314,7 +318,9 @@ public class FrameworkEnv
 			}
 			if (type == SchedulableTypeE.SMS)
 			{
-				schedulableMissionSequencerEnvs.add(p);
+				NestedMissionSequencerEnv nmsEnv = new NestedMissionSequencerEnv();
+				nmsEnv.setName(name);
+				schedulableMissionSequencerEnvs.add(nmsEnv);
 			}
 		}
 
@@ -468,6 +474,7 @@ public class FrameworkEnv
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 	{
 		controlTier.addTopLevelMissionSequencer(topLevelMissionSequencer);
+		
 
 		//
 		// TierEnv tier = new TierEnv();
@@ -526,6 +533,7 @@ public class FrameworkEnv
 	public void addSchedulable(SchedulableTypeE type, Name name)
 	{
 		currentCluster.addSchedulable(type, name);
+		currentCluster.missionEnv.addSchedulable(name);
 	}
 
 	public ArrayList<Name> missionsBelow(TierEnv tier)
@@ -574,6 +582,64 @@ public class FrameworkEnv
 		}
 
 		return present;
+	}
+
+	public ArrayList<MissionEnv> getMissions()
+	{
+		ArrayList<MissionEnv> missions = new ArrayList<MissionEnv>();
+		
+		for(TierEnv t : tiers)
+		{
+			for (ClusterEnv c : t.clusters)
+			{
+				missions.add(c.missionEnv);
+			}	
+				
+		}
+		
+		return missions;
+	}
+
+	//Bit hacky
+	public void addMissionSequencerMission(Name tlms, Name n)
+	{
+		System.out.println("*** Adding " + n + " to " + tlms + " ***");
+		if(controlTier.topLevelMissionSequencerEnv.getName() == tlms )
+		{
+			controlTier.topLevelMissionSequencerEnv.addMission(n);
+		}
+		
+		for(TierEnv t: tiers)
+		{
+			for(ClusterEnv c : t.clusters)
+			{
+				if(!c.schedulablesEnv.schedulableMissionSequencerEnvs.isEmpty())
+				{
+					for(NestedMissionSequencerEnv p : c.schedulablesEnv.schedulableMissionSequencerEnvs)
+					{
+						if(p.getName() == tlms)
+						{
+							p.addMission(n);
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
+	public ArrayList<ManagedThreadEnv> getManagedThreads()
+	{
+		ArrayList<ManagedThreadEnv> mtEnvs = new ArrayList<ManagedThreadEnv>();
+		
+		for(TierEnv t : tiers)
+		{
+			for(ClusterEnv c : t.clusters)
+			{
+				mtEnvs.addAll(c.schedulablesEnv.managedThreadEnvs);
+			}
+		}
+		return mtEnvs;
 	}
 
 }

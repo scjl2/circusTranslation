@@ -87,6 +87,7 @@ import com.sun.source.util.Trees;
 		public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
 		{
 			getVariables(arg0);	
+			System.out.println();
 			System.out.println("+++ Mission Sequencer Variables +++");
 			System.out.println();
 			
