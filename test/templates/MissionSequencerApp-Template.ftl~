@@ -1,4 +1,7 @@
-
+\begin{zsection}
+  \SECTION ~ ${ProcessName}App ~ \parents ~ TopLevelMissionSequencerChan,
+  \t1 MissionId, MissionIds, SchedulableId 
+\end{zsection}
 %\begin{circus}
 %\circchannelset MissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
 %\end{circus}
@@ -28,8 +31,7 @@ Methods \circdef  \\
 \circblockclose 
 \circseq Methods
 \end{circusaction}
- 
-<<<<<<< HEAD
+
 \begin{circusaction}
 \circspot (Methods) %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~${MissionSequencerID} \then \Skip)
@@ -37,9 +39,4 @@ Methods \circdef  \\
 
 \begin{circus}
   \circend
-=======
-\begin{circus}
-\circspot (Methods) %\circhide MissionSequencerAppStateSync
-\circinterrupt (end\_sequencer\_app~.~${MissionSequencerID} \then \Skip)
->>>>>>> 3c922fa7410689067a7a13fbcfda8bff71cb83c7
 \end{circus}

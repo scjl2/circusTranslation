@@ -1,4 +1,7 @@
-
+\begin{zsection}
+  \SECTION ~ ${MissionSequencerID}App ~ \parents ~ TopLevelMissionSequencerChan,
+  \t1 MissionId, MissionIds, SchedulableId 
+\end{zsection}
 %\begin{circus}
 %\circchannelset MissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
 %\end{circus}

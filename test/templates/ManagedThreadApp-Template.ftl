@@ -1,3 +1,7 @@
+\begin{zsection}
+  \SECTION ~ ${SchedulableID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
+\end{zsection}
+%
 \begin{circus}
 \circprocess ${SchedulableID}App \circdef \circbegin
 \end{circus}

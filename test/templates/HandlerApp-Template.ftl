@@ -1,6 +1,9 @@
+\begin{zsection}
+  \SECTION ~ ${SchedulableID}App ~ \parents ~ ${handlerType}EventHandlerChan, SchedulableId, SchedulableIds
+\end{zsection}
 
 \begin{circus}
-\circprocess HandlerApp \circdef \circbegin
+\circprocess ${SchedulableID}App \circdef \circbegin
 \end{circus}
 
 
@@ -12,15 +15,15 @@ Methods \circdef \\
 \begin{circusaction}
 handlerAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~[Handler] \then \\
+	handleAsyncEventCall~.~${SchedulableID} \then \\
 
-    handleAsyncEventRet~.~[Handler] \then \\
+    handleAsyncEventRet~.~${SchedulableID} \then \\
     \Skip
 \circblockclose
 \end{circusaction}
     
 \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_[handlerType]EventHandler\_app~.~[Handler] \then \Skip)
+\circspot (Methods) \circinterrupt (end\_${handlerType}EventHandler\_app~.~${SchedulableID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

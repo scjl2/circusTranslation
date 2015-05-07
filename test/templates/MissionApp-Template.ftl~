@@ -1,4 +1,7 @@
-
+\begin{zsection}
+  \SECTION ~ MissionFW ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+\end{zsection}
 %\begin{circus}
 %\circchannelset MissionAppSync == \\
 %	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
@@ -15,11 +18,7 @@
 %\end{circus}
 
 \begin{circus}
-<<<<<<< HEAD
 \circprocess MainMissionApp \circdef \circbegin
-=======
-\circprocess MainMissionApp \circdef
->>>>>>> 3c922fa7410689067a7a13fbcfda8bff71cb83c7
 \end{circus}
 
 \begin{circusaction}
@@ -41,7 +40,7 @@ InitializePhase \circdef \\
 CleanupPhase \circdef  \\
 \circblockopen
  cleanupMissionCall~.~${MissionID} \then \\
- cleanupMissionRet~.~${MissionID}~?~false \then \\
+ cleanupMissionRet~.~${MissionID}~?~\false \then \\
  \Skip
 \circblockclose
 \end{circusaction}
@@ -56,16 +55,10 @@ Methods \circdef \\
 \circseq Methods
 \end{circusaction}
 
-<<<<<<< HEAD
 \begin{circusaction}
 \circspot (Methods) \circinterrupt (end\_mission\_app~.~${MissionID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}
   \circend
-=======
-\begin{circus}
-\circspot (Methods) \circinterrupt (end\_mission\_app~.~${MissionID} \then \Skip)
-
->>>>>>> 3c922fa7410689067a7a13fbcfda8bff71cb83c7
 \end{circus}

@@ -1,4 +1,7 @@
-
+\begin{zsection}
+  \SECTION ~ ${MissionID}App ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+\end{zsection}
 %\begin{circus}
 %\circchannelset MissionAppSync == \\
 %	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
@@ -15,7 +18,7 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess MainMissionApp \circdef \circbegin
+\circprocess ${MissionID}App \circdef \circbegin
 \end{circus}
 
 \begin{circusaction}
@@ -37,7 +40,7 @@ InitializePhase \circdef \\
 CleanupPhase \circdef  \\
 \circblockopen
  cleanupMissionCall~.~${MissionID} \then \\
- cleanupMissionRet~.~${MissionID}~?~false \then \\
+ cleanupMissionRet~.~${MissionID}~?~\false \then \\
  \Skip
 \circblockclose
 \end{circusaction}

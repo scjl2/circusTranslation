@@ -1,3 +1,6 @@
+\begin{zsection}
+  \SECTION ~ ${ProcessName}App ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan
+\end{zsection}
 %\begin{circus}
 %\circchannelset ${ProcessName}AppSync \circdef \\
 %   \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
