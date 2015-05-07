@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${MissionSequencerID}App ~ \parents ~ TopLevelMissionSequencerChan,
+  \SECTION ~ ${MissionSequencerID}App ~ \parents ~ TopLevelMissionSequencerChan,\\
   \t1 MissionId, MissionIds, SchedulableId 
 \end{zsection}
 %\begin{circus}
