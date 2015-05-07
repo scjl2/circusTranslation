@@ -33,7 +33,9 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 	private Trees trees;
 	private Set<CompilationUnitTree> units;
 	private Set<TypeElement> type_elements;
-	private ReturnVisitor returnVisitor = new ReturnVisitor(programEnv);
+
+	private ReturnVisitor returnVisitor = new ReturnVisitor(null);
+
 
 	public SafeletLevel2Visitor(ProgramEnv programEnv, SCJAnalysis analysis)
 	{
@@ -80,7 +82,9 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 
 		ClassTree ct = trees.getTree(e);
 	
-		programEnv.getSafelet().setClassTree(ct);
+
+//		programEnv.getSafelet().setClassTree(ct);
+
 
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 		Iterator<StatementTree> i = members.iterator();

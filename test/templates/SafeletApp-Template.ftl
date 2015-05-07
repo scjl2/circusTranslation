@@ -43,9 +43,9 @@ Methods \circdef \\
 \circblockclose
 \circseq Methods
 \end{circusaction}
- 
- \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_safelet\_app \then \Skip) 
+
+\begin{circusaction}
+	\circspot (Methods) \circinterrupt (end\_safelet\_app \then \Skip) 
 \end{circusaction}
 
 \begin{circus}

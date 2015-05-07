@@ -19,6 +19,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 
+import checkers.formatter.quals.ReturnsFormat;
+
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
@@ -36,7 +38,7 @@ import com.sun.source.util.Trees;
 		private  Set<CompilationUnitTree> units;
 		private  Set<TypeElement> type_elements;
 		private ReturnVisitor returnVisitor ;
-		
+
 		
 		private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 		
@@ -49,7 +51,9 @@ import com.sun.source.util.Trees;
 			trees = analysis.TREES;
 			units = analysis.getCompilationUnits();
 			type_elements = analysis.getTypeElements();
-			 returnVisitor = new ReturnVisitor(programEnv);
+
+//			returnVisitor = new ReturnVisitor(programEnv);
+
 		}
 
 		@Override
@@ -85,6 +89,9 @@ import com.sun.source.util.Trees;
 		public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
 		{
 			getVariables(arg0);	
+
+			System.out.println();
+
 			System.out.println("+++ Mission Sequencer Variables +++");
 			System.out.println();
 			
@@ -108,10 +115,9 @@ import com.sun.source.util.Trees;
 			System.out.println("MS Visitor members: " + members);
 
 			Iterator<StatementTree> i = members.iterator();
-			
-			
-			
-			
+
+			returnVisitor = new ReturnVisitor(varMap);
+
 			
 			while (i.hasNext())
 			{

@@ -31,6 +31,8 @@ import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ErroneousTree;
 import com.sun.source.tree.ExpressionStatementTree;
+
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
@@ -72,10 +74,11 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	private Tree save;
 	private ArrayList<Name> returns = new ArrayList<Name>();
 	private ClassTree tree;
+
 	private Iterator<StatementTree> i ;
 	private ProgramEnv programEnv;
 
-	
+
 	public VariableVisitor(ProgramEnv programEnv)
 	{
 		this.programEnv = programEnv;
@@ -120,8 +123,54 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitAssignment(AssignmentTree arg0, Boolean arg1)
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		System.out.println("Var Visitor: Assignment");
+		System.out.println("-> " + arg0);
+//		System.out
+//				.println("-> variable.kind = " + arg0.getVariable().getKind());
+//		System.out.println("-> Expression = " + arg0.getExpression());
+//		System.out.println("-> expression.kind = "
+//				+ arg0.getExpression().getKind());
+		Map<Name, Tree> returnMap = new HashMap<Name, Tree>();
+
+		// Map<Name, Tree> expressionMap = arg0.getExpression().accept(this,
+		// false);
+		ExpressionTree variable = arg0.getVariable();
+		Name varName = null;
+		Tree expression = arg0.getExpression();
+		Tree expressionTree = null;
+		
+		
+		
+		if (variable instanceof IdentifierTree)
+		{
+			varName = ((IdentifierTree) variable).getName();
+			
+		}
+		if (variable instanceof MemberSelectTree)
+		{
+			varName = ((MemberSelectTree) variable).getIdentifier();
+		}
+		
+		if (expression instanceof NewClassTree)
+		{
+			expressionTree = ((NewClassTree) expression).getIdentifier();
+		}
+
+		if(expression instanceof IdentifierTree)
+		{
+			expressionTree = expression;
+		}
+		
+		if(varName != null & expressionTree != null)
+		{
+			System.out.println("Adding to Var Map");
+			returnMap.put(varName, expressionTree);
+		}
+	
+		
+		return returnMap;
+
 	}
 
 	@Override
@@ -134,8 +183,33 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitBlock(BlockTree arg0, Boolean arg1)
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		System.out.println("Var Visitor: Block");
+		System.out.println(arg0);
+		HashMap<Name, Tree> returnMap = new HashMap<Name, Tree>();
+
+		List<? extends StatementTree> statements = arg0.getStatements();
+
+		Iterator<? extends StatementTree> i = statements.iterator();
+
+		while (i.hasNext())
+		{
+			StatementTree st = i.next();
+			System.out.println("Var Visitor Block: st kind = " + st.getKind());
+			Map<Name, Tree> statementReturn = st.accept(this, false);
+			// System.out.println("Var Visitor: Block: in while");
+			if (statementReturn != null)
+			{
+				System.out.println("Var Visitor: Block: Returned Adding");
+				returnMap.putAll(statementReturn);
+			} else
+			{
+				System.out.println("Var Visitor: Block: Returned Null");
+			}
+		}
+
+		return returnMap;
+
 	}
 
 	@Override
@@ -231,8 +305,10 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitExpressionStatement(
 			ExpressionStatementTree arg0, Boolean arg1)
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		System.out.println("Var Visitor: Expression Statement Tree");
+		return arg0.getExpression().accept(this, false);
+
 	}
 
 	@Override
@@ -297,8 +373,13 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitLiteral(LiteralTree arg0, Boolean arg1)
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		Map<Name, Tree> returnMap = new HashMap<Name, Tree>();
+
+		// returnMap.put(null, (Tree) arg0.);
+
+		return returnMap;
+
 	}
 
 	@Override
@@ -319,8 +400,9 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitMethod(MethodTree arg0, Boolean arg1)
 	{
-		// TODO Auto-generated method stub
-		return null;
+
+		return arg0.getBody().accept(this, false);
+
 	}
 
 	@Override
@@ -450,15 +532,19 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitVariable(VariableTree arg0, Boolean arg1)
 	{
+
+		System.out.println("Var Visitor: Variable for " + arg0);
+
 		HashMap<Name, Tree> r = new HashMap<Name, Tree>();
-		System.out.println("+++ Var Visitor for " + arg0 + " +++");
-		System.out.println("-> Name = " + arg0.getName() + " Type = " + arg0.getType());
-		
-					
+
+		System.out.println("-> Name = " + arg0.getName() + " Type = "
+				+ arg0.getType());
+
 		r.put(arg0.getName(), arg0.getType());
-		
-//		System.out.println("+++ r is null : " + r == null + " +++");
-	
+
+		// System.out.println("+++ r is null : " + r == null + " +++");
+
+
 		return r;
 	}
 

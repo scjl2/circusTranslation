@@ -28,7 +28,7 @@ Methods \circdef  \\
 \circblockclose 
 \circseq Methods
 \end{circusaction}
- 
+
 \begin{circusaction}
 \circspot (Methods) %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~${MissionSequencerID} \then \Skip)

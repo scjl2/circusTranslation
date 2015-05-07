@@ -16,8 +16,7 @@ public class ParadigmEnv extends ObjectEnv
 	List<Name> nonPMeths;
 	List<MethodTree> meths;
 	
-	//temp
-	Name[] tlmsNames;
+	
 
 	public ParadigmEnv()
 	{
@@ -46,28 +45,15 @@ public class ParadigmEnv extends ObjectEnv
 		meths.add(meth);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Map toMap()
-	{
-		Map map = new HashMap();
-		map.put("ProcessName", name.toString());
-		map.put("initializeApplicationMethod", "");
-				
-		if (tlmsNames.length == 1)
-		{
-			map.put("SchedulableID", tlmsNames[0]);
-		}
-			
-		
-		
-		return map;
-	}
+	
+	
+	
+	
+	
+	
+	
 
-	public void setTLMSNames(Name[] names)
-	{
-		tlmsNames= names;
-		
-	}
+
 
 	// public Name getmethodName(String methodName)
 	// {

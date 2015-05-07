@@ -8,7 +8,7 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess ${MissionSequencerID}App \circdef \\ 
+\circprocess ${MissionSequencerID}App \circdef \circbegin\\ 
 \end{circus}
    
 \begin{circusaction}
@@ -29,7 +29,17 @@ Methods \circdef  \\
 \circseq Methods
 \end{circusaction}
  
+<<<<<<< HEAD
+\begin{circusaction}
+\circspot (Methods) %\circhide MissionSequencerAppStateSync
+\circinterrupt (end\_sequencer\_app~.~${MissionSequencerID} \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+=======
 \begin{circus}
 \circspot (Methods) %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~${MissionSequencerID} \then \Skip)
+>>>>>>> 3c922fa7410689067a7a13fbcfda8bff71cb83c7
 \end{circus}

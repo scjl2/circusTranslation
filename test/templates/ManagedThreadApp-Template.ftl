@@ -16,7 +16,7 @@ Run \circdef \\
 	\Skip
 \circblockclose
 \end{circusaction}	
-	
+
 \begin{circusaction}
 \circspot (Methods) \circinterrupt (end\_managedThread\_app~.~${SchedulableID} \then \Skip)
 \end{circusaction}

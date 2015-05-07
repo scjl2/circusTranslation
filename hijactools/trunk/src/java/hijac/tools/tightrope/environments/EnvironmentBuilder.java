@@ -97,13 +97,14 @@ public class EnvironmentBuilder
 		System.out.println("+++ Building Environments +++");
 		System.out.println();
 		ArrayList<Name> topLevelMissionSequners = buildSafelet(getSafelet());
-
+		
 		for (Name n : topLevelMissionSequners)
 		{
+//			System.out.println("+++ top Level Sequencer: " + n + " ***");
+
 			programEnv.addMission(n);
 
-			buildTopLevelMissionSequencer(analysis.ELEMENTS
-					.getTypeElement(packagePrefix + n));
+			buildTopLevelMissionSequencer(n);
 		}
 
 		return programEnv;
@@ -150,6 +151,7 @@ public class EnvironmentBuilder
 
 	private ArrayList<Name> buildSafelet(TypeElement safelet)
 	{		
+
 		ArrayList<Name> topLevelMissionSequencers = null;
 		topLevelMissionSequencers = safelet.accept(new SafeletLevel2Visitor(
 				programEnv, analysis), null);
@@ -158,16 +160,22 @@ public class EnvironmentBuilder
 		
 		for (Name n : topLevelMissionSequencers)
 		{
+			System.out.println();
 			System.out.println("+++ Exploring Top Level Sequencer " + n
 					+ " +++");
+			System.out.println();
 			programEnv.addTopLevelMissionSequencer(n);
 		}
 		return topLevelMissionSequencers;
 	}
 
-	private void buildTopLevelMissionSequencer(TypeElement tlms)
+	private void buildTopLevelMissionSequencer(Name tlms)
 	{
-		ArrayList<Name> missions = tlms.accept(
+		TypeElement tlmsElement = 
+		analysis.ELEMENTS
+		.getTypeElement(packagePrefix + tlms);
+		
+		ArrayList<Name> missions = tlmsElement.accept(
 				new MissionSequencerLevel2Visitor(programEnv, analysis), null);
 
 		if (missions == null)
@@ -179,11 +187,12 @@ public class EnvironmentBuilder
 			for (Name n : missions)
 			{
 				System.out.println("+++ Exploring Mission " + n + " +++");
+				
+				programEnv.addMissionSequencerMission(tlms, n);
 				buildMission(n);
 				if(newClusterNeeded)
 				{
-					programEnv.newCluster();
-				
+					programEnv.newCluster();				
 				}
 				else
 				{
@@ -312,9 +321,7 @@ public class EnvironmentBuilder
 					.key("SafeletType"));
 
 			//
-			if (elem.getInterfaces()
-
-			.toString().contains("Safelet"))
+			if (elem.getInterfaces().toString().contains("Safelet"))
 			{
 				System.out.println("Found Safelet");
 
@@ -328,7 +335,7 @@ public class EnvironmentBuilder
 				// names = elem.accept(new SafeletLevel2Visitor(programEnv,
 				// analysis), null);
 
-				programEnv.getSafelet().setTLMSNames(names);
+//				programEnv.getSafelet().setTLMSNames(names);
 
 				for (int i = 0; i < names.length; i++)
 				{

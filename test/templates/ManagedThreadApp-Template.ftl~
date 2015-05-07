@@ -1,5 +1,5 @@
 \begin{circus}
-\circprocess ${SchedulableID}App \circdef
+\circprocess ${SchedulableID}App \circdef \circbegin
 \end{circus}
 
 \begin{circusaction}
@@ -17,6 +17,15 @@ Run \circdef \\
 \circblockclose
 \end{circusaction}	
 	
+<<<<<<< HEAD
+\begin{circusaction}
+\circspot (Methods) \circinterrupt (end\_managedThread\_app~.~${SchedulableID} \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+=======
 \begin{circus}
 \circspot (Methods) \circinterrupt (end\_managedThread\_app~.~${SchedulableID} \then \Skip)
+>>>>>>> 3c922fa7410689067a7a13fbcfda8bff71cb83c7
 \end{circus}

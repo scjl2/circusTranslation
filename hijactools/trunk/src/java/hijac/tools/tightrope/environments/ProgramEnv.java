@@ -70,7 +70,7 @@ public class ProgramEnv
 		return nonParadigmObjectEnvs;
 	}
 
-	public ParadigmEnv getSafelet()
+	public SafeletEnv getSafelet()
 	{
 		return frameworkEnv.getControlTier().getSafeletEnv();
 	}
@@ -131,6 +131,31 @@ public class ProgramEnv
 		System.out.println();
 		
 		frameworkEnv.newCluster();
+	}
+
+	public ArrayList<TopLevelMissionSequencerEnv> getTopLevelMissionSequencers()
+	{
+		ArrayList<TopLevelMissionSequencerEnv> returnList = new ArrayList<TopLevelMissionSequencerEnv>();
+				
+		returnList.add(frameworkEnv.getControlTier().getTopLevelMissionSequencerEnv());
+		
+		return returnList;
+	}
+
+	public ArrayList<MissionEnv> getMissions()
+	{
+		return frameworkEnv.getMissions();
+	}
+
+	public void addMissionSequencerMission(Name tlms, Name n)
+	{
+		frameworkEnv.addMissionSequencerMission(tlms, n);
+		
+	}
+
+	public ArrayList<ManagedThreadEnv> getManagedThreads()
+	{
+		return frameworkEnv.getManagedThreads();
 	}
 
 	// public void setFrameworkEnv(FrameworkEnv frameworkEnv)

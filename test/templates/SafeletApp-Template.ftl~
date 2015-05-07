@@ -9,7 +9,11 @@
 %\end{circus}     
   
 \begin{circus}
+<<<<<<< HEAD
 \circprocess ${ProcessName}App  \circdef \circbegin
+=======
+\circprocess ${ProcessName}App  \circdef
+>>>>>>> 3c922fa7410689067a7a13fbcfda8bff71cb83c7
 \end{circus}
 
 
@@ -44,10 +48,15 @@ Methods \circdef \\
 \circseq Methods
 \end{circusaction}
  
- \begin{circus}
+<<<<<<< HEAD
+ \begin{circusaction}
 \circspot (Methods) \circinterrupt (end\_safelet\_app \then \Skip) 
-\end{circus}
+\end{circusaction}
 
 \begin{circus}
   \circend
+=======
+ \begin{circus}
+\circspot (Methods) \circinterrupt (end\_safelet\_app \then \Skip) 
+>>>>>>> 3c922fa7410689067a7a13fbcfda8bff71cb83c7
 \end{circus}

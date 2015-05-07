@@ -15,7 +15,11 @@
 %\end{circus}
 
 \begin{circus}
+<<<<<<< HEAD
+\circprocess MainMissionApp \circdef \circbegin
+=======
 \circprocess MainMissionApp \circdef
+>>>>>>> 3c922fa7410689067a7a13fbcfda8bff71cb83c7
 \end{circus}
 
 \begin{circusaction}
@@ -52,7 +56,16 @@ Methods \circdef \\
 \circseq Methods
 \end{circusaction}
 
+<<<<<<< HEAD
+\begin{circusaction}
+\circspot (Methods) \circinterrupt (end\_mission\_app~.~${MissionID} \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+=======
 \begin{circus}
 \circspot (Methods) \circinterrupt (end\_mission\_app~.~${MissionID} \then \Skip)
 
+>>>>>>> 3c922fa7410689067a7a13fbcfda8bff71cb83c7
 \end{circus}
