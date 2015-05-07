@@ -4,8 +4,10 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -33,7 +35,10 @@ import com.sun.source.util.Trees;
 		private  Trees trees;
 		private  Set<CompilationUnitTree> units;
 		private  Set<TypeElement> type_elements;
+		private ReturnVisitor returnVisitor ;
 		
+		
+		private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 		
 		public MissionSequencerLevel2Visitor(ProgramEnv programEnv, SCJAnalysis analysis)
 		{
@@ -44,6 +49,7 @@ import com.sun.source.util.Trees;
 			trees = analysis.TREES;
 			units = analysis.getCompilationUnits();
 			type_elements = analysis.getTypeElements();
+			 returnVisitor = new ReturnVisitor(programEnv);
 		}
 
 		@Override
@@ -78,6 +84,17 @@ import com.sun.source.util.Trees;
 		@Override
 		public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
 		{
+			getVariables(arg0);	
+			System.out.println("+++ Mission Sequencer Variables +++");
+			System.out.println();
+			
+			for (Name n : varMap.keySet())
+			{
+				System.out.println("+++ Variable " + n + " = " + varMap.get(n));
+			}
+			
+			
+			ArrayList<Name> missions = new ArrayList<Name>();
 
 			System.out.println("In MS Visitor for " + arg0);
 
@@ -93,6 +110,9 @@ import com.sun.source.util.Trees;
 			Iterator<StatementTree> i = members.iterator();
 			
 			
+			
+			
+			
 			while (i.hasNext())
 			{
 				Tree tlst = i.next();
@@ -102,26 +122,48 @@ import com.sun.source.util.Trees;
 				{
 					System.out.println("MS VIsitor: Variable Tree Found");
 					
-					VariableTree vt = (VariableTree) tlst;
-			
-					System.out.println("-> " + vt.toString());
-					System.out.println("-> Name:" + vt.getName());
-					System.out.println("-> Type: " + vt.getType());
-
-					programEnv.addVariable(vt.getName(), vt.getType());
+//					VariableTree vt = (VariableTree) tlst;
+//			
+//					System.out.println("-> " + vt.toString());
+//					System.out.println("-> Name:" + vt.getName());
+//					System.out.println("-> Type: " + vt.getType());
+//
+//					programEnv.addVariable(vt.getName(), vt.getType());
 				}
 
 				if (tlst instanceof MethodTree)
 				{
+					
 					MethodTree o = (MethodTree) tlst;
 					System.out.println("MS Visitor Method Tree = "
 							+ o.getName());
 
+					
+					if (o.getName().contentEquals("<init>"))
+					{
+//						ArrayList<Name> constructorReturns = null;
+						System.out.println("Release the Visitor!");
+						
+//						constructorReturns = 
+								o.accept(returnVisitor, false);
+//						if(constructorReturns != null)
+//						{
+//							missions.addAll(constructorReturns);
+//						}
+
+					}
+						
 					if (o.getName().contentEquals("getNextMission"))
 					{
-						
+						ArrayList<Name> getNextReturns = null;
 						System.out.println("Release the Visitor!");
-						return o.accept(new ReturnVisitor(), false);
+						
+						getNextReturns = o.accept(returnVisitor, false);
+						
+						if(getNextReturns != null)
+						{
+							missions.addAll(getNextReturns);
+						}
 
 						// System.out.println("in iterator");
 						// List<StatementTree> s = (List<StatementTree>)
@@ -160,7 +202,39 @@ import com.sun.source.util.Trees;
 				}
 			}
 
-			return null;
+			return missions;
+		}
+
+		private void getVariables(TypeElement arg0)
+		{
+			VariableVisitor varVisitor = new VariableVisitor(programEnv);
+			
+			ClassTree ct = trees.getTree(arg0);
+			List<? extends Tree> members =  ct.getMembers();
+			Iterator<? extends Tree> i = members.iterator();
+			
+			
+			while(i.hasNext())
+			{
+				Tree s = i.next();
+//				System.out.println(s);
+				 HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, false) ;
+				 
+//				 System.out.println("+++ m == null : " + m == null + " +++" );
+				 
+				 if (m == null)
+				 {
+					 System.out.println("+++ Variable Visitor Returned Null +++");
+						
+				 }
+				 else
+				 {
+					 System.out.println("+++ Variable Visitor Returned " + m);
+					 varMap.putAll(m);	
+				 }
+					
+			}
+			
 		}
 
 		@Override

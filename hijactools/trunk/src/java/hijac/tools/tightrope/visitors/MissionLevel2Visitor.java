@@ -61,7 +61,7 @@ public class MissionLevel2Visitor implements
 
 		ArrayList<Name> schedulables = new ArrayList<Name>();
 		ClassTree ct = trees.getTree(arg0);
-
+			
 		List<Tree> members = (List<Tree>) ct.getMembers();
 		Iterator<Tree> i = members.iterator();
 		while (i.hasNext())
@@ -95,6 +95,8 @@ public class MissionLevel2Visitor implements
 			{
 				MethodTree mt = (MethodTree) tlst;
 
+			
+				
 				if (mt.getName().contentEquals("initialize"))
 				{
 					System.out.println("Mission Visitor: J iterator");
@@ -108,7 +110,7 @@ public class MissionLevel2Visitor implements
 					{
 						StatementTree st = j.next();
 
-						System.out.println("Register Visistor: j = "
+						System.out.println("Mission Visistor: j = "
 								+ st.getKind());
 
 						// ArrayList<Name> name =

@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.environments;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +16,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.Trees;
@@ -147,11 +149,13 @@ public class EnvironmentBuilder
 	}
 
 	private ArrayList<Name> buildSafelet(TypeElement safelet)
-	{
-		ArrayList<Name> topLevelMissionSequencers;
+	{		
+		ArrayList<Name> topLevelMissionSequencers = null;
 		topLevelMissionSequencers = safelet.accept(new SafeletLevel2Visitor(
 				programEnv, analysis), null);
 
+	
+		
 		for (Name n : topLevelMissionSequencers)
 		{
 			System.out.println("+++ Exploring Top Level Sequencer " + n
@@ -198,10 +202,15 @@ public class EnvironmentBuilder
 
 		programEnv.addMission(n);
 
-		ArrayList<Name> schedulables = analysis.ELEMENTS.getTypeElement(
-				packagePrefix + n).accept(
+		
+		String fullName = packagePrefix + n;
+		Elements elems =analysis.ELEMENTS;	
+		System.out.println("Building Mission: Full Name = " + fullName);
+		
+		ArrayList<Name> schedulables = elems.getTypeElement(fullName
+				).accept(
 				new MissionLevel2Visitor(programEnv, analysis), null);
-
+		
 		if (schedulables == null)
 		{
 			System.out.println("+++ No Schedulables +++");

@@ -111,25 +111,26 @@ public class SPModeChanger extends MissionSequencer<Mission> implements
 		{
 			modesLeft--;
 			Console.println("Mode Changer: Advance To Launch Mode");
-			return launchMode;				
+			return (Mission) launchMode;				
 		}
 		else if (modesLeft == 2)
 		{
 			modesLeft--;
 			Console.println("Mode Changer: Advance To Cruise Mode");
-			return cruiseMode;
+			return (Mission) cruiseMode;
 		}
 		else if (modesLeft == 1)
 		{
 			modesLeft--;
 			Console.println("Mode Changer: Advance To Land Mode");
-			return landMode;
+			return (Mission) landMode;
 		}
 		else
 		{
-			return null;
 			Console.println("Mode Changer: FINISHED");
 			controllingMission.requestTermination();
+			return null;
+			
 		}
 	}
 
