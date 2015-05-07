@@ -1,0 +1,22 @@
+\begin{circus}
+\circprocess ManagedThreadApp \circdef
+\end{circus}
+
+\begin{circusaction}
+Methods \circdef \\
+	Run \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~[ManagedThread] \then \\
+		
+	runRet~.~[ManagedThread] \then \\
+	\Skip
+\circblockclose
+\end{circusaction}	
+	
+\begin{circus}
+\circspot (Methods) \circinterrupt (end\_managedThread\_app~.~[ManagedThread] \then \Skip)
+\end{circus}
