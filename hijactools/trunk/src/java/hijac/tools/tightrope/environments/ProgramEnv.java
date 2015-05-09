@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Name;
 
@@ -14,34 +15,34 @@ import com.sun.source.tree.Tree;
 
 public class ProgramEnv
 {
-	FrameworkEnv frameworkEnv;
+	FrameworkEnv structureEnv;
 	List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
 
 	public ProgramEnv(SCJAnalysis context)
 	{
-		this.frameworkEnv = new FrameworkEnv();
+		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
 	}
 
 	public void addSafelet(Name safelet)
 	{
-		frameworkEnv.addSafelet(safelet);
+		structureEnv.addSafelet(safelet);
 	}
 
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 	{
-		frameworkEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
+		structureEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 	}
 
 	public void addMission(Name mission)
 	{
-		frameworkEnv.addMission(mission);
+		structureEnv.addMission(mission);
 	}
 
 	public FrameworkEnv getFrameworkEnv()
 	{
-		return frameworkEnv;
+		return structureEnv;
 	}
 
 	public void getMethod(String methodName)
@@ -72,7 +73,7 @@ public class ProgramEnv
 
 	public SafeletEnv getSafelet()
 	{
-		return frameworkEnv.getControlTier().getSafeletEnv();
+		return structureEnv.getControlTier().getSafeletEnv();
 	}
 
 	public void output()
@@ -82,7 +83,7 @@ public class ProgramEnv
 		System.out.println("-------------------");
 		System.out.println("Framework Environment");
 		System.out.println("_____________________");
-		System.out.println(frameworkEnv.toString());
+		System.out.println(structureEnv.toString());
 		System.out.println("----------------------");
 		System.out.println("Non-Framework Environments");
 		System.out.println("___________________________");
@@ -99,12 +100,12 @@ public class ProgramEnv
 
 	public void addSchedulable(SchedulableTypeE type, Name name)
 	{
-		frameworkEnv.addSchedulable(type, name);
+		structureEnv.addSchedulable(type, name);
 	}
 
 	public boolean containsScheudlable(Name name)
 	{
-		return frameworkEnv.containsSchedulable(name);
+		return structureEnv.containsSchedulable(name);
 	}
 
 	public void addVariable(Name name, Tree type)
@@ -122,7 +123,7 @@ public class ProgramEnv
 		System.out.println("+++ New Tier +++");
 		System.out.println();
 		
-		frameworkEnv.newTier();
+		structureEnv.newTier();
 	}
 
 	public void newCluster()
@@ -130,32 +131,37 @@ public class ProgramEnv
 		System.out.println("+++ New Cluster +++");
 		System.out.println();
 		
-		frameworkEnv.newCluster();
+		structureEnv.newCluster();
 	}
 
 	public ArrayList<TopLevelMissionSequencerEnv> getTopLevelMissionSequencers()
 	{
 		ArrayList<TopLevelMissionSequencerEnv> returnList = new ArrayList<TopLevelMissionSequencerEnv>();
 				
-		returnList.add(frameworkEnv.getControlTier().getTopLevelMissionSequencerEnv());
+		returnList.add(structureEnv.getControlTier().getTopLevelMissionSequencerEnv());
 		
 		return returnList;
 	}
 
 	public ArrayList<MissionEnv> getMissions()
 	{
-		return frameworkEnv.getMissions();
+		return structureEnv.getMissions();
 	}
 
 	public void addMissionSequencerMission(Name tlms, Name n)
 	{
-		frameworkEnv.addMissionSequencerMission(tlms, n);
+		structureEnv.addMissionSequencerMission(tlms, n);
 		
 	}
 
 	public ArrayList<ManagedThreadEnv> getManagedThreads()
 	{
-		return frameworkEnv.getManagedThreads();
+		return structureEnv.getManagedThreads();
+	}
+
+	public Map geNetworkMap()
+	{
+		return structureEnv.getNetworkMap();
 	}
 
 	// public void setFrameworkEnv(FrameworkEnv frameworkEnv)

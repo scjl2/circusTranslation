@@ -1,23 +1,21 @@
 package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Name;
 
 public class FrameworkEnv
 {
 	private ControlTierEnv controlTier;
-	// private TierEnv tier0;
-	// private NestedTiersEnv nestedTiers;
 
 	private List<TierEnv> tiers;
 
 	private TierEnv currentTier;
 	private ClusterEnv currentCluster;
-
-	// List<TierEnv> nestedTiers;
 
 	class ControlTierEnv
 	{
@@ -75,6 +73,22 @@ public class FrameworkEnv
 
 			return output;
 
+		}
+
+		public Map toMap()
+		{
+			Map clusterMap = new HashMap();
+			clusterMap.put("safelet", safeletEnv.getName());
+			
+			List topLevelSequencersList = new ArrayList();
+			
+//			for(TopLevelMissionSequencerEnv t : )
+			topLevelSequencersList.add(topLevelMissionSequencerEnv.getName());
+			
+			clusterMap.put("topLevelSequencers",topLevelSequencersList);
+			
+			
+			return clusterMap;
 		}
 	}
 
@@ -156,6 +170,19 @@ public class FrameworkEnv
 				return output;
 			}
 
+		}
+		
+		public Map toMap()
+		{
+			Map clusterMap = new HashMap();
+			
+			for(ClusterEnv c : clusters)
+			{
+				clusterMap.put("mission", c.getMissionEnv().getName());
+				clusterMap.put("schedulables", c.getSchedulablesEnv().toList());
+			}
+			
+			return clusterMap;
 		}
 
 	}
@@ -242,6 +269,36 @@ public class FrameworkEnv
 		public List<ParadigmEnv> getPeriodEventHandlerEnvs()
 		{
 			return periodEventHandlerEnvs;
+		}
+
+		public List toList()
+		{
+			List schedulablesList = new ArrayList();
+			
+			for(ParadigmEnv p : periodEventHandlerEnvs)
+			{
+				schedulablesList.add(p.getName());
+			}
+			
+			for(ParadigmEnv p : aperiodicEventHandlerEnvs)
+			{
+				schedulablesList.add(p.getName());
+			}
+			for(ParadigmEnv p : oneShotEventHandlerEnvs)
+			{
+				schedulablesList.add(p.getName());
+			}
+			for(ParadigmEnv p : schedulableMissionSequencerEnvs)
+			{
+				schedulablesList.add(p.getName());
+			}
+			for(ParadigmEnv p : managedThreadEnvs)
+			{
+				schedulablesList.add(p.getName());
+			}
+			
+			
+			return schedulablesList;
 		}
 
 		public void setPeriodEventHandlerEnvs(
@@ -640,6 +697,23 @@ public class FrameworkEnv
 			}
 		}
 		return mtEnvs;
+	}
+
+	public Map getNetworkMap()
+	{
+		Map networkMap = new HashMap();
+		
+		networkMap.put("control-tier", getControlTier().toMap());
+
+		List tierList = new ArrayList();
+		int i = 0;
+		for (TierEnv tier : tiers)
+		{			
+			tierList.add(tier.toMap());
+		}
+		networkMap.put("tiers", tierList);
+		
+		return networkMap;
 	}
 
 }

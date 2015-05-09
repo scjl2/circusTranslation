@@ -53,7 +53,7 @@ public class CircusGenerator
 		{
 			System.out.println("+++ Translating +++");                                                                     
 			
-	        
+	   translateNetwork();     
 	        
 	        
 	translateSafelet();
@@ -68,6 +68,19 @@ public class CircusGenerator
 	
 	    
 		}
+
+
+	private void translateNetwork()
+	{
+		  
+        /* Create a data-model */
+        Map root = programEnv.geNetworkMap();		        
+
+//        translateCommon(root, "Network-Template.ftl", "Network.circus");
+        
+        System.out.println("root = " + root);
+		
+	}
 
 
 	private void translateCommon(Map root, String template, String fileName)
