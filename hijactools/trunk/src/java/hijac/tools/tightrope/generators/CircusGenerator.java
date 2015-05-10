@@ -76,7 +76,7 @@ public class CircusGenerator
         /* Create a data-model */
         Map root = programEnv.geNetworkMap();		        
 
-//        translateCommon(root, "Network-Template.ftl", "Network.circus");
+        translateCommon(root, "Network-Template.ftl", "Network.circus");
         
         System.out.println("root = " + root);
 		

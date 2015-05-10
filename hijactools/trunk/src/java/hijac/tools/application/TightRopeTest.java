@@ -77,7 +77,7 @@ public class TightRopeTest
 		CircusGenerator circGen = new CircusGenerator(programEnv);
 		circGen.translate();
 
-//		runLatex();
+		runLatex();
 
 		final long duration = System.nanoTime() - startTime;
 

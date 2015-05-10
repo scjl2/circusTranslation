@@ -172,41 +172,23 @@ public class FrameworkEnv
 
 		}
 		
-		public Map toMap()
+		public List toList()
 		{
-			Map clusterMap = new HashMap();
+			List clusterList = new ArrayList();
 			
 			for(ClusterEnv c : clusters)
 			{
-				clusterMap.put("mission", c.getMissionEnv().getName());
-				clusterMap.put("schedulables", c.getSchedulablesEnv().toList());
+				Map clusterMap = new HashMap();
+				clusterMap.put("Mission", c.getMissionEnv().getName());
+				clusterMap.put("Schedulables", c.getSchedulablesEnv().toList());
+				
+				clusterList.add(clusterMap);
 			}
 			
-			return clusterMap;
+			return clusterList;
 		}
 
 	}
-
-	// private class NestedTiersEnv
-	// {
-	// List<TierEnv> nestedTiers;
-	//
-	// public NestedTiersEnv()
-	// {
-	// nestedTiers = new ArrayList<TierEnv>();
-	// }
-	//
-	// public String toString()
-	// {
-	// if (nestedTiers.isEmpty())
-	// {
-	// return "No Nested Tiers";
-	// } else
-	// {
-	// return "Nested Tiers Exist";
-	// }
-	// }
-	// }
 
 	private class ClusterEnv
 	{
@@ -703,15 +685,16 @@ public class FrameworkEnv
 	{
 		Map networkMap = new HashMap();
 		
-		networkMap.put("control-tier", getControlTier().toMap());
+		networkMap.put("SafeletName", getControlTier().getSafeletEnv().getName());
+		networkMap.put("TopLevelSequencer", getControlTier().getTopLevelMissionSequencerEnv().getName());
 
 		List tierList = new ArrayList();
 		int i = 0;
 		for (TierEnv tier : tiers)
 		{			
-			tierList.add(tier.toMap());
+			tierList.add(tier.toList());
 		}
-		networkMap.put("tiers", tierList);
+		networkMap.put("Tiers", tierList);
 		
 		return networkMap;
 	}
