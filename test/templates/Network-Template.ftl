@@ -2,7 +2,7 @@
 
 \begin{zsection}
 	\SECTION ~ NetworkChannels ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-		\t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+		\t1 SchedulableId, SchedulableIds, MissionFWChan, SchedulableChan, TopLevelMissionSequencerFWChan, FrameworkChan, SafeletMethChan
 \end{zsection}
 %
 \begin{circus}
@@ -65,19 +65,19 @@ requestTermination.${cluster.Mission}.${Tiers[tier_index -1]}Needs to have param
 
 
 %
-%+++ Control Tier +++
+%+++ Program +++
 %
 \begin{zsection}
-  \SECTION ~ ControlTier ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
 \end{zsection}
 %
 \begin{circus}
-\circprocess ControlTier \circdef \circbegin\\
+\circprocess Program \circdef \circbegin \\
 \end{circus}
 %
 \begin{circusaction}
-\circspot
+ControlTier \circdef
 \circblockopen
 ${SafeletName}FW \\
 \t1 \lpar \emptyset | TierSync | \emptyset \rpar \\
@@ -85,47 +85,9 @@ ${TopLevelSequencer}FW
 \circblockclose
 \end{circusaction}
 %
-\begin{circus}
-\circend
-\end{circus}
-
-%
-%+++ Clusters
-%
 <#list Tiers as tier >
-%\begin{circus}
-<#list tier as cluster>
-%	Cluster${tier_index}${cluster_index} \circdef \\
-%		${cluster.Mission}\\
-%			\lpar ns_1 | mission_sync | ns_2 \rpar \\
-%		\circblockopen
-		<#list cluster.Schedulables as schedulable>
-%			${schedulable}\\
-			<#if schedulable_has_next>
-%			\lpar ns | schedulable_sync | ns \rpar\\
-			</#if>
-		</#list>
-%		\circblockclose
-%</#list>
-%\end{circus}
-</#list>
-
-
-%
-%+++ Tiers +++
-%
-<#list Tiers as tier >
-\begin{zsection}
-  \SECTION ~ Tier${tier_index} ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
-\end{zsection}
-
-\begin{circus}
-\circprocess Tier${tier_index} \circdef \circbegin\\
-\end{circus}
-
 \begin{circusaction}
-\circspot
+\Tier${tier_index} \circdef
 <#list tier as cluster>
 
 \circblockopen
@@ -145,26 +107,12 @@ ${TopLevelSequencer}FW
 	</#if>
 </#list>
 \end{circusaction}
-
-\begin{circus}
-\circend
-\end{circus}
-
+%
 </#list>
-
-
-
-%
-%+++ Application +++
-%
-\begin{zsection}
-  \SECTION ~ Application ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
-\end{zsection}
-%
-\begin{circus}
-\circprocess Application \circdef \\
+\begin{circusaction}
+\Application \circdef
 \circblockopen
+
 ${SafeletName}App\\
 \interleave \\
 ${TopLevelSequencer}App\\
@@ -182,22 +130,10 @@ ${schedulable}App\\
 </#list>
 </#list>
 \circblockclose
-\end{circus}
-
+\end{circusaction}
 %
-%+++ Framework +++
-%
-\begin{zsection}
-  \SECTION ~ Framework ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
-\end{zsection}
-%
-\begin{circus}
-\circprocess Framework \circdef \circbegin\\
-\end{circus}
-
 \begin{circusaction}
-\circspot 
+Framework \circdef
 \circblockopen
 ControlTier \\
 \t1 \lpar \emptyset | TierSync | \emptyset \rpar \\
@@ -213,23 +149,6 @@ Tier${tier_index}
 \circblockclose
 \circblockclose
 \end{circusaction}
-
-\begin{circus}
-\circend
-\end{circus}
-
-
-%
-%+++ Program +++
-%
-\begin{zsection}
-  \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
-\end{zsection}
-%
-\begin{circus}
-\circprocess Program \circdef \circbegin \\
-\end{circus}
 %
 \begin{circusaction}
 \circspot 
