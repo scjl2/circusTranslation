@@ -74,67 +74,63 @@
 %
 \begin{zsection}
   \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW, SafeletFW, TopLevelMissionSequencerFW
 \end{zsection}
 %
 \begin{circus}
-\circprocess Program \circdef \circbegin
+\circprocess ControlTier \circdef \\
+\circblockopen
+SafeletFW \\
+\t1 \lpar TierSync \rpar \\
+ToplevelMissionSequencerFW(${TopLevelSequencer})
+\circblockclose
 \end{circus}
 %
-\begin{circusaction}
-ControlTier \circdef \\
-\circblockopen
-${SafeletName}FW \\
-\t1 \lpar \emptyset | TierSync | \emptyset \rpar \\
-${TopLevelSequencer}FW 
-\circblockclose
-\end{circusaction}
-%
 <#list Tiers as tier >
-\begin{circusaction}
-Tier${tier_index} \circdef \\
+\begin{circus}
+\circprocess Tier${tier_index} \circdef \\
 <#list tier as cluster>
 
 \circblockopen
-	${cluster.Mission}FW\\
-		\t1 	\lpar \emptyset | MissionSync | \emptyset \rpar \\
+	MissionFW(${cluster.Mission})\\
+		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 		<#list cluster.Schedulables as schedulable>
 			${schedulable}FW\\
 			<#if schedulable_has_next>
-			\t1 \lpar \emptyset | SchedulablesSync | \emptyset \rpar\\
+			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
 		\circblockclose
 \circblockclose
 	<#if cluster_has_next>
-	\t1 \lpar \emptyset | ClusterSync | \emptyset  \rpar
+	\t1 \lpar ClusterSync \rpar
 	</#if>
 </#list>
-\end{circusaction}
+\end{circus}
 %
 </#list>
 %
-\begin{circusaction}
-Framework \circdef \\
+\begin{circus}
+\circprocess Framework \circdef \\
 \circblockopen
 ControlTier \\
-\t1 \lpar \emptyset | TierSync | \emptyset \rpar \\
+\t1 \lpar TierSync \rpar \\
 \circblockopen
 <#list Tiers as tier >
 
 Tier${tier_index}
 <#if tier_has_next>
-\t1 \lpar \emptyset | Tier${tier_index}Sync | \emptyset \rpar
+\t1 \lpar Tier${tier_index}Sync \rpar
 </#if>
 
 </#list>
 \circblockclose
 \circblockclose
-\end{circusaction}
+\end{circus}
 %
-\begin{circusaction}
-Application \circdef \\
+\begin{circus}
+\circprocess  Application \circdef \\
 \circblockopen
 
 ${SafeletName}App\\
@@ -154,15 +150,9 @@ ${schedulable}App\\
 </#list>
 </#list>
 \circblockclose
-\end{circusaction}
-%
-\begin{circusaction}
-\circspot 
-\circblockopen
-Framework \lpar \emptyset | AppSync | \emptyset \rpar Application
-\circblockclose
-\end{circusaction}
+\end{circus}
 %
 \begin{circus}
-\circend
+\circprocess Program \circdef Framework \lpar AppSync \rpar Application
 \end{circus}
+
