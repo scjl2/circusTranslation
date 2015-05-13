@@ -104,10 +104,10 @@ public class FrameworkEnv
 //			clusters.add(currentCluster);
 		}
 
-		public List<ClusterEnv> getClusters()
-		{
-			return clusters;
-		}
+//		public List<ClusterEnv> getClusters()
+//		{
+//			return clusters;
+//		}
 
 		public void addCluster(ClusterEnv cluster)
 		{
@@ -216,20 +216,20 @@ public class FrameworkEnv
 			return missionEnv;
 		}
 
-		public void setMissionEnv(MissionEnv missionEnv)
-		{
-			this.missionEnv = missionEnv;
-		}
+//		public void setMissionEnv(MissionEnv missionEnv)
+//		{
+//			this.missionEnv = missionEnv;
+//		}
 
 		public SchedulablesEnv getSchedulablesEnv()
 		{
 			return schedulablesEnv;
 		}
-
-		public void setSchedulablesEnv(SchedulablesEnv schedulablesEnv)
-		{
-			this.schedulablesEnv = schedulablesEnv;
-		}
+//
+//		public void setSchedulablesEnv(SchedulablesEnv schedulablesEnv)
+//		{
+//			this.schedulablesEnv = schedulablesEnv;
+//		}
 
 		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
@@ -263,6 +263,7 @@ public class FrameworkEnv
 			return periodEventHandlerEnvs;
 		}
 
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public List toList()
 		{
 			List schedulablesList = new ArrayList();
@@ -293,33 +294,33 @@ public class FrameworkEnv
 			return schedulablesList;
 		}
 
-		public void setPeriodEventHandlerEnvs(
-				List<ParadigmEnv> periodEventHandlerEnvs)
-		{
-			this.periodEventHandlerEnvs = periodEventHandlerEnvs;
-		}
+//		public void setPeriodEventHandlerEnvs(
+//				List<ParadigmEnv> periodEventHandlerEnvs)
+//		{
+//			this.periodEventHandlerEnvs = periodEventHandlerEnvs;
+//		}
 
 		public List<ParadigmEnv> getAperiodicEventHandlerEnvs()
 		{
 			return aperiodicEventHandlerEnvs;
 		}
 
-		public void setAperiodicEventHandlerEnvs(
-				List<ParadigmEnv> aperiodicEventHandlerEnvs)
-		{
-			this.aperiodicEventHandlerEnvs = aperiodicEventHandlerEnvs;
-		}
+//		public void setAperiodicEventHandlerEnvs(
+//				List<ParadigmEnv> aperiodicEventHandlerEnvs)
+//		{
+//			this.aperiodicEventHandlerEnvs = aperiodicEventHandlerEnvs;
+//		}
 
 		public List<ParadigmEnv> getOneShotEventHandlerEnvs()
 		{
 			return oneShotEventHandlerEnvs;
 		}
 
-		public void setOneShotEventHandlerEnvs(
-				List<ParadigmEnv> oneShotEventHandlerEnvs)
-		{
-			this.oneShotEventHandlerEnvs = oneShotEventHandlerEnvs;
-		}
+//		public void setOneShotEventHandlerEnvs(
+//				List<ParadigmEnv> oneShotEventHandlerEnvs)
+//		{
+//			this.oneShotEventHandlerEnvs = oneShotEventHandlerEnvs;
+//		}
 
 		public List<NestedMissionSequencerEnv> getSchedulableMissionSequencerEnvs()
 		{
@@ -337,10 +338,10 @@ public class FrameworkEnv
 			return managedThreadEnvs;
 		}
 
-		public void setManagedThreadEnvs(List<ManagedThreadEnv> managedThreadEnvs)
-		{
-			this.managedThreadEnvs = managedThreadEnvs;
-		}
+//		public void setManagedThreadEnvs(List<ManagedThreadEnv> managedThreadEnvs)
+//		{
+//			this.managedThreadEnvs = managedThreadEnvs;
+//		}
 
 		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
@@ -694,6 +695,7 @@ public class FrameworkEnv
 		return mtEnvs;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map getNetworkMap()
 	{
 		Map networkMap = new HashMap();
@@ -702,7 +704,7 @@ public class FrameworkEnv
 		networkMap.put("TopLevelSequencer", getControlTier().getTopLevelMissionSequencerEnv().getName());
 
 		List tierList = new ArrayList();
-		int i = 0;
+		
 		for (TierEnv tier : tiers)
 		{			
 			tierList.add(tier.toList());

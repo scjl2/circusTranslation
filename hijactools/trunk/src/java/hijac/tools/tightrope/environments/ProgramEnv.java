@@ -159,6 +159,7 @@ public class ProgramEnv
 		return structureEnv.getManagedThreads();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Map geNetworkMap()
 	{
 		return structureEnv.getNetworkMap();
