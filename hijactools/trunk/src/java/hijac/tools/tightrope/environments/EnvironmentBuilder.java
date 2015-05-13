@@ -102,7 +102,7 @@ public class EnvironmentBuilder
 		{
 //			System.out.println("+++ top Level Sequencer: " + n + " ***");
 
-			programEnv.addMission(n);
+//			programEnv.addMission(n);
 
 			buildTopLevelMissionSequencer(n);
 		}
@@ -171,6 +171,9 @@ public class EnvironmentBuilder
 
 	private void buildTopLevelMissionSequencer(Name tlms)
 	{
+		//First Cluster
+//		programEnv.newCluster(tlms);
+		
 		TypeElement tlmsElement = 
 		analysis.ELEMENTS
 		.getTypeElement(packagePrefix + tlms);
@@ -183,21 +186,23 @@ public class EnvironmentBuilder
 			System.out.println("+++ No Missions +++");
 		} else
 		{
+			programEnv.newTier();
 			boolean newClusterNeeded = false;
 			for (Name n : missions)
 			{
+				programEnv.newCluster(tlms);
 				System.out.println("+++ Exploring Mission " + n + " +++");
 				
 				programEnv.addMissionSequencerMission(tlms, n);
 				buildMission(n);
-				if(newClusterNeeded)
-				{
-					programEnv.newCluster();				
-				}
-				else
-				{
-					newClusterNeeded = true;
-				}
+//				if(newClusterNeeded)
+//				{
+//					programEnv.newCluster(tlms);				
+//				}
+//				else
+//				{
+//					newClusterNeeded = true;
+//				}
 			}
 		}
 
@@ -292,7 +297,7 @@ public class EnvironmentBuilder
 					buildMission(n);
 					if(newClusterNeeded)
 					{
-						programEnv.newCluster();
+						programEnv.newCluster(sequencer);
 					}
 					else
 					{

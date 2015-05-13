@@ -99,8 +99,8 @@ public class FrameworkEnv
 		public TierEnv()
 		{
 			clusters = new ArrayList<ClusterEnv>();
-			currentCluster = new ClusterEnv();
-			clusters.add(currentCluster);
+			currentCluster = null;
+//			clusters.add(currentCluster);
 		}
 
 		public List<ClusterEnv> getClusters()
@@ -113,12 +113,12 @@ public class FrameworkEnv
 			this.clusters.add(cluster);
 		}
 
-		public void addMission(Name mission)
-		{
-			currentCluster.getMissionEnv().setName(mission);
-
-			// clusters.add(new ClusterEnv(missionEnv));
-		}
+//		public void addMission(Name mission)
+//		{
+//			currentCluster.getMissionEnv().setName(mission);
+////			currentCluster = new 
+//			// clusters.add(new ClusterEnv(missionEnv));
+//		}
 
 		public ArrayList<Name> getMissions()
 		{
@@ -192,13 +192,15 @@ public class FrameworkEnv
 
 	private class ClusterEnv
 	{
+		Name sequencer;
 		MissionEnv missionEnv;
 		SchedulablesEnv schedulablesEnv;
 
-		public ClusterEnv()
+		public ClusterEnv(Name sequencer)
 		{
 			missionEnv = new MissionEnv();
 			schedulablesEnv = new SchedulablesEnv();
+			this.sequencer = sequencer;
 		}
 
 		public MissionEnv getMissionEnv()
@@ -487,7 +489,8 @@ public class FrameworkEnv
 		super();
 		this.controlTier = new ControlTierEnv();
 		tiers = new ArrayList<TierEnv>();
-		tiers.add(new TierEnv());
+		newTier();
+//		tiers.add(new TierEnv());
 	}
 
 	public ControlTierEnv getControlTier()
@@ -532,10 +535,12 @@ public class FrameworkEnv
 		currentCluster.getMissionEnv().setName(mission);
 	}
 
-	public void newCluster()
+	public void newCluster(Name sequencer)
 	{
-		currentCluster = new ClusterEnv();
+		currentCluster = new ClusterEnv(sequencer);
 
+		System.out.println("Current Tier " +  currentTier);
+		
 		currentTier.addCluster(currentCluster);
 	}
 

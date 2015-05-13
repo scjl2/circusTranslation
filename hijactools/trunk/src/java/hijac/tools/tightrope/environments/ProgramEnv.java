@@ -126,12 +126,12 @@ public class ProgramEnv
 		structureEnv.newTier();
 	}
 
-	public void newCluster()
+	public void newCluster(Name sequencer)
 	{
 		System.out.println("+++ New Cluster +++");
 		System.out.println();
 		
-		structureEnv.newCluster();
+		structureEnv.newCluster(sequencer);
 	}
 
 	public ArrayList<TopLevelMissionSequencerEnv> getTopLevelMissionSequencers()
