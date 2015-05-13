@@ -498,8 +498,7 @@ public class FrameworkEnv
 		super();
 		this.controlTier = new ControlTierEnv();
 		tiers = new ArrayList<TierEnv>();
-		newTier();
-//		tiers.add(new TierEnv());
+	//		tiers.add(new TierEnv());
 	}
 
 	public ControlTierEnv getControlTier()

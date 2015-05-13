@@ -45,19 +45,21 @@
 <#list Tiers as tier >
 <#if tier_has_next>
 \begin{circus}
-\circchannelset ~ Tier${tier_index}Sync == TierCommonSync \cup 
+\circchannelset ~ Tier${tier_index}Sync == \\ TierCommonSync \cup \\
 \lchanset 	
-<#list tier as cluster> 
-start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission}, initializeRet.${cluster.Mission}, 
+
+<#list tier as cluster>
+
+start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission},\\ initializeRet.${cluster.Mission}, 
 
 <#if tier_index == 0> 
 requestTermination.${cluster.Mission}.${TopLevelSequencer}
 <#else>
-requestTermination.${cluster.Mission}.${cluster.Sequcner}
+requestTermination.${cluster.Mission}.${cluster.Sequencer}
 </#if>
 
 <#if cluster_has_next>
-,
+, \\
 </#if>
 </#list>
 \rchanset
@@ -74,7 +76,8 @@ requestTermination.${cluster.Mission}.${cluster.Sequcner}
 %
 \begin{zsection}
   \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW, SafeletFW, TopLevelMissionSequencerFW
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
+  \t1 SafeletFW, TopLevelMissionSequencerFW
 \end{zsection}
 %
 \begin{circus}
@@ -104,39 +107,38 @@ ToplevelMissionSequencerFW(${TopLevelSequencer})
 		\circblockclose
 \circblockclose
 	<#if cluster_has_next>
-	\t1 \lpar ClusterSync \rpar
+	\\ \t1 \lpar ClusterSync \rpar \\
 	</#if>
 </#list>
 \end{circus}
 %
 </#list>
 %
+%+++ Framework +++ 
+%
 \begin{circus}
 \circprocess Framework \circdef \\
 \circblockopen
 ControlTier \\
 \t1 \lpar TierSync \rpar \\
-
-<#list Tiers as tier >
-
-<#if tier_index %2 == 0>
+<#assign brakcets = false>
 \circblockopen
-</#if>
+<#list Tiers as tier >
 
 
 Tier${tier_index}
-<#if tier_index %2 == 1>
-\circblockclose
-</#if>
+
+
 <#if tier_has_next>
+
+
 \\ \t1 \lpar Tier${tier_index}Sync \rpar \\
 </#if>
 
 
 
-
 </#list>
-
+\circblockclose
 \circblockclose
 \end{circus}
 %

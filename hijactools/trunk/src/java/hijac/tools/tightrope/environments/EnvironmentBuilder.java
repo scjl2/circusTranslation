@@ -195,6 +195,7 @@ public class EnvironmentBuilder
 //					newClusterNeeded = true;
 //				}
 			}
+			
 		}
 
 	}
