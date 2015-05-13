@@ -2,7 +2,6 @@ package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +19,8 @@ public class FrameworkEnv
 	class ControlTierEnv
 	{
 		
-		SafeletEnv safeletEnv;
-		TopLevelMissionSequencerEnv topLevelMissionSequencerEnv;
+		private SafeletEnv safeletEnv;
+		private TopLevelMissionSequencerEnv topLevelMissionSequencerEnv;
 
 		public ControlTierEnv()
 		{
@@ -75,8 +74,10 @@ public class FrameworkEnv
 
 		}
 
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
 		{
+			
 			Map clusterMap = new HashMap();
 			clusterMap.put("safelet", safeletEnv.getName());
 			
@@ -94,7 +95,7 @@ public class FrameworkEnv
 
 	private class TierEnv
 	{
-		List<ClusterEnv> clusters;
+		private List<ClusterEnv> clusters;
 
 		public TierEnv()
 		{
@@ -172,6 +173,7 @@ public class FrameworkEnv
 
 		}
 		
+		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public List toList()
 		{
 			List clusterList = new ArrayList();
@@ -179,6 +181,7 @@ public class FrameworkEnv
 			for(ClusterEnv c : clusters)
 			{
 				Map clusterMap = new HashMap();
+				clusterMap.put("Sequencer", c.getSequencer());
 				clusterMap.put("Mission", c.getMissionEnv().getName());
 				clusterMap.put("Schedulables", c.getSchedulablesEnv().toList());
 				
@@ -192,15 +195,20 @@ public class FrameworkEnv
 
 	private class ClusterEnv
 	{
-		Name sequencer;
-		MissionEnv missionEnv;
-		SchedulablesEnv schedulablesEnv;
+		private Name sequencer;
+		private MissionEnv missionEnv;
+		private SchedulablesEnv schedulablesEnv;
 
 		public ClusterEnv(Name sequencer)
 		{
 			missionEnv = new MissionEnv();
 			schedulablesEnv = new SchedulablesEnv();
 			this.sequencer = sequencer;
+		}
+
+		public Name getSequencer()
+		{
+			return sequencer;
 		}
 
 		public MissionEnv getMissionEnv()
@@ -244,11 +252,11 @@ public class FrameworkEnv
 	private class SchedulablesEnv
 	{
 
-		List<ParadigmEnv> periodEventHandlerEnvs = new ArrayList<ParadigmEnv>();
-		List<ParadigmEnv> aperiodicEventHandlerEnvs = new ArrayList<ParadigmEnv>();
-		List<ParadigmEnv> oneShotEventHandlerEnvs = new ArrayList<ParadigmEnv>();
-		List<NestedMissionSequencerEnv> schedulableMissionSequencerEnvs = new ArrayList<NestedMissionSequencerEnv>();
-		List<ManagedThreadEnv> managedThreadEnvs = new ArrayList<ManagedThreadEnv>();
+		private List<ParadigmEnv> periodEventHandlerEnvs = new ArrayList<ParadigmEnv>();
+		private List<ParadigmEnv> aperiodicEventHandlerEnvs = new ArrayList<ParadigmEnv>();
+		private List<ParadigmEnv> oneShotEventHandlerEnvs = new ArrayList<ParadigmEnv>();
+		private List<NestedMissionSequencerEnv> schedulableMissionSequencerEnvs = new ArrayList<NestedMissionSequencerEnv>();
+		private List<ManagedThreadEnv> managedThreadEnvs = new ArrayList<ManagedThreadEnv>();
 
 		public List<ParadigmEnv> getPeriodEventHandlerEnvs()
 		{
