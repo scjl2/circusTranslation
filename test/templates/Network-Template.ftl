@@ -44,24 +44,24 @@
 %
 <#list Tiers as tier >
 <#if tier_has_next>
-%\begin{circus}
-%\circchannelset ~ Tier${tier_index}Sync == TierCommonSync \cup 
-%\lchanset 	
+\begin{circus}
+\circchannelset ~ Tier${tier_index}Sync == TierCommonSync \cup 
+\lchanset 	
 <#list tier as cluster> 
-%start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission}, initializeRet.${cluster.Mission}, 
+start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission}, initializeRet.${cluster.Mission}, 
 
 <#if tier_index == 0> 
-%requestTermination.${cluster.Mission}.${TopLevelSequencer}
+requestTermination.${cluster.Mission}.${TopLevelSequencer}
 <#else>
-%requestTermination.${cluster.Mission}.${Tiers[tier_index -1]}Needs to have paramter for all sequencers in the tier above
+requestTermination.${cluster.Mission}.${cluster.Sequcner}
 </#if>
-%
+
 <#if cluster_has_next>
-%,
+,
 </#if>
 </#list>
-%\rchanset
-%\end{circus}
+\rchanset
+\end{circus}
 </#if>
 %
 </#list>
@@ -116,16 +116,27 @@ ToplevelMissionSequencerFW(${TopLevelSequencer})
 \circblockopen
 ControlTier \\
 \t1 \lpar TierSync \rpar \\
-\circblockopen
+
 <#list Tiers as tier >
 
-Tier${tier_index}
-<#if tier_has_next>
-\t1 \lpar Tier${tier_index}Sync \rpar
+<#if tier_index %2 == 0>
+\circblockopen
 </#if>
 
-</#list>
+
+Tier${tier_index}
+<#if tier_index %2 == 1>
 \circblockclose
+</#if>
+<#if tier_has_next>
+\\ \t1 \lpar Tier${tier_index}Sync \rpar \\
+</#if>
+
+
+
+
+</#list>
+
 \circblockclose
 \end{circus}
 %
