@@ -18,7 +18,7 @@ public class FrameworkEnv
 
 	class ControlTierEnv
 	{
-		
+
 		private SafeletEnv safeletEnv;
 		private TopLevelMissionSequencerEnv topLevelMissionSequencerEnv;
 
@@ -77,18 +77,17 @@ public class FrameworkEnv
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
 		{
-			
+
 			Map clusterMap = new HashMap();
 			clusterMap.put("safelet", safeletEnv.getName());
-			
+
 			List topLevelSequencersList = new ArrayList();
-			
-//			for(TopLevelMissionSequencerEnv t : )
+
+			// for(TopLevelMissionSequencerEnv t : )
 			topLevelSequencersList.add(topLevelMissionSequencerEnv.getName());
-			
-			clusterMap.put("topLevelSequencers",topLevelSequencersList);
-			
-			
+
+			clusterMap.put("topLevelSequencers", topLevelSequencersList);
+
 			return clusterMap;
 		}
 	}
@@ -101,25 +100,25 @@ public class FrameworkEnv
 		{
 			clusters = new ArrayList<ClusterEnv>();
 			currentCluster = null;
-//			clusters.add(currentCluster);
+			// clusters.add(currentCluster);
 		}
 
-//		public List<ClusterEnv> getClusters()
-//		{
-//			return clusters;
-//		}
+		// public List<ClusterEnv> getClusters()
+		// {
+		// return clusters;
+		// }
 
 		public void addCluster(ClusterEnv cluster)
 		{
 			this.clusters.add(cluster);
 		}
 
-//		public void addMission(Name mission)
-//		{
-//			currentCluster.getMissionEnv().setName(mission);
-////			currentCluster = new 
-//			// clusters.add(new ClusterEnv(missionEnv));
-//		}
+		// public void addMission(Name mission)
+		// {
+		// currentCluster.getMissionEnv().setName(mission);
+		// // currentCluster = new
+		// // clusters.add(new ClusterEnv(missionEnv));
+		// }
 
 		public ArrayList<Name> getMissions()
 		{
@@ -172,33 +171,35 @@ public class FrameworkEnv
 			}
 
 		}
-		
+
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public List toList()
 		{
 			List clusterList = new ArrayList();
-			
-			for(ClusterEnv c : clusters)
+
+			for (ClusterEnv c : clusters)
 			{
 				Map clusterMap = new HashMap();
 				clusterMap.put("Sequencer", c.getSequencer());
 				clusterMap.put("Mission", c.getMissionEnv().getName());
-				
+
 				Map schedulablesMap = new HashMap();
-				schedulablesMap.put("Periodics", c.getSchedulablesEnv().getPeriodicsList());
-				schedulablesMap.put("Aperiodics", c.getSchedulablesEnv().getPeriodicsList());
-				schedulablesMap.put("Oneshots", c.getSchedulablesEnv().getOneshotsList());
-				schedulablesMap.put("NestedSequencers", c.getSchedulablesEnv().getNestedSequencersList());
-				schedulablesMap.put("Threads", c.getSchedulablesEnv().getThreadsList());
-				
-				
-				
+				schedulablesMap.put("Periodics", c.getSchedulablesEnv()
+						.getPeriodicsList());
+				schedulablesMap.put("Aperiodics", c.getSchedulablesEnv()
+						.getPeriodicsList());
+				schedulablesMap.put("Oneshots", c.getSchedulablesEnv()
+						.getOneshotsList());
+				schedulablesMap.put("NestedSequencers", c.getSchedulablesEnv()
+						.getNestedSequencersList());
+				schedulablesMap.put("Threads", c.getSchedulablesEnv()
+						.getThreadsList());
+
 				clusterMap.put("Schedulables", schedulablesMap);
-				
-				
+
 				clusterList.add(clusterMap);
 			}
-			
+
 			return clusterList;
 		}
 
@@ -227,20 +228,21 @@ public class FrameworkEnv
 			return missionEnv;
 		}
 
-//		public void setMissionEnv(MissionEnv missionEnv)
-//		{
-//			this.missionEnv = missionEnv;
-//		}
+		// public void setMissionEnv(MissionEnv missionEnv)
+		// {
+		// this.missionEnv = missionEnv;
+		// }
 
 		public SchedulablesEnv getSchedulablesEnv()
 		{
 			return schedulablesEnv;
 		}
-//
-//		public void setSchedulablesEnv(SchedulablesEnv schedulablesEnv)
-//		{
-//			this.schedulablesEnv = schedulablesEnv;
-//		}
+
+		//
+		// public void setSchedulablesEnv(SchedulablesEnv schedulablesEnv)
+		// {
+		// this.schedulablesEnv = schedulablesEnv;
+		// }
 
 		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
@@ -276,7 +278,7 @@ public class FrameworkEnv
 
 		@SuppressWarnings("rawtypes")
 		public List getThreadsList()
-		{						
+		{
 			return toList(SchedulableTypeE.MT);
 		}
 
@@ -302,39 +304,39 @@ public class FrameworkEnv
 		private List toList(SchedulableTypeE type)
 		{
 			List schedulablesList = new ArrayList();
-			
+
 			switch (type)
 			{
 				case PEH:
-					for(ParadigmEnv p : periodEventHandlerEnvs)
+					for (ParadigmEnv p : periodEventHandlerEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
 					break;
-					
+
 				case APEH:
-					for(ParadigmEnv p : aperiodicEventHandlerEnvs)
+					for (ParadigmEnv p : aperiodicEventHandlerEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
 					break;
-					
+
 				case OSEH:
-					for(ParadigmEnv p : oneShotEventHandlerEnvs)
+					for (ParadigmEnv p : oneShotEventHandlerEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
 					break;
-					
+
 				case SMS:
-					for(ParadigmEnv p : schedulableMissionSequencerEnvs)
+					for (ParadigmEnv p : schedulableMissionSequencerEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
 					break;
-					
+
 				case MT:
-					for(ParadigmEnv p : managedThreadEnvs)
+					for (ParadigmEnv p : managedThreadEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
@@ -343,31 +345,25 @@ public class FrameworkEnv
 			return schedulablesList;
 		}
 
-
 		public List<ParadigmEnv> getAperiodicEventHandlerEnvs()
 		{
 			return aperiodicEventHandlerEnvs;
 		}
-
 
 		public List<ParadigmEnv> getOneShotEventHandlerEnvs()
 		{
 			return oneShotEventHandlerEnvs;
 		}
 
-
 		public List<NestedMissionSequencerEnv> getSchedulableMissionSequencerEnvs()
 		{
 			return schedulableMissionSequencerEnvs;
 		}
 
-
-
 		public List<ManagedThreadEnv> getManagedThreadEnvs()
 		{
 			return managedThreadEnvs;
 		}
-
 
 		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
@@ -470,26 +466,11 @@ public class FrameworkEnv
 			return output;
 		}
 
-		//coiuld trigger false posotive if two schedulable of different types have the same name
+		// coiuld trigger false posotive if two schedulable of different types
+		// have the same name
 		public boolean containsSchedulable(Name name)
 		{
-			for(ParadigmEnv p : getAperiodicEventHandlerEnvs())
-			{
-				if (p.getName().contentEquals(name))
-				{
-					return true;
-				}
-			}
-			
-			for(ParadigmEnv p : getPeriodEventHandlerEnvs())
-			{
-				if (p.getName().contentEquals(name))
-				{
-					return true;
-				}
-			}
-			
-			for(ParadigmEnv p : getOneShotEventHandlerEnvs())
+			for (ParadigmEnv p : getAperiodicEventHandlerEnvs())
 			{
 				if (p.getName().contentEquals(name))
 				{
@@ -497,24 +478,38 @@ public class FrameworkEnv
 				}
 			}
 
-		
-			for(ParadigmEnv p : getManagedThreadEnvs())
+			for (ParadigmEnv p : getPeriodEventHandlerEnvs())
 			{
 				if (p.getName().contentEquals(name))
 				{
 					return true;
 				}
 			}
-		
-			for(ParadigmEnv p : getSchedulableMissionSequencerEnvs())
+
+			for (ParadigmEnv p : getOneShotEventHandlerEnvs())
 			{
 				if (p.getName().contentEquals(name))
 				{
 					return true;
 				}
 			}
-			
-			
+
+			for (ParadigmEnv p : getManagedThreadEnvs())
+			{
+				if (p.getName().contentEquals(name))
+				{
+					return true;
+				}
+			}
+
+			for (ParadigmEnv p : getSchedulableMissionSequencerEnvs())
+			{
+				if (p.getName().contentEquals(name))
+				{
+					return true;
+				}
+			}
+
 			return false;
 		}
 	}
@@ -524,7 +519,7 @@ public class FrameworkEnv
 		super();
 		this.controlTier = new ControlTierEnv();
 		tiers = new ArrayList<TierEnv>();
-	//		tiers.add(new TierEnv());
+		// tiers.add(new TierEnv());
 	}
 
 	public ControlTierEnv getControlTier()
@@ -550,7 +545,6 @@ public class FrameworkEnv
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 	{
 		controlTier.addTopLevelMissionSequencer(topLevelMissionSequencer);
-		
 
 		//
 		// TierEnv tier = new TierEnv();
@@ -573,8 +567,8 @@ public class FrameworkEnv
 	{
 		currentCluster = new ClusterEnv(sequencer);
 
-		System.out.println("Current Tier " +  currentTier);
-		
+		System.out.println("Current Tier " + currentTier);
+
 		currentTier.addCluster(currentCluster);
 	}
 
@@ -628,7 +622,6 @@ public class FrameworkEnv
 		return null;
 	}
 
-	
 	public ArrayList<Name> sequencersAbove(TierEnv tier)
 	{
 		if (tiers.contains(tier))
@@ -655,7 +648,7 @@ public class FrameworkEnv
 
 				SchedulablesEnv s = c.schedulablesEnv;
 
-				present= s.containsSchedulable(name);
+				present = s.containsSchedulable(name);
 			}
 		}
 
@@ -665,37 +658,38 @@ public class FrameworkEnv
 	public ArrayList<MissionEnv> getMissions()
 	{
 		ArrayList<MissionEnv> missions = new ArrayList<MissionEnv>();
-		
-		for(TierEnv t : tiers)
+
+		for (TierEnv t : tiers)
 		{
 			for (ClusterEnv c : t.clusters)
 			{
 				missions.add(c.missionEnv);
-			}	
-				
+			}
+
 		}
-		
+
 		return missions;
 	}
 
-	//Bit hacky
+	// Bit hacky
 	public void addMissionSequencerMission(Name tlms, Name n)
 	{
 		System.out.println("*** Adding " + n + " to " + tlms + " ***");
-		if(controlTier.topLevelMissionSequencerEnv.getName() == tlms )
+		if (controlTier.topLevelMissionSequencerEnv.getName() == tlms)
 		{
 			controlTier.topLevelMissionSequencerEnv.addMission(n);
 		}
-		
-		for(TierEnv t: tiers)
+
+		for (TierEnv t : tiers)
 		{
-			for(ClusterEnv c : t.clusters)
+			for (ClusterEnv c : t.clusters)
 			{
-				if(!c.schedulablesEnv.schedulableMissionSequencerEnvs.isEmpty())
+				if (!c.schedulablesEnv.schedulableMissionSequencerEnvs
+						.isEmpty())
 				{
-					for(NestedMissionSequencerEnv p : c.schedulablesEnv.schedulableMissionSequencerEnvs)
+					for (NestedMissionSequencerEnv p : c.schedulablesEnv.schedulableMissionSequencerEnvs)
 					{
-						if(p.getName() == tlms)
+						if (p.getName() == tlms)
 						{
 							p.addMission(n);
 						}
@@ -703,16 +697,16 @@ public class FrameworkEnv
 				}
 			}
 		}
-		
+
 	}
 
 	public ArrayList<ManagedThreadEnv> getManagedThreads()
 	{
 		ArrayList<ManagedThreadEnv> mtEnvs = new ArrayList<ManagedThreadEnv>();
-		
-		for(TierEnv t : tiers)
+
+		for (TierEnv t : tiers)
 		{
-			for(ClusterEnv c : t.clusters)
+			for (ClusterEnv c : t.clusters)
 			{
 				mtEnvs.addAll(c.schedulablesEnv.managedThreadEnvs);
 			}
@@ -724,18 +718,20 @@ public class FrameworkEnv
 	public Map getNetworkMap()
 	{
 		Map networkMap = new HashMap();
-		
-		networkMap.put("SafeletName", getControlTier().getSafeletEnv().getName());
-		networkMap.put("TopLevelSequencer", getControlTier().getTopLevelMissionSequencerEnv().getName());
+
+		networkMap.put("SafeletName", getControlTier().getSafeletEnv()
+				.getName());
+		networkMap.put("TopLevelSequencer", getControlTier()
+				.getTopLevelMissionSequencerEnv().getName());
 
 		List tierList = new ArrayList();
-		
+
 		for (TierEnv tier : tiers)
-		{			
+		{
 			tierList.add(tier.toList());
 		}
 		networkMap.put("Tiers", tierList);
-		
+
 		return networkMap;
 	}
 

@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.generators;
 
-import hijac.tools.application.TightRopeTest;
+import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -14,9 +15,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Map;
-
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateExceptionHandler;
 
 public class CircusGenerator
 {
@@ -62,6 +60,7 @@ public class CircusGenerator
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void translateNetwork()
 	{
 
@@ -74,6 +73,7 @@ public class CircusGenerator
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void translateCommon(Map root, String template, String fileName)
 	{
 		/* Get the template (uses cache internally) */
@@ -117,6 +117,7 @@ public class CircusGenerator
 		// This is usually the case for file output, but not for servlet output.
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void translateSafelet()
 	{
 		// *****************************************Safelet++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -127,6 +128,7 @@ public class CircusGenerator
 		translateCommon(root, "SafeletApp-Template.ftl", "SafeletApp.circus");
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void translateTopLevelMissionSequencers()
 	{
 		// ********************************************Top Level MS
@@ -175,6 +177,7 @@ public class CircusGenerator
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void translateMissions()
 	{
 		// ***************************************** Missions
@@ -221,6 +224,7 @@ public class CircusGenerator
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void translateManagedThreads()
 	{
 		// ***************************************** Managed Threads
