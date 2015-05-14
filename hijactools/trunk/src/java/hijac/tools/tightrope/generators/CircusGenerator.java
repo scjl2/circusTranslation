@@ -47,6 +47,7 @@ public class CircusGenerator
 	public void translate() throws IOException, FileNotFoundException
 	{
 		System.out.println("+++ Translating +++");
+		System.out.println();
 
 		translateNetwork();
 
@@ -57,13 +58,24 @@ public class CircusGenerator
 		translateMissions();
 
 		translateManagedThreads();
+		
+		generateReport();
+
+	}
+
+	private void generateReport()
+	{
+		System.out.println("+++ Generating Report +++");
+		Map root = programEnv.geNetworkMap();
+		
+		translateCommon(root, "Report-Template.ftl", "Report.tex");
 
 	}
 
 	@SuppressWarnings("rawtypes")
 	private void translateNetwork()
 	{
-
+		System.out.println("+++ Translating Network +++ ");
 		/* Create a data-model */
 		Map root = programEnv.geNetworkMap();
 
@@ -121,16 +133,19 @@ public class CircusGenerator
 	private void translateSafelet()
 	{
 		// *****************************************Safelet++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+		System.out.println("+++ Translating Safelet +++ ");
 		/* Create a data-model */
 		Map root = programEnv.getSafelet().toMap();
 
-		translateCommon(root, "SafeletApp-Template.ftl", "SafeletApp.circus");
+		String name = (String) root.get("ProcessName");
+		
+		translateCommon(root, "SafeletApp-Template.ftl", name+"App.circus");
 	}
 
 	@SuppressWarnings("rawtypes")
 	private void translateTopLevelMissionSequencers()
 	{
+		System.out.println("+++ Translating Top Level Mission Sequencers +++");
 		// ********************************************Top Level MS
 		// +++++++++++++++++++++++++++++++++++++++++++++++
 		for (TopLevelMissionSequencerEnv tlmsEnv : programEnv
@@ -139,9 +154,11 @@ public class CircusGenerator
 			/* Create a data-model */
 			Map tlms = tlmsEnv.toMap();
 
+			
+			String name = (String) tlms.get("MissionSequencerID");
 			// String procName = (String) tlms.get("MissionSequencerName");
 			translateCommon(tlms, "MissionSequencerApp-Template.ftl",
-					"TopLevelMissionSequencerApp.circus");
+					name+"App.circus");
 
 			// /* Get the template (uses cache internally) */
 			// freemarker.template.Template temp2 =
@@ -180,6 +197,7 @@ public class CircusGenerator
 	@SuppressWarnings("rawtypes")
 	private void translateMissions()
 	{
+		System.out.println("+++ Translating Missions +++");
 		// ***************************************** Missions
 		// ++++++++++++++++++++++++++++++++++++++++++++++++++++
 		for (MissionEnv mEnv : programEnv.getMissions())
@@ -187,7 +205,9 @@ public class CircusGenerator
 			/* Create a data-model */
 			Map missionMap = mEnv.toMap();
 
-			String procName = "MissionApp.circus";
+			String name = (String) missionMap.get("MissionID");
+			
+			String procName = name+"App.circus";
 			translateCommon(missionMap, "MissionApp-Template.ftl", procName);
 
 			// /* Get the template (uses cache internally) */
@@ -227,6 +247,7 @@ public class CircusGenerator
 	@SuppressWarnings("rawtypes")
 	private void translateManagedThreads()
 	{
+		System.out.println("+++ Translating Managed Threads +++ ");
 		// ***************************************** Managed Threads
 		// ++++++++++++++++++++++++++++++++++++++++++++++++++++
 		ArrayList<ManagedThreadEnv> mts = programEnv.getManagedThreads();

@@ -1,6 +1,5 @@
 package hijac.tools.application;
 
-
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.compiler.SCJCompilationConfig;
 import hijac.tools.compiler.SCJCompilationException;
@@ -27,7 +26,9 @@ public class TightRopeTest
 
 	private static ProgramEnv programEnv;
 
-	private static String version = "v0.3";
+	private static String version = "v0.4";
+
+	private static boolean silent = true;
 
 	static
 	{
@@ -111,32 +112,36 @@ public class TightRopeTest
 			String reportLocation = "/home/matt/Documents/Translation/test/output/Report.tex";
 			String space = " ";
 
-	
-
 			Process p = Runtime.getRuntime().exec(
-//					"/usr/bin/pdflatex -output-directory /home/matt/Documents/Translation/test/output/ /home/matt/Documents/Translation/test/output/Report.tex");
-					latexLocation + space + "-output-directory" + space + outputDirectory + space 
-							+ reportLocation);
-			
+			// "/usr/bin/pdflatex -output-directory /home/matt/Documents/Translation/test/output/ /home/matt/Documents/Translation/test/output/Report.tex");
+					latexLocation + space + "-output-directory" + space
+							+ outputDirectory + space + reportLocation);
+
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
 					p.getInputStream()));
 
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(
 					p.getErrorStream()));
 
-			// read the output from the command
-			System.out.println("Here is the standard output of the command:\n");
-			while ((s = stdInput.readLine()) != null)
+			if (!silent)
 			{
-				System.out.println(s);
-			}
+				// read the output from the command
+				System.out
+						.println("Here is the standard output of the command:\n");
+				while ((s = stdInput.readLine()) != null)
+				{
+					System.out.println(s);
+				}
+			
 
-			// read any errors from the attempted command
-			System.out
-					.println("Here is the standard error of the command (if any):\n");
-			while ((s = stdError.readLine()) != null)
-			{
-				System.out.println(s);
+			
+				// read any errors from the attempted command
+				System.out
+						.println("Here is the standard error of the command (if any):\n");
+				while ((s = stdError.readLine()) != null)
+				{
+					System.out.println(s);
+				}
 			}
 
 		} catch (Exception e)

@@ -104,7 +104,7 @@ ${schedulable}App
 \circblockopen
 SafeletFW \\
 \t1 \lpar TierSync \rpar \\
-ToplevelMissionSequencerFW(${TopLevelSequencer})
+TopLevelMissionSequencerFW(${TopLevelSequencer})
 \circblockclose
 \end{circus}
 %
