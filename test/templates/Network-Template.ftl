@@ -79,7 +79,24 @@ requestTermination.${cluster.Mission}.${cluster.Sequencer}
 \begin{zsection}
   \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
-  \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW
+  \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
+  \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
+  \t1 AperiodicEventHandlerFW, ${SafeletName}App, ${TopLevelSequencer}App, \\
+  \t1 
+<#list Tiers as tier >
+<#list tier as cluster>
+${cluster.Mission}App, 
+
+<#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
+
+<#list schedulables as schedulable>
+${schedulable}App 
+	<#if schedulable_has_next>
+,
+	</#if>
+</#list>
+</#list>
+</#list>
 \end{zsection}
 %
 \begin{circus}
@@ -100,9 +117,54 @@ ToplevelMissionSequencerFW(${TopLevelSequencer})
 	MissionFW(${cluster.Mission})\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
-		<#list cluster.Schedulables as schedulable>
-			${schedulable}FW\\
-			<#if schedulable_has_next>
+		<#list cluster.Schedulables.Threads as thread>			
+			ManagedThreadFW(${thread})\\
+			<#if thread_has_next>
+			\t1 \lpar SchedulablesSync \rpar\\
+			</#if>
+		</#list>
+
+<#if cluster.Schedulables.Oneshots?size gte 1>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+
+
+		<#list cluster.Schedulables.Oneshots as oneshot>			
+			ManagedThreadFW(${oneshot})\\
+			<#if oneshot_has_next>
+			\t1 \lpar SchedulablesSync \rpar\\
+			</#if>
+		</#list>
+
+<#if cluster.Schedulables.NestedSequencers?size gte 1>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+
+		<#list cluster.Schedulables.NestedSequencers as sequencer>			
+			ManagedThreadFW(${sequencer})\\
+			<#if sequencer_has_next>
+			\t1 \lpar SchedulablesSync \rpar\\
+			</#if>
+		</#list>
+
+<#if cluster.Schedulables.Aperiodics?size gte 1>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+
+		<#list cluster.Schedulables.Aperiodics as aperiodic>			
+			ManagedThreadFW(${aperiodic})\\
+			<#if aperiodic_has_next>
+			\t1 \lpar SchedulablesSync \rpar\\
+			</#if>
+		</#list>
+
+<#if cluster.Schedulables.Periodics?size gte 1>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+
+		<#list cluster.Schedulables.Periodics as periodic>			
+			ManagedThreadFW(${periodic})\\
+			<#if periodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
@@ -126,19 +188,10 @@ ControlTier \\
 <#assign brakcets = false>
 \circblockopen
 <#list Tiers as tier >
-
-
 Tier${tier_index}
-
-
 <#if tier_has_next>
-
-
 \\ \t1 \lpar Tier${tier_index}Sync \rpar \\
 </#if>
-
-
-
 </#list>
 \circblockclose
 \circblockclose
@@ -156,7 +209,9 @@ ${TopLevelSequencer}App\\
 <#list tier as cluster>
 ${cluster.Mission}App\\
 \interleave \\
-<#list cluster.Schedulables as schedulable>
+<#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
+
+<#list schedulables as schedulable>
 ${schedulable}App\\
 			<#if schedulable_has_next>
 \interleave \\

@@ -183,7 +183,18 @@ public class FrameworkEnv
 				Map clusterMap = new HashMap();
 				clusterMap.put("Sequencer", c.getSequencer());
 				clusterMap.put("Mission", c.getMissionEnv().getName());
-				clusterMap.put("Schedulables", c.getSchedulablesEnv().toList());
+				
+				Map schedulablesMap = new HashMap();
+				schedulablesMap.put("Periodics", c.getSchedulablesEnv().getPeriodicsList());
+				schedulablesMap.put("Aperiodics", c.getSchedulablesEnv().getPeriodicsList());
+				schedulablesMap.put("Oneshots", c.getSchedulablesEnv().getOneshotsList());
+				schedulablesMap.put("NestedSequencers", c.getSchedulablesEnv().getNestedSequencersList());
+				schedulablesMap.put("Threads", c.getSchedulablesEnv().getThreadsList());
+				
+				
+				
+				clusterMap.put("Schedulables", schedulablesMap);
+				
 				
 				clusterList.add(clusterMap);
 			}
@@ -263,85 +274,100 @@ public class FrameworkEnv
 			return periodEventHandlerEnvs;
 		}
 
+		@SuppressWarnings("rawtypes")
+		public List getThreadsList()
+		{						
+			return toList(SchedulableTypeE.MT);
+		}
+
+		@SuppressWarnings("rawtypes")
+		public List getNestedSequencersList()
+		{
+			return toList(SchedulableTypeE.SMS);
+		}
+
+		@SuppressWarnings("rawtypes")
+		public List getOneshotsList()
+		{
+			return toList(SchedulableTypeE.OSEH);
+		}
+
+		@SuppressWarnings("rawtypes")
+		public List getPeriodicsList()
+		{
+			return toList(SchedulableTypeE.PEH);
+		}
+
 		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public List toList()
+		private List toList(SchedulableTypeE type)
 		{
 			List schedulablesList = new ArrayList();
 			
-			for(ParadigmEnv p : periodEventHandlerEnvs)
+			switch (type)
 			{
-				schedulablesList.add(p.getName());
+				case PEH:
+					for(ParadigmEnv p : periodEventHandlerEnvs)
+					{
+						schedulablesList.add(p.getName());
+					}
+					break;
+					
+				case APEH:
+					for(ParadigmEnv p : aperiodicEventHandlerEnvs)
+					{
+						schedulablesList.add(p.getName());
+					}
+					break;
+					
+				case OSEH:
+					for(ParadigmEnv p : oneShotEventHandlerEnvs)
+					{
+						schedulablesList.add(p.getName());
+					}
+					break;
+					
+				case SMS:
+					for(ParadigmEnv p : schedulableMissionSequencerEnvs)
+					{
+						schedulablesList.add(p.getName());
+					}
+					break;
+					
+				case MT:
+					for(ParadigmEnv p : managedThreadEnvs)
+					{
+						schedulablesList.add(p.getName());
+					}
+					break;
 			}
-			
-			for(ParadigmEnv p : aperiodicEventHandlerEnvs)
-			{
-				schedulablesList.add(p.getName());
-			}
-			for(ParadigmEnv p : oneShotEventHandlerEnvs)
-			{
-				schedulablesList.add(p.getName());
-			}
-			for(ParadigmEnv p : schedulableMissionSequencerEnvs)
-			{
-				schedulablesList.add(p.getName());
-			}
-			for(ParadigmEnv p : managedThreadEnvs)
-			{
-				schedulablesList.add(p.getName());
-			}
-			
-			
 			return schedulablesList;
 		}
 
-//		public void setPeriodEventHandlerEnvs(
-//				List<ParadigmEnv> periodEventHandlerEnvs)
-//		{
-//			this.periodEventHandlerEnvs = periodEventHandlerEnvs;
-//		}
 
 		public List<ParadigmEnv> getAperiodicEventHandlerEnvs()
 		{
 			return aperiodicEventHandlerEnvs;
 		}
 
-//		public void setAperiodicEventHandlerEnvs(
-//				List<ParadigmEnv> aperiodicEventHandlerEnvs)
-//		{
-//			this.aperiodicEventHandlerEnvs = aperiodicEventHandlerEnvs;
-//		}
 
 		public List<ParadigmEnv> getOneShotEventHandlerEnvs()
 		{
 			return oneShotEventHandlerEnvs;
 		}
 
-//		public void setOneShotEventHandlerEnvs(
-//				List<ParadigmEnv> oneShotEventHandlerEnvs)
-//		{
-//			this.oneShotEventHandlerEnvs = oneShotEventHandlerEnvs;
-//		}
 
 		public List<NestedMissionSequencerEnv> getSchedulableMissionSequencerEnvs()
 		{
 			return schedulableMissionSequencerEnvs;
 		}
 
-//		public void setSchedulableMissionSequencerEnvs(
-//				List<NestedMissionSequencerEnv> schedulableMissionSequencerEnvs)
-//		{
-//			this.schedulableMissionSequencerEnvs = schedulableMissionSequencerEnvs;
-//		}
+
 
 		public List<ManagedThreadEnv> getManagedThreadEnvs()
 		{
 			return managedThreadEnvs;
 		}
 
-//		public void setManagedThreadEnvs(List<ManagedThreadEnv> managedThreadEnvs)
-//		{
-//			this.managedThreadEnvs = managedThreadEnvs;
-//		}
 
 		public void addSchedulable(SchedulableTypeE type, Name name)
 		{

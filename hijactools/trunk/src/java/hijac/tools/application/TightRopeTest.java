@@ -71,7 +71,7 @@ public class TightRopeTest
 
 		programEnv = environmentBuilder.explore();
 
-		System.out.println("Framework Printing");
+		System.out.println("+++ Structure +++ ");
 		programEnv.output();
 
 		CircusGenerator circGen = new CircusGenerator(programEnv);
