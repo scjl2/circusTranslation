@@ -4,9 +4,11 @@
 
 \begin{zsection}
 	\SECTION ~ NetworkChannels ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-		\t1 SchedulableId, SchedulableIds, MissionFWChan, SchedulableChan, TopLevelMissionSequencerFWChan,\\
-		\t1 FrameworkChan, SafeletMethChan
+		\t1 SchedulableId, SchedulableIds, MissionChan, SchedulableChan, TopLevelMissionSequencerFWChan,\\
+		\t1 FrameworkChan, SafeletChan
 \end{zsection}
+%
+% done\_safeletFW doesn't exist...
 %
 \begin{circus}
 \circchannelset ~ TerminateSync == \\ \t1 \lchanset schedulables\_terminated, schedulables\_stopped, get\_activeSchedulables \rchanset
@@ -15,7 +17,7 @@
 \begin{circus}	
 \circchannelset ~ SafeletTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
-%
+%Start Mission and Done Mission wont parse?
 <#list Tiers[0] as cluster>
 \begin{circus}
 \circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission},\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
@@ -77,7 +79,7 @@ requestTermination.${cluster.Mission}.${cluster.Sequencer}
 \begin{zsection}
   \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
-  \t1 SafeletFW, TopLevelMissionSequencerFW
+  \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW
 \end{zsection}
 %
 \begin{circus}
