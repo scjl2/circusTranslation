@@ -244,9 +244,7 @@ public class EnvironmentBuilder
 			if (type == SchedulableTypeE.SMS)
 			{
 				nestedSequencers.add(s);
-			}
-
-			
+			}			
 		}
 
 		if (!nestedSequencers.isEmpty())
@@ -270,25 +268,29 @@ public class EnvironmentBuilder
 					.getTypeElement(packagePrefix + sequencer).accept(
 					new MissionSequencerLevel2Visitor(programEnv, analysis),
 					null));
+		
 
+			
 			if (missions == null)
 			{
 				System.out.println("+++ No Missions +++");
 			} else
 			{
-				boolean newClusterNeeded = false;
+				programEnv.newTier();
+//				boolean newClusterNeeded = false;
 				for (Name n : missions)
 				{
+					programEnv.newCluster(n);
 					System.out.println("+++ Exploring Mission " + n + " +++");
 					buildMission(n);
-					if(newClusterNeeded)
-					{
-						programEnv.newCluster(sequencer);
-					}
-					else
-					{
-						newClusterNeeded = true;
-					}
+//					if(newClusterNeeded)
+//					{
+//						programEnv.newCluster(sequencer);
+//					}
+//					else
+//					{
+//						newClusterNeeded = true;
+////					}
 				}
 			}
 

@@ -45,7 +45,8 @@ public class TightRopeTest
 	{
 
 		final long startTime = System.nanoTime();
-
+		
+		System.out.println();
 		System.out.println("+++ Tight Rope - SCJ to Circus translator +++");
 		System.out.println("+++" + version + "+++");
 		System.out.println("+++ Matt Luckcuck +++");

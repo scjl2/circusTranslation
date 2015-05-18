@@ -4,6 +4,8 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
+import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
+import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
 
@@ -58,6 +60,10 @@ public class CircusGenerator
 		translateMissions();
 
 		translateManagedThreads();
+		
+		translateNestedMissionSequencers();
+		
+		translateOneShotEventHandlers();
 		
 		generateReport();
 
@@ -245,6 +251,25 @@ public class CircusGenerator
 	}
 
 	@SuppressWarnings("rawtypes")
+	private void translateNestedMissionSequencers()
+	{
+		System.out.println("+++ Translating Nested Mission Sequencers +++");
+		// ********************************************Top Level MS
+		// +++++++++++++++++++++++++++++++++++++++++++++++
+		for (NestedMissionSequencerEnv smsEnv : programEnv
+				.getNestedMissionSequencers())
+		{
+			/* Create a data-model */
+			Map tlms = smsEnv.toMap();
+			
+			String name = (String) tlms.get("MissionSequencerID");
+			// String procName = (String) tlms.get("MissionSequencerName");
+			translateCommon(tlms, "MissionSequencerApp-Template.ftl",
+					name+"App.circus");
+		}		
+	}
+
+	@SuppressWarnings("rawtypes")
 	private void translateManagedThreads()
 	{
 		System.out.println("+++ Translating Managed Threads +++ ");
@@ -292,6 +317,24 @@ public class CircusGenerator
 			//
 
 		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void translateOneShotEventHandlers()
+	{
+		System.out.println("+++ Translating One Shot Event Handlers +++");
+		// ********************************************Top Level MS
+		// +++++++++++++++++++++++++++++++++++++++++++++++
+		for (OneShotEventHandlerEnv osevEnv : programEnv
+				.getOneShotEventHandlers())
+		{
+			/* Create a data-model */
+			Map osehMap = osevEnv.toMap();
+			
+			String name = (String) osehMap.get("SchedulableID");
+			translateCommon(osehMap, "HandlerApp-Template.ftl",
+					name+"App.circus");
+		}		
 	}
 
 }

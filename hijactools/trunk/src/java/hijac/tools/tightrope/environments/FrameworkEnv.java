@@ -267,7 +267,7 @@ public class FrameworkEnv
 
 		private List<ParadigmEnv> periodEventHandlerEnvs = new ArrayList<ParadigmEnv>();
 		private List<ParadigmEnv> aperiodicEventHandlerEnvs = new ArrayList<ParadigmEnv>();
-		private List<ParadigmEnv> oneShotEventHandlerEnvs = new ArrayList<ParadigmEnv>();
+		private List<OneShotEventHandlerEnv> oneShotEventHandlerEnvs = new ArrayList<OneShotEventHandlerEnv>();
 		private List<NestedMissionSequencerEnv> schedulableMissionSequencerEnvs = new ArrayList<NestedMissionSequencerEnv>();
 		private List<ManagedThreadEnv> managedThreadEnvs = new ArrayList<ManagedThreadEnv>();
 
@@ -350,7 +350,7 @@ public class FrameworkEnv
 			return aperiodicEventHandlerEnvs;
 		}
 
-		public List<ParadigmEnv> getOneShotEventHandlerEnvs()
+		public List<OneShotEventHandlerEnv> getOneShotEventHandlerEnvs()
 		{
 			return oneShotEventHandlerEnvs;
 		}
@@ -386,7 +386,9 @@ public class FrameworkEnv
 			}
 			if (type == SchedulableTypeE.OSEH)
 			{
-				oneShotEventHandlerEnvs.add(p);
+				OneShotEventHandlerEnv osehEnv = new OneShotEventHandlerEnv();
+				osehEnv.setName(name);
+				oneShotEventHandlerEnvs.add(osehEnv);
 			}
 			if (type == SchedulableTypeE.SMS)
 			{
@@ -713,6 +715,20 @@ public class FrameworkEnv
 		}
 		return mtEnvs;
 	}
+	
+	public ArrayList<NestedMissionSequencerEnv> getNestedMissionsequencers()
+	{
+		ArrayList<NestedMissionSequencerEnv> smsEnvs = new ArrayList<NestedMissionSequencerEnv>();
+
+		for (TierEnv t : tiers)
+		{
+			for (ClusterEnv c : t.clusters)
+			{
+				smsEnvs.addAll(c.schedulablesEnv.schedulableMissionSequencerEnvs);
+			}
+		}
+		return smsEnvs;
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map getNetworkMap()
@@ -733,6 +749,20 @@ public class FrameworkEnv
 		networkMap.put("Tiers", tierList);
 
 		return networkMap;
+	}
+
+	public ArrayList<OneShotEventHandlerEnv> getOneShotEventHandlers()
+	{
+		ArrayList<OneShotEventHandlerEnv> osehEnvs = new ArrayList<OneShotEventHandlerEnv>();
+
+		for (TierEnv t : tiers)
+		{
+			for (ClusterEnv c : t.clusters)
+			{
+				osehEnvs.addAll(c.schedulablesEnv.oneShotEventHandlerEnvs);
+			}
+		}
+		return osehEnvs;
 	}
 
 }

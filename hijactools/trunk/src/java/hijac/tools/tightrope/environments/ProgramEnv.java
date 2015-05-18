@@ -165,15 +165,16 @@ public class ProgramEnv
 		return structureEnv.getNetworkMap();
 	}
 
-	// public void setFrameworkEnv(FrameworkEnv frameworkEnv)
-	// {
-	// this.frameworkEnv = frameworkEnv;
-	// }
-	//
-	// public void setNonParadigmObjectEnvs(
-	// List<NonParadigmEnv> nonParadigmObjectEnvs)
-	// {
-	// this.nonParadigmObjectEnvs = nonParadigmObjectEnvs;
-	// }
+	public ArrayList<NestedMissionSequencerEnv> getNestedMissionSequencers()
+	{
+		return structureEnv.getNestedMissionsequencers();
+	}
+
+	public ArrayList<OneShotEventHandlerEnv> getOneShotEventHandlers()
+	{
+		return structureEnv.getOneShotEventHandlers();
+	}
+
+
 
 }
