@@ -19,7 +19,7 @@ methods : MethodSet
 \Delta ObjectEnv \\
 m? : Method \\
 \where
-methods' = methods \union \{m?\} \\
+methods' = methods \cup \{m?\} \\
 name' = name \\
 variables' = variables
 \end{schema}
@@ -107,7 +107,7 @@ CurrentTier : TierEnv \\
 CurrentCluster : ClusterEnv
 \where
 Tiers \filter \{ CurrentTier \} \neq \emptyset \\
-Tiers \filter \{ t : TierEnv | t.Clusters \filter \{ CurrentCluster \} \} \neq \emptyset \\
+CurrentTier.Clusters \filter \{ CurrentCluster \} \neq \emptyset \\
 \end{schema}
 %
 \begin{schema}{newTier}
@@ -121,20 +121,20 @@ ControlTier' = ControlTier \\
 CurrentCluster' = CurrentCluster 
 \end{schema}
 %
-\begin{schema}
+\begin{schema}{newCluster}
 \Delta StructureEnv \\
 c : ClusterEnv \\
 \where
 CurrentTier.Clusters \filter \{ c \} = \langle \rangle\\
 CurrentCluster' = c \\
 CurrentTier.Clusters' = CurrentTier.Clusters \cat \langle c \rangle \\
-CurrentTier' = CurrentTIer \\
+CurrentTier' = CurrentTier \\
 ControlTier' = ControlTier \\
 Tiers' = Tiers 
 \end{schema}
 %
 \begin{schema}{setSafelet}
-\Delta ControlTier \\
+\Delta ControlTierEnv \\
 s? : SafeletEnv \\
 \where
 % Precon Safelet not set? Can only be set once
@@ -143,11 +143,11 @@ TopLevelSequencers' = TopLevelSequencers
 \end{schema}
 %
 \begin{schema}{addTopLevelSequencer}
-\Delta ControlTier \\
-t? : TopLevelMissioNSequencerEnv \\
+\Delta ControlTierEnv \\
+t? : TopLevelMissionSequencerEnv \\
 \where
 TopLevelSequencers \filter \{ t? \} = \langle \rangle \\
-TopLevelSequencers' = TopLevelSequencers \cat \langle t? \rangle
+TopLevelSequencers' = TopLevelSequencers \cat \langle t? \rangle \\
 Safelet' = Safelet
 \end{schema}
 %
