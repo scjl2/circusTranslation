@@ -12,60 +12,160 @@
 \begin{schema}{ObjectEnv}
 name : Name \\
 variables : \seq Name \\
+methods : MethodSet
 \end{schema}
 %
-\begin{schema}{ParadigmEnv}
-ObjectEnv \\
-methods : MethodSet\\
-nonSCJMethods : MethodSet \\
+\begin{schema}{addMethod}
+\Delta ObjectEnv \\
+m? : Method \\
+\where
+methods' = methods \union \{m?\} \\
+name' = name \\
+variables' = variables
 \end{schema}
 %
-\begin{schema}{NonSCJEnv}
-ObjectEnv \\
-methods : MethodSet \\
+\begin{schema}{setName}
+\Delta ObjectEnv \\
+n? : Name \\
+\where
+name' = n? \\
+variables' = variables \\
+methods' = methods 
 \end{schema}
 %
-\begin{zed}
-	SafeletEnv == ParadigmEnv \\
-	TopLevelMissionSequencerEnv == ParadigmEnv \\
-	MissionEnv == ParadigmEnv \\
-	PEHEnv == ParadigmEnv \\
-	APEHEnv == ParadigmEnv \\
-	OSEHEnv == ParadigmEnv \\
-	SMSEnv == ParadigmEnv \\
-	MTEnv == ParadigmEnv \\
-	NonSCJObjectEnv == NonSCJEnv \\	
-\end{zed}
+\begin{schema}{SafeletEnv}
+ObjectEnv
+\end{schema}
 %
-\begin{zed}
-SchedulablesEnv == \\
-	\t1 \seq PEHEnv \cross \\
-	\t1 \seq APEHEnv \cross \\
-	\t1 \seq OSEHEnv \cross \\
-	\t1 \seq SMSEnv \cross \\
-	\t1 \seq MTEnv \\
-\end{zed}
+\begin{schema}{MissionEnv}
+ObjectEnv
+\end{schema}
+%
+\begin{schema}{OneShotEventHandlerEnv}
+ObjectEnv
+\end{schema}
+%
+\begin{schema}{PeriodicEventHandlerEnv}
+ObjectEnv
+\end{schema}
+%
+\begin{schema}{AperiodicEventHandlerEnv}
+ObjectEnv
+\end{schema}
+%
+\begin{schema}{ManagedThreadEnv}
+ObjectEnv
+\end{schema}
+%
+\begin{schema}{MissionSequencerEnv}
+ObjectEnv
+\end{schema}
+%
+\begin{schema}{TopLevelMissionSequencerEnv}
+MissionSequencerEnv
+\end{schema}
+%
+\begin{schema}{SchedulableMissionSequencerEnv}
+MissionSequencerEnv
+\end{schema}
+%
+\begin{schema}{SchedulablesEnv}
+Periodics : \seq PeriodicEventHandlerEnv\\
+Aperiodics : \seq AperiodicEventHandlerEnv\\
+OneShots : \seq OneShotEventHandlerEnv\\
+NestedSequencers : \seq SchedulableMissionSequencerEnv\\
+ManagedThreads : \seq ManagedThreadEnv
+	
+\end{schema}
 %
 \begin{schema}{ClusterEnv}
+Sequencer : MissionSequencerEnv\\
 Mission : MissionEnv \\
-Schedulables : SchedulablesEnv \\
+Schedulables : SchedulablesEnv 
+\end{schema}
+%
+\begin{schema}{getMission}
+\Xi ClusterEnv \\
+mission! : MissionEnv \\
+\where 
+mission! = Mission
 \end{schema}
 %
 \begin{schema}{TierEnv}
 Clusters : \seq ClusterEnv 
 \end{schema}
 %
-\begin{zed}
-	ControlTierEnv 	 == SafeletEnv \cross \seq TopLevelMissionSequencerEnv 	
-\end{zed}
+\begin{schema}{ControlTierEnv}
+Safelet : SafeletEnv\\
+TopLevelSequencers : \seq TopLevelMissionSequencerEnv
+\end{schema}
 %
 \begin{schema}{StructureEnv}
 ControlTier : ControlTierEnv\\
-Tiers : \seq TierEnv \\	
+Tiers : \seq TierEnv \\
+CurrentTier : TierEnv \\
+CurrentCluster : ClusterEnv
+\where
+Tiers \filter \{ CurrentTier \} \neq \emptyset \\
+Tiers \filter \{ t : TierEnv | t.Clusters \filter \{ CurrentCluster \} \} \neq \emptyset \\
 \end{schema}
 %
+\begin{schema}{newTier}
+\Delta StructureEnv \\
+t : TierEnv \\
+\where
+Tiers \filter \{ t \} = \langle \rangle \\
+CurrentTier' = t \\
+Tiers' = Tiers \cat \langle t \rangle \\
+ControlTier' = ControlTier \\
+CurrentCluster' = CurrentCluster 
+\end{schema}
+%
+\begin{schema}
+\Delta StructureEnv \\
+c : ClusterEnv \\
+\where
+CurrentTier.Clusters \filter \{ c \} = \langle \rangle\\
+CurrentCluster' = c \\
+CurrentTier.Clusters' = CurrentTier.Clusters \cat \langle c \rangle \\
+CurrentTier' = CurrentTIer \\
+ControlTier' = ControlTier \\
+Tiers' = Tiers 
+\end{schema}
+%
+\begin{schema}{setSafelet}
+\Delta ControlTier \\
+s? : SafeletEnv \\
+\where
+% Precon Safelet not set? Can only be set once
+Safelet' = s? \\
+TopLevelSequencers' = TopLevelSequencers
+\end{schema}
+%
+\begin{schema}{addTopLevelSequencer}
+\Delta ControlTier \\
+t? : TopLevelMissioNSequencerEnv \\
+\where
+TopLevelSequencers \filter \{ t? \} = \langle \rangle \\
+TopLevelSequencers' = TopLevelSequencers \cat \langle t? \rangle
+Safelet' = Safelet
+\end{schema}
+%
+\begin{schema}{addMission}
+\Delta StructureEnv \\
+m? : MissionEnv \\
+\where 
+%Precon CurrentCluster.Mission is null
+CurrentCluster.Mission' = m? \\
+CurrentCluster' = CurrentCluster \\
+CurrentTier' = CurrentTier \\
+ControlTier' = ControlTier \\
+Tiers' = Tiers
+\end{schema}
+%
+
 \begin{schema}{ProgramEnv}
 Structure : StructureEnv \\
-NonSCJObjects : \power NonSCJObjectEnv \\
-Variables : Name \pfun Type
+NonSCJObjects : \power ObjectEnv
+%Variables : Name \pfun Type
 \end{schema}
