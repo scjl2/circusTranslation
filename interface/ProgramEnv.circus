@@ -123,11 +123,12 @@ CurrentCluster' = CurrentCluster
 %
 \begin{schema}{newCluster}
 \Delta StructureEnv \\
+
 c : ClusterEnv \\
 \where
 CurrentTier.Clusters \filter \{ c \} = \langle \rangle\\
 CurrentCluster' = c \\
-CurrentTier.Clusters' = CurrentTier.Clusters \cat \langle c \rangle \\
+CurrentTier'.Clusters = CurrentTier.Clusters \cat \langle c \rangle \\
 CurrentTier' = CurrentTier \\
 ControlTier' = ControlTier \\
 Tiers' = Tiers 
@@ -156,7 +157,7 @@ Safelet' = Safelet
 m? : MissionEnv \\
 \where 
 %Precon CurrentCluster.Mission is null
-CurrentCluster.Mission' = m? \\
+CurrentCluster'.Mission = m? \\
 CurrentCluster' = CurrentCluster \\
 CurrentTier' = CurrentTier \\
 ControlTier' = ControlTier \\
