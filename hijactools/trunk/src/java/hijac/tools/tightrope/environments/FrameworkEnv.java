@@ -468,7 +468,7 @@ public class FrameworkEnv
 			return output;
 		}
 
-		// coiuld trigger false posotive if two schedulable of different types
+		// Could trigger false positive if two schedulable of different types
 		// have the same name
 		public boolean containsSchedulable(Name name)
 		{

@@ -19,6 +19,7 @@ methods : MethodSet
 \Delta ObjectEnv \\
 m? : Method \\
 \where
+m \notin methods\\
 methods' = methods \cup \{m?\} \\
 name' = name \\
 variables' = variables
@@ -33,55 +34,80 @@ variables' = variables \\
 methods' = methods 
 \end{schema}
 %
-\begin{schema}{SafeletEnv}
-ObjectEnv
-\end{schema}
+%\begin{schema}{SafeletEnv}
+%ObjectEnv
+%\end{schema}
 %
-\begin{schema}{MissionEnv}
-ObjectEnv
-\end{schema}
+%\begin{schema}{MissionEnv}
+%ObjectEnv
+%\end{schema}
 %
-\begin{schema}{OneShotEventHandlerEnv}
-ObjectEnv
-\end{schema}
+%\begin{schema}{OneShotEventHandlerEnv}
+%ObjectEnv
+%\end{schema}
 %
-\begin{schema}{PeriodicEventHandlerEnv}
-ObjectEnv
-\end{schema}
+%\begin{schema}{PeriodicEventHandlerEnv}
+%ObjectEnv
+%\end{schema}
 %
-\begin{schema}{AperiodicEventHandlerEnv}
-ObjectEnv
-\end{schema}
+%\begin{schema}{AperiodicEventHandlerEnv}
+%ObjectEnv
+%\end{schema}
 %
-\begin{schema}{ManagedThreadEnv}
-ObjectEnv
-\end{schema}
+%\begin{schema}{ManagedThreadEnv}
+%ObjectEnv
+%\end{schema}
 %
-\begin{schema}{MissionSequencerEnv}
-ObjectEnv
-\end{schema}
+%\begin{schema}{MissionSequencerEnv}
+%ObjectEnv
+%\end{schema}
 %
-\begin{schema}{TopLevelMissionSequencerEnv}
-MissionSequencerEnv
-\end{schema}
+%\begin{schema}{TopLevelMissionSequencerEnv}
+%MissionSequencerEnv
+%\end{schema}
 %
-\begin{schema}{SchedulableMissionSequencerEnv}
-MissionSequencerEnv
-\end{schema}
+%\begin{schema}{SchedulableMissionSequencerEnv}
+%MissionSequencerEnv
+%\end{schema}
+\begin{zed}
+SafeletEnv == ObjectEnv \\
+MissionEnv == ObjectEnv \\
+MissionSequencerEnv == ObjectEnv \\
+PeriodicEventHandlerEnv == ObjectEnv \\
+AperiodicEventHandlerEnv == ObjectEnv \\
+OneShotEventHandlerEnv == ObjectEnv \\
+ManagedThreadEnv == ObjectEnv 
+\end{zed}
+%
+\begin{axdef}
+  nullSafeletEnv : SafeletEnv \\
+  nullMissionEnv : MissionEnv \\
+  nullMissionSequencerEnv : MissionSequencerEnv \\
+  nullPeriodicEventHandlerEnv : PeriodicEventHandlerEnv \\
+  nullAperiodicEventHandlerEnv : AperiodicEventHandlerEnv \\
+  nullOneShotEventHandlerEnv : OneShotEventHandlerEnv \\
+  nullManagedThreadEnv : ManagedThreadEnv 
+\end{axdef}
+%
+\begin{zed}
+TopLevelMissionSequencerEnv == MissionSequencerEnv \\
+SchedulableMissionSequencerEnv == MissionSequencerEnv 
+\end{zed}
 %
 \begin{schema}{SchedulablesEnv}
 Periodics : \seq PeriodicEventHandlerEnv\\
 Aperiodics : \seq AperiodicEventHandlerEnv\\
 OneShots : \seq OneShotEventHandlerEnv\\
 NestedSequencers : \seq SchedulableMissionSequencerEnv\\
-ManagedThreads : \seq ManagedThreadEnv
-	
+ManagedThreads : \seq ManagedThreadEnv	
 \end{schema}
 %
 \begin{schema}{ClusterEnv}
 Sequencer : MissionSequencerEnv\\
 Mission : MissionEnv \\
 Schedulables : SchedulablesEnv 
+\where
+Schedulables.NestedSequencers \filter \{Sequencer\} = \langle \rangle
 \end{schema}
 %
 \begin{schema}{getMission}
@@ -105,31 +131,30 @@ ControlTier : ControlTierEnv\\
 Tiers : \seq TierEnv \\
 CurrentTier : TierEnv \\
 CurrentCluster : ClusterEnv
-\where
-Tiers \filter \{ CurrentTier \} \neq \emptyset \\
-CurrentTier.Clusters \filter \{ CurrentCluster \} \neq \emptyset \\
 \end{schema}
 %
 \begin{schema}{newTier}
 \Delta StructureEnv \\
-t : TierEnv \\
+%t : TierEnv \\
 \where
-Tiers \filter \{ t \} = \langle \rangle \\
-CurrentTier' = t \\
-Tiers' = Tiers \cat \langle t \rangle \\
+\exists t : TierEnv | t.Clusters = \langle \rangle \land Tiers \filter \{ t \} = \langle \rangle \\
+\t1 @ CurrentTier' = t \land Tiers' = Tiers \cat \langle t \rangle \\
+
 ControlTier' = ControlTier \\
 CurrentCluster' = CurrentCluster 
 \end{schema}
 %
 \begin{schema}{newCluster}
 \Delta StructureEnv \\
-
-c : ClusterEnv \\
+s? : MissionSequencerEnv \\
+%c : ClusterEnv \\
 \where
-CurrentTier.Clusters \filter \{ c \} = \langle \rangle\\
-CurrentCluster' = c \\
-CurrentTier'.Clusters = CurrentTier.Clusters \cat \langle c \rangle \\
-CurrentTier' = CurrentTier \\
+\exists c : ClusterEnv | c.Mission = nullMissionEnv \land c.Sequencer = s? \\
+\t1 CurrentTier.Clusters \filter \{ c \} = \langle \rangle\\
+\t1 @ CurrentCluster' = c \land CurrentTier'.Clusters = CurrentTier.Clusters \cat \langle c \rangle \land \\
+
+
+CurrentTier' = CurrentTier \\ 
 ControlTier' = ControlTier \\
 Tiers' = Tiers 
 \end{schema}
@@ -156,7 +181,7 @@ Safelet' = Safelet
 \Delta StructureEnv \\
 m? : MissionEnv \\
 \where 
-%Precon CurrentCluster.Mission is null
+CurrentCluster.Mission = nullMissionEnv \\
 CurrentCluster'.Mission = m? \\
 CurrentCluster' = CurrentCluster \\
 CurrentTier' = CurrentTier \\

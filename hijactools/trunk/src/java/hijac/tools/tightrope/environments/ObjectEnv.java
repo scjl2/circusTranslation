@@ -6,12 +6,14 @@ import java.util.List;
 import javax.lang.model.element.Name;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
 
 public class ObjectEnv
 {
-	ClassTree classTree;
+//	ClassTree classTree;
 	Name name;
 	List<Name> vars;
+	List<MethodTree> meths;
 
 	public ObjectEnv()
 	{
@@ -38,14 +40,17 @@ public class ObjectEnv
 		vars.add(var);
 	}
 
-	public ClassTree getClassTree()
-	{
-		return classTree;
-	}
-
-	public void setClassTree(ClassTree classTree)
-	{
-		this.classTree = classTree;
-	}
+//	public ClassTree getClassTree()
+//	{
+//		return classTree;
+//	}
+//
+//	public void setClassTree(ClassTree classTree)
+//	{
+//		this.classTree = classTree;
+//	}
+	
+	
+	
 
 }
