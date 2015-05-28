@@ -4,10 +4,20 @@
 \extracircusvspace
 %
 \begin{axdef}
-  MainMission : MissionID\\
-  NestedMission : MissionID\\
+<#list Missions as mission>
+	scedulable : MissionID\\
+</#list>
+ %eg MainMission : MissionID\\
+%  NestedMission : MissionID\\
  
 \where
-  distinct \langle nullMissionId, MainMission, NestedMission  \rangle
+  distinct \langle nullMissionId, 
+  <#list Missions as mission>
+	scedulable
+	<#if mission_has_next>
+	,
+	</#if>
+</#list>
+  \rangle
 \end{axdef}
 

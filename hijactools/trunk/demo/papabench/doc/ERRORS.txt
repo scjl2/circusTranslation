@@ -1,7 +1,0 @@
-ERRORS
----------
-
-LinkedList memory access error:
-Scenario:
- - allocate linked list in mission memory (e.g. for message pool)
- - add/remove an element during the task execution

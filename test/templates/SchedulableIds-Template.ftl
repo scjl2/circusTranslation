@@ -4,12 +4,21 @@
 \extracircusvspace
 %
 \begin{axdef}
-  MainMissionSequencer : SchedulableID\\
-  NestedMissionSequencer : SchedulableID\\
-  NestedOneShotEventHandler : SchedulableID\\   
+<#list Schedulables as schedulable>
+	scedulable : SchedulableID\\
+</#list>
+ %eg MainMissionSequencer : SchedulableID\\
+ % NestedMissionSequencer : SchedulableID\\
+ % NestedOneShotEventHandler : SchedulableID\\   
   
 \where
-  distinct \langle TopLevelSequencerId, MainMissionSequencer, NestedMissionSequencer, NestedOneShotEventHandler,\\
-  nullSequencerId, nullSchedulableId \rangle
+  distinct \langle nullSequencerId, nullSchedulableId,
+  <#list Schedulables as schedulable>
+	scedulable
+	<#if schedulable_has_next>
+	,
+	</#if>
+</#list>
+  \rangle
 \end{axdef}
 
