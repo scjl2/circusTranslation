@@ -153,7 +153,6 @@ s? : MissionSequencerEnv \\
 \t1 CurrentTier.Clusters \filter \{ c \} = \langle \rangle\\
 \t1 @ CurrentCluster' = c \land CurrentTier'.Clusters = CurrentTier.Clusters \cat \langle c \rangle \land \\
 
-
 CurrentTier' = CurrentTier \\ 
 ControlTier' = ControlTier \\
 Tiers' = Tiers 
