@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${SchedulableID}App ~ \parents ~ ${handlerType}EventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ ${SchedulableID}App ~ \parents ~ ${importName}EventHandlerChan, SchedulableId, SchedulableIds
 \end{zsection}
 
 \begin{circus}
@@ -23,7 +23,7 @@ handlerAsyncEvent \circdef \\
 \end{circusaction}
     
 \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_${handlerType}EventHandler\_app~.~${SchedulableID} \then \Skip)
+\circspot (Methods) \circinterrupt (end\_${handlerType}\_app~.~${SchedulableID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

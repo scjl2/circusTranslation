@@ -47,13 +47,13 @@
 <#list Tiers as tier >
 <#if tier_has_next>
 \begin{circus}
-\circchannelset ~ Tier${tier_index}Sync == \\ TierCommonSync \cup \\
-\lchanset 	
-
+\circchannelset ~ Tier${tier_index}Sync == \\ 
+\t1 TierCommonSync \\
+\t1 \cup \\
+\t1 \lchanset 	
 <#list tier as cluster>
-
-start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission},\\ initializeRet.${cluster.Mission}, 
-
+start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission},\\ 
+\t1 initializeRet.${cluster.Mission}, 
 <#if tier_index == 0> 
 requestTermination.${cluster.Mission}.${TopLevelSequencer}
 <#else>
