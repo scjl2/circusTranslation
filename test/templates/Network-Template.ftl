@@ -229,7 +229,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 ControlTier \\
 \t1 \lpar TierSync \rpar \\
 <#assign brakcets = false>
-\t1 \circblockopen
+ \circblockopen
 <#list Tiers as tier >
 Tier${tier_index}
 <#if tier_has_next>
