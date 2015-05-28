@@ -229,7 +229,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 ControlTier \\
 \t1 \lpar TierSync \rpar \\
 <#assign brakcets = false>
-\circblockopen
+\t1 \circblockopen
 <#list Tiers as tier >
 Tier${tier_index}
 <#if tier_has_next>
@@ -260,7 +260,13 @@ ${schedulable}App\\
 \interleave \\
 			</#if>
 		</#list>
+<#if cluster_has_next>
+\interleave \\
+			</#if>
 </#list>
+<#if tier_has_next>
+\interleave \\
+			</#if>
 </#list>
 \circblockclose
 \end{circus}
