@@ -108,6 +108,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 \circblockclose
 \end{circus}
 %
+<#assign syncNeeded=false>
 <#list Tiers as tier >
 \begin{circus}
 \circprocess Tier${tier_index} \circdef \\
@@ -117,57 +118,99 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 	MissionFW(${cluster.Mission})\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
+
+
+<#if cluster.Schedulables.Threads?size gte 1>
+<#if cluster.Schedulables.Threads?size gte 2>
+\circblockopen
+</#if>
 		<#list cluster.Schedulables.Threads as thread>			
 			ManagedThreadFW(${thread})\\
 			<#if thread_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
+<#assign syncNeeded=true>
+<#if cluster.Schedulables.Threads?size gte 2>
+\circblockclose
+</#if>
+</#if>
 
 <#if cluster.Schedulables.Oneshots?size gte 1>
+
+<#if syncNeeded == true>
 \t1 \lpar SchedulablesSync \rpar\\
+</#if>
+<#if cluster.Schedulables.Oneshots?size gte 2>
+\circblockopen
 </#if>
 
 
+
 		<#list cluster.Schedulables.Oneshots as oneshot>			
-			ManagedThreadFW(${oneshot})\\
+			OneShotEventHandlerFW(${oneshot})\\
 			<#if oneshot_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
-
-<#if cluster.Schedulables.NestedSequencers?size gte 1>
-\t1 \lpar SchedulablesSync \rpar\\
+<#if cluster.Schedulables.Oneshots?size gte 2>
+\circblockclose
+</#if>
 </#if>
 
+<#if cluster.Schedulables.NestedSequencers?size gte 1>
+<#if syncNeeded == true>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+<#if cluster.Schedulables.NestedSequencers?size gte 2>
+\circblockopen
+</#if>
 		<#list cluster.Schedulables.NestedSequencers as sequencer>			
-			ManagedThreadFW(${sequencer})\\
+			SchedulableMissionSequencerFW(${sequencer})\\
 			<#if sequencer_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
-
-<#if cluster.Schedulables.Aperiodics?size gte 1>
-\t1 \lpar SchedulablesSync \rpar\\
+<#if cluster.Schedulables.NestedSequencers?size gte 2>
+\circblockclose
+</#if>
 </#if>
 
+<#if cluster.Schedulables.Aperiodics?size gte 1>
+<#if syncNeeded == true>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+<#if cluster.Schedulables.Aperiodics?size gte 2>
+\circblockopen
+</#if>
 		<#list cluster.Schedulables.Aperiodics as aperiodic>			
-			ManagedThreadFW(${aperiodic})\\
+			AperiodicEventHandlerFW(${aperiodic})\\
 			<#if aperiodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
-
-<#if cluster.Schedulables.Periodics?size gte 1>
-\t1 \lpar SchedulablesSync \rpar\\
+<#if cluster.Schedulables.Aperiodics?size gte 2>
+\circblockclose
+</#if>
 </#if>
 
+<#if cluster.Schedulables.Periodics?size gte 1>
+<#if syncNeeded == true>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+<#if cluster.Schedulables.Periodics?size gte 2>
+\circblockopen
+</#if>
 		<#list cluster.Schedulables.Periodics as periodic>			
-			ManagedThreadFW(${periodic})\\
+			PeriodicEventHandlerFW(${periodic})\\
 			<#if periodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
+<#if cluster.Schedulables.Periodics?size gte 2>
+\circblockclose
+</#if>
+</#if>
 		\circblockclose
 \circblockclose
 	<#if cluster_has_next>
