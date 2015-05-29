@@ -519,6 +519,14 @@ public class RelationImpl<A, B> extends AbstractSet<Maplet<A, B>>
       result.append("}");
       return result.toString();
    }
+   
+ //Removes Weird Duplicate methods inherited named SPliterator error: Matt 29 May 2015
+   @Override
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+   public Spliterator spliterator()
+{
+	return null;
+}
 
    /**********************************************/
    /* Inner Class for the Maplet<A, B> iterator. */

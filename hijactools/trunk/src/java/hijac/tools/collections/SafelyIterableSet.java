@@ -3,6 +3,7 @@ package hijac.tools.collections;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Spliterator;
 
 /**
  * @author Frank Zeyda
@@ -49,7 +50,7 @@ public final class SafelyIterableSet<E> implements Set<E> {
 
    /* This is the only method whose implementation we alter w.r.t. set. */
 
-   @SuppressWarnings("unchecked")
+   @SuppressWarnings({ "unchecked", "rawtypes" })
    public Iterator<E> iterator() {
       return new ArrayIterator((E[]) toArray());
    }
@@ -81,4 +82,12 @@ public final class SafelyIterableSet<E> implements Set<E> {
    public String toString() {
       return set.toString();
    }
+   
+ //Removes Weird Duplicate methods inherited named SPliterator error: Matt 29 May 2015
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+@Override
+   public Spliterator spliterator()
+{
+	return null;
+}
 }

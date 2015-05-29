@@ -4,6 +4,7 @@ import hijac.tools.utils.Validatable;
 
 import java.util.Comparator;
 import java.util.Set;
+import java.util.Spliterator;
 
 /**
  * @author Frank Zeyda
@@ -24,4 +25,8 @@ public interface Relation<A, B> extends
    public Relation<A, B> ranSub(Set<B> b);
    public Relation<B, A> inverse();
    public <C> Relation<A, C> compose(Relation<B, C> r);
+   //Removes Weird Duplicate methods inherited named SPliterator error: Matt 29 May 2015
+   @Override
+   @SuppressWarnings({ "unchecked", "rawtypes" })
+   public Spliterator spliterator() ;
 }
