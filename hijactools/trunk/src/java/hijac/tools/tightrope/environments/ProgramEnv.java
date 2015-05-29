@@ -182,6 +182,17 @@ public class ProgramEnv
 	{
 		return structureEnv.getOneShotEventHandlers();
 	}
+	
+	public ArrayList<PeriodicEventHandlerEnv> getPeriodicEventHandlers()
+	{
+		return structureEnv.getPeriodicEventHandlers();
+	}
+
+	public ArrayList<AperiodicEventHandlerEnv> getAperiodicEventHandlers()
+	{
+		return structureEnv.getAperiodicEventHandlers();
+	}
+
 
 	@SuppressWarnings("rawtypes")
 	public Map getMissionIdsMap()
@@ -195,6 +206,7 @@ public class ProgramEnv
 		return schedulableIds.toMap();
 	}
 
+	
 
 
 }

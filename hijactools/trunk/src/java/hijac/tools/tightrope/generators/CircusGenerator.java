@@ -2,10 +2,12 @@ package hijac.tools.tightrope.generators;
 
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
+import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
 
@@ -64,6 +66,10 @@ public class CircusGenerator
 		translateNestedMissionSequencers();
 		
 		translateOneShotEventHandlers();
+		
+		translateAperiodicEventHandlers();
+		
+		translatePeriodicEventHandlers();
 		
 		translateIDFiles();
 		
@@ -347,6 +353,42 @@ public class CircusGenerator
 			
 			String name = (String) osehMap.get("SchedulableID");
 			translateCommon(osehMap, "HandlerApp-Template.ftl",
+					name+"App.circus");
+		}		
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void translatePeriodicEventHandlers()
+	{
+		System.out.println("+++ Translating Periodic Event Handlers +++");
+		// ********************************************Top Level MS
+		// +++++++++++++++++++++++++++++++++++++++++++++++
+		for (PeriodicEventHandlerEnv pehEnv : programEnv
+				.getPeriodicEventHandlers())
+		{
+			/* Create a data-model */
+			Map pehhMap = pehEnv.toMap();
+			
+			String name = (String) pehhMap.get("SchedulableID");
+			translateCommon(pehhMap, "HandlerApp-Template.ftl",
+					name+"App.circus");
+		}		
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void translateAperiodicEventHandlers()
+	{
+		System.out.println("+++ Translating One Shot Event Handlers +++");
+		// ********************************************Top Level MS
+		// +++++++++++++++++++++++++++++++++++++++++++++++
+		for (AperiodicEventHandlerEnv apehEnv : programEnv
+				.getAperiodicEventHandlers())
+		{
+			/* Create a data-model */
+			Map apehMap = apehEnv.toMap();
+			
+			String name = (String) apehMap.get("SchedulableID");
+			translateCommon(apehMap, "HandlerApp-Template.ftl",
 					name+"App.circus");
 		}		
 	}

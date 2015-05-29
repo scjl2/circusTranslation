@@ -265,13 +265,13 @@ public class FrameworkEnv
 	private class SchedulablesEnv
 	{
 
-		private List<ParadigmEnv> periodEventHandlerEnvs = new ArrayList<ParadigmEnv>();
-		private List<ParadigmEnv> aperiodicEventHandlerEnvs = new ArrayList<ParadigmEnv>();
+		private List<PeriodicEventHandlerEnv> periodEventHandlerEnvs = new ArrayList<PeriodicEventHandlerEnv>();
+		private List<AperiodicEventHandlerEnv> aperiodicEventHandlerEnvs = new ArrayList<AperiodicEventHandlerEnv>();
 		private List<OneShotEventHandlerEnv> oneShotEventHandlerEnvs = new ArrayList<OneShotEventHandlerEnv>();
 		private List<NestedMissionSequencerEnv> schedulableMissionSequencerEnvs = new ArrayList<NestedMissionSequencerEnv>();
 		private List<ManagedThreadEnv> managedThreadEnvs = new ArrayList<ManagedThreadEnv>();
 
-		public List<ParadigmEnv> getPeriodEventHandlerEnvs()
+		public List<PeriodicEventHandlerEnv> getPeriodEventHandlerEnvs()
 		{
 			return periodEventHandlerEnvs;
 		}
@@ -345,7 +345,7 @@ public class FrameworkEnv
 			return schedulablesList;
 		}
 
-		public List<ParadigmEnv> getAperiodicEventHandlerEnvs()
+		public List<AperiodicEventHandlerEnv> getAperiodicEventHandlerEnvs()
 		{
 			return aperiodicEventHandlerEnvs;
 		}
@@ -366,10 +366,7 @@ public class FrameworkEnv
 		}
 
 		public void addSchedulable(SchedulableTypeE type, Name name)
-		{
-			ParadigmEnv p = new ParadigmEnv();
-			p.setName(name);
-
+		{			
 			if (type == SchedulableTypeE.MT)
 			{
 				ManagedThreadEnv mtEnv = new ManagedThreadEnv();
@@ -378,11 +375,15 @@ public class FrameworkEnv
 			}
 			if (type == SchedulableTypeE.PEH)
 			{
+				PeriodicEventHandlerEnv p = new PeriodicEventHandlerEnv();
+				p.setName(name);
 				periodEventHandlerEnvs.add(p);
 			}
 			if (type == SchedulableTypeE.APEH)
 			{
-				aperiodicEventHandlerEnvs.add(p);
+				AperiodicEventHandlerEnv a = new AperiodicEventHandlerEnv();
+				a.setName(name);
+				aperiodicEventHandlerEnvs.add(a);
 			}
 			if (type == SchedulableTypeE.OSEH)
 			{
@@ -764,6 +765,34 @@ public class FrameworkEnv
 			}
 		}
 		return osehEnvs;
+	}
+
+	public ArrayList<PeriodicEventHandlerEnv> getPeriodicEventHandlers()
+	{
+		ArrayList<PeriodicEventHandlerEnv> pehEnvs = new ArrayList<PeriodicEventHandlerEnv>();
+
+		for (TierEnv t : tiers)
+		{
+			for (ClusterEnv c : t.clusters)
+			{
+				pehEnvs.addAll(c.schedulablesEnv.periodEventHandlerEnvs);
+			}
+		}
+		return pehEnvs;
+	}
+
+	public ArrayList<AperiodicEventHandlerEnv> getAperiodicEventHandlers()
+	{
+		ArrayList<AperiodicEventHandlerEnv> apehEnvs = new ArrayList<AperiodicEventHandlerEnv>();
+
+		for (TierEnv t : tiers)
+		{
+			for (ClusterEnv c : t.clusters)
+			{
+				apehEnvs.addAll(c.schedulablesEnv.aperiodicEventHandlerEnvs);
+			}
+		}
+		return apehEnvs;
 	}
 
 }
