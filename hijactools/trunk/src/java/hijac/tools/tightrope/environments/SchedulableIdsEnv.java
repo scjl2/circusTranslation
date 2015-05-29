@@ -13,9 +13,19 @@ import javax.lang.model.element.Name;
 		
 		ArrayList<Name> schedulables;
 		
+		public SchedulableIdsEnv()
+		{
+			schedulables = new ArrayList<Name>();
+		}
+		
 		public SchedulableIdsEnv(ArrayList<Name> schedulables)
 		{
 			this.schedulables = schedulables;
+		}
+		
+		public void addSchedulable(Name schedulableName)
+		{
+			schedulables.add(schedulableName);
 		}
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })

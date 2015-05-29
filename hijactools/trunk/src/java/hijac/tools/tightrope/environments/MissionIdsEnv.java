@@ -12,9 +12,19 @@ import javax.lang.model.element.Name;
 	{		
 		ArrayList<Name> missions;
 		
+		public MissionIdsEnv()
+		{
+			missions = new ArrayList<Name>();
+		}
+		
 		public MissionIdsEnv(ArrayList<Name> missions)
 		{
 			this.missions = missions;
+		}
+		
+		public void addMission(Name missionName)
+		{
+			missions.add(missionName);
 		}
 		
 		@SuppressWarnings({ "rawtypes", "unchecked" })

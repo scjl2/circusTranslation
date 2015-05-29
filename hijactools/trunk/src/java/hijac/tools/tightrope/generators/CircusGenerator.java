@@ -74,8 +74,13 @@ public class CircusGenerator
 	private void translateIDFiles()
 	{
 		System.out.println("+++ Generating ID Files +++");
+		Map Ids = programEnv.getMissionIdsMap();
 		
+		translateCommon(Ids, "MissionIds-Template.ftl", "MissionIds.circus");
 		
+		Ids = programEnv.getSchedulableIdsMap();
+		
+		translateCommon(Ids, "SchedulableIds-Template.ftl", "SchedulableIds.circus");
 	}
 
 	private void generateReport()

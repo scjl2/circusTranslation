@@ -18,11 +18,17 @@ public class ProgramEnv
 	FrameworkEnv structureEnv;
 	List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
+	
+	MissionIdsEnv missionIds;
+	SchedulableIdsEnv schedulableIds;
 
 	public ProgramEnv(SCJAnalysis context)
 	{
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
+		
+		missionIds = new MissionIdsEnv();
+		schedulableIds = new SchedulableIdsEnv();
 	}
 
 	public void addSafelet(Name safelet)
@@ -38,6 +44,7 @@ public class ProgramEnv
 	public void addMission(Name mission)
 	{
 		structureEnv.addMission(mission);
+		missionIds.addMission(mission);
 	}
 
 	public FrameworkEnv getFrameworkEnv()
@@ -101,6 +108,7 @@ public class ProgramEnv
 	public void addSchedulable(SchedulableTypeE type, Name name)
 	{
 		structureEnv.addSchedulable(type, name);
+		schedulableIds.addSchedulable(name);
 	}
 
 	public boolean containsScheudlable(Name name)
@@ -173,6 +181,18 @@ public class ProgramEnv
 	public ArrayList<OneShotEventHandlerEnv> getOneShotEventHandlers()
 	{
 		return structureEnv.getOneShotEventHandlers();
+	}
+
+	@SuppressWarnings("rawtypes")
+	public Map getMissionIdsMap()
+	{
+		return missionIds.toMap();		
+	}
+
+	@SuppressWarnings("rawtypes")
+	public Map getSchedulableIdsMap()
+	{
+		return schedulableIds.toMap();
 	}
 
 

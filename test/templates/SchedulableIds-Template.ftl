@@ -5,7 +5,7 @@
 %
 \begin{axdef}
 <#list Schedulables as schedulable>
-	scedulable : SchedulableID\\
+	${schedulable} : SchedulableID\\
 </#list>
  %eg MainMissionSequencer : SchedulableID\\
  % NestedMissionSequencer : SchedulableID\\

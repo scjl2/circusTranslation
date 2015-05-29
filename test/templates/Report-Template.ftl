@@ -16,6 +16,14 @@
 \input{Network.circus}
 \newpage
 
+\section{ID Files}
+\subsection{MissionIds}
+\input{MissionIds.circus}
+
+\subsection{SchedulablesIds}
+\input{SchedulableIds.circus}
+\newpage
+
 \section{Safelet}
 \input{${SafeletName}App.circus}
 \newpage

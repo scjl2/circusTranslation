@@ -5,7 +5,7 @@
 %
 \begin{axdef}
 <#list Missions as mission>
-	scedulable : MissionID\\
+	${mission} : MissionID\\
 </#list>
  %eg MainMission : MissionID\\
 %  NestedMission : MissionID\\
