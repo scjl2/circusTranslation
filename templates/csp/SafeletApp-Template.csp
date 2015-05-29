@@ -1,0 +1,30 @@
+-- SAFELET: MY APP
+
+nametype SafeltAppSync = 
+    {| getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end_safelet_app |}
+
+nametype MyAppChanSet =
+  {| getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end_safelet_app |}
+
+MyApp  = 
+	(
+	 	Methods_s 
+	)		
+ /\	(end_safelet_app -> SKIP)
+
+InitializeApplication_s =  
+     initializeApplicationCall -> 
+     initializeApplicationRet ->
+     SKIP
+
+GetSequencer_s = 
+	getSequencerCall -> 
+	getSequencerRet![top level sequencer]  ->
+	SKIP
+
+Methods_s = 
+ ( 
+	GetSequencer_s
+	[] 
+	InitializeApplication_s 
+ ); Methods_s

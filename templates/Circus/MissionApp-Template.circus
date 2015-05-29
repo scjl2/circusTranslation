@@ -1,0 +1,78 @@
+
+\begin{circus}
+\circchannelset MissionAppSync == \\
+	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
+\end{circus}
+
+\begin{circus}
+\circchannelset MissionAppChanSet == \\
+ \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+    <\#list schedulablesRegisters as SchedulableID>
+   register~.~\$\{SchedulableID\}~.~\${MissionID}
+  <\/\#list>
+   \rchanset
+\end{circus}
+
+\begin{circus}
+\circprocess \$\{ProcessName\}App \circdef
+\end{circus}
+
+
+<\# if there is state>
+<get state components>
+<\// \# if>
+
+<\# if there are actions>
+<get actions>
+<\// \# if>
+
+
+
+\begin{circusaction}
+Initialize \circdef \\
+\circblockopen
+  initializeCall~.~\$\{MissionID\} \then \\
+  
+  <\#list schedulablesRegisters as SchedulableID>\\
+   register~!~\$\{SchedulableID\}~!~\$\{MissionID\} \then   \\
+  <\/\#list>
+  
+  initializeRet~.~\$\{MissionID\} \then \\
+  \Skip
+\circblockclose 
+\end{circusaction}
+ 
+\begin{circusaction}
+CleanUp \circdef  \\
+\circblockopen
+<\# if cleanup method is present>\\
+\t1	<get method>\\
+<\# else>\\
+\t1	cleanupMissionCall~.~\$\{MissionID\} \then \\
+\t1	cleanupMissionRet~.~\$\{MissionID\}~!~True \then \\
+\t1	\Skip\\
+<\// \# if>\\
+ 
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Initialize \\
+	\extchoice \\
+	CleanUp
+		<\# if there are actions>\\
+		<\# list actions as action>\\
+		\extchoice \\
+		<get action>\\
+		<\//\# list>\\
+	<\//\# if>
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circus}
+\circspot (Methods) \circinterrupt (end\_mission\_app~.~\$\{MissionID\} \then \Skip)
+
+\end{circus}

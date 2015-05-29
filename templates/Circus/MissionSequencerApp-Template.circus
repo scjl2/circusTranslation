@@ -1,0 +1,49 @@
+
+\begin{circus}
+\circchannelset \$\{ProcessName\}AppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
+\end{circus}
+
+\begin{circus}
+\circchannelset \$\{ProcessName\}AppChanSet == MissionSequencerAppSync
+\end{circus}
+
+\begin{circus}
+\circprocess\$\{ProcessName\}App \circdef \\ 
+\end{circus}
+   
+<\# if there is state>
+<get state components>
+<\// \# if>
+
+<\# if there are actions>
+<get actions>
+<\// \# if>
+
+\begin{circusaction}
+GetNextMission \circdef \\
+\circblockopen
+    getNextMissionCall~.~\$\{SchedulableID\} \then \\
+	<get getNextMission contents>
+	getNextMissionRet~.~\$\{SchedulableID\}~!~\$\{MissionID\} \then \\
+	\Skip
+\circblockclose	
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+		<\# if there are actions>\\
+		<\# list actions as action>\\
+		\extchoice \\
+		<get action>\\
+		<\//\# list>\\
+	<\//\# if>
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+ 
+\begin{circus}
+\circspot (Methods) \circhide \$\{ProcessName\}AppStateSync
+\circinterrupt (end\_sequencer\_app~.~\$\{SchedulableID\} \then \Skip)
+\end{circus}

@@ -1,0 +1,25 @@
+
+nametype MissionSequencerAppSync = {|getNextMissionCall, getNextMissionRet,end_sequencer_app|}
+
+nametype MySequencerAppChanSet = MissionSequencerAppSync
+
+
+MainSequencerApp = 
+(
+  Methods_tlms 
+ 
+)\ MissionSequencerAppStateSync
+/\ (end_sequencer_app.[Top Level Sequencer ] -> SKIP)
+   
+
+GetNextMission_tlms = 
+    getNextMissionCall.[Top Level Sequencer ] -> 
+	
+	getNextMissionRet.[Top Level Sequencer ]![Main Mission]  ->
+	SKIP
+
+
+Methods_tlms = 
+ (
+	GetNextMission_tlms 
+ ) ; Methods_tlms  

@@ -1,0 +1,36 @@
+--MISSION
+
+nametype MissionAppSync = {|initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet   |}
+
+nametype TopMission1AppChanSet =
+  {| initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+    register.NestedMissionSequencerId.[Mission] 
+    |}
+
+MainMissionApp = 
+( 
+	(
+		(Methods_tlm1 )
+		/\ 
+		(end_mission_app.[Mission] -> SKIP )
+	) 
+)
+
+InitializePhase_tlm1 = 
+  initializeCall.[Mission]   -> 
+  
+  register![Schedulable Object]![Mission]  ->  
+  initializeRet.[Mission]  -> 
+ SKIP
+
+CleanupPhase_tlm1 = 
+ cleanupMissionCall.[Mission]  ->
+ cleanupMissionRet.[Mission]?false ->
+ SKIP
+
+Methods_tlm1 = 
+( 
+	InitializePhase_tlm1 
+	[] 
+	CleanupPhase_tlm1
+) ; Methods_tlm1

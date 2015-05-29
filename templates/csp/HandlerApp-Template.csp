@@ -1,0 +1,14 @@
+HandlerApp =
+(
+	Methods_
+)
+/\ (end_[handlerType]EventHandler_app.[Handler] -> SKIP)
+
+Methods_ =
+	handlerAsyncEvent_ ; Methods_
+
+handlerAsyncEvent_ =
+	handleAsyncEventCall.[Handler] -> 
+
+    handleAsyncEventRet.[Handler] ->
+    SKIP  

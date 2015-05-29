@@ -1,0 +1,41 @@
+
+\begin{circus}
+\circprocess \$\{ProcessName\}App \circdef
+\end{circus}
+
+
+<\# if there is state>
+<get state components>
+<\// \# if>
+
+<\# if there are actions>
+<get actions>
+<\// \# if>
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handlerAsyncEvent 
+	<\# if there are actions>
+		<\# list actions as action>
+		\extchoice \\
+		<get action>
+		<\//\# list>
+	<\//\# if>	
+\circblockclose	
+	\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~\$\{SchedulableID\} \then \\
+	<get handleAsyncEvent contents>
+    handleAsyncEventRet~.~\$\{SchedulableID\} \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+    
+\begin{circus}
+\circspot (Methods) \circinterrupt (end\_\$\{HandlerType\}EventHandler\_app~.~\$\{SchedulableID\} \then \Skip)
+\end{circus}

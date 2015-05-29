@@ -1,0 +1,15 @@
+
+ManagedThreadApp = 
+(
+	Methods_
+)
+/\ (end_managedThread_app.[ManagedThread] -> SKIP)
+
+Methods_ =
+	Run_ ; Methods_
+
+Run_ =
+	runCall.[ManagedThread] -> 
+		
+	runRet.[ManagedThread] ->
+	SKIP

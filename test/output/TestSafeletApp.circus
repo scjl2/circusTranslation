@@ -1,0 +1,56 @@
+\begin{zsection}
+  \SECTION ~ TestSafeletApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan
+\end{zsection}
+%\begin{circus}
+%\circchannelset TestSafeletAppSync \circdef \\
+%   \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
+%\end{circus}    
+    
+%\begin{circus}
+%\circchannelset TestSafeletChanSet \circdef \\
+%  \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
+%\end{circus}     
+  
+\begin{circus}
+\circprocess TestSafeletApp  \circdef \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+InitializeApplication \circdef \\
+\circblockopen
+     initializeApplicationCall \then \\
+
+	 	
+
+     initializeApplicationRet \then \\
+     \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+GetSequencer \circdef \\
+\circblockopen
+	getSequencerCall \then \\
+	getSequencerRet~!~MainMissionSequencer  \then \\
+	\Skip 
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	GetSequencer \\
+	\extchoice  \\
+	InitializeApplication  \\
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+	\circspot (Methods) \circinterrupt (end\_safelet\_app \then \Skip) 
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
