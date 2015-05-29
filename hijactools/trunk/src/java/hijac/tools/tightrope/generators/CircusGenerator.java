@@ -65,8 +65,17 @@ public class CircusGenerator
 		
 		translateOneShotEventHandlers();
 		
+		translateIDFiles();
+		
 		generateReport();
 
+	}
+
+	private void translateIDFiles()
+	{
+		System.out.println("+++ Generating ID Files +++");
+		
+		
 	}
 
 	private void generateReport()
