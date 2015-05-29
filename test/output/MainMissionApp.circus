@@ -11,10 +11,7 @@
 %\circchannelset MissionAppChanSet == \\
 % \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
 
-%    register~.~SPModeChanger~.~MainMission 
-%    register~.~EnvironmentMonitor~.~MainMission 
-%    register~.~ControlHandler~.~MainMission 
-%    register~.~AperiodicSimulator~.~MainMission 
+%    register~.~NestedMissionSequencer~.~MainMission 
 %\rchanset
 %\end{circus}
 
@@ -27,10 +24,7 @@ InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~MainMission \then \\
   
-	register~!~SPModeChanger~!~MainMission \then   \\
-	register~!~EnvironmentMonitor~!~MainMission \then   \\
-	register~!~ControlHandler~!~MainMission \then   \\
-	register~!~AperiodicSimulator~!~MainMission \then   \\
+	register~!~NestedMissionSequencer~!~MainMission \then   \\
 
 
   initializeRet~.~MainMission \then \\

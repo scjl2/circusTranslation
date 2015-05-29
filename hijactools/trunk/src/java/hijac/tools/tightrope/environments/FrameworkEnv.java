@@ -590,10 +590,15 @@ public class FrameworkEnv
 		output += controlTier.toString();
 		output += System.getProperty("line.separator");
 
+		output += "Number of Tiers = " + tiers.size();
+		output += System.getProperty("line.separator");
+		
 		int i = 0;
 		for (TierEnv tier : tiers)
 		{
 			output += "Tier " + i + ":";
+			output += System.getProperty("line.separator");
+			output += "Number of Clusters in Tier " + i + " = " + tier.clusters.size();
 			output += System.getProperty("line.separator");
 			output += tier.toString();
 			// output += System.getProperty("line.separator");

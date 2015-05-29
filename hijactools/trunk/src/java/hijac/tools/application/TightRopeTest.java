@@ -29,6 +29,8 @@ public class TightRopeTest
 	private static String version = "v0.4";
 
 	private static boolean silent = true;
+	private static boolean latex = false;
+	private static boolean freemarker = false;
 
 	static
 	{
@@ -75,11 +77,19 @@ public class TightRopeTest
 
 		System.out.println("+++ Structure +++ ");
 		programEnv.output();
+		
+		System.out.println("Network = " + programEnv.geNetworkMap());
+		
+		if(freemarker)
+		{
+			CircusGenerator circGen = new CircusGenerator(programEnv);
+			circGen.translate();
+		}
 
-		CircusGenerator circGen = new CircusGenerator(programEnv);
-		circGen.translate();
-
-		runLatex();
+		if(latex)
+		{
+			runLatex();
+		}
 
 		final long duration = System.nanoTime() - startTime;
 

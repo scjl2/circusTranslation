@@ -88,7 +88,7 @@ public class ProgramEnv
 		System.out.println("*******************");
 		System.out.println("Program Environment");
 		System.out.println("-------------------");
-		System.out.println("Framework Environment");
+		System.out.println("Structure Environment");
 		System.out.println("_____________________");
 		System.out.println(structureEnv.toString());
 		System.out.println("----------------------");

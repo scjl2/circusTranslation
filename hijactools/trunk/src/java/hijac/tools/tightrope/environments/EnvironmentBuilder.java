@@ -188,7 +188,8 @@ public class EnvironmentBuilder
 				System.out.println("+++ Exploring Mission " + n + " +++");
 				
 				programEnv.addMissionSequencerMission(tlms, n);
-				buildMission(n);
+//			System.out.println("buildMission:" + n);	//
+			buildMission(n);
 //				if(newClusterNeeded)
 //				{
 //					programEnv.newCluster(tlms);				
@@ -226,6 +227,7 @@ public class EnvironmentBuilder
 		} else
 		{
 			buildSchedulables(schedulables);
+//			System.out.println("Build Schedulables");
 		}
 
 	}
@@ -253,6 +255,7 @@ public class EnvironmentBuilder
 		if (!nestedSequencers.isEmpty())
 		{
 			buildSchedulableMissionSequencer(nestedSequencers);
+//			System.out.println("Build SMS");
 		}
 	}
 
@@ -287,7 +290,8 @@ public class EnvironmentBuilder
 					System.out.println("+++ Exploring Mission " + n + " +++");
 					
 					programEnv.addMissionSequencerMission(sequencer, n);
-					buildMission(n);
+					System.out.println("Build Mission: " + n);
+//					buildMission(n);
 //					if(newClusterNeeded)
 //					{
 //						programEnv.newCluster(sequencer);
