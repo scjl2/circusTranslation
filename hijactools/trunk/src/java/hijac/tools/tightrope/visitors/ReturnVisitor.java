@@ -155,33 +155,51 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		System.out.println("Return Visistor: visiting if tree " + arg0.getCondition());
 		System.out.println("+++ Size of Returns = " + returns.size() + " +++");
 		
-		ArrayList<StatementTree> branches = new ArrayList<StatementTree>();
-
-		branches.add(arg0.getThenStatement());
-		branches.add(arg0.getElseStatement());
 		
-		for (StatementTree s : branches)
-		{			
-			System.out.println("Visiting " + s.getKind() + " branch");
-			//this may trigger a mission being added to returns (eg above) so we get the same one twice...but it might not happen.
-			ArrayList<Name> names = s.accept(this, false);
-						
-			if (names != null)
-			{
-				System.out.println("+++ size of names = " + names.size() + " +++");
-				for(Name n : names)
-				{
-					System.out.println("+++ names returned = " + n + " +++");
-				}
-				
-				returns.addAll(names);
-			}
-			else
-			{
-				System.out.println("+++ twas a null return +++ ");
-			}
-			
+		ArrayList<Name> names = new ArrayList<Name>();
+		
+		names = (arg0.getThenStatement().accept(this, false));
+		
+		if(names != null)
+		{
+			returns.addAll(names);
 		}
+		
+		names = (arg0.getElseStatement().accept(this, false));
+		
+		if(names != null)
+		{
+			returns.addAll(names);
+		}
+		
+		
+//		ArrayList<StatementTree> branches = new ArrayList<StatementTree>();
+//
+//		branches.add(arg0.getThenStatement());
+//		branches.add(arg0.getElseStatement());
+//		
+//		for (StatementTree s : branches)
+//		{			
+//			System.out.println("Visiting " + s.getKind() + " branch");
+//			//this may trigger a mission being added to returns (eg above) so we get the same one twice...but it might not happen.
+//			ArrayList<Name> names = s.accept(this, false);
+//						
+//			if (names != null)
+//			{
+//				System.out.println("+++ size of names = " + names.size() + " +++");
+//				for(Name n : names)
+//				{
+//					System.out.println("+++ names returned = " + n + " +++");
+//				}
+//				
+//				returns.addAll(names);
+//			}
+//			else
+//			{
+//				System.out.println("+++ twas a null return +++ ");
+//			}
+//			
+//		}
 		
 //		if (save == arg0)
 //		{
