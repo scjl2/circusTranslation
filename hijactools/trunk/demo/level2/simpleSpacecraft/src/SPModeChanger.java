@@ -113,7 +113,8 @@ public class SPModeChanger extends MissionSequencer<Mission> implements
 			Console.println("Mode Changer: Advance To Launch Mode");
 			return (Mission) launchMode;				
 		}
-		//else 
+		else 
+		{}
 
 		if (modesLeft == 2)
 		{
@@ -121,7 +122,7 @@ public class SPModeChanger extends MissionSequencer<Mission> implements
 			Console.println("Mode Changer: Advance To Cruise Mode");
 			return (Mission) cruiseMode;
 		}
-		//else 
+		else {}
 
 		if (modesLeft == 1)
 		{
