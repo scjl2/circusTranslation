@@ -291,7 +291,7 @@ public class EnvironmentBuilder
 					
 					programEnv.addMissionSequencerMission(sequencer, n);
 					System.out.println("Build Mission: " + n);
-//					buildMission(n);
+					buildMission(n);
 //					if(newClusterNeeded)
 //					{
 //						programEnv.newCluster(sequencer);
