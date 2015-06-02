@@ -286,7 +286,7 @@ public class EnvironmentBuilder
 //				boolean newClusterNeeded = false;
 				for (Name n : missions)
 				{
-					programEnv.newCluster(n);
+					programEnv.newCluster(sequencer);
 					System.out.println("+++ Exploring Mission " + n + " +++");
 					
 					programEnv.addMissionSequencerMission(sequencer, n);

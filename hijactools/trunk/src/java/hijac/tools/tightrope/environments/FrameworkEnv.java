@@ -187,7 +187,7 @@ public class FrameworkEnv
 				schedulablesMap.put("Periodics", c.getSchedulablesEnv()
 						.getPeriodicsList());
 				schedulablesMap.put("Aperiodics", c.getSchedulablesEnv()
-						.getPeriodicsList());
+						.getAperiodicsList());
 				schedulablesMap.put("Oneshots", c.getSchedulablesEnv()
 						.getOneshotsList());
 				schedulablesMap.put("NestedSequencers", c.getSchedulablesEnv()
@@ -274,6 +274,12 @@ public class FrameworkEnv
 		public List<PeriodicEventHandlerEnv> getPeriodEventHandlerEnvs()
 		{
 			return periodEventHandlerEnvs;
+		}
+
+		@SuppressWarnings("rawtypes")
+		public List getAperiodicsList()
+		{
+			return toList(SchedulableTypeE.APEH);
 		}
 
 		@SuppressWarnings("rawtypes")
