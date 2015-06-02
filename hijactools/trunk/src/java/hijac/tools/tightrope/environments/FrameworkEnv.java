@@ -183,6 +183,8 @@ public class FrameworkEnv
 				clusterMap.put("Sequencer", c.getSequencer());
 				clusterMap.put("Mission", c.getMissionEnv().getName());
 
+
+				
 				Map schedulablesMap = new HashMap();
 				schedulablesMap.put("Periodics", c.getSchedulablesEnv()
 						.getPeriodicsList());

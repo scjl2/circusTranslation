@@ -108,7 +108,17 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 \circblockclose
 \end{circus}
 %
+
+<#function zebra index>
+  <#if (index % 2) == 0>
+    <#return "white" />
+  <#else>
+    <#return "#efefef" />
+  </#if>
+</#function>
+
 <#assign syncNeeded=false>
+
 <#list Tiers as tier >
 \begin{circus}
 \circprocess Tier${tier_index} \circdef \\
@@ -130,9 +140,16 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
-<#assign syncNeeded=true>
+
+<#assign syncNeeded=false>
+
 <#if cluster.Schedulables.Threads?size gte 2>
-\circblockclose
+\circblockclose \\
+
+</#if>
+
+<#if cluster.Schedulables.Threads?size gte 1>
+\t1 \lpar SchedulablesSync \rpar\\
 </#if>
 </#if>
 
@@ -141,21 +158,30 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 <#if syncNeeded == true>
 \t1 \lpar SchedulablesSync \rpar\\
 </#if>
+
+
 <#if cluster.Schedulables.Oneshots?size gte 2>
-\circblockopen
+\circblockopen 
 </#if>
 
+<#list cluster.Schedulables.Oneshots as oneshot>			
+	OneShotEventHandlerFW(${oneshot})\\
+	<#if oneshot_has_next>
+		\t1 \lpar SchedulablesSync \rpar\\
+	</#if>
 
+</#list>
 
-		<#list cluster.Schedulables.Oneshots as oneshot>			
-			OneShotEventHandlerFW(${oneshot})\\
-			<#if oneshot_has_next>
-			\t1 \lpar SchedulablesSync \rpar\\
-			</#if>
-		</#list>
+<#assign syncNeeded=false>
+
 <#if cluster.Schedulables.Oneshots?size gte 2>
-\circblockclose
+\circblockclose \\
 </#if>
+
+<#if cluster.Schedulables.Oneshots?size gte 1>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+
 </#if>
 
 <#if cluster.Schedulables.NestedSequencers?size gte 1>
@@ -163,7 +189,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 \t1 \lpar SchedulablesSync \rpar\\
 </#if>
 <#if cluster.Schedulables.NestedSequencers?size gte 2>
-\circblockopen
+\circblockopen 
 </#if>
 		<#list cluster.Schedulables.NestedSequencers as sequencer>			
 			SchedulableMissionSequencerFW(${sequencer})\\
@@ -171,9 +197,14 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
+<#assign syncNeeded=false>
 <#if cluster.Schedulables.NestedSequencers?size gte 2>
-\circblockclose
+\circblockclose \\
 </#if>
+<#if cluster.Schedulables.NestedSequencers?size gte 1>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+
 </#if>
 
 <#if cluster.Schedulables.Aperiodics?size gte 1>
@@ -189,9 +220,17 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
+<#assign syncNeeded=false>
 <#if cluster.Schedulables.Aperiodics?size gte 2>
-\circblockclose
+\circblockclose \\
+
 </#if>
+
+<#if cluster.Schedulables.Aperiodics?size gte 1>
+\t1 \lpar SchedulablesSync \rpar\\
+</#if>
+
+
 </#if>
 
 <#if cluster.Schedulables.Periodics?size gte 1>
@@ -207,8 +246,10 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
 		</#list>
+<#assign syncNeeded=false>
 <#if cluster.Schedulables.Periodics?size gte 2>
-\circblockclose
+\circblockclose \\ 
+
 </#if>
 </#if>
 		\circblockclose

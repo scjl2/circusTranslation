@@ -116,6 +116,8 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 \circblockclose
 \end{circus}
 %
+
+
 \begin{circus}
 \circprocess Tier0 \circdef \\
 
@@ -128,14 +130,21 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 			SchedulableMissionSequencerFW(SPModeChanger)\\
+\t1 \lpar SchedulablesSync \rpar\\
+
 
 			AperiodicEventHandlerFW(ControlHandler)\\
+
+\t1 \lpar SchedulablesSync \rpar\\
+
+
 
 \circblockopen
 			PeriodicEventHandlerFW(EnvironmentMonitor)\\
 			\t1 \lpar SchedulablesSync \rpar\\
 			PeriodicEventHandlerFW(AperiodicSimulator)\\
-\circblockclose
+\circblockclose \\ 
+
 		\circblockclose
 \circblockclose
 \end{circus}
@@ -153,6 +162,10 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 			AperiodicEventHandlerFW(LaunchHandler)\\
+
+\t1 \lpar SchedulablesSync \rpar\\
+
+
 
 			PeriodicEventHandlerFW(LaunchCountdown)\\
 		\circblockclose
@@ -172,13 +185,19 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 			AperiodicEventHandlerFW(BurnActivationHandler)\\
 			\t1 \lpar SchedulablesSync \rpar\\
 			AperiodicEventHandlerFW(BurnDurationHandler)\\
-\circblockclose
+\circblockclose \\
+
+
+\t1 \lpar SchedulablesSync \rpar\\
+
+
 
 \circblockopen
 			PeriodicEventHandlerFW(CruiseConditionsMonitor)\\
 			\t1 \lpar SchedulablesSync \rpar\\
 			PeriodicEventHandlerFW(AperiodicSimulator)\\
-\circblockclose
+\circblockclose \\ 
+
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
@@ -196,13 +215,19 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 			AperiodicEventHandlerFW(LandingGearHandler)\\
 			\t1 \lpar SchedulablesSync \rpar\\
 			AperiodicEventHandlerFW(ParachuteHandler)\\
-\circblockclose
+\circblockclose \\
+
+
+\t1 \lpar SchedulablesSync \rpar\\
+
+
 
 \circblockopen
 			PeriodicEventHandlerFW(AirSpeedMonitor)\\
 			\t1 \lpar SchedulablesSync \rpar\\
 			PeriodicEventHandlerFW(GroundDistanceMonitor)\\
-\circblockclose
+\circblockclose \\ 
+
 		\circblockclose
 \circblockclose
 \end{circus}
