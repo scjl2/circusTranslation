@@ -14,9 +14,9 @@
 \where
   distinct \langle nullSequencerId, nullSchedulableId,
   <#list Schedulables as schedulable>
-	scedulable
+	${schedulable}
 	<#if schedulable_has_next>
-	,
+	,\\
 	</#if>
 </#list>
   \rangle
