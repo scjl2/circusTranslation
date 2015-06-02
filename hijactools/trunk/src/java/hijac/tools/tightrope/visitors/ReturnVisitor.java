@@ -135,17 +135,21 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		System.out.println("Return Visitor: visiting Identifier Tree: "+ arg0.getName());
 		
 		//This adds a mission to returns
+		
+		ArrayList<Name> idReturn = new ArrayList<Name>();
 		if(!returnExpression)
 		{
 			Name t = ((IdentifierTree) varMap.get(arg0.getName())).getName();
 			
-			returns.add(t);
-			return null;
+//			returns.add(t);
+			idReturn.add(t);
+			return idReturn;
 		}
 		else
 		{
-			ArrayList<Name> ids = new ArrayList<Name>(); ids.add(arg0.getName());
-			return ids;
+//			ArrayList<Name> ids = new ArrayList<Name>(); 
+			idReturn.add(arg0.getName());
+			return idReturn;
 		}
 	}
 
@@ -158,7 +162,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		ArrayList<StatementTree> branches = new ArrayList<StatementTree>();
 
 		branches.add(arg0.getThenStatement());
-		branches.add(arg0.getElseStatement());
+//		branches.add(arg0.getElseStatement());
 		
 		for (StatementTree s : branches)
 		{			
@@ -594,16 +598,18 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		
 		System.out.println("-> t = " + t);
 		
+		ArrayList<Name> tcReturns = new ArrayList<Name>();
+		
 		if (n != null)
 		{
-
 			System.out.println("T type= " + t.getKind());
 			IdentifierTree id = (IdentifierTree) t;
-			returns.add(id.getName());
+//			returns.add(id.getName());
+			tcReturns.add(id.getName());
 		}
 		
 //		return arg0.getExpression().accept(this, arg1);
-		return returns;
+		return tcReturns;
 
 	}
 

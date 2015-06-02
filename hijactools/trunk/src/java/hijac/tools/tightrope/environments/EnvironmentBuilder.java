@@ -282,6 +282,7 @@ public class EnvironmentBuilder
 				System.out.println("+++ No Missions +++");
 			} else
 			{
+				System.out.println(" +++ I have " + missions.size() + " missions +++ ");
 				programEnv.newTier();
 //				boolean newClusterNeeded = false;
 				for (Name n : missions)
