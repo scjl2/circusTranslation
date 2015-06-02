@@ -164,6 +164,8 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		branches.add(arg0.getThenStatement());
 		branches.add(arg0.getElseStatement());
 		
+		ArrayList<Name> ifRetunrn = new ArrayList<Name>();
+		
 		for (StatementTree s : branches)
 		{			
 			System.out.println("Visiting " + s.getKind() + " branch");
@@ -178,7 +180,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 					System.out.println("+++ names returned = " + n + " +++");
 				}
 				
-				returns.addAll(names);
+				ifRetunrn.addAll(names);
 			}
 			else
 			{
@@ -206,7 +208,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 //			System.out.println("+++ in returns = " + n + " +++");
 //		}
 		
-		return returns;
+		return ifRetunrn;
 	}
 
 	@Override

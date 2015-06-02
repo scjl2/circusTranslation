@@ -85,12 +85,26 @@ LaunchMissionApp,
 LaunchHandlerApp 
 ,
 LaunchCountdownApp 
-LaunchMissionApp, 
+CruiseMissionApp, 
 
 
-LaunchHandlerApp 
+BurnActivationHandlerApp 
 ,
-LaunchCountdownApp 
+BurnDurationHandlerApp 
+,
+CruiseConditionsMonitorApp 
+,
+AperiodicSimulatorApp 
+LandMissionApp, 
+
+
+LandingGearHandlerApp 
+,
+ParachuteHandlerApp 
+,
+AirSpeedMonitorApp 
+,
+GroundDistanceMonitorApp 
 \end{zsection}
 %
 \begin{circus}
@@ -146,7 +160,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 	\\ \t1 \lpar ClusterSync \rpar \\
 
 \circblockopen
-	MissionFW(LaunchMission)\\
+	MissionFW(CruiseMission)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
@@ -154,9 +168,41 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			AperiodicEventHandlerFW(LaunchHandler)\\
+\circblockopen
+			AperiodicEventHandlerFW(BurnActivationHandler)\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			AperiodicEventHandlerFW(BurnDurationHandler)\\
+\circblockclose
 
-			PeriodicEventHandlerFW(LaunchCountdown)\\
+\circblockopen
+			PeriodicEventHandlerFW(CruiseConditionsMonitor)\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			PeriodicEventHandlerFW(AperiodicSimulator)\\
+\circblockclose
+		\circblockclose
+\circblockclose
+	\\ \t1 \lpar ClusterSync \rpar \\
+
+\circblockopen
+	MissionFW(LandMission)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+
+
+\circblockopen
+			AperiodicEventHandlerFW(LandingGearHandler)\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			AperiodicEventHandlerFW(ParachuteHandler)\\
+\circblockclose
+
+\circblockopen
+			PeriodicEventHandlerFW(AirSpeedMonitor)\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			PeriodicEventHandlerFW(GroundDistanceMonitor)\\
+\circblockclose
 		\circblockclose
 \circblockclose
 \end{circus}
@@ -203,12 +249,27 @@ LaunchHandlerApp\\
 \interleave \\
 LaunchCountdownApp\\
 \interleave \\
-LaunchMissionApp\\
+CruiseMissionApp\\
 \interleave \\
 
-LaunchHandlerApp\\
+BurnActivationHandlerApp\\
 \interleave \\
-LaunchCountdownApp\\
+BurnDurationHandlerApp\\
+\interleave \\
+CruiseConditionsMonitorApp\\
+\interleave \\
+AperiodicSimulatorApp\\
+\interleave \\
+LandMissionApp\\
+\interleave \\
+
+LandingGearHandlerApp\\
+\interleave \\
+ParachuteHandlerApp\\
+\interleave \\
+AirSpeedMonitorApp\\
+\interleave \\
+GroundDistanceMonitorApp\\
 \circblockclose
 \end{circus}
 %
