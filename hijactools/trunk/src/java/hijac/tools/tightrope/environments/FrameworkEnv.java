@@ -253,7 +253,7 @@ public class FrameworkEnv
 		{
 			String output = "Cluster Environment:";
 			output += System.getProperty("line.separator");
-			output += "Mission = " + missionEnv.getName();
+			output += "\t Mission = " + missionEnv.getName();
 			output += System.getProperty("line.separator");
 			output += schedulablesEnv.toString();
 
@@ -418,7 +418,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : periodEventHandlerEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 				}
 			}
@@ -430,7 +430,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : aperiodicEventHandlerEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 				}
 			}
@@ -442,7 +442,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : oneShotEventHandlerEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 				}
 			}
@@ -454,7 +454,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : schedulableMissionSequencerEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 				}
 			}
@@ -466,7 +466,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : managedThreadEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 
 				}

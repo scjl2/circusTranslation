@@ -75,6 +75,7 @@ public class TightRopeTest
 
 		programEnv = environmentBuilder.explore();
 
+		System.out.println();
 		System.out.println("+++ Structure +++ ");
 		programEnv.output();
 		

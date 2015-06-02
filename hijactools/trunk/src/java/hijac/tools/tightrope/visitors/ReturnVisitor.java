@@ -217,11 +217,17 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		List<? extends StatementTree> s = arg0.getBody().getStatements();
 
 		Iterator<? extends StatementTree> j = s.iterator();
-
+		
+		ArrayList<Name> methodReturns = new ArrayList<Name>();
+		ArrayList<Name> tempReturns = null;
+		
+		
 		while (j.hasNext())
 		{
+			tempReturns = new ArrayList<Name>();
 			StatementTree st = j.next();
 			System.out.println("Return Visitor: " + st + " is a " + st.getKind());
+			
 			if (st instanceof ExpressionStatementTree)
 			{
 				System.out.println("Expression Statement");
@@ -231,25 +237,39 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 			if (st instanceof ReturnTree)
 			{
 				System.out.println("Founs Return Tree");
-				return st.accept(this, false);
+				tempReturns =  st.accept(this, false);
+				
+				
 			}
+			
 			if (st instanceof IfTree)
 			{
 				System.out.println("Found If Tree");
-				return st.accept(this, false);
+				tempReturns =  st.accept(this, false);
+				
 			}
 //			
+			
+			
 //			if( st instanceof ExpressionStatementTree)
 //			{				
 //				System.out.println("Found Expression Statement");
 //				return st.accept(this, false);
 //			}
 		}
-
-		return null;
+		
+		if(tempReturns != null)
+		{
+			System.out.println("\t \t+++ Temp Returns = " + tempReturns );
+			methodReturns.addAll(tempReturns);
+			System.out.println("\t \t+++ Method Returns Now = " + methodReturns );
+		}
+		
+		System.out.println("\t \t+++ Final Method Returns = " + methodReturns );
+		return methodReturns;
 	}
 
-	@Override
+	@Override 
 	public ArrayList<Name> visitNewClass(NewClassTree arg0, Boolean returnExpression)
 	{
 
