@@ -12,6 +12,7 @@ import javax.lang.model.element.Name;
 	{		
 		
 		ArrayList<Name> schedulables;
+		Name topLevelSequencer;
 		
 		public SchedulableIdsEnv()
 		{
@@ -28,10 +29,16 @@ import javax.lang.model.element.Name;
 			schedulables.add(schedulableName);
 		}
 		
+		public void addTopLevelSequencer(Name topLevelSequencer)
+		{
+			this.topLevelSequencer = topLevelSequencer;
+		}
+		
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
 		{
 			Map map = new HashMap();
+			map.put("toplevelSequencer", topLevelSequencer);
 			map.put("Schedulables", schedulables);
 						
 			return map;

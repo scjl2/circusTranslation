@@ -39,6 +39,7 @@ public class ProgramEnv
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 	{
 		structureEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
+		schedulableIds.addTopLevelSequencer(topLevelMissionSequencer);
 	}
 
 	public void addMission(Name mission)
@@ -158,8 +159,7 @@ public class ProgramEnv
 
 	public void addMissionSequencerMission(Name tlms, Name n)
 	{
-		structureEnv.addMissionSequencerMission(tlms, n);
-		
+		structureEnv.addMissionSequencerMission(tlms, n);	
 	}
 
 	public ArrayList<ManagedThreadEnv> getManagedThreads()

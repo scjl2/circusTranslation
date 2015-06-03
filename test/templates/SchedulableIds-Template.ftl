@@ -4,6 +4,7 @@
 \extracircusvspace
 %
 \begin{axdef}
+${toplevelSequencer} : SchedulableID\\
 <#list Schedulables as schedulable>
 	${schedulable} : SchedulableID\\
 </#list>

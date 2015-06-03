@@ -8,8 +8,6 @@
 		\t1 FrameworkChan, SafeletChan
 \end{zsection}
 %
-% done\_safeletFW doesn't exist...
-%
 \begin{circus}
 \circchannelset ~ TerminateSync == \\ \t1 \lchanset schedulables\_terminated, schedulables\_stopped, get\_activeSchedulables \rchanset
 \end{circus}
@@ -17,10 +15,10 @@
 \begin{circus}	
 \circchannelset ~ ControlTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
-%Start Mission and Done Mission wont parse?
+% IDs wont type check again   Start Mission and Done Mission wont parse?
 <#list Tiers[0] as cluster>
 \begin{circus}
-\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission},\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
+\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~${cluster.Mission}, done\_mission~.~${cluster.Mission},\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
 \end{circus}
 </#list>
 %
@@ -43,23 +41,21 @@
 	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
 \end{circus}
 
-%
+%IDs wont type check
 <#list Tiers as tier >
 <#if tier_has_next>
 \begin{circus}
 \circchannelset ~ Tier${tier_index}Sync == \\ 
-\t1 TierCommonSync \\
-\t1 \cup \\
 \t1 \lchanset 	
-
+done\_toplevel\_sequencer, done\_safeletFW, \\
 <#assign next=tier_index+1>
 <#list Tiers[next] as cluster>
-start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission},\\ 
-\t1 initializeRet.${cluster.Mission}, 
+start\_mission~.~${cluster.Mission}, done\_mission~.~${cluster.Mission},\\ 
+\t1 initializeRet~.~${cluster.Mission}, 
 <#if tier_index == 0> 
-requestTermination.${cluster.Mission}.${TopLevelSequencer}
+requestTermination~.~${cluster.Mission}~.~${TopLevelSequencer}
 <#else>
-requestTermination.${cluster.Mission}.${cluster.Sequencer}
+requestTermination~.~${cluster.Mission}~.~${cluster.Sequencer}
 </#if>
 
 <#if cluster_has_next>
