@@ -67,44 +67,16 @@ requestTermination.MainMission.MainMissionSequencer
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
-  \t1 AperiodicEventHandlerFW, SPSafeletApp, MainMissionSequencerApp, \\
+  \t1 AperiodicEventHandlerFW, TestSafeletApp, MainMissionSequencerApp, \\
   \t1 
 MainMissionApp, 
 
 
-SPModeChangerApp 
-,
-ControlHandlerApp 
-,
-EnvironmentMonitorApp 
-,
-AperiodicSimulatorApp 
-LaunchMissionApp, 
+NestedMissionSequencerApp 
+NestedMissionApp, 
 
 
-LaunchHandlerApp 
-,
-LaunchCountdownApp 
-CruiseMissionApp, 
-
-
-BurnActivationHandlerApp 
-,
-BurnDurationHandlerApp 
-,
-CruiseConditionsMonitorApp 
-,
-AperiodicSimulatorApp 
-LandMissionApp, 
-
-
-LandingGearHandlerApp 
-,
-ParachuteHandlerApp 
-,
-AirSpeedMonitorApp 
-,
-GroundDistanceMonitorApp 
+NestedOneShotEventHandlerApp 
 \end{zsection}
 %
 \begin{circus}
@@ -129,21 +101,10 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			SchedulableMissionSequencerFW(SPModeChanger)\\
-\t1 \lpar SchedulablesSync \rpar\\
+			SchedulableMissionSequencerFW(NestedMissionSequencer)\\
+%\t1 \lpar SchedulablesSync \rpar\\
 
 
-			AperiodicEventHandlerFW(ControlHandler)\\
-
-\t1 \lpar SchedulablesSync \rpar\\
-
-
-
-\circblockopen
-			PeriodicEventHandlerFW(EnvironmentMonitor)\\
-			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(AperiodicSimulator)\\
-\circblockclose \\ 
 
 		\circblockclose
 \circblockclose
@@ -153,7 +114,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 \circprocess Tier1 \circdef \\
 
 \circblockopen
-	MissionFW(LaunchMission)\\
+	MissionFW(NestedMission)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
@@ -161,72 +122,17 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			AperiodicEventHandlerFW(LaunchHandler)\\
-
-\t1 \lpar SchedulablesSync \rpar\\
 
 
-
-			PeriodicEventHandlerFW(LaunchCountdown)\\
-		\circblockclose
-\circblockclose
-	\\ \t1 \lpar ClusterSync \rpar \\
-
-\circblockopen
-	MissionFW(CruiseMission)\\
-		\t1 	\lpar MissionSync \rpar \\
-		\circblockopen
+	OneShotEventHandlerFW(NestedOneShotEventHandler)\\
 
 
 
 
-
-\circblockopen
-			AperiodicEventHandlerFW(BurnActivationHandler)\\
-			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(BurnDurationHandler)\\
-\circblockclose \\
-
-
-\t1 \lpar SchedulablesSync \rpar\\
+%\t1 \lpar SchedulablesSync \rpar\\
 
 
 
-\circblockopen
-			PeriodicEventHandlerFW(CruiseConditionsMonitor)\\
-			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(AperiodicSimulator)\\
-\circblockclose \\ 
-
-		\circblockclose
-\circblockclose
-	\\ \t1 \lpar ClusterSync \rpar \\
-
-\circblockopen
-	MissionFW(LandMission)\\
-		\t1 	\lpar MissionSync \rpar \\
-		\circblockopen
-
-
-
-
-
-\circblockopen
-			AperiodicEventHandlerFW(LandingGearHandler)\\
-			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(ParachuteHandler)\\
-\circblockclose \\
-
-
-\t1 \lpar SchedulablesSync \rpar\\
-
-
-
-\circblockopen
-			PeriodicEventHandlerFW(AirSpeedMonitor)\\
-			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(GroundDistanceMonitor)\\
-\circblockclose \\ 
 
 		\circblockclose
 \circblockclose
@@ -252,49 +158,19 @@ Tier1
 \circprocess  Application \circdef \\
 \circblockopen
 
-SPSafeletApp\\
+TestSafeletApp\\
 \interleave \\
 MainMissionSequencerApp\\
 \interleave \\
 MainMissionApp\\
 \interleave \\
 
-SPModeChangerApp\\
+NestedMissionSequencerApp\\
 \interleave \\
-ControlHandlerApp\\
-\interleave \\
-EnvironmentMonitorApp\\
-\interleave \\
-AperiodicSimulatorApp\\
-\interleave \\
-LaunchMissionApp\\
+NestedMissionApp\\
 \interleave \\
 
-LaunchHandlerApp\\
-\interleave \\
-LaunchCountdownApp\\
-\interleave \\
-CruiseMissionApp\\
-\interleave \\
-
-BurnActivationHandlerApp\\
-\interleave \\
-BurnDurationHandlerApp\\
-\interleave \\
-CruiseConditionsMonitorApp\\
-\interleave \\
-AperiodicSimulatorApp\\
-\interleave \\
-LandMissionApp\\
-\interleave \\
-
-LandingGearHandlerApp\\
-\interleave \\
-ParachuteHandlerApp\\
-\interleave \\
-AirSpeedMonitorApp\\
-\interleave \\
-GroundDistanceMonitorApp\\
+NestedOneShotEventHandlerApp\\
 \circblockclose
 \end{circus}
 %
