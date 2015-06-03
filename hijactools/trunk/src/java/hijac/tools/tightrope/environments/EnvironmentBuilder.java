@@ -282,16 +282,17 @@ public class EnvironmentBuilder
 				System.out.println("+++ No Missions +++");
 			} else
 			{
+				System.out.println(" +++ I have " + missions.size() + " missions +++ ");
 				programEnv.newTier();
 //				boolean newClusterNeeded = false;
 				for (Name n : missions)
 				{
-					programEnv.newCluster(n);
+					programEnv.newCluster(sequencer);
 					System.out.println("+++ Exploring Mission " + n + " +++");
 					
 					programEnv.addMissionSequencerMission(sequencer, n);
 					System.out.println("Build Mission: " + n);
-//					buildMission(n);
+					buildMission(n);
 //					if(newClusterNeeded)
 //					{
 //						programEnv.newCluster(sequencer);

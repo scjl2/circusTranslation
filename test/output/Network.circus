@@ -19,7 +19,7 @@
 \end{circus}
 %Start Mission and Done Mission wont parse?
 \begin{circus}
-\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission., done\_mission.,\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
+\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission.MainMission, done\_mission.MainMission,\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
 \end{circus}
 %
 \begin{circus}
@@ -42,6 +42,18 @@
 %\end{circus}
 
 %
+\begin{circus}
+\circchannelset ~ Tier0Sync == \\ 
+\t1 TierCommonSync \\
+\t1 \cup \\
+\t1 \lchanset 	
+start\_mission.MainMission, done\_mission.MainMission,\\ 
+\t1 initializeRet.MainMission, 
+requestTermination.MainMission.MainMissionSequencer
+
+\rchanset
+\end{circus}
+%
 %
 %
 %
@@ -55,11 +67,16 @@
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
-  \t1 AperiodicEventHandlerFW, SPSafeletApp, MainMissionSequencerApp, \\
+  \t1 AperiodicEventHandlerFW, TestSafeletApp, MainMissionSequencerApp, \\
   \t1 
-App, 
+MainMissionApp, 
 
 
+NestedMissionSequencerApp 
+NestedMissionApp, 
+
+
+NestedOneShotEventHandlerApp 
 \end{zsection}
 %
 \begin{circus}
@@ -71,15 +88,48 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 \circblockclose
 \end{circus}
 %
+
+
 \begin{circus}
 \circprocess Tier0 \circdef \\
 
 \circblockopen
-	MissionFW()\\
+	MissionFW(MainMission)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
+
+
+			SchedulableMissionSequencerFW(NestedMissionSequencer)\\
+%\t1 \lpar SchedulablesSync \rpar\\
+
+
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circprocess Tier1 \circdef \\
+
+\circblockopen
+	MissionFW(NestedMission)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+
+
+
+
+	OneShotEventHandlerFW(NestedOneShotEventHandler)\\
+
+
+
+
+%\t1 \lpar SchedulablesSync \rpar\\
 
 
 
@@ -98,6 +148,8 @@ ControlTier \\
 \t1 \lpar TierSync \rpar \\
  \circblockopen
 Tier0
+\\ \t1 \lpar Tier0Sync \rpar \\
+Tier1
 \circblockclose
 \circblockclose
 \end{circus}
@@ -106,13 +158,19 @@ Tier0
 \circprocess  Application \circdef \\
 \circblockopen
 
-SPSafeletApp\\
+TestSafeletApp\\
 \interleave \\
 MainMissionSequencerApp\\
 \interleave \\
-App\\
+MainMissionApp\\
 \interleave \\
 
+NestedMissionSequencerApp\\
+\interleave \\
+NestedMissionApp\\
+\interleave \\
+
+NestedOneShotEventHandlerApp\\
 \circblockclose
 \end{circus}
 %

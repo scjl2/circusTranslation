@@ -208,6 +208,7 @@ import com.sun.source.util.Trees;
 				}
 			}
 
+			System.out.println(" +++ MissionSequencerVissitor has " + missions.size() + " missions +++");
 			return missions;
 		}
 

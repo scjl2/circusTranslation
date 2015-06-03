@@ -183,11 +183,13 @@ public class FrameworkEnv
 				clusterMap.put("Sequencer", c.getSequencer());
 				clusterMap.put("Mission", c.getMissionEnv().getName());
 
+
+				
 				Map schedulablesMap = new HashMap();
 				schedulablesMap.put("Periodics", c.getSchedulablesEnv()
 						.getPeriodicsList());
 				schedulablesMap.put("Aperiodics", c.getSchedulablesEnv()
-						.getPeriodicsList());
+						.getAperiodicsList());
 				schedulablesMap.put("Oneshots", c.getSchedulablesEnv()
 						.getOneshotsList());
 				schedulablesMap.put("NestedSequencers", c.getSchedulablesEnv()
@@ -253,7 +255,7 @@ public class FrameworkEnv
 		{
 			String output = "Cluster Environment:";
 			output += System.getProperty("line.separator");
-			output += "Mission = " + missionEnv.getName();
+			output += "\t Mission = " + missionEnv.getName();
 			output += System.getProperty("line.separator");
 			output += schedulablesEnv.toString();
 
@@ -274,6 +276,12 @@ public class FrameworkEnv
 		public List<PeriodicEventHandlerEnv> getPeriodEventHandlerEnvs()
 		{
 			return periodEventHandlerEnvs;
+		}
+
+		@SuppressWarnings("rawtypes")
+		public List getAperiodicsList()
+		{
+			return toList(SchedulableTypeE.APEH);
 		}
 
 		@SuppressWarnings("rawtypes")
@@ -412,7 +420,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : periodEventHandlerEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 				}
 			}
@@ -424,7 +432,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : aperiodicEventHandlerEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 				}
 			}
@@ -436,7 +444,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : oneShotEventHandlerEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 				}
 			}
@@ -448,7 +456,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : schedulableMissionSequencerEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 				}
 			}
@@ -460,7 +468,7 @@ public class FrameworkEnv
 
 				for (ParadigmEnv p : managedThreadEnvs)
 				{
-					output += p.getName();
+					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
 
 				}

@@ -13,9 +13,9 @@
 \where
   distinct \langle nullMissionId, 
   <#list Missions as mission>
-	scedulable
+	${mission}
 	<#if mission_has_next>
-	,
+	,\\
 	</#if>
 </#list>
   \rangle
