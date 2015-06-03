@@ -88,6 +88,8 @@ requestTermination.${cluster.Mission}.${cluster.Sequencer}
   \t1 
 <#list Tiers as tier >
 <#list tier as cluster>
+
+
 ${cluster.Mission}App, 
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
@@ -98,7 +100,13 @@ ${schedulable}App
 ,
 	</#if>
 </#list>
+	<#if cluster_has_next>
+,
+	</#if>
 </#list>
+	<#if tier_has_next>
+,
+	</#if>
 </#list>
 \end{zsection}
 %

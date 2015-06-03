@@ -71,10 +71,15 @@ requestTermination.NestedMission.MainMissionSequencer
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
   \t1 AperiodicEventHandlerFW, TestSafeletApp, MainMissionSequencerApp, \\
   \t1 
+
+
 MainMissionApp, 
 
 
 NestedMissionSequencerApp 
+,
+
+
 NestedMissionApp, 
 
 
