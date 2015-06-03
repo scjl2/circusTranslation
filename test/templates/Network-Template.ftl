@@ -15,7 +15,7 @@
 \end{circus}
 %
 \begin{circus}	
-\circchannelset ~ SafeletTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
+\circchannelset ~ ControlTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
 %Start Mission and Done Mission wont parse?
 <#list Tiers[0] as cluster>
@@ -38,10 +38,10 @@
 \circchannelset ~ ClusterSync == \\ \t1 \lchanset done\_toplevel\_sequencer, done\_safeletFW \rchanset 
 \end{circus}
 %
-%\begin{circus}
-%\circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
-%	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
-%\end{circus}
+\begin{circus}
+\circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
+	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
+\end{circus}
 
 %
 <#list Tiers as tier >
@@ -51,7 +51,9 @@
 \t1 TierCommonSync \\
 \t1 \cup \\
 \t1 \lchanset 	
-<#list tier as cluster>
+
+<#assign next=tier_index+1>
+<#list Tiers[next] as cluster>
 start\_mission.${cluster.Mission}, done\_mission.${cluster.Mission},\\ 
 \t1 initializeRet.${cluster.Mission}, 
 <#if tier_index == 0> 
@@ -64,6 +66,7 @@ requestTermination.${cluster.Mission}.${cluster.Sequencer}
 , \\
 </#if>
 </#list>
+
 \rchanset
 \end{circus}
 </#if>
@@ -103,7 +106,7 @@ ${schedulable}App
 \circprocess ControlTier \circdef \\
 \circblockopen
 SafeletFW \\
-\t1 \lpar TierSync \rpar \\
+\t1 \lpar ControlTierSync \rpar \\
 TopLevelMissionSequencerFW(${TopLevelSequencer})
 \circblockclose
 \end{circus}

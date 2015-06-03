@@ -15,7 +15,7 @@
 \end{circus}
 %
 \begin{circus}	
-\circchannelset ~ SafeletTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
+\circchannelset ~ ControlTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
 %Start Mission and Done Mission wont parse?
 \begin{circus}
@@ -36,10 +36,10 @@
 \circchannelset ~ ClusterSync == \\ \t1 \lchanset done\_toplevel\_sequencer, done\_safeletFW \rchanset 
 \end{circus}
 %
-%\begin{circus}
-%\circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
-%	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
-%\end{circus}
+\begin{circus}
+\circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
+	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
+\end{circus}
 
 %
 \begin{circus}
@@ -47,9 +47,11 @@
 \t1 TierCommonSync \\
 \t1 \cup \\
 \t1 \lchanset 	
-start\_mission.MainMission, done\_mission.MainMission,\\ 
-\t1 initializeRet.MainMission, 
-requestTermination.MainMission.MainMissionSequencer
+
+start\_mission.NestedMission, done\_mission.NestedMission,\\ 
+\t1 initializeRet.NestedMission, 
+requestTermination.NestedMission.MainMissionSequencer
+
 
 \rchanset
 \end{circus}
@@ -83,7 +85,7 @@ NestedOneShotEventHandlerApp
 \circprocess ControlTier \circdef \\
 \circblockopen
 SafeletFW \\
-\t1 \lpar TierSync \rpar \\
+\t1 \lpar ControlTierSync \rpar \\
 TopLevelMissionSequencerFW(MainMissionSequencer)
 \circblockclose
 \end{circus}
@@ -102,7 +104,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 			SchedulableMissionSequencerFW(NestedMissionSequencer)\\
-%\t1 \lpar SchedulablesSync \rpar\\
+\t1 \lpar SchedulablesSync \rpar\\
 
 
 
@@ -129,7 +131,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-%\t1 \lpar SchedulablesSync \rpar\\
+\t1 \lpar SchedulablesSync \rpar\\
 
 
 
