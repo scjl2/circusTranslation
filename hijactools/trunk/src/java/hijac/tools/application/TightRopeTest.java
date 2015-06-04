@@ -1,9 +1,11 @@
 package hijac.tools.application;
 
 import hijac.tools.analysis.SCJAnalysis;
+import static java.nio.file.StandardCopyOption.*;
 import hijac.tools.compiler.SCJCompilationConfig;
 import hijac.tools.compiler.SCJCompilationException;
 import hijac.tools.compiler.SCJCompilationTask;
+import hijac.tools.config.Config;
 import hijac.tools.config.Statics;
 
 import hijac.tools.application.UncaughtExceptionHandler;
@@ -11,6 +13,11 @@ import hijac.tools.application.UncaughtExceptionHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import hijac.tools.tightrope.environments.EnvironmentBuilder;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -26,12 +33,14 @@ public class TightRopeTest
 
 	private static ProgramEnv programEnv;
 
-	private static String version = "v0.4";
+	private static String version = "v0.5";
 
 	private static boolean silent = true;
 	private static boolean latex = true;
 	private static boolean freemarker = true;
 
+	private static String customName ="";
+	
 	static
 	{
 		Statics.kickstart();
@@ -55,9 +64,12 @@ public class TightRopeTest
 		System.out.println();
 
 		setUncaughtExceptionHandler();
+		
+		setCustomName();
 
-		SCJCompilationTask compiler = new SCJCompilationTask(
-				SCJCompilationConfig.getDefault());
+		SCJCompilationConfig config = SCJCompilationConfig.getDefault();
+		
+		SCJCompilationTask compiler = new SCJCompilationTask(config);
 
 		System.out.println("Compiling SCJ sources...");
 
@@ -83,13 +95,13 @@ public class TightRopeTest
 		
 		if(freemarker)
 		{
-			CircusGenerator circGen = new CircusGenerator(programEnv);
+			CircusGenerator circGen = new CircusGenerator(customName, programEnv);
 			circGen.translate();
 		}
 
 		if(latex)
 		{
-			runLatex();
+			runLatex(customName);
 		}
 
 		final long duration = System.nanoTime() - startTime;
@@ -103,7 +115,26 @@ public class TightRopeTest
 		System.exit(0);
 	}
 
-	public static void runLatex()
+	private static void setCustomName()
+	{
+		String[] source = Config.getSCJSrc();
+		String sourceString ="";
+		if(source.length == 1)
+		{
+			String[] srouceSplit = source[0].split("/");
+			sourceString=srouceSplit[srouceSplit.length-2];
+		}
+		else
+		{
+			System.out.println("*** CircusGenerator: multiple sources ***");
+		}
+		
+		
+		
+		customName=sourceString;
+	}
+
+	private static void runLatex(String customName)
 	{
 		/*
 		 * +++++++++++++++++++++++++++ Execute pdflatex on the output
@@ -120,10 +151,29 @@ public class TightRopeTest
 			System.out.println("+++ Generating PDF +++");
 
 			String latexLocation = "/usr/bin/pdflatex";
-			String outputDirectory = "/home/matt/Documents/Translation/test/output/";
-			String reportLocation = "/home/matt/Documents/Translation/test/output/Report.tex";
+			String outputDirectory = "/home/matt/Documents/Translation/test/output/"+customName+"/";
+			String reportLocation = "/home/matt/Documents/Translation/test/output/"+customName+"/"+customName+"-Report.tex";
 			String space = " ";
 
+			
+			Path source = Paths.get("/home/matt/Documents/Translation/test/packages/circus.sty");
+			Path destination = Paths.get("/home/matt/Documents/Translation/test/output/"+customName+"/circus.sty");
+			
+			Files.copy(source, destination, REPLACE_EXISTING);
+			
+			source = Paths.get("/home/matt/Documents/Translation/test/packages/czt.sty");
+			destination = Paths.get("/home/matt/Documents/Translation/test/output/"+customName+"/czt.sty");
+			
+			Files.copy(source, destination, REPLACE_EXISTING);
+			
+			source = Paths.get("/home/matt/Documents/Translation/test/packages/hijac.sty");
+			destination = Paths.get("/home/matt/Documents/Translation/test/output/"+customName+"/hijac.sty");
+			
+			Files.copy(source, destination, REPLACE_EXISTING);
+			
+			
+			
+			
 			Process p = Runtime.getRuntime().exec(
 			// "/usr/bin/pdflatex -output-directory /home/matt/Documents/Translation/test/output/ /home/matt/Documents/Translation/test/output/Report.tex");
 					latexLocation + space + "-output-directory" + space

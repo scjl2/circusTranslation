@@ -2,6 +2,8 @@ package hijac.tools.tightrope.generators;
 
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import hijac.tools.compiler.SCJCompilationConfig;
+import hijac.tools.config.Config;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
@@ -20,13 +22,20 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Map;
 
+import java.io.File;
+
+
+import java.util.List;
+
 public class CircusGenerator
 {
 	private freemarker.template.Configuration cfg;
 	private ProgramEnv programEnv;
 	private String fileLocation = "/home/matt/Documents/Translation/test/output/";
-
-	public CircusGenerator(ProgramEnv programEnv)
+	private String customName;
+	
+	
+	public CircusGenerator(String customName, ProgramEnv programEnv)
 	{
 		/* You should do this ONLY ONCE in the whole application life-cycle: */
 
@@ -46,6 +55,10 @@ public class CircusGenerator
 		}
 
 		this.programEnv = programEnv;
+					
+	
+		this.customName = customName;
+		
 	}
 
 	public void translate() throws IOException, FileNotFoundException
@@ -94,7 +107,7 @@ public class CircusGenerator
 		System.out.println("+++ Generating Report +++");
 		Map root = programEnv.geNetworkMap();
 		
-		translateCommon(root, "Report-Template.ftl", "Report.tex");
+		translateCommon(root, "Report-Template.ftl", customName+"-Report.tex");
 
 	}
 
@@ -126,7 +139,10 @@ public class CircusGenerator
 		}
 
 		/* Variables for writing output to a file */
-		File file = new File(fileLocation + fileName);
+		new File(fileLocation +  customName).mkdirs();
+		
+		File file = new File(fileLocation +  customName+ "/"+ fileName);
+		
 		FileOutputStream fop = null;
 		try
 		{
