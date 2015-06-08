@@ -31,13 +31,13 @@ public class Writer extends ManagedThread
 			{
 				while (!fbMission.bufferEmpty())
 				{
-					fbMission.waitOnMission();
+					fbMission.waitOnMission(); //synchronised
 				}
 
-				fbMission.write(i);
+				fbMission.write(i); // synchronised
 				i++;
 
-				fbMission.notifyOnMission();
+				fbMission.notifyOnMission(); // synchronised
 			}
 			catch (InterruptedException ie)
 			{

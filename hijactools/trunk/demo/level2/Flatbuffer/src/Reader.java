@@ -29,12 +29,12 @@ public class Reader extends ManagedThread
 			{
 				while (fbMission.bufferEmpty())
 				{
-					fbMission.waitOnMission();
+					fbMission.waitOnMission(); //synchronised
 				}
 
-				System.out.println("I Read: " + fbMission.read());
+				System.out.println("I Read: " + fbMission.read()); // synchronised
 
-				fbMission.notifyOnMission();
+				fbMission.notifyOnMission(); //synchronised
 			}
 			catch (InterruptedException ie)
 			{
