@@ -24,7 +24,7 @@ public class ObjectEnv
 	{
 		return name;
 	}
-
+	
 	public void setName(Name safelet)
 	{
 		this.name = safelet;

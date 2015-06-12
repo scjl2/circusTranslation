@@ -1,17 +1,30 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.visitors.ManagedThreadVisitor;
 import hijac.tools.tightrope.visitors.MissionLevel2Visitor;
 import hijac.tools.tightrope.visitors.MissionSequencerLevel2Visitor;
+import hijac.tools.tightrope.visitors.ReturnVisitor;
 import hijac.tools.tightrope.visitors.SafeletLevel2Visitor;
+import hijac.tools.tightrope.visitors.VariableVisitor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
+
+import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 
 public class EnvironmentBuilder
 {
@@ -249,7 +262,9 @@ public class EnvironmentBuilder
 			if (type == SchedulableTypeE.SMS)
 			{
 				nestedSequencers.add(s);
-			}			
+			}	
+			
+			buildShedulable(s);
 		}
 
 		if (!nestedSequencers.isEmpty())
@@ -257,6 +272,75 @@ public class EnvironmentBuilder
 			buildSchedulableMissionSequencer(nestedSequencers);
 //			System.out.println("Build SMS");
 		}
+	}
+
+	private void buildShedulable(Name s)
+	{
+		System.out.println();
+		System.out.println("+++ Building Schedulable  +++");
+		System.out.println();
+		
+		
+		String fullName = packagePrefix + s;
+		Elements elems =analysis.ELEMENTS;	
+		System.out.println("Building Schedulable: Full Name = " + fullName);
+		TypeElement schedulableType = elems.getTypeElement(fullName);
+	
+		ClassTree ct = analysis.TREES.getTree(schedulableType);
+			
+			
+		
+		
+		
+//			ReturnVisitor rv = new ReturnVisitor(ct);
+//			System.out.println("Retrun Visitor says... " +rv.getReturns());
+
+			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+			
+
+			Iterator<StatementTree> i = members.iterator();
+
+			ArrayList<Name> sycnMeths = new ArrayList<Name>();
+			
+			HashMap<Name, Tree> variables;
+			
+			while (i.hasNext())
+			{
+				
+				ArrayList<Name> tmp = new ArrayList<Name>();
+				variables =  getVariables(schedulableType);
+				System.out.println("\t *** variables = "+ variables);
+				
+				Tree tlst = i.next();
+//				System.out.println("MS Visitor i=" + ((Tree) i).getKind());
+
+				if (tlst instanceof MethodTree)
+				{
+					MethodTree mt = (MethodTree) tlst;
+					
+					System.out.println("*** Method Name = "+ mt.getName() + " ***");
+		
+					tmp = tlst.accept(new ManagedThreadVisitor(programEnv, analysis, variables), null);
+				
+				}
+				
+				if(tmp != null)
+				{					
+					sycnMeths.addAll(tmp);
+				}
+				
+			}
+		System.out.println();
+		System.out.println("+++ syncMethds empty = " + (sycnMeths.size() <= 0) + " +++");
+		if(sycnMeths.size() > 0 )
+		{
+			for(Name n : sycnMeths)
+			{
+				System.out.println("\t*** "+ n + " is synchronised");
+			}
+		}
+		System.out.println();
+		
 	}
 
 	private void buildSchedulableMissionSequencer(
@@ -372,6 +456,71 @@ public class EnvironmentBuilder
 		int firstIndex = packagePrefix.indexOf(elem.getSimpleName().toString());
 		packagePrefix = packagePrefix.substring(0, firstIndex);
 		return packagePrefix;
+	}
+	
+	private HashMap<Name, Tree> getVariables(TypeElement arg0)
+	{
+		HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
+		
+		VariableVisitor varVisitor = new VariableVisitor(programEnv);
+		
+		ClassTree ct = analysis.TREES.getTree(arg0);
+		List<? extends Tree> members =  ct.getMembers();
+		Iterator<? extends Tree> i = members.iterator();
+		
+		
+		while(i.hasNext())
+		{
+			Tree s = i.next();
+			System.out.println("\t *** Tree = " + s);
+			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, false) ; 
+			
+			
+//			 System.out.println("+++ m == null : " + m == null + " +++" );
+			 
+			 if (m == null)
+			 {
+				 System.out.println("+++ Variable Visitor Returned Null +++");
+					
+			 }
+			 else
+			 {
+//				 System.out.println("+++ Variable Visitor Returned " + m);
+//				 if(s instanceof MethodTree)
+//					{
+//						MethodTree mt = (MethodTree)s;
+//						if(mt.getName().contentEquals("<init>")  )
+//						{
+//							System.out.println("*** it was init, continue ***");
+//							continue;
+//						}
+//						else
+//						{
+//							System.out.println("*** Adding 1***");
+//							 varMap.putAll(m);	
+//						}
+//						
+//					}
+//				 else
+//				 {
+//					 System.out.println("*** Adding 2***");
+//					 varMap.putAll(m);	
+//				 }
+				 
+				
+				 
+				 for(Name n : m.keySet())
+				 {
+					 System.out.println("\t*** Name = " + n + " Type = " + m.get(n) + " Kind = " + m.get(n).getKind() );
+					 varMap.putIfAbsent(n, m.get(n));
+				 }
+				 
+			 }
+				
+		}
+		
+		return varMap;
+		
 	}
 
 //	private Name[] buildMissionSequencers(Name[] names, String packagePrefix,
