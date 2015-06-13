@@ -320,7 +320,7 @@ public class EnvironmentBuilder
 					
 					System.out.println("*** Method Name = "+ mt.getName() + " ***");
 		
-					tmp = tlst.accept(new ManagedThreadVisitor(programEnv, analysis, variables), null);
+					tmp = tlst.accept(new ManagedThreadVisitor(programEnv, analysis, variables, packagePrefix), null);
 				
 				}
 				
