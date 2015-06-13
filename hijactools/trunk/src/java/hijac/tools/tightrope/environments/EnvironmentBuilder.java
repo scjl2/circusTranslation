@@ -225,6 +225,7 @@ public class EnvironmentBuilder
 
 		programEnv.addMission(n);
 
+		ParadigmEnv missionEnv = programEnv.getFrameworkEnv().getMission(n);
 		
 		String fullName = packagePrefix + n;
 		Elements elems =analysis.ELEMENTS;	
@@ -232,7 +233,7 @@ public class EnvironmentBuilder
 		
 		ArrayList<Name> schedulables = elems.getTypeElement(fullName
 				).accept(
-				new MissionLevel2Visitor(programEnv, analysis), null);
+				new MissionLevel2Visitor(programEnv, missionEnv, analysis), null);
 		
 		if (schedulables == null)
 		{

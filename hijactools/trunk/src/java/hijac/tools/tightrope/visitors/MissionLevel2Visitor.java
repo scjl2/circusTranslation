@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -37,21 +39,23 @@ public class MissionLevel2Visitor implements
 	SCJAnalysis analysis;
 
 	private Trees trees;
-	private Set<CompilationUnitTree> units;
-	private Set<TypeElement> type_elements;
+	private ParadigmEnv missionEnv;
 
 	private RegistersVisitor registersVisitor;
 
-	public MissionLevel2Visitor(ProgramEnv programEnv, SCJAnalysis analysis)
+	public MissionLevel2Visitor(ProgramEnv programEnv, ParadigmEnv missionEnv,  SCJAnalysis analysis)
 	{
 		this.analysis = analysis;
 		this.programEnv = programEnv;
+		this.missionEnv = missionEnv;
 
 		trees = analysis.TREES;
-		units = analysis.getCompilationUnits();
-		type_elements = analysis.getTypeElements();
+		analysis.getCompilationUnits();
+		analysis.getTypeElements();
+		
 
 		registersVisitor = new RegistersVisitor(programEnv, analysis);
+		
 	}
 
 	@Override
@@ -87,6 +91,7 @@ public class MissionLevel2Visitor implements
 				System.out.println("-> Name:" + vt.getName());
 				System.out.println("-> Type: " + vt.getType());
 
+				//TODO refactor this. Variables should be kept in the relevent env
 				programEnv.addVariable(vt.getName(), vt.getType());
 
 			}
@@ -95,7 +100,11 @@ public class MissionLevel2Visitor implements
 			{
 				MethodTree mt = (MethodTree) tlst;
 
-			
+				if(mt.getModifiers().getFlags()
+										.contains(Modifier.SYNCHRONIZED))
+				{
+					missionEnv.addSyncMeth(mt.getName());
+				}
 				
 				if (mt.getName().contentEquals("initialize"))
 				{

@@ -225,7 +225,7 @@ public class FrameworkEnv
 			return sequencer;
 		}
 
-		public MissionEnv getMissionEnv()
+		public ParadigmEnv getMissionEnv()
 		{
 			return missionEnv;
 		}
@@ -685,6 +685,22 @@ public class FrameworkEnv
 		}
 
 		return missions;
+	}
+	
+	public ParadigmEnv getMission(Name n)
+	{
+		for (TierEnv t : tiers)
+		{
+			for (ClusterEnv c : t.clusters)
+			{
+				if(c.getMissionEnv().getName().equals(n))
+				{
+					return c.getMissionEnv();
+				}
+			}
+
+		}
+		return null;
 	}
 
 	// Bit hacky

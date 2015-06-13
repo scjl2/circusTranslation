@@ -9,29 +9,27 @@ import com.sun.source.tree.MethodTree;
 
 
 public class ParadigmEnv extends ObjectEnv
-{
-
-	List<Name> nonPMeths;
+{	
 	List<MethodTree> meths;
-	
-	
+	List<Name> syncMeths;	
 
 	public ParadigmEnv()
 	{
 		super();
-		nonPMeths = new ArrayList<Name>();
+//		nonPMeths = new ArrayList<Name>();
 		meths = new ArrayList<MethodTree>();
+		syncMeths = new ArrayList<Name>();
 	}
 
-	public List<Name> getNonPMeths()
-	{
-		return nonPMeths;
-	}
-
-	public void addNonPMeth(Name nonPMeth)
-	{
-		nonPMeths.add(nonPMeth);
-	}
+//	public List<Name> getNonPMeths()
+//	{
+//		return nonPMeths;
+//	}
+//
+//	public void addNonPMeth(Name nonPMeth)
+//	{
+//		nonPMeths.add(nonPMeth);
+//	}
 
 	public List<MethodTree> getMeths()
 	{
@@ -41,6 +39,11 @@ public class ParadigmEnv extends ObjectEnv
 	public void addMeth(MethodTree meth)
 	{
 		meths.add(meth);
+	}
+
+	public void addSyncMeth(Name name)
+	{
+		syncMeths.add(name);		
 	}
 
 	
