@@ -17,12 +17,7 @@ public class Reader extends ManagedThread
 
 		this.fbMission = fbMission;
 	}
-
-	public synchronized void notifyReader()
-	{
-		notify();
-	}
-
+	
 	public void run()
 	{
 		Console.println("Reader!");

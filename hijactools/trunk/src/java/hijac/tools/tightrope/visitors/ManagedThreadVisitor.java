@@ -547,8 +547,15 @@ public class ManagedThreadVisitor implements TreeVisitor<ArrayList<Name>, Void>
 	@Override
 	public ArrayList<Name> visitVariable(VariableTree arg0, Void arg1)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		System.out.println("*** mtVisitor variable ***");
+		if(arg0.getInitializer() != null)
+		{
+			return arg0.getInitializer().accept(this, arg1);
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	@Override
