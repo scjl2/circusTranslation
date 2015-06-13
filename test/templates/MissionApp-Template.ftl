@@ -45,12 +45,15 @@ CleanupPhase \circdef  \\
 \circblockclose
 \end{circusaction}
 
+<#include "Methods-Template.ftl">
+
 \begin{circusaction}
-Methods \circdef \\
+Methods \circdef 
 \circblockopen
 	InitializePhase \\
 	\extchoice \\
-	CleanupPhase
+	CleanupPhase \\
+<#include "MethodsAction-Template.ftl">
 \circblockclose 
 \circseq Methods
 \end{circusaction}

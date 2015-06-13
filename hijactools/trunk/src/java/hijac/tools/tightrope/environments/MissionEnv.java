@@ -21,6 +21,8 @@ import com.sun.source.tree.MethodTree;
 			Map map = new HashMap();
 			map.put("MissionID", name.toString());
 			map.put("RegisteredSchedulables", schedulables);
+			map.put("Methods", meths);
+			map.put("SyncMethods", syncMeths);
 //			map.put("initializeApplicationMethod", "");
 					
 //			if (tlmsNames.length == 1)
