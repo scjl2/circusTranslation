@@ -88,7 +88,7 @@ public class ManagedThreadVisitor implements TreeVisitor<ArrayList<Name>, Void>
 		this.analysis = analysis;
 		this.variables = vars;
 		this.packagePrefix = packagePrefix;
-		
+
 		System.out.println("*** Variables ***");
 		System.out.println(variables);
 	}
@@ -363,63 +363,67 @@ public class ManagedThreadVisitor implements TreeVisitor<ArrayList<Name>, Void>
 	{
 		System.out.println("+++ Method Invocation: "
 				+ arg0.getMethodSelect().toString());
-		
+
 		if (arg0.getMethodSelect().getKind() == Kind.MEMBER_SELECT)
 		{
 			MemberSelectTree method = (MemberSelectTree) arg0.getMethodSelect();
-			//get the name of the method we are calling...
+			// get the name of the method we are calling...
 			Name methodName = method.getIdentifier();
-			//...and the variable we're calling it on
+			// ...and the variable we're calling it on
 			ExpressionTree classNameExpression = method.getExpression();
-						
-			
-			if(classNameExpression instanceof IdentifierTree)
-			{	
-			
+
+			if (classNameExpression instanceof IdentifierTree)
+			{
+
 				IdentifierTree classNameIdentifier = (IdentifierTree) classNameExpression;
-				//get the name of the variable we're calling a method on, as a Name
+				// get the name of the variable we're calling a method on, as a
+				// Name
 				Name className = classNameIdentifier.getName();
-				
-				//get the type of the variable, from the variables map
+
+				// get the type of the variable, from the variables map
 				Tree classTree = variables.get(className);
-				
-				if(classTree instanceof IdentifierTree)
+
+				if (classTree instanceof IdentifierTree)
 				{
-					//get the Name of the actual class, not just the variable name
+					// get the Name of the actual class, not just the variable
+					// name
 					className = ((IdentifierTree) classTree).getName();
 				}
-				
-			
-				//get the full name of the class...
-				String fullName = packagePrefix + className;
-				//find the TypeElement for the class, using the full name
-				TypeElement type = analysis.ELEMENTS.getTypeElement(fullName);
-				//and then find the ClassTree for that class, using the TypeElement (phew!)
-				ClassTree ct = analysis.TREES.getTree(type);
-				ArrayList<Name> tmp = new ArrayList<Name>();
-				
-				for (Tree t : ct.getMembers())
-				{
-					if (t instanceof MethodTree)
-					{
-						System.out.println("*** methodTree *** ");
-						MethodTree mt = (MethodTree) t;
-						if (mt.getName().contentEquals(methodName))
-						{
-							System.out.println("*** found the method *** ");
-							if (mt.getModifiers().getFlags()
-									.contains(Modifier.SYNCHRONIZED))
-							{
-								System.out
-										.println("*** and it's synchronised *** ");
-								tmp.add(methodName);
 
+				// get the full name of the class...
+				String fullName = packagePrefix + className;
+				// find the TypeElement for the class, using the full name
+				TypeElement type = analysis.ELEMENTS.getTypeElement(fullName);
+				// and then find the ClassTree for that class, using the
+				// TypeElement (phew!)
+				if (type != null)
+				{
+					ClassTree ct = analysis.TREES.getTree(type);
+					ArrayList<Name> tmp = new ArrayList<Name>();
+
+					for (Tree t : ct.getMembers())
+					{
+						if (t instanceof MethodTree)
+						{
+							System.out.println("*** methodTree *** ");
+							MethodTree mt = (MethodTree) t;
+							if (mt.getName().contentEquals(methodName))
+							{
+								System.out.println("*** found the method *** ");
+								if (mt.getModifiers().getFlags()
+										.contains(Modifier.SYNCHRONIZED))
+								{
+									System.out
+											.println("*** and it's synchronised *** ");
+									tmp.add(methodName);
+
+								}
 							}
 						}
 					}
+
+					return tmp;
 				}
-	
-			return tmp;
 			}
 		}
 

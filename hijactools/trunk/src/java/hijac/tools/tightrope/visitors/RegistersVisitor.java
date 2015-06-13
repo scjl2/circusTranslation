@@ -352,22 +352,42 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 			System.out.println("Rgisters Visitor: Identifier "
 					+ arg0.getIdentifier());
 
+			if(arg0.getExpression() instanceof IdentifierTree)
+			{
+			
+				IdentifierTree identifier = (IdentifierTree) arg0.getExpression();
 			System.out.println("Registers Visitor: getExpression().getName() "
-					+ ((IdentifierTree) arg0.getExpression()).getName());
+					+ (identifier.getName()));
 
 			System.out.println("Registers Visitor: Returning "
-					+ programEnv.getVariable(((IdentifierTree) arg0
-							.getExpression()).getName()));
+					+ programEnv.getVariable(identifier.getName()));
 			// ArrayList<Name> a = new ArrayList<Name>();
 			// a.add( (Name) variables.get(((MethodTree)
 			// arg0.getExpression()).getName()) );
-			Name name = ((IdentifierTree) programEnv
-					.getVariable(((IdentifierTree) arg0.getExpression())
-							.getName())).getName();
+			Name name = 
+					((IdentifierTree) programEnv.getVariable(identifier.getName())).getName();
 
 			// programEnv.addSchedulable(getSchedulableType(name), name);
 
 			return name;
+			}
+			
+			if(arg0.getExpression() instanceof NewClassTree)
+			{
+				NewClassTree newClass = (NewClassTree) arg0.getExpression();
+				
+				System.out.println("Registers Visitor: getExpression().getName() "
+						+ (((IdentifierTree) newClass.getIdentifier()).getName()));
+				
+				System.out.println("Registers Visitor: Returning "
+						+ programEnv.getVariable(((IdentifierTree) newClass.getIdentifier()).getName()));
+				
+				Name name = (((IdentifierTree) newClass.getIdentifier()).getName());
+				
+//						((IdentifierTree) programEnv.getVariable(((IdentifierTree) newClass.getIdentifier()).getName())).getName();
+
+				return name;
+			}
 
 		}
 		return null;

@@ -5,66 +5,65 @@ import javax.safetycritical.Mission;
 import javax.safetycritical.StorageParameters;
 import javax.scj.util.Const;
 
+import devices.Console;
 
 public class FlatBufferMission extends Mission
 {
-	private volatile int[] buffer;
-	private Writer writer;
-	private Reader reader;
+
+	private volatile int buffer;
+private Writer writer;
+	private Reader reader;	
 
 	public FlatBufferMission()
 	{
-		buffer = new int[1];
-		buffer[0] = 0;
-
-		System.out.println("FlatBufferMission");
+		buffer = 0;
+		Console.println("FlatBufferMission");
 	}
 
-	//@Registers({"Reader","Writer"})
+
+
 	protected void initialize()
 	{
-		StorageParameters storageParameters = new StorageParameters(1048576,
-				new long[] { Const.HANDLER_STACK_SIZE }, 1048576, 1048576,
+		StorageParameters storageParameters = new StorageParameters(150 * 1000,
+				new long[] { Const.HANDLER_STACK_SIZE },
+				Const.PRIVATE_MEM_DEFAULT, Const.IMMORTAL_MEM_DEFAULT,
 				Const.MISSION_MEM_DEFAULT - 100 * 1000);
 
-		reader = new Reader(new PriorityParameters(5), storageParameters, this,
-				writer);
-		reader.register();
+		new Reader(new PriorityParameters(10), storageParameters, this).register();
 
-		writer = new Writer(new PriorityParameters(5), storageParameters, this,
-				reader);
+		new Writer(new PriorityParameters(10), storageParameters, this).register();
 
-		writer.register();
-
-		System.out.println("FlatBufferMission init");
+		Console.println("FlatBufferMission init");
 	}
 
-	public boolean bufferEmpty()
+	public boolean bufferEmpty(String name)
 	{
-		return buffer[0] == 0;
+		Console.println(name + " Checking Buffer Empty");
+		return buffer == 0;
 	}
 
 	public synchronized void write(int update)
 	{
-		buffer[0] = update;
+		Console.println("writing " + update + " to Buffer");
+		buffer = update;
+		this.notify();
 	}
 
 	public synchronized int read()
 	{
-		int out = buffer[0];
-		this.buffer[0] = 0;
-
+		int out = buffer;
+		Console.println("Reading " + out + " from Buffer");
+		buffer = 0;
+		this.notify();
+		
 		return out;
 	}
-	
-	public synchronized void waitOnMission() throws InterruptedException
+
+	public synchronized void waitOnMission(String name)
+			throws InterruptedException
 	{
+		Console.println(name + " Waiting on Mission");
 		this.wait();
-	}
-	
-	public synchronized void notifyOnMission() throws InterruptedException
-	{
-		this.notify();
 	}
 
 	public long missionMemorySize()

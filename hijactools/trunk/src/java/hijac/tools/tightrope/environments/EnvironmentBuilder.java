@@ -334,6 +334,7 @@ public class EnvironmentBuilder
 		System.out.println("+++ syncMethds empty = " + (sycnMeths.size() <= 0) + " +++");
 		if(sycnMeths.size() > 0 )
 		{
+			System.out.println("*** SyncMeths for " + s +" ***");
 			for(Name n : sycnMeths)
 			{
 				System.out.println("\t*** "+ n + " is synchronised");
