@@ -6,8 +6,6 @@ import hijac.tools.tightrope.environments.ProgramEnv;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
@@ -18,7 +16,6 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
@@ -31,9 +28,6 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 	SCJAnalysis analysis;
 
 	private Trees trees;
-	private Set<CompilationUnitTree> units;
-	private Set<TypeElement> type_elements;
-
 	private ReturnVisitor returnVisitor = new ReturnVisitor(null);
 
 
@@ -43,8 +37,8 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 		this.programEnv = programEnv;
 
 		trees = analysis.TREES;
-		units = analysis.getCompilationUnits();
-		type_elements = analysis.getTypeElements();
+		analysis.getCompilationUnits();
+		analysis.getTypeElements();
 	}
 
 	@Override
@@ -75,6 +69,7 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<Name> visitType(TypeElement e, Void p)
 	{
@@ -101,16 +96,17 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 
 				if (o.getName().contentEquals("initializeApplication"))
 				{
-					programEnv.getSafelet().addMeth(o);
+					programEnv.getSafelet().addMeth(o.getName());
 				}
 
 				if (o.getName().contentEquals("getSequencer"))
 				{
 					// System.out.println("in iterator");
-					programEnv.getSafelet().addMeth(o);
+					programEnv.getSafelet().addMeth(o.getName());
 					List<StatementTree> s = (List<StatementTree>) o.getBody()
 							.getStatements();
 
+					@SuppressWarnings("rawtypes")
 					Iterator j = s.iterator();
 
 					while (j.hasNext())

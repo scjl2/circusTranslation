@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Element;
@@ -19,6 +20,9 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+
+import cfjapa.parser.ast.type.PrimitiveType;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -26,6 +30,7 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
@@ -103,7 +108,24 @@ public class MissionLevel2Visitor implements
 				if(mt.getModifiers().getFlags()
 										.contains(Modifier.SYNCHRONIZED))
 				{
-					missionEnv.addSyncMeth(mt.getName());
+					
+					Map paramMap = new HashMap();
+					for(VariableTree vt : mt.getParameters())
+					{
+						paramMap.put(vt.getName().toString(), vt.getType());
+					}
+					
+					Tree returnType = mt.getReturnType();
+					TypeKind typeKind = TypeKind.ERROR;
+					
+					if(returnType instanceof PrimitiveTypeTree)
+					{
+						 typeKind = ((PrimitiveTypeTree) mt.getReturnType()). getPrimitiveTypeKind();
+						
+					}
+				
+					
+					missionEnv.addSyncMeth(mt.getName(),typeKind , paramMap );
 				}
 				
 				if (mt.getName().contentEquals("initialize"))

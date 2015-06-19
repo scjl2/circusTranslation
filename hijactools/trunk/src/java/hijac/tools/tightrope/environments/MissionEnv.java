@@ -2,12 +2,9 @@ package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
-
-import com.sun.source.tree.MethodTree;
 
 
 	
@@ -21,8 +18,9 @@ import com.sun.source.tree.MethodTree;
 			Map map = new HashMap();
 			map.put("MissionID", name.toString());
 			map.put("RegisteredSchedulables", schedulables);
-			map.put("Methods", meths);
-			map.put("SyncMethods", syncMeths);
+			map.put("Methods", methsList());
+			map.put("SyncMethods", syncMethsList());
+			
 //			map.put("initializeApplicationMethod", "");
 					
 //			if (tlmsNames.length == 1)

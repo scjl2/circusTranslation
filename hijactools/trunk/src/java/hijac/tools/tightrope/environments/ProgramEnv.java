@@ -53,26 +53,6 @@ public class ProgramEnv
 		return structureEnv;
 	}
 
-	public void getMethod(String methodName)
-	{
-		// ClassTree ct = getSafelet().getClassTree();
-
-		// List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-
-		Iterator<MethodTree> i = getSafelet().getMeths().iterator();
-		while (i.hasNext())
-		{
-			MethodTree o = i.next();
-
-			if (o.getName().contentEquals(methodName))
-			{
-				// explore it
-				System.out.println(o.getName());
-				System.out.println(o);
-			}
-		}
-
-	}
 
 	public List<NonParadigmEnv> getNonParadigmObjectEnvs()
 	{

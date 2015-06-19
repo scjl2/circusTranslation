@@ -4,22 +4,30 @@ ${meth}Meth \circdef \\
 \circblockopen
 ${meth}Call~.~${MissionID} \then \\
 ~\\
+<#if meth.returnType != 'VOID'>
+${meth}Ret~.~${MissionID}~.~${meth.returnType} \then \\
+<#else>
 ${meth}Ret~.~${MissionID} \then \\
+</#if>
 \Skip
 \circblockclose
 \end{circusaction}	
 </#list>
 %
-<#list SyncMethods as meth>
+<#list SyncMethods as meth >
 \begin{circusaction}
-${meth}SyncMeth \circdef \\
+${meth.methodName}SyncMeth \circdef \\
 \circblockopen
-${meth}Call~.~${MissionID}~?~thread \then \\
+${meth.methodName}Call~.~${MissionID}~?~thread \then \\
 startSyncMeth~.~${MissionID}~.~thread \then \\
 lockAcquired~.~${MissionID}~.~thread \then \\
 ~\\
 endSyncMeth~.~${MissionID}~.~thread \then  \\
-${meth}Ret~.~${MissionID}~.~thread \then \\
+<#if meth.returnType != 'VOID'>
+${meth.methodName}Ret~.~${MissionID}~.~${meth.returnType}~.~thread \then \\
+<#else>
+${meth.methodName}Ret~.~${MissionID}~.~thread \then \\
+</#if>
 \Skip
 \circblockclose
 \end{circusaction}	

@@ -6,6 +6,6 @@
 %
 <#list SyncMethods as meth>
 	\extchoice \\
-	${meth}SyncMeth \\	
+	${meth.methodName}SyncMeth \\	
 </#list>
 %

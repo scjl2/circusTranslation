@@ -7,11 +7,6 @@
 \end{circus}
 
 \begin{circusaction}
-Methods \circdef \\
-	Run \circseq Methods
-\end{circusaction}
-
-\begin{circusaction}
 Run \circdef \\
 \circblockopen
 	runCall~.~${SchedulableID} \then \\
@@ -20,6 +15,11 @@ Run \circdef \\
 	\Skip
 \circblockclose
 \end{circusaction}	
+
+\begin{circusaction}
+Methods \circdef \\
+	Run \circseq Methods
+\end{circusaction}
 
 \begin{circusaction}
 \circspot (Methods) \circinterrupt (end\_managedThread\_app~.~${SchedulableID} \then \Skip)
