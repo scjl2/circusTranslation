@@ -12,7 +12,7 @@ public class MethodEnv
 	private Name methodName;
 	private TypeKind returnType;
 	private Map<String, Type> parameters;
-	
+	//TODO Capture return value as well
 	
 	public MethodEnv(Name name)
 	{

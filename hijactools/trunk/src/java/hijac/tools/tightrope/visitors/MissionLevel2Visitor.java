@@ -114,7 +114,7 @@ public class MissionLevel2Visitor implements
 					{
 						paramMap.put(vt.getName().toString(), vt.getType());
 					}
-					
+					//TODO This needs to now actually figure out WHAT is returned and return it too
 					Tree returnType = mt.getReturnType();
 					TypeKind typeKind = TypeKind.ERROR;
 					
