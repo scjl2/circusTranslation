@@ -21,6 +21,8 @@
 \circprocess ${MissionID}App \circdef \circbegin
 \end{circus}
 
+<#include "State-Template.ftl">
+
 \begin{circusaction}
 InitializePhase \circdef \\
 \circblockopen

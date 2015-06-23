@@ -30,8 +30,8 @@ public class EnvironmentBuilder
 {
 	public SCJAnalysis analysis;
 
-//	private Trees trees;
-//	private Set<CompilationUnitTree> units;
+	// private Trees trees;
+	// private Set<CompilationUnitTree> units;
 	private Set<TypeElement> type_elements;
 
 	private ProgramEnv programEnv;
@@ -42,8 +42,8 @@ public class EnvironmentBuilder
 		this.analysis = analysis;
 		this.programEnv = new ProgramEnv(analysis);
 
-//		trees = analysis.TREES;
-//		units = analysis.getCompilationUnits();
+		// trees = analysis.TREES;
+		// units = analysis.getCompilationUnits();
 		type_elements = analysis.getTypeElements();
 
 	}
@@ -101,12 +101,12 @@ public class EnvironmentBuilder
 		System.out.println("+++ Building Environments +++");
 		System.out.println();
 		ArrayList<Name> topLevelMissionSequners = buildSafelet(getSafelet());
-		
+
 		for (Name n : topLevelMissionSequners)
 		{
-//			System.out.println("+++ top Level Sequencer: " + n + " ***");
+			// System.out.println("+++ top Level Sequencer: " + n + " ***");
 
-//			programEnv.addMission(n);
+			// programEnv.addMission(n);
 
 			buildTopLevelMissionSequencer(n);
 		}
@@ -154,14 +154,12 @@ public class EnvironmentBuilder
 	}
 
 	private ArrayList<Name> buildSafelet(TypeElement safelet)
-	{		
+	{
 
 		ArrayList<Name> topLevelMissionSequencers = null;
 		topLevelMissionSequencers = safelet.accept(new SafeletLevel2Visitor(
 				programEnv, analysis), null);
 
-	
-		
 		for (Name n : topLevelMissionSequencers)
 		{
 			System.out.println();
@@ -178,13 +176,12 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println("+++ Building Top Level Sequencer +++");
 		System.out.println();
-		//First Cluster
-//		programEnv.newCluster(tlms);
-		
-		TypeElement tlmsElement = 
-		analysis.ELEMENTS
-		.getTypeElement(packagePrefix + tlms);
-		
+		// First Cluster
+		// programEnv.newCluster(tlms);
+
+		TypeElement tlmsElement = analysis.ELEMENTS
+				.getTypeElement(packagePrefix + tlms);
+
 		ArrayList<Name> missions = tlmsElement.accept(
 				new MissionSequencerLevel2Visitor(programEnv, analysis), null);
 
@@ -194,25 +191,25 @@ public class EnvironmentBuilder
 		} else
 		{
 			programEnv.newTier();
-			
+
 			for (Name n : missions)
 			{
 				programEnv.newCluster(tlms);
 				System.out.println("+++ Exploring Mission " + n + " +++");
-				
+
 				programEnv.addMissionSequencerMission(tlms, n);
-//			System.out.println("buildMission:" + n);	//
-			buildMission(n);
-//				if(newClusterNeeded)
-//				{
-//					programEnv.newCluster(tlms);				
-//				}
-//				else
-//				{
-//					newClusterNeeded = true;
-//				}
+				// System.out.println("buildMission:" + n); //
+				buildMission(n);
+				// if(newClusterNeeded)
+				// {
+				// programEnv.newCluster(tlms);
+				// }
+				// else
+				// {
+				// newClusterNeeded = true;
+				// }
 			}
-			
+
 		}
 
 	}
@@ -226,22 +223,34 @@ public class EnvironmentBuilder
 		programEnv.addMission(n);
 
 		ParadigmEnv missionEnv = programEnv.getFrameworkEnv().getMission(n);
-		
+
 		String fullName = packagePrefix + n;
-		Elements elems =analysis.ELEMENTS;	
+		Elements elems = analysis.ELEMENTS;
 		System.out.println("Building Mission: Full Name = " + fullName);
+
+		TypeElement missionType = elems.getTypeElement(fullName);
+
+		HashMap<Name, Tree> variables = getVariables(missionType);
 		
-		ArrayList<Name> schedulables = elems.getTypeElement(fullName
-				).accept(
-				new MissionLevel2Visitor(programEnv, missionEnv, analysis), null);
-		
+		//TODO Here be more hack
+		for (Name varName : variables.keySet())
+		{
+			//TODO This needs to have the TypeKind, so VariableVisitor needs to find the TypeKind of the var.
+			//TODO Ideally the VariableVisitor needs to retrun a VariableEnv
+			missionEnv.addVariable(varName, variables.get(varName), null);
+		}
+
+		ArrayList<Name> schedulables = missionType.accept(
+				new MissionLevel2Visitor(programEnv, missionEnv, analysis),
+				null);
+
 		if (schedulables == null)
 		{
 			System.out.println("+++ No Schedulables +++");
 		} else
 		{
 			buildSchedulables(schedulables);
-//			System.out.println("Build Schedulables");
+			// System.out.println("Build Schedulables");
 		}
 
 	}
@@ -263,86 +272,83 @@ public class EnvironmentBuilder
 			if (type == SchedulableTypeE.SMS)
 			{
 				nestedSequencers.add(s);
-			}	
-			
+			}
+
 			buildShedulable(s);
 		}
 
 		if (!nestedSequencers.isEmpty())
 		{
 			buildSchedulableMissionSequencer(nestedSequencers);
-//			System.out.println("Build SMS");
+			// System.out.println("Build SMS");
 		}
 	}
 
 	private void buildShedulable(Name s)
 	{
 		System.out.println();
-		System.out.println("+++ Building Schedulable "+ s+" +++");
+		System.out.println("+++ Building Schedulable " + s + " +++");
 		System.out.println();
-		
-		
+
 		String fullName = packagePrefix + s;
-		Elements elems =analysis.ELEMENTS;	
+		Elements elems = analysis.ELEMENTS;
 		System.out.println("Building Schedulable: Full Name = " + fullName);
 		TypeElement schedulableType = elems.getTypeElement(fullName);
-	
+
 		ClassTree ct = analysis.TREES.getTree(schedulableType);
-			
-			
-		
-		
-		
-//			ReturnVisitor rv = new ReturnVisitor(ct);
-//			System.out.println("Retrun Visitor says... " +rv.getReturns());
 
-			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-			
+		// ReturnVisitor rv = new ReturnVisitor(ct);
+		// System.out.println("Retrun Visitor says... " +rv.getReturns());
 
-			Iterator<StatementTree> i = members.iterator();
+		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 
-			ArrayList<Name> sycnMeths = new ArrayList<Name>();
-			
-			HashMap<Name, Tree> variables;
-			
-			while (i.hasNext())
-			{
-				
-				ArrayList<Name> tmp = new ArrayList<Name>();
-				variables =  getVariables(schedulableType);
-				System.out.println("\t *** variables = "+ variables);
-				
-				Tree tlst = i.next();
-//				System.out.println("MS Visitor i=" + ((Tree) i).getKind());
+		Iterator<StatementTree> i = members.iterator();
 
-				if (tlst instanceof MethodTree)
-				{
-					MethodTree mt = (MethodTree) tlst;
-					
-					System.out.println("*** Method Name = "+ mt.getName() + " ***");
-		
-					tmp = tlst.accept(new ManagedThreadVisitor(programEnv, analysis, variables, packagePrefix), null);
-				
-				}
-				
-				if(tmp != null)
-				{					
-					sycnMeths.addAll(tmp);
-				}
-				
-			}
-		System.out.println();
-		System.out.println("+++ syncMethds empty = " + (sycnMeths.size() <= 0) + " +++");
-		if(sycnMeths.size() > 0 )
+		ArrayList<Name> sycnMeths = new ArrayList<Name>();
+
+		HashMap<Name, Tree> variables;
+
+		while (i.hasNext())
 		{
-			System.out.println("*** SyncMeths for " + s +" ***");
-			for(Name n : sycnMeths)
+
+			ArrayList<Name> tmp = new ArrayList<Name>();
+			variables = getVariables(schedulableType);
+			System.out.println("\t *** variables = " + variables);
+
+			Tree tlst = i.next();
+			// System.out.println("MS Visitor i=" + ((Tree) i).getKind());
+
+			if (tlst instanceof MethodTree)
 			{
-				System.out.println("\t*** "+ n + " is synchronised");
+				MethodTree mt = (MethodTree) tlst;
+
+				System.out
+						.println("*** Method Name = " + mt.getName() + " ***");
+
+				tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
+						analysis, variables, packagePrefix), null);
+
+			}
+
+			if (tmp != null)
+			{
+				sycnMeths.addAll(tmp);
+			}
+
+		}
+		System.out.println();
+		System.out.println("+++ syncMethds empty = " + (sycnMeths.size() <= 0)
+				+ " +++");
+		if (sycnMeths.size() > 0)
+		{
+			System.out.println("*** SyncMeths for " + s + " ***");
+			for (Name n : sycnMeths)
+			{
+				System.out.println("\t*** " + n + " is synchronised");
 			}
 		}
 		System.out.println();
-		
+
 	}
 
 	private void buildSchedulableMissionSequencer(
@@ -354,101 +360,100 @@ public class EnvironmentBuilder
 
 		for (Name sequencer : nestedSequencers)
 		{
-//			programEnv.newTier();
+			// programEnv.newTier();
 
 			ArrayList<Name> missions = (analysis.ELEMENTS
 					.getTypeElement(packagePrefix + sequencer).accept(
 					new MissionSequencerLevel2Visitor(programEnv, analysis),
 					null));
-		
 
-			
 			if (missions == null)
 			{
 				System.out.println("+++ No Missions +++");
 			} else
 			{
-				System.out.println(" +++ I have " + missions.size() + " missions +++ ");
+				System.out.println(" +++ I have " + missions.size()
+						+ " missions +++ ");
 				programEnv.newTier();
-//				boolean newClusterNeeded = false;
+				// boolean newClusterNeeded = false;
 				for (Name n : missions)
 				{
 					programEnv.newCluster(sequencer);
 					System.out.println("+++ Exploring Mission " + n + " +++");
-					
+
 					programEnv.addMissionSequencerMission(sequencer, n);
 					System.out.println("Build Mission: " + n);
 					buildMission(n);
-//					if(newClusterNeeded)
-//					{
-//						programEnv.newCluster(sequencer);
-//					}
-//					else
-//					{
-//						newClusterNeeded = true;
-////					}
+					// if(newClusterNeeded)
+					// {
+					// programEnv.newCluster(sequencer);
+					// }
+					// else
+					// {
+					// newClusterNeeded = true;
+					// // }
 				}
 			}
 
 		}
 	}
 
-//	public ProgramEnv build()
-//	{
-//
-//		Name[] names = null;
-//		String packagePrefix = null;
-//
-//		// for all the types in the program
-//		for (TypeElement elem : type_elements)
-//		{
-//			// System.out.println(elem.toString());
-//			String elemID = elem.toString();
-//			// if the type we have is the safelet
-//
-//			TypeMirror safelet_type = (TypeMirror) analysis.get(Hijac
-//					.key("SafeletType"));
-//
-//			//
-//			if (elem.getInterfaces().toString().contains("Safelet"))
-//			{
-//				System.out.println("Found Safelet");
-//
-//				// packagePrefix = findPackagePrefix(elem);
-//
-//				programEnv.addSafelet(elem.getSimpleName());
-//
-//				// add methods etc here
-//				programEnv.getSafelet();
-//
-//				// names = elem.accept(new SafeletLevel2Visitor(programEnv,
-//				// analysis), null);
-//
-////				programEnv.getSafelet().setTLMSNames(names);
-//
-//				for (int i = 0; i < names.length; i++)
-//				{
-//					// framework.put("TopLevelMissionSequencer", names[i]);
-//					programEnv.addTopLevelMissionSequencer(names[i]);
-//				}
-//
-//				System.out.println(names == null);
-//
-//			}
-//
-//		}
-//
-//		Name[] missionNames = null;
-//
-//		missionNames = buildMissionSequencers(names, packagePrefix,
-//				missionNames);
-//
-//		Name[][] clusters = null;
-//
-//		buildMissions(packagePrefix, missionNames);
-//
-//		return programEnv;
-//	}
+	// public ProgramEnv build()
+	// {
+	//
+	// Name[] names = null;
+	// String packagePrefix = null;
+	//
+	// // for all the types in the program
+	// for (TypeElement elem : type_elements)
+	// {
+	// // System.out.println(elem.toString());
+	// String elemID = elem.toString();
+	// // if the type we have is the safelet
+	//
+	// TypeMirror safelet_type = (TypeMirror) analysis.get(Hijac
+	// .key("SafeletType"));
+	//
+	// //
+	// if (elem.getInterfaces().toString().contains("Safelet"))
+	// {
+	// System.out.println("Found Safelet");
+	//
+	// // packagePrefix = findPackagePrefix(elem);
+	//
+	// programEnv.addSafelet(elem.getSimpleName());
+	//
+	// // add methods etc here
+	// programEnv.getSafelet();
+	//
+	// // names = elem.accept(new SafeletLevel2Visitor(programEnv,
+	// // analysis), null);
+	//
+	// // programEnv.getSafelet().setTLMSNames(names);
+	//
+	// for (int i = 0; i < names.length; i++)
+	// {
+	// // framework.put("TopLevelMissionSequencer", names[i]);
+	// programEnv.addTopLevelMissionSequencer(names[i]);
+	// }
+	//
+	// System.out.println(names == null);
+	//
+	// }
+	//
+	// }
+	//
+	// Name[] missionNames = null;
+	//
+	// missionNames = buildMissionSequencers(names, packagePrefix,
+	// missionNames);
+	//
+	// Name[][] clusters = null;
+	//
+	// buildMissions(packagePrefix, missionNames);
+	//
+	// return programEnv;
+	// }
 
 	private String findPackagePrefix(TypeElement elem)
 	{
@@ -459,110 +464,111 @@ public class EnvironmentBuilder
 		packagePrefix = packagePrefix.substring(0, firstIndex);
 		return packagePrefix;
 	}
-	
+
 	private HashMap<Name, Tree> getVariables(TypeElement arg0)
 	{
 		HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
-		
+
 		VariableVisitor varVisitor = new VariableVisitor(programEnv);
-		
+
 		ClassTree ct = analysis.TREES.getTree(arg0);
-		List<? extends Tree> members =  ct.getMembers();
+		List<? extends Tree> members = ct.getMembers();
 		Iterator<? extends Tree> i = members.iterator();
-		
-		
-		while(i.hasNext())
+
+		while (i.hasNext())
 		{
 			Tree s = i.next();
 			System.out.println("\t *** Tree = " + s);
-			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, false) ; 
-			
-			
-//			 System.out.println("+++ m == null : " + m == null + " +++" );
-			 
-			 if (m == null)
-			 {
-				 System.out.println("+++ Variable Visitor Returned Null +++");
-					
-			 }
-			 else
-			 {
-//				 System.out.println("+++ Variable Visitor Returned " + m);
-//				 if(s instanceof MethodTree)
-//					{
-//						MethodTree mt = (MethodTree)s;
-//						if(mt.getName().contentEquals("<init>")  )
-//						{
-//							System.out.println("*** it was init, continue ***");
-//							continue;
-//						}
-//						else
-//						{
-//							System.out.println("*** Adding 1***");
-//							 varMap.putAll(m);	
-//						}
-//						
-//					}
-//				 else
-//				 {
-//					 System.out.println("*** Adding 2***");
-//					 varMap.putAll(m);	
-//				 }
-				 
-				
-				 
-				 for(Name n : m.keySet())
-				 {
-					 System.out.println("\t*** Name = " + n + " Type = " + m.get(n) + " Kind = " + m.get(n).getKind() );
-					 varMap.putIfAbsent(n, m.get(n));
-				 }
-				 
-			 }
-				
+			// TODO if this is only ever going to return one value at a time
+			// then it shouldn't be a map
+			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor,
+					false);
+
+			// System.out.println("+++ m == null : " + m == null + " +++" );
+
+			if (m == null)
+			{
+				System.out.println("+++ Variable Visitor Returned Null +++");
+
+			} else
+			{
+				// System.out.println("+++ Variable Visitor Returned " + m);
+				// if(s instanceof MethodTree)
+				// {
+				// MethodTree mt = (MethodTree)s;
+				// if(mt.getName().contentEquals("<init>") )
+				// {
+				// System.out.println("*** it was init, continue ***");
+				// continue;
+				// }
+				// else
+				// {
+				// System.out.println("*** Adding 1***");
+				// varMap.putAll(m);
+				// }
+				//
+				// }
+				// else
+				// {
+				// System.out.println("*** Adding 2***");
+				// varMap.putAll(m);
+				// }
+
+				// TODO this is a bit of a hack...
+
+				for (Name n : m.keySet())
+				{
+					System.out.println("\t*** Name = " + n + " Type = "
+							+ m.get(n) + " Kind = " + m.get(n).getKind());
+					varMap.putIfAbsent(n, m.get(n));
+				}
+
+			}
+
 		}
-		
+
 		return varMap;
-		
+
 	}
 
-//	private Name[] buildMissionSequencers(Name[] names, String packagePrefix,
-//			Name[] missionNames)
-//	{
-//		if (names != null)
-//		{
-//			System.out.println("Mission Sequencer Visiting");
-//			for (int i = 0; i < names.length; i++)
-//			{
-//				programEnv.addTopLevelMissionSequencer(names[i]);
-//				// System.out.println(packagePrefix +names[i]);
-//				TypeElement elem = analysis.getTypeElement(packagePrefix
-//						+ names[i]);
-//
-//				System.out.println("Visiting: " + elem);
-//				// missionNames = elem.accept(new
-//				// MissionSequencerLevel2Visitor(programEnv, analysis),
-//				// null);
-//			}
-//		}
-//		return missionNames;
-//	}
-//
-//	private void buildMissions(String packagePrefix, Name[] missionNames)
-//	{
-//		Name[] schedulables;
-//		if (missionNames != null)
-//		{
-//			System.out.println("Mission Visiting");
-//			for (int i = 0; i < missionNames.length; i++)
-//			{
-//				programEnv.addMission(missionNames[i]);
-//				TypeElement elem = analysis.getTypeElement(packagePrefix
-//						+ missionNames[i]);
-//				System.out.println("Visiting: " + elem);
-//
-//				elem.accept(new MissionLevel2Visitor(programEnv, analysis),
-//						null);
-//			}
-//		}
-//	}
+	// private Name[] buildMissionSequencers(Name[] names, String packagePrefix,
+	// Name[] missionNames)
+	// {
+	// if (names != null)
+	// {
+	// System.out.println("Mission Sequencer Visiting");
+	// for (int i = 0; i < names.length; i++)
+	// {
+	// programEnv.addTopLevelMissionSequencer(names[i]);
+	// // System.out.println(packagePrefix +names[i]);
+	// TypeElement elem = analysis.getTypeElement(packagePrefix
+	// + names[i]);
+	//
+	// System.out.println("Visiting: " + elem);
+	// // missionNames = elem.accept(new
+	// // MissionSequencerLevel2Visitor(programEnv, analysis),
+	// // null);
+	// }
+	// }
+	// return missionNames;
+	// }
+	//
+	// private void buildMissions(String packagePrefix, Name[] missionNames)
+	// {
+	// Name[] schedulables;
+	// if (missionNames != null)
+	// {
+	// System.out.println("Mission Visiting");
+	// for (int i = 0; i < missionNames.length; i++)
+	// {
+	// programEnv.addMission(missionNames[i]);
+	// TypeElement elem = analysis.getTypeElement(packagePrefix
+	// + missionNames[i]);
+	// System.out.println("Visiting: " + elem);
+	//
+	// elem.accept(new MissionLevel2Visitor(programEnv, analysis),
+	// null);
+	// }
+	// }
+	// }
 }

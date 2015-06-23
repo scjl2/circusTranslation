@@ -51,4 +51,9 @@ public class MethodEnv
 	{
 		this.parameters = parameters;
 	}
+
+	public String getReturnValue()
+	{
+		return null;
+	}
 }

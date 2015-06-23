@@ -13,6 +13,7 @@ import com.sun.source.tree.MethodTree;
 
 public class ParadigmEnv extends ObjectEnv
 {
+	List<VariableEnv> variables;
 	List<MethodEnv> meths;
 	List<MethodEnv> syncMeths;
 
@@ -22,6 +23,7 @@ public class ParadigmEnv extends ObjectEnv
 		// nonPMeths = new ArrayList<Name>();
 		meths = new ArrayList<MethodEnv>();
 		syncMeths = new ArrayList<MethodEnv>();
+		
 	}
 
 	// public List<Name> getNonPMeths()
@@ -34,6 +36,8 @@ public class ParadigmEnv extends ObjectEnv
 	// nonPMeths.add(nonPMeth);
 	// }
 
+	
+	
 	public List<MethodEnv> getMeths()
 	{
 		return meths;
@@ -48,6 +52,8 @@ public class ParadigmEnv extends ObjectEnv
 	{
 		syncMeths.add(new MethodEnv(name, returnType, params));
 	}
+	
+	
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Map> methsList()
@@ -81,6 +87,7 @@ public class ParadigmEnv extends ObjectEnv
 			Map methodMap = new HashMap();
 			methodMap.put("methodName", me.getMethodName().toString());
 			methodMap.put("returnType", me.getReturnType());
+			methodMap.put("returnValue", me.getReturnValue());
 			methodMap.put("parameters", me.getParameters());
 
 			returnList.add(methodMap);

@@ -67,10 +67,11 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
+import com.sun.tools.internal.ws.wsdl.document.Types;
 
 public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 {
-
+	//TODO This returns Names and Trees, it should return Names and TypeKinds....but how?
 	private Tree save;
 	private ArrayList<Name> returns = new ArrayList<Name>();
 	private ClassTree tree;
@@ -154,7 +155,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		
 		if (expression instanceof NewClassTree)
 		{
-			expressionTree = ((NewClassTree) expression).getIdentifier();
+			expressionTree = ((NewClassTree) expression).getIdentifier();			
 		}
 
 		if(expression instanceof IdentifierTree)
@@ -539,7 +540,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		System.out.println("-> Name = " + arg0.getName() + " Type = "
 				+ arg0.getType());
-
+			
 		r.put(arg0.getName(), arg0.getType());
 
 		// System.out.println("+++ r is null : " + r == null + " +++");

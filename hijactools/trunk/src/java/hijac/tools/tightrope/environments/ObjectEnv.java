@@ -1,9 +1,12 @@
 package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.lang.model.element.Name;
+import javax.lang.model.type.TypeKind;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -12,12 +15,12 @@ public class ObjectEnv
 {
 //	ClassTree classTree;
 	Name name;
-	List<Name> vars;
+	List<VariableEnv> variables;
 	List<MethodTree> meths;
 
 	public ObjectEnv()
 	{
-		vars = new ArrayList<Name>();
+		variables = new ArrayList<VariableEnv>();
 	}
 
 	public Name getName()
@@ -30,14 +33,30 @@ public class ObjectEnv
 		this.name = safelet;
 	}
 
-	public List<Name> getVars()
+	public void addVariable(Name variableName, TypeKind variableType,
+			Object variableInit)
 	{
-		return vars;
+		variables.add(new VariableEnv(variableName, variableType, variableInit));		
 	}
-
-	public void addVar(Name var)
+	
+	public List<VariableEnv> getVariables()
 	{
-		vars.add(var);
+		return variables;
+	}
+	
+	public List<Map> varsList()
+	{
+		List<Map> returnList = new ArrayList<>();
+		
+		for(VariableEnv v : variables)
+		{
+			Map varMap = new HashMap();
+			varMap.put("VarName", v.getVariableName());
+			varMap.put("VarType", v.getVariableType());
+			varMap.put("VarInit", v.getVariableInit());
+		}
+		
+		return returnList;
 	}
 
 //	public ClassTree getClassTree()
