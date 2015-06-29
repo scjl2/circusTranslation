@@ -45,7 +45,14 @@ public class MethodEnv
 
 	public String getReturnType()
 	{
+		if(returnType != null)
+		{
 			return returnType.toString();
+		}
+		else
+		{
+			return "null";
+		}
 	}
 
 	public void setReturnType(TypeKind returnType)
@@ -68,7 +75,7 @@ public class MethodEnv
 		//TODO MORE HACKERY
 		if(returnValues != null)
 		{
-		return returnValues.get(0).toString();
+			return returnValues.toString();
 		}
 		else
 		{
