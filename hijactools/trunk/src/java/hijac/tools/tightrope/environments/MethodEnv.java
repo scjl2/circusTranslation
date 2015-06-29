@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.environments;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
@@ -13,12 +14,22 @@ public class MethodEnv
 	private TypeKind returnType;
 	private Map<String, Type> parameters;
 	//TODO Capture return value as well
+	private ArrayList<Name> returnValues;
 	
 	public MethodEnv(Name name)
 	{
 		this.methodName = name;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
+	{
+		this.methodName = name;
+		this.returnType = returnType;
+		this.parameters = params;
+		this.returnValues = returnValues;
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MethodEnv(Name name, TypeKind returnType, Map params)
 	{
@@ -54,6 +65,14 @@ public class MethodEnv
 
 	public String getReturnValue()
 	{
-		return null;
+		//TODO MORE HACKERY
+		if(returnValues != null)
+		{
+		return returnValues.get(0).toString();
+		}
+		else
+		{
+			return "null";
+		}
 	}
 }

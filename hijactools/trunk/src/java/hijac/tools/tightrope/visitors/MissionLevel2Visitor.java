@@ -123,9 +123,9 @@ public class MissionLevel2Visitor implements
 						 typeKind = ((PrimitiveTypeTree) mt.getReturnType()). getPrimitiveTypeKind();
 						 
 					}
-				
+				ArrayList<Name> returns = mt.accept(new ReturnVisitor(null), null);
 					
-					missionEnv.addSyncMeth(mt.getName(),typeKind , paramMap );
+					missionEnv.addSyncMeth(mt.getName(),typeKind , returns ,paramMap );
 				}
 				
 				if (mt.getName().contentEquals("initialize"))

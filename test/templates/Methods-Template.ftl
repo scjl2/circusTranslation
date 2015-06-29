@@ -1,6 +1,6 @@
 <#list Methods as meth>
 \begin{circusaction}
-${meth}Meth \circdef \\
+${meth.methodName}Meth \circdef \\
 \circblockopen
 ${meth}Call~.~${MissionID} \then \\
 ~\\

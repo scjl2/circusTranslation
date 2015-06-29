@@ -138,7 +138,7 @@ public class FrameworkEnv
 
 			for (ClusterEnv c : clusters)
 			{
-				for (ParadigmEnv p : c.getSchedulablesEnv()
+				for (ObjectEnv p : c.getSchedulablesEnv()
 						.getSchedulableMissionSequencerEnvs())
 				{
 					misssionSequeners.add(p.getName());
@@ -316,35 +316,35 @@ public class FrameworkEnv
 			switch (type)
 			{
 				case PEH:
-					for (ParadigmEnv p : periodEventHandlerEnvs)
+					for (ObjectEnv p : periodEventHandlerEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
 					break;
 
 				case APEH:
-					for (ParadigmEnv p : aperiodicEventHandlerEnvs)
+					for (ObjectEnv p : aperiodicEventHandlerEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
 					break;
 
 				case OSEH:
-					for (ParadigmEnv p : oneShotEventHandlerEnvs)
+					for (ObjectEnv p : oneShotEventHandlerEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
 					break;
 
 				case SMS:
-					for (ParadigmEnv p : schedulableMissionSequencerEnvs)
+					for (ObjectEnv p : schedulableMissionSequencerEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
 					break;
 
 				case MT:
-					for (ParadigmEnv p : managedThreadEnvs)
+					for (ObjectEnv p : managedThreadEnvs)
 					{
 						schedulablesList.add(p.getName());
 					}
@@ -418,7 +418,7 @@ public class FrameworkEnv
 				output += "Periodic Event Handlers:";
 				output += System.getProperty("line.separator");
 
-				for (ParadigmEnv p : periodEventHandlerEnvs)
+				for (ObjectEnv p : periodEventHandlerEnvs)
 				{
 					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
@@ -430,7 +430,7 @@ public class FrameworkEnv
 				output += "Aperidic Event Handlers:";
 				output += System.getProperty("line.separator");
 
-				for (ParadigmEnv p : aperiodicEventHandlerEnvs)
+				for (ObjectEnv p : aperiodicEventHandlerEnvs)
 				{
 					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
@@ -442,7 +442,7 @@ public class FrameworkEnv
 				output = "OneShot Event Handlers:";
 				output += System.getProperty("line.separator");
 
-				for (ParadigmEnv p : oneShotEventHandlerEnvs)
+				for (ObjectEnv p : oneShotEventHandlerEnvs)
 				{
 					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
@@ -454,7 +454,7 @@ public class FrameworkEnv
 				output += "Schedulable Mission Sequencers:";
 				output += System.getProperty("line.separator");
 
-				for (ParadigmEnv p : schedulableMissionSequencerEnvs)
+				for (ObjectEnv p : schedulableMissionSequencerEnvs)
 				{
 					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
@@ -466,7 +466,7 @@ public class FrameworkEnv
 				output += "Managed Threads:";
 				output += System.getProperty("line.separator");
 
-				for (ParadigmEnv p : managedThreadEnvs)
+				for (ObjectEnv p : managedThreadEnvs)
 				{
 					output += "\t"+p.getName();
 					output += System.getProperty("line.separator");
@@ -481,7 +481,7 @@ public class FrameworkEnv
 		// have the same name
 		public boolean containsSchedulable(Name name)
 		{
-			for (ParadigmEnv p : getAperiodicEventHandlerEnvs())
+			for (ObjectEnv p : getAperiodicEventHandlerEnvs())
 			{
 				if (p.getName().contentEquals(name))
 				{
@@ -489,7 +489,7 @@ public class FrameworkEnv
 				}
 			}
 
-			for (ParadigmEnv p : getPeriodEventHandlerEnvs())
+			for (ObjectEnv p : getPeriodEventHandlerEnvs())
 			{
 				if (p.getName().contentEquals(name))
 				{
@@ -497,7 +497,7 @@ public class FrameworkEnv
 				}
 			}
 
-			for (ParadigmEnv p : getOneShotEventHandlerEnvs())
+			for (ObjectEnv p : getOneShotEventHandlerEnvs())
 			{
 				if (p.getName().contentEquals(name))
 				{
@@ -505,7 +505,7 @@ public class FrameworkEnv
 				}
 			}
 
-			for (ParadigmEnv p : getManagedThreadEnvs())
+			for (ObjectEnv p : getManagedThreadEnvs())
 			{
 				if (p.getName().contentEquals(name))
 				{
@@ -513,7 +513,7 @@ public class FrameworkEnv
 				}
 			}
 
-			for (ParadigmEnv p : getSchedulableMissionSequencerEnvs())
+			for (ObjectEnv p : getSchedulableMissionSequencerEnvs())
 			{
 				if (p.getName().contentEquals(name))
 				{

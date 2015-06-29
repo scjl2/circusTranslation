@@ -3,10 +3,12 @@ package hijac.tools.tightrope.environments;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
+import com.sun.source.tree.Tree;
+
 public class VariableEnv
 {
 	private Name variableName;
-	private TypeKind variableType;
+	private Tree variableType;
 	private Object variableInit;
 
 	public VariableEnv()
@@ -15,13 +17,13 @@ public class VariableEnv
 		// TODO Auto-generated constructor stub
 	}
 
-	public VariableEnv(Name variableName, TypeKind variableType,
+	public VariableEnv(Name variableName, Tree variableType,
 			Object variableInit)
 	{
 		super();
 		this.variableName = variableName;
-		this.variableType = variableType;
-		this.variableInit = variableInit;
+		this.variableType = variableType;		
+		this.variableInit = "init_placeholder";
 	}
 
 	public Name getVariableName()
@@ -34,12 +36,12 @@ public class VariableEnv
 		this.variableName = variableName;
 	}
 
-	public TypeKind getVariableType()
+	public Tree getVariableType()
 	{
 		return variableType;
 	}
 
-	public void setVariableType(TypeKind variableType)
+	public void setVariableType(Tree variableType)
 	{
 		this.variableType = variableType;
 	}

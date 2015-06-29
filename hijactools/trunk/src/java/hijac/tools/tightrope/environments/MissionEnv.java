@@ -18,7 +18,7 @@ import javax.lang.model.element.Name;
 			Map map = new HashMap();
 			map.put("MissionID", name.toString());
 			map.put("RegisteredSchedulables", schedulables);
-			map.put("Variables", getVariables());
+			map.put("Variables", varsList());
 			map.put("Methods", methsList());
 			map.put("SyncMethods", syncMethsList());
 			

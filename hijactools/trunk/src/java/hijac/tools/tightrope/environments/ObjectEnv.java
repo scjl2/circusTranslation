@@ -9,14 +9,15 @@ import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 
 public class ObjectEnv
 {
 //	ClassTree classTree;
 	Name name;
 	List<VariableEnv> variables;
-	List<MethodTree> meths;
+	protected List<MethodEnv> meths;
+	protected List<MethodEnv> syncMeths;
 
 	public ObjectEnv()
 	{
@@ -33,7 +34,7 @@ public class ObjectEnv
 		this.name = safelet;
 	}
 
-	public void addVariable(Name variableName, TypeKind variableType,
+	public void addVariable(Name variableName, Tree variableType,
 			Object variableInit)
 	{
 		variables.add(new VariableEnv(variableName, variableType, variableInit));		
@@ -51,9 +52,11 @@ public class ObjectEnv
 		for(VariableEnv v : variables)
 		{
 			Map varMap = new HashMap();
-			varMap.put("VarName", v.getVariableName());
+			varMap.put("VarName", v.getVariableName().toString());
 			varMap.put("VarType", v.getVariableType());
-			varMap.put("VarInit", v.getVariableInit());
+			varMap.put("VarInit", v.getVariableInit().toString());
+			
+			returnList.add(varMap);
 		}
 		
 		return returnList;

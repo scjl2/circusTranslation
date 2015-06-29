@@ -13,10 +13,6 @@ import com.sun.source.tree.MethodTree;
 
 public class ParadigmEnv extends ObjectEnv
 {
-	List<VariableEnv> variables;
-	List<MethodEnv> meths;
-	List<MethodEnv> syncMeths;
-
 	public ParadigmEnv()
 	{
 		super();
@@ -48,9 +44,9 @@ public class ParadigmEnv extends ObjectEnv
 		meths.add(new MethodEnv(name));
 	}
 
-	public void addSyncMeth(Name name, TypeKind returnType, Map params)
+	public void addSyncMeth(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
 	{
-		syncMeths.add(new MethodEnv(name, returnType, params));
+		syncMeths.add(new MethodEnv(name, returnType, returnValues, params));
 	}
 	
 	
