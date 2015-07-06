@@ -2,7 +2,11 @@
 \begin{circusaction}
 ${meth.methodName}Meth \circdef \\
 \circblockopen
-${meth}Call~.~${MissionID} \then \\
+${meth}Call~.~${MissionID} 
+<#list meth.parameters?keys as param>
+~?~${param}
+</#list>
+\then \\
 ~\\
 <#if meth.returnType != 'VOID'>
 ${meth}Ret~.~${MissionID}~.~${meth.returnType} \then \\
@@ -18,7 +22,11 @@ ${meth}Ret~.~${MissionID} \then \\
 \begin{circusaction}
 ${meth.methodName}SyncMeth \circdef \\
 \circblockopen
-${meth.methodName}Call~.~${MissionID}~?~thread \then \\
+${meth.methodName}Call~.~${MissionID}~?~thread 
+<#list meth.parameters?keys as param>
+~?~${param}
+</#list>
+\then \\
 startSyncMeth~.~${MissionID}~.~thread \then \\
 lockAcquired~.~${MissionID}~.~thread \then \\
 ~\\

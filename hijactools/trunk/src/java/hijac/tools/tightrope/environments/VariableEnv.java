@@ -25,7 +25,7 @@ public class VariableEnv
 		this.variableType = variableType;
 		if(variableInit == null)
 		{
-			this.variableInit = "init_placeholder";
+			this.variableInit = "init\\_placeholder";
 		}
 		else
 		{
