@@ -2,16 +2,16 @@
 \begin{circusaction}
 ${meth.methodName}Meth \circdef \\
 \circblockopen
-${meth}Call~.~${MissionID} 
+${meth.methodName}Call~.~${MissionID} 
 <#list meth.parameters?keys as param>
 ~?~${param}
 </#list>
 \then \\
 ~\\
 <#if meth.returnType != 'VOID'>
-${meth}Ret~.~${MissionID}~.~${meth.returnType} \then \\
+${meth.methodName}Ret~.~${MissionID}~.~${meth.returnType} \then \\
 <#else>
-${meth}Ret~.~${MissionID} \then \\
+${meth.methodName}Ret~.~${MissionID} \then \\
 </#if>
 \Skip
 \circblockclose

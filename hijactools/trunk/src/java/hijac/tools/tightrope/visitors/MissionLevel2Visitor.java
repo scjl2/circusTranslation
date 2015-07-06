@@ -63,6 +63,7 @@ public class MissionLevel2Visitor implements
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
 	{
@@ -107,6 +108,7 @@ public class MissionLevel2Visitor implements
 				//capture the method
 				MethodTree mt = (MethodTree) tlst;
 
+				@SuppressWarnings("rawtypes")
 				Map paramMap = new HashMap();
 				for (VariableTree vt : mt.getParameters())
 				{

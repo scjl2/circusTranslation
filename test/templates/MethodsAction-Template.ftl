@@ -1,7 +1,7 @@
 %
 <#list Methods as meth>
 \extchoice \\
-	${meth}Meth \\ 
+	${meth.methodName}Meth \\ 
 </#list>
 %
 <#list SyncMethods as meth>
