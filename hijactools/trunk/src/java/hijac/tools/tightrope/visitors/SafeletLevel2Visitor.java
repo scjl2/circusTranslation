@@ -4,8 +4,11 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
@@ -14,11 +17,15 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
 public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Void>
@@ -94,15 +101,35 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 				MethodTree o = (MethodTree) obj;
 				// System.out.println(o.getName());
 
+				Tree returnType = o.getReturnType();
+				TypeKind typeKind = TypeKind.ERROR;
+
+				if (returnType instanceof PrimitiveTypeTree)
+				{
+					typeKind = ((PrimitiveTypeTree) o.getReturnType())
+							.getPrimitiveTypeKind();
+
+				}
+				ArrayList<Name> returns = o.accept(
+						new ReturnVisitor(null), null);
+				
+				Map paramMap = new HashMap();
+				for (VariableTree vt : o.getParameters())
+				{
+					paramMap.put(vt.getName().toString(), vt.getType());
+				}
+				
 				if (o.getName().contentEquals("initializeApplication"))
 				{
-					programEnv.getSafelet().addMeth(o.getName());
+					programEnv.getSafelet().addMeth(o.getName(), typeKind, returns,
+							paramMap);
 				}
 
 				if (o.getName().contentEquals("getSequencer"))
 				{
 					// System.out.println("in iterator");
-					programEnv.getSafelet().addMeth(o.getName());
+					programEnv.getSafelet().addMeth(o.getName(), typeKind, returns,
+							paramMap);
 					List<StatementTree> s = (List<StatementTree>) o.getBody()
 							.getStatements();
 

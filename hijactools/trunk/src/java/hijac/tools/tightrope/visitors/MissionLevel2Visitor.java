@@ -48,7 +48,8 @@ public class MissionLevel2Visitor implements
 
 	private RegistersVisitor registersVisitor;
 
-	public MissionLevel2Visitor(ProgramEnv programEnv, ParadigmEnv missionEnv,  SCJAnalysis analysis)
+	public MissionLevel2Visitor(ProgramEnv programEnv, ParadigmEnv missionEnv,
+			SCJAnalysis analysis)
 	{
 		this.analysis = analysis;
 		this.programEnv = programEnv;
@@ -57,10 +58,9 @@ public class MissionLevel2Visitor implements
 		trees = analysis.TREES;
 		analysis.getCompilationUnits();
 		analysis.getTypeElements();
-		
 
 		registersVisitor = new RegistersVisitor(programEnv, analysis);
-		
+
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class MissionLevel2Visitor implements
 
 		ArrayList<Name> schedulables = new ArrayList<Name>();
 		ClassTree ct = trees.getTree(arg0);
-			
+
 		List<Tree> members = (List<Tree>) ct.getMembers();
 		Iterator<Tree> i = members.iterator();
 		while (i.hasNext())
@@ -79,7 +79,7 @@ public class MissionLevel2Visitor implements
 
 			Tree tlst = i.next();
 			System.out.println("Mission Visistor: tlst = " + tlst.getKind());
-			
+
 			// Name name = tlst.accept(registersVisitor,null);
 			//
 			// if (name != null)
@@ -96,38 +96,38 @@ public class MissionLevel2Visitor implements
 				System.out.println("-> Name:" + vt.getName());
 				System.out.println("-> Type: " + vt.getType());
 
-				//TODO refactor this. Variables should be kept in the relevent env
+				// TODO refactor this. Variables should be kept in the relevent
+				// env
 				programEnv.addVariable(vt.getName(), vt.getType());
 
 			}
 
 			if (tlst instanceof MethodTree)
 			{
+				//capture the method
 				MethodTree mt = (MethodTree) tlst;
 
-				if(mt.getModifiers().getFlags()
-										.contains(Modifier.SYNCHRONIZED))
+				Map paramMap = new HashMap();
+				for (VariableTree vt : mt.getParameters())
 				{
-					
-					Map paramMap = new HashMap();
-					for(VariableTree vt : mt.getParameters())
-					{
-						paramMap.put(vt.getName().toString(), vt.getType());
-					}
-					//TODO This needs to now actually figure out WHAT is returned and return it too
-					Tree returnType = mt.getReturnType();
-					TypeKind typeKind = TypeKind.ERROR;
-					
-					if(returnType instanceof PrimitiveTypeTree)
-					{
-						 typeKind = ((PrimitiveTypeTree) mt.getReturnType()). getPrimitiveTypeKind();
-						 
-					}
-				ArrayList<Name> returns = mt.accept(new ReturnVisitor(null), null);
-					
-					missionEnv.addSyncMeth(mt.getName(),typeKind , returns ,paramMap );
+					paramMap.put(vt.getName().toString(), vt.getType());
 				}
+				// TODO This needs to now actually figure out WHAT is
+				// returned and return it too
+				Tree returnType = mt.getReturnType();
+				TypeKind typeKind = TypeKind.ERROR;
+
+				if (returnType instanceof PrimitiveTypeTree)
+				{
+					typeKind = ((PrimitiveTypeTree) mt.getReturnType())
+							.getPrimitiveTypeKind();
+
+				}
+				ArrayList<Name> returns = mt.accept(
+						new ReturnVisitor(null), null);
 				
+				
+
 				if (mt.getName().contentEquals("initialize"))
 				{
 					System.out.println("Mission Visitor: J iterator");
@@ -151,6 +151,22 @@ public class MissionLevel2Visitor implements
 						{
 							schedulables.add(name);
 						}
+					}
+				}
+				else
+				{
+					// ADD METHOD TO MISSION ENV
+					if (mt.getModifiers().getFlags()
+							.contains(Modifier.SYNCHRONIZED))
+					{
+
+						missionEnv.addSyncMeth(mt.getName(), typeKind, returns,
+								paramMap);
+					}
+					else if(! (mt.getName().contentEquals("<init>") || mt.getName().contentEquals("missionMemorySize") ))
+					{
+						missionEnv.addMeth(mt.getName(), typeKind, returns,
+								paramMap);
 					}
 				}
 			}

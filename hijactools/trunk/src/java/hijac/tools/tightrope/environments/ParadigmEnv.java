@@ -39,14 +39,14 @@ public class ParadigmEnv extends ObjectEnv
 		return meths;
 	}
 
-	public void addMeth(Name meth)
+	public void addMeth(Name methName, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
 	{
-		meths.add(new MethodEnv(name));
+		meths.add(new MethodEnv(methName, returnType, returnValues, params));
 	}
 
-	public void addSyncMeth(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
+	public void addSyncMeth(Name methName, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
 	{
-		syncMeths.add(new MethodEnv(name, returnType, returnValues, params));
+		syncMeths.add(new MethodEnv(methName, returnType, returnValues, params));
 	}
 	
 	
