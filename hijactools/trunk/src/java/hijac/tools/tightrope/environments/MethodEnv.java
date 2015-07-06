@@ -14,6 +14,8 @@ public class MethodEnv
 	private TypeKind returnType;
 	private Map<String, Type> parameters;
 	private ArrayList<Name> returnValues;
+	Object body;
+	
 	
 	public MethodEnv(Name name)
 	{
@@ -28,6 +30,18 @@ public class MethodEnv
 		this.parameters = params;
 		this.returnValues = returnValues;
 	}
+	
+	//TODO Find out what object the body should be
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params, Object body)
+	{
+		this.methodName = name;
+		this.returnType = returnType;
+		this.parameters = params;
+		this.returnValues = returnValues;
+		this.body = body;
+	}
+	
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MethodEnv(Name name, TypeKind returnType, Map params)

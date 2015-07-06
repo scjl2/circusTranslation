@@ -49,6 +49,16 @@ public class ParadigmEnv extends ObjectEnv
 		syncMeths.add(new MethodEnv(methName, returnType, returnValues, params));
 	}
 	
+	public void addMeth(MethodEnv me)
+	{
+		meths.add(me);
+	}
+
+	public void addSyncMeth(MethodEnv me)
+	{
+		syncMeths.add(me);
+	}
+	
 	
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
