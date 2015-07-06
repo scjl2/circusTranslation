@@ -139,7 +139,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 //		System.out.println("-> Expression = " + arg0.getExpression());
 //		System.out.println("-> expression.kind = "
 //				+ arg0.getExpression().getKind());
-		Map<Name, Tree> returnMap = new HashMap<Name, Tree>();
+		Map<Name, Tree> returnMap = null;
 
 		// Map<Name, Tree> expressionMap = arg0.getExpression().accept(this,
 		// false);
@@ -147,8 +147,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		Name varName = null;
 		Tree expression = arg0.getExpression();
 		Tree expressionTree = null;
-				
 		
+				
 		if (variable instanceof IdentifierTree)
 		{
 			varName = ((IdentifierTree) variable).getName();
@@ -171,13 +171,21 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			expressionTree = expression;
 		}
 		
+		if(expression instanceof LiteralTree)
+		{
+			expressionTree = expression;
+		}
+		
+	
+		
 		if(varName != null & expressionTree != null)
 		{
 			System.out.println("Adding to Var Map");
+			returnMap = new HashMap<Name, Tree>();
 			returnMap.put(varName, expressionTree);
 			if(objectEnv!= null && arg1 == true)
 			{
-				objectEnv.addVariable(varName, expressionTree , expression);
+				objectEnv.addVariableInit(varName, expressionTree);
 			}
 		}
 	
@@ -210,7 +218,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		{
 			StatementTree st = i.next();
 			System.out.println("Var Visitor Block: st kind = " + st.getKind());
-			Map<Name, Tree> statementReturn = st.accept(this, false);
+			Map<Name, Tree> statementReturn = st.accept(this, arg1);
 			// System.out.println("Var Visitor: Block: in while");
 			if (statementReturn != null)
 			{
@@ -321,7 +329,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	{
 
 		System.out.println("Var Visitor: Expression Statement Tree");
-		return arg0.getExpression().accept(this, false);
+		return arg0.getExpression().accept(this, arg1);
 
 	}
 
@@ -415,8 +423,17 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitMethod(MethodTree arg0, Boolean arg1)
 	{
 
-		return arg0.getBody().accept(this, false);
-
+		if(arg0.getName().contentEquals("<init>"))
+		{
+			System.out.println("+++ Var Visitor : Method Visitor found <init> +++");
+			return arg0.getBody().accept(this, true);
+		}
+		else
+		{
+			System.out.println("+++ Var Visitor : Method Visitor found method +++");
+			return arg0.getBody().accept(this, false);
+		}
+		
 	}
 
 	@Override

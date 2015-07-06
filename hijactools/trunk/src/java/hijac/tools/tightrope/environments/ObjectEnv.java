@@ -59,6 +59,18 @@ public class ObjectEnv
 		return returnList;
 	}
 
+	public void addVariableInit(Name varName, Tree init)
+	{
+		for(VariableEnv varEnv : getVariables())
+		{
+			if(varEnv.getVariableName().contentEquals(varName))
+			{
+				varEnv.setVariableInit(init);
+			}
+		}
+		
+	}
+
 //	public ClassTree getClassTree()
 //	{
 //		return classTree;
