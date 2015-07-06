@@ -1,24 +1,24 @@
 \begin{zsection}
-  \SECTION ~ ${MissionID}App ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \SECTION ~ ${ProcessID}App ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
 \end{zsection}
 %\begin{circus}
-%\circchannelset MissionAppSync == \\
+%\circchannelset ${ProcessID}AppSync == \\
 %	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
 %\end{circus}
 
 %\begin{circus}
-%\circchannelset MissionAppChanSet == \\
+%\circchannelset ${ProcessID}AppChanSet == \\
 % \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
 
 <#list RegisteredSchedulables as SchedulableID >
-%    register~.~${SchedulableID}~.~${MissionID} 
+%    register~.~${SchedulableID}~.~${ProcessID} 
 </#list>
 %\rchanset
 %\end{circus}
 
 \begin{circus}
-\circprocess ${MissionID}App \circdef \circbegin
+\circprocess ${ProcessID}App \circdef \circbegin
 \end{circus}
 
 <#include "State-Template.ftl">
@@ -26,14 +26,14 @@
 \begin{circusaction}
 InitializePhase \circdef \\
 \circblockopen
-  initializeCall~.~${MissionID} \then \\
+  initializeCall~.~${ProcessID} \then \\
   
 <#list RegisteredSchedulables as SchedulableID >
-	register~!~${SchedulableID}~!~${MissionID} \then   \\
+	register~!~${SchedulableID}~!~${ProcessID} \then   \\
 </#list>
 
 
-  initializeRet~.~${MissionID} \then \\
+  initializeRet~.~${ProcessID} \then \\
   \Skip
 \circblockclose 
 \end{circusaction}
@@ -41,8 +41,8 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
- cleanupMissionCall~.~${MissionID} \then \\
- cleanupMissionRet~.~${MissionID}~?~\false \then \\
+ cleanupMissionCall~.~${ProcessID} \then \\
+ cleanupMissionRet~.~${ProcessID}~?~\false \then \\
  \Skip
 \circblockclose
 \end{circusaction}
@@ -61,7 +61,7 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_mission\_app~.~${MissionID} \then \Skip)
+\circspot (Methods) \circinterrupt (end\_mission\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

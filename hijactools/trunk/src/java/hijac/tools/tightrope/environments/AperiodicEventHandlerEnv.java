@@ -9,7 +9,7 @@ public class AperiodicEventHandlerEnv extends ParadigmEnv
 	public Map toMap()
 	{
 		Map map = new HashMap();
-		map.put("SchedulableID", name.toString());
+		map.put("ProcessID", name.toString());
 		map.put("handlerType", "aperiodic");
 		map.put("importName", "Aperiodic");
 		

@@ -12,7 +12,7 @@ import java.util.Map;
 		public Map toMap()
 		{
 			Map map = new HashMap();
-			map.put("ProcessName", name.toString());
+			map.put("ProcessID", name.toString());
 			map.put("initializeApplicationMethod", "");
 					
 //			if (tlmsNames.length == 1)

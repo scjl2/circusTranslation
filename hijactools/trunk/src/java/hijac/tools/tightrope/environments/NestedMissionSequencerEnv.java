@@ -19,7 +19,7 @@ import com.sun.source.tree.MethodTree;
 		public Map toMap()
 		{
 			Map map = new HashMap();
-			map.put("MissionSequencerID", name.toString());
+			map.put("ProcessID", name.toString());
 //			map.put("MissionID", "");
 					
 			for(Name n : missions)
@@ -28,6 +28,9 @@ import com.sun.source.tree.MethodTree;
 			}
 				
 			map.put("Variables", varsList());
+			
+			map.put("Methods", methsList());
+			map.put("SyncMethods", syncMethsList());
 			
 			return map;
 		}

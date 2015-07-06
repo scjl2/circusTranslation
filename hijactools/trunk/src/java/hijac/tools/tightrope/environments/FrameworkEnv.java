@@ -72,6 +72,7 @@ public class FrameworkEnv
 			output += System.getProperty("line.separator");
 
 			List<MethodEnv> methods = safeletEnv.getMeths();
+			//TODO Output sync meths?
 			output = outputMethods(output, methods);
 			output += System.getProperty("line.separator");
 			output += "Top-Level Mission Sequencer: "

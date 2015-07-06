@@ -16,7 +16,7 @@ import javax.lang.model.element.Name;
 		public Map toMap()
 		{
 			Map map = new HashMap();
-			map.put("MissionID", name.toString());
+			map.put("ProcessID", name.toString());
 			map.put("RegisteredSchedulables", schedulables);
 			map.put("Variables", varsList());
 			map.put("Methods", methsList());

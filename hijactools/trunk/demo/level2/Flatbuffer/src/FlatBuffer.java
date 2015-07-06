@@ -37,6 +37,11 @@ public class FlatBuffer implements Safelet<Mission>
 	@Override
 	public void initializeApplication()
 	{
-
 	}
+
+public void test()
+{
+}
+
+
 }

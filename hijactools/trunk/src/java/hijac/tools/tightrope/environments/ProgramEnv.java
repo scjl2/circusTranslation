@@ -185,7 +185,7 @@ public class ProgramEnv
 		return schedulableIds.toMap();
 	}
 
-	public ObjectEnv getTopLevelMissionSequencer(Name tlms)
+	public ParadigmEnv getTopLevelMissionSequencer(Name tlms)
 	{
 		for (TopLevelMissionSequencerEnv tlmsEnv : getTopLevelMissionSequencers())
 		{
@@ -221,6 +221,19 @@ public class ProgramEnv
 		schedulables.addAll(getManagedThreads());
 				
 		return schedulables;
+	}
+
+	public NestedMissionSequencerEnv getNestedMissionSequencer(Name sequencer)
+	{
+		for(NestedMissionSequencerEnv n : getNestedMissionSequencers())
+		{
+			if(n.getName().contentEquals(sequencer))
+			{
+				return n;
+			}
+		}
+		
+		return null;
 	}
 
 }

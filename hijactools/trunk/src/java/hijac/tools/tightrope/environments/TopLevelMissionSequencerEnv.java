@@ -16,7 +16,7 @@ import javax.lang.model.element.Name;
 		public Map toMap()
 		{
 			Map map = new HashMap();
-			map.put("MissionSequencerID", name.toString());
+			map.put("ProcessID", name.toString());
 //			map.put("MissionID", "");
 					
 			for(Name n : missions)
@@ -25,6 +25,8 @@ import javax.lang.model.element.Name;
 			}
 				
 			map.put("Variables", varsList());
+			map.put("Methods", methsList());
+			map.put("SyncMethods", syncMethsList());
 			
 			return map;
 		}

@@ -2,16 +2,16 @@
 \begin{circusaction}
 ${meth.methodName}Meth \circdef \\
 \circblockopen
-${meth.methodName}Call~.~${MissionID} 
+${meth.methodName}Call~.~${ProcessID} 
 <#list meth.parameters?keys as param>
 ~?~${param}
 </#list>
 \then \\
 ~\\
 <#if meth.returnType != 'VOID'>
-${meth.methodName}Ret~.~${MissionID}~.~${meth.returnType} \then \\
+${meth.methodName}Ret~.~${ProcessID}~.~${meth.returnType} \then \\
 <#else>
-${meth.methodName}Ret~.~${MissionID} \then \\
+${meth.methodName}Ret~.~${ProcessID} \then \\
 </#if>
 \Skip
 \circblockclose
@@ -22,19 +22,19 @@ ${meth.methodName}Ret~.~${MissionID} \then \\
 \begin{circusaction}
 ${meth.methodName}SyncMeth \circdef \\
 \circblockopen
-${meth.methodName}Call~.~${MissionID}~?~thread 
+${meth.methodName}Call~.~${ProcessID}~?~thread 
 <#list meth.parameters?keys as param>
 ~?~${param}
 </#list>
 \then \\
-startSyncMeth~.~${MissionID}~.~thread \then \\
-lockAcquired~.~${MissionID}~.~thread \then \\
+startSyncMeth~.~${ProcessID}~.~thread \then \\
+lockAcquired~.~${ProcessID}~.~thread \then \\
 ~\\
-endSyncMeth~.~${MissionID}~.~thread \then  \\
+endSyncMeth~.~${ProcessID}~.~thread \then  \\
 <#if meth.returnType != 'VOID'>
-${meth.methodName}Ret~.~${MissionID}~.~${meth.returnValue}~.~thread \then \\
+${meth.methodName}Ret~.~${ProcessID}~.~${meth.returnValue}~.~thread \then \\
 <#else>
-${meth.methodName}Ret~.~${MissionID}~.~thread \then \\
+${meth.methodName}Ret~.~${ProcessID}~.~thread \then \\
 </#if>
 \Skip
 \circblockclose

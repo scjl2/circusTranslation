@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -98,39 +99,38 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 	
 			if (obj instanceof MethodTree)
 			{
-				MethodTree o = (MethodTree) obj;
-				// System.out.println(o.getName());
-
-				Tree returnType = o.getReturnType();
+				MethodTree mt = (MethodTree) obj;
+				
+				Tree returnType = mt.getReturnType();
 				TypeKind typeKind = TypeKind.ERROR;
 
 				if (returnType instanceof PrimitiveTypeTree)
 				{
-					typeKind = ((PrimitiveTypeTree) o.getReturnType())
+					typeKind = ((PrimitiveTypeTree) mt.getReturnType())
 							.getPrimitiveTypeKind();
 
 				}
-				ArrayList<Name> returns = o.accept(
+				ArrayList<Name> returns = mt.accept(
 						new ReturnVisitor(null), null);
 				
 				Map paramMap = new HashMap();
-				for (VariableTree vt : o.getParameters())
+				for (VariableTree vt : mt.getParameters())
 				{
 					paramMap.put(vt.getName().toString(), vt.getType());
 				}
 				
-				if (o.getName().contentEquals("initializeApplication"))
+				if (mt.getName().contentEquals("initializeApplication"))
 				{
-					programEnv.getSafelet().addMeth(o.getName(), typeKind, returns,
+					programEnv.getSafelet().addMeth(mt.getName(), typeKind, returns,
 							paramMap);
 				}
-
-				if (o.getName().contentEquals("getSequencer"))
+				else
+				if (mt.getName().contentEquals("getSequencer"))
 				{
-					// System.out.println("in iterator");
-					programEnv.getSafelet().addMeth(o.getName(), typeKind, returns,
+					
+					programEnv.getSafelet().addMeth(mt.getName(), typeKind, returns,
 							paramMap);
-					List<StatementTree> s = (List<StatementTree>) o.getBody()
+					List<StatementTree> s = (List<StatementTree>) mt.getBody()
 							.getStatements();
 
 					@SuppressWarnings("rawtypes")
@@ -140,78 +140,34 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 					{
 						StatementTree st = (StatementTree) j.next();
 
-						// System.out.println("Satement: "+st + " Kind: " +
-						// st.getKind());
-						// if (st instanceof VariableTree)
-						// {
-						// System.out.println("Variable: " + ((IdentifierTree)
-						// ((NewClassTree) ((VariableTree)
-						// st).getInitializer()).getIdentifier()).getName());
-						// return new Name[]{ ((IdentifierTree) ((NewClassTree)
-						// ((VariableTree)
-						// st).getInitializer()).getIdentifier()).getName()};
-						// }
-						//
-						// if (st instanceof AssignmentTree)
-						// {
-						// System.out.println("Assignment: " + ((AssignmentTree)
-						// st).getExpression());
-						// }
-						//
-						// if (st instanceof NewClassTree)
-						// {
-						// System.out.println("New Class: " + ((NewClassTree)
-						// st).getIdentifier());
-						// }
-						// // {
-						// Name id = ((IdentifierTree) ((NewClassTree)
-						// st).getIdentifier()).getName() ;
-						// System.out.println("Kind: " + id );
-						//
-						// return new Name[] {id};
-						// }
+						
 
 						if (st instanceof ReturnTree)
 						{
-							// System.out.println("Return Tree Found");
+							
 							return st.accept(returnVisitor, null);
-							// System.out.println( ((NewClassTree) ((ReturnTree)
-							// st).getExpression()).getIdentifier() );
+						
 						}
-						// {
-						// System.out.println(((ReturnTree) st).getExpression()
-						// );
-						//
-						// if (((ReturnTree) st).getExpression().getKind() ==
-						// Tree.Kind.NEW_CLASS )
-						// {
-						//
-						// Name id = ((IdentifierTree) ((NewClassTree)
-						// ((ReturnTree)
-						// st).getExpression()).getIdentifier()).getName() ;
-						//
-						//
-						//
-						// System.out.println("Kind: " + id );
-						// // ((ReturnTree) st).getExpression()
-						//
-						// // st.accept(new ReturnVisitor(), null);
-						// return new Name[] {id};
-						// // return null;
-						// //Now use this name to get to the next thing I need
-						// to explore?
-						// }
-						// else
-						// {
-						// System.out.println("Nope, not a New Class");
-						//
-						// }
-						//
-						// }
-
 					}
-
 				}
+				else					
+					{						
+						{
+							// ADD METHOD TO  ENV
+							if (mt.getModifiers().getFlags()
+									.contains(Modifier.SYNCHRONIZED))
+							{
+
+
+								programEnv.getSafelet().addSyncMeth(mt.accept(new MethodVisitor(), null));
+							}
+							else if(! (mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getSequencer") ) )
+							{
+
+//								programEnv.getSafelet().addMeth(mt.accept(new MethodVisitor(), null));
+							}
+						}
+					}
 			}
 
 		}

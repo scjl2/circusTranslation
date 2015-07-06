@@ -185,7 +185,7 @@ public class EnvironmentBuilder
 				.getTypeElement(packagePrefix + tlms);
 
 		ArrayList<Name> missions = tlmsElement.accept(
-				new MissionSequencerLevel2Visitor(programEnv, analysis), null);
+				new MissionSequencerLevel2Visitor(programEnv, programEnv.getTopLevelMissionSequencer(tlms), analysis), null);
 		
 		getVariables(tlmsElement, programEnv.getTopLevelMissionSequencer(tlms));
 
@@ -372,7 +372,7 @@ public class EnvironmentBuilder
 
 			ArrayList<Name> missions = (analysis.ELEMENTS
 					.getTypeElement(packagePrefix + sequencer).accept(
-					new MissionSequencerLevel2Visitor(programEnv, analysis),
+					new MissionSequencerLevel2Visitor(programEnv, programEnv.getNestedMissionSequencer(sequencer) ,analysis),
 					null));
 
 			if (missions == null)

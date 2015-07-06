@@ -12,7 +12,7 @@ import java.util.Map;
 		public Map toMap()
 		{
 			Map map = new HashMap();
-			map.put("SchedulableID", name.toString());
+			map.put("ProcessID", name.toString());
 //			map.put("initializeApplicationMethod", "");
 					
 //			if (tlmsNames.length == 1)
@@ -21,6 +21,9 @@ import java.util.Map;
 //			}
 				
 			map.put("Variables", varsList());
+			
+			map.put("Methods", methsList());
+			map.put("SyncMethods", syncMethsList());
 			
 			return map;
 		}

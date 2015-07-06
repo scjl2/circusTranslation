@@ -9,11 +9,14 @@ public class PeriodicEventHandlerEnv extends ParadigmEnv
 	public Map toMap()
 	{
 		Map map = new HashMap();
-		map.put("SchedulableID", name.toString());
+		map.put("ProcessID", name.toString());
 		map.put("handlerType", "periodic");
 		map.put("importName", "Periodic");
 		
 		map.put("Variables", varsList());
+		
+		map.put("Methods", methsList());
+		map.put("SyncMethods", syncMethsList());
 
 		return map;
 	}

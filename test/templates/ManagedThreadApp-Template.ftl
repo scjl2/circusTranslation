@@ -1,9 +1,9 @@
 \begin{zsection}
-  \SECTION ~ ${SchedulableID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
+  \SECTION ~ ${ProcessID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
 \end{zsection}
 %
 \begin{circus}
-\circprocess ${SchedulableID}App \circdef \circbegin
+\circprocess ${ProcessID}App \circdef \circbegin
 \end{circus}
 
 <#include "State-Template.ftl">
@@ -11,20 +11,26 @@
 \begin{circusaction}
 Run \circdef \\
 \circblockopen
-	runCall~.~${SchedulableID} \then \\
+	runCall~.~${ProcessID} \then \\
 		
-	runRet~.~${SchedulableID} \then \\
+	runRet~.~${ProcessID} \then \\
 	\Skip
 \circblockclose
 \end{circusaction}	
 
 \begin{circusaction}
 Methods \circdef \\
-	Run \circseq Methods
+\circblockopen
+	Run \\
+<#include "MethodsAction-Template.ftl">
+\circblockclose 
+	 \circseq Methods
 \end{circusaction}
 
+<#include "Methods-Template.ftl">
+
 \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_managedThread\_app~.~${SchedulableID} \then \Skip)
+\circspot (Methods) \circinterrupt (end\_managedThread\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

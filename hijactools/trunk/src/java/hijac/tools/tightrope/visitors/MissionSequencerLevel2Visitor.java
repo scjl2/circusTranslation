@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.Set;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -35,22 +37,23 @@ import com.sun.source.util.Trees;
 		SCJAnalysis analysis;
 		
 		private  Trees trees;
-		private  Set<CompilationUnitTree> units;
-		private  Set<TypeElement> type_elements;
+//		private  Set<CompilationUnitTree> units;
+//		private  Set<TypeElement> type_elements;
 		private ReturnVisitor returnVisitor ;
+		ParadigmEnv sequencerEnv;
 
 		
 		private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 		
-		public MissionSequencerLevel2Visitor(ProgramEnv programEnv, SCJAnalysis analysis)
+		public MissionSequencerLevel2Visitor(ProgramEnv programEnv, ParadigmEnv sequencerEnv, SCJAnalysis analysis)
 		{
 			this.analysis = analysis;
 			this.programEnv = programEnv;
-			
+			this.sequencerEnv = sequencerEnv;
 
 			trees = analysis.TREES;
-			units = analysis.getCompilationUnits();
-			type_elements = analysis.getTypeElements();
+//			units = analysis.getCompilationUnits();
+//			type_elements = analysis.getTypeElements();
 
 //			returnVisitor = new ReturnVisitor(programEnv);
 
@@ -158,7 +161,7 @@ import com.sun.source.util.Trees;
 //						}
 
 					}
-						
+					else	
 					if (o.getName().contentEquals("getNextMission"))
 					{
 						ArrayList<Name> getNextReturns = null;
@@ -171,39 +174,21 @@ import com.sun.source.util.Trees;
 							missions.addAll(getNextReturns);
 						}
 
-						// System.out.println("in iterator");
-						// List<StatementTree> s = (List<StatementTree>)
-						// o.getBody().getStatements();
-						//
-						// Iterator j = s.iterator();
-						//
-						// while(j.hasNext())
-						// {
-						// StatementTree st = (StatementTree) j.next();// StatementTree st = (StatementTree) j.next();
+						
+					}
+					else
+					{// ADD METHOD TO MISSION ENV
+						if (o.getModifiers().getFlags()
+								.contains(Modifier.SYNCHRONIZED))
+						{
 
-						// System.out.println("MS Visitor: " + st);
-						//
-						// if(st instanceof ReturnTree )
-						// {
-						// System.out.println("Mission Sequencer Return Tree FOUND: "+
-						// ((ReturnTree) st).getExpression() );
-						//
-						// // Name id = ((IdentifierTree) ((NewClassTree)
-						// ((ReturnTree)
-						// st).getExpression()).getIdentifier()).getName() ;
-						//
-						// return st.accept(new ReturnVisitor(), null);
-						// // System.out.println("Kind: " + id );
-						// // ((ReturnTree) st).getExpression()
-						//
-						// // st.accept(new ReturnVisitor(), null);
-						// // return new Name[] {id};
-						// //Now use this name to get to the next thing I need
-						// to explore?
-						//
-						// }
-						// }
-						//
+							sequencerEnv.addSyncMeth(o.accept(new MethodVisitor(), null));
+						}
+						else if(! (o.getName().contentEquals("<init>")  ))
+						{
+//				
+							sequencerEnv.addMeth(o.accept(new MethodVisitor(), null));
+						}
 					}
 				}
 			}
@@ -212,37 +197,37 @@ import com.sun.source.util.Trees;
 			return missions;
 		}
 
-		private void getVariables(TypeElement arg0)
-		{
-			VariableVisitor varVisitor = new VariableVisitor(programEnv);
-			
-			ClassTree ct = trees.getTree(arg0);
-			List<? extends Tree> members =  ct.getMembers();
-			Iterator<? extends Tree> i = members.iterator();
-			
-			
-			while(i.hasNext())
-			{
-				Tree s = i.next();
-//				System.out.println(s);
-				 HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, false) ;
-				 
-//				 System.out.println("+++ m == null : " + m == null + " +++" );
-				 
-				 if (m == null)
-				 {
-					 System.out.println("+++ Variable Visitor Returned Null +++");
-						
-				 }
-				 else
-				 {
-					 System.out.println("+++ Variable Visitor Returned " + m);
-					 varMap.putAll(m);	
-				 }
-					
-			}
-			
-		}
+//		private void getVariables(TypeElement arg0)
+//		{
+//			VariableVisitor varVisitor = new VariableVisitor(programEnv);
+//			
+//			ClassTree ct = trees.getTree(arg0);
+//			List<? extends Tree> members =  ct.getMembers();
+//			Iterator<? extends Tree> i = members.iterator();
+//			
+//			
+//			while(i.hasNext())
+//			{
+//				Tree s = i.next();
+////				System.out.println(s);
+//				 HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, false) ;
+//				 
+////				 System.out.println("+++ m == null : " + m == null + " +++" );
+//				 
+//				 if (m == null)
+//				 {
+//					 System.out.println("+++ Variable Visitor Returned Null +++");
+//						
+//				 }
+//				 else
+//				 {
+//					 System.out.println("+++ Variable Visitor Returned " + m);
+//					 varMap.putAll(m);	
+//				 }
+//					
+//			}
+//			
+//		}
 
 		@Override
 		public ArrayList<Name> visitTypeParameter(TypeParameterElement arg0, Void arg1)

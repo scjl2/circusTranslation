@@ -19,6 +19,10 @@ public class Writer extends ManagedThread
 		this.fbMission = fbMission;
 	}
 
+public void test()
+{
+}
+
 	public void run()
 	{
 		Console.println("Writer!");

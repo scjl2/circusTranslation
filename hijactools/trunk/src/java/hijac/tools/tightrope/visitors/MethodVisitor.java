@@ -319,6 +319,7 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 	@Override
 	public MethodEnv visitMethod(MethodTree mt, Boolean arg1)
 	{
+		System.out.println("+++ Method Visitor: Method +++");
 		//get name
 		Name methodName = mt.getName();
 		
