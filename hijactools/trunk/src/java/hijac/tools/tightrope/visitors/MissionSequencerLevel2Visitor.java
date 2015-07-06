@@ -88,7 +88,7 @@ import com.sun.source.util.Trees;
 		@Override
 		public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
 		{
-			getVariables(arg0);	
+//			getVariables(arg0);	
 
 			System.out.println();
 

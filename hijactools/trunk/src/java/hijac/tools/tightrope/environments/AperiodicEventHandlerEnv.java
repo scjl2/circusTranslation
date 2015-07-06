@@ -12,6 +12,8 @@ public class AperiodicEventHandlerEnv extends ParadigmEnv
 		map.put("SchedulableID", name.toString());
 		map.put("handlerType", "aperiodic");
 		map.put("importName", "Aperiodic");
+		
+		map.put("Variables", varsList());
 
 		return map;
 	}

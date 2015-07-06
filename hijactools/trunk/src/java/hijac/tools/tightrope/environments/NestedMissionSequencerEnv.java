@@ -27,7 +27,7 @@ import com.sun.source.tree.MethodTree;
 				map.put("MissionID", n);
 			}
 				
-			
+			map.put("Variables", varsList());
 			
 			return map;
 		}

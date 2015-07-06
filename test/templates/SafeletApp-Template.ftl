@@ -15,6 +15,7 @@
 \circprocess ${ProcessName}App  \circdef \circbegin
 \end{circus}
 
+<#include "State-Template.ftl">
 
 \begin{circusaction}
 InitializeApplication \circdef \\

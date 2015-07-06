@@ -25,6 +25,8 @@ import javax.lang.model.element.Name;
 				map.put("SchedulableID", n);
 			}
 			
+			map.put("Variables", varsList());
+			
 			return map;
 		}
 		

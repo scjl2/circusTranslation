@@ -24,7 +24,7 @@ import javax.lang.model.element.Name;
 				map.put("MissionID", n);
 			}
 				
-			
+			map.put("Variables", varsList());
 			
 			return map;
 		}

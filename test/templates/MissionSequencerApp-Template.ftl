@@ -14,6 +14,8 @@
 \circprocess ${MissionSequencerID}App \circdef \circbegin\\ 
 \end{circus}
    
+<#include "State-Template.ftl">
+
 \begin{circusaction}
 GetNextMission \circdef \\
 \circblockopen

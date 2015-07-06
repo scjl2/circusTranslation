@@ -20,7 +20,7 @@ import java.util.Map;
 //				map.put("SchedulableID", tlmsNames[0]);
 //			}
 				
-			
+			map.put("Variables", varsList());
 			
 			return map;
 		}

@@ -18,7 +18,7 @@ public class ProgramEnv
 	FrameworkEnv structureEnv;
 	List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
-	
+
 	MissionIdsEnv missionIds;
 	SchedulableIdsEnv schedulableIds;
 
@@ -26,7 +26,7 @@ public class ProgramEnv
 	{
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
-		
+
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
 	}
@@ -52,7 +52,6 @@ public class ProgramEnv
 	{
 		return structureEnv;
 	}
-
 
 	public List<NonParadigmEnv> getNonParadigmObjectEnvs()
 	{
@@ -111,7 +110,7 @@ public class ProgramEnv
 	{
 		System.out.println("+++ New Tier +++");
 		System.out.println();
-		
+
 		structureEnv.newTier();
 	}
 
@@ -119,16 +118,17 @@ public class ProgramEnv
 	{
 		System.out.println("+++ New Cluster +++");
 		System.out.println();
-		
+
 		structureEnv.newCluster(sequencer);
 	}
 
 	public ArrayList<TopLevelMissionSequencerEnv> getTopLevelMissionSequencers()
 	{
 		ArrayList<TopLevelMissionSequencerEnv> returnList = new ArrayList<TopLevelMissionSequencerEnv>();
-				
-		returnList.add(structureEnv.getControlTier().getTopLevelMissionSequencerEnv());
-		
+
+		returnList.add(structureEnv.getControlTier()
+				.getTopLevelMissionSequencerEnv());
+
 		return returnList;
 	}
 
@@ -139,7 +139,7 @@ public class ProgramEnv
 
 	public void addMissionSequencerMission(Name tlms, Name n)
 	{
-		structureEnv.addMissionSequencerMission(tlms, n);	
+		structureEnv.addMissionSequencerMission(tlms, n);
 	}
 
 	public ArrayList<ManagedThreadEnv> getManagedThreads()
@@ -162,7 +162,7 @@ public class ProgramEnv
 	{
 		return structureEnv.getOneShotEventHandlers();
 	}
-	
+
 	public ArrayList<PeriodicEventHandlerEnv> getPeriodicEventHandlers()
 	{
 		return structureEnv.getPeriodicEventHandlers();
@@ -173,11 +173,10 @@ public class ProgramEnv
 		return structureEnv.getAperiodicEventHandlers();
 	}
 
-
 	@SuppressWarnings("rawtypes")
 	public Map getMissionIdsMap()
 	{
-		return missionIds.toMap();		
+		return missionIds.toMap();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -186,7 +185,42 @@ public class ProgramEnv
 		return schedulableIds.toMap();
 	}
 
-	
+	public ObjectEnv getTopLevelMissionSequencer(Name tlms)
+	{
+		for (TopLevelMissionSequencerEnv tlmsEnv : getTopLevelMissionSequencers())
+		{
+			if (tlmsEnv.getName().contentEquals(tlms))
+			{
+				return tlmsEnv;
+			}
+		}
 
+		return null;
+	}
+
+	public ObjectEnv getSchedulable(Name s)
+	{
+		for(ObjectEnv obj : getSchedulables())
+		{
+			if(obj.getName().contentEquals(s))
+			{
+				return obj;
+			}
+		}
+		return null;
+	}
+
+	private List<ObjectEnv> getSchedulables()
+	{
+		ArrayList<ObjectEnv> schedulables = new ArrayList<ObjectEnv>();
+		
+		schedulables.addAll(getPeriodicEventHandlers());
+		schedulables.addAll(getAperiodicEventHandlers());
+		schedulables.addAll(getOneShotEventHandlers());
+		schedulables.addAll(getNestedMissionSequencers());
+		schedulables.addAll(getManagedThreads());
+				
+		return schedulables;
+	}
 
 }

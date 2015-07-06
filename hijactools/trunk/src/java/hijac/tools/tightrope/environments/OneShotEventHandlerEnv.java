@@ -12,6 +12,8 @@ public class OneShotEventHandlerEnv extends ParadigmEnv
 		map.put("SchedulableID", name.toString());
 		map.put("handlerType", "oneShot");
 		map.put("importName", "OneShot");
+		
+		map.put("Variables", varsList());
 
 		return map;
 	}

@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.visitors;
 
+import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
 import java.util.ArrayList;
@@ -72,17 +73,23 @@ import com.sun.tools.internal.ws.wsdl.document.Types;
 public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 {
 	//TODO This returns Names and Trees, it should return Names and TypeKinds....but how?
-	private Tree save;
-	private ArrayList<Name> returns = new ArrayList<Name>();
-	private ClassTree tree;
+//	private Tree save;
+//	private ArrayList<Name> returns = new ArrayList<Name>();
+//	private ClassTree tree;
 
-	private Iterator<StatementTree> i ;
-	private ProgramEnv programEnv;
-
+//	private Iterator<StatementTree> i ;
+//	private ProgramEnv programEnv;
+	private ObjectEnv objectEnv;
+	
+	public VariableVisitor(ProgramEnv programEnv, ObjectEnv objectEnv)
+	{
+//		this.programEnv = programEnv;
+		this.objectEnv = objectEnv;
+	}
 
 	public VariableVisitor(ProgramEnv programEnv)
 	{
-		this.programEnv = programEnv;
+//		this.programEnv = programEnv;
 	}
 
 	@Override
@@ -540,11 +547,17 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		System.out.println("-> Name = " + arg0.getName() + " Type = "
 				+ arg0.getType());
-			
-		r.put(arg0.getName(), arg0.getType());
+		
+		Name varName = arg0.getName();
+		Tree varType = arg0.getType();
+		
+		r.put(varName, varType);
 
 		// System.out.println("+++ r is null : " + r == null + " +++");
-
+		if(objectEnv != null && arg1 == true)
+		{
+			objectEnv.addVariable(varName, varType, null);
+		}
 
 		return r;
 	}

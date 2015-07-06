@@ -129,6 +129,8 @@ public class EnvironmentBuilder
 				packagePrefix = findPackagePrefix(elem);
 
 				programEnv.addSafelet(safelet.getSimpleName());
+				
+				getVariables(safelet, programEnv.getSafelet());
 
 				// add methods etc here
 				// programEnv.a
@@ -184,6 +186,8 @@ public class EnvironmentBuilder
 
 		ArrayList<Name> missions = tlmsElement.accept(
 				new MissionSequencerLevel2Visitor(programEnv, analysis), null);
+		
+		getVariables(tlmsElement, programEnv.getTopLevelMissionSequencer(tlms));
 
 		if (missions == null)
 		{
@@ -196,8 +200,10 @@ public class EnvironmentBuilder
 			{
 				programEnv.newCluster(tlms);
 				System.out.println("+++ Exploring Mission " + n + " +++");
-
 				programEnv.addMissionSequencerMission(tlms, n);
+			
+				
+				
 				// System.out.println("buildMission:" + n); //
 				buildMission(n);
 				// if(newClusterNeeded)
@@ -230,15 +236,15 @@ public class EnvironmentBuilder
 
 		TypeElement missionType = elems.getTypeElement(fullName);
 
-		HashMap<Name, Tree> variables = getVariables(missionType);
+		HashMap<Name, Tree> variables = getVariables(missionType, missionEnv);
 		
-		//TODO Here be more hack
-		for (Name varName : variables.keySet())
-		{
-			//TODO This needs to have the TypeKind, so VariableVisitor needs to find the TypeKind of the var.
-			//TODO Ideally the VariableVisitor needs to retrun a VariableEnv
-			missionEnv.addVariable(varName, variables.get(varName), null);
-		}
+//		//TODO Here be more hack
+//		for (Name varName : variables.keySet())
+//		{
+//			//TODO This needs to have the TypeKind, so VariableVisitor needs to find the TypeKind of the var.
+//			//TODO Ideally the VariableVisitor needs to retrun a VariableEnv
+//			missionEnv.addVariable(varName, variables.get(varName), null);
+//		}
 
 		ArrayList<Name> schedulables = missionType.accept(
 				new MissionLevel2Visitor(programEnv, missionEnv, analysis),
@@ -308,11 +314,13 @@ public class EnvironmentBuilder
 
 		HashMap<Name, Tree> variables;
 
+		variables = getVariables(schedulableType, programEnv.getSchedulable(s));
+		
 		while (i.hasNext())
 		{
 
 			ArrayList<Name> tmp = new ArrayList<Name>();
-			variables = getVariables(schedulableType);
+			
 			System.out.println("\t *** variables = " + variables);
 
 			Tree tlst = i.next();
@@ -465,11 +473,20 @@ public class EnvironmentBuilder
 		return packagePrefix;
 	}
 
-	private HashMap<Name, Tree> getVariables(TypeElement arg0)
+	private HashMap<Name, Tree> getVariables(TypeElement arg0, ObjectEnv objectEnv)
 	{
 		HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 
-		VariableVisitor varVisitor = new VariableVisitor(programEnv);
+		VariableVisitor varVisitor;
+		
+		if(objectEnv != null)
+		{
+			varVisitor = new VariableVisitor(programEnv, objectEnv);
+		}
+		else
+		{
+			varVisitor = new VariableVisitor(programEnv);
+		}
 
 		ClassTree ct = analysis.TREES.getTree(arg0);
 		List<? extends Tree> members = ct.getMembers();
@@ -482,7 +499,7 @@ public class EnvironmentBuilder
 			// TODO if this is only ever going to return one value at a time
 			// then it shouldn't be a map
 			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor,
-					false);
+					true);
 
 			// System.out.println("+++ m == null : " + m == null + " +++" );
 

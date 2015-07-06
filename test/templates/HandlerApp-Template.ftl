@@ -6,6 +6,7 @@
 \circprocess ${SchedulableID}App \circdef \circbegin
 \end{circus}
 
+<#include "State-Template.ftl">
 
 \begin{circusaction}
 Methods \circdef \\

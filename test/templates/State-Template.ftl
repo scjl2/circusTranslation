@@ -1,4 +1,4 @@
-
+<#if Variables?size != 0>
 \begin{schema}{State}
 <#list Variables as var>
   ${var.VarName} : ${var.VarType}\\ 
@@ -16,4 +16,4 @@
   ${var.VarName}' := ${var.VarInit}\\ 
 </#list>
 \end{schema}
-
+</#if>
