@@ -10,8 +10,8 @@ import devices.Console;
 public class FlatBufferMission extends Mission
 {
 
-	private volatile int buffer;
-private Writer writer;
+	private volatile int buffer = 0;
+	private Writer writer;
 	private Reader reader;	
 
 	public FlatBufferMission()
@@ -19,8 +19,6 @@ private Writer writer;
 		buffer = 0;
 		Console.println("FlatBufferMission");
 	}
-
-
 
 	protected void initialize()
 	{

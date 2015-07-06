@@ -22,8 +22,15 @@ public class VariableEnv
 	{
 		super();
 		this.variableName = variableName;
-		this.variableType = variableType;		
-		this.variableInit = "init_placeholder";
+		this.variableType = variableType;
+		if(variableInit == null)
+		{
+			this.variableInit = "init_placeholder";
+		}
+		else
+		{
+			this.variableInit = variableInit;
+		}
 	}
 
 	public Name getVariableName()

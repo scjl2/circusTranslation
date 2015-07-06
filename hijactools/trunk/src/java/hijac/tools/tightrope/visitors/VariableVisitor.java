@@ -147,17 +147,18 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		Name varName = null;
 		Tree expression = arg0.getExpression();
 		Tree expressionTree = null;
-		
-		
+				
 		
 		if (variable instanceof IdentifierTree)
 		{
 			varName = ((IdentifierTree) variable).getName();
+	
 			
 		}
 		if (variable instanceof MemberSelectTree)
 		{
 			varName = ((MemberSelectTree) variable).getIdentifier();
+			
 		}
 		
 		if (expression instanceof NewClassTree)
@@ -174,8 +175,13 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		{
 			System.out.println("Adding to Var Map");
 			returnMap.put(varName, expressionTree);
+			if(objectEnv!= null && arg1 == true)
+			{
+				objectEnv.addVariable(varName, expressionTree , expression);
+			}
 		}
 	
+		
 		
 		return returnMap;
 
@@ -546,7 +552,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		HashMap<Name, Tree> r = new HashMap<Name, Tree>();
 
 		System.out.println("-> Name = " + arg0.getName() + " Type = "
-				+ arg0.getType());
+				+ arg0.getType() + " Init = " + arg0.getInitializer());
 		
 		Name varName = arg0.getName();
 		Tree varType = arg0.getType();
@@ -556,7 +562,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		// System.out.println("+++ r is null : " + r == null + " +++");
 		if(objectEnv != null && arg1 == true)
 		{
-			objectEnv.addVariable(varName, varType, null);
+			objectEnv.addVariable(varName, varType, arg0.getInitializer());
 		}
 
 		return r;
