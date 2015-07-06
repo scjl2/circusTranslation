@@ -75,7 +75,14 @@ public class MethodEnv
 		//TODO MORE HACKERY
 		if(returnValues != null)
 		{
-			return returnValues.toString();
+			if(returnValues.size() == 1)
+			{
+				return returnValues.get(0).toString();
+			}
+			else
+			{
+				return returnValues.toString();
+			}
 		}
 		else
 		{

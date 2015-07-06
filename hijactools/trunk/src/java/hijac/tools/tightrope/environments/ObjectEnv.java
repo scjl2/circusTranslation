@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
-import javax.lang.model.type.TypeKind;
-
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 
 public class ObjectEnv
