@@ -346,7 +346,7 @@ public class EnvironmentBuilder
 
 					schedulableEnv.addSyncMeth(
 							mt.accept(new MethodVisitor(), null));
-				} else if (!(mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getSequencer") || mt.getName().contentEquals("getLevel")))
+				} else if (!(mt.getName().contentEquals("<init>") ))
 				{
 					schedulableEnv.addMeth(mt.accept(new MethodVisitor(), null));
 				}

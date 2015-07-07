@@ -127,10 +127,24 @@ public class SafeletLevel2Visitor implements
 					safeletEnv.addMeth(mt.getName(), typeKind,
 							returns, paramMap);
 				}
-				else if (mt.getName().contentEquals("getSequencer"))
+				else
 				{
-					safeletEnv.addMeth(mt.getName(), typeKind,
-							returns, paramMap);
+					{
+						// ADD METHOD TO ENV
+						if (mt.getModifiers().getFlags()
+								.contains(Modifier.SYNCHRONIZED))
+						{
+							safeletEnv.addSyncMeth(mt.accept(new MethodVisitor(), null));
+						} 
+						else if( !(mt.getName().contentEquals("getSequencer") || mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getLevel")    ) ) 
+						{
+							safeletEnv.addMeth(mt.accept(new MethodVisitor(), null));
+						}
+					}
+				}
+				if (mt.getName().contentEquals("getSequencer"))
+				{
+					
 					List<StatementTree> s = (List<StatementTree>) mt.getBody()
 							.getStatements();
 
@@ -149,31 +163,11 @@ public class SafeletLevel2Visitor implements
 						}
 					}
 				}
-				else
-				{
-					{
-						// ADD METHOD TO ENV
-						if (mt.getModifiers().getFlags()
-								.contains(Modifier.SYNCHRONIZED))
-						{
-
-							safeletEnv.addSyncMeth(
-									mt.accept(new MethodVisitor(), null));
-						} else if ((mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getSequencer") || mt.getName().contentEquals("getLevel")))
-						{
-
-							
-						}
-						else
-						{
-//							safeletEnv.addMeth(mt.accept(new MethodVisitor(), null));
-						}
-					}
-				}
+				
 			}
 
 		}
-
+//		|| mt.getName().contentEquals("getSequencer") || 
 		return null;
 	}
 
