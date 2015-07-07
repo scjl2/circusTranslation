@@ -107,28 +107,7 @@ public class MissionLevel2Visitor implements
 			{
 				//capture the method
 				MethodTree mt = (MethodTree) tlst;
-//
-//				@SuppressWarnings("rawtypes")
-//				Map paramMap = new HashMap();
-//				for (VariableTree vt : mt.getParameters())
-//				{
-//					paramMap.put(vt.getName().toString(), vt.getType());
-//				}
-//				// TODO This needs to now actually figure out WHAT is
-//				// returned and return it too
-//				Tree returnType = mt.getReturnType();
-//				TypeKind typeKind = TypeKind.ERROR;
-//
-//				if (returnType instanceof PrimitiveTypeTree)
-//				{
-//					typeKind = ((PrimitiveTypeTree) mt.getReturnType())
-//							.getPrimitiveTypeKind();
-//
-//				}
-//				ArrayList<Name> returns = mt.accept(
-//						new ReturnVisitor(null), null);
-//				
-				
+			
 
 				if (mt.getName().contentEquals("initialize"))
 				{

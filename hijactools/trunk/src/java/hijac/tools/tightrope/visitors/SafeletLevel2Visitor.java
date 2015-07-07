@@ -2,6 +2,7 @@ package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.SafeletEnv;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,8 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
-public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Void>
+public class SafeletLevel2Visitor implements
+		ElementVisitor<ArrayList<Name>, Void>
 {
 
 	ProgramEnv programEnv;
@@ -37,7 +39,8 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 
 	private Trees trees;
 	private ReturnVisitor returnVisitor = new ReturnVisitor(null);
-
+	private SafeletEnv safeletEnv;
+	
 
 	public SafeletLevel2Visitor(ProgramEnv programEnv, SCJAnalysis analysis)
 	{
@@ -47,6 +50,8 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 		trees = analysis.TREES;
 		analysis.getCompilationUnits();
 		analysis.getTypeElements();
+		
+		safeletEnv = programEnv.getSafelet();
 	}
 
 	@Override
@@ -84,23 +89,21 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 		// System.out.println(e);
 
 		ClassTree ct = trees.getTree(e);
-	
 
-//		programEnv.getSafelet().setClassTree(ct);
-
+		// programEnv.getSafelet().setClassTree(ct);
 
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 		Iterator<StatementTree> i = members.iterator();
 		while (i.hasNext())
 		{
 			Object obj = i.next();
-			
+
 			// wrong visiotr here?
-	
+
 			if (obj instanceof MethodTree)
 			{
 				MethodTree mt = (MethodTree) obj;
-				
+
 				Tree returnType = mt.getReturnType();
 				TypeKind typeKind = TypeKind.ERROR;
 
@@ -110,26 +113,24 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 							.getPrimitiveTypeKind();
 
 				}
-				ArrayList<Name> returns = mt.accept(
-						new ReturnVisitor(null), null);
-				
+				ArrayList<Name> returns = mt.accept(new ReturnVisitor(null),
+						null);
+
 				Map paramMap = new HashMap();
 				for (VariableTree vt : mt.getParameters())
 				{
 					paramMap.put(vt.getName().toString(), vt.getType());
 				}
-				
+
 				if (mt.getName().contentEquals("initializeApplication"))
 				{
-					programEnv.getSafelet().addMeth(mt.getName(), typeKind, returns,
-							paramMap);
+					safeletEnv.addMeth(mt.getName(), typeKind,
+							returns, paramMap);
 				}
-				else
-				if (mt.getName().contentEquals("getSequencer"))
+				else if (mt.getName().contentEquals("getSequencer"))
 				{
-					
-					programEnv.getSafelet().addMeth(mt.getName(), typeKind, returns,
-							paramMap);
+					safeletEnv.addMeth(mt.getName(), typeKind,
+							returns, paramMap);
 					List<StatementTree> s = (List<StatementTree>) mt.getBody()
 							.getStatements();
 
@@ -140,34 +141,35 @@ public class SafeletLevel2Visitor implements ElementVisitor<ArrayList<Name>, Voi
 					{
 						StatementTree st = (StatementTree) j.next();
 
-						
-
 						if (st instanceof ReturnTree)
 						{
-							
+
 							return st.accept(returnVisitor, null);
-						
+
 						}
 					}
 				}
-				else					
-					{						
+				else
+				{
+					{
+						// ADD METHOD TO ENV
+						if (mt.getModifiers().getFlags()
+								.contains(Modifier.SYNCHRONIZED))
 						{
-							// ADD METHOD TO  ENV
-							if (mt.getModifiers().getFlags()
-									.contains(Modifier.SYNCHRONIZED))
-							{
 
+							safeletEnv.addSyncMeth(
+									mt.accept(new MethodVisitor(), null));
+						} else if ((mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getSequencer") || mt.getName().contentEquals("getLevel")))
+						{
 
-								programEnv.getSafelet().addSyncMeth(mt.accept(new MethodVisitor(), null));
-							}
-							else if(! (mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getSequencer") ) )
-							{
-
-//								programEnv.getSafelet().addMeth(mt.accept(new MethodVisitor(), null));
-							}
+							
+						}
+						else
+						{
+//							safeletEnv.addMeth(mt.accept(new MethodVisitor(), null));
 						}
 					}
+				}
 			}
 
 		}

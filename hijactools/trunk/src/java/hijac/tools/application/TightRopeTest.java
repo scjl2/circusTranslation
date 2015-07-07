@@ -35,7 +35,7 @@ public class TightRopeTest
 
 	private static String version = "v0.5";
 
-	private static boolean silent = true;
+	private static boolean silent = false;
 	private static boolean latex = true;
 	private static boolean freemarker = true;
 

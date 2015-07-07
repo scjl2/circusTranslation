@@ -2,6 +2,7 @@ package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.visitors.ManagedThreadVisitor;
+import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.MissionLevel2Visitor;
 import hijac.tools.tightrope.visitors.MissionSequencerLevel2Visitor;
 import hijac.tools.tightrope.visitors.ReturnVisitor;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -313,8 +315,10 @@ public class EnvironmentBuilder
 		ArrayList<Name> sycnMeths = new ArrayList<Name>();
 
 		HashMap<Name, Tree> variables;
+		
+		ParadigmEnv schedulableEnv = programEnv.getSchedulable(s);
 
-		variables = getVariables(schedulableType, programEnv.getSchedulable(s));
+		variables = getVariables(schedulableType, schedulableEnv);
 		
 		while (i.hasNext())
 		{
@@ -333,29 +337,40 @@ public class EnvironmentBuilder
 				System.out
 						.println("*** Method Name = " + mt.getName() + " ***");
 
-				tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
-						analysis, variables, packagePrefix), null);
+//				tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
+//						analysis, variables, packagePrefix), null);
+				
+				if (mt.getModifiers().getFlags()
+						.contains(Modifier.SYNCHRONIZED))
+				{
+
+					schedulableEnv.addSyncMeth(
+							mt.accept(new MethodVisitor(), null));
+				} else if (!(mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getSequencer") || mt.getName().contentEquals("getLevel")))
+				{
+					schedulableEnv.addMeth(mt.accept(new MethodVisitor(), null));
+				}
 
 			}
 
-			if (tmp != null)
-			{
-				sycnMeths.addAll(tmp);
-			}
+//			if (tmp != null)
+//			{
+//				sycnMeths.addAll(tmp);
+//			}
 
 		}
-		System.out.println();
-		System.out.println("+++ syncMethds empty = " + (sycnMeths.size() <= 0)
-				+ " +++");
-		if (sycnMeths.size() > 0)
-		{
-			System.out.println("*** SyncMeths for " + s + " ***");
-			for (Name n : sycnMeths)
-			{
-				System.out.println("\t*** " + n + " is synchronised");
-			}
-		}
-		System.out.println();
+//		System.out.println();
+//		System.out.println("+++ syncMethds empty = " + (sycnMeths.size() <= 0)
+//				+ " +++");
+//		if (sycnMeths.size() > 0)
+//		{
+//			System.out.println("*** SyncMeths for " + s + " ***");
+//			for (Name n : sycnMeths)
+//			{
+//				System.out.println("\t*** " + n + " is synchronised");
+//			}
+//		}
+//		System.out.println();
 
 	}
 

@@ -158,6 +158,8 @@ public class CircusGenerator
 		try
 		{
 			temp.process(root, out);
+			
+//			out.close();
 		} catch (TemplateException e1)
 		{
 			// TODO Auto-generated catch block
@@ -167,6 +169,7 @@ public class CircusGenerator
 			e2.printStackTrace();
 		}
 
+	
 		// Note: Depending on what `out` is, you may need to call `out.close()`.
 		// This is usually the case for file output, but not for servlet output.
 	}
@@ -179,7 +182,7 @@ public class CircusGenerator
 		/* Create a data-model */
 		Map root = programEnv.getSafelet().toMap();
 
-		String name = (String) root.get("ProcessName");
+		String name = (String) root.get("ProcessID");
 		
 		translateCommon(root, "SafeletApp-Template.ftl", name+"App.circus");
 	}
@@ -197,7 +200,7 @@ public class CircusGenerator
 			Map tlms = tlmsEnv.toMap();
 
 			
-			String name = (String) tlms.get("MissionSequencerID");
+			String name = (String) tlms.get("ProcessID");
 			// String procName = (String) tlms.get("MissionSequencerName");
 			translateCommon(tlms, "MissionSequencerApp-Template.ftl",
 					name+"App.circus");
@@ -247,7 +250,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			Map missionMap = mEnv.toMap();
 
-			String name = (String) missionMap.get("MissionID");
+			String name = (String) missionMap.get("ProcessID");
 			
 			String procName = name+"App.circus";
 			translateCommon(missionMap, "MissionApp-Template.ftl", procName);
@@ -298,7 +301,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			Map tlms = smsEnv.toMap();
 			
-			String name = (String) tlms.get("MissionSequencerID");
+			String name = (String) tlms.get("ProcessID");
 			// String procName = (String) tlms.get("MissionSequencerName");
 			translateCommon(tlms, "MissionSequencerApp-Template.ftl",
 					name+"App.circus");
@@ -367,7 +370,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			Map osehMap = osevEnv.toMap();
 			
-			String name = (String) osehMap.get("SchedulableID");
+			String name = (String) osehMap.get("ProcessID");
 			translateCommon(osehMap, "HandlerApp-Template.ftl",
 					name+"App.circus");
 		}		
@@ -385,7 +388,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			Map pehhMap = pehEnv.toMap();
 			
-			String name = (String) pehhMap.get("SchedulableID");
+			String name = (String) pehhMap.get("ProcessID");
 			translateCommon(pehhMap, "HandlerApp-Template.ftl",
 					name+"App.circus");
 		}		
@@ -403,7 +406,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			Map apehMap = apehEnv.toMap();
 			
-			String name = (String) apehMap.get("SchedulableID");
+			String name = (String) apehMap.get("ProcessID");
 			translateCommon(apehMap, "HandlerApp-Template.ftl",
 					name+"App.circus");
 		}		

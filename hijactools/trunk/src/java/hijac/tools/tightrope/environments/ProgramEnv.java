@@ -198,9 +198,9 @@ public class ProgramEnv
 		return null;
 	}
 
-	public ObjectEnv getSchedulable(Name s)
+	public ParadigmEnv getSchedulable(Name s)
 	{
-		for(ObjectEnv obj : getSchedulables())
+		for(ParadigmEnv obj : getSchedulables())
 		{
 			if(obj.getName().contentEquals(s))
 			{
@@ -210,9 +210,9 @@ public class ProgramEnv
 		return null;
 	}
 
-	private List<ObjectEnv> getSchedulables()
+	private List<ParadigmEnv> getSchedulables()
 	{
-		ArrayList<ObjectEnv> schedulables = new ArrayList<ObjectEnv>();
+		ArrayList<ParadigmEnv> schedulables = new ArrayList<ParadigmEnv>();
 		
 		schedulables.addAll(getPeriodicEventHandlers());
 		schedulables.addAll(getAperiodicEventHandlers());

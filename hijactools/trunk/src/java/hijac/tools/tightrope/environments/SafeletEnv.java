@@ -28,7 +28,9 @@ import javax.lang.model.element.Name;
 			map.put("Variables", varsList());
 			
 			map.put("Methods", methsList());
+//			map.put("Methods", new ArrayList());
 			map.put("SyncMethods", syncMethsList());
+//			map.put("SyncMethods", new ArrayList());
 			
 			return map;
 		}
