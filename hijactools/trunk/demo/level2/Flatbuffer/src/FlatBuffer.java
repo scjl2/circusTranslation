@@ -39,9 +39,5 @@ public class FlatBuffer implements Safelet<Mission>
 	{
 	}
 
-public void test()
-{
-}
-
 
 }

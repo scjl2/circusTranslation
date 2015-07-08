@@ -38,8 +38,4 @@ public class FlatBufferMissionSequencer extends MissionSequencer<Mission>
 		}
 	}
 
-public void test()
-{
-}
-
 }
