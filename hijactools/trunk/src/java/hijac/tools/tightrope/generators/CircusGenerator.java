@@ -2,8 +2,6 @@ package hijac.tools.tightrope.generators;
 
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import hijac.tools.compiler.SCJCompilationConfig;
-import hijac.tools.config.Config;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
@@ -22,20 +20,27 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Map;
 
-import java.io.File;
-
-
-import java.util.List;
-
+/**
+ * Generates the Circus files of the environments that have been translated form a program.
+ * 
+ * @author Matt Luckcuck
+ *
+ */
 public class CircusGenerator
 {
+	private static final String TEMPLATE_DIRECTORY = "/home/matt/Documents/Translation/test/templates";
 	private freemarker.template.Configuration cfg;
 	private ProgramEnv programEnv;
-	private String fileLocation = "/home/matt/Documents/Translation/test/output/";
-	private String customName;
+	private static final String OUTPUT_DIRECTORY = "/home/matt/Documents/Translation/test/output/";
 	
+	private String programName;
 	
-	public CircusGenerator(String customName, ProgramEnv programEnv)
+	/**
+	 *
+	 * @param programName The name of the program being translated
+	 * @param programEnv The environment of the program that is being translated
+	 */
+	public CircusGenerator(String programName, ProgramEnv programEnv)
 	{
 		/* You should do this ONLY ONCE in the whole application life-cycle: */
 
@@ -48,7 +53,7 @@ public class CircusGenerator
 		try
 		{
 			cfg.setDirectoryForTemplateLoading(new File(
-					"/home/matt/Documents/Translation/test/templates"));
+					TEMPLATE_DIRECTORY));
 		} catch (IOException e)
 		{
 			e.printStackTrace();
@@ -57,10 +62,15 @@ public class CircusGenerator
 		this.programEnv = programEnv;
 					
 	
-		this.customName = customName;
+		this.programName = programName;
 		
 	}
 
+	/**
+	 * This method triggers the translation of the program, each type of object is translated to Circus and output to file.
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 */
 	public void translate() throws IOException, FileNotFoundException
 	{
 		System.out.println("+++ Translating +++");
@@ -90,6 +100,63 @@ public class CircusGenerator
 
 	}
 
+	/**
+	 * Used by all the translate methods. This processes a given Map with a given template and outputs it with a given filename
+	 * @param root Map of data
+	 * @param template The name of the template
+	 * @param fileName The file name to output the translated file to
+	 */
+	@SuppressWarnings("rawtypes")
+		private void translateCommon(Map root, String template, String fileName)
+		{
+			/* Get the template (uses cache internally) */
+			freemarker.template.Template temp = null;
+			try
+			{
+				temp = cfg.getTemplate(template);
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+			/* Variables for writing output to a file */
+			new File(OUTPUT_DIRECTORY +  programName).mkdirs();
+			
+			File file = new File(OUTPUT_DIRECTORY +  programName+ "/"+ fileName);
+			
+			FileOutputStream fop = null;
+			try
+			{
+				fop = new FileOutputStream(file);
+			} catch (FileNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	
+			/* Merge data-model with template */
+			Writer out = new OutputStreamWriter(fop);
+			try
+			{
+				temp.process(root, out);
+				
+	//			out.close();
+			} catch (TemplateException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e2)
+			{
+				e2.printStackTrace();
+			}
+	
+		
+			// Note: Depending on what `out` is, you may need to call `out.close()`.
+			// This is usually the case for file output, but not for servlet output.
+		}
+
+	@SuppressWarnings("rawtypes")
 	private void translateIDFiles()
 	{
 		System.out.println("+++ Generating ID Files +++");
@@ -102,13 +169,14 @@ public class CircusGenerator
 		translateCommon(Ids, "SchedulableIds-Template.ftl", "SchedulableIds.circus");
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void generateReport()
 	{
 		System.out.println("+++ Generating Report +++");
 		Map root = programEnv.geNetworkMap();
+		root.put("programName", programName);
 		
-		translateCommon(root, "Report-Template.ftl", customName+"-Report.tex");
-
+		translateCommon(root, "Report-Template.ftl", programName+"-Report.tex");
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -122,56 +190,6 @@ public class CircusGenerator
 
 		System.out.println("Network = " + root);
 
-	}
-
-	@SuppressWarnings("rawtypes")
-	private void translateCommon(Map root, String template, String fileName)
-	{
-		/* Get the template (uses cache internally) */
-		freemarker.template.Template temp = null;
-		try
-		{
-			temp = cfg.getTemplate(template);
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		/* Variables for writing output to a file */
-		new File(fileLocation +  customName).mkdirs();
-		
-		File file = new File(fileLocation +  customName+ "/"+ fileName);
-		
-		FileOutputStream fop = null;
-		try
-		{
-			fop = new FileOutputStream(file);
-		} catch (FileNotFoundException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		/* Merge data-model with template */
-		Writer out = new OutputStreamWriter(fop);
-		try
-		{
-			temp.process(root, out);
-			
-//			out.close();
-		} catch (TemplateException e1)
-		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e2)
-		{
-			e2.printStackTrace();
-		}
-
-	
-		// Note: Depending on what `out` is, you may need to call `out.close()`.
-		// This is usually the case for file output, but not for servlet output.
 	}
 
 	@SuppressWarnings("rawtypes")

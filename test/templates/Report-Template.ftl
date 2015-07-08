@@ -11,7 +11,12 @@
 
 \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 
+\title{${programName}}
+
 \begin{document}
+
+\maketitle
+
 \section{Network}
 \input{Network.circus}
 \newpage

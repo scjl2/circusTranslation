@@ -134,6 +134,12 @@ public class TightRopeTest
 		customName=sourceString;
 	}
 
+	/** 
+	 * Generate the report and styles.
+	 * Then run PDFLatex on them
+	 * 
+	 * @param customName - the name of the program being translated
+	 */	 
 	private static void runLatex(String customName)
 	{
 		/*
