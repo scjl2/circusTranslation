@@ -13,12 +13,9 @@ import hijac.tools.application.UncaughtExceptionHandler;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
 import hijac.tools.tightrope.environments.EnvironmentBuilder;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.generators.CircusGenerator;
@@ -33,11 +30,10 @@ public class TightRopeTest
 
 	private static ProgramEnv programEnv;
 
-	private static String version = "v0.5";
-
-	private static boolean silent = false;
-	private static boolean latex = true;
-	private static boolean freemarker = true;
+	private static final String VERSION = "v0.5";
+	private static final boolean SILENT = false;
+	private static final boolean LATEX = true;
+	private static final boolean FREEMARKER = true;
 
 	private static String customName ="";
 	
@@ -59,7 +55,7 @@ public class TightRopeTest
 		
 		System.out.println();
 		System.out.println("+++ Tight Rope - SCJ to Circus translator +++");
-		System.out.println("+++" + version + "+++");
+		System.out.println("+++" + VERSION + "+++");
 		System.out.println("+++ Matt Luckcuck +++");
 		System.out.println();
 
@@ -93,13 +89,13 @@ public class TightRopeTest
 		
 		System.out.println("Network = " + programEnv.geNetworkMap());
 		
-		if(freemarker)
+		if(FREEMARKER)
 		{
 			CircusGenerator circGen = new CircusGenerator(customName, programEnv);
 			circGen.translate();
 		}
 
-		if(latex)
+		if(LATEX)
 		{
 			runLatex(customName);
 		}
@@ -142,10 +138,6 @@ public class TightRopeTest
 	 */	 
 	private static void runLatex(String customName)
 	{
-		/*
-		 * +++++++++++++++++++++++++++ Execute pdflatex on the output
-		 * ++++++++++++++++++++++++++
-		 */
 		try
 		{
 			String s = null;
@@ -180,9 +172,7 @@ public class TightRopeTest
 			
 			
 			
-			Process p = Runtime.getRuntime().exec(
-			// "/usr/bin/pdflatex -output-directory /home/matt/Documents/Translation/test/output/ /home/matt/Documents/Translation/test/output/Report.tex");
-					latexLocation + space + "-output-directory" + space
+			Process p = Runtime.getRuntime().exec(latexLocation + space + "-output-directory" + space
 							+ outputDirectory + space + reportLocation);
 
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(
@@ -191,7 +181,7 @@ public class TightRopeTest
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(
 					p.getErrorStream()));
 
-			if (!silent)
+			if (!SILENT)
 			{
 				// read the output from the command
 				System.out
