@@ -74,7 +74,8 @@ public class ParadigmEnv extends ObjectEnv
 			methodMap.put("methodName", me.getMethodName().toString());
 			methodMap.put("returnType", me.getReturnType());
 			methodMap.put("parameters", me.getParameters());
-
+			methodMap.put("body", me.body);
+			
 			returnList.add(methodMap);
 		}
 

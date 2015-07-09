@@ -7,7 +7,7 @@ ${meth.methodName}Call~.~${ProcessID}
 ~?~${param}
 </#list>
 \then \\
-~\\
+${meth.body}
 <#if meth.returnType != 'VOID'>
 ${meth.methodName}Ret~.~${ProcessID}~.~${meth.returnType} \then \\
 <#else>

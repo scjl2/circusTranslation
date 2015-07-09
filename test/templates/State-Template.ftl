@@ -13,7 +13,7 @@
   State~'
 \where
  <#list Variables as var>
-  ${var.VarName}' := ${var.VarInit}\\ 
+  ${var.VarName}' = ${var.VarInit}\\ 
 </#list>
 \end{schema}
 </#if>

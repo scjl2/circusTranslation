@@ -23,15 +23,11 @@ import hijac.tools.tightrope.generators.CircusGenerator;
 public class TightRopeTest
 {
 	public static SCJAnalysis ANALYSIS;
-	//
-	// private static Trees trees;
-	// private static Set<CompilationUnitTree> units;
-	// private static Set<TypeElement> type_elements;
-
+	
 	private static ProgramEnv programEnv;
 
 	private static final String VERSION = "v0.5";
-	private static final boolean SILENT = false;
+	private static final boolean SILENT = true;
 	private static final boolean LATEX = true;
 	private static final boolean FREEMARKER = true;
 

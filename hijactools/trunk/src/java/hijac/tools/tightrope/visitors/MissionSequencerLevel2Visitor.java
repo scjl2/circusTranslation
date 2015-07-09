@@ -1,6 +1,10 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.modelgen.circus.SCJApplication;
+import hijac.tools.modelgen.circus.visitors.AMethodVisitor;
+import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
@@ -41,6 +45,8 @@ import com.sun.source.util.Trees;
 //		private  Set<TypeElement> type_elements;
 		private ReturnVisitor returnVisitor ;
 		ParadigmEnv sequencerEnv;
+		
+		AMethodVisitor franksMethodVisitor; 
 
 		
 		private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
@@ -56,7 +62,7 @@ import com.sun.source.util.Trees;
 //			type_elements = analysis.getTypeElements();
 
 //			returnVisitor = new ReturnVisitor(programEnv);
-
+			this.franksMethodVisitor = new AMethodVisitor(new SCJApplication(analysis));
 		}
 
 		@Override
@@ -173,6 +179,11 @@ import com.sun.source.util.Trees;
 						{
 							missions.addAll(getNextReturns);
 						}
+						
+
+						System.out.println("*** TRYING FRANK'S METHOD VISITOR ***");
+						sequencerEnv.addMeth(new MethodEnv(o.getName(), null, null, null, o.accept(franksMethodVisitor, new MethodVisitorContext()) ));
+						
 
 						
 					}
@@ -189,7 +200,9 @@ import com.sun.source.util.Trees;
 //				
 							sequencerEnv.addMeth(o.accept(new MethodVisitor(), null));
 						}
+						
 					}
+
 				}
 			}
 
