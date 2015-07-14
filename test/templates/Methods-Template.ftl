@@ -1,15 +1,20 @@
 <#list Methods as meth>
 \begin{circusaction}
-${meth.methodName}Meth \circdef \\
+${meth.methodName}Meth \circdef 
+<#if meth.returnType != 'VOID'>
+\circvar ret : ${meth.returnType} \circspot
+</#if>
+\\
 \circblockopen
 ${meth.methodName}Call~.~${ProcessID} 
 <#list meth.parameters?keys as param>
 ~?~${param}
 </#list>
 \then \\
-${meth.body}
+${meth.body} \\
+
 <#if meth.returnType != 'VOID'>
-${meth.methodName}Ret~.~${ProcessID}~.~${meth.returnType} \then \\
+${meth.methodName}Ret~.~${ProcessID}~!~ret \then \\
 <#else>
 ${meth.methodName}Ret~.~${ProcessID} \then \\
 </#if>

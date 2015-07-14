@@ -21,8 +21,8 @@ GetNextMission \circdef \\
 \circblockopen
     getNextMissionCall~.~${ProcessID} \then \\
 	
-	getNextMissionRet~.~${ProcessID}~!~${MissionID}  \then \\
-	\Skip
+    getNextMissionRet~.~${ProcessID}~!~${MissionID}  \then \\
+\Skip
 \circblockclose	
 \end{circusaction}
 

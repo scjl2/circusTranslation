@@ -29,6 +29,8 @@ public class CircusTemplates {
 
    public final Template TYPE;
 
+   
+   
    public CircusTemplates(SCJApplication context) {
       FACTORY = new CircusTemplateFactory(context);
       SAFELET = FACTORY.getTemplate("Safelet.ftl");

@@ -1,12 +1,14 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.modelgen.circus.SCJApplication;
+import hijac.tools.modelgen.circus.templates.CircusTemplates;
 import hijac.tools.modelgen.circus.visitors.AMethodVisitor;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.generators.NewCircusTemplates;
+import hijac.tools.tightrope.generators.NewSCJApplication;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,12 +26,14 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
 
 import checkers.formatter.quals.ReturnsFormat;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -46,11 +50,12 @@ import com.sun.source.util.Trees;
 		private ReturnVisitor returnVisitor ;
 		ParadigmEnv sequencerEnv;
 		
-		AMethodVisitor franksMethodVisitor; 
+		MethodBodyVisitor franksMethodVisitor; 
 
 		
 		private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 		
+				
 		public MissionSequencerLevel2Visitor(ProgramEnv programEnv, ParadigmEnv sequencerEnv, SCJAnalysis analysis)
 		{
 			this.analysis = analysis;
@@ -62,7 +67,9 @@ import com.sun.source.util.Trees;
 //			type_elements = analysis.getTypeElements();
 
 //			returnVisitor = new ReturnVisitor(programEnv);
-			this.franksMethodVisitor = new AMethodVisitor(new SCJApplication(analysis));
+			
+	
+			this.franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(analysis));
 		}
 
 		@Override
@@ -182,7 +189,39 @@ import com.sun.source.util.Trees;
 						
 
 						System.out.println("*** TRYING FRANK'S METHOD VISITOR ***");
-						sequencerEnv.addMeth(new MethodEnv(o.getName(), null, null, null, o.accept(franksMethodVisitor, new MethodVisitorContext()) ));
+						Tree returnType = o.getReturnType();
+						
+						TypeKind returnTypeKind = TypeKind.ERROR;
+
+						if (returnType instanceof PrimitiveTypeTree)
+						{
+							returnTypeKind = ((PrimitiveTypeTree) o.getReturnType())
+									.getPrimitiveTypeKind();
+						}
+						
+						//return values
+						ArrayList<Name> returnsValues = o.accept(
+								new ReturnVisitor(null), null);
+						
+						
+
+						@SuppressWarnings("rawtypes")
+						Map parameters = new HashMap();
+						for (VariableTree vt : o.getParameters())
+						{
+							parameters.put(vt.getName().toString(), vt.getType());
+						}
+						
+						String body = o.accept(franksMethodVisitor, new MethodVisitorContext());
+						
+						System.out.println("*** Body ***");
+						System.out.println(body);
+						
+						sequencerEnv.addMeth(
+							new MethodEnv(
+									o.getName(), returnTypeKind, returnsValues, parameters, body 
+									)
+							);
 						
 
 						
