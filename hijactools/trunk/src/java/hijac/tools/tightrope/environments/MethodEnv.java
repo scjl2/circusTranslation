@@ -11,7 +11,7 @@ import javax.lang.model.type.TypeKind;
 public class MethodEnv
 {
 	private Name methodName;
-	private TypeKind returnType;
+	private String returnType;
 	private Map<String, Type> parameters;
 	private ArrayList<Name> returnValues;
 	Object body;
@@ -26,7 +26,7 @@ public class MethodEnv
 	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
 	{
 		this.methodName = name;
-		this.returnType = returnType;
+		this.returnType = returnType.toString();
 		this.parameters = params;
 		this.returnValues = returnValues;
 	}
@@ -36,18 +36,27 @@ public class MethodEnv
 	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params, Object body)
 	{
 		this.methodName = name;
+		this.returnType = returnType.toString();
+		this.parameters = params;
+		this.returnValues = returnValues;
+		this.body = body;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public MethodEnv(Name name, String returnType, ArrayList<Name> returnValues ,Map params, Object body)
+	{
+		this.methodName = name;
 		this.returnType = returnType;
 		this.parameters = params;
 		this.returnValues = returnValues;
 		this.body = body;
 	}
 	
-	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MethodEnv(Name name, TypeKind returnType, Map params)
 	{
 		this.methodName = name;
-		this.returnType = returnType;
+		this.returnType = returnType.toString();
 		this.parameters = params;
 	}
 
@@ -70,7 +79,7 @@ public class MethodEnv
 
 	public void setReturnType(TypeKind returnType)
 	{
-		this.returnType = returnType;
+		this.returnType = returnType.toString();
 	}
 
 	public Map<String, Type> getParameters()

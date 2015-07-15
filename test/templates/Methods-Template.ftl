@@ -11,7 +11,7 @@ ${meth.methodName}Call~.~${ProcessID}
 ~?~${param}
 </#list>
 \then \\
-${meth.body} \\
+${meth.body} \circseq  \\
 
 <#if meth.returnType != 'VOID'>
 ${meth.methodName}Ret~.~${ProcessID}~!~ret \then \\

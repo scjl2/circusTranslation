@@ -190,7 +190,7 @@ import com.sun.source.util.Trees;
 
 						System.out.println("*** TRYING FRANK'S METHOD VISITOR ***");
 						Tree returnType = o.getReturnType();
-						
+						//TODO get the type kind better more proper
 						TypeKind returnTypeKind = TypeKind.ERROR;
 
 						if (returnType instanceof PrimitiveTypeTree)
@@ -198,6 +198,13 @@ import com.sun.source.util.Trees;
 							returnTypeKind = ((PrimitiveTypeTree) o.getReturnType())
 									.getPrimitiveTypeKind();
 						}
+						else 
+						{
+							returnTypeKind = TypeKind.DECLARED;
+							
+								
+						}
+				
 						
 						//return values
 						ArrayList<Name> returnsValues = o.accept(
@@ -217,14 +224,24 @@ import com.sun.source.util.Trees;
 						System.out.println("*** Body ***");
 						System.out.println(body);
 						
-						sequencerEnv.addMeth(
-							new MethodEnv(
-									o.getName(), returnTypeKind, returnsValues, parameters, body 
-									)
-							);
 						
-
+						MethodEnv m;
 						
+						if(returnTypeKind == TypeKind.DECLARED)
+						{
+							String s = o.getReturnType().toString();
+							if(s.contains("Mission"))
+							{
+								s = "MissionID";
+							}
+							
+							m= new MethodEnv(o.getName(), s, returnsValues, parameters, body);
+						}
+						else
+						{
+							m= new MethodEnv(o.getName(), returnTypeKind, returnsValues, parameters, body);
+						}
+						sequencerEnv.addMeth(m);						
 					}
 					else
 					{// ADD METHOD TO MISSION ENV
