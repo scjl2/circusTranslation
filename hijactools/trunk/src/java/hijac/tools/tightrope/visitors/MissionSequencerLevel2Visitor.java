@@ -1,28 +1,16 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.modelgen.circus.templates.CircusTemplates;
-import hijac.tools.modelgen.circus.utils.TransUtils;
-import hijac.tools.modelgen.circus.visitors.AMethodVisitor;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
-import hijac.tools.tightrope.generators.NewCircusTemplates;
 import hijac.tools.tightrope.generators.NewSCJApplication;
-import hijac.tools.tightrope.utils.NewTransUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import javacutils.TypesUtils;
-
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Processor;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
@@ -33,12 +21,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
-
-import checkers.formatter.quals.ReturnsFormat;
-
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.StatementTree;
@@ -134,6 +117,7 @@ import com.sun.source.util.Trees;
 //			ReturnVisitor rv = new ReturnVisitor(ct);
 //			System.out.println("Retrun Visitor says... " +rv.getReturns());
 
+			@SuppressWarnings("unchecked")
 			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 			System.out.println("MS Visitor members: " + members);
 
@@ -215,8 +199,8 @@ import com.sun.source.util.Trees;
 						ArrayList<Name> returnsValues = o.accept(
 								new ReturnVisitor(null), null);			
 						
-						@SuppressWarnings("rawtypes")
-						Map parameters = new HashMap();
+						
+						Map<Object, Object> parameters = new HashMap<>();
 						for (VariableTree vt : o.getParameters())
 						{
 							parameters.put(vt.getName().toString(), vt.getType());
