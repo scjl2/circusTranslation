@@ -206,10 +206,7 @@ import com.sun.source.util.Trees;
 							parameters.put(vt.getName().toString(), vt.getType());
 						}
 						
-						String body = o.accept(franksMethodVisitor, new MethodVisitorContext());
 						
-						System.out.println("*** Body ***");
-						System.out.println(body);
 						
 						
 //						Processor p = new AbstractProcessor();
@@ -221,6 +218,8 @@ import com.sun.source.util.Trees;
 //										analysis.ELEMENTS, 
 //										returnType.getClass() );
 //						
+						String body;
+						String returnString = null;
 						
 						if(returnTypeKind == TypeKind.DECLARED)
 						{
@@ -228,7 +227,7 @@ import com.sun.source.util.Trees;
 												
 							if(s.contains("Mission"))
 							{
-								s = "MissionId";
+								returnString = "MissionId";
 							}
 							else
 								if (s.contains("MissionSequencer")
@@ -242,14 +241,24 @@ import com.sun.source.util.Trees;
 									s.contains("ManagedThread")
 									)
 								{
-									s = "SchedulableId";
+									returnString = "SchedulableId";
 								}
 								
+							franksMethodVisitor.setReturn(s);
+							body = o.accept(franksMethodVisitor, new MethodVisitorContext());
 							
-							m= new MethodEnv(o.getName(), s, returnsValues, parameters, body);
+							System.out.println("*** Body ***");
+							System.out.println(body); 
+							
+							m= new MethodEnv(o.getName(), returnString, returnsValues, parameters, body);
 						}
 						else
 						{
+							body = o.accept(franksMethodVisitor, new MethodVisitorContext());
+							
+							System.out.println("*** Body ***");
+							System.out.println(body); 
+							
 							m= new MethodEnv(o.getName(), returnTypeKind, returnsValues, parameters, body);
 						}
 						
