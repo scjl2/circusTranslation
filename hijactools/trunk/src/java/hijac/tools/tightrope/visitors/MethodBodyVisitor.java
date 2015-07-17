@@ -47,6 +47,7 @@ import hijac.tools.modelgen.circus.templates.CircusTemplateFactory;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
 
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
@@ -59,6 +60,7 @@ public class MethodBodyVisitor extends
 	private static final String EXPR_TEMPLATE = "L2Expr.ftl";
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
 	private static String nullString = null;
+	MethodEnv methodEnv = null;
 	
 	protected final NewSCJApplication CONTEXT;
 
@@ -68,6 +70,15 @@ public class MethodBodyVisitor extends
 		assert context != null;
 		CONTEXT = context;
 		nullString = null;
+	}
+	
+	public MethodBodyVisitor(NewSCJApplication context, MethodEnv env)
+	{
+		super(NewTransUtils.FAILED_RESULT);
+		assert context != null;
+		CONTEXT = context;
+		nullString = null;
+		this.methodEnv = env;
 	}
 
 	public void initMacroModel(Tree node, MethodVisitorContext ctxt)
@@ -80,7 +91,14 @@ public class MethodBodyVisitor extends
 		ctxt.MACRO_MODEL.put("NODE", node);
 		ctxt.MACRO_MODEL.put("CTXT", ctxt);
 
-		ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT));
+		if(methodEnv != null)
+		{
+			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT, methodEnv));
+		}
+		else
+		{
+			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT));
+		}
 	}
 
 	protected String doMacroCall(Tree node, MethodVisitorContext ctxt,
@@ -284,15 +302,19 @@ public class MethodBodyVisitor extends
 		/* Should we do the translation in a template macro here too? */
 		System.out.println("///Literal ");
 		//This is supposed to cater for null id values, but is a bit hacky...
-		if(nullString == null)
+		if(methodEnv.getReturnType().contains("MissionId") ) 
 		{
-			System.out.println("/// String is null");
-			return NewTransUtils.encodeLiteral(node);
+			
+			return "nullMissionId";			
+		}
+		else if (methodEnv.getReturnType().contains("SchedulableId"))
+		{
+			return "nullSchedulableId";
 		}
 		else
 		{
-			System.out.println("///String is " + nullString);
-			return nullString;
+			System.out.println("/// String is null");
+			return NewTransUtils.encodeLiteral(node);
 		}
 	}
 

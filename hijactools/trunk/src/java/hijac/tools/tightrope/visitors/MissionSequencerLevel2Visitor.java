@@ -29,319 +29,333 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
-	public class MissionSequencerLevel2Visitor implements ElementVisitor<ArrayList<Name>, Void>
+public class MissionSequencerLevel2Visitor implements
+		ElementVisitor<ArrayList<Name>, Void>
+{
+	ProgramEnv programEnv;
+	SCJAnalysis analysis;
+
+	private Trees trees;
+	// private Set<CompilationUnitTree> units;
+	// private Set<TypeElement> type_elements;
+	private ReturnVisitor returnVisitor;
+	ParadigmEnv sequencerEnv;
+
+	MethodBodyVisitor franksMethodVisitor;
+
+	private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
+
+	public MissionSequencerLevel2Visitor(ProgramEnv programEnv,
+			ParadigmEnv sequencerEnv, SCJAnalysis analysis)
 	{
-		ProgramEnv programEnv;
-		SCJAnalysis analysis;
-		
-		private  Trees trees;
-//		private  Set<CompilationUnitTree> units;
-//		private  Set<TypeElement> type_elements;
-		private ReturnVisitor returnVisitor ;
-		ParadigmEnv sequencerEnv;
-		
-		MethodBodyVisitor franksMethodVisitor; 
+		this.analysis = analysis;
+		this.programEnv = programEnv;
+		this.sequencerEnv = sequencerEnv;
 
-		
-		private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
-		
-				
-		public MissionSequencerLevel2Visitor(ProgramEnv programEnv, ParadigmEnv sequencerEnv, SCJAnalysis analysis)
-		{
-			this.analysis = analysis;
-			this.programEnv = programEnv;
-			this.sequencerEnv = sequencerEnv;
+		trees = analysis.TREES;
+		// units = analysis.getCompilationUnits();
+		// type_elements = analysis.getTypeElements();
 
-			trees = analysis.TREES;
-//			units = analysis.getCompilationUnits();
-//			type_elements = analysis.getTypeElements();
+		// returnVisitor = new ReturnVisitor(programEnv);
 
-//			returnVisitor = new ReturnVisitor(programEnv);
-			
-	
-			this.franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(analysis));
-		}
+		this.franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(
+				analysis));
+	}
 
-		@Override
-		public ArrayList<Name> visit(Element arg0)
-		{
-			// TODO Auto-generated method stub
-			return null;
-
-		}
-
-		@Override
-		public ArrayList<Name> visit(Element arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public ArrayList<Name> visitExecutable(ExecutableElement arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public ArrayList<Name> visitPackage(PackageElement arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
-		{
-//			getVariables(arg0);	
-
-			System.out.println();
-
-			System.out.println("+++ Mission Sequencer Variables +++");
-			System.out.println();
-			
-			for (Name n : varMap.keySet())
-			{
-				System.out.println("+++ Variable " + n + " = " + varMap.get(n));
-			}
-			
-			
-			ArrayList<Name> missions = new ArrayList<Name>();
-
-			System.out.println("In MS Visitor for " + arg0);
-
-			ClassTree ct = trees.getTree(arg0);
-			System.out.println("MS Visitor class tree: " + ct);
-			
-//			ReturnVisitor rv = new ReturnVisitor(ct);
-//			System.out.println("Retrun Visitor says... " +rv.getReturns());
-
-			@SuppressWarnings("unchecked")
-			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-			System.out.println("MS Visitor members: " + members);
-
-			Iterator<StatementTree> i = members.iterator();
-
-			returnVisitor = new ReturnVisitor(varMap);
-
-			
-			while (i.hasNext())
-			{
-				Tree tlst = i.next();
-//				System.out.println("MS Visitor i=" + ((Tree) i).getKind());
-
-				if (tlst instanceof VariableTree)
-				{
-					System.out.println("MS VIsitor: Variable Tree Found");
-					
-//					VariableTree vt = (VariableTree) tlst;
-//			
-//					System.out.println("-> " + vt.toString());
-//					System.out.println("-> Name:" + vt.getName());
-//					System.out.println("-> Type: " + vt.getType());
-//
-//					programEnv.addVariable(vt.getName(), vt.getType());
-				}
-
-				if (tlst instanceof MethodTree)
-				{
-					
-					MethodTree o = (MethodTree) tlst;
-					System.out.println("MS Visitor Method Tree = "
-							+ o.getName());
-
-					
-					if (o.getName().contentEquals("<init>"))
-					{
-//						ArrayList<Name> constructorReturns = null;
-						System.out.println("Release the Visitor!");
-						
-//						constructorReturns = 
-								o.accept(returnVisitor, false);
-//						if(constructorReturns != null)
-//						{
-//							missions.addAll(constructorReturns);
-//						}
-
-					}
-					else	
-					if (o.getName().contentEquals("getNextMission"))
-					{
-						ArrayList<Name> getNextReturns = null;
-						System.out.println("Release the Visitor!");
-						
-						getNextReturns = o.accept(returnVisitor, false);
-						
-						if(getNextReturns != null)
-						{
-							missions.addAll(getNextReturns);
-						}
-						
-
-						System.out.println("*** TRYING FRANK'S METHOD VISITOR ***");
-						Tree returnType = o.getReturnType();
-						//TODO get the type kind better more proper
-						TypeKind returnTypeKind = TypeKind.ERROR;
-						
-						if (returnType instanceof PrimitiveTypeTree)
-						{
-							returnTypeKind = ((PrimitiveTypeTree) o.getReturnType())
-									.getPrimitiveTypeKind();
-						}
-						else 
-						{
-							returnTypeKind = TypeKind.DECLARED;							
-						}
-				
-						
-						//return values
-						ArrayList<Name> returnsValues = o.accept(
-								new ReturnVisitor(null), null);			
-						
-						
-						Map<Object, Object> parameters = new HashMap<>();
-						for (VariableTree vt : o.getParameters())
-						{
-							parameters.put(vt.getName().toString(), vt.getType());
-						}
-						
-						
-						
-						
-//						Processor p = new AbstractProcessor();
-						
-						MethodEnv m;
-						//TODO Get the type mirror...somehow
-//						TypeMirror type = 
-//								TypesUtils.typeFromClass(analysis.TYPES, 
-//										analysis.ELEMENTS, 
-//										returnType.getClass() );
-//						
-						String body;
-						String returnString = null;
-						
-						if(returnTypeKind == TypeKind.DECLARED)
-						{
-							String s = o.getReturnType().toString();
-												
-							if(s.contains("Mission"))
-							{
-								returnString = "MissionId";
-							}
-							else
-								if (s.contains("MissionSequencer")
-									||
-									s.contains("OneShotEventHandler")
-									||
-									s.contains("AperiodicEventHandler")
-									||
-									s.contains("PeriodicEventHandler")
-									||
-									s.contains("ManagedThread")
-									)
-								{
-									returnString = "SchedulableId";
-								}
-								
-							franksMethodVisitor.setReturn(s);
-							body = o.accept(franksMethodVisitor, new MethodVisitorContext());
-							
-							System.out.println("*** Body ***");
-							System.out.println(body); 
-							
-							m= new MethodEnv(o.getName(), returnString, returnsValues, parameters, body);
-						}
-						else
-						{
-							body = o.accept(franksMethodVisitor, new MethodVisitorContext());
-							
-							System.out.println("*** Body ***");
-							System.out.println(body); 
-							
-							m= new MethodEnv(o.getName(), returnTypeKind, returnsValues, parameters, body);
-						}
-						
-						
-//							m= new MethodEnv(o.getName(), NewTransUtils.encodeType(type), returnsValues, parameters, body);
-						
-						
-						sequencerEnv.addMeth(m);						
-					}
-					else
-					{// ADD METHOD TO MISSION ENV
-						if (o.getModifiers().getFlags()
-								.contains(Modifier.SYNCHRONIZED))
-						{
-
-							sequencerEnv.addSyncMeth(o.accept(new MethodVisitor(), null));
-						}
-						else if(! (o.getName().contentEquals("<init>")  ))
-						{
-//				
-							sequencerEnv.addMeth(o.accept(new MethodVisitor(), null));
-						}
-						
-					}
-
-				}
-			}
-
-			System.out.println(" +++ MissionSequencerVissitor has " + missions.size() + " missions +++");
-			return missions;
-		}
-
-//		private void getVariables(TypeElement arg0)
-//		{
-//			VariableVisitor varVisitor = new VariableVisitor(programEnv);
-//			
-//			ClassTree ct = trees.getTree(arg0);
-//			List<? extends Tree> members =  ct.getMembers();
-//			Iterator<? extends Tree> i = members.iterator();
-//			
-//			
-//			while(i.hasNext())
-//			{
-//				Tree s = i.next();
-////				System.out.println(s);
-//				 HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, false) ;
-//				 
-////				 System.out.println("+++ m == null : " + m == null + " +++" );
-//				 
-//				 if (m == null)
-//				 {
-//					 System.out.println("+++ Variable Visitor Returned Null +++");
-//						
-//				 }
-//				 else
-//				 {
-//					 System.out.println("+++ Variable Visitor Returned " + m);
-//					 varMap.putAll(m);	
-//				 }
-//					
-//			}
-//			
-//		}
-
-		@Override
-		public ArrayList<Name> visitTypeParameter(TypeParameterElement arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public ArrayList<Name> visitUnknown(Element arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public ArrayList<Name> visitVariable(VariableElement arg0, Void arg1)
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
+	@Override
+	public ArrayList<Name> visit(Element arg0)
+	{
+		// TODO Auto-generated method stub
+		return null;
 
 	}
+
+	@Override
+	public ArrayList<Name> visit(Element arg0, Void arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitExecutable(ExecutableElement arg0, Void arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitPackage(PackageElement arg0, Void arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
+	{
+		// getVariables(arg0);
+
+		System.out.println();
+
+		System.out.println("+++ Mission Sequencer Variables +++");
+		System.out.println();
+
+		for (Name n : varMap.keySet())
+		{
+			System.out.println("+++ Variable " + n + " = " + varMap.get(n));
+		}
+
+		ArrayList<Name> missions = new ArrayList<Name>();
+
+		System.out.println("In MS Visitor for " + arg0);
+
+		ClassTree ct = trees.getTree(arg0);
+		System.out.println("MS Visitor class tree: " + ct);
+
+		// ReturnVisitor rv = new ReturnVisitor(ct);
+		// System.out.println("Retrun Visitor says... " +rv.getReturns());
+
+		@SuppressWarnings("unchecked")
+		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+		System.out.println("MS Visitor members: " + members);
+
+		Iterator<StatementTree> i = members.iterator();
+
+		returnVisitor = new ReturnVisitor(varMap);
+
+		while (i.hasNext())
+		{
+			Tree tlst = i.next();
+			// System.out.println("MS Visitor i=" + ((Tree) i).getKind());
+
+			if (tlst instanceof VariableTree)
+			{
+				System.out.println("MS VIsitor: Variable Tree Found");
+
+				// VariableTree vt = (VariableTree) tlst;
+				//
+				// System.out.println("-> " + vt.toString());
+				// System.out.println("-> Name:" + vt.getName());
+				// System.out.println("-> Type: " + vt.getType());
+				//
+				// programEnv.addVariable(vt.getName(), vt.getType());
+			}
+
+			if (tlst instanceof MethodTree)
+			{
+
+				MethodTree o = (MethodTree) tlst;
+				System.out.println("MS Visitor Method Tree = " + o.getName());
+
+				if (o.getName().contentEquals("<init>"))
+				{
+					// ArrayList<Name> constructorReturns = null;
+					System.out.println("Release the Visitor!");
+
+					// constructorReturns =
+					o.accept(returnVisitor, false);
+					// if(constructorReturns != null)
+					// {
+					// missions.addAll(constructorReturns);
+					// }
+
+				} else if (o.getName().contentEquals("getNextMission"))
+				{
+					ArrayList<Name> getNextReturns = null;
+					System.out.println("Release the Visitor!");
+
+					getNextReturns = o.accept(returnVisitor, false);
+
+					if (getNextReturns != null)
+					{
+						missions.addAll(getNextReturns);
+					}
+
+					System.out.println("*** TRYING FRANK'S METHOD VISITOR ***");
+					Tree returnType = o.getReturnType();
+					// TODO get the type kind better more proper
+					TypeKind returnTypeKind = TypeKind.ERROR;
+					String returnString = null;
+					if (returnType instanceof PrimitiveTypeTree)
+					{
+						
+						
+						returnTypeKind = ((PrimitiveTypeTree) o.getReturnType())
+								.getPrimitiveTypeKind();
+						
+						switch (returnTypeKind)
+						{
+							case BOOLEAN:
+								returnString= "\\boolean";
+							case BYTE:
+								returnString= "byte";
+							case INT:
+								returnString= "int";
+							case LONG:
+								returnString= "long";
+							case FLOAT:
+								returnString= "float";
+							case DOUBLE:
+								returnString= "double";
+							case CHAR:
+								returnString= "char";
+						}
+						
+					} else
+					{
+						returnTypeKind = TypeKind.DECLARED;
+					}
+
+					// return values
+					ArrayList<Name> returnsValues = o.accept(new ReturnVisitor(
+							null), null);
+
+					Map<Object, Object> parameters = new HashMap<>();
+					for (VariableTree vt : o.getParameters())
+					{
+						parameters.put(vt.getName().toString(), vt.getType());
+					}
+
+					// Processor p = new AbstractProcessor();
+
+					MethodEnv m;
+					// TODO Get the type mirror...somehow
+					// TypeMirror type =
+					// TypesUtils.typeFromClass(analysis.TYPES,
+					// analysis.ELEMENTS,
+					// returnType.getClass() );
+					//
+					
+					//TODO refactor this
+					String body;
+					
+
+					if (returnTypeKind == TypeKind.DECLARED)
+					{
+						String s = o.getReturnType().toString();
+
+						if (s.contains("Mission"))
+						{
+							returnString = "MissionId";
+						} else if (s.contains("MissionSequencer")
+								|| s.contains("OneShotEventHandler")
+								|| s.contains("AperiodicEventHandler")
+								|| s.contains("PeriodicEventHandler")
+								|| s.contains("ManagedThread"))
+						{
+							returnString = "SchedulableId";
+						}
+
+						m = new MethodEnv(o.getName(), returnString,
+								returnsValues, parameters, "");
+						
+						franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(
+								analysis), m);
+						
+						body = o.accept(franksMethodVisitor,
+								new MethodVisitorContext());
+
+						System.out.println("*** Body ***");
+						System.out.println(body);
+						m.setBody(body);
+						
+					} 
+					else
+					{
+						body = o.accept(franksMethodVisitor,
+								new MethodVisitorContext());
+
+						System.out.println("*** Body ***");
+						System.out.println(body);
+
+						m = new MethodEnv(o.getName(), returnString,
+								returnsValues, parameters, body);
+					}
+
+					// m= new MethodEnv(o.getName(),
+					// NewTransUtils.encodeType(type), returnsValues,
+					// parameters, body);
+
+					sequencerEnv.addMeth(m);
+				} else
+				{// ADD METHOD TO MISSION ENV
+					if (o.getModifiers().getFlags()
+							.contains(Modifier.SYNCHRONIZED))
+					{
+
+						sequencerEnv.addSyncMeth(o.accept(new MethodVisitor(),
+								null));
+					} else if (!(o.getName().contentEquals("<init>")))
+					{
+						//
+						sequencerEnv.addMeth(o
+								.accept(new MethodVisitor(), null));
+					}
+
+				}
+
+			}
+		}
+
+		System.out.println(" +++ MissionSequencerVissitor has "
+				+ missions.size() + " missions +++");
+		return missions;
+	}
+
+	// private void getVariables(TypeElement arg0)
+	// {
+	// VariableVisitor varVisitor = new VariableVisitor(programEnv);
+	//
+	// ClassTree ct = trees.getTree(arg0);
+	// List<? extends Tree> members = ct.getMembers();
+	// Iterator<? extends Tree> i = members.iterator();
+	//
+	//
+	// while(i.hasNext())
+	// {
+	// Tree s = i.next();
+	// // System.out.println(s);
+	// HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, false)
+	// ;
+	//
+	// // System.out.println("+++ m == null : " + m == null + " +++" );
+	//
+	// if (m == null)
+	// {
+	// System.out.println("+++ Variable Visitor Returned Null +++");
+	//
+	// }
+	// else
+	// {
+	// System.out.println("+++ Variable Visitor Returned " + m);
+	// varMap.putAll(m);
+	// }
+	//
+	// }
+	//
+	// }
+
+	@Override
+	public ArrayList<Name> visitTypeParameter(TypeParameterElement arg0,
+			Void arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitUnknown(Element arg0, Void arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitVariable(VariableElement arg0, Void arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

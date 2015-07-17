@@ -111,4 +111,10 @@ public class MethodEnv
 			return "null";
 		}
 	}
+
+	public void setBody(String body)
+	{
+		this.body=body;
+		
+	}
 }
