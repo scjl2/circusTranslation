@@ -2,6 +2,7 @@ package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
+import hijac.tools.modelgen.circus.utils.TransUtils;
 import hijac.tools.modelgen.circus.visitors.AMethodVisitor;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
@@ -9,6 +10,7 @@ import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.generators.NewCircusTemplates;
 import hijac.tools.tightrope.generators.NewSCJApplication;
+import hijac.tools.tightrope.utils.NewTransUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +19,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javacutils.TypesUtils;
+
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Processor;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
@@ -27,6 +33,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 
 import checkers.formatter.quals.ReturnsFormat;
 
@@ -192,7 +199,7 @@ import com.sun.source.util.Trees;
 						Tree returnType = o.getReturnType();
 						//TODO get the type kind better more proper
 						TypeKind returnTypeKind = TypeKind.ERROR;
-
+						
 						if (returnType instanceof PrimitiveTypeTree)
 						{
 							returnTypeKind = ((PrimitiveTypeTree) o.getReturnType())
@@ -200,18 +207,14 @@ import com.sun.source.util.Trees;
 						}
 						else 
 						{
-							returnTypeKind = TypeKind.DECLARED;
-							
-								
+							returnTypeKind = TypeKind.DECLARED;							
 						}
 				
 						
 						//return values
 						ArrayList<Name> returnsValues = o.accept(
-								new ReturnVisitor(null), null);
+								new ReturnVisitor(null), null);			
 						
-						
-
 						@SuppressWarnings("rawtypes")
 						Map parameters = new HashMap();
 						for (VariableTree vt : o.getParameters())
@@ -225,15 +228,39 @@ import com.sun.source.util.Trees;
 						System.out.println(body);
 						
 						
+//						Processor p = new AbstractProcessor();
+						
 						MethodEnv m;
+						//TODO Get the type mirror...somehow
+//						TypeMirror type = 
+//								TypesUtils.typeFromClass(analysis.TYPES, 
+//										analysis.ELEMENTS, 
+//										returnType.getClass() );
+//						
 						
 						if(returnTypeKind == TypeKind.DECLARED)
 						{
 							String s = o.getReturnType().toString();
+												
 							if(s.contains("Mission"))
 							{
-								s = "MissionID";
+								s = "MissionId";
 							}
+							else
+								if (s.contains("MissionSequencer")
+									||
+									s.contains("OneShotEventHandler")
+									||
+									s.contains("AperiodicEventHandler")
+									||
+									s.contains("PeriodicEventHandler")
+									||
+									s.contains("ManagedThread")
+									)
+								{
+									s = "SchedulableId";
+								}
+								
 							
 							m= new MethodEnv(o.getName(), s, returnsValues, parameters, body);
 						}
@@ -241,6 +268,11 @@ import com.sun.source.util.Trees;
 						{
 							m= new MethodEnv(o.getName(), returnTypeKind, returnsValues, parameters, body);
 						}
+						
+						
+//							m= new MethodEnv(o.getName(), NewTransUtils.encodeType(type), returnsValues, parameters, body);
+						
+						
 						sequencerEnv.addMeth(m);						
 					}
 					else

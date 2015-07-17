@@ -87,7 +87,7 @@ public class TransUtils {
    public static String encodeLiteral(LiteralTree node) {
       switch (node.getKind()) {
       case BOOLEAN_LITERAL:
-         return ((Boolean) node.getValue()) ? "\\true" : "\\false";
+         return ((Boolean) node.getValue()) ? "true" : "false";
 
       case CHAR_LITERAL:
       case INT_LITERAL:
