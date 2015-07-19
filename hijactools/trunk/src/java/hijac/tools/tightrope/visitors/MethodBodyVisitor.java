@@ -302,18 +302,29 @@ public class MethodBodyVisitor extends
 		/* Should we do the translation in a template macro here too? */
 		System.out.println("///Literal ");
 		//This is supposed to cater for null id values, but is a bit hacky...
-		if(methodEnv.getReturnType().contains("MissionId") ) 
+		
+		
+		if(methodEnv != null)
+		{
+			String returnType = methodEnv.getReturnType();
+		if(returnType.contains("MissionId") ) 
 		{
 			
 			return "nullMissionId";			
 		}
-		else if (methodEnv.getReturnType().contains("SchedulableId"))
+		else if (returnType.contains("SchedulableId"))
 		{
 			return "nullSchedulableId";
 		}
 		else
 		{
 			System.out.println("/// String is null");
+			return NewTransUtils.encodeLiteral(node);
+		}
+		}else
+		{
+
+			System.out.println("/// methodEnv is null");
 			return NewTransUtils.encodeLiteral(node);
 		}
 	}

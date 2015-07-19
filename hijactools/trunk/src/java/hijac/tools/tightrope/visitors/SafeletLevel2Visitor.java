@@ -134,11 +134,11 @@ public class SafeletLevel2Visitor implements
 						if (mt.getModifiers().getFlags()
 								.contains(Modifier.SYNCHRONIZED))
 						{
-							safeletEnv.addSyncMeth(mt.accept(new MethodVisitor(), null));
+							safeletEnv.addSyncMeth(mt.accept(new MethodVisitor(analysis), null));
 						} 
 						else if( !(mt.getName().contentEquals("getSequencer") || mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getLevel")    ) ) 
 						{
-							safeletEnv.addMeth(mt.accept(new MethodVisitor(), null));
+							safeletEnv.addMeth(mt.accept(new MethodVisitor(analysis), null));
 						}
 					}
 				}

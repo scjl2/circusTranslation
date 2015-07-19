@@ -143,13 +143,13 @@ public class MissionLevel2Visitor implements
 
 //						missionEnv.addSyncMeth(mt.getName(), typeKind, returns,
 //								paramMap);
-						missionEnv.addSyncMeth(mt.accept(new MethodVisitor(), null));
+						missionEnv.addSyncMeth(mt.accept(new MethodVisitor(analysis), null));
 					}
 					else if(! (mt.getName().contentEquals("<init>") || mt.getName().contentEquals("missionMemorySize") ))
 					{
 //						missionEnv.addMeth(mt.getName(), typeKind, returns,
 //								paramMap);
-						missionEnv.addMeth(mt.accept(new MethodVisitor(), null));
+						missionEnv.addMeth(mt.accept(new MethodVisitor(analysis), null));
 					}
 				}
 			}

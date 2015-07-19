@@ -69,10 +69,10 @@ import com.sun.source.tree.WildcardTree;
 public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 {
 
-	private Tree save;
+//	private Tree save;
 	private ArrayList<Name> returns = new ArrayList<Name>();
-	private ClassTree tree;
-	private Iterator<StatementTree> i ;
+//	private ClassTree tree;
+//	private Iterator<StatementTree> i ;
 //	private ProgramEnv programEnv;
 
 
@@ -81,6 +81,12 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	public ReturnVisitor(Map<Name, Tree> varMap)
 	{
 		this.varMap = varMap;
+
+	}
+	
+	public ReturnVisitor()
+	{
+		this.varMap = new HashMap<Name, Tree>();
 
 	}
 	

@@ -56,7 +56,7 @@ public class MissionSequencerLevel2Visitor implements
 		// units = analysis.getCompilationUnits();
 		// type_elements = analysis.getTypeElements();
 
-		// returnVisitor = new ReturnVisitor(programEnv);
+		returnVisitor = new ReturnVisitor();
 
 		this.franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(
 				analysis));
@@ -123,9 +123,10 @@ public class MissionSequencerLevel2Visitor implements
 		Iterator<StatementTree> i = members.iterator();
 
 		returnVisitor = new ReturnVisitor(varMap);
-
+		MethodEnv m;
 		while (i.hasNext())
 		{
+			m = null;
 			Tree tlst = i.next();
 			// System.out.println("MS Visitor i=" + ((Tree) i).getKind());
 
@@ -148,22 +149,25 @@ public class MissionSequencerLevel2Visitor implements
 				MethodTree o = (MethodTree) tlst;
 				System.out.println("MS Visitor Method Tree = " + o.getName());
 
-				if (o.getName().contentEquals("<init>"))
+				 if (o.getName().contentEquals("<init>"))
+				 {
+				 // ArrayList<Name> constructorReturns = null;
+				 System.out.println("Release the Visitor!");
+				
+				 // constructorReturns =
+				 o.accept(returnVisitor, false);
+				 // if(constructorReturns != null)
+				 // {
+				 // missions.addAll(constructorReturns);
+				 // }
+				
+				 } else
+				if (o.getName().contentEquals("getNextMission"))
 				{
-					// ArrayList<Name> constructorReturns = null;
-					System.out.println("Release the Visitor!");
-
-					// constructorReturns =
-					o.accept(returnVisitor, false);
-					// if(constructorReturns != null)
-					// {
-					// missions.addAll(constructorReturns);
-					// }
-
-				} else if (o.getName().contentEquals("getNextMission"))
-				{
+					
+					
 					ArrayList<Name> getNextReturns = null;
-					System.out.println("Release the Visitor!");
+			
 
 					getNextReturns = o.accept(returnVisitor, false);
 
@@ -171,126 +175,106 @@ public class MissionSequencerLevel2Visitor implements
 					{
 						missions.addAll(getNextReturns);
 					}
-
-					System.out.println("*** TRYING FRANK'S METHOD VISITOR ***");
-					Tree returnType = o.getReturnType();
-					// TODO get the type kind better more proper
-					TypeKind returnTypeKind = TypeKind.ERROR;
-					String returnString = null;
-					if (returnType instanceof PrimitiveTypeTree)
-					{
-						
-						
-						returnTypeKind = ((PrimitiveTypeTree) o.getReturnType())
-								.getPrimitiveTypeKind();
-						
-						switch (returnTypeKind)
-						{
-							case BOOLEAN:
-								returnString= "\\boolean";
-							case BYTE:
-								returnString= "byte";
-							case INT:
-								returnString= "int";
-							case LONG:
-								returnString= "long";
-							case FLOAT:
-								returnString= "float";
-							case DOUBLE:
-								returnString= "double";
-							case CHAR:
-								returnString= "char";
-						}
-						
-					} else
-					{
-						returnTypeKind = TypeKind.DECLARED;
-					}
-
-					// return values
-					ArrayList<Name> returnsValues = o.accept(new ReturnVisitor(
-							null), null);
-
-					Map<Object, Object> parameters = new HashMap<>();
-					for (VariableTree vt : o.getParameters())
-					{
-						parameters.put(vt.getName().toString(), vt.getType());
-					}
-
-					// Processor p = new AbstractProcessor();
-
-					MethodEnv m;
-					// TODO Get the type mirror...somehow
-					// TypeMirror type =
-					// TypesUtils.typeFromClass(analysis.TYPES,
-					// analysis.ELEMENTS,
-					// returnType.getClass() );
-					//
 					
-					//TODO refactor this
-					String body;
+					m = o.accept(new MethodVisitor(analysis), null);
+//
+//					System.out.println("*** TRYING FRANK'S METHOD VISITOR ***");
+//					Tree returnType = o.getReturnType();
+//			
+//					
+//					String returnString = null;
+//
+//				
+//					String body;
+//
+//					Map<Object, Object> parameters = new HashMap<>();
+//					
+//					for (VariableTree vt : o.getParameters())
+//					{
+//						parameters.put(vt.getName().toString(), vt.getType());
+//					}
+//
+//					if (returnType instanceof PrimitiveTypeTree)
+//					{
+//
+//						TypeKind returnTypeKind = ((PrimitiveTypeTree) o.getReturnType())
+//								.getPrimitiveTypeKind();
+//
+//						switch (returnTypeKind)
+//						{
+//							case BOOLEAN:
+//								returnString = "\\boolean";
+//							case BYTE:
+//								returnString = "byte";
+//							case INT:
+//								returnString = "int";
+//							case LONG:
+//								returnString = "long";
+//							case FLOAT:
+//								returnString = "float";
+//							case DOUBLE:
+//								returnString = "double";
+//							case CHAR:
+//								returnString = "char";
+//							default:
+//								break;
+//						}
+//
+//						body = o.accept(franksMethodVisitor,
+//								new MethodVisitorContext());
+//
+//						System.out.println("*** Body ***");
+//						System.out.println(body);
+//
+//						m = new MethodEnv(o.getName(), returnString,
+//								getNextReturns, parameters, body);
+//
+//					} else
+//					{
+//						String s = o.getReturnType().toString();
+//
+//						if (s.contains("Mission"))
+//						{
+//							returnString = "MissionId";
+//						} else if (s.contains("MissionSequencer")
+//								|| s.contains("OneShotEventHandler")
+//								|| s.contains("AperiodicEventHandler")
+//								|| s.contains("PeriodicEventHandler")
+//								|| s.contains("ManagedThread"))
+//						{
+//							returnString = "SchedulableId";
+//						}
+//						m = new MethodEnv(o.getName(), returnString,							
+//								getNextReturns, parameters, "");
+//
+//						franksMethodVisitor = new MethodBodyVisitor(
+//								new NewSCJApplication(analysis), m);
+//
+//						body = o.accept(franksMethodVisitor,
+//								new MethodVisitorContext());
+//
+//						System.out.println("*** Body ***");
+//						System.out.println(body);
+//						m.setBody(body);
+//						
+//						
+//						
+//						
+//					}
+
 					
-
-					if (returnTypeKind == TypeKind.DECLARED)
-					{
-						String s = o.getReturnType().toString();
-
-						if (s.contains("Mission"))
-						{
-							returnString = "MissionId";
-						} else if (s.contains("MissionSequencer")
-								|| s.contains("OneShotEventHandler")
-								|| s.contains("AperiodicEventHandler")
-								|| s.contains("PeriodicEventHandler")
-								|| s.contains("ManagedThread"))
-						{
-							returnString = "SchedulableId";
-						}
-
-						m = new MethodEnv(o.getName(), returnString,
-								returnsValues, parameters, "");
-						
-						franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(
-								analysis), m);
-						
-						body = o.accept(franksMethodVisitor,
-								new MethodVisitorContext());
-
-						System.out.println("*** Body ***");
-						System.out.println(body);
-						m.setBody(body);
-						
-					} 
-					else
-					{
-						body = o.accept(franksMethodVisitor,
-								new MethodVisitorContext());
-
-						System.out.println("*** Body ***");
-						System.out.println(body);
-
-						m = new MethodEnv(o.getName(), returnString,
-								returnsValues, parameters, body);
-					}
-
-					// m= new MethodEnv(o.getName(),
-					// NewTransUtils.encodeType(type), returnsValues,
-					// parameters, body);
-
 					sequencerEnv.addMeth(m);
 				} else
 				{// ADD METHOD TO MISSION ENV
+					m = o.accept(new MethodVisitor(analysis), null);
+
 					if (o.getModifiers().getFlags()
 							.contains(Modifier.SYNCHRONIZED))
 					{
-
-						sequencerEnv.addSyncMeth(o.accept(new MethodVisitor(),
-								null));
+						sequencerEnv.addSyncMeth(m);
 					} else if (!(o.getName().contentEquals("<init>")))
 					{
-						//
-						sequencerEnv.addMeth(o
-								.accept(new MethodVisitor(), null));
+						sequencerEnv.addMeth(m);
 					}
 
 				}
@@ -298,6 +282,7 @@ public class MissionSequencerLevel2Visitor implements
 			}
 		}
 
+	
 		System.out.println(" +++ MissionSequencerVissitor has "
 				+ missions.size() + " missions +++");
 		return missions;

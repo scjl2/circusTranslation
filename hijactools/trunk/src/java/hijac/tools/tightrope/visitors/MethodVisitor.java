@@ -7,7 +7,10 @@ import java.util.Map;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
+import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
+import hijac.tools.tightrope.generators.NewSCJApplication;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
@@ -75,7 +78,16 @@ import com.sun.source.tree.WildcardTree;
 public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 {
 	MethodEnv methodEnv;
+	MethodBodyVisitor franksMethodVisitor;
+	SCJAnalysis analysis;
 
+	public MethodVisitor(SCJAnalysis analysis)
+	{
+		this.analysis = analysis;
+		this.franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(
+				analysis));
+	}
+	
 	@Override
 	public MethodEnv visitAnnotatedType(AnnotatedTypeTree arg0, Boolean arg1)
 	{
@@ -320,39 +332,110 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 	public MethodEnv visitMethod(MethodTree mt, Boolean arg1)
 	{
 		System.out.println("+++ Method Visitor: Method +++");
+		MethodEnv m;
+		
 		//get name
 		Name methodName = mt.getName();
+		
+		//return values
+				ArrayList<Name> returnsValues = mt.accept(
+						new ReturnVisitor(null), null);
+				
+				
+				Map<Object, Object> parameters = new HashMap<>();
+						
+				for (VariableTree vt : mt.getParameters())
+				{
+					parameters.put(vt.getName().toString(), vt.getType());
+				}
 		
 		//get return type
 		// TODO This needs to now actually figure out WHAT is
 				// returned and return it too
 		Tree returnType = mt.getReturnType();
-		TypeKind returnTypeKind = TypeKind.ERROR;
-
+		String returnString = null;
+		String body =null;
+		
 		if (returnType instanceof PrimitiveTypeTree)
 		{
-			returnTypeKind = ((PrimitiveTypeTree) mt.getReturnType())
+
+			TypeKind returnTypeKind = ((PrimitiveTypeTree) mt.getReturnType())
 					.getPrimitiveTypeKind();
-		}
-		
-		//return values
-		ArrayList<Name> returnsValues = mt.accept(
-				new ReturnVisitor(null), null);
-		
-		
-		@SuppressWarnings("rawtypes")
-		Map parameters = new HashMap();
-		for (VariableTree vt : mt.getParameters())
+
+			switch (returnTypeKind)
+			{
+				case BOOLEAN:
+					returnString = "\\boolean";
+				case BYTE:
+					returnString = "byte";
+				case INT:
+					returnString = "int";
+				case LONG:
+					returnString = "long";
+				case FLOAT:
+					returnString = "float";
+				case DOUBLE:
+					returnString = "double";
+				case CHAR:
+					returnString = "char";
+				default:
+					break;
+			}
+
+			body = mt.accept(franksMethodVisitor,
+					new MethodVisitorContext());
+
+			System.out.println("*** Body ***");
+			System.out.println(body);
+
+			m = new MethodEnv(methodName, returnString,
+					returnsValues, parameters, body);
+
+		} else
 		{
-			parameters.put(vt.getName().toString(), vt.getType());
+			String s = "null";
+			if(mt.getReturnType() != null)
+			{
+				s= mt.getReturnType().toString();
+			
+			if (s.contains("Mission"))
+			{
+				returnString = "MissionId";
+			} else if (s.contains("MissionSequencer")
+					|| s.contains("OneShotEventHandler")
+					|| s.contains("AperiodicEventHandler")
+					|| s.contains("PeriodicEventHandler")
+					|| s.contains("ManagedThread"))
+			{
+				returnString = "SchedulableId";
+			}
+			}
+			
+
+			m = new MethodEnv(methodName, returnString,							
+					returnsValues, parameters, "");
+
+			franksMethodVisitor = new MethodBodyVisitor(
+					new NewSCJApplication(analysis), m);
+
+			body = mt.accept(franksMethodVisitor,
+					new MethodVisitorContext());
+
+			System.out.println("*** Body ***");
+			System.out.println(body);
+			m.setBody(body);
 		}
+
+		
+		
 		
 		
 		//get body
-		Object body = mt.getBody().accept(this, arg1);
+//		Object body = mt.getBody().accept(this, arg1);
 		
 		
-		return new MethodEnv(methodName, returnTypeKind, returnsValues, parameters, body);
+//		return new MethodEnv(methodName, returnString, returnsValues, parameters, body);
+		return m;
 	}
 
 	@Override
