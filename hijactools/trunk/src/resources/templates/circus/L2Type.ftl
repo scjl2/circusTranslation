@@ -6,7 +6,7 @@
 
 <#macro PrimitiveType kind>
 <@compact>
-<#if kind="BOOLEAN"> \boolean
+<#if kind="BOOLEAN"> \\boolean
 <#elseif kind="BYTE">byte
 <#elseif kind="CHAR">char
 <#elseif kind="DOUBLE">\real

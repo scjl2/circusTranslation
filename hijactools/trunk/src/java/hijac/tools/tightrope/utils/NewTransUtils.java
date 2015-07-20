@@ -41,6 +41,69 @@ public class NewTransUtils extends TransUtils
 		return encodeName(name.toString());
 	}
 
+	//mine
+	public static String encodeType(Tree returnTree)
+	{
+		String returnString = null;
+		
+		if(returnTree != null)
+		{
+		if (returnTree instanceof PrimitiveTypeTree)
+		{
+
+			TypeKind returnTypeKind = ((PrimitiveTypeTree) returnTree)
+					.getPrimitiveTypeKind();
+			
+		
+
+			switch (returnTypeKind)
+			{
+				case BOOLEAN:
+					returnString = "\\boolean";
+					break;
+				case BYTE:
+					returnString = "byte";
+					break;
+				case INT:
+					returnString = "int";
+					break;
+				case LONG:
+					returnString = "long";
+					break;
+				case FLOAT:
+					returnString = "float";
+					break;
+				case DOUBLE:
+					returnString = "double";
+					break;
+				case CHAR:
+					returnString = "char";
+					break;
+				default:
+					break;
+			}
+		}
+		else
+		{
+			String s = returnTree.toString();
+			
+			if (s.contains("Mission"))
+			{
+				returnString = "MissionID";
+			} else if (s.contains("MissionSequencer")
+					|| s.contains("OneShotEventHandler")
+					|| s.contains("AperiodicEventHandler")
+					|| s.contains("PeriodicEventHandler")
+					|| s.contains("ManagedThread"))
+			{
+				returnString = "SchedulableID";
+			}
+			}
+			
+		}
+		return returnString;
+	}
+	
 	public static String encodeType(TypeMirror type)
 	{
 		/* Primitive Types */

@@ -11,6 +11,7 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.generators.NewSCJApplication;
+import hijac.tools.tightrope.utils.NewTransUtils;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
@@ -357,37 +358,37 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 		if (returnType instanceof PrimitiveTypeTree)
 		{
 
-			TypeKind returnTypeKind = ((PrimitiveTypeTree) mt.getReturnType())
-					.getPrimitiveTypeKind();
-			
-			System.out.println("/// returnTypeKind " + mt.getName() + " returns " + returnTypeKind);
-
-			switch (returnTypeKind)
-			{
-				case BOOLEAN:
-					returnString = "\\boolean";
-					break;
-				case BYTE:
-					returnString = "byte";
-					break;
-				case INT:
-					returnString = "int";
-					break;
-				case LONG:
-					returnString = "long";
-					break;
-				case FLOAT:
-					returnString = "float";
-					break;
-				case DOUBLE:
-					returnString = "double";
-					break;
-				case CHAR:
-					returnString = "char";
-					break;
-				default:
-					break;
-			}
+//			TypeKind returnTypeKind = ((PrimitiveTypeTree) mt.getReturnType())
+//					.getPrimitiveTypeKind();
+//			
+//		
+//
+//			switch (returnTypeKind)
+//			{
+//				case BOOLEAN:
+//					returnString = "\\boolean";
+//					break;
+//				case BYTE:
+//					returnString = "byte";
+//					break;
+//				case INT:
+//					returnString = "int";
+//					break;
+//				case LONG:
+//					returnString = "long";
+//					break;
+//				case FLOAT:
+//					returnString = "float";
+//					break;
+//				case DOUBLE:
+//					returnString = "double";
+//					break;
+//				case CHAR:
+//					returnString = "char";
+//					break;
+//				default:
+//					break;
+//			}
 
 			body = mt.accept(franksMethodVisitor,
 					new MethodVisitorContext());
@@ -395,33 +396,33 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 			System.out.println("*** Body ***");
 			System.out.println(body);
 
-			m = new MethodEnv(methodName, returnString,
+			m = new MethodEnv(methodName, NewTransUtils.encodeType(returnType),
 					returnsValues, parameters, body);
 			
-			System.out.println("/// method env for "+ m.getMethodName() +" returnString = " + m.getReturnType());
+			
 
 		} else
 		{
-			String s = "null";
-			if(mt.getReturnType() != null)
-			{
-				s= mt.getReturnType().toString();
-			
-			if (s.contains("Mission"))
-			{
-				returnString = "MissionID";
-			} else if (s.contains("MissionSequencer")
-					|| s.contains("OneShotEventHandler")
-					|| s.contains("AperiodicEventHandler")
-					|| s.contains("PeriodicEventHandler")
-					|| s.contains("ManagedThread"))
-			{
-				returnString = "SchedulableID";
-			}
-			}
+//			String s = "null";
+//			if(mt.getReturnType() != null)
+//			{
+//				s= mt.getReturnType().toString();
+//			
+//			if (s.contains("Mission"))
+//			{
+//				returnString = "MissionID";
+//			} else if (s.contains("MissionSequencer")
+//					|| s.contains("OneShotEventHandler")
+//					|| s.contains("AperiodicEventHandler")
+//					|| s.contains("PeriodicEventHandler")
+//					|| s.contains("ManagedThread"))
+//			{
+//				returnString = "SchedulableID";
+//			}
+//			}
 			
 
-			m = new MethodEnv(methodName, returnString,							
+			m = new MethodEnv(methodName, NewTransUtils.encodeType(returnType),							
 					returnsValues, parameters, "");
 
 			franksMethodVisitor = new MethodBodyVisitor(

@@ -46,6 +46,7 @@ public class MethodEnv
 	public MethodEnv(Name name, String returnType, ArrayList<Name> returnValues ,Map params, Object body)
 	{
 		this.methodName = name;
+		
 		this.returnType = returnType;
 		this.parameters = params;
 		this.returnValues = returnValues;

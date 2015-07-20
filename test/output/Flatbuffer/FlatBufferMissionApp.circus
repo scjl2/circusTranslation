@@ -72,7 +72,17 @@ bufferEmptyCall~.~FlatBufferMission
   \circblockopen
 
 
-  ret := (buffer = 0)
+  \circif ~ (buffer = 0) ~ \circthen ~
+  \\
+  \t1
+ret := \true
+  \\
+  \circelse ~ \lnot (buffer = 0) ~ \circthen ~
+  \\
+  \t1
+ret := \false
+  \\
+  \circfi
 
   \circblockclose
  \circseq  \\

@@ -38,6 +38,7 @@ import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
@@ -56,11 +57,15 @@ public class MethodBodyVisitor extends
 		SimpleTreeVisitor<String, MethodVisitorContext>
 {
 
+	private static final String RET_FALSE = "ret := \\false";
+	private static final String RET_TRUE = "ret := \\true";
 	private static final String TYPE_TEMPLATE = "L2Type.ftl";
 	private static final String EXPR_TEMPLATE = "L2Expr.ftl";
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
 	private static String nullString = null;
-	MethodEnv methodEnv = null;
+	private MethodEnv methodEnv = null;
+	private LiteralTree trueLiteral = null;
+	private LiteralTree falseLiteral = null;
 
 	protected final NewSCJApplication CONTEXT;
 
@@ -79,6 +84,70 @@ public class MethodBodyVisitor extends
 		CONTEXT = context;
 		nullString = null;
 		this.methodEnv = env;
+	}
+	
+	/**
+	 * Constructs the trueLiteral and falseLiteral LiteralTrees if they have not been constructed before.
+	 */
+	public void lazyLiteralConstructor()
+	{
+		if(trueLiteral == null)
+		{
+		 trueLiteral = new LiteralTree(){
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1)
+			{
+				// TODO Auto-generated method stub
+				return (R) RET_TRUE;
+			}
+
+			@Override
+			public Kind getKind()
+			{
+				// TODO Auto-generated method stub
+				return Kind.BOOLEAN_LITERAL;
+			}
+
+			@Override
+			public Object getValue()
+			{
+				// TODO Auto-generated method stub
+				return true;
+			}
+			
+		};
+		}
+		
+		if(falseLiteral == null )
+		{
+		falseLiteral = new LiteralTree(){
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1)
+			{
+				// TODO Auto-generated method stub
+				return (R) RET_FALSE;
+			}
+
+			@Override
+			public Kind getKind()
+			{
+				// TODO Auto-generated method stub
+				return Kind.BOOLEAN_LITERAL;
+			}
+
+			@Override
+			public Object getValue()
+			{
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+		};
+		}
 	}
 
 	public void initMacroModel(Tree node, MethodVisitorContext ctxt)
@@ -437,7 +506,22 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitReturn(ReturnTree node, MethodVisitorContext ctxt)
 	{
-		return callStmtMacro(node, ctxt, "Return", node.getExpression());
+		ExpressionTree et = node.getExpression();
+		
+		
+			
+		if(et instanceof BinaryTree)
+		{
+			lazyLiteralConstructor();
+			
+			BinaryTree bt = (BinaryTree) et;
+			return callStmtMacro(node, ctxt, "If", bt,
+					trueLiteral, falseLiteral);
+		}
+		else
+		{
+			return callStmtMacro(node, ctxt, "Return", et);
+		}
 	}
 
 	@Override
