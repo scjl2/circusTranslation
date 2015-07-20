@@ -162,6 +162,7 @@ public class NewTransUtils extends TransUtils
 			}
 		}
 		/* Record a translation error here too. */
+		System.out.println("/// failed type");
 		return FAILED_RESULT;
 	}
 
@@ -179,6 +180,7 @@ public class NewTransUtils extends TransUtils
 
 			case FLOAT_LITERAL:
 			case DOUBLE_LITERAL:
+				System.out.println("/// failed literal");
 				return FAILED_RESULT;
 
 			case STRING_LITERAL:
