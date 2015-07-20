@@ -62,7 +62,6 @@ public class MethodBodyVisitor extends
 	private static final String TYPE_TEMPLATE = "L2Type.ftl";
 	private static final String EXPR_TEMPLATE = "L2Expr.ftl";
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
-	private static String nullString = null;
 	private MethodEnv methodEnv = null;
 	private LiteralTree trueLiteral = null;
 	private LiteralTree falseLiteral = null;
@@ -74,7 +73,6 @@ public class MethodBodyVisitor extends
 		super(NewTransUtils.FAILED_RESULT);
 		assert context != null;
 		CONTEXT = context;
-		nullString = null;
 	}
 
 	public MethodBodyVisitor(NewSCJApplication context, MethodEnv env)
@@ -82,7 +80,6 @@ public class MethodBodyVisitor extends
 		super(NewTransUtils.FAILED_RESULT);
 		assert context != null;
 		CONTEXT = context;
-		nullString = null;
 		this.methodEnv = env;
 	}
 	
@@ -374,7 +371,7 @@ public class MethodBodyVisitor extends
 		if (methodEnv != null)
 		{
 			String returnType = methodEnv.getReturnType();
-			Object value = node.getValue();
+			
 			if (node.getKind() == Tree.Kind.NEW_CLASS
 					|| node.getKind() == Tree.Kind.IDENTIFIER ||
 					node.getKind() == Tree.Kind.NULL_LITERAL)
@@ -559,18 +556,15 @@ public class MethodBodyVisitor extends
 		if (s.contains("Mission"))
 		{
 			System.out.println("///Mission");
-			nullString = "nullMissionID";
 		} else if (s.contains("MissionSequencer"))
 		{
 			System.out.println("///MissionSequencer");
-			nullString = "nullSequencerID";
 		} else if (s.contains("OneShotEventHandler")
 				|| s.contains("AperiodicEventHandler")
 				|| s.contains("PeriodicEventHandler")
 				|| s.contains("ManagedThread"))
 		{
 			System.out.println("///Other Schedulables");
-			nullString = "nullSchedulableID";
 		}
 
 	}

@@ -18,9 +18,6 @@ public class Reader extends ManagedThread
 		this.fbMission = fbMission;
 	}
 
-public void test()
-{
-}
 	
 	public void run()
 	{

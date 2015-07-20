@@ -319,12 +319,13 @@
 </#macro>
 
 <#-------------------->
-<#-- WhileLoop Tree -->
+<#-- WhileLoop Tree   <@keep_newlines>  </@keep_newlines> -->
 <#-------------------->
+
 
 <#macro WhileLoop condition statement>
 <@compact>
-<@keep_newlines>
+
   \circblockopen
   \circmu X \circspot
   \\
@@ -342,6 +343,6 @@
   \circfi
   \circblockclose
   \circblockclose
-</@keep_newlines>
+
 </@compact>
 </#macro>

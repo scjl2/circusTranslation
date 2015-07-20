@@ -40,7 +40,6 @@ public class Reader extends ManagedThread
 			{
 				// Handle Interruption
 			}
-
 		}
 	}
 }

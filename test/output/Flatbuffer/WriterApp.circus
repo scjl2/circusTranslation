@@ -37,12 +37,32 @@ Methods \circdef \\
 \circblockopen
 	Run \\
 %
+\extchoice \\
+	runMeth \\ 
 %
 %
 \circblockclose 
 	 \circseq Methods
 \end{circusaction}
 
+\begin{circusaction}
+runMeth \circdef 
+\circvar ret : null \circspot
+\\
+\circblockopen
+runCall~.~Writer 
+\then \\
+  \circblockopen
+
+
+\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot fbMission.terminationPending() ) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \invalid \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot fbMission.terminationPending() ) \circthen \Skip \\ \circfi \circblockclose \circblockclose
+  \circblockclose
+ \circseq  \\
+
+runRet~.~Writer~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
 %
 %
 

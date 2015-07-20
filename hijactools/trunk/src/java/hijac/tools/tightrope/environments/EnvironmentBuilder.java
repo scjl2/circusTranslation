@@ -348,7 +348,7 @@ public class EnvironmentBuilder
 							mt.accept(new MethodVisitor(analysis), null));
 				} else if (!(mt.getName().contentEquals("<init>") ))
 				{
-//					schedulableEnv.addMeth(mt.accept(new MethodVisitor(analysis), null));
+					schedulableEnv.addMeth(mt.accept(new MethodVisitor(analysis), null));
 				}
 
 			}

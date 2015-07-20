@@ -4,9 +4,6 @@ import com.sun.source.tree.*;
 
 import hijac.tools.modelgen.circus.utils.TransUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
