@@ -1,0 +1,53 @@
+\begin{zsection}
+  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
+\end{zsection}
+%
+\begin{circus}
+\circprocess ReaderApp \circdef \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  fbMission : FlatBufferMission\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~'
+\where
+  fbMission' = fbMission\\ 
+\end{schema}
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~Reader \then \\
+		
+	runRet~.~Reader \then \\
+	\Skip
+\circblockclose
+\end{circusaction}	
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Run \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+\circspot (Methods) \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

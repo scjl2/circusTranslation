@@ -1,0 +1,31 @@
+\begin{zsection}
+  \SECTION ~ LaunchHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds
+\end{zsection}
+
+\begin{circus}
+\circprocess LaunchHandlerApp \circdef \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+Methods \circdef \\
+	handlerAsyncEvent \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~LaunchHandler \then \\
+
+    handleAsyncEventRet~.~LaunchHandler \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+    
+\begin{circusaction}
+\circspot (Methods) \circinterrupt (end\_aperiodic\_app~.~LaunchHandler \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

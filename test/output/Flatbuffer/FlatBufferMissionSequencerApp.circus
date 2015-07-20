@@ -1,0 +1,107 @@
+\begin{zsection}
+  \SECTION ~ FlatBufferMissionSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \t1 MissionId, MissionIds, SchedulableId 
+\end{zsection}
+%\begin{circus}
+%\circchannelset FlatBufferMissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset FlatBufferMissionSequencerAppChanSet == FlatBufferMissionSequencerAppSync
+%\end{circus}
+
+\begin{circus}
+\circprocess FlatBufferMissionSequencerApp \circdef \circbegin\\ 
+\end{circus}
+   
+\begin{schema}{State}
+  returnedMission : boolean\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~'
+\where
+  returnedMission' = false\\ 
+\end{schema}
+
+\begin{circusaction}
+GetNextMission \circdef \\
+\circblockopen
+    getNextMissionCall~.~FlatBufferMissionSequencer \then \\
+	
+    getNextMissionRet~.~FlatBufferMissionSequencer~!~FlatBufferMission  \then \\
+\Skip
+\circblockclose	
+\end{circusaction}
+
+\begin{circusaction}
+getNextMissionMeth \circdef 
+\circvar ret : MissionId \circspot
+\\
+\circblockopen
+getNextMissionCall~.~FlatBufferMissionSequencer 
+\then \\
+  \circblockopen
+
+
+  \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+
+
+  returnedMission := \true ~
+
+
+  \circseq \\
+  ret := FlatBufferMission
+
+  \circblockclose
+
+  \\
+  \circelse ~ \lnot (\lnot returnedMission = \true) ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  ret := \circnull
+
+  \circblockclose
+
+  \\
+  \circfi
+
+  \circblockclose
+ \circseq  \\
+
+getNextMissionRet~.~FlatBufferMissionSequencer~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
+%
+%
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+%
+\extchoice \\
+	getNextMissionMeth \\ 
+%
+%
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot (Methods) %\circhide MissionSequencerAppStateSync
+\circinterrupt (end\_sequencer\_app~.~FlatBufferMissionSequencer \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
