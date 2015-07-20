@@ -307,6 +307,10 @@ public class MethodBodyVisitor extends
 		if(methodEnv != null)
 		{
 			String returnType = methodEnv.getReturnType();
+			Object value = node.getValue();
+			if(node.getKind() == Tree.Kind.NEW_CLASS ||
+					node.getKind() == Tree.Kind.IDENTIFIER 	)
+			{
 		if(returnType.contains("MissionId") ) 
 		{
 			
@@ -321,10 +325,19 @@ public class MethodBodyVisitor extends
 			System.out.println("/// String is null");
 			return NewTransUtils.encodeLiteral(node);
 		}
-		}else
+		}
+			else
+			{
+
+				System.out.println("///  kind is not new class or identifier");
+				return NewTransUtils.encodeLiteral(node);
+			}
+				
+		}
+		else
 		{
 
-			System.out.println("/// methodEnv is null");
+			System.out.println("/// methodEnv is null ");
 			return NewTransUtils.encodeLiteral(node);
 		}
 	}
