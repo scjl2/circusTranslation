@@ -349,9 +349,7 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 					parameters.put(vt.getName().toString(), vt.getType());
 				}
 		
-		//get return type
-		// TODO This needs to now actually figure out WHAT is
-				// returned and return it too
+		
 		Tree returnType = mt.getReturnType();
 		String returnString = null;
 		String body =null;
@@ -361,23 +359,32 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 
 			TypeKind returnTypeKind = ((PrimitiveTypeTree) mt.getReturnType())
 					.getPrimitiveTypeKind();
+			
+			System.out.println("/// returnTypeKind " + mt.getName() + " returns " + returnTypeKind);
 
 			switch (returnTypeKind)
 			{
 				case BOOLEAN:
 					returnString = "\\boolean";
+					break;
 				case BYTE:
 					returnString = "byte";
+					break;
 				case INT:
 					returnString = "int";
+					break;
 				case LONG:
 					returnString = "long";
+					break;
 				case FLOAT:
 					returnString = "float";
+					break;
 				case DOUBLE:
 					returnString = "double";
+					break;
 				case CHAR:
 					returnString = "char";
+					break;
 				default:
 					break;
 			}
@@ -390,6 +397,8 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 
 			m = new MethodEnv(methodName, returnString,
 					returnsValues, parameters, body);
+			
+			System.out.println("/// method env for "+ m.getMethodName() +" returnString = " + m.getReturnType());
 
 		} else
 		{
@@ -400,14 +409,14 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 			
 			if (s.contains("Mission"))
 			{
-				returnString = "MissionId";
+				returnString = "MissionID";
 			} else if (s.contains("MissionSequencer")
 					|| s.contains("OneShotEventHandler")
 					|| s.contains("AperiodicEventHandler")
 					|| s.contains("PeriodicEventHandler")
 					|| s.contains("ManagedThread"))
 			{
-				returnString = "SchedulableId";
+				returnString = "SchedulableID";
 			}
 			}
 			

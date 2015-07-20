@@ -61,7 +61,7 @@ public class MethodBodyVisitor extends
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
 	private static String nullString = null;
 	MethodEnv methodEnv = null;
-	
+
 	protected final NewSCJApplication CONTEXT;
 
 	public MethodBodyVisitor(NewSCJApplication context)
@@ -71,7 +71,7 @@ public class MethodBodyVisitor extends
 		CONTEXT = context;
 		nullString = null;
 	}
-	
+
 	public MethodBodyVisitor(NewSCJApplication context, MethodEnv env)
 	{
 		super(NewTransUtils.FAILED_RESULT);
@@ -91,11 +91,11 @@ public class MethodBodyVisitor extends
 		ctxt.MACRO_MODEL.put("NODE", node);
 		ctxt.MACRO_MODEL.put("CTXT", ctxt);
 
-		if(methodEnv != null)
+		if (methodEnv != null)
 		{
-			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT, methodEnv));
-		}
-		else
+			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT,
+					methodEnv));
+		} else
 		{
 			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT));
 		}
@@ -107,9 +107,9 @@ public class MethodBodyVisitor extends
 		initMacroModel(node, ctxt);
 
 		CircusTemplates templates = CONTEXT.TEMPLATES;
-		
+
 		CircusTemplateFactory factory = templates.FACTORY;
-	
+
 		return factory.doMacroCall(ctxt.MACRO_MODEL, file, name, args);
 	}
 
@@ -255,16 +255,15 @@ public class MethodBodyVisitor extends
 			MethodVisitorContext ctxt)
 	{
 		/* Are those nodes permissible? Do a bit more investigation here. */
-		
+
 		// TODO HACKERY!
 		if (node.toString().contains("Console"))
 		{
 			return "";
-		}
-		else
+		} else
 		{
 			return callStmtMacro(node, ctxt, "ExpressionStatement",
-				node.getExpression());
+					node.getExpression());
 		}
 	}
 
@@ -301,40 +300,36 @@ public class MethodBodyVisitor extends
 	{
 		/* Should we do the translation in a template macro here too? */
 		System.out.println("///Literal ");
-		//This is supposed to cater for null id values, but is a bit hacky...
-		
-		
-		if(methodEnv != null)
+		// This is supposed to cater for null id values, but is a bit hacky...
+
+		if (methodEnv != null)
 		{
 			String returnType = methodEnv.getReturnType();
 			Object value = node.getValue();
-			if(node.getKind() == Tree.Kind.NEW_CLASS ||
-					node.getKind() == Tree.Kind.IDENTIFIER 	)
+			if (node.getKind() == Tree.Kind.NEW_CLASS
+					|| node.getKind() == Tree.Kind.IDENTIFIER ||
+					node.getKind() == Tree.Kind.NULL_LITERAL)
 			{
-		if(returnType.contains("MissionId") ) 
-		{
-			
-			return "nullMissionId";			
-		}
-		else if (returnType.contains("SchedulableId"))
-		{
-			return "nullSchedulableId";
-		}
-		else
-		{
-			System.out.println("/// String is null");
-			return NewTransUtils.encodeLiteral(node);
-		}
-		}
-			else
+				if (returnType.contains("MissionID"))
+				{
+
+					return "nullMissionId";
+				} else if (returnType.contains("SchedulableId"))
+				{
+					return "nullSchedulableId";
+				} else
+				{
+					System.out.println("/// String is null");
+					return NewTransUtils.encodeLiteral(node);
+				}
+			} else
 			{
 
 				System.out.println("///  kind is not new class or identifier");
 				return NewTransUtils.encodeLiteral(node);
 			}
-				
-		}
-		else
+
+		} else
 		{
 
 			System.out.println("/// methodEnv is null ");
@@ -442,7 +437,7 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitReturn(ReturnTree node, MethodVisitorContext ctxt)
 	{
-		return callStmtMacro(node, ctxt, "Return", node.getExpression() );
+		return callStmtMacro(node, ctxt, "Return", node.getExpression());
 	}
 
 	@Override
@@ -474,33 +469,26 @@ public class MethodBodyVisitor extends
 	}
 
 	public void setReturn(String s)
-	{		
-		System.out.println("///setReturn s= "+s);
-		
-		if(s.contains("Mission"))
+	{
+		System.out.println("///setReturn s= " + s);
+
+		if (s.contains("Mission"))
 		{
 			System.out.println("///Mission");
 			nullString = "nullMissionID";
+		} else if (s.contains("MissionSequencer"))
+		{
+			System.out.println("///MissionSequencer");
+			nullString = "nullSequencerID";
+		} else if (s.contains("OneShotEventHandler")
+				|| s.contains("AperiodicEventHandler")
+				|| s.contains("PeriodicEventHandler")
+				|| s.contains("ManagedThread"))
+		{
+			System.out.println("///Other Schedulables");
+			nullString = "nullSchedulableID";
 		}
-		else
-			if (s.contains("MissionSequencer") )
-			{
-				System.out.println("///MissionSequencer");
-				nullString = "nullSequencerID";
-			}
-			else if(s.contains("OneShotEventHandler")
-				||
-				s.contains("AperiodicEventHandler")
-				||
-				s.contains("PeriodicEventHandler")
-				||
-				s.contains("ManagedThread")
-				)
-			{
-				System.out.println("///Other Schedulables");
-				nullString = "nullSchedulableID";
-			}
-		
+
 	}
 
 }

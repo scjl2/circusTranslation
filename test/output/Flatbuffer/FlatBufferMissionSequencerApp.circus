@@ -40,7 +40,7 @@ GetNextMission \circdef \\
 
 \begin{circusaction}
 getNextMissionMeth \circdef 
-\circvar ret : MissionId \circspot
+\circvar ret : MissionID \circspot
 \\
 \circblockopen
 getNextMissionCall~.~FlatBufferMissionSequencer 
@@ -67,7 +67,7 @@ getNextMissionCall~.~FlatBufferMissionSequencer
   \\
   \t1
   \circblockopen
-  ret := \circnull
+  ret := nullMissionId
 
   \circblockclose
 

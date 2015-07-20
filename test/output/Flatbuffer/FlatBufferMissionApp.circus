@@ -63,7 +63,7 @@ CleanupPhase \circdef  \\
 
 \begin{circusaction}
 bufferEmptyMeth \circdef 
-\circvar ret : char \circspot
+\circvar ret : \boolean \circspot
 \\
 \circblockopen
 bufferEmptyCall~.~FlatBufferMission 
