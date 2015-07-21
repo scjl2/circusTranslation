@@ -55,7 +55,7 @@ runCall~.~Writer
   \circblockopen
 
 
-\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot fbMission.terminationPending() ) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \invalid \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot fbMission.terminationPending() ) \circthen \Skip \\ \circfi \circblockclose \circblockclose
+\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot fbMission.terminationPending() ) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot fbMission.bufferEmpty(\langle 87, 114, 105, 116, 101, 114 \rangle) ) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen fbMission.waitOnMission(\langle 87, 114, 105, 116, 101, 114 \rangle) \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot fbMission.bufferEmpty(\langle 87, 114, 105, 116, 101, 114 \rangle) ) \circthen \Skip \\ \circfi \circblockclose \circblockclose \circseq \\ fbMission.write(i) \circseq \\ i := i + 1 \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot fbMission.terminationPending() ) \circthen \Skip \\ \circfi \circblockclose \circblockclose
   \circblockclose
  \circseq  \\
 

@@ -19,9 +19,6 @@ public class Writer extends ManagedThread
 		this.fbMission = fbMission;
 	}
 
-public void test()
-{
-}
 
 	public void run()
 	{
@@ -29,8 +26,7 @@ public void test()
 
 		while (!fbMission.terminationPending())
 		{
-			try
-			{
+			
 				while (!fbMission.bufferEmpty("Writer"))
 				{
 					fbMission.waitOnMission("Writer");
@@ -39,10 +35,6 @@ public void test()
 				fbMission.write(i);
 				i++;
 
-			} catch (InterruptedException ie)
-			{
-				// Handle Interruption
-			}
 		}
 
 	}

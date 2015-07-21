@@ -10,7 +10,7 @@ import devices.Console;
 public class FlatBufferMission extends Mission
 {
 
-	private volatile int buffer = 0;
+	private volatile int buffer;
 	private Writer writer;
 	private Reader reader;	
 

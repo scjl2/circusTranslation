@@ -39,6 +39,7 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
+import com.sun.source.tree.TryTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
@@ -540,6 +541,12 @@ public class MethodBodyVisitor extends
 	{
 		return callStmtMacro(node, ctxt, "Variable", node.getName(),
 				node.getInitializer());
+	}
+	
+	@Override
+	public String visitTry(TryTree node, MethodVisitorContext ctxt)
+	{
+		return callStmtMacro(node, ctxt, "Block", node.getBlock());
 	}
 
 	@Override
