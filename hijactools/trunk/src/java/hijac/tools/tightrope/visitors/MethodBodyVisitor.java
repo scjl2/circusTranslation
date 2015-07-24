@@ -436,8 +436,20 @@ public class MethodBodyVisitor extends
 		}
 		/* Infer the method here that is called and pass to it the macro. */
 		/* Question: Is that generally feasible? */
-		return callExprMacro(node, ctxt, "MethodInvocation",
-				node.getMethodSelect(), arguments);
+//		return callExprMacro(node, ctxt, "MethodInvocation",
+//				node.getMethodSelect(), arguments);
+		
+		//TODO if the object in which the method I'm invoking resides is an API app process, translate to call/ret comms
+		String returnString;
+		String methodName = node.getMethodSelect().toString();
+		
+		returnString = methodName + "Call";
+		returnString += "\\then \\\\";
+		
+		returnString += methodName + "Ret";
+//		returnString += "\\then \\\\";
+		
+		return returnString;
 	}
 
 	@Override
@@ -556,24 +568,24 @@ public class MethodBodyVisitor extends
 				node.getStatement());
 	}
 
-	public void setReturn(String s)
-	{
-		System.out.println("///setReturn s= " + s);
-
-		if (s.contains("Mission"))
-		{
-			System.out.println("///Mission");
-		} else if (s.contains("MissionSequencer"))
-		{
-			System.out.println("///MissionSequencer");
-		} else if (s.contains("OneShotEventHandler")
-				|| s.contains("AperiodicEventHandler")
-				|| s.contains("PeriodicEventHandler")
-				|| s.contains("ManagedThread"))
-		{
-			System.out.println("///Other Schedulables");
-		}
-
-	}
+//	public void setReturn(String s)
+//	{
+//		System.out.println("///setReturn s= " + s);
+//
+//		if (s.contains("Mission"))
+//		{
+//			System.out.println("///Mission");
+//		} else if (s.contains("MissionSequencer"))
+//		{
+//			System.out.println("///MissionSequencer");
+//		} else if (s.contains("OneShotEventHandler")
+//				|| s.contains("AperiodicEventHandler")
+//				|| s.contains("PeriodicEventHandler")
+//				|| s.contains("ManagedThread"))
+//		{
+//			System.out.println("///Other Schedulables");
+//		}
+//
+//	}
 
 }

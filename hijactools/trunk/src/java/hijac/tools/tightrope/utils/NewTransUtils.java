@@ -5,11 +5,7 @@ import com.sun.source.tree.*;
 import hijac.tools.modelgen.circus.utils.TransUtils;
 
 import javax.lang.model.element.Name;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.ArrayType;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 
 /* There is more to do here. We should really use the templates and also
  * properly handler types that are represented by identifiers... */
@@ -17,7 +13,7 @@ import javax.lang.model.type.TypeMirror;
 /**
  * Utility methods for the low-level translation of Java into Circus.
  * 
- * @author Frank Zeyda
+ * @author Matt Luckcuck
  * @version $Revision$
  */
 public class NewTransUtils extends TransUtils
@@ -38,134 +34,67 @@ public class NewTransUtils extends TransUtils
 		return encodeName(name.toString());
 	}
 
-	//mine
+	// mine
 	public static String encodeType(Tree returnTree)
 	{
 		String returnString = null;
-		
-		if(returnTree != null)
-		{
-		if (returnTree instanceof PrimitiveTypeTree)
-		{
 
-			TypeKind returnTypeKind = ((PrimitiveTypeTree) returnTree)
-					.getPrimitiveTypeKind();
-			
-		
-
-			switch (returnTypeKind)
-			{
-				case BOOLEAN:
-					returnString = "\\boolean";
-					break;
-				case BYTE:
-					returnString = "byte";
-					break;
-				case INT:
-					returnString = "int";
-					break;
-				case LONG:
-					returnString = "long";
-					break;
-				case FLOAT:
-					returnString = "float";
-					break;
-				case DOUBLE:
-					returnString = "double";
-					break;
-				case CHAR:
-					returnString = "char";
-					break;
-				default:
-					break;
-			}
-		}
-		else
+		if (returnTree != null)
 		{
-			String s = returnTree.toString();
-			
-			if (s.contains("Mission"))
+			if (returnTree instanceof PrimitiveTypeTree)
 			{
-				returnString = "MissionID";
-			} else if (s.contains("MissionSequencer")
-					|| s.contains("OneShotEventHandler")
-					|| s.contains("AperiodicEventHandler")
-					|| s.contains("PeriodicEventHandler")
-					|| s.contains("ManagedThread"))
+
+				TypeKind returnTypeKind = ((PrimitiveTypeTree) returnTree)
+						.getPrimitiveTypeKind();
+
+				switch (returnTypeKind)
+				{
+					case BOOLEAN:
+						returnString = "\\boolean";
+						break;
+					case BYTE:
+						returnString = "byte";
+						break;
+					case INT:
+						returnString = "int";
+						break;
+					case LONG:
+						returnString = "long";
+						break;
+					case FLOAT:
+						returnString = "float";
+						break;
+					case DOUBLE:
+						returnString = "double";
+						break;
+					case CHAR:
+						returnString = "char";
+						break;
+					default:
+						break;
+				}
+			} else
 			{
-				returnString = "SchedulableID";
+				String s = returnTree.toString();
+
+				if (s.contains("Mission"))
+				{
+					returnString = "MissionID";
+				} else if (s.contains("MissionSequencer")
+						|| s.contains("OneShotEventHandler")
+						|| s.contains("AperiodicEventHandler")
+						|| s.contains("PeriodicEventHandler")
+						|| s.contains("ManagedThread"))
+				{
+					returnString = "SchedulableID";
+				}
 			}
-			}
-			
+
 		}
 		return returnString;
 	}
-	
-	public static String encodeType(TypeMirror type)
-	{
-		/* Primitive Types */
-		if (type.getKind().isPrimitive())
-		{
-			switch (type.getKind())
-			{
-				case BOOLEAN:
-					return "boolean";
-				case BYTE:
-					return "byte";
-				case INT:
-					return "int";
-				case LONG:
-					return "long";
-				case FLOAT:
-					return "float";
-				case DOUBLE:
-					return "double";
-				case CHAR:
-					return "char";
-			}
-		}
-		/* Declared Type */
-		if (type.getKind() == TypeKind.DECLARED)
-		{
-			TypeElement type_element = (TypeElement) ((DeclaredType) type)
-					.asElement();
-			Name name = type_element.getSimpleName();
-			/* Name name = type_element.getQualifiedName(); */
-			/* The following is a rather a hack... Revised! */
-			if (name.toString().equals("Mission"))
-			{
-				return "MissionId";
-			}
-			if (name.toString().equals("AperiodicEventHandler")
-					|| name.toString().equals("AperiodicLongEventHandler")
-					|| name.toString().equals("PeriodicLongEventHandler"))
-			{
-				return "HandlerId";
-			}
-			return encodeName(name) + "Class";
-		}
-		/* Null Type */
-		if (type.getKind() == TypeKind.NULL)
-		{
-			return "\\universe";
-		}
-		/* Array Type */
-		if (type.getKind() == TypeKind.ARRAY)
-		{
-			TypeMirror ctype = ((ArrayType) type).getComponentType();
-			if (ctype.getKind() == TypeKind.ARRAY)
-			{
-				return "\\seq \\, (" + encodeType(ctype) + ")";
-			} else
-			{
-				return "\\seq " + encodeType(ctype);
-			}
-		}
-		/* Record a translation error here too. */
-		System.out.println("/// failed type");
-		return FAILED_RESULT;
-	}
 
+	
 	public static String encodeLiteral(LiteralTree node)
 	{
 		switch (node.getKind())
@@ -180,7 +109,6 @@ public class NewTransUtils extends TransUtils
 
 			case FLOAT_LITERAL:
 			case DOUBLE_LITERAL:
-				System.out.println("/// failed literal");
 				return FAILED_RESULT;
 
 			case STRING_LITERAL:
@@ -211,6 +139,7 @@ public class NewTransUtils extends TransUtils
 		}
 		result.append(" ");
 		result.append("\\rangle");
-		return result.toString();
+		// return result.toString();
+		return "";
 	}
 }
