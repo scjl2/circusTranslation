@@ -176,7 +176,7 @@ public class MethodBodyVisitor extends
 		CircusTemplates templates = CONTEXT.TEMPLATES;
 
 		CircusTemplateFactory factory = templates.FACTORY;
-
+		System.out.println("doMacroCall node = "+ node);
 		return factory.doMacroCall(ctxt.MACRO_MODEL, file, name, args);
 	}
 
@@ -546,7 +546,7 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitTry(TryTree node, MethodVisitorContext ctxt)
 	{
-		return callStmtMacro(node, ctxt, "Block", node.getBlock());
+		return callStmtMacro(node, ctxt, "Block", node.getBlock().getStatements());
 	}
 
 	@Override

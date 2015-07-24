@@ -25,17 +25,22 @@ public class Reader extends ManagedThread
 
 		while (!fbMission.terminationPending())
 		{
-			
-				while (fbMission.bufferEmpty("Reader"))
-				{
+			try
+			{
+				//while (fbMission.bufferEmpty("Reader"))
+				//{
 					fbMission.waitOnMission("Reader");
-				}
+				//}
 				
 				int value = fbMission.read();
 				Console.println("Reader Read " + value
 						+ " from Buffer");	
 
-			
+			} catch (InterruptedException ie)
+			{
+				// Handle Interruption
+			}
+
 		}
 	}
 }
