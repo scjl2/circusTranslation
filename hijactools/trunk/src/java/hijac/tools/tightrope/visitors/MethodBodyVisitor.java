@@ -447,7 +447,7 @@ public class MethodBodyVisitor extends
 		returnString += "\\then \\\\";
 		
 		returnString += methodName + "Ret";
-//		returnString += "\\then \\\\";
+		returnString += "\\then \\Skip"; 
 		
 		return returnString;
 	}

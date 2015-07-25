@@ -27,9 +27,9 @@ public class TightRopeTest
 	private static ProgramEnv programEnv;
 
 	private static final String VERSION = "v0.5";
-	private static final boolean SILENT = true;
-	private static final boolean LATEX = true;
-	private static final boolean FREEMARKER = true;
+	private static final boolean QUIET_LATEX_OUTPUT = true;
+	private static final boolean RUN_LATEX = true;
+	private static final boolean RUN_FREEMARKER = true;
 
 	private static String customName ="";
 	
@@ -85,13 +85,13 @@ public class TightRopeTest
 		
 		System.out.println("Network = " + programEnv.geNetworkMap());
 		
-		if(FREEMARKER)
+		if(RUN_FREEMARKER)
 		{
 			CircusGenerator circGen = new CircusGenerator(customName, programEnv);
 			circGen.translate();
 		}
 
-		if(LATEX)
+		if(RUN_LATEX)
 		{
 			runLatex(customName);
 		}
@@ -177,7 +177,7 @@ public class TightRopeTest
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(
 					p.getErrorStream()));
 
-			if (!SILENT)
+			if (!QUIET_LATEX_OUTPUT)
 			{
 				// read the output from the command
 				System.out
@@ -195,6 +195,21 @@ public class TightRopeTest
 				while ((s = stdError.readLine()) != null)
 				{
 					System.out.println(s);
+				}
+			}
+			else
+			{
+				if(stdError.readLine() != null)
+				{
+					System.out.println();
+					System.out.println("+++ Latex error! +++");
+					System.out.println();
+				}
+				else
+				{
+					System.out.println();
+					System.out.println("+++ Latex complete +++");
+					System.out.println();
 				}
 			}
 
