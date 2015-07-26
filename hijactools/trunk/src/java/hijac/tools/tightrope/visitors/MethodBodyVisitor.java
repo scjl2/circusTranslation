@@ -84,7 +84,8 @@ public class MethodBodyVisitor extends
 		this.object = object;
 	}
 
-	public MethodBodyVisitor(NewSCJApplication context,ObjectEnv object, MethodEnv env)
+	public MethodBodyVisitor(NewSCJApplication context, ObjectEnv object,
+			MethodEnv env)
 	{
 		super(NewTransUtils.FAILED_RESULT);
 		assert context != null;
@@ -92,68 +93,71 @@ public class MethodBodyVisitor extends
 		this.object = object;
 		this.methodEnv = env;
 	}
-	
+
 	/**
-	 * Constructs the trueLiteral and falseLiteral LiteralTrees if they have not been constructed before.
+	 * Constructs the trueLiteral and falseLiteral LiteralTrees if they have not
+	 * been constructed before.
 	 */
 	public void lazyLiteralConstructor()
 	{
-		if(trueLiteral == null)
+		if (trueLiteral == null)
 		{
-		 trueLiteral = new LiteralTree(){
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1)
+			trueLiteral = new LiteralTree()
 			{
-				// TODO Auto-generated method stub
-				return (R) RET_TRUE;
-			}
 
-			@Override
-			public Kind getKind()
-			{
-				// TODO Auto-generated method stub
-				return Kind.BOOLEAN_LITERAL;
-			}
+				@SuppressWarnings("unchecked")
+				@Override
+				public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1)
+				{
+					// TODO Auto-generated method stub
+					return (R) RET_TRUE;
+				}
 
-			@Override
-			public Object getValue()
-			{
-				// TODO Auto-generated method stub
-				return true;
-			}
-			
-		};
+				@Override
+				public Kind getKind()
+				{
+					// TODO Auto-generated method stub
+					return Kind.BOOLEAN_LITERAL;
+				}
+
+				@Override
+				public Object getValue()
+				{
+					// TODO Auto-generated method stub
+					return true;
+				}
+
+			};
 		}
-		
-		if(falseLiteral == null )
+
+		if (falseLiteral == null)
 		{
-		falseLiteral = new LiteralTree(){
-
-			@SuppressWarnings("unchecked")
-			@Override
-			public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1)
+			falseLiteral = new LiteralTree()
 			{
-				// TODO Auto-generated method stub
-				return (R) RET_FALSE;
-			}
 
-			@Override
-			public Kind getKind()
-			{
-				// TODO Auto-generated method stub
-				return Kind.BOOLEAN_LITERAL;
-			}
+				@SuppressWarnings("unchecked")
+				@Override
+				public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1)
+				{
+					// TODO Auto-generated method stub
+					return (R) RET_FALSE;
+				}
 
-			@Override
-			public Object getValue()
-			{
-				// TODO Auto-generated method stub
-				return false;
-			}
-			
-		};
+				@Override
+				public Kind getKind()
+				{
+					// TODO Auto-generated method stub
+					return Kind.BOOLEAN_LITERAL;
+				}
+
+				@Override
+				public Object getValue()
+				{
+					// TODO Auto-generated method stub
+					return false;
+				}
+
+			};
 		}
 	}
 
@@ -173,7 +177,8 @@ public class MethodBodyVisitor extends
 					object, methodEnv));
 		} else
 		{
-			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT, object));
+			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT,
+					object));
 		}
 	}
 
@@ -185,7 +190,7 @@ public class MethodBodyVisitor extends
 		CircusTemplates templates = CONTEXT.TEMPLATES;
 
 		CircusTemplateFactory factory = templates.FACTORY;
-		System.out.println("doMacroCall node = "+ node);
+		System.out.println("doMacroCall node = " + node);
 		return factory.doMacroCall(ctxt.MACRO_MODEL, file, name, args);
 	}
 
@@ -381,10 +386,10 @@ public class MethodBodyVisitor extends
 		if (methodEnv != null)
 		{
 			String returnType = methodEnv.getReturnType();
-			
+
 			if (node.getKind() == Tree.Kind.NEW_CLASS
-					|| node.getKind() == Tree.Kind.IDENTIFIER ||
-					node.getKind() == Tree.Kind.NULL_LITERAL)
+					|| node.getKind() == Tree.Kind.IDENTIFIER
+					|| node.getKind() == Tree.Kind.NULL_LITERAL)
 			{
 				if (returnType.contains("MissionID"))
 				{
@@ -445,59 +450,64 @@ public class MethodBodyVisitor extends
 		}
 		/* Infer the method here that is called and pass to it the macro. */
 		/* Question: Is that generally feasible? */
-//		return callExprMacro(node, ctxt, "MethodInvocation",
-//				node.getMethodSelect(), arguments);
-		
-		//TODO if the object in which the method I'm invoking resides is an API app process, translate to call/ret comms
-		String returnString= "";
+		// return callExprMacro(node, ctxt, "MethodInvocation",
+		// node.getMethodSelect(), arguments);
+
+		// TODO if the object in which the method I'm invoking resides is an API
+		// app process, translate to call/ret comms
+		String returnString = "";
 		ExpressionTree et = node.getMethodSelect();
 		MemberSelectTree mst = null;
 		if (et instanceof MemberSelectTree)
 		{
 			mst = (MemberSelectTree) et;
 		}
-		
-		//TODO what I need to get here is the MethodEnv (or similar) of the method we're calling so I know it's parameters and return value.
-		
-//		TypeElement te =  CONTEXT.getAnalysis().getTypeElement("scjlevel2examples.flatbuffer.FlatBufferMission");
-		
-//		object = TightRopeTest.getProgramEnv().getObjectEnv();
-//		
+
+		// TODO what I need to get here is the MethodEnv (or similar) of the
+		// method we're calling so I know it's parameters and return value.
+
+		// TypeElement te =
+		// CONTEXT.getAnalysis().getTypeElement("scjlevel2examples.flatbuffer.FlatBufferMission");
+
+		// object = TightRopeTest.getProgramEnv().getObjectEnv();
+		//
 		((NewCircusTemplates) CONTEXT.getTemplates()).setObjectEnv(object);
 		ObjectEnv objectWhereMethodResides = null;
 		String returnType = "";
-		
-				
-		for(VariableEnv v : object.getVariables())
+		String methodName = mst.getIdentifier().toString();
+
+		for (VariableEnv v : object.getVariables())
 		{
-			if(v.getVariableName().contentEquals(mst.getExpression().toString()))
+			if (v.getVariableName().contentEquals(
+					mst.getExpression().toString()))
 			{
-				//THIS FAILS BECASUE WE ARE BUILDING THE PROGRAM ENV AT THIS POINT...
-				objectWhereMethodResides = TightRopeTest.getProgramEnv().getObjectEnv(v.getVariableType().toString());
-				
+
+				objectWhereMethodResides = TightRopeTest.getProgramEnv()
+						.getObjectEnv(v.getVariableType().toString());
+
 				MethodEnv methodWeAreCalling;
-				for(MethodEnv m : ((ParadigmEnv) objectWhereMethodResides).getMeths())
+				for (MethodEnv m : ((ParadigmEnv) objectWhereMethodResides)
+						.getMeths())
 				{
-					methodWeAreCalling = m;
-					
-					returnType = "~?~"+methodWeAreCalling.getReturnType();
+					if (m.getMethodName().contentEquals(methodName))
+					{
+						methodWeAreCalling = m;
+
+						returnType = "~?~" + methodWeAreCalling.getReturnType();
+					}
 				}
-			
+
 			}
 		}
-		
-		
-		
-		String methodName = mst.getIdentifier() .toString();
-		
+
 		returnString = methodName + "Call";
 		returnString += "\\then \\\\";
-		
+
 		returnString += methodName + "Ret" + returnType;
-		returnString += "\\then \\Skip"; 
-//		
-//returnString = node.get
-		
+		returnString += "\\then \\Skip";
+		//
+		// returnString = node.get
+
 		return returnString;
 	}
 
@@ -566,18 +576,15 @@ public class MethodBodyVisitor extends
 	public String visitReturn(ReturnTree node, MethodVisitorContext ctxt)
 	{
 		ExpressionTree et = node.getExpression();
-		
-		
-			
-		if(et instanceof BinaryTree)
+
+		if (et instanceof BinaryTree)
 		{
 			lazyLiteralConstructor();
-			
+
 			BinaryTree bt = (BinaryTree) et;
-			return callStmtMacro(node, ctxt, "If", bt,
-					trueLiteral, falseLiteral);
-		}
-		else
+			return callStmtMacro(node, ctxt, "If", bt, trueLiteral,
+					falseLiteral);
+		} else
 		{
 			return callStmtMacro(node, ctxt, "Return", et);
 		}
@@ -603,11 +610,12 @@ public class MethodBodyVisitor extends
 		return callStmtMacro(node, ctxt, "Variable", node.getName(),
 				node.getInitializer());
 	}
-	
+
 	@Override
 	public String visitTry(TryTree node, MethodVisitorContext ctxt)
 	{
-		return callStmtMacro(node, ctxt, "Block", node.getBlock().getStatements());
+		return callStmtMacro(node, ctxt, "Block", node.getBlock()
+				.getStatements());
 	}
 
 	@Override
@@ -617,24 +625,24 @@ public class MethodBodyVisitor extends
 				node.getStatement());
 	}
 
-//	public void setReturn(String s)
-//	{
-//		System.out.println("///setReturn s= " + s);
-//
-//		if (s.contains("Mission"))
-//		{
-//			System.out.println("///Mission");
-//		} else if (s.contains("MissionSequencer"))
-//		{
-//			System.out.println("///MissionSequencer");
-//		} else if (s.contains("OneShotEventHandler")
-//				|| s.contains("AperiodicEventHandler")
-//				|| s.contains("PeriodicEventHandler")
-//				|| s.contains("ManagedThread"))
-//		{
-//			System.out.println("///Other Schedulables");
-//		}
-//
-//	}
+	// public void setReturn(String s)
+	// {
+	// System.out.println("///setReturn s= " + s);
+	//
+	// if (s.contains("Mission"))
+	// {
+	// System.out.println("///Mission");
+	// } else if (s.contains("MissionSequencer"))
+	// {
+	// System.out.println("///MissionSequencer");
+	// } else if (s.contains("OneShotEventHandler")
+	// || s.contains("AperiodicEventHandler")
+	// || s.contains("PeriodicEventHandler")
+	// || s.contains("ManagedThread"))
+	// {
+	// System.out.println("///Other Schedulables");
+	// }
+	//
+	// }
 
 }

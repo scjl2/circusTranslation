@@ -49,7 +49,7 @@ public class TightRopeTest
 
 	public static ProgramEnv getProgramEnv()
 	{
-		return programEnv;
+		return environmentBuilder.getProgramEnv();
 	}
 	
 	public static void main(String[] args) throws IOException

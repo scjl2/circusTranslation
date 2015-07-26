@@ -30,6 +30,16 @@ import com.sun.source.tree.VariableTree;
 
 public class EnvironmentBuilder
 {
+	private static final String ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME = "javax.safetycritical.OneShotEventHandler";
+
+	private static final String APERIODIC_EVENT_HANDLER_QUALIFIED_NAME = "javax.safetycritical.AperiodicEventHandler";
+
+	private static final String PERIODIC_EVENT_HANDLER_QUALIFIED_NAME = "javax.safetycritical.PeriodicEventHandler";
+
+	private static final String MISSION_SEQUENCER_QUALIFIED_NAME = "javax.safetycritical.MissionSequencer";
+
+	private static final String MANAGED_THREAD_QUALIFIED_NAME = "javax.safetycritical.ManagedThread";
+
 	public SCJAnalysis analysis;
 
 	// private Trees trees;
@@ -37,6 +47,12 @@ public class EnvironmentBuilder
 	private Set<TypeElement> type_elements;
 
 	private ProgramEnv programEnv;
+	
+	public ProgramEnv getProgramEnv()
+	{
+		return programEnv;
+	}
+
 	private String packagePrefix;
 	
 	
@@ -66,31 +82,31 @@ public class EnvironmentBuilder
 				TypeMirror superclass = elem.getSuperclass();
 
 				if (superclass.toString().contains(
-						"javax.safetycritical.ManagedThread"))
+						MANAGED_THREAD_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.MT;
 				}
 
 				if (superclass.toString().contains(
-						("javax.safetycritical.MissionSequencer")))
+						MISSION_SEQUENCER_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.SMS;
 				}
 
 				if (superclass.toString().contains(
-						"javax.safetycritical.PeriodicEventHandler"))
+						PERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.PEH;
 				}
 
 				if (superclass.toString().contains(
-						"javax.safetycritical.AperiodicEventHandler"))
+						APERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.APEH;
 				}
 
 				if (superclass.toString().contains(
-						"javax.safetycritical.OneShotEventHandler"))
+						ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.OSEH;
 				}

@@ -70,7 +70,7 @@ public class MethodEnv
 	{
 		if(returnType != null)
 		{
-			return returnType.toString();
+			return returnType;
 		}
 		else
 		{
