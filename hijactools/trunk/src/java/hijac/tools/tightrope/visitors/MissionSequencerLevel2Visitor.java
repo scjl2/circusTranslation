@@ -59,7 +59,7 @@ public class MissionSequencerLevel2Visitor implements
 		returnVisitor = new ReturnVisitor();
 
 		this.franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(
-				analysis));
+				analysis), sequencerEnv);
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class MissionSequencerLevel2Visitor implements
 						missions.addAll(getNextReturns);
 					}
 					
-					m = o.accept(new MethodVisitor(analysis), null);
+					m = o.accept(new MethodVisitor(analysis, sequencerEnv), null);
 //
 //					System.out.println("*** TRYING FRANK'S METHOD VISITOR ***");
 //					Tree returnType = o.getReturnType();
@@ -266,7 +266,7 @@ public class MissionSequencerLevel2Visitor implements
 					sequencerEnv.addMeth(m);
 				} else
 				{// ADD METHOD TO MISSION ENV
-					m = o.accept(new MethodVisitor(analysis), null);
+					m = o.accept(new MethodVisitor(analysis, sequencerEnv), null);
 
 					if (o.getModifiers().getFlags()
 							.contains(Modifier.SYNCHRONIZED))

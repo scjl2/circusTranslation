@@ -24,12 +24,15 @@ public class TightRopeTest
 {
 	public static SCJAnalysis ANALYSIS;
 	
-	private static ProgramEnv programEnv;
+
 
 	private static final String VERSION = "v0.5";
 	private static final boolean QUIET_LATEX_OUTPUT = true;
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
+	
+	private static EnvironmentBuilder environmentBuilder = null;
+	private static ProgramEnv programEnv;
 
 	private static String customName ="";
 	
@@ -44,6 +47,11 @@ public class TightRopeTest
 				new UncaughtExceptionHandler());
 	}
 
+	public static ProgramEnv getProgramEnv()
+	{
+		return programEnv;
+	}
+	
 	public static void main(String[] args) throws IOException
 	{
 
@@ -75,7 +83,7 @@ public class TightRopeTest
 			System.exit(-1);
 		}
 
-		EnvironmentBuilder environmentBuilder = new EnvironmentBuilder(ANALYSIS);
+		environmentBuilder = new EnvironmentBuilder(ANALYSIS);
 
 		programEnv = environmentBuilder.explore();
 

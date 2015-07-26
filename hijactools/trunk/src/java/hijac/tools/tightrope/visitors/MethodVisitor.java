@@ -10,6 +10,7 @@ import javax.lang.model.type.TypeKind;
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
+import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
 
@@ -81,12 +82,14 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 	MethodEnv methodEnv;
 	MethodBodyVisitor franksMethodVisitor;
 	SCJAnalysis analysis;
+	ObjectEnv object;
 
-	public MethodVisitor(SCJAnalysis analysis)
+	public MethodVisitor(SCJAnalysis analysis, ObjectEnv object)
 	{
 		this.analysis = analysis;
+		this.object = object;
 		this.franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(
-				analysis));
+				analysis), object);
 	}
 	
 	@Override
@@ -426,7 +429,7 @@ public class MethodVisitor implements TreeVisitor<MethodEnv, Boolean>
 					returnsValues, parameters, "");
 
 			franksMethodVisitor = new MethodBodyVisitor(
-					new NewSCJApplication(analysis), m);
+					new NewSCJApplication(analysis), object, m);
 
 			body = mt.accept(franksMethodVisitor,
 					new MethodVisitorContext());

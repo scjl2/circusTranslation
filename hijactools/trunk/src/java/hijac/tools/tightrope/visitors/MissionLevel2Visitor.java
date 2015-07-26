@@ -137,19 +137,20 @@ public class MissionLevel2Visitor implements
 				else
 				{
 					// ADD METHOD TO MISSION ENV
+					MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv);
 					if (mt.getModifiers().getFlags()
 							.contains(Modifier.SYNCHRONIZED))
 					{
 
 //						missionEnv.addSyncMeth(mt.getName(), typeKind, returns,
 //								paramMap);
-						missionEnv.addSyncMeth(mt.accept(new MethodVisitor(analysis), null));
+						missionEnv.addSyncMeth(mt.accept(methodVisitor, null));
 					}
 					else if(! (mt.getName().contentEquals("<init>") || mt.getName().contentEquals("missionMemorySize") ))
 					{
 //						missionEnv.addMeth(mt.getName(), typeKind, returns,
 //								paramMap);
-						missionEnv.addMeth(mt.accept(new MethodVisitor(analysis), null));
+						missionEnv.addMeth(mt.accept(methodVisitor, null));
 					}
 				}
 			}

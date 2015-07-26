@@ -45,12 +45,18 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SimpleTreeVisitor;
 
+import hijac.tools.application.TightRopeTest;
 import hijac.tools.modelgen.circus.templates.CircusTemplateFactory;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
 
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
+import hijac.tools.tightrope.environments.ObjectEnv;
+import hijac.tools.tightrope.environments.ParadigmEnv;
+import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
+import hijac.tools.tightrope.generators.NewCircusTemplates;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
 
@@ -66,21 +72,24 @@ public class MethodBodyVisitor extends
 	private MethodEnv methodEnv = null;
 	private LiteralTree trueLiteral = null;
 	private LiteralTree falseLiteral = null;
+	private ObjectEnv object;
 
 	protected final NewSCJApplication CONTEXT;
 
-	public MethodBodyVisitor(NewSCJApplication context)
+	public MethodBodyVisitor(NewSCJApplication context, ObjectEnv object)
 	{
 		super(NewTransUtils.FAILED_RESULT);
 		assert context != null;
 		CONTEXT = context;
+		this.object = object;
 	}
 
-	public MethodBodyVisitor(NewSCJApplication context, MethodEnv env)
+	public MethodBodyVisitor(NewSCJApplication context,ObjectEnv object, MethodEnv env)
 	{
 		super(NewTransUtils.FAILED_RESULT);
 		assert context != null;
 		CONTEXT = context;
+		this.object = object;
 		this.methodEnv = env;
 	}
 	
@@ -161,10 +170,10 @@ public class MethodBodyVisitor extends
 		if (methodEnv != null)
 		{
 			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT,
-					methodEnv));
+					object, methodEnv));
 		} else
 		{
-			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT));
+			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT, object));
 		}
 	}
 
@@ -440,14 +449,54 @@ public class MethodBodyVisitor extends
 //				node.getMethodSelect(), arguments);
 		
 		//TODO if the object in which the method I'm invoking resides is an API app process, translate to call/ret comms
-		String returnString;
-		String methodName = node.getMethodSelect().toString();
+		String returnString= "";
+		ExpressionTree et = node.getMethodSelect();
+		MemberSelectTree mst = null;
+		if (et instanceof MemberSelectTree)
+		{
+			mst = (MemberSelectTree) et;
+		}
+		
+		//TODO what I need to get here is the MethodEnv (or similar) of the method we're calling so I know it's parameters and return value.
+		
+//		TypeElement te =  CONTEXT.getAnalysis().getTypeElement("scjlevel2examples.flatbuffer.FlatBufferMission");
+		
+//		object = TightRopeTest.getProgramEnv().getObjectEnv();
+//		
+		((NewCircusTemplates) CONTEXT.getTemplates()).setObjectEnv(object);
+		ObjectEnv objectWhereMethodResides = null;
+		String returnType = "";
+		
+				
+		for(VariableEnv v : object.getVariables())
+		{
+			if(v.getVariableName().contentEquals(mst.getExpression().toString()))
+			{
+				//THIS FAILS BECASUE WE ARE BUILDING THE PROGRAM ENV AT THIS POINT...
+				objectWhereMethodResides = TightRopeTest.getProgramEnv().getObjectEnv(v.getVariableType().toString());
+				
+				MethodEnv methodWeAreCalling;
+				for(MethodEnv m : ((ParadigmEnv) objectWhereMethodResides).getMeths())
+				{
+					methodWeAreCalling = m;
+					
+					returnType = "~?~"+methodWeAreCalling.getReturnType();
+				}
+			
+			}
+		}
+		
+		
+		
+		String methodName = mst.getIdentifier() .toString();
 		
 		returnString = methodName + "Call";
 		returnString += "\\then \\\\";
 		
-		returnString += methodName + "Ret";
+		returnString += methodName + "Ret" + returnType;
 		returnString += "\\then \\Skip"; 
+//		
+//returnString = node.get
 		
 		return returnString;
 	}

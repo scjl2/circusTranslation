@@ -38,7 +38,8 @@ public class EnvironmentBuilder
 
 	private ProgramEnv programEnv;
 	private String packagePrefix;
-
+	
+	
 	public EnvironmentBuilder(SCJAnalysis analysis)
 	{
 		this.analysis = analysis;
@@ -47,9 +48,12 @@ public class EnvironmentBuilder
 		// trees = analysis.TREES;
 		// units = analysis.getCompilationUnits();
 		type_elements = analysis.getTypeElements();
-
+		
+		
 	}
 
+	
+	
 	public SchedulableTypeE getSchedulableType(Name s)
 	{
 		// System.out.println("+++ getSchedulableType: Name = " + s + " +++");
@@ -345,10 +349,10 @@ public class EnvironmentBuilder
 				{
 
 					schedulableEnv.addSyncMeth(
-							mt.accept(new MethodVisitor(analysis), null));
+							mt.accept(new MethodVisitor(analysis, schedulableEnv), null));
 				} else if (!(mt.getName().contentEquals("<init>") ))
 				{
-					schedulableEnv.addMeth(mt.accept(new MethodVisitor(analysis), null));
+					schedulableEnv.addMeth(mt.accept(new MethodVisitor(analysis, schedulableEnv), null));
 				}
 
 			}

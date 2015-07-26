@@ -236,4 +236,25 @@ public class ProgramEnv
 		return null;
 	}
 
+	public ObjectEnv getObjectEnv(String objectName)
+	{
+		ArrayList<ObjectEnv> objects = new ArrayList<ObjectEnv>();
+		objects.addAll(	getMissions() );
+		objects.addAll(getTopLevelMissionSequencers());
+		objects.addAll(getNestedMissionSequencers());
+		objects.addAll(getSchedulables());
+		
+		
+		
+		for(ObjectEnv o : objects)
+		{
+			if(o.getName().contentEquals(objectName))
+			{
+				return o;
+			}
+		}
+		
+		return null;
+	}
+
 }
