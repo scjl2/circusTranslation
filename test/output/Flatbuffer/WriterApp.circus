@@ -47,7 +47,6 @@ Methods \circdef \\
 
 \begin{circusaction}
 runMeth \circdef 
-\circvar ret : null \circspot
 \\
 \circblockopen
 runCall~.~Writer 
@@ -59,7 +58,7 @@ runCall~.~Writer
   \circblockclose
  \circseq  \\
 
-runRet~.~Writer~!~ret \then \\
+runRet~.~Writer \then \\
 \Skip
 \circblockclose
 \end{circusaction}	

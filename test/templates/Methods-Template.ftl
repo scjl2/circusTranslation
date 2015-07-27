@@ -1,7 +1,7 @@
 <#list Methods as meth>
 \begin{circusaction}
 ${meth.methodName}Meth \circdef 
-<#if meth.returnType != 'VOID'>
+<#if meth.returnType != 'null'>
 \circvar ret : ${meth.returnType} \circspot
 </#if>
 \\
@@ -13,7 +13,7 @@ ${meth.methodName}Call~.~${ProcessID}
 \then \\
 ${meth.body} \circseq  \\
 
-<#if meth.returnType != 'VOID'>
+<#if meth.returnType != 'null'>
 ${meth.methodName}Ret~.~${ProcessID}~!~ret \then \\
 <#else>
 ${meth.methodName}Ret~.~${ProcessID} \then \\

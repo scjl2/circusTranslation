@@ -23,11 +23,13 @@ public class Reader extends ManagedThread
 	{
 		Console.println("Reader!");
 
+		//rewritten, only variables in boolean conditions
 		boolean terminationPending = fbMission.terminationPending();
 		while (!terminationPending)
 		{
 			try
 			{
+				//rewritten, only variables in boolean conditions
 				boolean bufferEmpty = fbMission.bufferEmpty("Reader");
 				while (bufferEmpty)
 				{
