@@ -365,10 +365,10 @@ public class EnvironmentBuilder
 				{
 
 					schedulableEnv.addSyncMeth(
-							mt.accept(new MethodVisitor(analysis, schedulableEnv), null));
+							(new MethodVisitor(analysis, schedulableEnv).visitMethod(mt, null)));
 				} else if (!(mt.getName().contentEquals("<init>") ))
 				{
-					schedulableEnv.addMeth(mt.accept(new MethodVisitor(analysis, schedulableEnv), null));
+					schedulableEnv.addMeth(new MethodVisitor(analysis, schedulableEnv).visitMethod(mt, null));
 				}
 
 			}
