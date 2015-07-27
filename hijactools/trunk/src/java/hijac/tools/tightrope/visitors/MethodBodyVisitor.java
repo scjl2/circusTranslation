@@ -450,18 +450,18 @@ public class MethodBodyVisitor extends
 		}
 		/* Infer the method here that is called and pass to it the macro. */
 		/* Question: Is that generally feasible? */
-		// return callExprMacro(node, ctxt, "MethodInvocation",
-		// node.getMethodSelect(), arguments);
-
+		 return callExprMacro(node, ctxt, "MethodInvocation",
+				 node.getMethodSelect(), arguments);
+//
 		// TODO if the object in which the method I'm invoking resides is an API
 		// app process, translate to call/ret comms
-		String returnString = "";
-		ExpressionTree et = node.getMethodSelect();
-		MemberSelectTree mst = null;
-		if (et instanceof MemberSelectTree)
-		{
-			mst = (MemberSelectTree) et;
-		}
+//		String returnString = "";
+//		ExpressionTree et = node.getMethodSelect();
+//		MemberSelectTree mst = null;
+//		if (et instanceof MemberSelectTree)
+//		{
+//			mst = (MemberSelectTree) et;
+//		}
 
 		// TODO what I need to get here is the MethodEnv (or similar) of the
 		// method we're calling so I know it's parameters and return value.
@@ -470,45 +470,45 @@ public class MethodBodyVisitor extends
 		// CONTEXT.getAnalysis().getTypeElement("scjlevel2examples.flatbuffer.FlatBufferMission");
 
 		// object = TightRopeTest.getProgramEnv().getObjectEnv();
-		//
-		((NewCircusTemplates) CONTEXT.getTemplates()).setObjectEnv(object);
-		ObjectEnv objectWhereMethodResides = null;
-		String returnType = "";
-		String methodName = mst.getIdentifier().toString();
+//		//
+//		((NewCircusTemplates) CONTEXT.getTemplates()).setObjectEnv(object);
+//		ObjectEnv objectWhereMethodResides = null;
+//		String returnType = "";
+//		String methodName = mst.getIdentifier().toString();
+//
+//		for (VariableEnv v : object.getVariables())
+//		{
+//			if (v.getVariableName().contentEquals(
+//					mst.getExpression().toString()))
+//			{
+//
+//				objectWhereMethodResides = TightRopeTest.getProgramEnv()
+//						.getObjectEnv(v.getVariableType().toString());
+//
+//				MethodEnv methodWeAreCalling;
+//				for (MethodEnv m : ((ParadigmEnv) objectWhereMethodResides)
+//						.getMeths())
+//				{
+//					if (m.getMethodName().contentEquals(methodName))
+//					{
+//						methodWeAreCalling = m;
+//
+//						returnType = "~?~" + methodWeAreCalling.getReturnType();
+//					}
+//				}
+//
+//			}
+//		}
 
-		for (VariableEnv v : object.getVariables())
-		{
-			if (v.getVariableName().contentEquals(
-					mst.getExpression().toString()))
-			{
-
-				objectWhereMethodResides = TightRopeTest.getProgramEnv()
-						.getObjectEnv(v.getVariableType().toString());
-
-				MethodEnv methodWeAreCalling;
-				for (MethodEnv m : ((ParadigmEnv) objectWhereMethodResides)
-						.getMeths())
-				{
-					if (m.getMethodName().contentEquals(methodName))
-					{
-						methodWeAreCalling = m;
-
-						returnType = "~?~" + methodWeAreCalling.getReturnType();
-					}
-				}
-
-			}
-		}
-
-		returnString = methodName + "Call";
-		returnString += "\\then \\\\";
-
-		returnString += methodName + "Ret" + returnType;
-		returnString += "\\then \\Skip";
-		//
-		// returnString = node.get
-
-		return returnString;
+//		returnString = methodName + "Call";
+//		returnString += "\\then \\\\";
+//
+//		returnString += methodName + "Ret" + returnType;
+//		returnString += "\\then \\Skip";
+//		//
+//		// returnString = node.get
+//
+//		return returnString;
 	}
 
 	@Override

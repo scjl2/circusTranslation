@@ -23,7 +23,8 @@ public class Reader extends ManagedThread
 	{
 		Console.println("Reader!");
 
-		while (!fbMission.terminationPending())
+		boolean terminationPending = fbMission.terminationPending();
+		while (!terminationPending)
 		{
 			try
 			{

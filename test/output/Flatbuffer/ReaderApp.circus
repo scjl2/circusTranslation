@@ -53,7 +53,10 @@ runCall~.~Reader
   \circblockopen
 
 
-\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot terminationPendingCall\then \\terminationPendingRet\then \Skip) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \circblockopen \circvar bufferEmpty : boolean \circspot bufferEmpty := bufferEmptyCall\then \\bufferEmptyRet~?~\boolean\then \Skip ~ \circseq \\ \circblockopen \circmu X \circspot \\ \circblockopen \circif ~ bufferEmpty = \true ~ \circthen ~ \\ \t1 \circblockopen \circblockopen waitOnMissionCall\then \\waitOnMissionRet\then \Skip \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot bufferEmpty = \true \circthen \Skip \\ \circfi \circblockclose \circblockclose \circseq \\ \circvar value : int \circspot value := readCall\then \\readRet\then \Skip ~ \circseq \\ \circblockclose \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot terminationPendingCall\then \\terminationPendingRet\then \Skip) \circthen \Skip \\ \circfi \circblockclose \circblockclose
+  \circvar terminationPending : boolean \circspot terminationPending := fbMission.terminationPending() ~
+
+  \circseq \\
+\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot terminationPending = \true) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \circblockopen \circvar bufferEmpty : boolean \circspot bufferEmpty := fbMission.bufferEmpty() ~ \circseq \\ \circblockopen \circmu X \circspot \\ \circblockopen \circif ~ bufferEmpty = \true ~ \circthen ~ \\ \t1 \circblockopen \circblockopen fbMission.waitOnMission() \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot bufferEmpty = \true \circthen \Skip \\ \circfi \circblockclose \circblockclose \circseq \\ \circvar value : int \circspot value := fbMission.read() ~ \circseq \\ \circblockclose \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot terminationPending = \true) \circthen \Skip \\ \circfi \circblockclose \circblockclose
   \circblockclose
  \circseq  \\
 

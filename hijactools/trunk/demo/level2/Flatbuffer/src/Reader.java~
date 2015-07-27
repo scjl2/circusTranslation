@@ -27,7 +27,7 @@ public class Reader extends ManagedThread
 		{
 			try
 			{
-				boolean bufferEmpty = fbMission.bufferEmpty("Reader")
+				boolean bufferEmpty = fbMission.bufferEmpty("Reader");
 				while (bufferEmpty)
 				{
 					fbMission.waitOnMission("Reader");
