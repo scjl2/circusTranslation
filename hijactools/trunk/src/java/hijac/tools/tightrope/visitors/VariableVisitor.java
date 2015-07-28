@@ -581,7 +581,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		// System.out.println("+++ r is null : " + r == null + " +++");
 		if(objectEnv != null && arg1 == true)
 		{
-			objectEnv.addVariable(varName, varType, arg0.getInitializer());
+			objectEnv.addVariable(varName.toString(), varType.toString(), arg0.getInitializer());
 		}
 
 		return r;

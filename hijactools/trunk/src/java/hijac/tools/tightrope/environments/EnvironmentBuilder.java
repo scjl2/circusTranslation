@@ -1,11 +1,9 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.tightrope.visitors.ManagedThreadVisitor;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.MissionLevel2Visitor;
 import hijac.tools.tightrope.visitors.MissionSequencerLevel2Visitor;
-import hijac.tools.tightrope.visitors.ReturnVisitor;
 import hijac.tools.tightrope.visitors.SafeletLevel2Visitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
@@ -26,7 +24,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 
 public class EnvironmentBuilder
 {
@@ -317,6 +314,9 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println("+++ Building Schedulable " + s + " +++");
 		System.out.println();
+		
+		ClassEnv classEnv = new ClassEnv();
+		classEnv.setName(s);
 
 		String fullName = packagePrefix + s;
 		Elements elems = analysis.ELEMENTS;
@@ -337,15 +337,19 @@ public class EnvironmentBuilder
 		HashMap<Name, Tree> variables;
 		
 		ParadigmEnv schedulableEnv = programEnv.getSchedulable(s);
+		schedulableEnv.addClassEnv(classEnv);
 
-		variables = getVariables(schedulableType, schedulableEnv);
+		variables = getVariables(schedulableType, classEnv);
 		
+		
+		schedulableEnv.addVariable("this", "\\circreftype " +s+"Class", "\\circnew " +s+"Class()");
+		//TODO Need a new env for classes...
 		while (i.hasNext())
 		{
 
 			ArrayList<Name> tmp = new ArrayList<Name>();
 			
-			System.out.println("\t *** variables = " + variables);
+//			System.out.println("\t *** variables = " + variables);
 
 			Tree tlst = i.next();
 			// System.out.println("MS Visitor i=" + ((Tree) i).getKind());
@@ -364,11 +368,11 @@ public class EnvironmentBuilder
 						.contains(Modifier.SYNCHRONIZED))
 				{
 
-					schedulableEnv.addSyncMeth(
-							(new MethodVisitor(analysis, schedulableEnv).visitMethod(mt, null)));
+					classEnv.addSyncMeth(
+							(new MethodVisitor(analysis, classEnv).visitMethod(mt, null)));
 				} else if (!(mt.getName().contentEquals("<init>") ))
 				{
-					schedulableEnv.addMeth(new MethodVisitor(analysis, schedulableEnv).visitMethod(mt, null));
+					classEnv.addMeth(new MethodVisitor(analysis, classEnv).visitMethod(mt, null));
 				}
 
 			}
@@ -581,6 +585,22 @@ public class EnvironmentBuilder
 
 		return varMap;
 
+	}
+	
+	public class ClassEnv extends ParadigmEnv
+	{
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		public Map toMap()
+		{
+			Map map = new HashMap();
+			map.put("ProcessID", name.toString());
+//			map.put("handlerType", "aperiodic");
+//			map.put("importName", "Aperiodic");
+			map.put("Methods", methsList());
+			map.put("Variables", varsList());
+
+			return map;
+		}
 	}
 
 	// private Name[] buildMissionSequencers(Name[] names, String packagePrefix,

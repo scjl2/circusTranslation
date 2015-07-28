@@ -51,6 +51,8 @@
 <#list schedulables as schedulable>
 
 \input{${schedulable}App.circus}
+\newpage
+\input{${schedulable}Class.circus}
 			<#if schedulable_has_next>
 \newpage
 			</#if>

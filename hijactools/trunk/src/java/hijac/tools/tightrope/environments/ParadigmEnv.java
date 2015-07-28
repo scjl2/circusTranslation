@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.environments;
 
-import java.lang.reflect.Type;
+import hijac.tools.tightrope.environments.EnvironmentBuilder.ClassEnv;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +10,10 @@ import java.util.Map;
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
 
-import com.sun.source.tree.MethodTree;
-
 public class ParadigmEnv extends ObjectEnv
 {
+	private ClassEnv classEnv;
+
 	public ParadigmEnv()
 	{
 		super();
@@ -103,6 +104,17 @@ public class ParadigmEnv extends ObjectEnv
 		return returnList;
 	}
 
+	public void addClassEnv(ClassEnv classEnv)
+	{
+		this.classEnv = classEnv;
+	}
+	
+	public ClassEnv getClassEnv()
+	{
+		return classEnv;
+	}
+
+	
 	// public Name getmethodName(String methodName)
 	// {
 	// for(Name n : meths)

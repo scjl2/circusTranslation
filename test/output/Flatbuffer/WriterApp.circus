@@ -7,8 +7,7 @@
 \end{circus}
 
 \begin{schema}{State}
-  fbMission : FlatBufferMission\\ 
-  i : int\\ 
+  this : \circreftype WriterClass\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -18,15 +17,14 @@
 \begin{schema}{Init}
   State~'
 \where
-  fbMission' = fbMission\\ 
-  i' = 1\\ 
+  this' = \circnew WriterClass()\\ 
 \end{schema}
 
 \begin{circusaction}
 Run \circdef \\
 \circblockopen
 	runCall~.~Writer \then \\
-		
+	this~.~run() \circseq \\
 	runRet~.~Writer \then \\
 	\Skip
 \circblockclose
@@ -37,31 +35,12 @@ Methods \circdef \\
 \circblockopen
 	Run \\
 %
-\extchoice \\
-	runMeth \\ 
 %
 %
 \circblockclose 
 	 \circseq Methods
 \end{circusaction}
 
-\begin{circusaction}
-runMeth \circdef 
-\\
-\circblockopen
-runCall~.~Writer 
-\then \\
-  \circblockopen
-
-
-\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot fbMission.terminationPending() ) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \circblockopen \circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot fbMission.bufferEmpty() ) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen fbMission.waitOnMission() \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot fbMission.bufferEmpty() ) \circthen \Skip \\ \circfi \circblockclose \circblockclose \circseq \\ fbMission.write(i) \circseq \\ i := i + 1 \circblockclose \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot fbMission.terminationPending() ) \circthen \Skip \\ \circfi \circblockclose \circblockclose
-  \circblockclose
- \circseq  \\
-
-runRet~.~Writer \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
 %
 %
 

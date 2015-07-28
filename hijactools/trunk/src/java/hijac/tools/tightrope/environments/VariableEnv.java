@@ -7,8 +7,8 @@ import com.sun.source.tree.Tree;
 
 public class VariableEnv
 {
-	private Name variableName;
-	private Tree variableType;
+	private String variableName;
+	private String variableType;
 	private Object variableInit;
 
 	public VariableEnv()
@@ -17,7 +17,7 @@ public class VariableEnv
 		// TODO Auto-generated constructor stub
 	}
 
-	public VariableEnv(Name variableName, Tree variableType,
+	public VariableEnv(String variableName, String variableType,
 			Object variableInit)
 	{
 		super();
@@ -33,22 +33,22 @@ public class VariableEnv
 		}
 	}
 
-	public Name getVariableName()
+	public String getVariableName()
 	{
 		return variableName;
 	}
 
-	public void setVariableName(Name variableName)
+	public void setVariableName(String variableName)
 	{
 		this.variableName = variableName;
 	}
 
-	public Tree getVariableType()
+	public String getVariableType()
 	{
 		return variableType;
 	}
 
-	public void setVariableType(Tree variableType)
+	public void setVariableType(String variableType)
 	{
 		this.variableType = variableType;
 	}

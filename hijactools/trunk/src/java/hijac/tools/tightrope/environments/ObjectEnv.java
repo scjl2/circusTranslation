@@ -31,7 +31,7 @@ public class ObjectEnv
 		this.name = safelet;
 	}
 
-	public void addVariable(Name variableName, Tree variableType,
+	public void addVariable(String variableName, String variableType,
 			Object variableInit)
 	{
 		variables.add(new VariableEnv(variableName, variableType, variableInit));		
