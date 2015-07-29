@@ -6,38 +6,32 @@ import java.util.Map;
 
 import javax.lang.model.element.Name;
 
+public class SafeletEnv extends ParadigmEnv
+{
+	// temp
+	ArrayList<Name> tlmsNames = new ArrayList<Name>();
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Map toMap()
+	{
+		Map map = new HashMap();
+		map.put("ProcessID", name.toString());
+		map.put("initializeApplicationMethod", "");
 
-	public class SafeletEnv extends ParadigmEnv
-	{		
-		//temp
-		ArrayList<Name> tlmsNames = new ArrayList<Name>();
-		
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public Map toMap()
+		for (Name n : tlmsNames)
 		{
-			Map map = new HashMap();
-			map.put("ProcessID", name.toString());
-			map.put("initializeApplicationMethod", "");
-			
-			for(Name n : tlmsNames)
-			{
-				map.put("SchedulableID", n);
-			}
-			
-			map.put("Variables", varsList());
-			
-			map.put("Methods", methsList());
-//			map.put("Methods", new ArrayList());
-			map.put("SyncMethods", syncMethsList());
-//			map.put("SyncMethods", new ArrayList());
-			
-			return map;
+			map.put("SchedulableID", n);
 		}
-		
-		public void addTopLevelMissionSequencer(Name name)
-		{
-			tlmsNames.add(name);			
-		}
+
+		map.put("Variables", varsList());
+		map.put("Methods", methsList());
+		map.put("SyncMethods", syncMethsList());
+
+		return map;
 	}
-	
+
+	public void addTopLevelMissionSequencer(Name name)
+	{
+		tlmsNames.add(name);
+	}
+}

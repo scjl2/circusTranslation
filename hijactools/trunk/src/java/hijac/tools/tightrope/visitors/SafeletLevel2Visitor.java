@@ -10,15 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementVisitor;
-import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.TypeParameterElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
 
 import com.sun.source.tree.ClassTree;
@@ -30,8 +24,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
-public class SafeletLevel2Visitor implements
-		ElementVisitor<ArrayList<Name>, Void>
+public class SafeletLevel2Visitor 
 {
 
 	ProgramEnv programEnv;
@@ -54,36 +47,8 @@ public class SafeletLevel2Visitor implements
 		safeletEnv = programEnv.getSafelet();
 	}
 
-	@Override
-	public ArrayList<Name> visit(Element e)
-	{
-		// System.out.println(e);
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visit(Element e, Void p)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitExecutable(ExecutableElement e, Void p)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitPackage(PackageElement e, Void p)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@SuppressWarnings("unchecked")
-	@Override
 	public ArrayList<Name> visitType(TypeElement e, Void p)
 	{
 		// System.out.println(e);
@@ -97,8 +62,6 @@ public class SafeletLevel2Visitor implements
 		while (i.hasNext())
 		{
 			Object obj = i.next();
-
-			// wrong visiotr here?
 
 			if (obj instanceof MethodTree)
 			{
@@ -171,29 +134,7 @@ public class SafeletLevel2Visitor implements
 			}
 
 		}
-//		|| mt.getName().contentEquals("getSequencer") || 
+
 		return null;
 	}
-
-	@Override
-	public ArrayList<Name> visitTypeParameter(TypeParameterElement e, Void p)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitUnknown(Element e, Void p)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitVariable(VariableElement e, Void p)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

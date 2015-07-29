@@ -42,13 +42,9 @@ public class EnvironmentBuilder
 	// private Trees trees;
 	// private Set<CompilationUnitTree> units;
 	private Set<TypeElement> type_elements;
+	private Elements elems;
 
 	private ProgramEnv programEnv;
-
-	public ProgramEnv getProgramEnv()
-	{
-		return programEnv;
-	}
 
 	private String packagePrefix;
 
@@ -56,11 +52,17 @@ public class EnvironmentBuilder
 	{
 		EnvironmentBuilder.analysis = analysis;
 		this.programEnv = new ProgramEnv(analysis);
-
+	
 		// trees = analysis.TREES;
 		// units = analysis.getCompilationUnits();
 		type_elements = analysis.getTypeElements();
+		elems = analysis.ELEMENTS;
+	
+	}
 
+	public ProgramEnv getProgramEnv()
+	{
+		return programEnv;
 	}
 
 	public SchedulableTypeE getSchedulableType(Name s)
@@ -131,8 +133,7 @@ public class EnvironmentBuilder
 
 	private TypeElement getSafelet()
 	{
-
-		TypeElement safelet = null;
+//		TypeElement safelet = null;
 		for (TypeElement elem : type_elements)
 		{
 			// TODO needs to be made safer. I think this might fall over if
@@ -140,42 +141,28 @@ public class EnvironmentBuilder
 			if (elem.getInterfaces().toString().contains("Safelet"))
 			{
 				System.out.println("Found Safelet");
-				safelet = elem;
+//				safelet = elem;
 				packagePrefix = findPackagePrefix(elem);
 
-				programEnv.addSafelet(safelet.getSimpleName());
+				programEnv.addSafelet(elem.getSimpleName());
 
-				getVariables(safelet, programEnv.getSafelet());
-
-				// add methods etc here
-				// programEnv.a
-
-				// TODO Hack, needs to return all the tlms
-
-				// programEnv.addTopLevelMissionSequencers(topLevelMissionSequencer);
-
-				// programEnv.getSafelet().setTLMSNames(names);
-				//
-				// for (int i = 0; i < names.length; i++)
-				// {
-				// // framework.put("TopLevelMissionSequencer", names[i]);
-				// programEnv.addTopLevelMissionSequencer(names[i]);
-				// }
-
-				// System.out.println(names == null);
-
+				getVariables(elem, programEnv.getSafelet());		
+				
+				return elem;
 			}
-
 		}
-		return safelet;
+		return null;
 	}
 
 	private ArrayList<Name> buildSafelet(TypeElement safelet)
 	{
 
 		ArrayList<Name> topLevelMissionSequencers = null;
-		topLevelMissionSequencers = safelet.accept(new SafeletLevel2Visitor(
-				programEnv, analysis), null);
+		
+		SafeletLevel2Visitor safeletLevel2Visitor = new SafeletLevel2Visitor(programEnv, analysis);
+		
+		topLevelMissionSequencers = 
+				safeletLevel2Visitor.visitType(safelet, null);
 
 		for (Name n : topLevelMissionSequencers)
 		{
@@ -242,7 +229,7 @@ public class EnvironmentBuilder
 		MissionEnv missionEnv = programEnv.getFrameworkEnv().getMission(n);
 
 		String fullName = packagePrefix + n;
-		Elements elems = analysis.ELEMENTS;
+		
 		System.out.println("Building Mission: Full Name = " + fullName);
 
 		TypeElement missionType = elems.getTypeElement(fullName);
@@ -340,12 +327,12 @@ public class EnvironmentBuilder
 				// tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
 				// analysis, variables, packagePrefix), null);
 
+				MethodVisitor methodVisitor = new MethodVisitor(analysis, classEnv);
 				if (mt.getModifiers().getFlags()
 						.contains(Modifier.SYNCHRONIZED))
 				{
 
-					classEnv.addSyncMeth((new MethodVisitor(analysis, classEnv)
-							.visitMethod(mt, null)));
+					classEnv.addSyncMeth(methodVisitor.visitMethod(mt, null));
 
 					// TODO Add to schedulableEnv but...need a different visitor
 					// because otherwie it'll be outputting too much
@@ -361,7 +348,7 @@ public class EnvironmentBuilder
 						// (new MethodVisitor(analysis,
 						// classEnv).visitMethod(mt, null)));
 					}
-					classEnv.addMeth(new MethodVisitor(analysis, classEnv)
+					classEnv.addMeth(methodVisitor
 							.visitMethod(mt, null));
 				}
 
@@ -373,19 +360,7 @@ public class EnvironmentBuilder
 			// }
 
 		}
-		// System.out.println();
-		// System.out.println("+++ syncMethds empty = " + (sycnMeths.size() <=
-		// 0)
-		// + " +++");
-		// if (sycnMeths.size() > 0)
-		// {
-		// System.out.println("*** SyncMeths for " + s + " ***");
-		// for (Name n : sycnMeths)
-		// {
-		// System.out.println("\t*** " + n + " is synchronised");
-		// }
-		// }
-		// System.out.println();
+	
 
 	}
 

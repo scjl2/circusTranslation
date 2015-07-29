@@ -4,7 +4,6 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
-import hijac.tools.tightrope.generators.NewSCJApplication;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
