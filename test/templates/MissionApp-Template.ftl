@@ -42,6 +42,7 @@ InitializePhase \circdef \\
 CleanupPhase \circdef  \\
 \circblockopen
  cleanupMissionCall~.~${ProcessID} \then \\
+
  cleanupMissionRet~.~${ProcessID}~!~\false \then \\
  \Skip
 \circblockclose

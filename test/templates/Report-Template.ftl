@@ -47,6 +47,8 @@
 \subsection{${cluster.Mission}}
 \input{${cluster.Mission}App.circus}
 \newpage
+\input{${cluster.Mission}Class.circus}
+\newpage
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 \subsection{Schedulables of ${cluster.Mission}}

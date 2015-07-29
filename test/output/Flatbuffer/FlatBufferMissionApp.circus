@@ -21,9 +21,7 @@
 \end{circus}
 
 \begin{schema}{State}
-  buffer : int\\ 
-  \circreftype writerClass : WriterClass\\ 
-  \circreftype readerClass : ReaderClass\\ 
+  this : \circreftype FlatBufferMissionClass\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -33,9 +31,7 @@
 \begin{schema}{Init}
   State~'
 \where
-  buffer' = 0\\ 
-  \circreftype writerClass' = \circnew WriterClass()\\ 
-  \circreftype readerClass' = \circnew ReaderClass()\\ 
+  this' = \circnew FlatBufferMissionClass()\\ 
 \end{schema}
 
 \begin{circusaction}
@@ -56,6 +52,7 @@ InitializePhase \circdef \\
 CleanupPhase \circdef  \\
 \circblockopen
  cleanupMissionCall~.~FlatBufferMission \then \\
+
  cleanupMissionRet~.~FlatBufferMission~!~\false \then \\
  \Skip
 \circblockclose

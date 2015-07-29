@@ -227,18 +227,26 @@ public class EnvironmentBuilder
 		programEnv.addMission(n);
 
 		MissionEnv missionEnv = programEnv.getFrameworkEnv().getMission(n);
+		
+		
+		ClassEnv missionClassEnv = new ClassEnv();
+		missionClassEnv.setName(n);
+		missionEnv.addClassEnv(missionClassEnv);
 
 		String fullName = packagePrefix + n;
 		
-		System.out.println("Building Mission: Full Name = " + fullName);
+		System.out.println("+++ Building Mission: Full Name = " + fullName + " +++");
 
-		TypeElement missionType = elems.getTypeElement(fullName);
+		TypeElement missionTypeElem = elems.getTypeElement(fullName);
 
-		HashMap<Name, Tree> variables = getVariables(missionType, missionEnv);
+//		HashMap<Name, Tree> variables = 
+				getVariables(missionTypeElem, missionClassEnv);
 
-		ArrayList<Name> schedulables = missionType.accept(
-				new MissionLevel2Visitor(programEnv, missionEnv, analysis),
-				null);
+		missionEnv.addVariable("this", "\\circreftype " + n.toString() + "Class", "\\circnew "
+				+ n.toString() + "Class()");
+				
+		ArrayList<Name> schedulables = 
+				new MissionLevel2Visitor(programEnv, missionEnv, analysis).visitType(missionTypeElem, null);
 
 		if (schedulables == null)
 		{

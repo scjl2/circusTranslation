@@ -256,6 +256,11 @@ public class CircusGenerator
 
 			translateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
+			
+			missionMap = mEnv.getClassEnv().toMap();
+			translateCommon(missionMap, "Class-Template.ftl", procName
+					+ "Class.circus");
+			
 		}
 	}
 
