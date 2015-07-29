@@ -28,6 +28,7 @@ public class MissionSequencerLevel2Visitor
 	private ReturnVisitor returnVisitor;
 	private ParadigmEnv sequencerEnv;
 	private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
+	private MethodVisitor methodVisitor; 
 
 	public MissionSequencerLevel2Visitor(ProgramEnv programEnv,
 			ParadigmEnv sequencerEnv, SCJAnalysis analysis)
@@ -39,6 +40,7 @@ public class MissionSequencerLevel2Visitor
 		trees = analysis.TREES;
 
 		returnVisitor = new ReturnVisitor();
+		methodVisitor = new MethodVisitor(analysis, sequencerEnv);
 
 	}
 
@@ -103,7 +105,7 @@ public class MissionSequencerLevel2Visitor
 
 				} else
 				{
-					MethodVisitor methodVisitor = new MethodVisitor(analysis, sequencerEnv);
+					
 					if (methodName.contentEquals("getNextMission"))
 					{
 

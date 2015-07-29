@@ -47,12 +47,14 @@ public class MethodVisitor
 	// TODO Tuning: have this method accept an empty ArrayList to fill
 	public MethodEnv visitMethod(MethodTree mt, Boolean arg1)
 	{
-		System.out.println("+++ Method Visitor: Method +++");
+		// get name
+				Name methodName = mt.getName();
+				
+		System.out.println("+++ Method Visitor: "+methodName+" +++");
 		MethodEnv m;
 
-		// get name
-		Name methodName = mt.getName();
-
+		
+		
 		// return values
 		ArrayList<Name> returnsValues = mt
 				.accept(new ReturnVisitor(null), null);
