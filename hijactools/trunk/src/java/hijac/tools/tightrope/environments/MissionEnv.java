@@ -22,14 +22,6 @@ import javax.lang.model.element.Name;
 			map.put("Methods", methsList());
 			map.put("SyncMethods", syncMethsList());
 			
-//			map.put("initializeApplicationMethod", "");
-					
-//			if (tlmsNames.length == 1)
-//			{
-//				map.put("SchedulableID", tlmsNames[0]);
-//			}
-			
-			
 			return map;
 		}
 		

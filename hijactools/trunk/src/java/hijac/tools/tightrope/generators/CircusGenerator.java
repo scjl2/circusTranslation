@@ -21,10 +21,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * Generates the Circus files of the environments that have been translated form a program.
+ * Generates the Circus files of the environments that have been translated form
+ * a program.
  * 
  * @author Matt Luckcuck
- *
+ * 
  */
 public class CircusGenerator
 {
@@ -44,17 +45,19 @@ public class CircusGenerator
 	private static final String APP_CIRCUS = "App.circus";
 	private static final String TEMPLATE_DIRECTORY = "/home/matt/Documents/Translation/test/templates";
 	private static final String OUTPUT_DIRECTORY = "/home/matt/Documents/Translation/test/output/";
-	
+
 	private freemarker.template.Configuration cfg;
-	private ProgramEnv programEnv;	
+	private ProgramEnv programEnv;
 	private String programName;
-	
+
 	private String procName;
-	
+
 	/**
-	 *
-	 * @param programName The name of the program being translated
-	 * @param programEnv The environment of the program that is being translated
+	 * 
+	 * @param programName
+	 *            The name of the program being translated
+	 * @param programEnv
+	 *            The environment of the program that is being translated
 	 */
 	public CircusGenerator(String programName, ProgramEnv programEnv)
 	{
@@ -68,22 +71,22 @@ public class CircusGenerator
 
 		try
 		{
-			cfg.setDirectoryForTemplateLoading(new File(
-					TEMPLATE_DIRECTORY));
+			cfg.setDirectoryForTemplateLoading(new File(TEMPLATE_DIRECTORY));
 		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 
 		this.programEnv = programEnv;
-					
-	
+
 		this.programName = programName;
-		
+
 	}
 
 	/**
-	 * This method triggers the translation of the program, each type of object is translated to Circus and output to file.
+	 * This method triggers the translation of the program, each type of object
+	 * is translated to Circus and output to file.
+	 * 
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
@@ -101,69 +104,74 @@ public class CircusGenerator
 		translateMissions();
 
 		translateManagedThreads();
-		
+
 		translateNestedMissionSequencers();
-		
+
 		translateOneShotEventHandlers();
-		
+
 		translateAperiodicEventHandlers();
-		
+
 		translatePeriodicEventHandlers();
-		
+
 		translateIDFiles();
-		
+
 		generateReport();
 
 	}
 
 	/**
-	 * Used by all the translate methods. This processes a given Map with a given template and outputs it with a given filename
-	 * @param root Map of data
-	 * @param template The name of the template
-	 * @param fileName The file name to output the translated file to
+	 * Used by all the translate methods. This processes a given Map with a
+	 * given template and outputs it with a given filename
+	 * 
+	 * @param root
+	 *            Map of data
+	 * @param template
+	 *            The name of the template
+	 * @param fileName
+	 *            The file name to output the translated file to
 	 */
 	@SuppressWarnings("rawtypes")
-		private void translateCommon(Map root, String template, String fileName)
+	private void translateCommon(Map root, String template, String fileName)
+	{
+		/* Get the template (uses cache internally) */
+		freemarker.template.Template temp = null;
+		try
 		{
-			/* Get the template (uses cache internally) */
-			freemarker.template.Template temp = null;
-			try
-			{
-				temp = cfg.getTemplate(template);
-			} catch (IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	
-			/* Variables for writing output to a file */
-			new File(OUTPUT_DIRECTORY +  programName).mkdirs();
-			
-			File file = new File(OUTPUT_DIRECTORY +  programName+ "/"+ fileName);
-			
-			FileOutputStream fop = null;
-			try
-			{
-				fop = new FileOutputStream(file);
-			} catch (FileNotFoundException e)
-			{
-				e.printStackTrace();
-			}
-	
-			/* Merge data-model with template */
-			Writer out = new OutputStreamWriter(fop);
-			try
-			{
-				temp.process(root, out);
-				
-	//			out.close();
-			} catch (TemplateException e1)
-			{
-				e1.printStackTrace();
-			} catch (IOException e2)
-			{
-				e2.printStackTrace();
-			}
+			temp = cfg.getTemplate(template);
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		/* Variables for writing output to a file */
+		new File(OUTPUT_DIRECTORY + programName).mkdirs();
+
+		File file = new File(OUTPUT_DIRECTORY + programName + "/" + fileName);
+
+		FileOutputStream fop = null;
+		try
+		{
+			fop = new FileOutputStream(file);
+		} catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+
+		/* Merge data-model with template */
+		Writer out = new OutputStreamWriter(fop);
+		try
+		{
+			temp.process(root, out);
+
+			// out.close();
+		} catch (TemplateException e1)
+		{
+			e1.printStackTrace();
+		} catch (IOException e2)
+		{
+			e2.printStackTrace();
+		}
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -171,12 +179,13 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Generating ID Files +++");
 		Map Ids = programEnv.getMissionIdsMap();
-		
+
 		translateCommon(Ids, MISSION_IDS_TEMPLATE_FTL, MISSION_IDS_CIRCUS);
-		
+
 		Ids = programEnv.getSchedulableIdsMap();
-		
-		translateCommon(Ids, SCHEDULABLE_IDS_TEMPLATE_FTL, SCHEDULABLE_IDS_CIRCUS);
+
+		translateCommon(Ids, SCHEDULABLE_IDS_TEMPLATE_FTL,
+				SCHEDULABLE_IDS_CIRCUS);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -185,8 +194,8 @@ public class CircusGenerator
 		System.out.println("+++ Generating Report +++");
 		Map root = programEnv.geNetworkMap();
 		root.put("programName", programName);
-		
-		translateCommon(root, REPORT_TEMPLATE_FTL, programName+REPORT_TEX);
+
+		translateCommon(root, REPORT_TEMPLATE_FTL, programName + REPORT_TEX);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -207,8 +216,8 @@ public class CircusGenerator
 		Map root = programEnv.getSafelet().toMap();
 
 		procName = (String) root.get(PROCESS_ID);
-		
-		translateCommon(root, SAFELET_APP_TEMPLATE_FTL, procName+APP_CIRCUS);
+
+		translateCommon(root, SAFELET_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -222,47 +231,14 @@ public class CircusGenerator
 			/* Create a data-model */
 			Map tlms = tlmsEnv.toMap();
 
-			
 			procName = (String) tlms.get(PROCESS_ID);
-			// String procName = (String) tlms.get("MissionSequencerName");
-			translateCommon(tlms, MISSION_SEQUENCER_APP_TEMPLATE_FTL,
-					procName+APP_CIRCUS);
-			
+
+			translateCommon(tlms, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
+					+ APP_CIRCUS);
+
 			tlms = tlmsEnv.getClassEnv().toMap();
 			translateCommon(tlms, "Class-Template.ftl", procName
 					+ "Class.circus");
-
-			// /* Get the template (uses cache internally) */
-			// freemarker.template.Template temp2 =
-			// cfg.getTemplate("MissionSequencerApp-Template.ftl");
-			//
-			//
-			//
-			// /* Variables for writing output to a file */
-			// // String procName = (String) tlms.get("MissionSequencerName");
-			// String procName = "TopLevelMissionSequencerApp";
-			// File file2 = new
-			// File("/home/matt/Documents/Translation/test/output/"+procName+".circus");
-			// FileOutputStream fop2 = new FileOutputStream(file2);
-			//
-			//
-			//
-			// /* Merge data-model with template */
-			// Writer out3 = new OutputStreamWriter(fop2);
-			// try
-			// {
-			// temp2.process(tlms, out3);
-			// } catch (TemplateException e1)
-			// {
-			// // TODO Auto-generated catch block
-			// e1.printStackTrace();
-			// }
-			// // Note: Depending on what `out` is, you may need to call
-			// `out.close()`.
-			// // This is usually the case for file output, but not for servlet
-			// output.
-			//
-
 		}
 	}
 
@@ -277,40 +253,9 @@ public class CircusGenerator
 			Map missionMap = mEnv.toMap();
 
 			procName = (String) missionMap.get(PROCESS_ID);
-						
-			translateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName+APP_CIRCUS);
 
-			// /* Get the template (uses cache internally) */
-			// freemarker.template.Template temp3 =
-			// cfg.getTemplate("MissionApp-Template.ftl");
-			//
-			//
-			//
-			// /* Variables for writing output to a file */
-			// // String procName = (String) tlms.get("MissionSequencerName");
-			// String procName = "MissionApp";
-			// File file3 = new
-			// File("/home/matt/Documents/Translation/test/output/"+procName+".circus");
-			// FileOutputStream fop3 = new FileOutputStream(file3);
-			//
-			//
-			//
-			// /* Merge data-model with template */
-			// Writer out3 = new OutputStreamWriter(fop3);
-			// try
-			// {
-			// temp3.process(missionMap, out3);
-			// } catch (TemplateException e1)
-			// {
-			// // TODO Auto-generated catch block
-			// e1.printStackTrace();
-			// }
-			// // Note: Depending on what `out` is, you may need to call
-			// `out.close()`.
-			// // This is usually the case for file output, but not for servlet
-			// output.
-			//
-
+			translateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName
+					+ APP_CIRCUS);
 		}
 	}
 
@@ -324,12 +269,12 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			Map tlms = smsEnv.toMap();
-			
+
 			procName = (String) tlms.get(PROCESS_ID);
 
-			translateCommon(tlms, MISSION_SEQUENCER_APP_TEMPLATE_FTL,
-					procName+APP_CIRCUS);
-		}		
+			translateCommon(tlms, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
+					+ APP_CIRCUS);
+		}
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -346,7 +291,7 @@ public class CircusGenerator
 			procName = mtEnv.getName().toString();
 			translateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName
 					+ APP_CIRCUS);
-			
+
 			mtMap = mtEnv.getClassEnv().toMap();
 			translateCommon(mtMap, "Class-Template.ftl", procName
 					+ "Class.circus");
@@ -384,7 +329,7 @@ public class CircusGenerator
 
 		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	private void translateOneShotEventHandlers()
 	{
@@ -395,13 +340,13 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			Map osehMap = osevEnv.toMap();
-			
+
 			procName = (String) osehMap.get(PROCESS_ID);
-			translateCommon(osehMap, HANDLER_APP_TEMPLATE_FTL,
-					procName+APP_CIRCUS);
-		}		
+			translateCommon(osehMap, HANDLER_APP_TEMPLATE_FTL, procName
+					+ APP_CIRCUS);
+		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	private void translatePeriodicEventHandlers()
 	{
@@ -412,13 +357,13 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			Map pehhMap = pehEnv.toMap();
-			
+
 			procName = (String) pehhMap.get(PROCESS_ID);
-			translateCommon(pehhMap, HANDLER_APP_TEMPLATE_FTL,
-					procName+APP_CIRCUS);
-		}		
+			translateCommon(pehhMap, HANDLER_APP_TEMPLATE_FTL, procName
+					+ APP_CIRCUS);
+		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	private void translateAperiodicEventHandlers()
 	{
@@ -429,11 +374,11 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			Map apehMap = apehEnv.toMap();
-			
+
 			procName = (String) apehMap.get(PROCESS_ID);
-			translateCommon(apehMap, HANDLER_APP_TEMPLATE_FTL,
-					procName+APP_CIRCUS);
-		}		
+			translateCommon(apehMap, HANDLER_APP_TEMPLATE_FTL, procName
+					+ APP_CIRCUS);
+		}
 	}
 
 }

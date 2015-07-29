@@ -259,26 +259,15 @@ public class FrameworkEnv
 			return sequencer;
 		}
 
-		public ParadigmEnv getMissionEnv()
+		public MissionEnv getMissionEnv()
 		{
 			return missionEnv;
 		}
-
-		// public void setMissionEnv(MissionEnv missionEnv)
-		// {
-		// this.missionEnv = missionEnv;
-		// }
 
 		public SchedulablesEnv getSchedulablesEnv()
 		{
 			return schedulablesEnv;
 		}
-
-		//
-		// public void setSchedulablesEnv(SchedulablesEnv schedulablesEnv)
-		// {
-		// this.schedulablesEnv = schedulablesEnv;
-		// }
 
 		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
@@ -300,7 +289,6 @@ public class FrameworkEnv
 
 	private class SchedulablesEnv
 	{
-
 		private List<PeriodicEventHandlerEnv> periodEventHandlerEnvs = new ArrayList<PeriodicEventHandlerEnv>();
 		private List<AperiodicEventHandlerEnv> aperiodicEventHandlerEnvs = new ArrayList<AperiodicEventHandlerEnv>();
 		private List<OneShotEventHandlerEnv> oneShotEventHandlerEnvs = new ArrayList<OneShotEventHandlerEnv>();
@@ -722,7 +710,7 @@ public class FrameworkEnv
 		return missions;
 	}
 
-	public ParadigmEnv getMission(Name n)
+	public MissionEnv getMission(Name n)
 	{
 		for (TierEnv t : tiers)
 		{

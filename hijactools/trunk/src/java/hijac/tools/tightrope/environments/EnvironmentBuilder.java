@@ -202,17 +202,16 @@ public class EnvironmentBuilder
 		ClassEnv tlmsClassEnv = new ClassEnv();
 		tlmsClassEnv.setName(tlms);
 		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
-		
-		ArrayList<Name> missions = tlmsElement.accept(
-				new MissionSequencerLevel2Visitor(programEnv,
-						topLevelMissionSequencer, analysis), null);
+
+		ArrayList<Name> missions = new MissionSequencerLevel2Visitor(
+				programEnv, tlmsClassEnv, analysis).visitType(
+				tlmsElement, null);
 
 		topLevelMissionSequencer.addVariable("this",
 				"\\circreftype " + tlms.toString() + "Class", "\\circnew "
 						+ tlms.toString() + "Class()");
 
 		getVariables(tlmsElement, tlmsClassEnv);
-		
 
 		if (missions == null)
 		{
@@ -225,7 +224,7 @@ public class EnvironmentBuilder
 			{
 				programEnv.newCluster(tlms);
 				System.out.println("+++ Exploring Mission " + n + " +++");
-				programEnv.addMissionSequencerMission(tlms, n);
+				topLevelMissionSequencer.addMission(n);
 
 				buildMission(n);
 			}
@@ -240,7 +239,7 @@ public class EnvironmentBuilder
 
 		programEnv.addMission(n);
 
-		ParadigmEnv missionEnv = programEnv.getFrameworkEnv().getMission(n);
+		MissionEnv missionEnv = programEnv.getFrameworkEnv().getMission(n);
 
 		String fullName = packagePrefix + n;
 		Elements elems = analysis.ELEMENTS;
@@ -259,21 +258,20 @@ public class EnvironmentBuilder
 			System.out.println("+++ No Schedulables +++");
 		} else
 		{
-			buildSchedulables(schedulables);
+			buildSchedulables(missionEnv, schedulables);
 		}
 
 	}
 
-	private void buildSchedulables(ArrayList<Name> schedulables)
+	private void buildSchedulables(MissionEnv missionEnv, ArrayList<Name> schedulables)
 	{
 
 		ArrayList<Name> nestedSequencers = new ArrayList<Name>();
 		for (Name s : schedulables)
 		{
 			SchedulableTypeE type = getSchedulableType(s);
-			System.out.println("+++ Adding Schedulable " + s + " +++");
-			System.out.println("+++ schedulableType = " + type + " +++");
 
+			//TODO need to get rid of this stupid method call. I add to the Cluster and to the Mission envs
 			programEnv.addSchedulable(type, s);
 
 			assert (programEnv.containsScheudlable(s));
@@ -289,7 +287,6 @@ public class EnvironmentBuilder
 		if (!nestedSequencers.isEmpty())
 		{
 			buildSchedulableMissionSequencer(nestedSequencers);
-			// System.out.println("Build SMS");
 		}
 	}
 
@@ -399,15 +396,21 @@ public class EnvironmentBuilder
 		System.out.println("+++ Building Schedulable Mission Sequencers +++");
 		System.out.println();
 
+		TypeElement tlmsElement;
+		ArrayList<Name> missions;
+		NestedMissionSequencerEnv nestedMissionSequencer;
+
 		for (Name sequencer : nestedSequencers)
 		{
-			// programEnv.newTier();
+			tlmsElement = analysis.ELEMENTS.getTypeElement(packagePrefix
+					+ sequencer);
 
-			ArrayList<Name> missions = (analysis.ELEMENTS
-					.getTypeElement(packagePrefix + sequencer).accept(
-					new MissionSequencerLevel2Visitor(programEnv, programEnv
-							.getNestedMissionSequencer(sequencer), analysis),
-					null));
+			nestedMissionSequencer = programEnv
+					.getNestedMissionSequencer(sequencer);
+
+			missions = new MissionSequencerLevel2Visitor(programEnv,
+					nestedMissionSequencer, analysis).visitType(tlmsElement,
+					null);
 
 			if (missions == null)
 			{
@@ -417,85 +420,18 @@ public class EnvironmentBuilder
 				System.out.println(" +++ I have " + missions.size()
 						+ " missions +++ ");
 				programEnv.newTier();
-				// boolean newClusterNeeded = false;
+
 				for (Name n : missions)
 				{
 					programEnv.newCluster(sequencer);
-					System.out.println("+++ Exploring Mission " + n + " +++");
-
-					programEnv.addMissionSequencerMission(sequencer, n);
-					System.out.println("Build Mission: " + n);
+					
+					nestedMissionSequencer.addMission(n);
+					System.out.println("+++ Build Mission: " + n + " +++");
 					buildMission(n);
-					// if(newClusterNeeded)
-					// {
-					// programEnv.newCluster(sequencer);
-					// }
-					// else
-					// {
-					// newClusterNeeded = true;
-					// // }
 				}
 			}
-
 		}
 	}
-
-	// public ProgramEnv build()
-	// {
-	//
-	// Name[] names = null;
-	// String packagePrefix = null;
-	//
-	// // for all the types in the program
-	// for (TypeElement elem : type_elements)
-	// {
-	// // System.out.println(elem.toString());
-	// String elemID = elem.toString();
-	// // if the type we have is the safelet
-	//
-	// TypeMirror safelet_type = (TypeMirror) analysis.get(Hijac
-	// .key("SafeletType"));
-	//
-	// //
-	// if (elem.getInterfaces().toString().contains("Safelet"))
-	// {
-	// System.out.println("Found Safelet");
-	//
-	// // packagePrefix = findPackagePrefix(elem);
-	//
-	// programEnv.addSafelet(elem.getSimpleName());
-	//
-	// // add methods etc here
-	// programEnv.getSafelet();
-	//
-	// // names = elem.accept(new SafeletLevel2Visitor(programEnv,
-	// // analysis), null);
-	//
-	// // programEnv.getSafelet().setTLMSNames(names);
-	//
-	// for (int i = 0; i < names.length; i++)
-	// {
-	// // framework.put("TopLevelMissionSequencer", names[i]);
-	// programEnv.addTopLevelMissionSequencer(names[i]);
-	// }
-	//
-	// System.out.println(names == null);
-	//
-	// }
-	//
-	// }
-	//
-	// Name[] missionNames = null;
-	//
-	// missionNames = buildMissionSequencers(names, packagePrefix,
-	// missionNames);
-	//
-	// Name[][] clusters = null;
-	//
-	// buildMissions(packagePrefix, missionNames);
-	//
-	// return programEnv;
-	// }
 
 	private String findPackagePrefix(TypeElement elem)
 	{
