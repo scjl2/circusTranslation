@@ -116,6 +116,7 @@ public class SafeletLevel2Visitor implements
 				ArrayList<Name> returns = mt.accept(new ReturnVisitor(null),
 						null);
 
+				@SuppressWarnings("rawtypes")
 				Map paramMap = new HashMap();
 				for (VariableTree vt : mt.getParameters())
 				{

@@ -24,10 +24,8 @@ public class TightRopeTest
 {
 	public static SCJAnalysis ANALYSIS;
 	
-
-
 	private static final String VERSION = "v0.5";
-	private static final boolean QUIET_LATEX_OUTPUT = false;
+	private static final boolean QUIET_LATEX_OUTPUT = true;
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
 	

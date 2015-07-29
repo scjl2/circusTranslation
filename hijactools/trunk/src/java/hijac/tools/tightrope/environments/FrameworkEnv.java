@@ -8,8 +8,6 @@ import java.util.Map;
 
 import javax.lang.model.element.Name;
 
-import com.sun.source.tree.Tree;
-
 public class FrameworkEnv
 {
 	private ControlTierEnv controlTier;

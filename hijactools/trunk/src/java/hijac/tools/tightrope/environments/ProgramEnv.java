@@ -4,13 +4,11 @@ import hijac.tools.analysis.SCJAnalysis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
 
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 
 public class ProgramEnv
@@ -185,7 +183,7 @@ public class ProgramEnv
 		return schedulableIds.toMap();
 	}
 
-	public ParadigmEnv getTopLevelMissionSequencer(Name tlms)
+	public TopLevelMissionSequencerEnv getTopLevelMissionSequencer(Name tlms)
 	{
 		for (TopLevelMissionSequencerEnv tlmsEnv : getTopLevelMissionSequencers())
 		{

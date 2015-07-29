@@ -1,7 +1,6 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
@@ -20,10 +18,8 @@ import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeKind;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -36,8 +32,6 @@ public class MissionSequencerLevel2Visitor implements
 	SCJAnalysis analysis;
 
 	private Trees trees;
-	// private Set<CompilationUnitTree> units;
-	// private Set<TypeElement> type_elements;
 	private ReturnVisitor returnVisitor;
 	ParadigmEnv sequencerEnv;
 
@@ -53,8 +47,6 @@ public class MissionSequencerLevel2Visitor implements
 		this.sequencerEnv = sequencerEnv;
 
 		trees = analysis.TREES;
-		// units = analysis.getCompilationUnits();
-		// type_elements = analysis.getTypeElements();
 
 		returnVisitor = new ReturnVisitor();
 

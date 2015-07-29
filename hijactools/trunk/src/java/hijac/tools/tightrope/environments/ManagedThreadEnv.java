@@ -13,12 +13,7 @@ import java.util.Map;
 		{
 			Map map = new HashMap();
 			map.put("ProcessID", name.toString());
-//			map.put("initializeApplicationMethod", "");
-					
-//			if (tlmsNames.length == 1)
-//			{
-//				map.put("SchedulableID", tlmsNames[0]);
-//			}
+
 				
 			map.put("Variables", varsList());
 			

@@ -22,8 +22,8 @@
 
 \begin{schema}{State}
   buffer : int\\ 
-  writer : Writer\\ 
-  reader : Reader\\ 
+  \circreftype writerClass : WriterClass\\ 
+  \circreftype readerClass : ReaderClass\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -34,8 +34,8 @@
   State~'
 \where
   buffer' = 0\\ 
-  writer' = init\_placeholder\\ 
-  reader' = init\_placeholder\\ 
+  \circreftype writerClass' = \circnew WriterClass()\\ 
+  \circreftype readerClass' = \circnew ReaderClass()\\ 
 \end{schema}
 
 \begin{circusaction}

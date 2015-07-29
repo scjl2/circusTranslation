@@ -43,7 +43,7 @@ public class MethodVisitor
 
 	
 	//This should be the entry and exit point, since I'm translating a method
-	@SuppressWarnings("unchecked")
+
 	public MethodEnv visitMethod(MethodTree mt, Boolean arg1)
 	{
 		System.out.println("+++ Method Visitor: Method +++");
@@ -66,7 +66,7 @@ public class MethodVisitor
 		
 		
 		Tree returnType = mt.getReturnType();
-		String returnString = null;
+
 		String body =null;
 		
 		if (returnType instanceof PrimitiveTypeTree)

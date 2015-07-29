@@ -4,7 +4,6 @@ import hijac.tools.modelgen.circus.SCJApplication;
 import hijac.tools.modelgen.circus.freemarker.VisitorMethodModel;
 import hijac.tools.modelgen.circus.templates.CircusTemplateFactory;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
-import hijac.tools.modelgen.circus.visitors.AMethodVisitor;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.visitors.MethodBodyVisitor;

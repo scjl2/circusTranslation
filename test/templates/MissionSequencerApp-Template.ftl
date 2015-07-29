@@ -20,7 +20,7 @@
 GetNextMission \circdef \\
 \circblockopen
     getNextMissionCall~.~${ProcessID} \then \\
-	
+	this~.~getNextMission() \circseq \\
     getNextMissionRet~.~${ProcessID}~!~${MissionID}  \then \\
 \Skip
 \circblockclose	

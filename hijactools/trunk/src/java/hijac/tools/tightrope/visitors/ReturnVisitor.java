@@ -1,7 +1,5 @@
 package hijac.tools.tightrope.visitors;
 
-import hijac.tools.tightrope.environments.ProgramEnv;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;

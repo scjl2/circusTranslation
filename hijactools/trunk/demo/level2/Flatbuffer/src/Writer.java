@@ -24,11 +24,15 @@ public class Writer extends ManagedThread
 	{
 		Console.println("Writer!");
 
-		while (!fbMission.terminationPending())
+		//rewritten, only variables in boolean conditions
+		boolean terminationPending = fbMission.terminationPending();
+		while (!terminationPending)
 		{
 			try
 			{
-				while (!fbMission.bufferEmpty("Writer"))
+				//rewritten, only variables in boolean conditions
+				boolean bufferEmpty = fbMission.bufferEmpty("Writer");
+				while (bufferEmpty)
 				{
 					fbMission.waitOnMission("Writer");
 				}

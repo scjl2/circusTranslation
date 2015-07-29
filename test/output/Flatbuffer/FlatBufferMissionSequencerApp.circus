@@ -15,7 +15,7 @@
 \end{circus}
    
 \begin{schema}{State}
-  returnedMission : boolean\\ 
+  this : \circreftype FlatBufferMissionSequencerClass\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -25,14 +25,14 @@
 \begin{schema}{Init}
   State~'
 \where
-  returnedMission' = false\\ 
+  this' = \circnew FlatBufferMissionSequencerClass()\\ 
 \end{schema}
 
 \begin{circusaction}
 GetNextMission \circdef \\
 \circblockopen
     getNextMissionCall~.~FlatBufferMissionSequencer \then \\
-	
+	this~.~getNextMission() \circseq \\
     getNextMissionRet~.~FlatBufferMissionSequencer~!~FlatBufferMission  \then \\
 \Skip
 \circblockclose	

@@ -42,6 +42,7 @@ public class ObjectEnv
 		return variables;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Map> varsList()
 	{
 		List<Map> returnList = new ArrayList<>();

@@ -17,39 +17,32 @@ public class ParadigmEnv extends ObjectEnv
 	public ParadigmEnv()
 	{
 		super();
-		// nonPMeths = new ArrayList<Name>();
+
 		meths = new ArrayList<MethodEnv>();
 		syncMeths = new ArrayList<MethodEnv>();
-		
+
 	}
 
-	// public List<Name> getNonPMeths()
-	// {
-	// return nonPMeths;
-	// }
-	//
-	// public void addNonPMeth(Name nonPMeth)
-	// {
-	// nonPMeths.add(nonPMeth);
-	// }
-
-	
-	
 	public List<MethodEnv> getMeths()
 	{
 		return meths;
 	}
 
-	public void addMeth(Name methName, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
+	@SuppressWarnings("rawtypes")
+	public void addMeth(Name methName, TypeKind returnType,
+			ArrayList<Name> returnValues, Map params)
 	{
 		meths.add(new MethodEnv(methName, returnType, returnValues, params));
 	}
 
-	public void addSyncMeth(Name methName, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
+	@SuppressWarnings("rawtypes")
+	public void addSyncMeth(Name methName, TypeKind returnType,
+			ArrayList<Name> returnValues, Map params)
 	{
-		syncMeths.add(new MethodEnv(methName, returnType, returnValues, params));
+		syncMeths
+				.add(new MethodEnv(methName, returnType, returnValues, params));
 	}
-	
+
 	public void addMeth(MethodEnv me)
 	{
 		meths.add(me);
@@ -59,15 +52,11 @@ public class ParadigmEnv extends ObjectEnv
 	{
 		syncMeths.add(me);
 	}
-	
-	
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Map> methsList()
 	{
 		List<Map> returnList = new ArrayList<>();
-
-		// Map<String, String> returnMap = new HashMap<String, String>();
 
 		for (MethodEnv me : meths)
 		{
@@ -76,19 +65,17 @@ public class ParadigmEnv extends ObjectEnv
 			methodMap.put("returnType", me.getReturnType());
 			methodMap.put("parameters", me.getParameters());
 			methodMap.put("body", me.body);
-			
+
 			returnList.add(methodMap);
 		}
 
 		return returnList;
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Map> syncMethsList()
 	{
 		List<Map> returnList = new ArrayList<>();
-
-		// Map<String, String> returnMap = new HashMap<String, String>();
 
 		for (MethodEnv me : syncMeths)
 		{
@@ -108,23 +95,9 @@ public class ParadigmEnv extends ObjectEnv
 	{
 		this.classEnv = classEnv;
 	}
-	
+
 	public ClassEnv getClassEnv()
 	{
 		return classEnv;
 	}
-
-	
-	// public Name getmethodName(String methodName)
-	// {
-	// for(Name n : meths)
-	// {
-	// if (n.contentEquals(methodName))
-	// {
-	// return n;
-	// }
-	// }
-	// return null;
-	// }
-
 }

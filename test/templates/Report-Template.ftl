@@ -36,6 +36,8 @@
 \section{Top Level Mission Sequencer}
 \input{${TopLevelSequencer}App.circus}
 \newpage
+\input{${TopLevelSequencer}Class.circus}
+\newpage
 
 \section{Missions}
 

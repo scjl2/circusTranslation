@@ -44,15 +44,14 @@ public class EnvironmentBuilder
 	private Set<TypeElement> type_elements;
 
 	private ProgramEnv programEnv;
-	
+
 	public ProgramEnv getProgramEnv()
 	{
 		return programEnv;
 	}
 
 	private String packagePrefix;
-	
-	
+
 	public EnvironmentBuilder(SCJAnalysis analysis)
 	{
 		this.analysis = analysis;
@@ -61,12 +60,9 @@ public class EnvironmentBuilder
 		// trees = analysis.TREES;
 		// units = analysis.getCompilationUnits();
 		type_elements = analysis.getTypeElements();
-		
-		
+
 	}
 
-	
-	
 	public SchedulableTypeE getSchedulableType(Name s)
 	{
 		// System.out.println("+++ getSchedulableType: Name = " + s + " +++");
@@ -148,7 +144,7 @@ public class EnvironmentBuilder
 				packagePrefix = findPackagePrefix(elem);
 
 				programEnv.addSafelet(safelet.getSimpleName());
-				
+
 				getVariables(safelet, programEnv.getSafelet());
 
 				// add methods etc here
@@ -197,16 +193,26 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println("+++ Building Top Level Sequencer +++");
 		System.out.println();
-		// First Cluster
-		// programEnv.newCluster(tlms);
 
 		TypeElement tlmsElement = analysis.ELEMENTS
 				.getTypeElement(packagePrefix + tlms);
 
-		ArrayList<Name> missions = tlmsElement.accept(
-				new MissionSequencerLevel2Visitor(programEnv, programEnv.getTopLevelMissionSequencer(tlms), analysis), null);
+		TopLevelMissionSequencerEnv topLevelMissionSequencer = programEnv
+				.getTopLevelMissionSequencer(tlms);
+		ClassEnv tlmsClassEnv = new ClassEnv();
+		tlmsClassEnv.setName(tlms);
+		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 		
-		getVariables(tlmsElement, programEnv.getTopLevelMissionSequencer(tlms));
+		ArrayList<Name> missions = tlmsElement.accept(
+				new MissionSequencerLevel2Visitor(programEnv,
+						topLevelMissionSequencer, analysis), null);
+
+		topLevelMissionSequencer.addVariable("this",
+				"\\circreftype " + tlms.toString() + "Class", "\\circnew "
+						+ tlms.toString() + "Class()");
+
+		getVariables(tlmsElement, tlmsClassEnv);
+		
 
 		if (missions == null)
 		{
@@ -220,23 +226,10 @@ public class EnvironmentBuilder
 				programEnv.newCluster(tlms);
 				System.out.println("+++ Exploring Mission " + n + " +++");
 				programEnv.addMissionSequencerMission(tlms, n);
-			
-				
-				
-				// System.out.println("buildMission:" + n); //
+
 				buildMission(n);
-				// if(newClusterNeeded)
-				// {
-				// programEnv.newCluster(tlms);
-				// }
-				// else
-				// {
-				// newClusterNeeded = true;
-				// }
 			}
-
 		}
-
 	}
 
 	private void buildMission(Name n)
@@ -256,14 +249,6 @@ public class EnvironmentBuilder
 		TypeElement missionType = elems.getTypeElement(fullName);
 
 		HashMap<Name, Tree> variables = getVariables(missionType, missionEnv);
-		
-//		//TODO Here be more hack
-//		for (Name varName : variables.keySet())
-//		{
-//			//TODO This needs to have the TypeKind, so VariableVisitor needs to find the TypeKind of the var.
-//			//TODO Ideally the VariableVisitor needs to retrun a VariableEnv
-//			missionEnv.addVariable(varName, variables.get(varName), null);
-//		}
 
 		ArrayList<Name> schedulables = missionType.accept(
 				new MissionLevel2Visitor(programEnv, missionEnv, analysis),
@@ -275,7 +260,6 @@ public class EnvironmentBuilder
 		} else
 		{
 			buildSchedulables(schedulables);
-			// System.out.println("Build Schedulables");
 		}
 
 	}
@@ -309,12 +293,13 @@ public class EnvironmentBuilder
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void buildShedulable(Name s)
 	{
 		System.out.println();
 		System.out.println("+++ Building Schedulable " + s + " +++");
 		System.out.println();
-		
+
 		ClassEnv classEnv = new ClassEnv();
 		classEnv.setName(s);
 
@@ -325,9 +310,6 @@ public class EnvironmentBuilder
 
 		ClassTree ct = analysis.TREES.getTree(schedulableType);
 
-		// ReturnVisitor rv = new ReturnVisitor(ct);
-		// System.out.println("Retrun Visitor says... " +rv.getReturns());
-
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 
 		Iterator<StatementTree> i = members.iterator();
@@ -335,24 +317,21 @@ public class EnvironmentBuilder
 		ArrayList<Name> sycnMeths = new ArrayList<Name>();
 
 		HashMap<Name, Tree> variables;
-		
+
 		ParadigmEnv schedulableEnv = programEnv.getSchedulable(s);
 		schedulableEnv.addClassEnv(classEnv);
 
 		variables = getVariables(schedulableType, classEnv);
-		
-		
-		schedulableEnv.addVariable("this", "\\circreftype " +s+"Class", "\\circnew " +s+"Class()");
-		//TODO Need a new env for classes...
+
+		schedulableEnv.addVariable("this", "\\circreftype " + s + "Class",
+				"\\circnew " + s + "Class()");
+
 		while (i.hasNext())
 		{
 
-			ArrayList<Name> tmp = new ArrayList<Name>();
-			
-//			System.out.println("\t *** variables = " + variables);
+			// ArrayList<Name> tmp = new ArrayList<Name>();
 
 			Tree tlst = i.next();
-			// System.out.println("MS Visitor i=" + ((Tree) i).getKind());
 
 			if (tlst instanceof MethodTree)
 			{
@@ -361,40 +340,55 @@ public class EnvironmentBuilder
 				System.out
 						.println("*** Method Name = " + mt.getName() + " ***");
 
-//				tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
-//						analysis, variables, packagePrefix), null);
-				
+				// tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
+				// analysis, variables, packagePrefix), null);
+
 				if (mt.getModifiers().getFlags()
 						.contains(Modifier.SYNCHRONIZED))
 				{
 
-					classEnv.addSyncMeth(
-							(new MethodVisitor(analysis, classEnv).visitMethod(mt, null)));
-				} else if (!(mt.getName().contentEquals("<init>") ))
+					classEnv.addSyncMeth((new MethodVisitor(analysis, classEnv)
+							.visitMethod(mt, null)));
+
+					// TODO Add to schedulableEnv but...need a different visitor
+					// because otherwie it'll be outputting too much
+
+				} else if (!(mt.getName().contentEquals("<init>")))
 				{
-					classEnv.addMeth(new MethodVisitor(analysis, classEnv).visitMethod(mt, null));
+					if (!(mt.getName().contentEquals("run")))
+					{
+						// TODO Add to schedulableEnv but...need a different
+						// visitor because otherwie it'll be outputting too much
+
+						// schedulableEnv.addSyncMeth(
+						// (new MethodVisitor(analysis,
+						// classEnv).visitMethod(mt, null)));
+					}
+					classEnv.addMeth(new MethodVisitor(analysis, classEnv)
+							.visitMethod(mt, null));
 				}
 
 			}
 
-//			if (tmp != null)
-//			{
-//				sycnMeths.addAll(tmp);
-//			}
+			// if (tmp != null)
+			// {
+			// sycnMeths.addAll(tmp);
+			// }
 
 		}
-//		System.out.println();
-//		System.out.println("+++ syncMethds empty = " + (sycnMeths.size() <= 0)
-//				+ " +++");
-//		if (sycnMeths.size() > 0)
-//		{
-//			System.out.println("*** SyncMeths for " + s + " ***");
-//			for (Name n : sycnMeths)
-//			{
-//				System.out.println("\t*** " + n + " is synchronised");
-//			}
-//		}
-//		System.out.println();
+		// System.out.println();
+		// System.out.println("+++ syncMethds empty = " + (sycnMeths.size() <=
+		// 0)
+		// + " +++");
+		// if (sycnMeths.size() > 0)
+		// {
+		// System.out.println("*** SyncMeths for " + s + " ***");
+		// for (Name n : sycnMeths)
+		// {
+		// System.out.println("\t*** " + n + " is synchronised");
+		// }
+		// }
+		// System.out.println();
 
 	}
 
@@ -411,7 +405,8 @@ public class EnvironmentBuilder
 
 			ArrayList<Name> missions = (analysis.ELEMENTS
 					.getTypeElement(packagePrefix + sequencer).accept(
-					new MissionSequencerLevel2Visitor(programEnv, programEnv.getNestedMissionSequencer(sequencer) ,analysis),
+					new MissionSequencerLevel2Visitor(programEnv, programEnv
+							.getNestedMissionSequencer(sequencer), analysis),
 					null));
 
 			if (missions == null)
@@ -512,17 +507,17 @@ public class EnvironmentBuilder
 		return packagePrefix;
 	}
 
-	private HashMap<Name, Tree> getVariables(TypeElement arg0, ObjectEnv objectEnv)
+	private HashMap<Name, Tree> getVariables(TypeElement arg0,
+			ObjectEnv objectEnv)
 	{
 		HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 
 		VariableVisitor varVisitor;
-		
-		if(objectEnv != null)
+
+		if (objectEnv != null)
 		{
 			varVisitor = new VariableVisitor(programEnv, objectEnv);
-		}
-		else
+		} else
 		{
 			varVisitor = new VariableVisitor(programEnv);
 		}
@@ -586,7 +581,7 @@ public class EnvironmentBuilder
 		return varMap;
 
 	}
-	
+
 	public class ClassEnv extends ParadigmEnv
 	{
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -594,8 +589,8 @@ public class EnvironmentBuilder
 		{
 			Map map = new HashMap();
 			map.put("ProcessID", name.toString());
-//			map.put("handlerType", "aperiodic");
-//			map.put("importName", "Aperiodic");
+			// map.put("handlerType", "aperiodic");
+			// map.put("importName", "Aperiodic");
 			map.put("Methods", methsList());
 			map.put("Variables", varsList());
 

@@ -1,10 +1,5 @@
 package hijac.tools.tightrope.environments;
 
-import javax.lang.model.element.Name;
-import javax.lang.model.type.TypeKind;
-
-import com.sun.source.tree.Tree;
-
 public class VariableEnv
 {
 	private String variableName;

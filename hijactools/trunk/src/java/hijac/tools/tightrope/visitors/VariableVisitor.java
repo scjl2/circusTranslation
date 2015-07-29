@@ -3,7 +3,6 @@ package hijac.tools.tightrope.visitors;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -68,7 +67,6 @@ import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
-import com.sun.tools.internal.ws.wsdl.document.Types;
 
 public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 {
@@ -576,12 +574,30 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		
 		Tree varType = arg0.getType();
 		
+		String init = "";
+		if(arg0.getInitializer() != null)
+		{
+			init = arg0.getInitializer().toString();
+		}
+		
 		r.put(varName, varType);
 
 		// System.out.println("+++ r is null : " + r == null + " +++");
 		if(objectEnv != null && arg1 == true)
 		{
-			objectEnv.addVariable(varName.toString(), varType.toString(), arg0.getInitializer());
+			if(varType.getKind()== Tree.Kind.PRIMITIVE_TYPE)
+			{
+				objectEnv.addVariable(varName.toString(), 
+						varType.toString(), 
+						init);
+			}
+			else
+			{
+				objectEnv.addVariable("\\circreftype "+ varName.toString() +"Class", 
+									varType.toString()+"Class", 
+									"\\circnew " +varType.toString()+"Class()");
+			}
+
 		}
 
 		return r;
