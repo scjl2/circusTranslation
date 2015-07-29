@@ -37,7 +37,7 @@ public class EnvironmentBuilder
 
 	private static final String MANAGED_THREAD_QUALIFIED_NAME = "javax.safetycritical.ManagedThread";
 
-	public SCJAnalysis analysis;
+	public static SCJAnalysis analysis;
 
 	// private Trees trees;
 	// private Set<CompilationUnitTree> units;
@@ -54,7 +54,7 @@ public class EnvironmentBuilder
 
 	public EnvironmentBuilder(SCJAnalysis analysis)
 	{
-		this.analysis = analysis;
+		EnvironmentBuilder.analysis = analysis;
 		this.programEnv = new ProgramEnv(analysis);
 
 		// trees = analysis.TREES;

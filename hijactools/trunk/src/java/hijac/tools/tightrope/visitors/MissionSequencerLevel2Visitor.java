@@ -26,10 +26,7 @@ public class MissionSequencerLevel2Visitor
 
 	private Trees trees;
 	private ReturnVisitor returnVisitor;
-	ParadigmEnv sequencerEnv;
-
-	MethodBodyVisitor franksMethodVisitor;
-
+	private ParadigmEnv sequencerEnv;
 	private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 
 	public MissionSequencerLevel2Visitor(ProgramEnv programEnv,
@@ -43,8 +40,6 @@ public class MissionSequencerLevel2Visitor
 
 		returnVisitor = new ReturnVisitor();
 
-		this.franksMethodVisitor = new MethodBodyVisitor(new NewSCJApplication(
-				analysis), sequencerEnv);
 	}
 
 	// TODO Tuning: have this method accept an empty ArrayList to fill

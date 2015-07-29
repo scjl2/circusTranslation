@@ -19,18 +19,20 @@ import java.nio.file.Paths;
 import hijac.tools.tightrope.environments.EnvironmentBuilder;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.generators.CircusGenerator;
+import hijac.tools.tightrope.generators.NewSCJApplication;
 
 public class TightRopeTest
-{
-	public static SCJAnalysis ANALYSIS;
-	
+{	
 	private static final String VERSION = "v0.5";
 	private static final boolean QUIET_LATEX_OUTPUT = true;
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
 	
+	
+	public static SCJAnalysis ANALYSIS;	
 	private static EnvironmentBuilder environmentBuilder = null;
 	private static ProgramEnv programEnv;
+	private static NewSCJApplication scjApplication;
 
 	private static String customName ="";
 	
@@ -39,17 +41,6 @@ public class TightRopeTest
 		Statics.kickstart();
 	}
 
-	protected static void setUncaughtExceptionHandler()
-	{
-		Thread.currentThread().setUncaughtExceptionHandler(
-				new UncaughtExceptionHandler());
-	}
-
-	public static ProgramEnv getProgramEnv()
-	{
-		return environmentBuilder.getProgramEnv();
-	}
-	
 	public static void main(String[] args) throws IOException
 	{
 
@@ -81,6 +72,7 @@ public class TightRopeTest
 			System.exit(-1);
 		}
 
+		scjApplication = new NewSCJApplication(ANALYSIS);
 		environmentBuilder = new EnvironmentBuilder(ANALYSIS);
 
 		programEnv = environmentBuilder.explore();
@@ -225,5 +217,21 @@ public class TightRopeTest
 			e.printStackTrace();
 			System.exit(-1);
 		}
+	}
+
+	protected static void setUncaughtExceptionHandler()
+	{
+		Thread.currentThread().setUncaughtExceptionHandler(
+				new UncaughtExceptionHandler());
+	}
+
+	public static ProgramEnv getProgramEnv()
+	{
+		return environmentBuilder.getProgramEnv();
+	}
+
+	public static NewSCJApplication getSCJApplication()
+	{
+		return scjApplication;
 	}
 }
