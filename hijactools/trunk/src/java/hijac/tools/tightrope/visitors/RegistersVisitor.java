@@ -1,8 +1,7 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.tightrope.environments.ProgramEnv;
-
+import hijac.tools.tightrope.environments.MissionEnv;
 import javax.lang.model.element.Name;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
@@ -61,18 +60,13 @@ import com.sun.source.tree.WildcardTree;
 
 public class RegistersVisitor implements TreeVisitor<Name, Void>
 {
+	private MissionEnv missionEnv;
+//	private static SCJAnalysis analysis;
 
-	// private HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
-
-	// ArrayList<Name> schedulables = new ArrayList<Name>();
-
-	ProgramEnv programEnv;
-	SCJAnalysis analysis;
-
-	public RegistersVisitor(ProgramEnv programEnv, SCJAnalysis analysis)
+	public RegistersVisitor(MissionEnv missionEnv, SCJAnalysis analysis)
 	{
-		this.programEnv = programEnv;
-		this.analysis = analysis;
+		this.missionEnv = missionEnv;
+//		RegistersVisitor.analysis = analysis;
 
 	}
 
@@ -360,12 +354,12 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 					+ (identifier.getName()));
 
 			System.out.println("Registers Visitor: Returning "
-					+ programEnv.getVariable(identifier.getName()));
+					+ missionEnv.getVariable(identifier.getName()));
 			// ArrayList<Name> a = new ArrayList<Name>();
 			// a.add( (Name) variables.get(((MethodTree)
 			// arg0.getExpression()).getName()) );
 			Name name = 
-					((IdentifierTree) programEnv.getVariable(identifier.getName())).getName();
+					((IdentifierTree) missionEnv.getVariable(identifier.getName())).getName();
 
 			// programEnv.addSchedulable(getSchedulableType(name), name);
 
@@ -380,7 +374,7 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 						+ (((IdentifierTree) newClass.getIdentifier()).getName()));
 				
 				System.out.println("Registers Visitor: Returning "
-						+ programEnv.getVariable(((IdentifierTree) newClass.getIdentifier()).getName()));
+						+ missionEnv.getVariable(((IdentifierTree) newClass.getIdentifier()).getName()));
 				
 				Name name = (((IdentifierTree) newClass.getIdentifier()).getName());
 				
@@ -609,8 +603,8 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	public Name visitVariable(VariableTree arg0, Void arg1)
 	{
 		System.out.println("Registers Visitor: Variable Tree Found");
-		programEnv.addVariable(arg0.getName(), arg0.getType());
-
+//		missionEnv.addVariable(arg0.getName().toString(), arg0.getType().toString(), "");
+		
 		return null;
 	}
 

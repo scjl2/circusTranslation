@@ -15,7 +15,7 @@ public class ProgramEnv
 {
 	FrameworkEnv structureEnv;
 	List<NonParadigmEnv> nonParadigmObjectEnvs;
-	private HashMap<Name, Tree> variables = new HashMap<Name, Tree>();
+
 
 	MissionIdsEnv missionIds;
 	SchedulableIdsEnv schedulableIds;
@@ -75,12 +75,7 @@ public class ProgramEnv
 		System.out.println(nonParadigmObjectEnvs.toString());
 		System.out.println("--------------------------------");
 		System.out.println("Variables");
-		System.out.println("---------");
-		for (Name n : variables.keySet())
-		{
-			System.out.println(n + " -> " + variables.get(n));
-		}
-
+		
 	}
 
 	public void addSchedulable(SchedulableTypeE type, Name name)
@@ -92,16 +87,6 @@ public class ProgramEnv
 	public boolean containsScheudlable(Name name)
 	{
 		return structureEnv.containsSchedulable(name);
-	}
-
-	public void addVariable(Name name, Tree type)
-	{
-		variables.put(name, type);
-	}
-
-	public Tree getVariable(Name name)
-	{
-		return variables.get(name);
 	}
 
 	public void newTier()

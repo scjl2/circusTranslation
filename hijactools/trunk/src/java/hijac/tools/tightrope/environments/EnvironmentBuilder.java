@@ -246,7 +246,7 @@ public class EnvironmentBuilder
 				+ n.toString() + "Class()");
 				
 		ArrayList<Name> schedulables = 
-				new MissionLevel2Visitor(programEnv, missionEnv, analysis).visitType(missionTypeElem, null);
+				new MissionLevel2Visitor(programEnv, missionEnv,  analysis).visitType(missionTypeElem, null);
 
 		if (schedulables == null)
 		{
@@ -511,6 +511,7 @@ public class EnvironmentBuilder
 			// map.put("handlerType", "aperiodic");
 			// map.put("importName", "Aperiodic");
 			map.put("Methods", methsList());
+			map.put("SyncMethods", syncMethsList());
 			map.put("Variables", varsList());
 
 			return map;

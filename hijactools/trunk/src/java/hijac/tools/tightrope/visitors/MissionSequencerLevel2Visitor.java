@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -92,6 +95,8 @@ public class MissionSequencerLevel2Visitor
 			{
 
 				MethodTree o = (MethodTree) tlst;
+				
+				
 
 				Name methodName = o.getName();
 				System.out.println("MS Visitor Method Tree = " + methodName);
@@ -118,11 +123,13 @@ public class MissionSequencerLevel2Visitor
 						}
 
 						m = methodVisitor.visitMethod(o, null);
+						setMethodAccess(m, o);
 
 						sequencerEnv.addMeth(m);
 					} else
 					{// ADD METHOD TO MISSION ENV
 						m = methodVisitor.visitMethod(o, null);
+						setMethodAccess(m, o);
 
 						if (o.getModifiers().getFlags()
 								.contains(Modifier.SYNCHRONIZED))
@@ -140,5 +147,26 @@ public class MissionSequencerLevel2Visitor
 		System.out.println(" +++ MissionSequencerVissitor has "
 				+ missions.size() + " missions +++");
 		return missions;
+	}
+
+	private void setMethodAccess(MethodEnv m, MethodTree o)
+	{
+		ModifiersTree modTree = o.getModifiers();
+		Set<Modifier> flags = modTree.getFlags();
+		
+//				m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
+		
+		if(flags.contains(Modifier.PUBLIC))
+		{
+			m.setAccess(MethodEnv.AccessMod.PUBLIC);
+		}
+		else if (flags.contains(Modifier.PRIVATE))
+		{
+			m.setAccess(MethodEnv.AccessMod.PRIVATE);
+		}
+		else if (flags.contains(Modifier.PROTECTED))
+		{
+			m.setAccess(MethodEnv.AccessMod.PROTECTED);
+		}
 	}
 }

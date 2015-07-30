@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
 
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
@@ -17,6 +19,7 @@ import javax.lang.model.type.TypeKind;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
@@ -99,13 +102,15 @@ public class SafeletLevel2Visitor
 						if (mt.getModifiers().getFlags()
 								.contains(Modifier.SYNCHRONIZED))
 						{
-							
-							
-							safeletEnv.addSyncMeth((methodVisitor.visitMethod(mt, null)));
+							MethodEnv m= methodVisitor.visitMethod(mt, null);
+							setMethodAccess( m,  mt);
+							safeletEnv.addSyncMeth(m);
 						} 
 						else if( !(mt.getName().contentEquals("getSequencer") || mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getLevel")    ) ) 
 						{
-							safeletEnv.addMeth((methodVisitor.visitMethod(mt, null)));
+							MethodEnv m = methodVisitor.visitMethod(mt, null);
+							setMethodAccess( m,  mt);
+							safeletEnv.addMeth(m);
 						}
 					}
 				}
@@ -136,5 +141,26 @@ public class SafeletLevel2Visitor
 		}
 
 		return null;
+	}
+	
+	private void setMethodAccess(MethodEnv m, MethodTree o)
+	{
+		ModifiersTree modTree = o.getModifiers();
+		Set<Modifier> flags = modTree.getFlags();
+		
+//				m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
+		
+		if(flags.contains(Modifier.PUBLIC))
+		{
+			m.setAccess(MethodEnv.AccessMod.PUBLIC);
+		}
+		else if (flags.contains(Modifier.PRIVATE))
+		{
+			m.setAccess(MethodEnv.AccessMod.PRIVATE);
+		}
+		else if (flags.contains(Modifier.PROTECTED))
+		{
+			m.setAccess(MethodEnv.AccessMod.PROTECTED);
+		}
 	}
 }

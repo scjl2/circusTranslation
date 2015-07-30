@@ -49,7 +49,7 @@ public class ParadigmEnv extends ObjectEnv
 	}
 
 	public void addSyncMeth(MethodEnv me)
-	{
+	{		
 		syncMeths.add(me);
 	}
 
@@ -64,7 +64,8 @@ public class ParadigmEnv extends ObjectEnv
 			methodMap.put("methodName", me.getMethodName().toString());
 			methodMap.put("returnType", me.getReturnType());
 			methodMap.put("parameters", me.getParameters());
-			methodMap.put("body", me.body);
+			methodMap.put("body", me.getBody());
+			methodMap.put("access", me.getAccessString());
 
 			returnList.add(methodMap);
 		}
@@ -84,7 +85,8 @@ public class ParadigmEnv extends ObjectEnv
 			methodMap.put("returnType", me.getReturnType());
 			methodMap.put("returnValue", me.getReturnValue());
 			methodMap.put("parameters", me.getParameters());
-
+			methodMap.put("access", me.getAccessString());
+			methodMap.put("body", me.getBody());
 			returnList.add(methodMap);
 		}
 

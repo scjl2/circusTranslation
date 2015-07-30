@@ -10,11 +10,15 @@ import javax.lang.model.type.TypeKind;
 
 public class MethodEnv
 {
+	public static enum AccessMod {PUBLIC,PRIVATE,PROTECTED};
+	
 	private Name methodName;
 	private String returnType;
 	private Map<String, Type> parameters;
 	private ArrayList<Name> returnValues;
-	Object body;
+	private Object body;
+	private boolean synchronised;
+	private AccessMod accesMod = null;
 	
 	
 	public MethodEnv(Name name)
@@ -39,7 +43,7 @@ public class MethodEnv
 		this.returnType = returnType.toString();
 		this.parameters = params;
 		this.returnValues = returnValues;
-		this.body = body;
+		this.setBody(body);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -50,7 +54,7 @@ public class MethodEnv
 		this.returnType = returnType;
 		this.parameters = params;
 		this.returnValues = returnValues;
-		this.body = body;
+		this.setBody(body);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -115,7 +119,38 @@ public class MethodEnv
 
 	public void setBody(String body)
 	{
-		this.body=body;
-		
+		this.body=body;		
+	}
+	
+	public void setSynchronised(boolean sync)
+	{
+		synchronised = sync;
+	}
+	
+	public void setAccess(AccessMod access)
+	{
+		accesMod = access;
+	}
+	
+	public String getAccessString()
+	{
+		if(accesMod != null)
+		{
+		return accesMod.toString().toLowerCase();
+		}
+		else
+		{
+			return "";
+		}
+	}
+
+	public Object getBody()
+	{
+		return body;
+	}
+
+	public void setBody(Object body)
+	{
+		this.body = body;
 	}
 }

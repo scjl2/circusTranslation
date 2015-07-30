@@ -571,4 +571,6 @@ public class ManagedThreadVisitor implements TreeVisitor<ArrayList<Name>, Void>
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
 }

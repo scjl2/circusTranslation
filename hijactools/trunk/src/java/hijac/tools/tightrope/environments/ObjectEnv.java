@@ -37,6 +37,23 @@ public class ObjectEnv
 		variables.add(new VariableEnv(variableName, variableType, variableInit));		
 	}
 	
+	public VariableEnv getVariable(Name name)
+	{
+		return this.getVariable(name.toString());
+	}
+	
+	public VariableEnv getVariable(String name)
+	{
+		for(VariableEnv v : variables)
+		{
+			if(v.getVariableName().equals(name))
+			{
+				return v;
+			}
+		}
+		return null;
+	}
+	
 	public List<VariableEnv> getVariables()
 	{
 		return variables;

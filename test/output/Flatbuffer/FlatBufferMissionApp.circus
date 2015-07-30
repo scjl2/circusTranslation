@@ -58,78 +58,7 @@ CleanupPhase \circdef  \\
 \circblockclose
 \end{circusaction}
 
-\begin{circusaction}
-bufferEmptyMeth \circdef 
-\circvar ret : \boolean \circspot
-\\
-\circblockopen
-bufferEmptyCall~.~FlatBufferMission 
-~?~name
-\then \\
-  \circblockopen
-
-
-  \circif ~ (buffer = 0) ~ \circthen ~
-  \\
-  \t1
-ret := \true
-  \\
-  \circelse ~ \lnot (buffer = 0) ~ \circthen ~
-  \\
-  \t1
-ret := \false
-  \\
-  \circfi
-
-  \circblockclose
- \circseq  \\
-
-bufferEmptyRet~.~FlatBufferMission~!~ret \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
 %
-\begin{circusaction}
-writeSyncMeth \circdef \\
-\circblockopen
-writeCall~.~FlatBufferMission~?~thread 
-~?~update
-\then \\
-startSyncMeth~.~FlatBufferMission~.~thread \then \\
-lockAcquired~.~FlatBufferMission~.~thread \then \\
-~\\
-endSyncMeth~.~FlatBufferMission~.~thread \then  \\
-writeRet~.~FlatBufferMission~.~[]~.~thread \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-readSyncMeth \circdef \\
-\circblockopen
-readCall~.~FlatBufferMission~?~thread 
-\then \\
-startSyncMeth~.~FlatBufferMission~.~thread \then \\
-lockAcquired~.~FlatBufferMission~.~thread \then \\
-~\\
-endSyncMeth~.~FlatBufferMission~.~thread \then  \\
-readRet~.~FlatBufferMission~.~out~.~thread \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-waitOnMissionSyncMeth \circdef \\
-\circblockopen
-waitOnMissionCall~.~FlatBufferMission~?~thread 
-~?~name
-\then \\
-startSyncMeth~.~FlatBufferMission~.~thread \then \\
-lockAcquired~.~FlatBufferMission~.~thread \then \\
-~\\
-endSyncMeth~.~FlatBufferMission~.~thread \then  \\
-waitOnMissionRet~.~FlatBufferMission~.~[]~.~thread \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
 %
 
 \begin{circusaction}
@@ -139,15 +68,7 @@ Methods \circdef
 	\extchoice \\
 	CleanupPhase \\
 %
-\extchoice \\
-	bufferEmptyMeth \\ 
 %
-	\extchoice \\
-	writeSyncMeth \\	
-	\extchoice \\
-	readSyncMeth \\	
-	\extchoice \\
-	waitOnMissionSyncMeth \\	
 %
 \circblockclose 
 \circseq Methods
