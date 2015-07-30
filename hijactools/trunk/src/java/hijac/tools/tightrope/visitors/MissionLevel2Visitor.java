@@ -105,29 +105,29 @@ public class MissionLevel2Visitor
 						}
 					}
 				}
-//				else
-//				{
-//					// ADD METHOD TO MISSION ENV
-//					MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv);
-//					if (mt.getModifiers().getFlags()
-//							.contains(Modifier.SYNCHRONIZED))
-//					{
-//
-////						missionEnv.addSyncMeth(mt.getName(), typeKind, returns,
-////								paramMap);
-//						MethodEnv m = methodVisitor.visitMethod(mt, null);
-//						setMethodAccess(mt, m);
-//						missionEnv.addSyncMeth(m);
-//					}
-//					else if(! (mt.getName().contentEquals("<init>") || mt.getName().contentEquals("missionMemorySize") ))
-//					{
-////						missionEnv.addMeth(mt.getName(), typeKind, returns,
-////								paramMap);
-//						MethodEnv m = methodVisitor.visitMethod(mt, null);
-//						setMethodAccess(mt, m);
-//						missionEnv.addMeth(m);
-//					}
-//				}
+				else
+				{
+					// ADD METHOD TO MISSION ENV
+					MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv);
+					if (mt.getModifiers().getFlags()
+							.contains(Modifier.SYNCHRONIZED))
+					{
+
+//						missionEnv.addSyncMeth(mt.getName(), typeKind, returns,
+//								paramMap);
+						MethodEnv m = methodVisitor.visitMethod(mt, null);
+						setMethodAccess(mt, m);
+						missionEnv.addSyncMeth(m);
+					}
+					else if(! (mt.getName().contentEquals("<init>") || mt.getName().contentEquals("missionMemorySize") ))
+					{
+//						missionEnv.addMeth(mt.getName(), typeKind, returns,
+//								paramMap);
+						MethodEnv m = methodVisitor.visitMethod(mt, null);
+						setMethodAccess(mt, m);
+						missionEnv.addMeth(m);
+					}
+				}
 			}
 		}
 		return schedulables;
