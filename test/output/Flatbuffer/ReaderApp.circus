@@ -35,12 +35,26 @@ Methods \circdef \\
 \circblockopen
 	Run \\
 %
+\extchoice \\
+	runMeth \\ 
 %
 %
 \circblockclose 
 	 \circseq Methods
 \end{circusaction}
 
+\begin{circusaction}
+runMeth \circdef 
+\\
+\circblockopen
+runCall~.~Reader 
+\then \\
+this~.~run() \circseq  \\
+
+runRet~.~Reader \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
 %
 %
 

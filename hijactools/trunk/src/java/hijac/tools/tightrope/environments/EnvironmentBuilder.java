@@ -335,12 +335,12 @@ public class EnvironmentBuilder
 				// tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
 				// analysis, variables, packagePrefix), null);
 
-				MethodVisitor methodVisitor = new MethodVisitor(analysis, classEnv);
+				MethodVisitor methodVisitor = new MethodVisitor(analysis, schedulableEnv);
 				if (mt.getModifiers().getFlags()
 						.contains(Modifier.SYNCHRONIZED))
 				{
 
-					classEnv.addSyncMeth(methodVisitor.visitMethod(mt, null));
+					schedulableEnv.addSyncMeth(methodVisitor.visitMethod(mt, null));
 
 					// TODO Add to schedulableEnv but...need a different visitor
 					// because otherwie it'll be outputting too much
@@ -356,7 +356,7 @@ public class EnvironmentBuilder
 						// (new MethodVisitor(analysis,
 						// classEnv).visitMethod(mt, null)));
 					}
-					classEnv.addMeth(methodVisitor
+					schedulableEnv.addMeth(methodVisitor
 							.visitMethod(mt, null));
 				}
 

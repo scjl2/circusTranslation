@@ -36,7 +36,7 @@ public class MissionLevel2Visitor
 	{
 		MissionLevel2Visitor.analysis = analysis;
 //		MissionLevel2Visitor.programEnv = programEnv;
-		this.missionEnv = missionEnv.getClassEnv();
+		this.missionEnv = missionEnv;
 
 		trees = analysis.TREES;
 		analysis.getCompilationUnits();
