@@ -29,6 +29,8 @@ public class MissionLevel2Visitor
 	private static RegistersVisitor registersVisitor;
 	private static Trees trees;
 	
+	
+	
 	private ParadigmEnv missionEnv;	
 
 	public MissionLevel2Visitor(ProgramEnv programEnv, MissionEnv missionEnv,
@@ -75,11 +77,13 @@ public class MissionLevel2Visitor
 //			}
 
 			if (tlst instanceof MethodTree)
-			{
+			{				
 				//capture the method
 				MethodTree mt = (MethodTree) tlst;
+				final boolean notIgnoredMethod = ! (mt.getName().contentEquals("<init>") || mt.getName().contentEquals("missionMemorySize") );
+				final boolean syncMethod = mt.getModifiers().getFlags()
+						.contains(Modifier.SYNCHRONIZED);
 				
-
 				if (mt.getName().contentEquals("initialize"))
 				{
 					System.out.println("Mission Visitor: J iterator");
@@ -109,8 +113,8 @@ public class MissionLevel2Visitor
 				{
 					// ADD METHOD TO MISSION ENV
 					MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv);
-					if (mt.getModifiers().getFlags()
-							.contains(Modifier.SYNCHRONIZED))
+					
+					if (syncMethod)
 					{
 
 //						missionEnv.addSyncMeth(mt.getName(), typeKind, returns,
@@ -118,14 +122,17 @@ public class MissionLevel2Visitor
 						MethodEnv m = methodVisitor.visitMethod(mt, null);
 						setMethodAccess(mt, m);
 						missionEnv.addSyncMeth(m);
-					}
-					else if(! (mt.getName().contentEquals("<init>") || mt.getName().contentEquals("missionMemorySize") ))
+					} else
 					{
+						
+						if(notIgnoredMethod)
+						{
 //						missionEnv.addMeth(mt.getName(), typeKind, returns,
 //								paramMap);
-						MethodEnv m = methodVisitor.visitMethod(mt, null);
-						setMethodAccess(mt, m);
-						missionEnv.addMeth(m);
+							MethodEnv m = methodVisitor.visitMethod(mt, null);
+							setMethodAccess(mt, m);
+							missionEnv.getClassEnv().addMeth(m);
+						}
 					}
 				}
 			}

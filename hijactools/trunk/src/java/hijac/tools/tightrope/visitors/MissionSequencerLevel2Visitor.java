@@ -30,7 +30,7 @@ public class MissionSequencerLevel2Visitor
 	private ReturnVisitor returnVisitor;
 	private ParadigmEnv sequencerEnv;
 	private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
-	private MethodVisitor methodVisitor; 
+	private MethodVisitor methodVisitor;
 
 	public MissionSequencerLevel2Visitor(ProgramEnv programEnv,
 			ParadigmEnv sequencerEnv, SCJAnalysis analysis)
@@ -60,14 +60,14 @@ public class MissionSequencerLevel2Visitor
 
 		ArrayList<Name> missions = new ArrayList<Name>();
 
-//		System.out.println("In MS Visitor for " + arg0);
+		// System.out.println("In MS Visitor for " + arg0);
 
 		ClassTree ct = trees.getTree(arg0);
-//		System.out.println("MS Visitor class tree: " + ct);
+		// System.out.println("MS Visitor class tree: " + ct);
 
 		@SuppressWarnings("unchecked")
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-//		System.out.println("MS Visitor members: " + members);
+		// System.out.println("MS Visitor members: " + members);
 
 		Iterator<StatementTree> i = members.iterator();
 
@@ -95,8 +95,6 @@ public class MissionSequencerLevel2Visitor
 			{
 
 				MethodTree o = (MethodTree) tlst;
-				
-				
 
 				Name methodName = o.getName();
 				System.out.println("MS Visitor Method Tree = " + methodName);
@@ -107,10 +105,17 @@ public class MissionSequencerLevel2Visitor
 
 					o.accept(returnVisitor, false);
 
-				} else
+				}
+				else
 				{
+
+					final boolean isGetNextMissionMethod = methodName
+							.contentEquals("getNextMission");
+
+					final boolean notIgnoredMethod = !(methodName
+							.contentEquals("<init>"));
 					
-					if (methodName.contentEquals("getNextMission"))
+					if (isGetNextMissionMethod)
 					{
 
 						ArrayList<Name> getNextReturns = null;
@@ -126,26 +131,30 @@ public class MissionSequencerLevel2Visitor
 						setMethodAccess(m, o);
 
 						sequencerEnv.addMeth(m);
-					} else
+					}
+					else
 					{// ADD METHOD TO MISSION ENV
 						m = methodVisitor.visitMethod(o, null);
 						setMethodAccess(m, o);
 
-						if (o.getModifiers().getFlags()
-								.contains(Modifier.SYNCHRONIZED))
+						final boolean isSyncMethod = o.getModifiers()
+								.getFlags().contains(Modifier.SYNCHRONIZED);
+						if (isSyncMethod)
 						{
 							sequencerEnv.addSyncMeth(m);
-						} else if (!(methodName.contentEquals("<init>")))
+						}
+						else
 						{
-							sequencerEnv.addMeth(m);
+							if (notIgnoredMethod)
+							{
+								sequencerEnv.addMeth(m);
+							}
 						}
 					}
 				}
 			}
 		}
 
-		System.out.println(" +++ MissionSequencerVissitor has "
-				+ missions.size() + " missions +++");
 		return missions;
 	}
 
@@ -153,10 +162,10 @@ public class MissionSequencerLevel2Visitor
 	{
 		ModifiersTree modTree = o.getModifiers();
 		Set<Modifier> flags = modTree.getFlags();
-		
-//				m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
-		
-		if(flags.contains(Modifier.PUBLIC))
+
+		// m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
+
+		if (flags.contains(Modifier.PUBLIC))
 		{
 			m.setAccess(MethodEnv.AccessMod.PUBLIC);
 		}

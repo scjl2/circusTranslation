@@ -340,7 +340,7 @@ public class EnvironmentBuilder
 						.contains(Modifier.SYNCHRONIZED))
 				{
 
-					schedulableEnv.addSyncMeth(methodVisitor.visitMethod(mt, null));
+					schedulableEnv.getClassEnv().addSyncMeth(methodVisitor.visitMethod(mt, null));
 
 					// TODO Add to schedulableEnv but...need a different visitor
 					// because otherwie it'll be outputting too much

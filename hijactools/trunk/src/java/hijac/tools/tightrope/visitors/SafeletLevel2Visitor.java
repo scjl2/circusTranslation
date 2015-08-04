@@ -27,29 +27,28 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
-public class SafeletLevel2Visitor 
+public class SafeletLevel2Visitor
 {
 
-	ProgramEnv programEnv;
-	SCJAnalysis analysis;
+//	private static ProgramEnv programEnv;
+	private static SCJAnalysis analysis;
+	private static ReturnVisitor returnVisitor = new ReturnVisitor(null);
 
 	private Trees trees;
-	private ReturnVisitor returnVisitor = new ReturnVisitor(null);
-	private SafeletEnv safeletEnv;
 	
+	private SafeletEnv safeletEnv;
 
 	public SafeletLevel2Visitor(ProgramEnv programEnv, SCJAnalysis analysis)
 	{
-		this.analysis = analysis;
-		this.programEnv = programEnv;
+		SafeletLevel2Visitor.analysis = analysis;
+//		SafeletLevel2Visitor.programEnv = programEnv;
 
 		trees = analysis.TREES;
 		analysis.getCompilationUnits();
 		analysis.getTypeElements();
-		
+
 		safeletEnv = programEnv.getSafelet();
 	}
-
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<Name> visitType(TypeElement e, Void p)
@@ -73,6 +72,14 @@ public class SafeletLevel2Visitor
 				Tree returnType = mt.getReturnType();
 				TypeKind typeKind = TypeKind.ERROR;
 
+				final boolean isGetSequencerMethod = mt.getName()
+						.contentEquals("getSequencer");
+				final boolean isSyncMethod = mt.getModifiers().getFlags()
+						.contains(Modifier.SYNCHRONIZED);
+				final boolean notIgnoredMethod = !(isGetSequencerMethod
+						|| mt.getName().contentEquals("<init>") || mt.getName()
+						.contentEquals("getLevel"));
+
 				if (returnType instanceof PrimitiveTypeTree)
 				{
 					typeKind = ((PrimitiveTypeTree) mt.getReturnType())
@@ -91,32 +98,36 @@ public class SafeletLevel2Visitor
 
 				if (mt.getName().contentEquals("initializeApplication"))
 				{
-					safeletEnv.addMeth(mt.getName(), typeKind,
-							returns, paramMap);
+					safeletEnv.addMeth(mt.getName(), typeKind, returns,
+							paramMap);
 				}
 				else
 				{
 					{
-						// ADD METHOD TO ENV
-						MethodVisitor methodVisitor = new MethodVisitor(analysis, safeletEnv);
-						if (mt.getModifiers().getFlags()
-								.contains(Modifier.SYNCHRONIZED))
-						{
-							MethodEnv m= methodVisitor.visitMethod(mt, null);
-							setMethodAccess( m,  mt);
-							safeletEnv.addSyncMeth(m);
-						} 
-						else if( !(mt.getName().contentEquals("getSequencer") || mt.getName().contentEquals("<init>") || mt.getName().contentEquals("getLevel")    ) ) 
+						MethodVisitor methodVisitor = new MethodVisitor(
+								analysis, safeletEnv);
+
+						if (isSyncMethod)
 						{
 							MethodEnv m = methodVisitor.visitMethod(mt, null);
-							setMethodAccess( m,  mt);
-							safeletEnv.addMeth(m);
+							setMethodAccess(m, mt);
+							safeletEnv.getClassEnv().addSyncMeth(m);
+						}
+						else
+						{
+							if (notIgnoredMethod)
+							{
+								MethodEnv m = methodVisitor.visitMethod(mt,
+										null);
+								setMethodAccess(m, mt);
+								safeletEnv.addMeth(m);
+							}
 						}
 					}
 				}
-				if (mt.getName().contentEquals("getSequencer"))
+				if (isGetSequencerMethod)
 				{
-					
+
 					List<StatementTree> s = (List<StatementTree>) mt.getBody()
 							.getStatements();
 
@@ -135,22 +146,22 @@ public class SafeletLevel2Visitor
 						}
 					}
 				}
-				
+
 			}
 
 		}
 
 		return null;
 	}
-	
+
 	private void setMethodAccess(MethodEnv m, MethodTree o)
 	{
 		ModifiersTree modTree = o.getModifiers();
 		Set<Modifier> flags = modTree.getFlags();
-		
-//				m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
-		
-		if(flags.contains(Modifier.PUBLIC))
+
+		// m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
+
+		if (flags.contains(Modifier.PUBLIC))
 		{
 			m.setAccess(MethodEnv.AccessMod.PUBLIC);
 		}

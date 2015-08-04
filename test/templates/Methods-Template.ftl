@@ -11,7 +11,7 @@ ${meth.methodName}Call~.~${ProcessID}
 ~?~${param}
 </#list>
 \then \\
-this~.~${meth.methodName}() \circseq  \\
+${meth.body}  \circseq  \\
 
 <#if meth.returnType != 'null'>
 ${meth.methodName}Ret~.~${ProcessID}~!~ret \then \\
@@ -34,7 +34,7 @@ ${meth.methodName}Call~.~${ProcessID}~?~thread
 \then \\
 startSyncMeth~.~${ProcessID}~.~thread \then \\
 lockAcquired~.~${ProcessID}~.~thread \then \\
-this~.~${meth.methodName}() \circseq  \\
+${meth.body} \circseq  \\
 endSyncMeth~.~${ProcessID}~.~thread \then  \\
 <#if meth.returnType != 'VOID'>
 ${meth.methodName}Ret~.~${ProcessID}~.~${meth.returnValue}~.~thread \then \\

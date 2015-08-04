@@ -58,20 +58,6 @@ CleanupPhase \circdef  \\
 \circblockclose
 \end{circusaction}
 
-\begin{circusaction}
-bufferEmptyMeth \circdef 
-\circvar ret : \boolean \circspot
-\\
-\circblockopen
-bufferEmptyCall~.~FlatBufferMission 
-~?~name
-\then \\
-this~.~bufferEmpty() \circseq  \\
-
-bufferEmptyRet~.~FlatBufferMission~!~ret \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
 %
 \begin{circusaction}
 writeSyncMeth \circdef \\
@@ -81,7 +67,18 @@ writeCall~.~FlatBufferMission~?~thread
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
 lockAcquired~.~FlatBufferMission~.~thread \then \\
-this~.~write() \circseq  \\
+  \circblockopen
+
+
+  buffer := update ~
+
+
+  \circseq \\
+  this.notify()  
+
+
+  \circblockclose
+ \circseq  \\
 endSyncMeth~.~FlatBufferMission~.~thread \then  \\
 writeRet~.~FlatBufferMission~.~[]~.~thread \then \\
 \Skip
@@ -94,7 +91,24 @@ readCall~.~FlatBufferMission~?~thread
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
 lockAcquired~.~FlatBufferMission~.~thread \then \\
-this~.~read() \circseq  \\
+  \circblockopen
+  \circvar out : int \circspot out := buffer ~
+
+  \circseq \\
+
+
+  buffer := 0 ~
+
+
+  \circseq \\
+  this.notify()  
+
+
+  \circseq \\
+  ret := out
+
+  \circblockclose
+ \circseq  \\
 endSyncMeth~.~FlatBufferMission~.~thread \then  \\
 readRet~.~FlatBufferMission~.~out~.~thread \then \\
 \Skip
@@ -108,7 +122,14 @@ waitOnMissionCall~.~FlatBufferMission~?~thread
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
 lockAcquired~.~FlatBufferMission~.~thread \then \\
-this~.~waitOnMission() \circseq  \\
+  \circblockopen
+
+
+  this.wait()  
+
+
+  \circblockclose
+ \circseq  \\
 endSyncMeth~.~FlatBufferMission~.~thread \then  \\
 waitOnMissionRet~.~FlatBufferMission~.~[]~.~thread \then \\
 \Skip
@@ -123,8 +144,6 @@ Methods \circdef
 	\extchoice \\
 	CleanupPhase \\
 %
-\extchoice \\
-	bufferEmptyMeth \\ 
 %
 	\extchoice \\
 	writeSyncMeth \\	
