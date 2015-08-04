@@ -23,7 +23,7 @@
 \end{circusaction}
 %
 \begin{schema}{Init}
-  State~'
+  State~' \\
 \where
   this' = \circnew FlatBufferMissionSequencerClass()\\ 
 \end{schema}

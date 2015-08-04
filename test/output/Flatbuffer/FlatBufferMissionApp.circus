@@ -29,7 +29,7 @@
 \end{circusaction}
 %
 \begin{schema}{Init}
-  State~'
+  State~' \\
 \where
   this' = \circnew FlatBufferMissionClass()\\ 
 \end{schema}

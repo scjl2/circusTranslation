@@ -10,7 +10,12 @@
 \end{circusaction}
 %
 \begin{schema}{Init}
-  State~'
+  State~' \\
+<#list Variables as var>
+<#if var.VarInput>
+${var.VarInit} : ${var.VarType}
+</#if>	
+</#list>
 \where
  <#list Variables as var>
   ${var.VarName}' = ${var.VarInit}\\ 

@@ -69,7 +69,8 @@ public class ObjectEnv
 			Map varMap = new HashMap();
 			varMap.put("VarName", v.getVariableName().toString());
 			varMap.put("VarType", v.getVariableType());
-			varMap.put("VarInit", v.getVariableInit().toString());
+			varMap.put("VarInit", v.getVariableInit().toString());					
+			varMap.put("VarInput", v.getVariableInput().toString());		
 			
 			returnList.add(varMap);
 		}
@@ -78,6 +79,26 @@ public class ObjectEnv
 	}
 
 	public void addVariableInit(Name varName, Tree init)
+	{
+		for(VariableEnv varEnv : getVariables())
+		{
+			if(varEnv.getVariableName().contentEquals(varName))
+			{
+				varEnv.setVariableInit(init);
+			}
+		}
+	}
+
+	public void addVariable(String variableName, String variableType,
+			Object variableInit, String variableInput)
+	
+	{
+		variables.add(new VariableEnv(variableName, variableType, variableInit, variableInput));	
+		
+		
+	}
+
+	public void addVariableInit(String varName, String init)
 	{
 		for(VariableEnv varEnv : getVariables())
 		{

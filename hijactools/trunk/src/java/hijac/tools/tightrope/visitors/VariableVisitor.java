@@ -132,15 +132,9 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		System.out.println("Var Visitor: Assignment");
 		System.out.println("-> " + arg0);
-//		System.out
-//				.println("-> variable.kind = " + arg0.getVariable().getKind());
-//		System.out.println("-> Expression = " + arg0.getExpression());
-//		System.out.println("-> expression.kind = "
-//				+ arg0.getExpression().getKind());
+
 		Map<Name, Tree> returnMap = null;
 
-		// Map<Name, Tree> expressionMap = arg0.getExpression().accept(this,
-		// false);
 		ExpressionTree variable = arg0.getVariable();
 		Name varName = null;
 		Tree expression = arg0.getExpression();
@@ -149,14 +143,11 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 				
 		if (variable instanceof IdentifierTree)
 		{
-			varName = ((IdentifierTree) variable).getName();
-	
-			
+			varName = ((IdentifierTree) variable).getName();			
 		}
 		if (variable instanceof MemberSelectTree)
 		{
-			varName = ((MemberSelectTree) variable).getIdentifier();
-			
+			varName = ((MemberSelectTree) variable).getIdentifier();			
 		}
 		
 		if (expression instanceof NewClassTree)
@@ -184,6 +175,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			if(objectEnv!= null && arg1 == true)
 			{
 				objectEnv.addVariableInit(varName, expressionTree);
+				
 			}
 		}
 	
@@ -217,7 +209,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			StatementTree st = i.next();
 			System.out.println("Var Visitor Block: st kind = " + st.getKind());
 			Map<Name, Tree> statementReturn = st.accept(this, arg1);
-			// System.out.println("Var Visitor: Block: in while");
+			
 			if (statementReturn != null)
 			{
 				System.out.println("Var Visitor: Block: Returned Adding");
@@ -591,8 +583,19 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 						varType.toString(), 
 						init);
 			}
-			else
+			else if (! (objectEnv.getName().toString().contains(varType.toString())))
 			{
+				//TODO HACKY! need to get what kind of ID here!
+				final String variableInitAndInput = "?"+varName.toString()+"In";
+				
+				objectEnv.addVariable(varName.toString(), 
+										"MissionID", 
+										variableInitAndInput, 
+										variableInitAndInput);
+			}
+			else	
+			{
+								
 				objectEnv.addVariable("\\circreftype "+ varName.toString() +"Class", 
 									varType.toString()+"Class", 
 									"\\circnew " +varType.toString()+"Class()");

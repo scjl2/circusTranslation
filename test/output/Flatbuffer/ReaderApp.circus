@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
+  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds, ReaderClass
 \end{zsection}
 %
 \begin{circus}
@@ -7,7 +7,7 @@
 \end{circus}
 
 \begin{schema}{State}
-  this : \circreftype ReaderClass\\ 
+  fbMission : MissionID\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -15,9 +15,9 @@
 \end{circusaction}
 %
 \begin{schema}{Init}
-  State~'
+  State~' \\
 \where
-  this' = \circnew ReaderClass()\\ 
+  fbMission' = fbMission\\ 
 \end{schema}
 
 \begin{circusaction}
@@ -29,19 +29,6 @@ Run \circdef \\
 	\Skip
 \circblockclose
 \end{circusaction}	
-
-\begin{circusaction}
-Methods \circdef \\
-\circblockopen
-	Run \\
-%
-\extchoice \\
-	runMeth \\ 
-%
-%
-\circblockclose 
-	 \circseq Methods
-\end{circusaction}
 
 \begin{circusaction}
 runMeth \circdef 
@@ -65,6 +52,19 @@ runRet~.~Reader \then \\
 \end{circusaction}	
 %
 %
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Run \\
+%
+\extchoice \\
+	runMeth \\ 
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
 
 \begin{circusaction}
 \circspot (Methods) \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)

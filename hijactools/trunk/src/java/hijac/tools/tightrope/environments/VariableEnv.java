@@ -5,11 +5,11 @@ public class VariableEnv
 	private String variableName;
 	private String variableType;
 	private Object variableInit;
+	private boolean variableInput;
 
 	public VariableEnv()
 	{
-		super();
-		// TODO Auto-generated constructor stub
+		super();		
 	}
 
 	public VariableEnv(String variableName, String variableType,
@@ -26,6 +26,15 @@ public class VariableEnv
 		{
 			this.variableInit = variableInit;
 		}
+		
+		this.variableInput = false;
+	}
+
+	public VariableEnv(String variableName, String variableType,
+			Object variableInit, String variableInput)
+	{
+		this(variableName, variableType, variableInit );
+		this.variableInput = true;		
 	}
 
 	public String getVariableName()
@@ -57,5 +66,12 @@ public class VariableEnv
 	{
 		this.variableInit = variableInit;
 	}
+
+	public Boolean getVariableInput()
+	{
+		return variableInput;
+	}
+
+	
 
 }

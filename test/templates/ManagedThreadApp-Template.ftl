@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
+  \SECTION ~ ${ProcessID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds, ${ProcessID}Class
 \end{zsection}
 %
 \begin{circus}
@@ -18,6 +18,8 @@ Run \circdef \\
 \circblockclose
 \end{circusaction}	
 
+<#include "Methods-Template.ftl">
+
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
@@ -26,8 +28,6 @@ Methods \circdef \\
 \circblockclose 
 	 \circseq Methods
 \end{circusaction}
-
-<#include "Methods-Template.ftl">
 
 \begin{circusaction}
 \circspot (Methods) \circinterrupt (end\_managedThread\_app~.~${ProcessID} \then \Skip)

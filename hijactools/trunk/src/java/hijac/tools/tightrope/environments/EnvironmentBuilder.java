@@ -52,12 +52,12 @@ public class EnvironmentBuilder
 	{
 		EnvironmentBuilder.analysis = analysis;
 		this.programEnv = new ProgramEnv(analysis);
-	
+
 		// trees = analysis.TREES;
 		// units = analysis.getCompilationUnits();
 		type_elements = analysis.getTypeElements();
 		elems = analysis.ELEMENTS;
-	
+
 	}
 
 	public ProgramEnv getProgramEnv()
@@ -133,7 +133,7 @@ public class EnvironmentBuilder
 
 	private TypeElement getSafelet()
 	{
-//		TypeElement safelet = null;
+		// TypeElement safelet = null;
 		for (TypeElement elem : type_elements)
 		{
 			// TODO needs to be made safer. I think this might fall over if
@@ -141,13 +141,13 @@ public class EnvironmentBuilder
 			if (elem.getInterfaces().toString().contains("Safelet"))
 			{
 				System.out.println("Found Safelet");
-//				safelet = elem;
+				// safelet = elem;
 				packagePrefix = findPackagePrefix(elem);
 
 				programEnv.addSafelet(elem.getSimpleName());
 
-				getVariables(elem, programEnv.getSafelet());		
-				
+				getVariables(elem, programEnv.getSafelet());
+
 				return elem;
 			}
 		}
@@ -158,11 +158,12 @@ public class EnvironmentBuilder
 	{
 
 		ArrayList<Name> topLevelMissionSequencers = null;
-		
-		SafeletLevel2Visitor safeletLevel2Visitor = new SafeletLevel2Visitor(programEnv, analysis);
-		
-		topLevelMissionSequencers = 
-				safeletLevel2Visitor.visitType(safelet, null);
+
+		SafeletLevel2Visitor safeletLevel2Visitor = new SafeletLevel2Visitor(
+				programEnv, analysis);
+
+		topLevelMissionSequencers = safeletLevel2Visitor.visitType(safelet,
+				null);
 
 		for (Name n : topLevelMissionSequencers)
 		{
@@ -191,8 +192,8 @@ public class EnvironmentBuilder
 		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
 		ArrayList<Name> missions = new MissionSequencerLevel2Visitor(
-				programEnv, tlmsClassEnv, analysis).visitType(
-				tlmsElement, null);
+				programEnv, tlmsClassEnv, analysis)
+				.visitType(tlmsElement, null);
 
 		topLevelMissionSequencer.addVariable("this",
 				"\\circreftype " + tlms.toString() + "Class", "\\circnew "
@@ -203,7 +204,8 @@ public class EnvironmentBuilder
 		if (missions == null)
 		{
 			System.out.println("+++ No Missions +++");
-		} else
+		}
+		else
 		{
 			programEnv.newTier();
 
@@ -227,38 +229,40 @@ public class EnvironmentBuilder
 		programEnv.addMission(n);
 
 		MissionEnv missionEnv = programEnv.getFrameworkEnv().getMission(n);
-		
-		
+
 		ClassEnv missionClassEnv = new ClassEnv();
 		missionClassEnv.setName(n);
 		missionEnv.addClassEnv(missionClassEnv);
 
 		String fullName = packagePrefix + n;
-		
-		System.out.println("+++ Building Mission: Full Name = " + fullName + " +++");
+
+		System.out.println("+++ Building Mission: Full Name = " + fullName
+				+ " +++");
 
 		TypeElement missionTypeElem = elems.getTypeElement(fullName);
 
-//		HashMap<Name, Tree> variables = 
-				getVariables(missionTypeElem, missionClassEnv);
+		// HashMap<Name, Tree> variables =
+		getVariables(missionTypeElem, missionClassEnv);
 
-		missionEnv.addVariable("this", "\\circreftype " + n.toString() + "Class", "\\circnew "
-				+ n.toString() + "Class()");
-				
-		ArrayList<Name> schedulables = 
-				new MissionLevel2Visitor(programEnv, missionEnv,  analysis).visitType(missionTypeElem, null);
+		missionEnv.addVariable("this", "\\circreftype " + n.toString()
+				+ "Class", "\\circnew " + n.toString() + "Class()");
+
+		ArrayList<Name> schedulables = new MissionLevel2Visitor(programEnv,
+				missionEnv, analysis).visitType(missionTypeElem, null);
 
 		if (schedulables == null)
 		{
 			System.out.println("+++ No Schedulables +++");
-		} else
+		}
+		else
 		{
 			buildSchedulables(missionEnv, schedulables);
 		}
 
 	}
 
-	private void buildSchedulables(MissionEnv missionEnv, ArrayList<Name> schedulables)
+	private void buildSchedulables(MissionEnv missionEnv,
+			ArrayList<Name> schedulables)
 	{
 
 		ArrayList<Name> nestedSequencers = new ArrayList<Name>();
@@ -266,7 +270,8 @@ public class EnvironmentBuilder
 		{
 			SchedulableTypeE type = getSchedulableType(s);
 
-			//TODO need to get rid of this stupid method call. I add to the Cluster and to the Mission envs
+			// TODO need to get rid of this stupid method call. I add to the
+			// Cluster and to the Mission envs
 			programEnv.addSchedulable(type, s);
 
 			assert (programEnv.containsScheudlable(s));
@@ -306,23 +311,22 @@ public class EnvironmentBuilder
 
 		Iterator<StatementTree> i = members.iterator();
 
-		ArrayList<Name> sycnMeths = new ArrayList<Name>();
+//		ArrayList<Name> sycnMeths = new ArrayList<Name>();
 
-		HashMap<Name, Tree> variables;
+		// HashMap<Name, Tree> variables;
 
 		ParadigmEnv schedulableEnv = programEnv.getSchedulable(s);
 		schedulableEnv.addClassEnv(classEnv);
 
-		variables = getVariables(schedulableType, classEnv);
+		// variables =
+		getVariables(schedulableType, schedulableEnv);
+		// getVariables(schedulableType, classEnv);
 
-		schedulableEnv.addVariable("this", "\\circreftype " + s + "Class",
-				"\\circnew " + s + "Class()");
+		// schedulableEnv.addVariable("this", "\\circreftype " + s + "Class",
+		// "\\circnew " + s + "Class()");
 
 		while (i.hasNext())
 		{
-
-			// ArrayList<Name> tmp = new ArrayList<Name>();
-
 			Tree tlst = i.next();
 
 			if (tlst instanceof MethodTree)
@@ -335,29 +339,31 @@ public class EnvironmentBuilder
 				// tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
 				// analysis, variables, packagePrefix), null);
 
-				MethodVisitor methodVisitor = new MethodVisitor(analysis, schedulableEnv);
+				MethodVisitor methodVisitor = new MethodVisitor(analysis,
+						schedulableEnv);
 				if (mt.getModifiers().getFlags()
 						.contains(Modifier.SYNCHRONIZED))
 				{
 
-					schedulableEnv.getClassEnv().addSyncMeth(methodVisitor.visitMethod(mt, null));
+					schedulableEnv.getClassEnv().addSyncMeth(
+							methodVisitor.visitMethod(mt, null));
 
 					// TODO Add to schedulableEnv but...need a different visitor
-					// because otherwie it'll be outputting too much
+					// because otherwise it'll be outputting too much
 
-				} else if (!(mt.getName().contentEquals("<init>")))
+				}
+				else if (!(mt.getName().contentEquals("<init>")))
 				{
 					if (!(mt.getName().contentEquals("run")))
 					{
 						// TODO Add to schedulableEnv but...need a different
-						// visitor because otherwie it'll be outputting too much
+						// visitor because otherwise it'll be outputting too much
 
 						// schedulableEnv.addSyncMeth(
 						// (new MethodVisitor(analysis,
 						// classEnv).visitMethod(mt, null)));
 					}
-					schedulableEnv.addMeth(methodVisitor
-							.visitMethod(mt, null));
+					schedulableEnv.addMeth(methodVisitor.visitMethod(mt, null));
 				}
 
 			}
@@ -368,7 +374,6 @@ public class EnvironmentBuilder
 			// }
 
 		}
-	
 
 	}
 
@@ -398,7 +403,8 @@ public class EnvironmentBuilder
 			if (missions == null)
 			{
 				System.out.println("+++ No Missions +++");
-			} else
+			}
+			else
 			{
 				System.out.println(" +++ I have " + missions.size()
 						+ " missions +++ ");
@@ -407,7 +413,7 @@ public class EnvironmentBuilder
 				for (Name n : missions)
 				{
 					programEnv.newCluster(sequencer);
-					
+
 					nestedMissionSequencer.addMission(n);
 					System.out.println("+++ Build Mission: " + n + " +++");
 					buildMission(n);
@@ -436,7 +442,8 @@ public class EnvironmentBuilder
 		if (objectEnv != null)
 		{
 			varVisitor = new VariableVisitor(programEnv, objectEnv);
-		} else
+		}
+		else
 		{
 			varVisitor = new VariableVisitor(programEnv);
 		}
@@ -453,37 +460,14 @@ public class EnvironmentBuilder
 			// then it shouldn't be a map
 			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor,
 					true);
-
-			// System.out.println("+++ m == null : " + m == null + " +++" );
-
+			
 			if (m == null)
 			{
 				System.out.println("+++ Variable Visitor Returned Null +++");
 
-			} else
+			}
+			else
 			{
-				// System.out.println("+++ Variable Visitor Returned " + m);
-				// if(s instanceof MethodTree)
-				// {
-				// MethodTree mt = (MethodTree)s;
-				// if(mt.getName().contentEquals("<init>") )
-				// {
-				// System.out.println("*** it was init, continue ***");
-				// continue;
-				// }
-				// else
-				// {
-				// System.out.println("*** Adding 1***");
-				// varMap.putAll(m);
-				// }
-				//
-				// }
-				// else
-				// {
-				// System.out.println("*** Adding 2***");
-				// varMap.putAll(m);
-				// }
-
 				// TODO this is a bit of a hack...
 
 				for (Name n : m.keySet())
@@ -492,9 +476,7 @@ public class EnvironmentBuilder
 							+ m.get(n) + " Kind = " + m.get(n).getKind());
 					varMap.putIfAbsent(n, m.get(n));
 				}
-
 			}
-
 		}
 
 		return varMap;
