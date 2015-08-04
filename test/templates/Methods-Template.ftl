@@ -25,7 +25,11 @@ ${meth.methodName}Ret~.~${ProcessID} \then \\
 %
 <#list SyncMethods as meth >
 \begin{circusaction}
-${meth.methodName}SyncMeth \circdef \\
+${meth.methodName}SyncMeth \circdef 
+<#if meth.returnType != 'null'>
+\circvar ret : ${meth.returnType} \circspot
+</#if>
+\\
 \circblockopen
 ${meth.methodName}Call~.~${ProcessID}~?~thread 
 <#list meth.parameters?keys as param>
@@ -37,7 +41,7 @@ lockAcquired~.~${ProcessID}~.~thread \then \\
 ${meth.body} \circseq  \\
 endSyncMeth~.~${ProcessID}~.~thread \then  \\
 <#if meth.returnType != 'VOID'>
-${meth.methodName}Ret~.~${ProcessID}~.~${meth.returnValue}~.~thread \then \\
+${meth.methodName}Ret~.~${ProcessID}~!~ret~!~thread \then \\
 <#else>
 ${meth.methodName}Ret~.~${ProcessID}~.~thread \then \\
 </#if>
