@@ -157,7 +157,30 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		if(expression instanceof IdentifierTree)
 		{
-			expressionTree = expression;
+//			expressionTree = expression;
+			
+			if(objectEnv.getVariable(varName).isPrimitive())
+			{
+				expressionTree = expression;
+			}
+			else
+				
+			if (! (objectEnv.getName().toString().contains(expression.toString())))
+			{
+				//TODO HACKY! need to get what kind of ID here!
+				final String variableInitAndInput = "?"+varName.toString()+"In";
+//				
+//				objectEnv.addVariable(varName.toString(), 
+//										"MissionID", 
+//										variableInitAndInput, 
+//										variableInitAndInput);
+				
+				
+				
+				objectEnv.addVariableInit(varName.toString(), variableInitAndInput);
+				
+			}
+			
 		}
 		
 		if(expression instanceof LiteralTree)
@@ -175,7 +198,9 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			if(objectEnv!= null && arg1 == true)
 			{
 				objectEnv.addVariableInit(varName, expressionTree);
+//				objectEnv.addVariableInit(varName.toString(), "?"+varName.toString()+"In");
 				
+								
 			}
 		}
 	
@@ -581,7 +606,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			{
 				objectEnv.addVariable(varName.toString(), 
 						varType.toString(), 
-						init);
+						init, true);
 			}
 			else if (! (objectEnv.getName().toString().contains(varType.toString())))
 			{
@@ -591,14 +616,14 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 				objectEnv.addVariable(varName.toString(), 
 										"MissionID", 
 										variableInitAndInput, 
-										variableInitAndInput);
+										variableInitAndInput, false);
 			}
 			else	
 			{
 								
 				objectEnv.addVariable("\\circreftype "+ varName.toString() +"Class", 
 									varType.toString()+"Class", 
-									"\\circnew " +varType.toString()+"Class()");
+									"\\circnew " +varType.toString()+"Class()", false);
 			}
 
 		}

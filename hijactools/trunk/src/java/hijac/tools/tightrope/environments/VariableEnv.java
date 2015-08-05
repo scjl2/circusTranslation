@@ -6,6 +6,7 @@ public class VariableEnv
 	private String variableType;
 	private Object variableInit;
 	private boolean variableInput;
+	private boolean primitive;
 
 	public VariableEnv()
 	{
@@ -13,11 +14,12 @@ public class VariableEnv
 	}
 
 	public VariableEnv(String variableName, String variableType,
-			Object variableInit)
+			Object variableInit, boolean primitive)
 	{
 		super();
 		this.variableName = variableName;
 		this.variableType = variableType;
+		this.primitive = primitive;
 		if(variableInit == null)
 		{
 			this.variableInit = "init\\_placeholder";
@@ -31,9 +33,10 @@ public class VariableEnv
 	}
 
 	public VariableEnv(String variableName, String variableType,
-			Object variableInit, String variableInput)
+			Object variableInit, String variableInput, boolean primitive)
 	{
-		this(variableName, variableType, variableInit );
+		this(variableName, variableType, variableInit, primitive );
+		
 		this.variableInput = true;		
 	}
 
@@ -70,6 +73,16 @@ public class VariableEnv
 	public Boolean getVariableInput()
 	{
 		return variableInput;
+	}
+
+	public boolean isPrimitive()
+	{
+		return primitive;
+	}
+
+	public void setPrimitive(boolean primitive)
+	{
+		this.primitive = primitive;
 	}
 
 	

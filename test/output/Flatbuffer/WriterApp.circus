@@ -18,7 +18,7 @@
 \begin{schema}{Init}
   State~' \\
 \where
-  fbMission' = fbMission\\ 
+  fbMission' = ?fbMissionIn\\ 
   i' = 1\\ 
 \end{schema}
 

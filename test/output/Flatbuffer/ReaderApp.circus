@@ -17,7 +17,7 @@
 \begin{schema}{Init}
   State~' \\
 \where
-  fbMission' = fbMission\\ 
+  fbMission' = ?fbMissionIn\\ 
 \end{schema}
 
 \begin{circusaction}

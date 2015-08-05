@@ -197,7 +197,7 @@ public class EnvironmentBuilder
 
 		topLevelMissionSequencer.addVariable("this",
 				"\\circreftype " + tlms.toString() + "Class", "\\circnew "
-						+ tlms.toString() + "Class()");
+						+ tlms.toString() + "Class()", false);
 
 		getVariables(tlmsElement, tlmsClassEnv);
 
@@ -245,7 +245,7 @@ public class EnvironmentBuilder
 		getVariables(missionTypeElem, missionClassEnv);
 
 		missionEnv.addVariable("this", "\\circreftype " + n.toString()
-				+ "Class", "\\circnew " + n.toString() + "Class()");
+				+ "Class", "\\circnew " + n.toString() + "Class()", true);
 
 		ArrayList<Name> schedulables = new MissionLevel2Visitor(programEnv,
 				missionEnv, analysis).visitType(missionTypeElem, null);

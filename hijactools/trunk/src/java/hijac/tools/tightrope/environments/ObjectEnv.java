@@ -32,9 +32,9 @@ public class ObjectEnv
 	}
 
 	public void addVariable(String variableName, String variableType,
-			Object variableInit)
+			Object variableInit, boolean primitive)
 	{
-		variables.add(new VariableEnv(variableName, variableType, variableInit));		
+		variables.add(new VariableEnv(variableName, variableType, variableInit, primitive));		
 	}
 	
 	public VariableEnv getVariable(Name name)
@@ -90,10 +90,10 @@ public class ObjectEnv
 	}
 
 	public void addVariable(String variableName, String variableType,
-			Object variableInit, String variableInput)
+			Object variableInit, String variableInput, boolean primitive )
 	
 	{
-		variables.add(new VariableEnv(variableName, variableType, variableInit, variableInput));	
+		variables.add(new VariableEnv(variableName, variableType, variableInit, variableInput, primitive));	
 		
 		
 	}
