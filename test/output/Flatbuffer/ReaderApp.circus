@@ -16,6 +16,7 @@
 %
 \begin{schema}{Init}
   State~' \\
+?fbMissionIn : MissionID
 \where
   fbMission' = ?fbMissionIn\\ 
 \end{schema}

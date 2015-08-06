@@ -177,7 +177,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 				
 				
 				
-				objectEnv.addVariableInit(varName.toString(), variableInitAndInput);
+				objectEnv.addVariableInit(varName.toString(), variableInitAndInput, true);
 				
 			}
 			

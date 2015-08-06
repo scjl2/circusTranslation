@@ -85,6 +85,11 @@ public class VariableEnv
 		this.primitive = primitive;
 	}
 
+	public void setVariableInput(boolean variableInput)
+	{
+		this.variableInput = variableInput;
+	}
+
 	
 
 }
