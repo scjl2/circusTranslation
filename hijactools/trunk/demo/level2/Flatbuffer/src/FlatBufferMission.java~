@@ -29,7 +29,8 @@ public class FlatBufferMission extends Mission
 
 		new Reader(new PriorityParameters(10), storageParameters, this).register();
 
-		new Writer(new PriorityParameters(10), storageParameters, this).register();
+		writer = new Writer(new PriorityParameters(10), storageParameters, this);
+writer.register();
 
 		Console.println("FlatBufferMission init");
 	}

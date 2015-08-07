@@ -2,6 +2,7 @@ package hijac.tools.tightrope.visitors;
 
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -70,24 +71,25 @@ import com.sun.source.tree.WildcardTree;
 
 public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 {
-	//TODO This returns Names and Trees, it should return Names and TypeKinds....but how?
-//	private Tree save;
-//	private ArrayList<Name> returns = new ArrayList<Name>();
-//	private ClassTree tree;
+	// TODO This returns Names and Trees, it should return Names and
+	// TypeKinds....but how?
+	// private Tree save;
+	// private ArrayList<Name> returns = new ArrayList<Name>();
+	// private ClassTree tree;
 
-//	private Iterator<StatementTree> i ;
-//	private ProgramEnv programEnv;
+	// private Iterator<StatementTree> i ;
+	private ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
-	
+
 	public VariableVisitor(ProgramEnv programEnv, ObjectEnv objectEnv)
 	{
-//		this.programEnv = programEnv;
+		this.programEnv = programEnv;
 		this.objectEnv = objectEnv;
 	}
 
 	public VariableVisitor(ProgramEnv programEnv)
 	{
-//		this.programEnv = programEnv;
+		// this.programEnv = programEnv;
 	}
 
 	@Override
@@ -139,73 +141,72 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		Name varName = null;
 		Tree expression = arg0.getExpression();
 		Tree expressionTree = null;
-		
-				
+
 		if (variable instanceof IdentifierTree)
 		{
-			varName = ((IdentifierTree) variable).getName();			
+			varName = ((IdentifierTree) variable).getName();
 		}
 		if (variable instanceof MemberSelectTree)
 		{
-			varName = ((MemberSelectTree) variable).getIdentifier();			
-		}
-		
-		if (expression instanceof NewClassTree)
-		{
-			expressionTree = ((NewClassTree) expression).getIdentifier();			
+			varName = ((MemberSelectTree) variable).getIdentifier();
 		}
 
-		if(expression instanceof IdentifierTree)
+		if (expression instanceof NewClassTree)
 		{
-//			expressionTree = expression;
-			
-			if(objectEnv.getVariable(varName).isPrimitive())
-			{
-				expressionTree = expression;
-			}
-			else
-				
-			if (! (objectEnv.getName().toString().contains(expression.toString())))
-			{
-				//TODO HACKY! need to get what kind of ID here!
-				final String variableInitAndInput = "?"+varName.toString()+"In";
-//				
-//				objectEnv.addVariable(varName.toString(), 
-//										"MissionID", 
-//										variableInitAndInput, 
-//										variableInitAndInput);
-				
-				
-				
-				objectEnv.addVariableInit(varName.toString(), variableInitAndInput, true);
-				
-			}
-			
+			expressionTree = ((NewClassTree) expression).getIdentifier();
 		}
-		
-		if(expression instanceof LiteralTree)
+
+		if (expression instanceof IdentifierTree)
+		{
+			// expressionTree = expression;
+
+			final VariableEnv variableWeHave = objectEnv.getVariable(varName);
+			if (variableWeHave != null)
+			{
+				if (variableWeHave.isPrimitive())
+				{
+					expressionTree = expression;
+				}
+				else
+
+				if (!(objectEnv.getName().toString().contains(expression
+						.toString())))
+				{
+					// TODO HACKY! need to get what kind of ID here!
+					final String variableInitAndInput = "?"
+							+ varName.toString() + "In";
+					//
+					// objectEnv.addVariable(varName.toString(),
+					// "MissionID",
+					// variableInitAndInput,
+					// variableInitAndInput);
+
+					objectEnv.addVariableInit(varName.toString(),
+							variableInitAndInput, true);
+
+				}
+			}
+		}
+
+		if (expression instanceof LiteralTree)
 		{
 			expressionTree = expression;
 		}
-		
-	
-		
-		if(varName != null & expressionTree != null)
+
+		if (varName != null & expressionTree != null)
 		{
 			System.out.println("Adding to Var Map");
 			returnMap = new HashMap<Name, Tree>();
 			returnMap.put(varName, expressionTree);
-			if(objectEnv!= null && arg1 == true)
+			if (objectEnv != null && arg1 == true)
 			{
 				objectEnv.addVariableInit(varName, expressionTree);
-//				objectEnv.addVariableInit(varName.toString(), "?"+varName.toString()+"In");
-				
-								
+				// objectEnv.addVariableInit(varName.toString(),
+				// "?"+varName.toString()+"In");
+
 			}
 		}
-	
-		
-		
+
 		return returnMap;
 
 	}
@@ -234,12 +235,13 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			StatementTree st = i.next();
 			System.out.println("Var Visitor Block: st kind = " + st.getKind());
 			Map<Name, Tree> statementReturn = st.accept(this, arg1);
-			
+
 			if (statementReturn != null)
 			{
 				System.out.println("Var Visitor: Block: Returned Adding");
 				returnMap.putAll(statementReturn);
-			} else
+			}
+			else
 			{
 				System.out.println("Var Visitor: Block: Returned Null");
 			}
@@ -438,17 +440,19 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitMethod(MethodTree arg0, Boolean arg1)
 	{
 
-		if(arg0.getName().contentEquals("<init>"))
+		if (arg0.getName().contentEquals("<init>"))
 		{
-			System.out.println("+++ Var Visitor : Method Visitor found <init> +++");
+			System.out
+					.println("+++ Var Visitor : Method Visitor found <init> +++");
 			return arg0.getBody().accept(this, true);
 		}
 		else
 		{
-			System.out.println("+++ Var Visitor : Method Visitor found method +++");
+			System.out
+					.println("+++ Var Visitor : Method Visitor found method +++");
 			return arg0.getBody().accept(this, false);
 		}
-		
+
 	}
 
 	@Override
@@ -585,45 +589,51 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		System.out.println("-> Name = " + arg0.getName() + " Type = "
 				+ arg0.getType() + " Init = " + arg0.getInitializer());
-		
+
 		Name varName = arg0.getName();
-		
-		
+
 		Tree varType = arg0.getType();
-		
+
 		String init = "";
-		if(arg0.getInitializer() != null)
+		if (arg0.getInitializer() != null)
 		{
 			init = arg0.getInitializer().toString();
 		}
-		
+
 		r.put(varName, varType);
 
 		// System.out.println("+++ r is null : " + r == null + " +++");
-		if(objectEnv != null && arg1 == true)
+		if (objectEnv != null && arg1 == true)
 		{
-			if(varType.getKind()== Tree.Kind.PRIMITIVE_TYPE)
+			if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
 			{
-				objectEnv.addVariable(varName.toString(), 
-						varType.toString(), 
+				objectEnv.addVariable(varName.toString(), varType.toString(),
 						init, true);
 			}
-			else if (! (objectEnv.getName().toString().contains(varType.toString())))
+			else if ((!(objectEnv.getName().toString().contains(varType
+					.toString()))))
 			{
-				//TODO HACKY! need to get what kind of ID here!
-				final String variableInitAndInput = "?"+varName.toString()+"In";
-				
-				objectEnv.addVariable(varName.toString(), 
-										"MissionID", 
-										variableInitAndInput, 
-										variableInitAndInput, false);
+				//if (programEnv.getSchedulable(varName) != null)
+				{
+
+					// TODO HACKY! need to get what kind of ID here!
+					final String variableInitAndInput = "?"
+							+ varName.toString() + "In";
+
+					objectEnv.addVariable(varName.toString(), "MissionID",
+							variableInitAndInput, variableInitAndInput, false);
+				}
 			}
-			else	
+			else if (programEnv.getSchedulable(varName) != null)
 			{
-								
-				objectEnv.addVariable("\\circreftype "+ varName.toString() +"Class", 
-									varType.toString()+"Class", 
-									"\\circnew " +varType.toString()+"Class()", false);
+				
+			}
+			else
+			{
+
+				objectEnv.addVariable("\\circreftype " + varName.toString()
+						+ "Class", varType.toString() + "Class", "\\circnew "
+						+ varType.toString() + "Class()", false);
 			}
 
 		}
