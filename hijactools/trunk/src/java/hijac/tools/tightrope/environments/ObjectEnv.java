@@ -13,12 +13,14 @@ public class ObjectEnv
 //	ClassTree classTree;
 	Name name;
 	List<VariableEnv> variables;
+	List<VariableEnv> parameters;
 	protected List<MethodEnv> meths;
 	protected List<MethodEnv> syncMeths;
 
 	public ObjectEnv()
 	{
 		variables = new ArrayList<VariableEnv>();
+		parameters = new ArrayList<VariableEnv>();
 	}
 
 	public Name getName()
@@ -112,17 +114,44 @@ public class ObjectEnv
 		
 	}
 
-//	public ClassTree getClassTree()
-//	{
-//		return classTree;
-//	}
-//
-//	public void setClassTree(ClassTree classTree)
-//	{
-//		this.classTree = classTree;
-//	}
+	public List<VariableEnv> getParameters()
+	{
+		return parameters;
+	}
+
+	public void addParameter(VariableEnv parameter)
+	{
+		parameters.add(parameter);
+	}
 	
+	public void addParameter(String variableName, String variableType,
+			Object variableInit, String variableInput, boolean primitive )
 	
+	{
+		parameters.add(new VariableEnv(variableName, variableType, variableInit, variableInput, primitive));	
+		
+		
+	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<Map> paramsList()
+	{
+		List<Map> returnList = new ArrayList<>();
+		
+		for(VariableEnv v : parameters)
+		{
+			Map varMap = new HashMap();
+			varMap.put("VarName", v.getVariableName().toString());
+			varMap.put("VarType", v.getVariableType());
+			varMap.put("VarInit", v.getVariableInit().toString());					
+			varMap.put("VarInput", v.getVariableInput());	
+			
+			
+			returnList.add(varMap);
+		}
+		
+		return returnList;
+	}
+
 
 }

@@ -3,23 +3,9 @@
 \end{zsection}
 %
 \begin{circus}
-\circprocess ReaderApp \circdef \circbegin
+\circprocess ReaderApp \circdef  \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  fbMission : MissionID\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-?fbMissionIn : MissionID
-\where
-  fbMission' = ?fbMissionIn\\ 
-\end{schema}
 
 \begin{circusaction}
 Run \circdef \\

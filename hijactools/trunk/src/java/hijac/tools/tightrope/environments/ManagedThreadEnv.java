@@ -16,7 +16,7 @@ import java.util.Map;
 
 				
 			map.put("Variables", varsList());
-			
+			map.put("Parameters", paramsList());
 			map.put("Methods", methsList());
 			map.put("SyncMethods", syncMethsList());
 			

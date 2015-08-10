@@ -3,11 +3,10 @@
 \end{zsection}
 %
 \begin{circus}
-\circprocess WriterApp \circdef \circbegin
+\circprocess WriterApp \circdef  \circbegin
 \end{circus}
 
 \begin{schema}{State}
-  fbMission : MissionID\\ 
   i : int\\ 
 \end{schema}
 % 
@@ -17,9 +16,7 @@
 %
 \begin{schema}{Init}
   State~' \\
-?fbMissionIn : MissionID
 \where
-  fbMission' = ?fbMissionIn\\ 
   i' = 1\\ 
 \end{schema}
 

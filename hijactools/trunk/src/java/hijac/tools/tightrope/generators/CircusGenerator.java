@@ -298,9 +298,11 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			mtMap = mtEnv.getClassEnv().toMap();
-			translateCommon(mtMap, "Class-Template.ftl", procName
+			if(!mtMap.isEmpty())
+			{
+				translateCommon(mtMap, "Class-Template.ftl", procName
 					+ "Class.circus");
-
+			}
 			// /* Get the template (uses cache internally) */
 			// freemarker.template.Template temp4 =
 			// cfg.getTemplate("ManagedThreadApp-Template.ftl");

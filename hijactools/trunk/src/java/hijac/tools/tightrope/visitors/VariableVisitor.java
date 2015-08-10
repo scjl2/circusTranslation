@@ -620,7 +620,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 					final String variableInitAndInput = "?"
 							+ varName.toString() + "In";
 
-					objectEnv.addVariable(varName.toString(), "MissionID",
+					objectEnv.addParameter(varName.toString(), "MissionID",
 							variableInitAndInput, variableInitAndInput, false);
 				}
 			}
