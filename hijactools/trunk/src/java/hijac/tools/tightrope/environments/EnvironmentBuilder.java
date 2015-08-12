@@ -27,6 +27,32 @@ import com.sun.source.tree.Tree;
 
 public class EnvironmentBuilder
 {
+	private static final String VARIABLE_VISITOR_RETURNED_NULL = "+++ Variable Visitor Returned Null +++";
+
+	private static final String BUILD_MISSION = "+++ Build Mission: ";
+
+	private static final String NO_MISSIONS = "+++ No Missions +++";
+
+	private static final String BUILDING_SCHEDULABLE_MISSION_SEQUENCERS = "+++ Building Schedulable Mission Sequencers +++";
+
+	private static final String BUILDING_SCHEDULABLE = "+++ Building Schedulable ";
+
+	private static final String NO_SCHEDULABLES = "+++ No Schedulables +++";
+
+	private static final String CIRCNEW = "\\circnew ";
+
+	private static final String CLASS = "Class";
+
+	private static final String CLASS_BRACKETS = "Class()";
+
+	private static final String CIRCREFTYPE = "\\circreftype ";
+
+	private static final String THIS = "this";
+
+	private static final String BUILDING_MISSION = "+++ Building Mission ";
+
+	private static final String END_PLUSES = " +++";
+
 	private static final String ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME = "javax.safetycritical.OneShotEventHandler";
 
 	private static final String APERIODIC_EVENT_HANDLER_QUALIFIED_NAME = "javax.safetycritical.AperiodicEventHandler";
@@ -164,12 +190,15 @@ public class EnvironmentBuilder
 
 		topLevelMissionSequencers = safeletLevel2Visitor.visitType(safelet,
 				null);
+		
+		final String output = "+++ Exploring Top Level Sequencer ";
 
 		for (Name n : topLevelMissionSequencers)
 		{
 			System.out.println();
-			System.out.println("+++ Exploring Top Level Sequencer " + n
-					+ " +++");
+			
+			System.out.println(output + n
+					+ END_PLUSES);
 			System.out.println();
 			programEnv.addTopLevelMissionSequencer(n);
 		}
@@ -195,24 +224,26 @@ public class EnvironmentBuilder
 				programEnv, tlmsClassEnv, analysis)
 				.visitType(tlmsElement, null);
 
-		topLevelMissionSequencer.addVariable("this",
-				"\\circreftype " + tlms.toString() + "Class", "\\circnew "
-						+ tlms.toString() + "Class()", false);
+		topLevelMissionSequencer.addVariable(THIS,
+				CIRCREFTYPE + tlms.toString() + CLASS, CIRCNEW
+						+ tlms.toString() + CLASS_BRACKETS, false);
 
 		getVariables(tlmsElement, tlmsClassEnv);
 
 		if (missions == null)
 		{
-			System.out.println("+++ No Missions +++");
+			System.out.println(NO_MISSIONS);
 		}
 		else
 		{
 			programEnv.newTier();
-
+			final String output = "+++ Exploring Mission ";
+			
 			for (Name n : missions)
 			{
 				programEnv.newCluster(tlms);
-				System.out.println("+++ Exploring Mission " + n + " +++");
+				
+				System.out.println(output + n + END_PLUSES);
 				topLevelMissionSequencer.addMission(n);
 
 				buildMission(n);
@@ -223,7 +254,7 @@ public class EnvironmentBuilder
 	private void buildMission(Name n)
 	{
 		System.out.println();
-		System.out.println("+++ Building Mission " + n + " +++");
+		System.out.println(BUILDING_MISSION + n + END_PLUSES);
 		System.out.println();
 
 		programEnv.addMission(n);
@@ -236,23 +267,23 @@ public class EnvironmentBuilder
 
 		String fullName = packagePrefix + n;
 
-		System.out.println("+++ Building Mission: Full Name = " + fullName
-				+ " +++");
+//		System.out.println("+++ Building Mission: Full Name = " + fullName
+//				+ END_PLUSES);
 
 		TypeElement missionTypeElem = elems.getTypeElement(fullName);
 
 		// HashMap<Name, Tree> variables =
 		getVariables(missionTypeElem, missionClassEnv);
 
-		missionEnv.addVariable("this", "\\circreftype " + n.toString()
-				+ "Class", "\\circnew " + n.toString() + "Class()", true);
+		missionEnv.addVariable(THIS, CIRCREFTYPE + n.toString()
+				+ CLASS, CIRCNEW + n.toString() + CLASS_BRACKETS, true);
 
 		ArrayList<Name> schedulables = new MissionLevel2Visitor(programEnv,
 				missionEnv, analysis).visitType(missionTypeElem, null);
 
 		if (schedulables == null)
 		{
-			System.out.println("+++ No Schedulables +++");
+			System.out.println(NO_SCHEDULABLES);
 		}
 		else
 		{
@@ -294,7 +325,7 @@ public class EnvironmentBuilder
 	private void buildShedulable(Name s)
 	{
 		System.out.println();
-		System.out.println("+++ Building Schedulable " + s + " +++");
+		System.out.println(BUILDING_SCHEDULABLE + s + END_PLUSES);
 		System.out.println();
 
 		ClassEnv classEnv = new ClassEnv();
@@ -302,7 +333,7 @@ public class EnvironmentBuilder
 
 		String fullName = packagePrefix + s;
 		Elements elems = analysis.ELEMENTS;
-		System.out.println("Building Schedulable: Full Name = " + fullName);
+//		System.out.println("Building Schedulable: Full Name = " + fullName);
 		TypeElement schedulableType = elems.getTypeElement(fullName);
 
 		ClassTree ct = analysis.TREES.getTree(schedulableType);
@@ -332,10 +363,7 @@ public class EnvironmentBuilder
 			if (tlst instanceof MethodTree)
 			{
 				MethodTree mt = (MethodTree) tlst;
-
-				System.out
-						.println("*** Method Name = " + mt.getName() + " ***");
-
+				
 				// tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
 				// analysis, variables, packagePrefix), null);
 
@@ -366,13 +394,7 @@ public class EnvironmentBuilder
 					schedulableEnv.addMeth(methodVisitor.visitMethod(mt, null));
 				}
 
-			}
-
-			// if (tmp != null)
-			// {
-			// sycnMeths.addAll(tmp);
-			// }
-
+			}			
 		}
 
 	}
@@ -381,7 +403,7 @@ public class EnvironmentBuilder
 			ArrayList<Name> nestedSequencers)
 	{
 		System.out.println();
-		System.out.println("+++ Building Schedulable Mission Sequencers +++");
+		System.out.println(BUILDING_SCHEDULABLE_MISSION_SEQUENCERS);
 		System.out.println();
 
 		TypeElement tlmsElement;
@@ -402,12 +424,12 @@ public class EnvironmentBuilder
 
 			if (missions == null)
 			{
-				System.out.println("+++ No Missions +++");
+				System.out.println(NO_MISSIONS);
 			}
 			else
 			{
-				System.out.println(" +++ I have " + missions.size()
-						+ " missions +++ ");
+//				System.out.println(" +++ I have " + missions.size()
+//						+ " missions +++ ");
 				programEnv.newTier();
 
 				for (Name n : missions)
@@ -415,7 +437,7 @@ public class EnvironmentBuilder
 					programEnv.newCluster(sequencer);
 
 					nestedMissionSequencer.addMission(n);
-					System.out.println("+++ Build Mission: " + n + " +++");
+					System.out.println(BUILD_MISSION + n + END_PLUSES);
 					buildMission(n);
 				}
 			}
@@ -463,7 +485,7 @@ public class EnvironmentBuilder
 			
 			if (m == null)
 			{
-				System.out.println("+++ Variable Visitor Returned Null +++");
+				System.out.println(VARIABLE_VISITOR_RETURNED_NULL);
 
 			}
 			else
@@ -472,8 +494,8 @@ public class EnvironmentBuilder
 
 				for (Name n : m.keySet())
 				{
-					System.out.println("\t*** Name = " + n + " Type = "
-							+ m.get(n) + " Kind = " + m.get(n).getKind());
+//					System.out.println("\t*** Name = " + n + " Type = "
+//							+ m.get(n) + " Kind = " + m.get(n).getKind());
 					varMap.putIfAbsent(n, m.get(n));
 				}
 			}
@@ -489,12 +511,12 @@ public class EnvironmentBuilder
 		public Map toMap()
 		{
 			Map map = new HashMap();
-			map.put("ProcessID", name.toString());
+			map.put(PROCESS_ID, name.toString());
 			// map.put("handlerType", "aperiodic");
 			// map.put("importName", "Aperiodic");
-			map.put("Methods", methsList());
-			map.put("SyncMethods", syncMethsList());
-			map.put("Variables", varsList());
+			map.put(METHODS, methsList());
+			map.put(SYNC_METHODS, syncMethsList());
+			map.put(VARIABLES_STR, varsList());
 
 			return map;
 		}

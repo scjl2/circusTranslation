@@ -1,20 +1,21 @@
 package hijac.tools.tightrope.environments;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class AperiodicEventHandlerEnv extends ParadigmEnv
+public class AperiodicEventHandlerEnv extends EventHandlerEnv
 {
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Map toMap()
-	{
-		Map map = new HashMap();
-		map.put("ProcessID", name.toString());
-		map.put("handlerType", "aperiodic");
-		map.put("importName", "Aperiodic");
-		
-		map.put("Variables", varsList());
 
-		return map;
+	private static final String IMPORT_NAME = "Aperiodic";
+	private static final String HANDLER_TYPE = "aperiodic";
+
+	@Override
+	public String getHandlerType()
+	{
+		return HANDLER_TYPE;
 	}
+
+	@Override
+	public String getImportName()
+	{
+		return IMPORT_NAME;
+	}
+
 }

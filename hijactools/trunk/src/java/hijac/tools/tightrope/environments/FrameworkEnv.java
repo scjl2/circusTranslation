@@ -10,8 +10,9 @@ import javax.lang.model.element.Name;
 
 public class FrameworkEnv
 {
-	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-	
+	private static final String LINE_SEPARATOR = System
+			.getProperty("line.separator");
+
 	private ControlTierEnv controlTier;
 
 	private List<TierEnv> tiers;
@@ -72,7 +73,7 @@ public class FrameworkEnv
 			output += LINE_SEPARATOR;
 
 			List<MethodEnv> methods = safeletEnv.getMeths();
-			//TODO Output sync meths?
+			// TODO Output sync meths?
 			output = outputMethods(output, methods);
 			output += LINE_SEPARATOR;
 			output += "Top-Level Mission Sequencer: "
@@ -80,7 +81,7 @@ public class FrameworkEnv
 			output += LINE_SEPARATOR;
 			output += "Top Level Sequencer Methods:";
 			output += LINE_SEPARATOR;
-			
+
 			methods = topLevelMissionSequencerEnv.getMeths();
 			output = outputMethods(output, methods);
 
@@ -89,22 +90,23 @@ public class FrameworkEnv
 		}
 
 		private String outputMethods(String output, List<MethodEnv> methods)
-		{					
+		{
 			if (methods.size() <= 0)
 			{
 				output += "No Methods";
-			} else
+			}
+			else
 			{
 
 				for (MethodEnv me : methods)
 				{
 					String params = "";
-					Map<String, Type> parameterMap =me.getParameters();
-					if(parameterMap != null)
+					Map<String, Type> parameterMap = me.getParameters();
+					if (parameterMap != null)
 					{
 						params = parameterMap.toString();
 					}
-					
+
 					output += me.getReturnType() + ":" + me.getMethodName()
 							+ "(" + params + ")";
 				}
@@ -173,7 +175,8 @@ public class FrameworkEnv
 			if (misssionSequeners.isEmpty())
 			{
 				return null;
-			} else
+			}
+			else
 			{
 				return misssionSequeners;
 			}
@@ -184,7 +187,8 @@ public class FrameworkEnv
 			if (clusters.isEmpty())
 			{
 				return "Tier Empty";
-			} else
+			}
+			else
 			{
 				String output = "";
 				for (ClusterEnv c : clusters)
@@ -278,7 +282,7 @@ public class FrameworkEnv
 
 	private class SchedulablesEnv
 	{
-		
+
 		private List<PeriodicEventHandlerEnv> periodEventHandlerEnvs = new ArrayList<PeriodicEventHandlerEnv>();
 		private List<AperiodicEventHandlerEnv> aperiodicEventHandlerEnvs = new ArrayList<AperiodicEventHandlerEnv>();
 		private List<OneShotEventHandlerEnv> oneShotEventHandlerEnvs = new ArrayList<OneShotEventHandlerEnv>();
@@ -421,7 +425,7 @@ public class FrameworkEnv
 
 		public String toString()
 		{
-			
+
 			StringBuilder output = new StringBuilder("Schedulables:");
 			output.append(LINE_SEPARATOR);
 
@@ -432,56 +436,56 @@ public class FrameworkEnv
 
 				for (PeriodicEventHandlerEnv p : periodEventHandlerEnvs)
 				{
-					output.append( "\t" + p.getName());
-					output .append( LINE_SEPARATOR);
+					output.append("\t" + p.getName());
+					output.append(LINE_SEPARATOR);
 				}
 			}
 
 			if (!aperiodicEventHandlerEnvs.isEmpty())
 			{
-				output .append("Aperidic Event Handlers:");
-				output .append(LINE_SEPARATOR);
+				output.append("Aperidic Event Handlers:");
+				output.append(LINE_SEPARATOR);
 
-				for (AperiodicEventHandlerEnv p : aperiodicEventHandlerEnvs)
+				for (ObjectEnv p : aperiodicEventHandlerEnvs)
 				{
-					output .append( "\t" + p.getName());
-					output .append( LINE_SEPARATOR);
+					output.append("\t" + p.getName());
+					output.append(LINE_SEPARATOR);
 				}
 			}
 
 			if (!oneShotEventHandlerEnvs.isEmpty())
 			{
-				output .append("OneShot Event Handlers:");
-				output .append(LINE_SEPARATOR);
+				output.append("OneShot Event Handlers:");
+				output.append(LINE_SEPARATOR);
 
 				for (OneShotEventHandlerEnv p : oneShotEventHandlerEnvs)
 				{
-					output .append( "\t" + p.getName());
-					output .append( LINE_SEPARATOR);
+					output.append("\t" + p.getName());
+					output.append(LINE_SEPARATOR);
 				}
 			}
 
 			if (!schedulableMissionSequencerEnvs.isEmpty())
 			{
-				output.append( "Schedulable Mission Sequencers:");
-				output.append( LINE_SEPARATOR);
+				output.append("Schedulable Mission Sequencers:");
+				output.append(LINE_SEPARATOR);
 
 				for (NestedMissionSequencerEnv p : schedulableMissionSequencerEnvs)
 				{
-					output .append( "\t" + p.getName());
-					output .append( LINE_SEPARATOR);
+					output.append("\t" + p.getName());
+					output.append(LINE_SEPARATOR);
 				}
 			}
 
 			if (!managedThreadEnvs.isEmpty())
 			{
-				output .append( "Managed Threads:");
-				output .append( LINE_SEPARATOR);
+				output.append("Managed Threads:");
+				output.append(LINE_SEPARATOR);
 
 				for (ManagedThreadEnv p : managedThreadEnvs)
 				{
-					output .append( "\t" + p.getName());
-					output .append(LINE_SEPARATOR);
+					output.append("\t" + p.getName());
+					output.append(LINE_SEPARATOR);
 
 				}
 			}
@@ -568,17 +572,6 @@ public class FrameworkEnv
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 	{
 		controlTier.addTopLevelMissionSequencer(topLevelMissionSequencer);
-
-		//
-		// TierEnv tier = new TierEnv();
-		// currentTier = tier;
-		//
-		// ClusterEnv cluster = new ClusterEnv();
-		// currentCuster = cluster;
-		//
-		// tier.addCluster(cluster);
-		//
-		// tiers.add(tier);
 	}
 
 	public void addMission(Name mission)
@@ -590,7 +583,7 @@ public class FrameworkEnv
 	{
 		currentCluster = new ClusterEnv(sequencer);
 
-		System.out.println("Current Tier " + currentTier);
+		// System.out.println("Current Tier " + currentTier);
 
 		currentTier.addCluster(currentCluster);
 	}
@@ -604,17 +597,17 @@ public class FrameworkEnv
 
 	public String toString()
 	{
-	
+
 		String top = "Control Tier:";
-		top +=(LINE_SEPARATOR);
-		top +=(controlTier.toString());
-		top +=(LINE_SEPARATOR);
-		top +=("Number of Tiers = ");
-		top +=(tiers.size());
-		top +=(LINE_SEPARATOR);
+		top += (LINE_SEPARATOR);
+		top += (controlTier.toString());
+		top += (LINE_SEPARATOR);
+		top += ("Number of Tiers = ");
+		top += (tiers.size());
+		top += (LINE_SEPARATOR);
 
 		StringBuilder output = new StringBuilder(top);
-		
+
 		int i = 0;
 		for (TierEnv tier : tiers)
 		{
@@ -628,7 +621,7 @@ public class FrameworkEnv
 			output.append(tier.clusters.size());
 			output.append(LINE_SEPARATOR);
 			output.append(tier.toString());
-			
+
 			i++;
 
 		}
@@ -699,7 +692,6 @@ public class FrameworkEnv
 			{
 				missions.add(c.missionEnv);
 			}
-
 		}
 
 		return missions;
@@ -722,12 +714,12 @@ public class FrameworkEnv
 	}
 
 	// Bit hacky
-	public void addMissionSequencerMission(Name tlms, Name n)
+	public void addMissionSequencerMission(Name missionSequencerName, Name missionName)
 	{
-		System.out.println("*** Adding " + n + " to " + tlms + " ***");
-		if (controlTier.topLevelMissionSequencerEnv.getName() == tlms)
+//		System.out.println("*** Adding " + n + " to " + tlms + " ***");
+		if (controlTier.topLevelMissionSequencerEnv.getName() == missionSequencerName)
 		{
-			controlTier.topLevelMissionSequencerEnv.addMission(n);
+			controlTier.topLevelMissionSequencerEnv.addMission(missionName);
 		}
 
 		for (TierEnv t : tiers)
@@ -739,11 +731,11 @@ public class FrameworkEnv
 				{
 					for (NestedMissionSequencerEnv p : c.schedulablesEnv.schedulableMissionSequencerEnvs)
 					{
-						if (p.getName() == tlms)
+						if (p.getName() == missionSequencerName)
 						{
 							System.out
 									.println("Trting to Add Mission to Nested Sequencer");
-							p.addMission(n);
+							p.addMission(missionName);
 						}
 					}
 				}
