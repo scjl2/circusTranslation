@@ -75,7 +75,7 @@ lockAcquired~.~FlatBufferMission~.~thread \then \\
 
 
   \circseq \\
-  this.notify()  
+  notify~.~FlatBufferMissionObject~?~thread \then \\\Skip()  
 
 
   \circblockclose
@@ -104,7 +104,7 @@ lockAcquired~.~FlatBufferMission~.~thread \then \\
 
 
   \circseq \\
-  this.notify()  
+  notify~.~FlatBufferMissionObject~?~thread \then \\\Skip()  
 
 
   \circseq \\
@@ -129,7 +129,7 @@ lockAcquired~.~FlatBufferMission~.~thread \then \\
   \circblockopen
 
 
-  this.wait()  
+  waitCall~.~FlatBufferMissionObject~?~thread \then\\waitRet~.~FlatBufferMissionObject~?~thread \then\\\Skip()  
 
 
   \circblockclose

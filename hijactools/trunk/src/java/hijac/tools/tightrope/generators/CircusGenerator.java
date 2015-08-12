@@ -293,6 +293,8 @@ public class CircusGenerator
 			/* Create a data-model */
 			Map mtMap = mtEnv.toMap();
 
+			System.out.println("/// params = " + mtMap.get("Parameters").toString());
+			
 			procName = mtEnv.getName().toString();
 			translateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName
 					+ APP_CIRCUS);

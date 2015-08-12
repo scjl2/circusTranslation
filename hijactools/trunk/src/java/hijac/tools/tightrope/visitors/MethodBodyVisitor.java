@@ -55,6 +55,14 @@ import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
 
+/**
+ * This class visits a method and returns a String representing its body.
+ * 
+ * Adapted from <code>hijac.tools.modelgen.circus.visitors.AMethodVisitor</code>.
+ * 
+ * @author Matt Luckcuck
+ */
+
 public class MethodBodyVisitor extends
 		SimpleTreeVisitor<String, MethodVisitorContext>
 {
@@ -417,9 +425,44 @@ public class MethodBodyVisitor extends
 	public String visitMemberSelect(MemberSelectTree node,
 			MethodVisitorContext ctxt)
 	{
+		Name identifier = node.getIdentifier();
+		Name objectEnvName = object.getName();
+		StringBuilder sb = new StringBuilder();
+				
+		if(identifier.contentEquals("notify"))
+		{
+			sb.append("notify~.~");
+			sb.append(objectEnvName.toString());
+			sb.append("Object");
+			sb.append("~?~thread \\then ");
+			sb.append("\\\\");
+			sb.append("\\Skip");
+			
+			return  sb.toString() ;
+		}
+		else if (identifier.contentEquals("wait"))
+		{
+			sb.append("waitCall~.~");
+			sb.append(objectEnvName.toString());
+			sb.append("Object");
+			sb.append("~?~thread \\then");
+			sb.append("\\\\");
+			sb.append("waitRet~.~");
+			sb.append(objectEnvName.toString());
+			sb.append("Object");
+			sb.append("~?~thread \\then");
+			sb.append("\\\\");
+			sb.append("\\Skip");
+			
+			return  sb.toString() ;
+		}
+		else
+		{
+			
 		/* Are MemberSelect nodes also used for selecting methods too? */
 		return callExprMacro(node, ctxt, "MemberSelect", node.getExpression(),
 				node.getIdentifier());
+		}
 	}
 
 	@Override
