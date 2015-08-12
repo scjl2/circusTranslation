@@ -500,45 +500,4 @@ public class EnvironmentBuilder
 		}
 		
 	}
-
-	// private Name[] buildMissionSequencers(Name[] names, String packagePrefix,
-	// Name[] missionNames)
-	// {
-	// if (names != null)
-	// {
-	// System.out.println("Mission Sequencer Visiting");
-	// for (int i = 0; i < names.length; i++)
-	// {
-	// programEnv.addTopLevelMissionSequencer(names[i]);
-	// // System.out.println(packagePrefix +names[i]);
-	// TypeElement elem = analysis.getTypeElement(packagePrefix
-	// + names[i]);
-	//
-	// System.out.println("Visiting: " + elem);
-	// // missionNames = elem.accept(new
-	// // MissionSequencerLevel2Visitor(programEnv, analysis),
-	// // null);
-	// }
-	// }
-	// return missionNames;
-	// }
-	//
-	// private void buildMissions(String packagePrefix, Name[] missionNames)
-	// {
-	// Name[] schedulables;
-	// if (missionNames != null)
-	// {
-	// System.out.println("Mission Visiting");
-	// for (int i = 0; i < missionNames.length; i++)
-	// {
-	// programEnv.addMission(missionNames[i]);
-	// TypeElement elem = analysis.getTypeElement(packagePrefix
-	// + missionNames[i]);
-	// System.out.println("Visiting: " + elem);
-	//
-	// elem.accept(new MissionLevel2Visitor(programEnv, analysis),
-	// null);
-	// }
-	// }
-	// }
 }

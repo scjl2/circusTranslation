@@ -10,6 +10,8 @@ import javax.lang.model.element.Name;
 
 public class FrameworkEnv
 {
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+	
 	private ControlTierEnv controlTier;
 
 	private List<TierEnv> tiers;
@@ -65,19 +67,19 @@ public class FrameworkEnv
 		{
 			String output = "";
 			output += "Safelet: " + safeletEnv.getName();
-			output += System.getProperty("line.separator");
+			output += LINE_SEPARATOR;
 			output += "Safelet Methods:";
-			output += System.getProperty("line.separator");
+			output += LINE_SEPARATOR;
 
 			List<MethodEnv> methods = safeletEnv.getMeths();
 			//TODO Output sync meths?
 			output = outputMethods(output, methods);
-			output += System.getProperty("line.separator");
+			output += LINE_SEPARATOR;
 			output += "Top-Level Mission Sequencer: "
 					+ topLevelMissionSequencerEnv.getName();
-			output += System.getProperty("line.separator");
+			output += LINE_SEPARATOR;
 			output += "Top Level Sequencer Methods:";
-			output += System.getProperty("line.separator");
+			output += LINE_SEPARATOR;
 			
 			methods = topLevelMissionSequencerEnv.getMeths();
 			output = outputMethods(output, methods);
@@ -87,7 +89,7 @@ public class FrameworkEnv
 		}
 
 		private String outputMethods(String output, List<MethodEnv> methods)
-		{
+		{					
 			if (methods.size() <= 0)
 			{
 				output += "No Methods";
@@ -136,25 +138,12 @@ public class FrameworkEnv
 		{
 			clusters = new ArrayList<ClusterEnv>();
 			currentCluster = null;
-			// clusters.add(currentCluster);
 		}
-
-		// public List<ClusterEnv> getClusters()
-		// {
-		// return clusters;
-		// }
 
 		public void addCluster(ClusterEnv cluster)
 		{
 			this.clusters.add(cluster);
 		}
-
-		// public void addMission(Name mission)
-		// {
-		// currentCluster.getMissionEnv().setName(mission);
-		// // currentCluster = new
-		// // clusters.add(new ClusterEnv(missionEnv));
-		// }
 
 		public ArrayList<Name> getMissions()
 		{
@@ -277,9 +266,9 @@ public class FrameworkEnv
 		public String toString()
 		{
 			String output = "Cluster Environment:";
-			output += System.getProperty("line.separator");
+			output += LINE_SEPARATOR;
 			output += "\t Mission = " + missionEnv.getName();
-			output += System.getProperty("line.separator");
+			output += LINE_SEPARATOR;
 			output += schedulablesEnv.toString();
 
 			return output;
@@ -289,6 +278,7 @@ public class FrameworkEnv
 
 	private class SchedulablesEnv
 	{
+		
 		private List<PeriodicEventHandlerEnv> periodEventHandlerEnvs = new ArrayList<PeriodicEventHandlerEnv>();
 		private List<AperiodicEventHandlerEnv> aperiodicEventHandlerEnvs = new ArrayList<AperiodicEventHandlerEnv>();
 		private List<OneShotEventHandlerEnv> oneShotEventHandlerEnvs = new ArrayList<OneShotEventHandlerEnv>();
@@ -431,72 +421,72 @@ public class FrameworkEnv
 
 		public String toString()
 		{
-
-			String output = "Schedulables:";
-			output += System.getProperty("line.separator");
+			
+			StringBuilder output = new StringBuilder("Schedulables:");
+			output.append(LINE_SEPARATOR);
 
 			if (!periodEventHandlerEnvs.isEmpty())
 			{
-				output += "Periodic Event Handlers:";
-				output += System.getProperty("line.separator");
+				output.append("Periodic Event Handlers:");
+				output.append(LINE_SEPARATOR);
 
-				for (ObjectEnv p : periodEventHandlerEnvs)
+				for (PeriodicEventHandlerEnv p : periodEventHandlerEnvs)
 				{
-					output += "\t" + p.getName();
-					output += System.getProperty("line.separator");
+					output.append( "\t" + p.getName());
+					output .append( LINE_SEPARATOR);
 				}
 			}
 
 			if (!aperiodicEventHandlerEnvs.isEmpty())
 			{
-				output += "Aperidic Event Handlers:";
-				output += System.getProperty("line.separator");
+				output .append("Aperidic Event Handlers:");
+				output .append(LINE_SEPARATOR);
 
-				for (ObjectEnv p : aperiodicEventHandlerEnvs)
+				for (AperiodicEventHandlerEnv p : aperiodicEventHandlerEnvs)
 				{
-					output += "\t" + p.getName();
-					output += System.getProperty("line.separator");
+					output .append( "\t" + p.getName());
+					output .append( LINE_SEPARATOR);
 				}
 			}
 
 			if (!oneShotEventHandlerEnvs.isEmpty())
 			{
-				output = "OneShot Event Handlers:";
-				output += System.getProperty("line.separator");
+				output .append("OneShot Event Handlers:");
+				output .append(LINE_SEPARATOR);
 
-				for (ObjectEnv p : oneShotEventHandlerEnvs)
+				for (OneShotEventHandlerEnv p : oneShotEventHandlerEnvs)
 				{
-					output += "\t" + p.getName();
-					output += System.getProperty("line.separator");
+					output .append( "\t" + p.getName());
+					output .append( LINE_SEPARATOR);
 				}
 			}
 
 			if (!schedulableMissionSequencerEnvs.isEmpty())
 			{
-				output += "Schedulable Mission Sequencers:";
-				output += System.getProperty("line.separator");
+				output.append( "Schedulable Mission Sequencers:");
+				output.append( LINE_SEPARATOR);
 
-				for (ObjectEnv p : schedulableMissionSequencerEnvs)
+				for (NestedMissionSequencerEnv p : schedulableMissionSequencerEnvs)
 				{
-					output += "\t" + p.getName();
-					output += System.getProperty("line.separator");
+					output .append( "\t" + p.getName());
+					output .append( LINE_SEPARATOR);
 				}
 			}
 
 			if (!managedThreadEnvs.isEmpty())
 			{
-				output += "Managed Threads:";
-				output += System.getProperty("line.separator");
+				output .append( "Managed Threads:");
+				output .append( LINE_SEPARATOR);
 
-				for (ObjectEnv p : managedThreadEnvs)
+				for (ManagedThreadEnv p : managedThreadEnvs)
 				{
-					output += "\t" + p.getName();
-					output += System.getProperty("line.separator");
+					output .append( "\t" + p.getName());
+					output .append(LINE_SEPARATOR);
 
 				}
 			}
 
-			return output;
+			return output.toString();
 		}
 
 		// Could trigger false positive if two schedulable of different types
@@ -614,31 +604,36 @@ public class FrameworkEnv
 
 	public String toString()
 	{
-		String output = "";
-		output += "Control Tier:";
-		output += System.getProperty("line.separator");
-		output += controlTier.toString();
-		output += System.getProperty("line.separator");
+	
+		String top = "Control Tier:";
+		top +=(LINE_SEPARATOR);
+		top +=(controlTier.toString());
+		top +=(LINE_SEPARATOR);
+		top +=("Number of Tiers = ");
+		top +=(tiers.size());
+		top +=(LINE_SEPARATOR);
 
-		output += "Number of Tiers = " + tiers.size();
-		output += System.getProperty("line.separator");
-
+		StringBuilder output = new StringBuilder(top);
+		
 		int i = 0;
 		for (TierEnv tier : tiers)
 		{
-			output += "Tier " + i + ":";
-			output += System.getProperty("line.separator");
-			output += "Number of Clusters in Tier " + i + " = "
-					+ tier.clusters.size();
-			output += System.getProperty("line.separator");
-			output += tier.toString();
-			// output += System.getProperty("line.separator");
-
+			output.append("Tier ");
+			output.append(i);
+			output.append(":");
+			output.append(LINE_SEPARATOR);
+			output.append("Number of Clusters in Tier ");
+			output.append(i);
+			output.append(" = ");
+			output.append(tier.clusters.size());
+			output.append(LINE_SEPARATOR);
+			output.append(tier.toString());
+			
 			i++;
 
 		}
 
-		return output;
+		return output.toString();
 	}
 
 	public void addSchedulable(SchedulableTypeE type, Name name)
