@@ -276,8 +276,27 @@ public class MethodBodyVisitor extends
 	public String visitAssignment(AssignmentTree node, MethodVisitorContext ctxt)
 	{
 		/* Should we check that we are not inside an expression? */
-		return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
-				node.getExpression());
+		if(node.getExpression() instanceof MethodInvocationTree)
+		{
+			MethodInvocationTree mit = (MethodInvocationTree) node.getExpression();
+			
+			if(isSyncMethod(mit))
+			{
+				return visitMethodInvocation(mit, ctxt);
+			}
+			else
+			{
+				return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
+						node.getExpression());
+			}
+		}
+		else
+		{
+		
+			return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
+					node.getExpression());
+		}
+		
 	}
 
 	@Override
@@ -534,7 +553,26 @@ public class MethodBodyVisitor extends
 		}
 		else if (isSyncMethod(node))
 		{
-			sb.append("TEST");
+			sb.append(identifier);
+			sb.append("Call");
+			sb.append("~.~");
+			sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression().toString());
+			sb.append("~.~");
+			sb.append(objectEnvName.toString());
+			sb.append("\\then \\\\");
+			
+			sb.append(identifier);
+			sb.append("Ret");
+			sb.append("~.~");
+			sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression().toString());
+			sb.append("~.~");
+			sb.append(objectEnvName.toString());
+			sb.append("\\then \\\\");
+			sb.append("\\Skip");
+			
+			
+			
+			
 
 			return sb.toString();
 		}
