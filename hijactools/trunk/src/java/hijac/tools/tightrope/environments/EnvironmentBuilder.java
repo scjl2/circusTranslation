@@ -333,7 +333,7 @@ public class EnvironmentBuilder
 
 		String fullName = packagePrefix + s;
 		Elements elems = analysis.ELEMENTS;
-//		System.out.println("Building Schedulable: Full Name = " + fullName);
+
 		TypeElement schedulableType = elems.getTypeElement(fullName);
 
 		ClassTree ct = analysis.TREES.getTree(schedulableType);
@@ -342,20 +342,12 @@ public class EnvironmentBuilder
 
 		Iterator<StatementTree> i = members.iterator();
 
-//		ArrayList<Name> sycnMeths = new ArrayList<Name>();
-
-		// HashMap<Name, Tree> variables;
 
 		ParadigmEnv schedulableEnv = programEnv.getSchedulable(s);
 		schedulableEnv.addClassEnv(classEnv);
 
-		// variables =
 		getVariables(schedulableType, schedulableEnv);
-		// getVariables(schedulableType, classEnv);
-
-		// schedulableEnv.addVariable("this", "\\circreftype " + s + "Class",
-		// "\\circnew " + s + "Class()");
-
+		
 		while (i.hasNext())
 		{
 			Tree tlst = i.next();
@@ -363,10 +355,7 @@ public class EnvironmentBuilder
 			if (tlst instanceof MethodTree)
 			{
 				MethodTree mt = (MethodTree) tlst;
-				
-				// tmp = tlst.accept(new ManagedThreadVisitor(programEnv,
-				// analysis, variables, packagePrefix), null);
-
+	
 				MethodVisitor methodVisitor = new MethodVisitor(analysis,
 						schedulableEnv);
 				if (mt.getModifiers().getFlags()
@@ -374,10 +363,7 @@ public class EnvironmentBuilder
 				{
 
 					schedulableEnv.getClassEnv().addSyncMeth(
-							methodVisitor.visitMethod(mt, null));
-
-					// TODO Add to schedulableEnv but...need a different visitor
-					// because otherwise it'll be outputting too much
+						methodVisitor.visitMethod(mt, null));
 
 				}
 				else if (!(mt.getName().contentEquals("<init>")))

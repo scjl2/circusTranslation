@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.visitors;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javacutils.TreeUtils;
@@ -18,6 +19,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.EmptyStatementTree;
@@ -45,12 +47,14 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SimpleTreeVisitor;
 
+import hijac.tools.application.TightRopeTest;
 import hijac.tools.modelgen.circus.templates.CircusTemplateFactory;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
 
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
@@ -58,7 +62,8 @@ import hijac.tools.tightrope.utils.NewTransUtils;
 /**
  * This class visits a method and returns a String representing its body.
  * 
- * Adapted from <code>hijac.tools.modelgen.circus.visitors.AMethodVisitor</code>.
+ * Adapted from <code>hijac.tools.modelgen.circus.visitors.AMethodVisitor</code>
+ * .
  * 
  * @author Matt Luckcuck
  */
@@ -178,7 +183,8 @@ public class MethodBodyVisitor extends
 		{
 			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT,
 					object, methodEnv));
-		} else
+		}
+		else
 		{
 			ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT,
 					object));
@@ -344,7 +350,8 @@ public class MethodBodyVisitor extends
 		if (node.toString().contains("Console"))
 		{
 			return "";
-		} else
+		}
+		else
 		{
 			return callStmtMacro(node, ctxt, "ExpressionStatement",
 					node.getExpression());
@@ -398,22 +405,26 @@ public class MethodBodyVisitor extends
 				{
 
 					return "nullMissionId";
-				} else if (returnType.contains("SchedulableId"))
+				}
+				else if (returnType.contains("SchedulableId"))
 				{
 					return "nullSchedulableId";
-				} else
+				}
+				else
 				{
 					System.out.println("/// String is null");
 					return NewTransUtils.encodeLiteral(node);
 				}
-			} else
+			}
+			else
 			{
 
 				System.out.println("///  kind is not new class or identifier");
 				return NewTransUtils.encodeLiteral(node);
 			}
 
-		} else
+		}
+		else
 		{
 
 			System.out.println("/// methodEnv is null ");
@@ -425,44 +436,44 @@ public class MethodBodyVisitor extends
 	public String visitMemberSelect(MemberSelectTree node,
 			MethodVisitorContext ctxt)
 	{
-//		Name identifier = node.getIdentifier();
-//		Name objectEnvName = object.getName();
-//		StringBuilder sb = new StringBuilder();
-//				
-//		if(identifier.contentEquals("notify"))
-//		{
-//			sb.append("notify~.~");
-//			sb.append(objectEnvName.toString());
-//			sb.append("Object");
-//			sb.append("~?~thread \\then ");
-//			sb.append("\\\\");
-//			sb.append("\\Skip");
-//			
-//			return  sb.toString() ;
-//		}
-//		else if (identifier.contentEquals("wait"))
-//		{
-//			sb.append("waitCall~.~");
-//			sb.append(objectEnvName.toString());
-//			sb.append("Object");
-//			sb.append("~?~thread \\then");
-//			sb.append("\\\\");
-//			sb.append("waitRet~.~");
-//			sb.append(objectEnvName.toString());
-//			sb.append("Object");
-//			sb.append("~?~thread \\then");
-//			sb.append("\\\\");
-//			sb.append("\\Skip");
-//			
-//			return  sb.toString() ;
-//		}
-//		else
-//		{
-			
+		// Name identifier = node.getIdentifier();
+		// Name objectEnvName = object.getName();
+		// StringBuilder sb = new StringBuilder();
+		//
+		// if(identifier.contentEquals("notify"))
+		// {
+		// sb.append("notify~.~");
+		// sb.append(objectEnvName.toString());
+		// sb.append("Object");
+		// sb.append("~?~thread \\then ");
+		// sb.append("\\\\");
+		// sb.append("\\Skip");
+		//
+		// return sb.toString() ;
+		// }
+		// else if (identifier.contentEquals("wait"))
+		// {
+		// sb.append("waitCall~.~");
+		// sb.append(objectEnvName.toString());
+		// sb.append("Object");
+		// sb.append("~?~thread \\then");
+		// sb.append("\\\\");
+		// sb.append("waitRet~.~");
+		// sb.append(objectEnvName.toString());
+		// sb.append("Object");
+		// sb.append("~?~thread \\then");
+		// sb.append("\\\\");
+		// sb.append("\\Skip");
+		//
+		// return sb.toString() ;
+		// }
+		// else
+		// {
+
 		/* Are MemberSelect nodes also used for selecting methods too? */
 		return callExprMacro(node, ctxt, "MemberSelect", node.getExpression(),
 				node.getIdentifier());
-//		}
+		// }
 	}
 
 	@Override
@@ -475,12 +486,26 @@ public class MethodBodyVisitor extends
 	public String visitMethodInvocation(MethodInvocationTree node,
 			MethodVisitorContext ctxt)
 	{
-				
-		Name identifier = ((MemberSelectTree) node.getMethodSelect()).getIdentifier();
+
+		// ExpressionTree expression = (((MemberSelectTree)
+		// node.getMethodSelect()).getExpression());
+		//
+		// final boolean waitOnMission = false ;
+		//
+		// // for(TypeElement t : CONTEXT.getAnalysis().getTypeElements())
+		// // {
+		// // if(t.getSimpleName().contentEquals(expression.toString()))
+		// // {
+		// //
+		// // }
+		// // }
+
+		Name identifier = ((MemberSelectTree) node.getMethodSelect())
+				.getIdentifier();
 		Name objectEnvName = object.getName();
 		StringBuilder sb = new StringBuilder();
-				
-		if(identifier.contentEquals("notify"))
+
+		if (identifier.contentEquals("notify"))
 		{
 			sb.append("notify~.~");
 			sb.append(objectEnvName.toString());
@@ -488,8 +513,8 @@ public class MethodBodyVisitor extends
 			sb.append("~?~thread \\then ");
 			sb.append("\\\\");
 			sb.append("\\Skip");
-			
-			return  sb.toString() ;
+
+			return sb.toString();
 		}
 		else if (identifier.contentEquals("wait"))
 		{
@@ -504,38 +529,45 @@ public class MethodBodyVisitor extends
 			sb.append("~?~thread \\then");
 			sb.append("\\\\");
 			sb.append("\\Skip");
-			
-			return  sb.toString() ;
-		}else
+
+			return sb.toString();
+		}
+		else if (isSyncMethod(node))
 		{
-		
-		
-		ExecutableElement method = TreeUtils.elementFromUse(node);
-		List<? extends VariableElement> params = method.getParameters();
-		List<ExpressionTree> arguments = new ArrayList<ExpressionTree>();
-		for (int index = 0; index < params.size(); index++)
+			sb.append("TEST");
+
+			return sb.toString();
+		}
+		else
 		{
-			if (!CONTEXT.ANNOTS.isInteractionCode(params.get(index))
-					&& !CONTEXT.ANNOTS.isIgnored(params.get(index)))
+
+			ExecutableElement method = TreeUtils.elementFromUse(node);
+			List<? extends VariableElement> params = method.getParameters();
+			List<ExpressionTree> arguments = new ArrayList<ExpressionTree>();
+			for (int index = 0; index < params.size(); index++)
 			{
-				arguments.add(node.getArguments().get(index));
+				if (!CONTEXT.ANNOTS.isInteractionCode(params.get(index))
+						&& !CONTEXT.ANNOTS.isIgnored(params.get(index)))
+				{
+					arguments.add(node.getArguments().get(index));
+				}
 			}
+			/* Infer the method here that is called and pass to it the macro. */
+			/* Question: Is that generally feasible? */
+			return callExprMacro(node, ctxt, "MethodInvocation",
+					node.getMethodSelect(), arguments);
+
 		}
-		/* Infer the method here that is called and pass to it the macro. */
-		/* Question: Is that generally feasible? */
-		 return callExprMacro(node, ctxt, "MethodInvocation",
-				 node.getMethodSelect(), arguments);
-		}
-//
+		//
 		// TODO if the object in which the method I'm invoking resides is an API
 		// app process, translate to call/ret comms
-//		String returnString = "";
-//		ExpressionTree et = node.getMethodSelect();
-//		MemberSelectTree mst = null;
-//		if (et instanceof MemberSelectTree)
-//		{
-//			mst = (MemberSelectTree) et;
-//		}
+		// String returnString = "";
+		// ExpressionTree et = node.getMethodSelect();
+		// MemberSelectTree mst = null;
+		// if (et instanceof MemberSelectTree)
+		// {
+		// mst = (MemberSelectTree) et;
+		// }
 
 		// TODO what I need to get here is the MethodEnv (or similar) of the
 		// method we're calling so I know it's parameters and return value.
@@ -544,45 +576,157 @@ public class MethodBodyVisitor extends
 		// CONTEXT.getAnalysis().getTypeElement("scjlevel2examples.flatbuffer.FlatBufferMission");
 
 		// object = TightRopeTest.getProgramEnv().getObjectEnv();
-//		//
-//		((NewCircusTemplates) CONTEXT.getTemplates()).setObjectEnv(object);
-//		ObjectEnv objectWhereMethodResides = null;
-//		String returnType = "";
-//		String methodName = mst.getIdentifier().toString();
-//
-//		for (VariableEnv v : object.getVariables())
-//		{
-//			if (v.getVariableName().contentEquals(
-//					mst.getExpression().toString()))
+		// //
+		// ((NewCircusTemplates) CONTEXT.getTemplates()).setObjectEnv(object);
+		// ObjectEnv objectWhereMethodResides = null;
+		// String returnType = "";
+		// String methodName = mst.getIdentifier().toString();
+		//
+		// for (VariableEnv v : object.getVariables())
+		// {
+		// if (v.getVariableName().contentEquals(
+		// mst.getExpression().toString()))
+		// {
+		//
+		// objectWhereMethodResides = TightRopeTest.getProgramEnv()
+		// .getObjectEnv(v.getVariableType().toString());
+		//
+		// MethodEnv methodWeAreCalling;
+		// for (MethodEnv m : ((ParadigmEnv) objectWhereMethodResides)
+		// .getMeths())
+		// {
+		// if (m.getMethodName().contentEquals(methodName))
+		// {
+		// methodWeAreCalling = m;
+		//
+		// returnType = "~?~" + methodWeAreCalling.getReturnType();
+		// }
+		// }
+		//
+		// }
+		// }
+
+		// returnString = methodName + "Call";
+		// returnString += "\\then \\\\";
+		//
+		// returnString += methodName + "Ret" + returnType;
+		// returnString += "\\then \\Skip";
+		// //
+		// // returnString = node.get
+		//
+		// return returnString;
+	}
+
+	private boolean isSyncMethod(MethodInvocationTree node)
+	{
+		MemberSelectTree mst = (MemberSelectTree) node.getMethodSelect();
+
+		ExpressionTree expression = mst.getExpression();
+		Name identifier = mst.getIdentifier();
+		
+		
+
+		System.out.println("/// node.getMethodSelect = "
+				+ mst.toString());
+
+		System.out.println("/// node...getExpression = "
+				+ mst.getExpression()
+						.toString());
+
+		System.out.println("/// node...getIdenitifer = "
+				+ mst.getIdentifier()
+						.toString());
+
+		String varType = "";
+		final boolean objectNotNull = object != null;
+		System.out.println("/// objectNotNull = " + objectNotNull);
+		if (objectNotNull)
+		{
+			System.out.println("/// object name = " + object.getName());
+			
+//			VariableEnv v = object.getVariable(expression.toString());
+			
+			for(TypeElement t : CONTEXT.getAnalysis().getTypeElements())
+			{
+				System.out.println("///** t.getSimpleName() = " + t.getSimpleName());
+				//here comparing the wrong thing
+				if(t.getSimpleName().contentEquals(object.getName()))
+				{
+					ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
+					
+					List<Tree> members = (List<Tree>) ct.getMembers();
+					Iterator<Tree> i = members.iterator();
+					
+					while(i.hasNext())
+					{
+						Tree tree = i.next();
+						
+						if(tree instanceof VariableTree)
+						{
+							VariableTree vt = (VariableTree) tree;
+							
+							System.out.println("/// vt.getName = " + vt.getName());
+							
+							if(vt.getName().contentEquals(expression.toString()))
+							{
+								Tree typeTree = vt.getType();
+								
+							
+								if(typeTree instanceof IdentifierTree)
+								{
+									IdentifierTree it =  (IdentifierTree) typeTree;
+									
+									
+									
+									varType = it.getName().toString();
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			
+
+//			final boolean vNotNull = v != null;
+			
+//			System.out.println("// vNotNull = " + vNotNull);
+//			if (vNotNull)
 //			{
-//
-//				objectWhereMethodResides = TightRopeTest.getProgramEnv()
-//						.getObjectEnv(v.getVariableType().toString());
-//
-//				MethodEnv methodWeAreCalling;
-//				for (MethodEnv m : ((ParadigmEnv) objectWhereMethodResides)
-//						.getMeths())
+//				if (!v.isPrimitive())
 //				{
-//					if (m.getMethodName().contentEquals(methodName))
-//					{
-//						methodWeAreCalling = m;
-//
-//						returnType = "~?~" + methodWeAreCalling.getReturnType();
-//					}
-//				}
-//
+//					 varType = v.getVariableType();
+					
+					System.out.println("/// varType = " + varType);
+
+					for (TypeElement t : CONTEXT.getAnalysis()
+							.getTypeElements())
+					{
+						System.out.println("/// t simpleName = " + t.getSimpleName());
+						if (t.getSimpleName().contentEquals(varType))
+						{
+							ObjectEnv o = TightRopeTest.getProgramEnv()
+									.getObjectEnv(t.getSimpleName());
+							
+							System.out.println("/// o name = " + o.getName().toString());
+
+							for (MethodEnv mEnv : o.getSyncMeths())
+							{
+								System.out.println("/// mEnv.getMethodName = " +mEnv.getMethodName());
+								if (mEnv.getMethodName().contentEquals(
+										identifier))
+								{
+									return true;
+								}
+							}
+						}
+					}
+				}
+
 //			}
 //		}
 
-//		returnString = methodName + "Call";
-//		returnString += "\\then \\\\";
-//
-//		returnString += methodName + "Ret" + returnType;
-//		returnString += "\\then \\Skip";
-//		//
-//		// returnString = node.get
-//
-//		return returnString;
+		return false;
 	}
 
 	@Override
@@ -610,7 +754,8 @@ public class MethodBodyVisitor extends
 
 				}
 			}
-		} else
+		}
+		else
 		{
 
 			ExecutableElement ctor = TreeUtils.elementFromUse(node);
@@ -658,7 +803,8 @@ public class MethodBodyVisitor extends
 			BinaryTree bt = (BinaryTree) et;
 			return callStmtMacro(node, ctxt, "If", bt, trueLiteral,
 					falseLiteral);
-		} else
+		}
+		else
 		{
 			return callStmtMacro(node, ctxt, "Return", et);
 		}

@@ -57,11 +57,27 @@ public class ObjectEnv
 				primitive));
 	}
 
+	/**
+	 * Gets a variable environment from this object which shares the same name as <code>name</code>. 
+	 * If the variable doesn't exist in this object environment, then this method will return <code>null</code>
+	 * This method use <code>getVariable(String name)</code> internally
+	 * 
+	 * @param name The name of the variable you're looking for, as a <code>Name</code>
+	 * @return The <code>VariableEnv</code> representing the variable you're looking for, or <code>null</code>
+	 */
 	public VariableEnv getVariable(Name name)
 	{
 		return this.getVariable(name.toString());
 	}
 
+	
+	/**
+	 * Gets a variable environment from this object which shares the same name as <code>name</code>. 
+	 * If the variable doesn't exist in this object environment, then this method will return <code>null</code>
+	 * 
+	 * @param name The name of the variable you're looking for, as a <code>String</code>
+	 * @return The <code>VariableEnv</code> representing the variable you're looking for, or <code>null</code>
+	 */
 	public VariableEnv getVariable(String name)
 	{
 		for (VariableEnv v : variables)
@@ -113,6 +129,26 @@ public class ObjectEnv
 
 	}
 
+	/**
+	 * Gets the <code>VariableEnv</code> representing the parameter that shares its name with the parameter.
+	 * May return <code>null</code>
+	 * 
+	 * @param name The name of the parameter we're looking for
+	 * @return The <code>VariableEnv</code> representing the parameter we're looking for, or <code>null</code> 
+	 */
+	public VariableEnv getParameter(String name)
+	{
+		for(VariableEnv v : parameters)
+		{
+			if(v.getVariableName().contentEquals(name))
+			{
+				return v;
+			}
+		}
+		
+		return null;
+	}
+	
 	public List<VariableEnv> getParameters()
 	{
 		return parameters;
@@ -234,5 +270,17 @@ public class ObjectEnv
 
 		return returnList;
 	}
+
+	public List<MethodEnv> getMeths()
+	{
+		return meths;
+	}
+	
+	public List<MethodEnv> getSyncMeths()
+	{
+		return syncMeths;
+	}
+	
+	
 
 }

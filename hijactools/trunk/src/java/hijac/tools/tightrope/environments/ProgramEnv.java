@@ -13,8 +13,8 @@ import com.sun.source.tree.Tree;
 
 public class ProgramEnv
 {
-	FrameworkEnv structureEnv;
-	List<NonParadigmEnv> nonParadigmObjectEnvs;
+	private FrameworkEnv structureEnv;
+	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 
 
 	MissionIdsEnv missionIds;
@@ -181,11 +181,18 @@ public class ProgramEnv
 		return null;
 	}
 
-	public ParadigmEnv getSchedulable(Name s)
+	/**
+	 * Gets the <code>ParadigmEnv</code> that represents the schedulable sharing a name with the parameter.
+	 * May return <code>null</code>
+	 * 
+	 * @param name The name of the schedulable that we're looking for, as a <code>Name</code>
+	 * @return The <code>ParadigmEnv</code> we're looking for, or <code>null</code>
+	 */
+	public ParadigmEnv getSchedulable(Name name)
 	{
 		for(ParadigmEnv obj : getSchedulables())
 		{
-			if(obj.getName().contentEquals(s))
+			if(obj.getName().contentEquals(name))
 			{
 				return obj;
 			}
@@ -219,6 +226,26 @@ public class ProgramEnv
 		return null;
 	}
 
+	/**
+	 * Gets the object environment within this program environment that shares the same name as the parameter, if
+	 * it does not exists this method will return <code>null</code>. 
+	 * Internally, this method calls <code>getObjectEnv(String objectName)</code>.
+	 * 
+	 * @param objectName The name of the object we're looking for
+	 * @return The <code>ObjectEnv</code> representing the object we're looking for, or <code>null</code>
+	 */
+	public ObjectEnv getObjectEnv(Name objectName)
+	{
+		return getObjectEnv(objectName.toString());
+	}
+		
+	/**
+	 * Gets the object environment within this program environment that shares the same name as the parameter, if
+	 * it does not exists this method will return <code>null</code>
+	 * 
+	 * @param objectName The name of the object we're looking for
+	 * @return The <code>ObjectEnv</code> representing the object we're looking for, or <code>null</code>
+	 */
 	public ObjectEnv getObjectEnv(String objectName)
 	{
 		ArrayList<ObjectEnv> objects = new ArrayList<ObjectEnv>();
