@@ -425,7 +425,58 @@ public class MethodBodyVisitor extends
 	public String visitMemberSelect(MemberSelectTree node,
 			MethodVisitorContext ctxt)
 	{
-		Name identifier = node.getIdentifier();
+//		Name identifier = node.getIdentifier();
+//		Name objectEnvName = object.getName();
+//		StringBuilder sb = new StringBuilder();
+//				
+//		if(identifier.contentEquals("notify"))
+//		{
+//			sb.append("notify~.~");
+//			sb.append(objectEnvName.toString());
+//			sb.append("Object");
+//			sb.append("~?~thread \\then ");
+//			sb.append("\\\\");
+//			sb.append("\\Skip");
+//			
+//			return  sb.toString() ;
+//		}
+//		else if (identifier.contentEquals("wait"))
+//		{
+//			sb.append("waitCall~.~");
+//			sb.append(objectEnvName.toString());
+//			sb.append("Object");
+//			sb.append("~?~thread \\then");
+//			sb.append("\\\\");
+//			sb.append("waitRet~.~");
+//			sb.append(objectEnvName.toString());
+//			sb.append("Object");
+//			sb.append("~?~thread \\then");
+//			sb.append("\\\\");
+//			sb.append("\\Skip");
+//			
+//			return  sb.toString() ;
+//		}
+//		else
+//		{
+			
+		/* Are MemberSelect nodes also used for selecting methods too? */
+		return callExprMacro(node, ctxt, "MemberSelect", node.getExpression(),
+				node.getIdentifier());
+//		}
+	}
+
+	@Override
+	public String visitMethod(MethodTree node, MethodVisitorContext ctxt)
+	{
+		return visit(node.getBody(), ctxt);
+	}
+
+	@Override
+	public String visitMethodInvocation(MethodInvocationTree node,
+			MethodVisitorContext ctxt)
+	{
+				
+		Name identifier = ((MemberSelectTree) node.getMethodSelect()).getIdentifier();
 		Name objectEnvName = object.getName();
 		StringBuilder sb = new StringBuilder();
 				
@@ -455,26 +506,10 @@ public class MethodBodyVisitor extends
 			sb.append("\\Skip");
 			
 			return  sb.toString() ;
-		}
-		else
+		}else
 		{
-			
-		/* Are MemberSelect nodes also used for selecting methods too? */
-		return callExprMacro(node, ctxt, "MemberSelect", node.getExpression(),
-				node.getIdentifier());
-		}
-	}
-
-	@Override
-	public String visitMethod(MethodTree node, MethodVisitorContext ctxt)
-	{
-		return visit(node.getBody(), ctxt);
-	}
-
-	@Override
-	public String visitMethodInvocation(MethodInvocationTree node,
-			MethodVisitorContext ctxt)
-	{
+		
+		
 		ExecutableElement method = TreeUtils.elementFromUse(node);
 		List<? extends VariableElement> params = method.getParameters();
 		List<ExpressionTree> arguments = new ArrayList<ExpressionTree>();
@@ -490,6 +525,7 @@ public class MethodBodyVisitor extends
 		/* Question: Is that generally feasible? */
 		 return callExprMacro(node, ctxt, "MethodInvocation",
 				 node.getMethodSelect(), arguments);
+		}
 //
 		// TODO if the object in which the method I'm invoking resides is an API
 		// app process, translate to call/ret comms
@@ -662,25 +698,4 @@ public class MethodBodyVisitor extends
 		return callStmtMacro(node, ctxt, "WhileLoop", node.getCondition(),
 				node.getStatement());
 	}
-
-	// public void setReturn(String s)
-	// {
-	// System.out.println("///setReturn s= " + s);
-	//
-	// if (s.contains("Mission"))
-	// {
-	// System.out.println("///Mission");
-	// } else if (s.contains("MissionSequencer"))
-	// {
-	// System.out.println("///MissionSequencer");
-	// } else if (s.contains("OneShotEventHandler")
-	// || s.contains("AperiodicEventHandler")
-	// || s.contains("PeriodicEventHandler")
-	// || s.contains("ManagedThread"))
-	// {
-	// System.out.println("///Other Schedulables");
-	// }
-	//
-	// }
-
 }
