@@ -276,6 +276,7 @@ public class MethodBodyVisitor extends
 	public String visitAssignment(AssignmentTree node, MethodVisitorContext ctxt)
 	{
 		/* Should we check that we are not inside an expression? */
+		System.out.println("/// AssignmentTree node = " + node);
 		if(node.getExpression() instanceof MethodInvocationTree)
 		{
 			MethodInvocationTree mit = (MethodInvocationTree) node.getExpression();
