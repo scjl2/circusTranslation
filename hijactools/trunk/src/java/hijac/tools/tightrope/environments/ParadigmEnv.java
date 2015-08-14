@@ -1,9 +1,6 @@
 package hijac.tools.tightrope.environments;
 
-import hijac.tools.tightrope.environments.EnvironmentBuilder.ClassEnv;
-
 import java.util.ArrayList;
-
 
 public class ParadigmEnv extends ObjectEnv
 {

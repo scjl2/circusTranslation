@@ -48,6 +48,7 @@ public class CircusGenerator
 	private static final String APP_CIRCUS = "App.circus";
 	private static final String TEMPLATE_DIRECTORY = "/home/matt/Documents/Translation/test/templates";
 	private static final String OUTPUT_DIRECTORY = "/home/matt/Documents/Translation/test/output/";
+	private static final String CUSTOM_CHANNELS_TEMPLATE_FTL = "CustomChannels-Templat.ftl";
 
 	private freemarker.template.Configuration cfg;
 	private ProgramEnv programEnv;
@@ -266,6 +267,8 @@ public class CircusGenerator
 			translateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
 			
+			System.out.println("/// mission map " + missionMap.toString());
+			translateCommon(missionMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName + "MethChan.circus");
 			
 			missionMap = mEnv.getClassEnv().toMap();
 			if(!missionMap.isEmpty())

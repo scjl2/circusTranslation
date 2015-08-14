@@ -28,16 +28,24 @@ public class ObjectEnv
 	protected static final String IMPORT_NAME = "importName";
 	protected static final String HANDLER_TYPE = "handlerType";
 	// ClassTree classTree;
+	/**
+	 * The name of the entity this environment represents
+	 */
 	Name name;
 	List<VariableEnv> variables;
 	List<VariableEnv> parameters;
 	protected List<MethodEnv> meths;
 	protected List<MethodEnv> syncMeths;
+	/**
+	 * A list of custom channels required by this object. I.E. the new channels that need creating for it.
+	 */	
+	private List<ChannelEnv> newChannels;
 
 	public ObjectEnv()
 	{
 		variables = new ArrayList<VariableEnv>();
 		parameters = new ArrayList<VariableEnv>();
+		newChannels = new ArrayList<ChannelEnv>();
 	}
 
 	public Name getName()
@@ -280,7 +288,16 @@ public class ObjectEnv
 	{
 		return syncMeths;
 	}
+
+	public List<ChannelEnv> getNewChannels()
+	{
+		return newChannels;
+	}
 	
+	public void addNewChannel(String channelName, String channelType)
+	{
+		newChannels.add(new ChannelEnv(channelName, channelType));
+	}
 	
 
 }

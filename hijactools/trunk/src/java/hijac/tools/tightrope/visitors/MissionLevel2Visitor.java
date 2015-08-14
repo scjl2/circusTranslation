@@ -31,7 +31,7 @@ public class MissionLevel2Visitor
 	
 	
 	
-	private ParadigmEnv missionEnv;	
+	private MissionEnv missionEnv;	
 
 	public MissionLevel2Visitor(ProgramEnv programEnv, MissionEnv missionEnv,
 			SCJAnalysis analysis)

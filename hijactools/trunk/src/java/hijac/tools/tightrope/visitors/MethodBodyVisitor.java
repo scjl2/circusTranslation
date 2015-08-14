@@ -229,32 +229,6 @@ public class MethodBodyVisitor extends
 		return doMacroCall(node, ctxt, TYPE_TEMPLATE, name, args);
 	}
 
-	// @Override
-	// public String visitMethodInvocation(MethodInvocationTree node,
-	// MethodVisitorContext ctxt)
-	// {
-	// System.out.println("*** Method Invocation ***");
-	// return null;
-	// }
-
-	// @Override
-	// public String visitMemberSelect(MemberSelectTree node,
-	// MethodVisitorContext ctxt)
-	//
-	// {
-	// System.out.println("\\\\\\ "+ node);
-	// return "";
-	// }
-
-	// @Override
-	// public String visitExpressionStatement(ExpressionStatementTree node,
-	// MethodVisitorContext ctxt)
-	// {
-	//
-	// System.out.println("*** Expression  Statement ***");
-	// return "";
-	// }
-
 	@Override
 	public String visitAnnotation(AnnotationTree node, MethodVisitorContext ctxt)
 	{
@@ -706,26 +680,26 @@ public class MethodBodyVisitor extends
 
 		ExpressionTree expression = mst.getExpression();
 		Name identifier = mst.getIdentifier();
-
-		System.out.println("/// node.getMethodSelect = " + mst.toString());
-
-		System.out.println("/// node...getExpression = "
-				+ mst.getExpression().toString());
-
-		System.out.println("/// node...getIdenitifer = "
-				+ mst.getIdentifier().toString());
+//
+//		System.out.println("/// node.getMethodSelect = " + mst.toString());
+//
+//		System.out.println("/// node...getExpression = "
+//				+ mst.getExpression().toString());
+//
+//		System.out.println("/// node...getIdenitifer = "
+//				+ mst.getIdentifier().toString());
 
 		String varType = "";
 		final boolean objectNotNull = object != null;
 		System.out.println("/// objectNotNull = " + objectNotNull);
 		if (objectNotNull)
 		{
-			System.out.println("/// object name = " + object.getName());
+//			System.out.println("/// object name = " + object.getName());
 
 			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 			{
-				System.out.println("///** t.getSimpleName() = "
-						+ t.getSimpleName());
+//				System.out.println("///** t.getSimpleName() = "
+//						+ t.getSimpleName());
 
 				if (t.getSimpleName().contentEquals(object.getName()))
 				{
@@ -742,8 +716,8 @@ public class MethodBodyVisitor extends
 						{
 							VariableTree vt = (VariableTree) tree;
 
-							System.out.println("/// vt.getName = "
-									+ vt.getName());
+//							System.out.println("/// vt.getName = "
+//									+ vt.getName());
 
 							if (vt.getName().contentEquals(
 									expression.toString()))
@@ -762,23 +736,23 @@ public class MethodBodyVisitor extends
 				}
 			}
 
-			System.out.println("/// varType = " + varType);
+//			System.out.println("/// varType = " + varType);
 
 			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 			{
-				System.out.println("/// t simpleName = " + t.getSimpleName());
+//				System.out.println("/// t simpleName = " + t.getSimpleName());
 				if (t.getSimpleName().contentEquals(varType))
 				{
 					ObjectEnv o = TightRopeTest.getProgramEnv().getObjectEnv(
 							t.getSimpleName());
 
-					System.out
-							.println("/// o name = " + o.getName().toString());
+//					System.out
+//							.println("/// o name = " + o.getName().toString());
 
 					for (MethodEnv mEnv : o.getSyncMeths())
 					{
-						System.out.println("/// mEnv.getMethodName = "
-								+ mEnv.getMethodName());
+//						System.out.println("/// mEnv.getMethodName = "
+//								+ mEnv.getMethodName());
 						if (mEnv.getMethodName().contentEquals(identifier))
 						{
 
@@ -889,7 +863,7 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitVariable(VariableTree node, MethodVisitorContext ctxt)
 	{
-		System.out.println("/// VariableTree node = " + node);
+//		System.out.println("/// VariableTree node = " + node);
 
 		if (node.getInitializer() instanceof MethodInvocationTree)
 		{

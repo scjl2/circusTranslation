@@ -491,21 +491,5 @@ public class EnvironmentBuilder
 
 	}
 
-	public class ClassEnv extends ParadigmEnv
-	{
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public Map toMap()
-		{
-			Map map = new HashMap();
-			map.put(PROCESS_ID, name.toString());
-			// map.put("handlerType", "aperiodic");
-			// map.put("importName", "Aperiodic");
-			map.put(METHODS, methsList());
-			map.put(SYNC_METHODS, syncMethsList());
-			map.put(VARIABLES_STR, varsList());
-
-			return map;
-		}
-		
-	}
+	
 }
