@@ -333,6 +333,8 @@ public class MethodBodyVisitor extends
 	public String visitCompoundAssignment(CompoundAssignmentTree node,
 			MethodVisitorContext ctxt)
 	{
+		System.out.println("/// CompoundAssignmentTree node = " + node);
+		
 		/* Should we check that we are not inside an expression? */
 		return callStmtMacro(node, ctxt, "CompoundAssignment",
 				node.getVariable(), node.getExpression());
@@ -866,8 +868,29 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitVariable(VariableTree node, MethodVisitorContext ctxt)
 	{
-		return callStmtMacro(node, ctxt, "Variable", node.getName(),
-				node.getInitializer());
+		System.out.println("/// VariableTree node = " + node);
+		
+		if(node.getInitializer() instanceof MethodInvocationTree)
+		{
+			MethodInvocationTree mit = (MethodInvocationTree) node.getInitializer();
+			
+			if(isSyncMethod(mit))
+			{
+				return visitMethodInvocation(mit, ctxt);
+			}
+			else
+			{
+				return callStmtMacro(node, ctxt, "Variable", node.getName(),
+						node.getInitializer());
+			}
+		}
+		else
+		{
+			return callStmtMacro(node, ctxt, "Variable", node.getName(),
+					node.getInitializer());
+		}
+		
+		
 	}
 
 	@Override
