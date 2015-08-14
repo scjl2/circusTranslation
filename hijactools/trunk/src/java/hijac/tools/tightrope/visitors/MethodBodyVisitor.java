@@ -1,8 +1,11 @@
 package hijac.tools.tightrope.visitors;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javacutils.TreeUtils;
 
@@ -77,6 +80,11 @@ public class MethodBodyVisitor extends
 	private static final String TYPE_TEMPLATE = "L2Type.ftl";
 	private static final String EXPR_TEMPLATE = "L2Expr.ftl";
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
+	/**
+	 * Used to store values for 'future' calls to methods of the visitor
+	 */
+	private static final HashMap<String, Object> timeMachine = new HashMap<String, Object>();
+
 	private MethodEnv methodEnv = null;
 	private LiteralTree trueLiteral = null;
 	private LiteralTree falseLiteral = null;
@@ -277,27 +285,28 @@ public class MethodBodyVisitor extends
 	{
 		/* Should we check that we are not inside an expression? */
 		System.out.println("/// AssignmentTree node = " + node);
-		if(node.getExpression() instanceof MethodInvocationTree)
+		if (node.getExpression() instanceof MethodInvocationTree)
 		{
-			MethodInvocationTree mit = (MethodInvocationTree) node.getExpression();
-			
-			if(isSyncMethod(mit))
+			MethodInvocationTree mit = (MethodInvocationTree) node
+					.getExpression();
+
+			if (isSyncMethod(mit))
 			{
 				return visitMethodInvocation(mit, ctxt);
 			}
 			else
 			{
-				return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
-						node.getExpression());
+				return callStmtMacro(node, ctxt, "Assignment",
+						node.getVariable(), node.getExpression());
 			}
 		}
 		else
 		{
-		
+
 			return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
 					node.getExpression());
 		}
-		
+
 	}
 
 	@Override
@@ -334,7 +343,7 @@ public class MethodBodyVisitor extends
 			MethodVisitorContext ctxt)
 	{
 		System.out.println("/// CompoundAssignmentTree node = " + node);
-		
+
 		/* Should we check that we are not inside an expression? */
 		return callStmtMacro(node, ctxt, "CompoundAssignment",
 				node.getVariable(), node.getExpression());
@@ -556,26 +565,46 @@ public class MethodBodyVisitor extends
 		}
 		else if (isSyncMethod(node))
 		{
+			MethodEnv method = getMethodEnvBeingCalled(node);
+
+			String returnString = method.getReturnType();
+			List<? extends ExpressionTree> parameters = node.getArguments();
+
 			sb.append(identifier);
 			sb.append("Call");
 			sb.append("~.~");
-			sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression().toString());
+			sb.append(((MemberSelectTree) node.getMethodSelect())
+					.getExpression().toString());
 			sb.append("~.~");
 			sb.append(objectEnvName.toString());
+			if (!parameters.isEmpty())
+			{
+				for (ExpressionTree s : parameters)
+				{
+					sb.append("~!~");
+					if (s instanceof IdentifierTree)
+					{
+						sb.append(((IdentifierTree) s).getName().toString());
+					}
+				}
+			}
 			sb.append("\\then \\\\");
-			
+
 			sb.append(identifier);
 			sb.append("Ret");
 			sb.append("~.~");
-			sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression().toString());
+			sb.append(((MemberSelectTree) node.getMethodSelect())
+					.getExpression().toString());
 			sb.append("~.~");
 			sb.append(objectEnvName.toString());
+			if (!returnString.contains("null"))
+			{
+				sb.append("~?~");
+				// TODO this needs to be the variable that we just got rid of.
+				sb.append(timeMachine.get("varValue").toString());
+			}
 			sb.append("\\then \\\\");
 			sb.append("\\Skip");
-			
-			
-			
-			
 
 			return sb.toString();
 		}
@@ -660,23 +689,31 @@ public class MethodBodyVisitor extends
 
 	private boolean isSyncMethod(MethodInvocationTree node)
 	{
+		if (getMethodEnvBeingCalled(node) != null)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private MethodEnv getMethodEnvBeingCalled(MethodInvocationTree node)
+	{
 		MemberSelectTree mst = (MemberSelectTree) node.getMethodSelect();
 
 		ExpressionTree expression = mst.getExpression();
 		Name identifier = mst.getIdentifier();
-		
-		
 
-		System.out.println("/// node.getMethodSelect = "
-				+ mst.toString());
+		System.out.println("/// node.getMethodSelect = " + mst.toString());
 
 		System.out.println("/// node...getExpression = "
-				+ mst.getExpression()
-						.toString());
+				+ mst.getExpression().toString());
 
 		System.out.println("/// node...getIdenitifer = "
-				+ mst.getIdentifier()
-						.toString());
+				+ mst.getIdentifier().toString());
 
 		String varType = "";
 		final boolean objectNotNull = object != null;
@@ -684,41 +721,39 @@ public class MethodBodyVisitor extends
 		if (objectNotNull)
 		{
 			System.out.println("/// object name = " + object.getName());
-			
-//			VariableEnv v = object.getVariable(expression.toString());
-			
-			for(TypeElement t : CONTEXT.getAnalysis().getTypeElements())
+
+			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 			{
-				System.out.println("///** t.getSimpleName() = " + t.getSimpleName());
-				//here comparing the wrong thing
-				if(t.getSimpleName().contentEquals(object.getName()))
+				System.out.println("///** t.getSimpleName() = "
+						+ t.getSimpleName());
+
+				if (t.getSimpleName().contentEquals(object.getName()))
 				{
 					ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
-					
+
 					List<Tree> members = (List<Tree>) ct.getMembers();
 					Iterator<Tree> i = members.iterator();
-					
-					while(i.hasNext())
+
+					while (i.hasNext())
 					{
 						Tree tree = i.next();
-						
-						if(tree instanceof VariableTree)
+
+						if (tree instanceof VariableTree)
 						{
 							VariableTree vt = (VariableTree) tree;
-							
-							System.out.println("/// vt.getName = " + vt.getName());
-							
-							if(vt.getName().contentEquals(expression.toString()))
+
+							System.out.println("/// vt.getName = "
+									+ vt.getName());
+
+							if (vt.getName().contentEquals(
+									expression.toString()))
 							{
 								Tree typeTree = vt.getType();
-								
-							
-								if(typeTree instanceof IdentifierTree)
+
+								if (typeTree instanceof IdentifierTree)
 								{
-									IdentifierTree it =  (IdentifierTree) typeTree;
-									
-									
-									
+									IdentifierTree it = (IdentifierTree) typeTree;
+
 									varType = it.getName().toString();
 								}
 							}
@@ -726,48 +761,34 @@ public class MethodBodyVisitor extends
 					}
 				}
 			}
-			
-			
 
-//			final boolean vNotNull = v != null;
-			
-//			System.out.println("// vNotNull = " + vNotNull);
-//			if (vNotNull)
-//			{
-//				if (!v.isPrimitive())
-//				{
-//					 varType = v.getVariableType();
-					
-					System.out.println("/// varType = " + varType);
+			System.out.println("/// varType = " + varType);
 
-					for (TypeElement t : CONTEXT.getAnalysis()
-							.getTypeElements())
+			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
+			{
+				System.out.println("/// t simpleName = " + t.getSimpleName());
+				if (t.getSimpleName().contentEquals(varType))
+				{
+					ObjectEnv o = TightRopeTest.getProgramEnv().getObjectEnv(
+							t.getSimpleName());
+
+					System.out
+							.println("/// o name = " + o.getName().toString());
+
+					for (MethodEnv mEnv : o.getSyncMeths())
 					{
-						System.out.println("/// t simpleName = " + t.getSimpleName());
-						if (t.getSimpleName().contentEquals(varType))
+						System.out.println("/// mEnv.getMethodName = "
+								+ mEnv.getMethodName());
+						if (mEnv.getMethodName().contentEquals(identifier))
 						{
-							ObjectEnv o = TightRopeTest.getProgramEnv()
-									.getObjectEnv(t.getSimpleName());
-							
-							System.out.println("/// o name = " + o.getName().toString());
 
-							for (MethodEnv mEnv : o.getSyncMeths())
-							{
-								System.out.println("/// mEnv.getMethodName = " +mEnv.getMethodName());
-								if (mEnv.getMethodName().contentEquals(
-										identifier))
-								{
-									return true;
-								}
-							}
+							return mEnv;
 						}
 					}
 				}
-
-//			}
-//		}
-
-		return false;
+			}
+		}
+		return null;
 	}
 
 	@Override
@@ -869,13 +890,15 @@ public class MethodBodyVisitor extends
 	public String visitVariable(VariableTree node, MethodVisitorContext ctxt)
 	{
 		System.out.println("/// VariableTree node = " + node);
-		
-		if(node.getInitializer() instanceof MethodInvocationTree)
+
+		if (node.getInitializer() instanceof MethodInvocationTree)
 		{
-			MethodInvocationTree mit = (MethodInvocationTree) node.getInitializer();
-			
-			if(isSyncMethod(mit))
+			MethodInvocationTree mit = (MethodInvocationTree) node
+					.getInitializer();
+
+			if (isSyncMethod(mit))
 			{
+				timeMachine.putIfAbsent("varValue", node.getName().toString());
 				return visitMethodInvocation(mit, ctxt);
 			}
 			else
@@ -889,8 +912,7 @@ public class MethodBodyVisitor extends
 			return callStmtMacro(node, ctxt, "Variable", node.getName(),
 					node.getInitializer());
 		}
-		
-		
+
 	}
 
 	@Override
