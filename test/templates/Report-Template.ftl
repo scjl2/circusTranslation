@@ -34,11 +34,17 @@
 \IfFileExists{${SafeletName}Class.circus}{\newpage
 \input{${SafeletName}Class.circus}}{}
 \newpage
+\IfFileExists{${SafeletName}MethChan.circus}{\newpage
+\input{${SafeletName}MethChan.circus}}{}
+\newpage
 
 \section{Top Level Mission Sequencer}
 \input{${TopLevelSequencer}App.circus}
 \IfFileExists{${TopLevelSequencer}Class.circus}{\newpage
 \input{${TopLevelSequencer}Class.circus}}{}
+\newpage
+\IfFileExists{${TopLevelSequencer}MethChan.circus}{\newpage
+\input{${TopLevelSequencer}MethChan.circus}}{}
 \newpage
 
 \section{Missions}
@@ -50,7 +56,9 @@
 \input{${cluster.Mission}App.circus}
 \IfFileExists{${cluster.Mission}Class.circus}{\newpage
 \input{${cluster.Mission}Class.circus}}{}
-
+\newpage
+\IfFileExists{${cluster.Mission}MethChan.circus}{\newpage
+\input{${cluster.Mission}MethChan.circus}}{}
 \newpage
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
@@ -60,6 +68,10 @@
 \input{${schedulable}App.circus}
 \IfFileExists{${schedulable}Class.circus}{\newpage
 \input{${schedulable}Class.circus}}{}
+\newpage
+\IfFileExists{${schedulable}MethChan.circus}{\newpage
+\input{${schedulable}MethChan.circus}}{}
+
 			<#if schedulable_has_next>
 \newpage
 			</#if>

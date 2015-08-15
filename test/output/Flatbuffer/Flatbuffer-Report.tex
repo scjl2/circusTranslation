@@ -34,11 +34,17 @@
 \IfFileExists{FlatBufferClass.circus}{\newpage
 \input{FlatBufferClass.circus}}{}
 \newpage
+\IfFileExists{FlatBufferMethChan.circus}{\newpage
+\input{FlatBufferMethChan.circus}}{}
+\newpage
 
 \section{Top Level Mission Sequencer}
 \input{FlatBufferMissionSequencerApp.circus}
 \IfFileExists{FlatBufferMissionSequencerClass.circus}{\newpage
 \input{FlatBufferMissionSequencerClass.circus}}{}
+\newpage
+\IfFileExists{FlatBufferMissionSequencerMethChan.circus}{\newpage
+\input{FlatBufferMissionSequencerMethChan.circus}}{}
 \newpage
 
 \section{Missions}
@@ -48,7 +54,9 @@
 \input{FlatBufferMissionApp.circus}
 \IfFileExists{FlatBufferMissionClass.circus}{\newpage
 \input{FlatBufferMissionClass.circus}}{}
-
+\newpage
+\IfFileExists{FlatBufferMissionMethChan.circus}{\newpage
+\input{FlatBufferMissionMethChan.circus}}{}
 \newpage
 
 \subsection{Schedulables of FlatBufferMission}
@@ -57,10 +65,18 @@
 \IfFileExists{ReaderClass.circus}{\newpage
 \input{ReaderClass.circus}}{}
 \newpage
+\IfFileExists{ReaderMethChan.circus}{\newpage
+\input{ReaderMethChan.circus}}{}
+
+\newpage
 
 \input{WriterApp.circus}
 \IfFileExists{WriterClass.circus}{\newpage
 \input{WriterClass.circus}}{}
+\newpage
+\IfFileExists{WriterMethChan.circus}{\newpage
+\input{WriterMethChan.circus}}{}
+
 
 
 \end{document}
