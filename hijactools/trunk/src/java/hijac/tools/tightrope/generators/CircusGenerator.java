@@ -3,12 +3,14 @@ package hijac.tools.tightrope.generators;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
+import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
 
 import java.io.File;
@@ -76,7 +78,8 @@ public class CircusGenerator
 		try
 		{
 			cfg.setDirectoryForTemplateLoading(new File(TEMPLATE_DIRECTORY));
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -142,7 +145,8 @@ public class CircusGenerator
 		try
 		{
 			temp = cfg.getTemplate(template);
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -151,13 +155,15 @@ public class CircusGenerator
 		/* Variables for writing output to a file */
 		new File(OUTPUT_DIRECTORY + programName).mkdirs();
 
-		File file = new File(OUTPUT_DIRECTORY + programName + FILE_DELIMITER + fileName);
+		File file = new File(OUTPUT_DIRECTORY + programName + FILE_DELIMITER
+				+ fileName);
 
 		FileOutputStream fop = null;
 		try
 		{
 			fop = new FileOutputStream(file);
-		} catch (FileNotFoundException e)
+		}
+		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
@@ -169,10 +175,12 @@ public class CircusGenerator
 			temp.process(root, out);
 
 			// out.close();
-		} catch (TemplateException e1)
+		}
+		catch (TemplateException e1)
 		{
 			e1.printStackTrace();
-		} catch (IOException e2)
+		}
+		catch (IOException e2)
 		{
 			e2.printStackTrace();
 		}
@@ -217,11 +225,28 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Translating Safelet +++ ");
 		/* Create a data-model */
-		Map root = programEnv.getSafelet().toMap();
+		SafeletEnv safelet = programEnv.getSafelet();
+
+		Map root = safelet.toMap();
 
 		procName = (String) root.get(PROCESS_ID);
 
 		translateCommon(root, SAFELET_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
+
+		// Custom Channels
+		translateCommon(root, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+				+ "MethChan.circus");
+
+		ClassEnv classEnv = safelet.getClassEnv();
+		if (classEnv != null)
+		{
+			root = classEnv.toMap();
+			if (!root.isEmpty())
+			{
+				translateCommon(root, CLASS_TEMPLATE_FTL, procName
+						+ CLASS_CIRCUS);
+			}
+		}
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -230,7 +255,7 @@ public class CircusGenerator
 		System.out.println("+++ Translating Top Level Mission Sequencers +++");
 
 		Map tlms;
-		
+
 		for (TopLevelMissionSequencerEnv tlmsEnv : programEnv
 				.getTopLevelMissionSequencers())
 		{
@@ -242,11 +267,19 @@ public class CircusGenerator
 			translateCommon(tlms, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
 
-			tlms = tlmsEnv.getClassEnv().toMap();
-			if(!tlms.isEmpty())
+			// Custom Channels
+			translateCommon(tlms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+					+ "MethChan.circus");
+
+			ClassEnv classEnv = tlmsEnv.getClassEnv();
+			if (classEnv != null)
 			{
-			translateCommon(tlms, CLASS_TEMPLATE_FTL, procName
-					+ CLASS_CIRCUS);
+				tlms = classEnv.toMap();
+				if (!tlms.isEmpty())
+				{
+					translateCommon(tlms, CLASS_TEMPLATE_FTL, procName
+							+ CLASS_CIRCUS);
+				}
 			}
 		}
 	}
@@ -256,7 +289,7 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Translating Missions +++");
 		Map missionMap;
-		
+
 		for (MissionEnv mEnv : programEnv.getMissions())
 		{
 			/* Create a data-model */
@@ -264,19 +297,26 @@ public class CircusGenerator
 
 			procName = (String) missionMap.get(PROCESS_ID);
 
+			// Application Process
 			translateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
-			
-			System.out.println("/// mission map " + missionMap.toString());
-			translateCommon(missionMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName + "MethChan.circus");
-			
-			missionMap = mEnv.getClassEnv().toMap();
-			if(!missionMap.isEmpty())
+
+			// Custom Channels
+			translateCommon(missionMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+					+ "MethChan.circus");
+
+			// Class
+			ClassEnv classEnv = mEnv.getClassEnv();
+			if (classEnv != null)
 			{
-				translateCommon(missionMap, CLASS_TEMPLATE_FTL, procName
-					+ CLASS_CIRCUS);
+				missionMap = classEnv.toMap();
+				if (!missionMap.isEmpty())
+				{
+					translateCommon(missionMap, CLASS_TEMPLATE_FTL, procName
+							+ CLASS_CIRCUS);
+				}
 			}
-			
+
 		}
 	}
 
@@ -286,7 +326,7 @@ public class CircusGenerator
 		System.out.println("+++ Translating Nested Mission Sequencers +++");
 
 		Map sms;
-		
+
 		for (NestedMissionSequencerEnv smsEnv : programEnv
 				.getNestedMissionSequencers())
 		{
@@ -297,12 +337,20 @@ public class CircusGenerator
 
 			translateCommon(sms, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
-			
-			sms = smsEnv.getClassEnv().toMap();
-			if(!sms.isEmpty())
+
+			// Custom Channels
+			translateCommon(sms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+					+ "MethChan.circus");
+
+			ClassEnv classEnv = smsEnv.getClassEnv();
+			if (classEnv != null)
 			{
-				translateCommon(sms, CLASS_TEMPLATE_FTL, procName
-					+ CLASS_CIRCUS);
+				sms = classEnv.toMap();
+				if (!sms.isEmpty())
+				{
+					translateCommon(sms, CLASS_TEMPLATE_FTL, procName
+							+ CLASS_CIRCUS);
+				}
 			}
 		}
 	}
@@ -311,7 +359,7 @@ public class CircusGenerator
 	private void translateManagedThreads()
 	{
 		System.out.println("+++ Translating Managed Threads +++ ");
-		
+
 		Map mtMap;
 
 		ArrayList<ManagedThreadEnv> mts = programEnv.getManagedThreads();
@@ -320,19 +368,27 @@ public class CircusGenerator
 			/* Create a data-model */
 			mtMap = mtEnv.toMap();
 
-			System.out.println("/// params = " + mtMap.get("Parameters").toString());
-			
+			System.out.println("/// params = "
+					+ mtMap.get("Parameters").toString());
+
 			procName = mtEnv.getName().toString();
 			translateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName
 					+ APP_CIRCUS);
 
-			mtMap = mtEnv.getClassEnv().toMap();
-			if(!mtMap.isEmpty())
+			// Custom Channels
+			translateCommon(mtMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+					+ "MethChan.circus");
+
+			ClassEnv classEnv = mtEnv.getClassEnv();
+			if (classEnv != null)
 			{
-				translateCommon(mtMap, CLASS_TEMPLATE_FTL, procName
-					+ CLASS_CIRCUS);
+				mtMap = classEnv.toMap();
+				if (!mtMap.isEmpty())
+				{
+					translateCommon(mtMap, CLASS_TEMPLATE_FTL, procName
+							+ CLASS_CIRCUS);
+				}
 			}
-			
 
 		}
 	}
@@ -343,7 +399,7 @@ public class CircusGenerator
 		System.out.println("+++ Translating One Shot Event Handlers +++");
 
 		Map osehMap;
-		
+
 		for (OneShotEventHandlerEnv osehEnv : programEnv
 				.getOneShotEventHandlers())
 		{
@@ -353,12 +409,20 @@ public class CircusGenerator
 			procName = (String) osehMap.get(PROCESS_ID);
 			translateCommon(osehMap, HANDLER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
-			
-			osehMap = osehEnv.getClassEnv().toMap();
-			if(!osehMap.isEmpty())
+
+			// Custom Channels
+			translateCommon(osehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+					+ "MethChan.circus");
+
+			ClassEnv classEnv = osehEnv.getClassEnv();
+			if (classEnv != null)
 			{
-				translateCommon(osehMap, CLASS_TEMPLATE_FTL, procName
-					+ CLASS_CIRCUS);
+				osehMap = classEnv.toMap();
+				if (!osehMap.isEmpty())
+				{
+					translateCommon(osehMap, CLASS_TEMPLATE_FTL, procName
+							+ CLASS_CIRCUS);
+				}
 			}
 		}
 	}
@@ -369,7 +433,7 @@ public class CircusGenerator
 		System.out.println("+++ Translating Periodic Event Handlers +++");
 
 		Map pehhMap;
-		
+
 		for (PeriodicEventHandlerEnv pehEnv : programEnv
 				.getPeriodicEventHandlers())
 		{
@@ -379,12 +443,20 @@ public class CircusGenerator
 			procName = (String) pehhMap.get(PROCESS_ID);
 			translateCommon(pehhMap, HANDLER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
-			
-			pehhMap = pehEnv.getClassEnv().toMap();
-			if(!pehhMap.isEmpty())
+
+			// Custom Channels
+			translateCommon(pehhMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+					+ "MethChan.circus");
+
+			ClassEnv classEnv = pehEnv.getClassEnv();
+			if (classEnv != null)
 			{
-				translateCommon(pehhMap, CLASS_TEMPLATE_FTL, procName
-					+ CLASS_CIRCUS);
+				pehhMap = classEnv.toMap();
+				if (!pehhMap.isEmpty())
+				{
+					translateCommon(pehhMap, CLASS_TEMPLATE_FTL, procName
+							+ CLASS_CIRCUS);
+				}
 			}
 		}
 	}
@@ -395,7 +467,7 @@ public class CircusGenerator
 		System.out.println("+++ Translating One Shot Event Handlers +++");
 
 		Map apehMap;
-		
+
 		for (AperiodicEventHandlerEnv apehEnv : programEnv
 				.getAperiodicEventHandlers())
 		{
@@ -405,12 +477,20 @@ public class CircusGenerator
 			procName = (String) apehMap.get(PROCESS_ID);
 			translateCommon(apehMap, HANDLER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
-			
-			apehMap = apehEnv.getClassEnv().toMap();
-			if(!apehMap.isEmpty())
+
+			// Custom Channels
+			translateCommon(apehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+					+ "MethChan.circus");
+
+			ClassEnv classEnv = apehEnv.getClassEnv();
+			if (classEnv != null)
 			{
-				translateCommon(apehMap, CLASS_TEMPLATE_FTL, procName
-					+ CLASS_CIRCUS);
+				apehMap = classEnv.toMap();
+				if (!apehMap.isEmpty())
+				{
+					translateCommon(apehMap, CLASS_TEMPLATE_FTL, procName
+							+ CLASS_CIRCUS);
+				}
 			}
 		}
 	}

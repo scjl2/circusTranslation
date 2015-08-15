@@ -2,59 +2,33 @@
   \SECTION ~ ${ProcessID}MethChan ~ \parents ~ scj\_prelude, GlobalTypes 
 \end{zsection}
 %
-<#if Methods?size > 0>
-\begin{circus}
 <#list Methods as meth>
-  \circchannel ${meth.methodName}CalL
-  <#if meth.parameters?size > 0> 
-  :
-<#list meth.parameters?values as param>
-${param}
-<#if para_has_next>
-\cross
-</#if>
-</#list>  
-\\
-</#if>
-  
-<#if meth.returnType != 'null'>
-  \circchannel ${meth.methodName}Ret : ${meth.returnType} \\
-<#else>
-  \circchannel ${meth.methodName}Ret \\
-</#if>  
-  
-
-</#list>
-\end{circus}
-</#if>
-%
-<#if SyncMethods?size > 0>
 \begin{circus}
-<#list SyncMethods as meth>
-  \circchannel ${meth.methodName}CalL
-  <#if meth.parameters?size > 0> 
-  :
+\t1 \circchannel ${meth.methodName}Call <#if meth.parameters?size > 0>:
 <#list meth.parameters?values as param>
-${param}
-<#if para_has_next>
-\cross
-</#if>
-</#list>  
-\\
-</#if>
+${param} <#if para_has_next> \cross </#if>
+</#list> </#if> \\
+<#if meth.returnType != 'null'>
+\t1 \circchannel ${meth.methodName}Ret : ${meth.returnType} \\
+<#else>
+\t1 \circchannel ${meth.methodName}Ret \\
+</#if>    
+\end{circus}
+%
+</#list>
+%
+<#list SyncMethods as meth>
+\begin{circus}
+\t1 \circchannel ${meth.methodName}Call <#if meth.parameters?size > 0>:
+<#list meth.parameters?values as param>
+${param}<#if para_has_next>\cross</#if>
+</#list> </#if>\\
   
 <#if meth.returnType != 'null'>
-  \circchannel ${meth.methodName}Ret : ${meth.returnType} \\
+\t1 \circchannel ${meth.methodName}Ret : ${meth.returnType} \\
 <#else>
-  \circchannel ${meth.methodName}Ret \\
+\t1 \circchannel ${meth.methodName}Ret \\
 </#if>  
-  
-
-</#list>
 \end{circus}
-</#if>
-
-
-
-
-
+%
+</#list>

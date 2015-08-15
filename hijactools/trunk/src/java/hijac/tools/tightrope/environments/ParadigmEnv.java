@@ -12,6 +12,7 @@ public class ParadigmEnv extends ObjectEnv
 
 		meths = new ArrayList<MethodEnv>();
 		syncMeths = new ArrayList<MethodEnv>();
+//		classEnv = new ClassEnv();
 
 	}
 
