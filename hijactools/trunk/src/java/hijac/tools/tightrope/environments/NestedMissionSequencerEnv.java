@@ -15,12 +15,12 @@ public class NestedMissionSequencerEnv extends ParadigmEnv
 	{
 		Map map = super.toMap();
 		
-	
-		for (Name n : missions)
-		{
-			//TODO ALSO WONT WORK
-			map.put("MissionID", n);
-		}
+		
+//		for (Name n : missions)
+//		{
+//			//TODO ALSO WONT WORK
+//			map.put("MissionID", n);
+//		}
 
 		
 		return map;
