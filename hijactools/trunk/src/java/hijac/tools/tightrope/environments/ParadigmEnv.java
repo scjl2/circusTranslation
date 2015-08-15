@@ -8,6 +8,7 @@ public abstract class ParadigmEnv extends ObjectEnv
 {
 	protected static final String HAS_CLASS = "HasClass";
 	protected ClassEnv classEnv;
+	protected boolean hasClass;
 
 	public ParadigmEnv()
 	{
@@ -16,12 +17,15 @@ public abstract class ParadigmEnv extends ObjectEnv
 		meths = new ArrayList<MethodEnv>();
 		syncMeths = new ArrayList<MethodEnv>();
 //		classEnv = new ClassEnv();
+		classEnv = null;
+		hasClass = false;
 
 	}
 
 	public void addClassEnv(ClassEnv classEnv)
 	{
 		this.classEnv = classEnv;
+		this.hasClass = true;
 	}
 
 	public ClassEnv getClassEnv()
@@ -39,7 +43,7 @@ public abstract class ParadigmEnv extends ObjectEnv
 
 		map.put(METHODS, methsList());
 		map.put(SYNC_METHODS, syncMethsList());
-		map.put(HAS_CLASS, classEnv != null);
+		map.put(HAS_CLASS, hasClass);
 		
 		return map;
 	}

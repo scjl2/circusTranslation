@@ -31,11 +31,14 @@
 
 \section{Safelet}
 \input{FlatBufferApp.circus}
+\IfFileExists{FlatBufferClass.circus}{\newpage
+\input{FlatBufferClass.circus}}{}
 \newpage
 
 \section{Top Level Mission Sequencer}
 \input{FlatBufferMissionSequencerApp.circus}
-
+\IfFileExists{FlatBufferMissionSequencerClass.circus}{\newpage
+\input{FlatBufferMissionSequencerClass.circus}}{}
 \newpage
 
 \section{Missions}
@@ -43,15 +46,21 @@
 
 \subsection{FlatBufferMission}
 \input{FlatBufferMissionApp.circus}
+\IfFileExists{FlatBufferMissionClass.circus}{\newpage
+\input{FlatBufferMissionClass.circus}}{}
 
 \newpage
 
 \subsection{Schedulables of FlatBufferMission}
 
 \input{ReaderApp.circus}
+\IfFileExists{ReaderClass.circus}{\newpage
+\input{ReaderClass.circus}}{}
 \newpage
 
 \input{WriterApp.circus}
+\IfFileExists{WriterClass.circus}{\newpage
+\input{WriterClass.circus}}{}
 
 
 \end{document}

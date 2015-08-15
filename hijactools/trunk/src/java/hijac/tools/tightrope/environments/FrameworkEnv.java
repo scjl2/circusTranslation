@@ -211,6 +211,7 @@ public class FrameworkEnv
 				Map clusterMap = new HashMap();
 				clusterMap.put("Sequencer", c.getSequencer());
 				clusterMap.put("Mission", c.getMissionEnv().getName());
+				clusterMap.put("Mission_HasClass", c.getMissionEnv().hasClass);
 
 				Map schedulablesMap = new HashMap();
 				schedulablesMap.put("Periodics", c.getSchedulablesEnv()
@@ -779,8 +780,14 @@ public class FrameworkEnv
 
 		networkMap.put("SafeletName", getControlTier().getSafeletEnv()
 				.getName());
+	
+		networkMap.put("Safelet_HasClass", getControlTier().getSafeletEnv().hasClass);
+		
 		networkMap.put("TopLevelSequencer", getControlTier()
 				.getTopLevelMissionSequencerEnv().getName());
+		
+		networkMap.put("TopLevelSequencer_HasClass", getControlTier()
+				.getTopLevelMissionSequencerEnv().hasClass);
 
 		List tierList = new ArrayList();
 
@@ -789,6 +796,9 @@ public class FrameworkEnv
 			tierList.add(tier.toList());
 		}
 		networkMap.put("Tiers", tierList);
+		
+		
+		
 
 		return networkMap;
 	}

@@ -31,19 +31,14 @@
 
 \section{Safelet}
 \input{${SafeletName}App.circus}
-<#if SafeletName.HasClass = true>
-\newpage
-\input{${SafeletName}Class.circus}
-</#if>
+\IfFileExists{${SafeletName}Class.circus}{\newpage
+\input{${SafeletName}Class.circus}}{}
 \newpage
 
 \section{Top Level Mission Sequencer}
 \input{${TopLevelSequencer}App.circus}
-<#if TopLevelSequencer.HasClass = true>
-\newpage
-\input{${TopLevelSequencer}Class.circus}
-</#if>
-
+\IfFileExists{${TopLevelSequencer}Class.circus}{\newpage
+\input{${TopLevelSequencer}Class.circus}}{}
 \newpage
 
 \section{Missions}
@@ -53,10 +48,8 @@
 <#list tier as cluster>
 \subsection{${cluster.Mission}}
 \input{${cluster.Mission}App.circus}
-<#if cluster.Mission.HasClass = true>
-\newpage
-\input{${cluster.Mission}Class.circus}
-</#if>
+\IfFileExists{${cluster.Mission}Class.circus}{\newpage
+\input{${cluster.Mission}Class.circus}}{}
 
 \newpage
 
@@ -65,10 +58,8 @@
 <#list schedulables as schedulable>
 
 \input{${schedulable}App.circus}
-<#if schedulable.HasClass = true>
-\newpage
-\input{${schedulable}Class.circus}
-</#if>
+\IfFileExists{${schedulable}Class.circus}{\newpage
+\input{${schedulable}Class.circus}}{}
 			<#if schedulable_has_next>
 \newpage
 			</#if>
