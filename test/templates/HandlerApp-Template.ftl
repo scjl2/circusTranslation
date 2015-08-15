@@ -32,7 +32,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_${handlerType}\_app~.~${ProcessID} \then \Skip)
+\circspot (<#if Variables?size != 0> Init \circseq</#if> Methods) \circinterrupt (end\_${handlerType}\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

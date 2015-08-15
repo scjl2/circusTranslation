@@ -54,7 +54,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)
+\circspot ( Methods) \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)
 \end{circusaction}
 
 \begin{circus}

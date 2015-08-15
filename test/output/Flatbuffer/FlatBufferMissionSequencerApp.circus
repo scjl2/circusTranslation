@@ -53,7 +53,7 @@ Methods \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (Methods) %\circhide MissionSequencerAppStateSync
+\circspot ( Init \circseq Methods) %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~FlatBufferMissionSequencer \then \Skip)
 \end{circusaction}
 

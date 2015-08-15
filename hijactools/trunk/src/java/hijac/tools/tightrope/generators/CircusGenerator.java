@@ -13,6 +13,7 @@ import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
 
+import java.awt.List;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -391,6 +392,7 @@ public class CircusGenerator
 			// Custom Channels
 			if(!mtEnv.getMeths().isEmpty() || ! mtEnv.getSyncMeths().isEmpty())
 			{
+				
 				translateCommon(mtMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
 			}

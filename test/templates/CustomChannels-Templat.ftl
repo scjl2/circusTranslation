@@ -30,5 +30,5 @@ ${param}<#if para_has_next>\cross</#if>
 \t1 \circchannel ${meth.methodName}Ret \\
 </#if>  
 \end{circus}
-%
+% 
 </#list>

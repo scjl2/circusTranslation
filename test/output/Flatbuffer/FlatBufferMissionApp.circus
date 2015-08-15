@@ -156,7 +156,7 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_mission\_app~.~FlatBufferMission \then \Skip)
+\circspot ( Init \circseq Methods) \circinterrupt (end\_mission\_app~.~FlatBufferMission \then \Skip)
 \end{circusaction}
 
 \begin{circus}

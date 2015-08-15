@@ -38,7 +38,7 @@ Methods \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (Methods) %\circhide MissionSequencerAppStateSync
+\circspot (<#if Variables?size != 0> Init \circseq</#if> Methods) %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
