@@ -15,12 +15,10 @@ import javax.lang.model.element.Name;
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
 		{
-			Map map = new HashMap();
-			map.put("ProcessID", name.toString());
+			Map map = super.toMap();
+			
 			map.put("RegisteredSchedulables", schedulables);
-			map.put("Variables", varsList());
-			map.put("Methods", methsList());
-			map.put("SyncMethods", syncMethsList());
+			
 			
 			return map;
 		}

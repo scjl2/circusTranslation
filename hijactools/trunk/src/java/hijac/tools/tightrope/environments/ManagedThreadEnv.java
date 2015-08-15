@@ -11,14 +11,8 @@ import java.util.Map;
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
 		{
-			Map map = new HashMap();
-			map.put("ProcessID", name.toString());
-
-				
-			map.put("Variables", varsList());
-			map.put("Parameters", paramsList());
-			map.put("Methods", methsList());
-			map.put("SyncMethods", syncMethsList());
+			Map map = super.toMap();
+			
 			
 			return map;
 		}

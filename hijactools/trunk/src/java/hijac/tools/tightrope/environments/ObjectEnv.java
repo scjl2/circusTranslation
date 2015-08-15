@@ -14,7 +14,6 @@ public class ObjectEnv
 {
 	private static final String ACCESS = "access";
 	private static final String BODY = "body";
-	private static final String PARAMETERS_STR = "parameters";
 	private static final String RETURN_TYPE = "returnType";
 	private static final String METHOD_NAME = "methodName";
 	private static final String VAR_INPUT = "VarInput";
@@ -27,6 +26,7 @@ public class ObjectEnv
 	protected static final String PROCESS_ID = "ProcessID";
 	protected static final String IMPORT_NAME = "importName";
 	protected static final String HANDLER_TYPE = "handlerType";
+	protected static final String PARAMETERS_STR = "Parameters";
 	// ClassTree classTree;
 	/**
 	 * The name of the entity this environment represents

@@ -15,17 +15,14 @@ import javax.lang.model.element.Name;
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
 		{
-			Map map = new HashMap();
-			map.put("ProcessID", name.toString());
-					
+			Map map = super.toMap();
+							
 			for(Name n : missions)
 			{
+				//TODO THIS WONT WORK WITH MORE THAN ONE MISSION.
 				map.put("MissionID", n);
 			}
-				
-			map.put("Variables", varsList());
-			map.put("Methods", methsList());
-			map.put("SyncMethods", syncMethsList());
+			
 			
 			
 			return map;

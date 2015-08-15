@@ -1,10 +1,13 @@
 package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ParadigmEnv extends ObjectEnv
+public abstract class ParadigmEnv extends ObjectEnv
 {
-	private ClassEnv classEnv;
+	protected static final String HAS_CLASS = "HasClass";
+	protected ClassEnv classEnv;
 
 	public ParadigmEnv()
 	{
@@ -24,5 +27,20 @@ public class ParadigmEnv extends ObjectEnv
 	public ClassEnv getClassEnv()
 	{
 		return classEnv;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Map toMap()
+	{
+		Map map = new HashMap();
+		map.put(PROCESS_ID, name.toString());
+		map.put(PARAMETERS_STR, paramsList());
+		map.put(VARIABLES_STR, varsList());
+
+		map.put(METHODS, methsList());
+		map.put(SYNC_METHODS, syncMethsList());
+		map.put(HAS_CLASS, classEnv != null);
+		
+		return map;
 	}
 }

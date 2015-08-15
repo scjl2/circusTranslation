@@ -233,9 +233,13 @@ public class CircusGenerator
 
 		translateCommon(root, SAFELET_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
+		
 		// Custom Channels
-		translateCommon(root, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+		if(!safelet.getMeths().isEmpty() || ! safelet.getSyncMeths().isEmpty())
+		{
+			translateCommon(root, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 				+ "MethChan.circus");
+		}
 
 		ClassEnv classEnv = safelet.getClassEnv();
 		if (classEnv != null)
@@ -268,8 +272,11 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			translateCommon(tlms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+			if(!tlmsEnv.getMeths().isEmpty() || ! tlmsEnv.getSyncMeths().isEmpty())
+			{
+				translateCommon(tlms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
+			}
 
 			ClassEnv classEnv = tlmsEnv.getClassEnv();
 			if (classEnv != null)
@@ -302,8 +309,11 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			translateCommon(missionMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+			if(!mEnv.getMeths().isEmpty() || ! mEnv.getSyncMeths().isEmpty())
+			{
+				translateCommon(missionMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
+			}
 
 			// Class
 			ClassEnv classEnv = mEnv.getClassEnv();
@@ -339,8 +349,11 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			translateCommon(sms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+			if(!smsEnv.getMeths().isEmpty() || ! smsEnv.getSyncMeths().isEmpty())
+			{
+				translateCommon(sms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
+			}
 
 			ClassEnv classEnv = smsEnv.getClassEnv();
 			if (classEnv != null)
@@ -376,15 +389,19 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			translateCommon(mtMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+			if(!mtEnv.getMeths().isEmpty() || ! mtEnv.getSyncMeths().isEmpty())
+			{
+				translateCommon(mtMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
+			}
 
 			ClassEnv classEnv = mtEnv.getClassEnv();
 			if (classEnv != null)
 			{
-				mtMap = classEnv.toMap();
-				if (!mtMap.isEmpty())
+				
+				if(!classEnv.getMeths().isEmpty() || ! classEnv.getSyncMeths().isEmpty())					
 				{
+					mtMap = classEnv.toMap();
 					translateCommon(mtMap, CLASS_TEMPLATE_FTL, procName
 							+ CLASS_CIRCUS);
 				}
@@ -411,8 +428,11 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			translateCommon(osehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+			if(!osehEnv.getMeths().isEmpty() || ! osehEnv.getSyncMeths().isEmpty())
+			{
+				translateCommon(osehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
+			}
 
 			ClassEnv classEnv = osehEnv.getClassEnv();
 			if (classEnv != null)
@@ -445,8 +465,11 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			translateCommon(pehhMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+			if(!pehEnv.getMeths().isEmpty() || ! pehEnv.getSyncMeths().isEmpty())
+			{
+				translateCommon(pehhMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
+			}
 
 			ClassEnv classEnv = pehEnv.getClassEnv();
 			if (classEnv != null)
@@ -479,8 +502,11 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			translateCommon(apehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+			if(!apehEnv.getMeths().isEmpty() || ! apehEnv.getSyncMeths().isEmpty())
+			{
+				translateCommon(apehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
+			}
 
 			ClassEnv classEnv = apehEnv.getClassEnv();
 			if (classEnv != null)

@@ -31,12 +31,19 @@
 
 \section{Safelet}
 \input{${SafeletName}App.circus}
+<#if SafeletName.HasClass = true>
+\newpage
+\input{${SafeletName}Class.circus}
+</#if>
 \newpage
 
 \section{Top Level Mission Sequencer}
 \input{${TopLevelSequencer}App.circus}
+<#if TopLevelSequencer.HasClass = true>
 \newpage
 \input{${TopLevelSequencer}Class.circus}
+</#if>
+
 \newpage
 
 \section{Missions}
@@ -46,8 +53,11 @@
 <#list tier as cluster>
 \subsection{${cluster.Mission}}
 \input{${cluster.Mission}App.circus}
+<#if cluster.Mission.HasClass = true>
 \newpage
 \input{${cluster.Mission}Class.circus}
+</#if>
+
 \newpage
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
@@ -55,8 +65,10 @@
 <#list schedulables as schedulable>
 
 \input{${schedulable}App.circus}
+<#if schedulable.HasClass = true>
 \newpage
 \input{${schedulable}Class.circus}
+</#if>
 			<#if schedulable_has_next>
 \newpage
 			</#if>

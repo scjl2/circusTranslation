@@ -14,8 +14,8 @@ public class SafeletEnv extends ParadigmEnv
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
-		Map map = new HashMap();
-		map.put("ProcessID", name.toString());
+		Map map = super.toMap();
+	
 		map.put("initializeApplicationMethod", "");
 
 		for (Name n : tlmsNames)
@@ -23,10 +23,7 @@ public class SafeletEnv extends ParadigmEnv
 			map.put("SchedulableID", n);
 		}
 
-		map.put("Variables", varsList());
-		map.put("Methods", methsList());
-		map.put("SyncMethods", syncMethsList());
-
+		
 		return map;
 	}
 

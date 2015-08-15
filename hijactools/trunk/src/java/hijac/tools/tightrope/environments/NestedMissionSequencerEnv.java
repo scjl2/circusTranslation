@@ -13,19 +13,16 @@ public class NestedMissionSequencerEnv extends ParadigmEnv
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
-		Map map = new HashMap();
-		map.put("ProcessID", name.toString());
+		Map map = super.toMap();
+		
 	
 		for (Name n : missions)
 		{
+			//TODO ALSO WONT WORK
 			map.put("MissionID", n);
 		}
 
-		map.put("Variables", varsList());
-
-		map.put("Methods", methsList());
-		map.put("SyncMethods", syncMethsList());
-
+		
 		return map;
 	}
 

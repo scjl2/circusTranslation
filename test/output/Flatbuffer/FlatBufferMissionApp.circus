@@ -64,7 +64,6 @@ writeSyncMeth \circdef
 \\
 \circblockopen
 writeCall~.~FlatBufferMission~?~thread 
-~?~update
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
 lockAcquired~.~FlatBufferMission~.~thread \then \\
@@ -120,7 +119,6 @@ waitOnMissionSyncMeth \circdef
 \\
 \circblockopen
 waitOnMissionCall~.~FlatBufferMission~?~thread 
-~?~name
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
 lockAcquired~.~FlatBufferMission~.~thread \then \\
