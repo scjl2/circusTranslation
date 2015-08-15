@@ -17,11 +17,11 @@
 <#include "State-Template.ftl">
 
 \begin{circusaction}
-GetNextMission \circdef \\
+GetNextMission \circdef \circvar ret : MissionID \circspot \\
 \circblockopen
     getNextMissionCall~.~${ProcessID} \then \\
-	this~.~getNextMission() \circseq \\
-    getNextMissionRet~.~${ProcessID}~!~${MissionID}  \then \\
+	ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~${ProcessID}~!~ret  \then \\
 \Skip
 \circblockclose	
 \end{circusaction}
