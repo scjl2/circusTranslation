@@ -383,9 +383,6 @@ public class CircusGenerator
 			/* Create a data-model */
 			mtMap = mtEnv.toMap();
 
-			// System.out.println("/// params = "
-			// + mtMap.get("Parameters").toString());
-
 			procName = mtEnv.getName().toString();
 			translateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName
 					+ APP_CIRCUS);
@@ -393,6 +390,8 @@ public class CircusGenerator
 			// Custom Channels
 			if (!mtEnv.getMeths().isEmpty() || !mtEnv.getSyncMeths().isEmpty())
 			{
+				mtEnv.getMeths().remove("run");
+				
 				translateCommon(mtMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 						+ "MethChan.circus");
 			}

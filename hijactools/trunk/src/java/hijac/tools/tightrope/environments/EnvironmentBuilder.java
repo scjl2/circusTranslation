@@ -368,16 +368,19 @@ public class EnvironmentBuilder
 				}
 				else if (!(mt.getName().contentEquals("<init>")))
 				{
-					if (!(mt.getName().contentEquals("run")))
+					if ((mt.getName().contentEquals("run")))
 					{
 						// TODO Add to schedulableEnv but...need a different
 						// visitor because otherwise it'll be outputting too much
-
+						((ManagedThreadEnv) schedulableEnv).addRunMethod(methodVisitor.visitMethod(mt, null));
 						// schedulableEnv.addSyncMeth(
 						// (new MethodVisitor(analysis,
 						// classEnv).visitMethod(mt, null)));
 					}
-					schedulableEnv.addMeth(methodVisitor.visitMethod(mt, null));
+					else
+					{
+						schedulableEnv.addMeth(methodVisitor.visitMethod(mt, null));
+					}
 				}
 
 			}			

@@ -12,10 +12,10 @@ import com.sun.source.tree.Tree;
 
 public class ObjectEnv
 {
-	private static final String ACCESS = "access";
-	private static final String BODY = "body";
-	private static final String RETURN_TYPE = "returnType";
-	private static final String METHOD_NAME = "methodName";
+	protected static final String ACCESS = "access";
+	protected static final String BODY = "body";
+	protected static final String RETURN_TYPE = "returnType";
+	protected static final String METHOD_NAME = "methodName";
 	private static final String VAR_INPUT = "VarInput";
 	private static final String VAR_INIT = "VarInit";
 	private static final String VAR_TYPE = "VarType";
