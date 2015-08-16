@@ -11,7 +11,7 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess FlatBufferMissionSequencerApp \circdef \circbegin\\ 
+\circprocess FlatBufferMissionSequencerApp \circdef  \circbegin\\ 
 \end{circus}
    
 \begin{schema}{State}

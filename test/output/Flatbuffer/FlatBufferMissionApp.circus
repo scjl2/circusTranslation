@@ -17,7 +17,7 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess FlatBufferMissionApp \circdef \circbegin
+\circprocess FlatBufferMissionApp \circdef  \circbegin
 \end{circus}
 
 \begin{schema}{State}

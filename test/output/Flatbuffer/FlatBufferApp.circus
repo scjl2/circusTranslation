@@ -12,7 +12,7 @@
 %\end{circus}     
   
 \begin{circus}
-\circprocess FlatBufferApp  \circdef \circbegin
+\circprocess FlatBufferApp  \circdef  \circbegin
 \end{circus}
 
 

@@ -3,7 +3,8 @@
 \end{zsection}
 %
 \begin{circus}
-\circprocess WriterApp \circdef  \circbegin
+\circprocess WriterApp \circdef   fbMission : MissionID
+ \circbegin
 \end{circus}
 
 \begin{schema}{State}

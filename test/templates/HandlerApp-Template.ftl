@@ -3,7 +3,7 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess ${ProcessID}App \circdef \circbegin
+\circprocess ${ProcessID}App \circdef <#include "Params-Template.ftl">  \circbegin
 \end{circus}
 
 <#include "State-Template.ftl">

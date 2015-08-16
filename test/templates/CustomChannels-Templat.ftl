@@ -4,7 +4,7 @@
 %
 <#list Methods as meth>
 \begin{circus}
-\t1 \circchannel ${meth.methodName}Call <#if meth.parameters?size > 0>:
+\t1 \circchannel ${meth.methodName}Call <#if meth.parameters?size != 0>:
 <#list meth.parameters?values as param>
 ${param} <#if para_has_next> \cross </#if>
 </#list> </#if> \\
@@ -19,7 +19,7 @@ ${param} <#if para_has_next> \cross </#if>
 %
 <#list SyncMethods as meth>
 \begin{circus}
-\t1 \circchannel ${meth.methodName}Call <#if meth.parameters?size > 0>:
+\t1 \circchannel ${meth.methodName}Call <#if meth.parameters?size != 0>:
 <#list meth.parameters?values as param>
 ${param}<#if para_has_next>\cross</#if>
 </#list> </#if>\\
