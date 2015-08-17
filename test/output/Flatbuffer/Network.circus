@@ -85,16 +85,14 @@ TopLevelMissionSequencerFW(FlatBufferMissionSequencer)
 		\circblockopen
 
 
-\circblockopen
+
 			ManagedThreadFW(Reader)\\
 			\t1 \lpar SchedulablesSync \rpar\\
 			ManagedThreadFW(Writer)\\
 
 
-\circblockclose \\
 
 
-\t1 \lpar SchedulablesSync \rpar\\
 
 
 

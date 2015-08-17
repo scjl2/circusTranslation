@@ -137,10 +137,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 		\circblockopen
 
 
-<#if cluster.Schedulables.Threads?size gte 1>
-<#if cluster.Schedulables.Threads?size gte 2>
-\circblockopen
-</#if>
+
 		<#list cluster.Schedulables.Threads as thread>			
 			ManagedThreadFW(${thread})\\
 			<#if thread_has_next>
@@ -150,15 +147,8 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 
 <#assign syncNeeded=false>
 
-<#if cluster.Schedulables.Threads?size gte 2>
-\circblockclose \\
 
-</#if>
 
-<#if cluster.Schedulables.Threads?size gte 1>
-\t1 \lpar SchedulablesSync \rpar\\
-</#if>
-</#if>
 
 <#if cluster.Schedulables.Oneshots?size gte 1>
 
