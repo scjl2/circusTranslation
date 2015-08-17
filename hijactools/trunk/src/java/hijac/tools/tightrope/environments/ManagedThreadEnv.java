@@ -23,14 +23,7 @@ public class ManagedThreadEnv extends ParadigmEnv
 	{
 		Map map = super.toMap();
 		
-		Map runMethodMap = new HashMap();
-		runMethodMap.put(METHOD_NAME, runMethod.getMethodName().toString());
-		runMethodMap.put(RETURN_TYPE, runMethod.getReturnType());
-		runMethodMap.put(PARAMETERS_STR, runMethod.getParameters());
-		runMethodMap.put(BODY, runMethod.getBody());
-		runMethodMap.put(ACCESS, runMethod.getAccessString());
-
-		
+		Map runMethodMap =  methodToMap(runMethod);		
 		
 		map.put("Run", runMethodMap);
 

@@ -246,12 +246,8 @@ public class ObjectEnv
 
 		for (MethodEnv me : meths)
 		{
-			Map methodMap = new HashMap();
-			methodMap.put(METHOD_NAME, me.getMethodName().toString());
-			methodMap.put(RETURN_TYPE, me.getReturnType());
-			methodMap.put(PARAMETERS_STR, me.getParameters());
-			methodMap.put(BODY, me.getBody());
-			methodMap.put(ACCESS, me.getAccessString());
+			Map methodMap = methodToMap(me);
+
 
 			returnList.add(methodMap);
 		}
@@ -266,17 +262,29 @@ public class ObjectEnv
 
 		for (MethodEnv me : syncMeths)
 		{
-			Map methodMap = new HashMap();
-			methodMap.put(METHOD_NAME, me.getMethodName().toString());
-			methodMap.put(RETURN_TYPE, me.getReturnType());
-			methodMap.put("returnValue", me.getReturnValue());
-			methodMap.put(PARAMETERS_STR, me.getParameters());
-			methodMap.put(ACCESS, me.getAccessString());
-			methodMap.put(BODY, me.getBody());
+			Map methodMap = methodToMap(me);
 			returnList.add(methodMap);
 		}
 
 		return returnList;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected Map methodToMap(MethodEnv me)
+	{
+		Map methodMap = new HashMap();
+		
+		
+		Name n = me.getMethodName();
+		String s = n.toString();
+		methodMap.put( METHOD_NAME, s);
+		methodMap.put(RETURN_TYPE, me.getReturnType());
+		methodMap.put("returnValue", me.getReturnValue());
+		methodMap.put(PARAMETERS_STR, me.getParameters());
+		methodMap.put(ACCESS, me.getAccessString());
+		methodMap.put(BODY, me.getBody());
+		
+		return methodMap;
 	}
 
 	public List<MethodEnv> getMeths()

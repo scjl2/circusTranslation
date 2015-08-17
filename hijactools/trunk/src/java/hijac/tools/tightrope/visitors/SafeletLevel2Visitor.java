@@ -54,7 +54,8 @@ public class SafeletLevel2Visitor
 	public ArrayList<Name> visitType(TypeElement e, Void p)
 	{
 		// System.out.println(e);
-
+		MethodVisitor methodVisitor = new MethodVisitor(
+				analysis, safeletEnv);
 		ClassTree ct = trees.getTree(e);
 
 		// programEnv.getSafelet().setClassTree(ct);
@@ -98,14 +99,15 @@ public class SafeletLevel2Visitor
 
 				if (mt.getName().contentEquals("initializeApplication"))
 				{
-					safeletEnv.addMeth(mt.getName(), typeKind, returns,
-							paramMap);
+//					MethodEnv me = new MethodEnv(mt.getName(), typeKind, returns,
+//							paramMap);
+//					
+					safeletEnv.addInitMethod(methodVisitor.visitMethod(mt, null));
 				}
 				else
 				{
 					{
-						MethodVisitor methodVisitor = new MethodVisitor(
-								analysis, safeletEnv);
+						
 
 						if (isSyncMethod)
 						{

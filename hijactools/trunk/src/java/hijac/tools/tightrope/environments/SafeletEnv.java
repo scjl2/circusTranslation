@@ -8,6 +8,30 @@ import javax.lang.model.element.Name;
 
 public class SafeletEnv extends ParadigmEnv
 {
+	
+	private MethodEnv initMethod, getSequencerMeth;
+	
+	public void addInitMethod(MethodEnv initMethod)
+	{
+		this.initMethod = initMethod;
+	}
+	
+	public MethodEnv getInitMethod()
+	{
+		return initMethod;
+	}
+	
+	public void addGetSequencerMethod(MethodEnv getSequencerMethod)
+	{
+		this.getSequencerMeth = getSequencerMethod;
+	}
+	
+	public MethodEnv getGetSequencerMethod()
+	{
+		return getSequencerMeth;
+	}
+	
+	
 	// temp
 	ArrayList<Name> tlmsNames = new ArrayList<Name>();
 
@@ -16,6 +40,7 @@ public class SafeletEnv extends ParadigmEnv
 	{
 		Map map = super.toMap();
 	
+//		map.put("initializeApplicationMethod", methodToMap(initMethod));
 		map.put("initializeApplicationMethod", "");
 
 		for (Name n : tlmsNames)
@@ -23,6 +48,7 @@ public class SafeletEnv extends ParadigmEnv
 			map.put("SchedulableID", n);
 		}
 
+		
 		
 		return map;
 	}

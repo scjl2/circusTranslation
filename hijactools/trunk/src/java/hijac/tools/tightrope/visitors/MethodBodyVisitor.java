@@ -515,7 +515,7 @@ public class MethodBodyVisitor extends
 			sb.append("notify~.~");
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
-			sb.append("~?~thread \\then ");
+			sb.append("~!~thread \\then ");
 			sb.append("\\\\");
 			sb.append("\\Skip");
 
@@ -526,12 +526,12 @@ public class MethodBodyVisitor extends
 			sb.append("waitCall~.~");
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
-			sb.append("~?~thread \\then");
+			sb.append("~!~thread \\then");
 			sb.append("\\\\");
 			sb.append("waitRet~.~");
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
-			sb.append("~?~thread \\then");
+			sb.append("~!~thread \\then");
 			sb.append("\\\\");
 			sb.append("\\Skip");
 

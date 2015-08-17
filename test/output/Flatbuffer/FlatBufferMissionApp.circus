@@ -74,7 +74,7 @@ lockAcquired~.~FlatBufferMission~.~thread \then \\
 
 
   \circseq \\
-notify~.~FlatBufferMissionObject~?~thread \then \\\Skip
+notify~.~FlatBufferMissionObject~!~thread \then \\\Skip
 
   \circblockclose
  \circseq  \\
@@ -102,7 +102,7 @@ lockAcquired~.~FlatBufferMission~.~thread \then \\
 
 
   \circseq \\
-notify~.~FlatBufferMissionObject~?~thread \then \\\Skip
+notify~.~FlatBufferMissionObject~!~thread \then \\\Skip
 
   \circseq \\
   ret := out
@@ -125,7 +125,7 @@ lockAcquired~.~FlatBufferMission~.~thread \then \\
   \circblockopen
 
 
-waitCall~.~FlatBufferMissionObject~?~thread \then\\waitRet~.~FlatBufferMissionObject~?~thread \then\\\Skip
+waitCall~.~FlatBufferMissionObject~!~thread \then\\waitRet~.~FlatBufferMissionObject~!~thread \then\\\Skip
 
   \circblockclose
  \circseq  \\

@@ -22,7 +22,7 @@ InitializeApplication \circdef \\
 \circblockopen
      initializeApplicationCall \then \\
 
-	 ${initializeApplicationMethod}	
+	 ${initializeApplicationMethod.body}	
 
      initializeApplicationRet \then \\
      \Skip
