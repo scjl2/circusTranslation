@@ -111,7 +111,7 @@ ${schedulable}App
 \circblockopen
 SafeletFW \\
 \t1 \lpar ControlTierSync \rpar \\
-TopLevelMissionSequencerFW(${TopLevelSequencer})
+TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockclose
 \end{circus}
 %
@@ -132,14 +132,14 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 <#list tier as cluster>
 
 \circblockopen
-	MissionFW(${cluster.Mission})\\
+	MissionFW(${cluster.Mission.Name})\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
 
 		<#list cluster.Schedulables.Threads as thread>			
-			ManagedThreadFW(${thread})\\
+			ManagedThreadFW(${thread.Name})\\
 			<#if thread_has_next>
 			<#if thread?counter % 2 == 0>
 			\circblockclosed

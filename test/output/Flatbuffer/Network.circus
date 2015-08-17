@@ -70,7 +70,7 @@ App
 \circblockopen
 SafeletFW \\
 \t1 \lpar ControlTierSync \rpar \\
-TopLevelMissionSequencerFW()
+TopLevelMissionSequencerFW(FlatBufferMissionSequencer)
 \circblockclose
 \end{circus}
 %
@@ -80,15 +80,15 @@ TopLevelMissionSequencerFW()
 \circprocess Tier0 \circdef \\
 
 \circblockopen
-	MissionFW()\\
+	MissionFW(FlatBufferMission)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
 
-			ManagedThreadFW()\\
+			ManagedThreadFW(Reader)\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			ManagedThreadFW()\\
+			ManagedThreadFW(Writer)\\
 
 
 
