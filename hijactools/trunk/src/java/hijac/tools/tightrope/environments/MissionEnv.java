@@ -1,7 +1,6 @@
 package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
@@ -15,7 +14,7 @@ import javax.lang.model.element.Name;
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
 		{
-			Map map = super.toMap();
+		Map map = super.toMap();
 			
 			map.put("RegisteredSchedulables", schedulables);
 			

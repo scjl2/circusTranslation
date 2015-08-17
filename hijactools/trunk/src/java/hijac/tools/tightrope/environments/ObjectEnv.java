@@ -239,7 +239,7 @@ public class ObjectEnv
 		return returnList;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public List<Map> methsList()
 	{
 		List<Map> returnList = new ArrayList<>();
@@ -255,7 +255,7 @@ public class ObjectEnv
 		return returnList;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public List<Map> syncMethsList()
 	{
 		List<Map> returnList = new ArrayList<>();

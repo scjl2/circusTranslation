@@ -35,7 +35,6 @@ public class MethodEnv
 		this.returnValues = returnValues;
 	}
 	
-	//TODO Find out what object the body should be
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params, Object body)
 	{
@@ -125,6 +124,11 @@ public class MethodEnv
 	public void setSynchronised(boolean sync)
 	{
 		synchronised = sync;
+	}
+	
+	public boolean isSynchronised()
+	{
+		return synchronised;
 	}
 	
 	public void setAccess(AccessMod access)

@@ -1,18 +1,14 @@
 package hijac.tools.tightrope.translators;
 
-import freemarker.template.ObjectWrapper;
-import freemarker.template.Template;
-/*import freemarker.template.TemplateException;*/
-
 import hijac.tools.config.Hijac;
 import hijac.tools.modelgen.AbstractTranslator;
 import hijac.tools.modelgen.circus.SCJApplication;
-import hijac.tools.modelgen.circus.templates.CircusObjectWrapper;
 import hijac.tools.modelgen.circus.datamodel.ClassModel;
 import hijac.tools.modelgen.circus.datamodel.HandlerModel;
 import hijac.tools.modelgen.targets.ClassTarget;
 
 import javax.lang.model.type.TypeMirror;
+/*import freemarker.template.TemplateException;*/
 
 /**
  * @author Frank Zeyda

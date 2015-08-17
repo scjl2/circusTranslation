@@ -1,7 +1,6 @@
 package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
@@ -12,7 +11,7 @@ import javax.lang.model.element.Name;
 	{		
 		ArrayList<Name> missions = new ArrayList<Name>();
 		
-		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@SuppressWarnings({ "rawtypes"})
 		public Map toMap()
 		{
 			Map map = super.toMap();

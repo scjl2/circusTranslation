@@ -1,6 +1,5 @@
 package hijac.tools.tightrope.environments;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class EventHandlerEnv extends ParadigmEnv

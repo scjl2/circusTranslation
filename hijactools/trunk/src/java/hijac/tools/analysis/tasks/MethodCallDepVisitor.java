@@ -15,7 +15,6 @@ import hijac.tools.collections.Maplet;
 import hijac.tools.collections.Relation;
 
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
 
 /* The method dependency analysis considers methods as well as constructors.
  * However, static and instance initializers are not considered yet as we
