@@ -141,9 +141,13 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 		<#list cluster.Schedulables.Threads as thread>			
 			ManagedThreadFW(${thread})\\
 			<#if thread_has_next>
+			<#if thread?counter % 2 == 0>
+			\circblockclosed
+			\circblockopen
+			</#if>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
-		</#list>
+		</#list>	
 
 <#assign syncNeeded=false>
 
@@ -282,18 +286,18 @@ Tier${tier_index}
 \circprocess  Application \circdef \\
 \circblockopen
 
-${SafeletName}App\\
+${Safelet.Name}App<#if Safelet.Parameters?size != 0> (<#list Safelet.Parameters as param> ?param? <#if param_has_next>,</#if> </#list>) </#if>\\
 \interleave \\
-${TopLevelSequencer}App\\
+${TopLevelSequencer.Name}App<#if TopLevelSequencer.Parameters?size != 0> (<#list TopLevelSequencer.Parameters as param> ?param? <#if param_has_next>,</#if> </#list>) </#if>\\
 \interleave \\
 <#list Tiers as tier >
 <#list tier as cluster>
-${cluster.Mission}App\\
+${cluster.Mission.Name}App<#if cluster.Mission.Parameters?size != 0> (<#list cluster.Mission.Parameters as param> ?param? <#if param_has_next>,</#if> </#list>) </#if>\\
 \interleave \\
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
 <#list schedulables as schedulable>
-${schedulable}App\\
+${schedulable.Name}App<#if schedulable.Parameters?size != 0> (<#list schedulable.Parameters as param> ?param? <#if param_has_next>,</#if> </#list>) </#if>\\
 			<#if schedulable_has_next>
 \interleave \\
 			</#if>

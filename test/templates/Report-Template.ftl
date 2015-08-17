@@ -30,21 +30,21 @@
 \newpage
 
 \section{Safelet}
-\input{${SafeletName}App.circus}
-\IfFileExists{${SafeletName}Class.circus}{\newpage
-\input{${SafeletName}Class.circus}}{}
+\input{${Safelet.Name}App.circus}
+\IfFileExists{${Safelet.Name}Class.circus}{\newpage
+\input{${Safelet.Name}Class.circus}}{}
 \newpage
-\IfFileExists{${SafeletName}MethChan.circus}{\newpage
-\input{${SafeletName}MethChan.circus}}{}
+\IfFileExists{${Safelet.Name}MethChan.circus}{\newpage
+\input{${Safelet.Name}MethChan.circus}}{}
 \newpage
 
 \section{Top Level Mission Sequencer}
-\input{${TopLevelSequencer}App.circus}
-\IfFileExists{${TopLevelSequencer}Class.circus}{\newpage
-\input{${TopLevelSequencer}Class.circus}}{}
+\input{${TopLevelSequencer.Name}App.circus}
+\IfFileExists{${TopLevelSequencer.Name}Class.circus}{\newpage
+\input{${TopLevelSequencer.Name}Class.circus}}{}
 \newpage
-\IfFileExists{${TopLevelSequencer}MethChan.circus}{\newpage
-\input{${TopLevelSequencer}MethChan.circus}}{}
+\IfFileExists{${TopLevelSequencer.Name}MethChan.circus}{\newpage
+\input{${TopLevelSequencer.Name}MethChan.circus}}{}
 \newpage
 
 \section{Missions}
@@ -52,25 +52,25 @@
 <#list Tiers as tier >
 
 <#list tier as cluster>
-\subsection{${cluster.Mission}}
-\input{${cluster.Mission}App.circus}
-\IfFileExists{${cluster.Mission}Class.circus}{\newpage
-\input{${cluster.Mission}Class.circus}}{}
+\subsection{${cluster.Mission.Name}}
+\input{${cluster.Mission.Name}App.circus}
+\IfFileExists{${cluster.Mission.Name}Class.circus}{\newpage
+\input{${cluster.Mission.Name}Class.circus}}{}
 \newpage
-\IfFileExists{${cluster.Mission}MethChan.circus}{\newpage
-\input{${cluster.Mission}MethChan.circus}}{}
+\IfFileExists{${cluster.Mission.Name}MethChan.circus}{\newpage
+\input{${cluster.Mission.Name}MethChan.circus}}{}
 \newpage
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 \subsection{Schedulables of ${cluster.Mission}}
 <#list schedulables as schedulable>
 
-\input{${schedulable}App.circus}
-\IfFileExists{${schedulable}Class.circus}{\newpage
-\input{${schedulable}Class.circus}}{}
+\input{${schedulable.Name}App.circus}
+\IfFileExists{${schedulable.Name}Class.circus}{\newpage
+\input{${schedulable.Name}Class.circus}}{}
 \newpage
-\IfFileExists{${schedulable}MethChan.circus}{\newpage
-\input{${schedulable}MethChan.circus}}{}
+\IfFileExists{${schedulable.Name}MethChan.circus}{\newpage
+\input{${schedulable.Name}MethChan.circus}}{}
 
 			<#if schedulable_has_next>
 \newpage

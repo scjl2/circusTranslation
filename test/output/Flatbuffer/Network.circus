@@ -17,7 +17,7 @@
 \end{circus}
 % IDs wont type check again   Start Mission and Done Mission wont parse?
 \begin{circus}
-\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~FlatBufferMission, done\_mission~.~FlatBufferMission,\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
+\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~, done\_mission~.~,\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
 \end{circus}
 %
 \begin{circus}
@@ -53,16 +53,16 @@
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
-  \t1 AperiodicEventHandlerFW, FlatBufferApp, FlatBufferMissionSequencerApp, \\
+  \t1 AperiodicEventHandlerFW, App, App, \\
   \t1 
 
 
-FlatBufferMissionApp, 
+App, 
 
 
-ReaderApp 
+App 
 ,
-WriterApp 
+App 
 \end{zsection}
 %
 \begin{circus}
@@ -70,7 +70,7 @@ WriterApp
 \circblockopen
 SafeletFW \\
 \t1 \lpar ControlTierSync \rpar \\
-TopLevelMissionSequencerFW(FlatBufferMissionSequencer)
+TopLevelMissionSequencerFW()
 \circblockclose
 \end{circus}
 %
@@ -80,15 +80,15 @@ TopLevelMissionSequencerFW(FlatBufferMissionSequencer)
 \circprocess Tier0 \circdef \\
 
 \circblockopen
-	MissionFW(FlatBufferMission)\\
+	MissionFW()\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
 
-			ManagedThreadFW(Reader)\\
+			ManagedThreadFW()\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			ManagedThreadFW(Writer)\\
+			ManagedThreadFW()\\
 
 
 
@@ -126,9 +126,9 @@ FlatBufferMissionSequencerApp\\
 FlatBufferMissionApp\\
 \interleave \\
 
-ReaderApp\\
+ReaderApp ( ?param?  ) \\
 \interleave \\
-WriterApp\\
+WriterApp ( ?param?  ) \\
 \circblockclose
 \end{circus}
 %

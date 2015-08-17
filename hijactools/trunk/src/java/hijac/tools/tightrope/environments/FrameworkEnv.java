@@ -210,7 +210,12 @@ public class FrameworkEnv
 			{
 				Map clusterMap = new HashMap();
 				clusterMap.put("Sequencer", c.getSequencer());
-				clusterMap.put("Mission", c.getMissionEnv().getName());
+
+				Map missionMap = new HashMap();
+				missionMap.put("Name", c.getMissionEnv().getName());
+				missionMap.put("Parameters", c.getMissionEnv().getParameters());
+
+				clusterMap.put("Mission", missionMap);
 				clusterMap.put("Mission_HasClass", c.getMissionEnv().hasClass);
 
 				Map schedulablesMap = new HashMap();
@@ -335,39 +340,57 @@ public class FrameworkEnv
 				case PEH:
 					for (ObjectEnv p : periodEventHandlerEnvs)
 					{
-						schedulablesList.add(p.getName());
+						Map sMap = makeSchedulableMap(p);
+
+						schedulablesList.add(sMap);
 					}
 					break;
 
 				case APEH:
 					for (ObjectEnv p : aperiodicEventHandlerEnvs)
 					{
-						schedulablesList.add(p.getName());
+						Map sMap = makeSchedulableMap(p);
+
+						schedulablesList.add(sMap);
 					}
 					break;
 
 				case OSEH:
 					for (ObjectEnv p : oneShotEventHandlerEnvs)
 					{
-						schedulablesList.add(p.getName());
+						Map sMap = makeSchedulableMap(p);
+
+						schedulablesList.add(sMap);
 					}
 					break;
 
 				case SMS:
 					for (ObjectEnv p : schedulableMissionSequencerEnvs)
 					{
-						schedulablesList.add(p.getName());
+						Map sMap = makeSchedulableMap(p);
+
+						schedulablesList.add(sMap);
 					}
 					break;
 
 				case MT:
 					for (ObjectEnv p : managedThreadEnvs)
 					{
-						schedulablesList.add(p.getName());
+						Map sMap = makeSchedulableMap(p);
+
+						schedulablesList.add(sMap);
 					}
 					break;
 			}
 			return schedulablesList;
+		}
+
+		private Map makeSchedulableMap(ObjectEnv p)
+		{
+			Map sMap = new HashMap();
+			sMap.put("Name", p.getName());
+			sMap.put("Parameters", p.getParameters());
+			return sMap;
 		}
 
 		public List<AperiodicEventHandlerEnv> getAperiodicEventHandlerEnvs()
@@ -715,9 +738,10 @@ public class FrameworkEnv
 	}
 
 	// Bit hacky
-	public void addMissionSequencerMission(Name missionSequencerName, Name missionName)
+	public void addMissionSequencerMission(Name missionSequencerName,
+			Name missionName)
 	{
-//		System.out.println("*** Adding " + n + " to " + tlms + " ***");
+		// System.out.println("*** Adding " + n + " to " + tlms + " ***");
 		if (controlTier.topLevelMissionSequencerEnv.getName() == missionSequencerName)
 		{
 			controlTier.topLevelMissionSequencerEnv.addMission(missionName);
@@ -778,14 +802,25 @@ public class FrameworkEnv
 	{
 		Map networkMap = new HashMap();
 
-		networkMap.put("SafeletName", getControlTier().getSafeletEnv()
+		Map safeletMap = new HashMap();
+		safeletMap.put("Name", getControlTier().getSafeletEnv().getName());
+		
+		safeletMap.put("Parameters", getControlTier().getSafeletEnv()
+				.getParameters());
+
+		networkMap.put("Safelet", safeletMap);
+
+		networkMap.put("Safelet_HasClass",
+				getControlTier().getSafeletEnv().hasClass);
+
+		Map tlmsMap = new HashMap();
+		tlmsMap.put("Name", getControlTier().getTopLevelMissionSequencerEnv()
 				.getName());
-	
-		networkMap.put("Safelet_HasClass", getControlTier().getSafeletEnv().hasClass);
-		
-		networkMap.put("TopLevelSequencer", getControlTier()
-				.getTopLevelMissionSequencerEnv().getName());
-		
+		tlmsMap.put("Parameters", getControlTier()
+				.getTopLevelMissionSequencerEnv().getParameters());
+
+		networkMap.put("TopLevelSequencer", tlmsMap);
+
 		networkMap.put("TopLevelSequencer_HasClass", getControlTier()
 				.getTopLevelMissionSequencerEnv().hasClass);
 
@@ -796,9 +831,6 @@ public class FrameworkEnv
 			tierList.add(tier.toList());
 		}
 		networkMap.put("Tiers", tierList);
-		
-		
-		
 
 		return networkMap;
 	}
