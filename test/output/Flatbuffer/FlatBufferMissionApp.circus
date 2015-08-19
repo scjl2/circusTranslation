@@ -58,6 +58,19 @@ CleanupPhase \circdef  \\
 \circblockclose
 \end{circusaction}
 
+\begin{circusaction}
+bufferEmptyMeth \circdef 
+\circvar ret : \boolean \circspot
+\\
+\circblockopen
+bufferEmptyCall~.~FlatBufferMission 
+\then \\
+ret := this~.~bufferEmpty(String)  \circseq  \\
+
+bufferEmptyRet~.~FlatBufferMission~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
 %
 \begin{circusaction}
 writeSyncMeth \circdef 
@@ -143,6 +156,8 @@ Methods \circdef
 	\extchoice \\
 	CleanupPhase \\
 %
+\extchoice \\
+	bufferEmptyMeth \\ 
 %
 	\extchoice \\
 	writeSyncMeth \\	

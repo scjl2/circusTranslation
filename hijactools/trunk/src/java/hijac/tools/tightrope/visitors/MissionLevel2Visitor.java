@@ -132,6 +132,40 @@ public class MissionLevel2Visitor
 							MethodEnv m = methodVisitor.visitMethod(mt, null);
 							setMethodAccess(mt, m);
 							missionEnv.getClassEnv().addMeth(m);
+							
+							MethodEnv m2 = methodVisitor.visitMethod(mt, null);
+							StringBuilder body;
+							
+							if(m2.getReturnType() == "null")
+							{
+								body = new StringBuilder();
+							}
+							else
+							{
+								body = new StringBuilder("ret := ");
+							}						
+							
+							
+							StringBuilder parametersString = new StringBuilder();
+							
+							if(!m2.getParameters().isEmpty())
+							{
+								for(String s : m2.getParameters().keySet())
+								{
+									parametersString.append(m2.getParameters().get(s));
+								}
+							}
+							
+							 body.append( "this~.~");
+							 body.append( m2.getMethodName());
+							 body.append("(");
+							 body.append( parametersString.toString());
+							 body.append(")");
+							
+							
+							m2.setBody(body);
+							missionEnv.addMeth(m2);
+							
 						}
 					}
 				}

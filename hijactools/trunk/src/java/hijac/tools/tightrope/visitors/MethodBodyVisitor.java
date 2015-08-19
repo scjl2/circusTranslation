@@ -487,20 +487,6 @@ public class MethodBodyVisitor extends
 	public String visitMethodInvocation(MethodInvocationTree node,
 			MethodVisitorContext ctxt)
 	{
-
-		// ExpressionTree expression = (((MemberSelectTree)
-		// node.getMethodSelect()).getExpression());
-		//
-		// final boolean waitOnMission = false ;
-		//
-		// // for(TypeElement t : CONTEXT.getAnalysis().getTypeElements())
-		// // {
-		// // if(t.getSimpleName().contentEquals(expression.toString()))
-		// // {
-		// //
-		// // }
-		// // }
-
 		Name identifier = ((MemberSelectTree) node.getMethodSelect())
 				.getIdentifier();
 		Name objectEnvName = object.getName();
@@ -533,7 +519,7 @@ public class MethodBodyVisitor extends
 
 			return sb.toString();
 		}
-		else if (isSyncMethod(node))
+		else if (isSyncMethod(node) )
 		{
 			MethodEnv method = getMethodEnvBeingCalled(node);
 
@@ -570,7 +556,7 @@ public class MethodBodyVisitor extends
 			if (!returnString.contains("null"))
 			{
 				sb.append("~?~");
-				// TODO this needs to be the variable that we just got rid of.
+				
 				sb.append(timeMachine.get("varValue").toString());
 			}
 			sb.append("\\then \\\\");
