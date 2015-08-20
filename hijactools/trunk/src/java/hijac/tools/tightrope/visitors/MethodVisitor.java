@@ -26,35 +26,31 @@ import com.sun.source.tree.VariableTree;
  * 
  */
 
-// TODO This may need some more context, i.e. the Env that it will reside in
 public class MethodVisitor
 {
 	private static NewSCJApplication application;
 	private static MethodBodyVisitor franksMethodVisitor;
-		
-//	private SCJAnalysis analysis;
-	private ObjectEnv object;
 
+	private ObjectEnv object;
 
 	public MethodVisitor(SCJAnalysis analysis, ObjectEnv object)
 	{
-//		this.analysis = analysis;
-		this.object = object;		
+		// this.analysis = analysis;
+		this.object = object;
 		MethodVisitor.application = TightRopeTest.getSCJApplication();
-		MethodVisitor.franksMethodVisitor = new MethodBodyVisitor(application, object);
+		MethodVisitor.franksMethodVisitor = new MethodBodyVisitor(application,
+				object);
 	}
 
 	// TODO Tuning: have this method accept an empty ArrayList to fill
 	public MethodEnv visitMethod(MethodTree mt, Boolean arg1)
 	{
 		// get name
-				Name methodName = mt.getName();
-				
-		System.out.println("+++ Method Visitor: "+methodName+" +++");
+		Name methodName = mt.getName();
+
+		System.out.println("+++ Method Visitor: " + methodName + " +++");
 		MethodEnv m;
 
-		
-		
 		// return values
 		ArrayList<Name> returnsValues = mt
 				.accept(new ReturnVisitor(null), null);
@@ -76,8 +72,8 @@ public class MethodVisitor
 
 			m = new MethodEnv(methodName, NewTransUtils.encodeType(returnType),
 					returnsValues, parameters, body);
-
-		} else
+		}
+		else
 		{
 			m = new MethodEnv(methodName, NewTransUtils.encodeType(returnType),
 					returnsValues, parameters, "");
@@ -91,5 +87,4 @@ public class MethodVisitor
 
 		return m;
 	}
-
 }

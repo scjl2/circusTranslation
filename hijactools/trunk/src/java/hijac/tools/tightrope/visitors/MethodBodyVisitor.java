@@ -254,7 +254,7 @@ public class MethodBodyVisitor extends
 	public String visitAssignment(AssignmentTree node, MethodVisitorContext ctxt)
 	{
 		/* Should we check that we are not inside an expression? */
-		System.out.println("/// AssignmentTree node = " + node);
+//		System.out.println("/// AssignmentTree node = " + node);
 		if (node.getExpression() instanceof MethodInvocationTree)
 		{
 			MethodInvocationTree mit = (MethodInvocationTree) node
@@ -312,7 +312,7 @@ public class MethodBodyVisitor extends
 	public String visitCompoundAssignment(CompoundAssignmentTree node,
 			MethodVisitorContext ctxt)
 	{
-		System.out.println("/// CompoundAssignmentTree node = " + node);
+//		System.out.println("/// CompoundAssignmentTree node = " + node);
 
 		/* Should we check that we are not inside an expression? */
 		return callStmtMacro(node, ctxt, "CompoundAssignment",
@@ -391,7 +391,7 @@ public class MethodBodyVisitor extends
 	public String visitLiteral(LiteralTree node, MethodVisitorContext ctxt)
 	{
 		/* Should we do the translation in a template macro here too? */
-		System.out.println("///Literal ");
+//		System.out.println("///Literal ");
 		// This is supposed to cater for null id values, but is a bit hacky...
 
 		if (methodEnv != null)
@@ -673,7 +673,7 @@ public class MethodBodyVisitor extends
 
 		String varType = "";
 		final boolean objectNotNull = object != null;
-		System.out.println("/// objectNotNull = " + objectNotNull);
+//		System.out.println("/// objectNotNull = " + objectNotNull);
 		if (objectNotNull)
 		{
 //			System.out.println("/// object name = " + object.getName());

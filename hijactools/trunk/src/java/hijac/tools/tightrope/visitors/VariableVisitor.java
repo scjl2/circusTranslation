@@ -73,6 +73,9 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 {
 	// TODO This returns Names and Trees, it should return Names and
 	// TypeKinds....but how?
+	
+	
+	//TODO CLEAN UP
 	// private Tree save;
 	// private ArrayList<Name> returns = new ArrayList<Name>();
 	// private ClassTree tree;
@@ -132,8 +135,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitAssignment(AssignmentTree arg0, Boolean arg1)
 	{
 
-		System.out.println("Var Visitor: Assignment");
-		System.out.println("-> " + arg0);
+//		System.out.println("Var Visitor: Assignment");
+//		System.out.println("-> " + arg0);
 
 		Map<Name, Tree> returnMap = null;
 
@@ -195,7 +198,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		if (varName != null & expressionTree != null)
 		{
-			System.out.println("Adding to Var Map");
+//			System.out.println("Adding to Var Map");
 			returnMap = new HashMap<Name, Tree>();
 			returnMap.put(varName, expressionTree);
 			if (objectEnv != null && arg1 == true)
@@ -222,8 +225,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitBlock(BlockTree arg0, Boolean arg1)
 	{
 
-		System.out.println("Var Visitor: Block");
-		System.out.println(arg0);
+//		System.out.println("Var Visitor: Block");
+//		System.out.println(arg0);
 		HashMap<Name, Tree> returnMap = new HashMap<Name, Tree>();
 
 		List<? extends StatementTree> statements = arg0.getStatements();
@@ -233,18 +236,18 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		while (i.hasNext())
 		{
 			StatementTree st = i.next();
-			System.out.println("Var Visitor Block: st kind = " + st.getKind());
+//			System.out.println("Var Visitor Block: st kind = " + st.getKind());
 			Map<Name, Tree> statementReturn = st.accept(this, arg1);
 
 			if (statementReturn != null)
 			{
-				System.out.println("Var Visitor: Block: Returned Adding");
+//				System.out.println("Var Visitor: Block: Returned Adding");
 				returnMap.putAll(statementReturn);
 			}
-			else
-			{
-				System.out.println("Var Visitor: Block: Returned Null");
-			}
+//			else
+//			{
+//				System.out.println("Var Visitor: Block: Returned Null");
+//			}
 		}
 
 		return returnMap;
@@ -345,7 +348,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			ExpressionStatementTree arg0, Boolean arg1)
 	{
 
-		System.out.println("Var Visitor: Expression Statement Tree");
+//		System.out.println("Var Visitor: Expression Statement Tree");
 		return arg0.getExpression().accept(this, arg1);
 
 	}
@@ -442,14 +445,14 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		if (arg0.getName().contentEquals("<init>"))
 		{
-			System.out
-					.println("+++ Var Visitor : Method Visitor found <init> +++");
+//			System.out
+//					.println("+++ Var Visitor : Method Visitor found <init> +++");
 			return arg0.getBody().accept(this, true);
 		}
 		else
 		{
-			System.out
-					.println("+++ Var Visitor : Method Visitor found method +++");
+//			System.out
+//					.println("+++ Var Visitor : Method Visitor found method +++");
 			return arg0.getBody().accept(this, false);
 		}
 
@@ -583,12 +586,12 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitVariable(VariableTree arg0, Boolean arg1)
 	{
 
-		System.out.println("Var Visitor: Variable for " + arg0);
+//		System.out.println("Var Visitor: Variable for " + arg0);
 
 		HashMap<Name, Tree> r = new HashMap<Name, Tree>();
 
-		System.out.println("-> Name = " + arg0.getName() + " Type = "
-				+ arg0.getType() + " Init = " + arg0.getInitializer());
+//		System.out.println("-> Name = " + arg0.getName() + " Type = "
+//				+ arg0.getType() + " Init = " + arg0.getInitializer());
 
 		Name varName = arg0.getName();
 

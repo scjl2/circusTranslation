@@ -65,7 +65,7 @@ bufferEmptyMeth \circdef
 \circblockopen
 bufferEmptyCall~.~FlatBufferMission 
 \then \\
-ret := this~.~bufferEmpty(String)  \circseq  \\
+ret := this~.~bufferEmpty(name)  \circseq  \\
 
 bufferEmptyRet~.~FlatBufferMission~!~ret \then \\
 \Skip
