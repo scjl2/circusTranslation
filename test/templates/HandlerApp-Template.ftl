@@ -12,7 +12,7 @@
 handlerAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~${ProcessID} \then \\
-
+	${HandleAsync.Body}
     handleAsyncEventRet~.~${ProcessID} \then \\
     \Skip
 \circblockclose

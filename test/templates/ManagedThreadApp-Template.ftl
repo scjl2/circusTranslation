@@ -12,7 +12,7 @@
 Run \circdef \\
 \circblockopen
 	runCall~.~${ProcessID} \then \\
-	${Run.body} \circseq \\
+	${Run.Body} \circseq \\
 	runRet~.~${ProcessID} \then \\
 	\Skip
 \circblockclose

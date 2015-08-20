@@ -25,7 +25,15 @@
 Run \circdef \\
 \circblockopen
 	runCall~.~Writer \then \\
-	 \circseq \\
+	  \circblockopen
+
+
+  \circvar terminationPending : boolean \circspot terminationPending := fbMission.terminationPending() ~
+
+  \circseq \\
+\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot terminationPending = \true) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \circblockopen \circvar bufferEmpty : boolean \circspot bufferEmpty := fbMission.bufferEmpty() ~ \circseq \\ \circblockopen \circmu X \circspot \\ \circblockopen \circif ~ bufferEmpty = \true ~ \circthen ~ \\ \t1 \circblockopen \circblockopen waitOnMissionCall~.~fbMission~.~Writer~!~\then \\waitOnMissionRet~.~fbMission~.~Writer\then \\\Skip \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot bufferEmpty = \true \circthen \Skip \\ \circfi \circblockclose \circblockclose \circseq \\ writeCall~.~fbMission~.~Writer~!~i\then \\writeRet~.~fbMission~.~Writer\then \\\Skip \circseq \\ i := i + 1 \circblockclose \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot terminationPending = \true) \circthen \Skip \\ \circfi \circblockclose \circblockclose
+  \circblockclose
+ \circseq \\
 	runRet~.~Writer \then \\
 	\Skip
 \circblockclose

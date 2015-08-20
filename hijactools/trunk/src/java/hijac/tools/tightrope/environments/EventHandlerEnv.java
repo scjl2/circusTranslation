@@ -9,6 +9,12 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 	
 	public abstract String getImportName();
 	
+	public static final String HANDLE_ASYNC = "HandleAsync";
+	
+	private MethodEnv handleAsync;
+	
+	
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
@@ -17,9 +23,22 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 		map.put(HANDLER_TYPE, getHandlerType());
 		map.put(IMPORT_NAME, getImportName());
 		
+		Map handleAsyncMap = methodToMap(handleAsync);
+		map.put(HANDLE_ASYNC, handleAsyncMap);
+		
 	
 
 		return map;
+	}
+
+	public MethodEnv getHandleAsync()
+	{
+		return handleAsync;
+	}
+
+	public void setHandleAsync(MethodEnv handleAsync)
+	{
+		this.handleAsync = handleAsync;
 	}
 
 }
