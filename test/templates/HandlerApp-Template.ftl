@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ ${importName}EventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ ${ProcessID}App ~ \parents ~ ${ImportName}EventHandlerChan, SchedulableId, SchedulableIds
 \end{zsection}
 
 \begin{circus}
@@ -7,8 +7,6 @@
 \end{circus}
 
 <#include "State-Template.ftl">
-
-
 
 \begin{circusaction}
 handlerAsyncEvent \circdef \\
@@ -32,7 +30,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (<#if Variables?size != 0> Init \circseq</#if> Methods) \circinterrupt (end\_${handlerType}\_app~.~${ProcessID} \then \Skip)
+\circspot (<#if Variables?size != 0> Init \circseq</#if> Methods) \circinterrupt (end\_${HandlerType}\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

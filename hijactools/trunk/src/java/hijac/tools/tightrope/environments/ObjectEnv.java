@@ -12,10 +12,10 @@ import com.sun.source.tree.Tree;
 
 public class ObjectEnv
 {
-	protected static final String ACCESS = "access";
-	protected static final String BODY = "body";
-	protected static final String RETURN_TYPE = "returnType";
-	protected static final String METHOD_NAME = "methodName";
+	protected static final String ACCESS = "Access";
+	protected static final String BODY = "Body";
+	protected static final String RETURN_TYPE = "ReturnType";
+	protected static final String METHOD_NAME = "MethodName";
 	private static final String VAR_INPUT = "VarInput";
 	private static final String VAR_INIT = "VarInit";
 	private static final String VAR_TYPE = "VarType";
@@ -24,8 +24,8 @@ public class ObjectEnv
 	protected static final String SYNC_METHODS = "SyncMethods";
 	protected static final String METHODS = "Methods";
 	protected static final String PROCESS_ID = "ProcessID";
-	protected static final String IMPORT_NAME = "importName";
-	protected static final String HANDLER_TYPE = "handlerType";
+	protected static final String IMPORT_NAME = "ImportName";
+	protected static final String HANDLER_TYPE = "HandlerType";
 	protected static final String PARAMETERS_STR = "Parameters";
 	// ClassTree classTree;
 	/**

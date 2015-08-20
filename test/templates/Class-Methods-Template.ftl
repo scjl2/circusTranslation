@@ -1,24 +1,24 @@
 <#list Methods as meth>
 \begin{circusaction}
-\circ${meth.access} ~ ${meth.methodName} ~ \circdef 
-<#if meth.returnType != 'null'>
-\circvar ret : ${meth.returnType} \circspot
+\circ${meth.Access} ~ ${methMmethodName} ~ \circdef 
+<#if meth.ReturnType != 'null'>
+\circvar ret : ${meth.ReturnType} \circspot
 </#if>
 \\ 
 
-${meth.body} 
+${meth.Body} 
 
 \end{circusaction}	
 </#list>
 %
 <#list SyncMethods as meth >
 \begin{circusaction}
-\circ${meth.access} ~ \circsync ~ ${meth.methodName} ~ \circdef 
-<#if meth.returnType != 'null'>
-\circvar ret : ${meth.returnType} \circspot 
+\circ${meth.Access} ~ \circsync ~ ${meth.MethodName} ~ \circdef 
+<#if meth.ReturnType != 'null'>
+\circvar ret : ${meth.ReturnType} \circspot 
 </#if>
 \\
-${meth.body} 
+${meth.Body} 
 
 \end{circusaction}	
 </#list>

@@ -59,25 +59,23 @@ CleanupPhase \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-bufferEmptyMeth \circdef 
-\circvar ret : \boolean \circspot
+Meth \circdef 
 \\
 \circblockopen
-bufferEmptyCall~.~FlatBufferMission 
+Call~.~FlatBufferMission 
 ~?~name
 \then \\
 ret := this~.~bufferEmpty(name)  \circseq  \\
 
-bufferEmptyRet~.~FlatBufferMission~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}	
 %
 \begin{circusaction}
-writeSyncMeth \circdef 
+SyncMeth \circdef 
 \\
 \circblockopen
-writeCall~.~FlatBufferMission~?~thread 
+Call~.~FlatBufferMission~?~thread 
 ~?~update
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
@@ -94,16 +92,14 @@ notify~.~FlatBufferMissionObject~!~thread \then \\\Skip
   \circblockclose
  \circseq  \\
 endSyncMeth~.~FlatBufferMission~.~thread \then  \\
-writeRet~.~FlatBufferMission~!~ret~!~thread \then \\
 \Skip
 \circblockclose
 \end{circusaction}	
 \begin{circusaction}
-readSyncMeth \circdef 
-\circvar ret : int \circspot
+SyncMeth \circdef 
 \\
 \circblockopen
-readCall~.~FlatBufferMission~?~thread 
+Call~.~FlatBufferMission~?~thread 
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
 lockAcquired~.~FlatBufferMission~.~thread \then \\
@@ -125,15 +121,14 @@ notify~.~FlatBufferMissionObject~!~thread \then \\\Skip
   \circblockclose
  \circseq  \\
 endSyncMeth~.~FlatBufferMission~.~thread \then  \\
-readRet~.~FlatBufferMission~!~ret~!~thread \then \\
 \Skip
 \circblockclose
 \end{circusaction}	
 \begin{circusaction}
-waitOnMissionSyncMeth \circdef 
+SyncMeth \circdef 
 \\
 \circblockopen
-waitOnMissionCall~.~FlatBufferMission~?~thread 
+Call~.~FlatBufferMission~?~thread 
 ~?~name
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
@@ -146,7 +141,6 @@ waitCall~.~FlatBufferMissionObject~!~thread \then\\waitRet~.~FlatBufferMissionOb
   \circblockclose
  \circseq  \\
 endSyncMeth~.~FlatBufferMission~.~thread \then  \\
-waitOnMissionRet~.~FlatBufferMission~!~ret~!~thread \then \\
 \Skip
 \circblockclose
 \end{circusaction}	
@@ -160,14 +154,14 @@ Methods \circdef
 	CleanupPhase \\
 %
 \extchoice \\
-	bufferEmptyMeth \\ 
+	Meth \\ 
 %
 	\extchoice \\
-	writeSyncMeth \\	
+	SyncMeth \\	
 	\extchoice \\
-	readSyncMeth \\	
+	SyncMeth \\	
 	\extchoice \\
-	waitOnMissionSyncMeth \\	
+	SyncMeth \\	
 %
 \circblockclose 
 \circseq Methods
