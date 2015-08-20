@@ -124,6 +124,8 @@ public class MissionLevel2Visitor
 						MethodEnv m = methodVisitor.visitMethod(mt, null);
 						setMethodAccess(mt, m);
 						missionEnv.addSyncMeth(m);
+						
+						System.out.println("/// method params =" + m.getParameters());
 					}
 					else
 					{

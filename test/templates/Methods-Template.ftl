@@ -7,7 +7,7 @@ ${meth.methodName}Meth \circdef
 \\
 \circblockopen
 ${meth.methodName}Call~.~${ProcessID} 
-<#list meth.parameters?keys as param>
+<#list meth.Parameters?keys as param>
 ~?~${param}
 </#list>
 \then \\
@@ -32,7 +32,7 @@ ${meth.methodName}SyncMeth \circdef
 \\
 \circblockopen
 ${meth.methodName}Call~.~${ProcessID}~?~thread 
-<#list meth.parameters?keys as param>
+<#list meth.Parameters?keys as param>
 ~?~${param}
 </#list>
 \then \\
