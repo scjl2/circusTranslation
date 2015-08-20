@@ -275,8 +275,8 @@ public class ObjectEnv
 		Map methodMap = new HashMap();
 		
 		
-		Name n = me.getMethodName();
-		String s = n.toString();
+		String s = me.getMethodName().toString();
+	
 		methodMap.put( METHOD_NAME, s);
 		methodMap.put(RETURN_TYPE, me.getReturnType());
 		methodMap.put("returnValue", me.getReturnValue());

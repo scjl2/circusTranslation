@@ -36,9 +36,9 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 		return handleAsync;
 	}
 
-	public void setHandleAsync(MethodEnv handleAsync)
+	public void addHandleAsyncMethod(MethodEnv method)
 	{
-		this.handleAsync = handleAsync;
+		handleAsync = method;
 	}
 
 }

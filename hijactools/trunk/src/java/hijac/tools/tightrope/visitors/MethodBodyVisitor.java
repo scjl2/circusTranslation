@@ -21,6 +21,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -519,7 +520,7 @@ public class MethodBodyVisitor extends
 
 			return sb.toString();
 		}
-		else if (isSyncMethod(node) )
+		else if (isNotMyMethod(node) )
 		{
 			MethodEnv method = getMethodEnvBeingCalled(node);
 
@@ -643,6 +644,27 @@ public class MethodBodyVisitor extends
 		// return returnString;
 	}
 
+	private boolean isNotMyMethod(MethodInvocationTree node)
+	{
+//		MethodEnv method = getMethodEnvBeingCalled(node);
+		
+		MemberSelectTree methodSelect = (MemberSelectTree) node.getMethodSelect();
+		
+		ExpressionTree et = methodSelect.getExpression();
+		String expressionString = et.toString();
+		
+		if(expressionString.contentEquals(object.getName().toString()))
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+		
+		
+	}
+
 	private boolean isSyncMethod(MethodInvocationTree node)
 	{
 		if (getMethodEnvBeingCalled(node) != null)
@@ -662,34 +684,38 @@ public class MethodBodyVisitor extends
 
 		ExpressionTree expression = mst.getExpression();
 		Name identifier = mst.getIdentifier();
-//
-//		System.out.println("/// node.getMethodSelect = " + mst.toString());
-//
-//		System.out.println("/// node...getExpression = "
-//				+ mst.getExpression().toString());
-//
-//		System.out.println("/// node...getIdenitifer = "
-//				+ mst.getIdentifier().toString());
+
+		System.out.println("/// node.getMethodSelect = " + mst.toString());
+
+		System.out.println("/// node...getExpression = "
+				+ mst.getExpression().toString());
+
+		System.out.println("/// node...getIdenitifer = "
+				+ mst.getIdentifier().toString());
 
 		String varType = "";
 		final boolean objectNotNull = object != null;
-//		System.out.println("/// objectNotNull = " + objectNotNull);
+		System.out.println("/// objectNotNull = " + objectNotNull);
 		if (objectNotNull)
 		{
-//			System.out.println("/// object name = " + object.getName());
+			System.out.println("/// object name = " + object.getName());
 
+			//For all the type elements in the program...
 			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 			{
-//				System.out.println("///** t.getSimpleName() = "
-//						+ t.getSimpleName());
+				System.out.println("///** t.getSimpleName() = "
+						+ t.getSimpleName());
 
+				// ...if the name of the type equals the name of the object we're in...
 				if (t.getSimpleName().contentEquals(object.getName()))
 				{
+					// ... then that's our class tree!					
 					ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
 
 					List<Tree> members = (List<Tree>) ct.getMembers();
 					Iterator<Tree> i = members.iterator();
 
+					//iterate through all the members of our class...
 					while (i.hasNext())
 					{
 						Tree tree = i.next();
@@ -698,9 +724,10 @@ public class MethodBodyVisitor extends
 						{
 							VariableTree vt = (VariableTree) tree;
 
-//							System.out.println("/// vt.getName = "
-//									+ vt.getName());
-
+							System.out.println("/// vt.getName = "
+									+ vt.getName());
+							/// ... to find the variable with the same name as the expression in our method call
+							// i.e. expression.methodCall()
 							if (vt.getName().contentEquals(
 									expression.toString()))
 							{
@@ -708,8 +735,9 @@ public class MethodBodyVisitor extends
 
 								if (typeTree instanceof IdentifierTree)
 								{
+									
 									IdentifierTree it = (IdentifierTree) typeTree;
-
+									// And finally get the TYPE (as a String) of the variable we are calling the method of 
 									varType = it.getName().toString();
 								}
 							}
@@ -718,26 +746,69 @@ public class MethodBodyVisitor extends
 				}
 			}
 
-//			System.out.println("/// varType = " + varType);
-
+			System.out.println("/// varType = " + varType);
+			// Then we get the Type Element of the variable we're calling the method on
 			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 			{
-//				System.out.println("/// t simpleName = " + t.getSimpleName());
-				if (t.getSimpleName().contentEquals(varType))
+				TypeMirror superClass = t.getSuperclass();
+				TypeElement superClassElement = null;
+				
+				for (TypeElement t2 : CONTEXT.getAnalysis().getTypeElements())
 				{
-					ObjectEnv o = TightRopeTest.getProgramEnv().getObjectEnv(
-							t.getSimpleName());
-
-//					System.out
-//							.println("/// o name = " + o.getName().toString());
-
-					for (MethodEnv mEnv : o.getSyncMeths())
+					if(t2.getSimpleName().contentEquals(superClass.toString()))
 					{
-//						System.out.println("/// mEnv.getMethodName = "
-//								+ mEnv.getMethodName());
+						superClassElement = t2;
+					}
+				}
+				
+				final Name simpleName = t.getSimpleName();
+				
+				System.out.println("/// t simpleName = " + simpleName);
+				if (simpleName.contentEquals(varType))
+				{
+					//Get the object env of the class, that represents the variable we're calling the method on
+					ObjectEnv o = TightRopeTest.getProgramEnv().getObjectEnv(
+							simpleName);
+
+					System.out
+							.println("/// o name = " + o.getName().toString());
+
+					
+					List<MethodEnv> methods = new ArrayList<MethodEnv>();
+					methods.addAll(o.getSyncMeths());
+					methods.addAll(o.getMeths());
+					
+					if(superClassElement != null)
+					{
+						ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
+
+						List<Tree> members = (List<Tree>) ct.getMembers();
+						Iterator<Tree> i = members.iterator();
+
+						while (i.hasNext())
+						{
+							Tree tree = i.next();
+							if(tree instanceof MethodTree)
+							{
+								MethodTree mt = (MethodTree) tree;
+								
+								MethodEnv m = new MethodEnv(mt.getName());
+								
+								
+								methods.add(m);
+							}
+						}
+					}
+					
+					
+					//TODO This falls over for API methods...
+					for (MethodEnv mEnv : methods) 
+					{
+						System.out.println("/// mEnv.getMethodName = "
+								+ mEnv.getMethodName());
 						if (mEnv.getMethodName().contentEquals(identifier))
 						{
-
+							// Then get the method env of the method we're calling.	
 							return mEnv;
 						}
 					}
