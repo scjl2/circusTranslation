@@ -77,6 +77,8 @@ public class MethodBodyVisitor extends
 	private static final String TYPE_TEMPLATE = "L2Type.ftl";
 	private static final String EXPR_TEMPLATE = "L2Expr.ftl";
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
+	
+	private static final List<MethodEnv> MISSION_API_METHODS = new ArrayList<MethodEnv>(); 
 	/**
 	 * Used to store values for 'future' calls to methods of the visitor
 	 */
@@ -95,6 +97,18 @@ public class MethodBodyVisitor extends
 		assert context != null;
 		CONTEXT = context;
 		this.object = object;
+		
+		initAPIMeths();
+		
+	}
+
+	private void initAPIMeths()
+	{
+		MISSION_API_METHODS.add(new MethodEnv("getMission"));
+		MISSION_API_METHODS.add(new MethodEnv("getSequencer"));
+		MISSION_API_METHODS.add(new MethodEnv("missionMemorySize"));
+		MISSION_API_METHODS.add(new MethodEnv("requestTermination"));
+		MISSION_API_METHODS.add(new MethodEnv("terminationPending"));
 	}
 
 	public MethodBodyVisitor(NewSCJApplication context, ObjectEnv object,
@@ -105,6 +119,8 @@ public class MethodBodyVisitor extends
 		CONTEXT = context;
 		this.object = object;
 		this.methodEnv = env;
+		
+		initAPIMeths();
 	}
 
 	/**
@@ -255,7 +271,7 @@ public class MethodBodyVisitor extends
 	public String visitAssignment(AssignmentTree node, MethodVisitorContext ctxt)
 	{
 		/* Should we check that we are not inside an expression? */
-//		System.out.println("/// AssignmentTree node = " + node);
+		// System.out.println("/// AssignmentTree node = " + node);
 		if (node.getExpression() instanceof MethodInvocationTree)
 		{
 			MethodInvocationTree mit = (MethodInvocationTree) node
@@ -313,7 +329,7 @@ public class MethodBodyVisitor extends
 	public String visitCompoundAssignment(CompoundAssignmentTree node,
 			MethodVisitorContext ctxt)
 	{
-//		System.out.println("/// CompoundAssignmentTree node = " + node);
+		// System.out.println("/// CompoundAssignmentTree node = " + node);
 
 		/* Should we check that we are not inside an expression? */
 		return callStmtMacro(node, ctxt, "CompoundAssignment",
@@ -392,7 +408,7 @@ public class MethodBodyVisitor extends
 	public String visitLiteral(LiteralTree node, MethodVisitorContext ctxt)
 	{
 		/* Should we do the translation in a template macro here too? */
-//		System.out.println("///Literal ");
+		// System.out.println("///Literal ");
 		// This is supposed to cater for null id values, but is a bit hacky...
 
 		if (methodEnv != null)
@@ -520,13 +536,13 @@ public class MethodBodyVisitor extends
 
 			return sb.toString();
 		}
-		else if (isNotMyMethod(node) )
+		else if (isNotMyMethod(node))
 		{
 			MethodEnv method = getMethodEnvBeingCalled(node);
 
 			String returnString = method.getReturnType();
 			List<? extends ExpressionTree> parameters = node.getArguments();
-
+			
 			sb.append(identifier);
 			sb.append("Call");
 			sb.append("~.~");
@@ -557,7 +573,7 @@ public class MethodBodyVisitor extends
 			if (!returnString.contains("null"))
 			{
 				sb.append("~?~");
-				
+
 				sb.append(timeMachine.get("varValue").toString());
 			}
 			sb.append("\\then \\\\");
@@ -567,7 +583,6 @@ public class MethodBodyVisitor extends
 		}
 		else
 		{
-
 			ExecutableElement method = TreeUtils.elementFromUse(node);
 			List<? extends VariableElement> params = method.getParameters();
 			List<ExpressionTree> arguments = new ArrayList<ExpressionTree>();
@@ -646,14 +661,15 @@ public class MethodBodyVisitor extends
 
 	private boolean isNotMyMethod(MethodInvocationTree node)
 	{
-//		MethodEnv method = getMethodEnvBeingCalled(node);
-		
-		MemberSelectTree methodSelect = (MemberSelectTree) node.getMethodSelect();
-		
+		// MethodEnv method = getMethodEnvBeingCalled(node);
+
+		MemberSelectTree methodSelect = (MemberSelectTree) node
+				.getMethodSelect();
+
 		ExpressionTree et = methodSelect.getExpression();
 		String expressionString = et.toString();
-		
-		if(expressionString.contentEquals(object.getName().toString()))
+
+		if (expressionString.contentEquals(object.getName().toString()))
 		{
 			return false;
 		}
@@ -661,8 +677,7 @@ public class MethodBodyVisitor extends
 		{
 			return true;
 		}
-		
-		
+
 	}
 
 	private boolean isSyncMethod(MethodInvocationTree node)
@@ -693,6 +708,8 @@ public class MethodBodyVisitor extends
 		System.out.println("/// node...getIdenitifer = "
 				+ mst.getIdentifier().toString());
 
+		
+
 		String varType = "";
 		final boolean objectNotNull = object != null;
 		System.out.println("/// objectNotNull = " + objectNotNull);
@@ -700,22 +717,25 @@ public class MethodBodyVisitor extends
 		{
 			System.out.println("/// object name = " + object.getName());
 
-			//For all the type elements in the program...
+			// For all the type elements in the program...
 			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 			{
 				System.out.println("///** t.getSimpleName() = "
 						+ t.getSimpleName());
 
-				// ...if the name of the type equals the name of the object we're in...
+				// ...if the name of the type equals the name of the object
+				// we're in...
 				if (t.getSimpleName().contentEquals(object.getName()))
 				{
-					// ... then that's our class tree!					
+				
+					
+					// ... then that's our class tree!
 					ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
-
+					
 					List<Tree> members = (List<Tree>) ct.getMembers();
 					Iterator<Tree> i = members.iterator();
 
-					//iterate through all the members of our class...
+					// iterate through all the members of our class...
 					while (i.hasNext())
 					{
 						Tree tree = i.next();
@@ -726,7 +746,8 @@ public class MethodBodyVisitor extends
 
 							System.out.println("/// vt.getName = "
 									+ vt.getName());
-							/// ... to find the variable with the same name as the expression in our method call
+							// / ... to find the variable with the same name as
+							// the expression in our method call
 							// i.e. expression.methodCall()
 							if (vt.getName().contentEquals(
 									expression.toString()))
@@ -735,9 +756,10 @@ public class MethodBodyVisitor extends
 
 								if (typeTree instanceof IdentifierTree)
 								{
-									
+
 									IdentifierTree it = (IdentifierTree) typeTree;
-									// And finally get the TYPE (as a String) of the variable we are calling the method of 
+									// And finally get the TYPE (as a String) of
+									// the variable we are calling the method of
 									varType = it.getName().toString();
 								}
 							}
@@ -747,68 +769,44 @@ public class MethodBodyVisitor extends
 			}
 
 			System.out.println("/// varType = " + varType);
-			// Then we get the Type Element of the variable we're calling the method on
+
+			
+			// Then we get the Type Element of the variable we're calling the
+			// method on
 			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 			{
-				TypeMirror superClass = t.getSuperclass();
-				TypeElement superClassElement = null;
-				
-				for (TypeElement t2 : CONTEXT.getAnalysis().getTypeElements())
-				{
-					if(t2.getSimpleName().contentEquals(superClass.toString()))
-					{
-						superClassElement = t2;
-					}
-				}
-				
+				System.out.println("!// t = " + t.getSimpleName());
+			
+
 				final Name simpleName = t.getSimpleName();
-				
+
 				System.out.println("/// t simpleName = " + simpleName);
 				if (simpleName.contentEquals(varType))
 				{
-					//Get the object env of the class, that represents the variable we're calling the method on
+					// Get the object env of the class, that represents the
+					// variable we're calling the method on
 					ObjectEnv o = TightRopeTest.getProgramEnv().getObjectEnv(
 							simpleName);
 
 					System.out
 							.println("/// o name = " + o.getName().toString());
 
-					
 					List<MethodEnv> methods = new ArrayList<MethodEnv>();
 					methods.addAll(o.getSyncMeths());
 					methods.addAll(o.getMeths());
+					methods.addAll(MISSION_API_METHODS);
 					
-					if(superClassElement != null)
-					{
-						ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
+					
 
-						List<Tree> members = (List<Tree>) ct.getMembers();
-						Iterator<Tree> i = members.iterator();
-
-						while (i.hasNext())
-						{
-							Tree tree = i.next();
-							if(tree instanceof MethodTree)
-							{
-								MethodTree mt = (MethodTree) tree;
-								
-								MethodEnv m = new MethodEnv(mt.getName());
-								
-								
-								methods.add(m);
-							}
-						}
-					}
-					
-					
-					//TODO This falls over for API methods...
-					for (MethodEnv mEnv : methods) 
+					// TODO This falls over for API methods...
+					for (MethodEnv mEnv : methods)
 					{
 						System.out.println("/// mEnv.getMethodName = "
-								+ mEnv.getMethodName());
+								+ mEnv.getMethodName()); 
 						if (mEnv.getMethodName().contentEquals(identifier))
 						{
-							// Then get the method env of the method we're calling.	
+							// Then get the method env of the method we're
+							// calling.
 							return mEnv;
 						}
 					}
@@ -916,7 +914,7 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitVariable(VariableTree node, MethodVisitorContext ctxt)
 	{
-//		System.out.println("/// VariableTree node = " + node);
+		// System.out.println("/// VariableTree node = " + node);
 
 		if (node.getInitializer() instanceof MethodInvocationTree)
 		{

@@ -12,7 +12,7 @@ public class MethodEnv
 {
 	public static enum AccessMod {PUBLIC,PRIVATE,PROTECTED};
 	
-	private Name methodName;
+	private String methodName;
 	private String returnType;
 	private Map<String, Type> parameters;
 	private ArrayList<Name> returnValues;
@@ -23,13 +23,13 @@ public class MethodEnv
 	
 	public MethodEnv(Name name)
 	{
-		this.methodName = name;
+		this.methodName = name.toString();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
 	{
-		this.methodName = name;
+		this.methodName = name.toString();
 		this.returnType = returnType.toString();
 		this.parameters = params;
 		this.returnValues = returnValues;
@@ -38,7 +38,7 @@ public class MethodEnv
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params, Object body)
 	{
-		this.methodName = name;
+		this.methodName = name.toString();
 		this.returnType = returnType.toString();
 		this.parameters = params;
 		this.returnValues = returnValues;
@@ -48,7 +48,7 @@ public class MethodEnv
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MethodEnv(Name name, String returnType, ArrayList<Name> returnValues ,Map params, Object body)
 	{
-		this.methodName = name;
+		this.methodName = name.toString();
 		
 		this.returnType = returnType;
 		this.parameters = params;
@@ -59,12 +59,17 @@ public class MethodEnv
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MethodEnv(Name name, TypeKind returnType, Map params)
 	{
-		this.methodName = name;
+		this.methodName = name.toString();
 		this.returnType = returnType.toString();
 		this.parameters = params;
 	}
 
-	public Name getMethodName()
+	public MethodEnv(String name)
+	{
+		methodName = name;
+	}
+
+	public String getMethodName()
 	{
 		return methodName;
 	}

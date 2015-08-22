@@ -162,7 +162,7 @@ public class MissionLevel2Visitor
 							}
 
 							body.append("this~.~");
-							body.append(m2.getMethodName());
+							body.append(m2.getMethodName()); 
 							body.append("(");
 							body.append(parametersString.toString());
 							body.append(")");
