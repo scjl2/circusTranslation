@@ -104,11 +104,12 @@ public class MethodBodyVisitor extends
 
 	private void initAPIMeths()
 	{
-		MISSION_API_METHODS.add(new MethodEnv("getMission"));
-		MISSION_API_METHODS.add(new MethodEnv("getSequencer"));
-		MISSION_API_METHODS.add(new MethodEnv("missionMemorySize"));
-		MISSION_API_METHODS.add(new MethodEnv("requestTermination"));
-		MISSION_API_METHODS.add(new MethodEnv("terminationPending"));
+		MISSION_API_METHODS.add(new MethodEnv("getMission", "Mission"));
+		MISSION_API_METHODS.add(new MethodEnv("getSequencer", "MissionSequencer" ));
+		MISSION_API_METHODS.add(new MethodEnv("missionMemorySize", "int"));
+		MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean"));
+		MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean"));
+		
 	}
 
 	public MethodBodyVisitor(NewSCJApplication context, ObjectEnv object,
@@ -540,6 +541,8 @@ public class MethodBodyVisitor extends
 		{
 			MethodEnv method = getMethodEnvBeingCalled(node);
 
+			System.out.println("!// method being called (returned) = " + method.getMethodName());
+			
 			String returnString = method.getReturnType();
 			List<? extends ExpressionTree> parameters = node.getArguments();
 			
@@ -557,6 +560,7 @@ public class MethodBodyVisitor extends
 					sb.append("~!~");
 					if (s instanceof IdentifierTree)
 					{
+						
 						sb.append(((IdentifierTree) s).getName().toString());
 					}
 				}
@@ -570,11 +574,18 @@ public class MethodBodyVisitor extends
 					.getExpression().toString());
 			sb.append("~.~");
 			sb.append(objectEnvName.toString());
+			
+			System.out.println("!// !returnString.contains('null') =  " + (!returnString.contains("null")));
+			System.out.println("!// returnString =  " + returnString);
 			if (!returnString.contains("null"))
 			{
 				sb.append("~?~");
-
-				sb.append(timeMachine.get("varValue").toString());
+				System.out.println("!// return string not 'null', getting key: " + 
+						((MemberSelectTree) node.getMethodSelect()).getIdentifier().toString().toString() +
+						" value: " + 
+						timeMachine.get(((MemberSelectTree) node.getMethodSelect()).getIdentifier().toString()).toString());
+						
+				sb.append(timeMachine.get(((MemberSelectTree) node.getMethodSelect()).getIdentifier().toString()).toString());
 			}
 			sb.append("\\then \\\\");
 			sb.append("\\Skip");
@@ -921,9 +932,10 @@ public class MethodBodyVisitor extends
 			MethodInvocationTree mit = (MethodInvocationTree) node
 					.getInitializer();
 
-			if (isSyncMethod(mit))
+			if (isNotMyMethod(mit))
 			{
-				timeMachine.putIfAbsent("varValue", node.getName().toString());
+				System.out.println("!// not my method, variable, putting key: " +((MemberSelectTree) mit.getMethodSelect()).getIdentifier().toString() + " value: " + node.getName().toString());
+				timeMachine.putIfAbsent(((MemberSelectTree) mit.getMethodSelect()).getIdentifier().toString(), node.getName().toString());
 				return visitMethodInvocation(mit, ctxt);
 			}
 			else

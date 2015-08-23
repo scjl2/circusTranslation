@@ -64,9 +64,10 @@ public class MethodEnv
 		this.parameters = params;
 	}
 
-	public MethodEnv(String name)
+	public MethodEnv(String name, String returnType)
 	{
 		methodName = name;
+		this.returnType = returnType;
 	}
 
 	public String getMethodName()
