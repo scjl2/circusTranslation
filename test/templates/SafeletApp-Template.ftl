@@ -52,7 +52,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-	\circspot (<#if Variables?size != 0> Init \circseq</#if> Methods) \circinterrupt (end\_safelet\_app \then \Skip) 
+<#include MainAction-Template.ftl> \circinterrupt (end\_safelet\_app \then \Skip) 
 \end{circusaction}
 
 \begin{circus}
