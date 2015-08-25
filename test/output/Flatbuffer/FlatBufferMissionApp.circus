@@ -1,6 +1,7 @@
 \begin{zsection}
   \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , FlatBufferMissionClass
+
 \end{zsection}
 %\begin{circus}
 %\circchannelset FlatBufferMissionAppSync == \\
@@ -168,7 +169,8 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Init \circseq Methods) \circinterrupt (end\_mission\_app~.~FlatBufferMission \then \Skip)
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~FlatBufferMission \then \Skip)
 \end{circusaction}
 
 \begin{circus}

@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan
+  \SECTION ~ ${ProcessID}App ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  <#include "CommonImports-Template.ftl">
 \end{zsection}
 %\begin{circus}
 %\circchannelset ${ProcessID}AppSync \circdef \\
@@ -52,7 +52,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-<#include MainAction-Template.ftl> \circinterrupt (end\_safelet\_app \then \Skip) 
+<#include "MainAction-Template.ftl"> \circinterrupt (end\_safelet\_app \then \Skip) 
 \end{circusaction}
 
 \begin{circus}

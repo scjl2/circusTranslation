@@ -1,9 +1,10 @@
 \begin{zsection}
-  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
+  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  
+
 \end{zsection}
 %
 \begin{circus}
-\circprocess ReaderApp \circdef   fbMission : MissionID  \circspot
+\circprocess ReaderApp \circdef   fbMission : MissionID
  \circbegin
 \end{circus}
 
@@ -40,7 +41,8 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)
+\circspot ( Methods) 
+  \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)
 \end{circusaction}
 
 \begin{circus}

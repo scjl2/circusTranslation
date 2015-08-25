@@ -1,9 +1,10 @@
 \begin{zsection}
-  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
+  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  
+
 \end{zsection}
 %
 \begin{circus}
-\circprocess WriterApp \circdef   fbMission : MissionID \circspot
+\circprocess WriterApp \circdef   fbMission : MissionID
  \circbegin
 \end{circus}
 
@@ -53,7 +54,8 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Init \circseq Methods) \circinterrupt (end\_managedThread\_app~.~Writer \then \Skip)
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  \circinterrupt (end\_managedThread\_app~.~Writer \then \Skip)
 \end{circusaction}
 
 \begin{circus}

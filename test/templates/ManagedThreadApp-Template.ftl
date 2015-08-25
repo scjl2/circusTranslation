@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds, ${ProcessID}Class
+  \SECTION ~ ${ProcessID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  <#include "CommonImports-Template.ftl">
 \end{zsection}
 %
 \begin{circus}
@@ -30,7 +30,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-<#include MainAction-Template.ftl>  \circinterrupt (end\_managedThread\_app~.~${ProcessID} \then \Skip)
+<#include "MainAction-Template.ftl">  \circinterrupt (end\_managedThread\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

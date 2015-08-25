@@ -1,6 +1,7 @@
 \begin{zsection}
   \SECTION ~ FlatBufferMissionSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId 
+  \t1 MissionId, MissionIds, SchedulableId  , FlatBufferMissionSequencerClass
+
 \end{zsection}
 %\begin{circus}
 %\circchannelset FlatBufferMissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
@@ -53,7 +54,8 @@ Methods \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Init \circseq Methods) %\circhide MissionSequencerAppStateSync
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~FlatBufferMissionSequencer \then \Skip)
 \end{circusaction}
 

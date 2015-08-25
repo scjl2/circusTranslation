@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ ${ProcessID}App ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId 
+  \t1 MissionId, MissionIds, SchedulableId  <#include "CommonImports-Template.ftl">
 \end{zsection}
 %\begin{circus}
 %\circchannelset ${ProcessID}AppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
@@ -38,7 +38,7 @@ Methods \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-<#include MainAction-Template.ftl>  %\circhide MissionSequencerAppStateSync
+<#include "MainAction-Template.ftl">  %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 

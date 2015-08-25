@@ -216,7 +216,7 @@ public class FrameworkEnv
 				missionMap.put("Parameters", c.getMissionEnv().getParameters());
 
 				clusterMap.put("Mission", missionMap);
-				clusterMap.put("Mission_HasClass", c.getMissionEnv().hasClass);
+				clusterMap.put("Mission_HasClass", c.getMissionEnv().isHasClass());
 
 				Map schedulablesMap = new HashMap();
 				schedulablesMap.put("Periodics", c.getSchedulablesEnv()
@@ -811,7 +811,7 @@ public class FrameworkEnv
 		networkMap.put("Safelet", safeletMap);
 
 		networkMap.put("Safelet_HasClass",
-				getControlTier().getSafeletEnv().hasClass);
+				getControlTier().getSafeletEnv().isHasClass());
 
 		Map tlmsMap = new HashMap();
 		tlmsMap.put("Name", getControlTier().getTopLevelMissionSequencerEnv()
@@ -822,7 +822,7 @@ public class FrameworkEnv
 		networkMap.put("TopLevelSequencer", tlmsMap);
 
 		networkMap.put("TopLevelSequencer_HasClass", getControlTier()
-				.getTopLevelMissionSequencerEnv().hasClass);
+				.getTopLevelMissionSequencerEnv().isHasClass());
 
 		List tierList = new ArrayList();
 

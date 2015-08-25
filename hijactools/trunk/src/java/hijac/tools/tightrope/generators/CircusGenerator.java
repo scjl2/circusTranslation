@@ -301,7 +301,7 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			missionMap = mEnv.toMap();
-
+			System.out.println("*** Mission : " + mEnv.getName() + " Has Class? : "+ mEnv.isHasClass());
 			procName = (String) missionMap.get(PROCESS_ID);
 
 			// Application Process
@@ -381,7 +381,7 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			mtMap = mtEnv.toMap();
-
+			System.out.println("*** Schedulable : " + mtEnv.getName() + " Has Class? : "+ mtEnv.isHasClass());
 			procName = mtEnv.getName().toString();
 			translateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName
 					+ APP_CIRCUS);

@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ ${ProcessID}App ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan <#include "CommonImports-Template.ftl">
 \end{zsection}
 %\begin{circus}
 %\circchannelset ${ProcessID}AppSync == \\
@@ -62,7 +62,7 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-<#include MainAction-Template.ftl> \circinterrupt (end\_mission\_app~.~${ProcessID} \then \Skip)
+<#include "MainAction-Template.ftl"> \circinterrupt (end\_mission\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}
