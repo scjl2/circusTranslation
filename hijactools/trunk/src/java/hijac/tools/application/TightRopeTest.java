@@ -23,7 +23,7 @@ import hijac.tools.tightrope.generators.NewSCJApplication;
 
 public class TightRopeTest
 {	
-	private static final String VERSION = "v0.5";
+	private static final String VERSION = "v0.6";
 	private static final boolean QUIET_LATEX_OUTPUT = true;
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
@@ -233,5 +233,10 @@ public class TightRopeTest
 	public static NewSCJApplication getSCJApplication()
 	{
 		return scjApplication;
+	}
+
+	public static String getVersion()
+	{
+		return VERSION;
 	}
 }

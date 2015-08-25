@@ -11,7 +11,9 @@
 
 \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 
-\title{${programName}}
+\title{${ProgramName}}
+
+\author{Tight Rope ${Version}}
 
 \begin{document}
 

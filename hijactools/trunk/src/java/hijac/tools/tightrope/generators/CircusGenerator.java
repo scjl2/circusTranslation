@@ -2,6 +2,7 @@ package hijac.tools.tightrope.generators;
 
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import hijac.tools.application.TightRopeTest;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
@@ -205,7 +206,8 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Generating Report +++");
 		Map root = programEnv.geNetworkMap();
-		root.put("programName", programName);
+		root.put("ProgramName", programName);
+		root.put("Version", TightRopeTest.getVersion());
 
 		translateCommon(root, REPORT_TEMPLATE_FTL, programName + REPORT_TEX);
 	}
@@ -301,7 +303,7 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			missionMap = mEnv.toMap();
-			System.out.println("*** Mission : " + mEnv.getName() + " Has Class? : "+ mEnv.isHasClass());
+			
 			procName = (String) missionMap.get(PROCESS_ID);
 
 			// Application Process
@@ -381,7 +383,7 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			mtMap = mtEnv.toMap();
-			System.out.println("*** Schedulable : " + mtEnv.getName() + " Has Class? : "+ mtEnv.isHasClass());
+			
 			procName = mtEnv.getName().toString();
 			translateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName
 					+ APP_CIRCUS);
