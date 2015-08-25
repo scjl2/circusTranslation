@@ -9,7 +9,7 @@
 \end{circus}
 
 \begin{schema}{State}
-  i : int\\ 
+  i : \num\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -29,9 +29,9 @@ Run \circdef \\
 	  \circblockopen
 
 
-terminationPendingCall~.~fbMission~.~Writer\then \\terminationPendingRet~.~fbMission~.~Writer~?~terminationPending\then \\\Skip
+terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\\Skip
   \circseq \\
-\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot terminationPending = \true) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \circblockopen bufferEmptyCall~.~fbMission~.~Writer~!~\then \\bufferEmptyRet~.~fbMission~.~Writer~?~bufferEmpty\then \\\Skip \circseq \\ \circblockopen \circmu X \circspot \\ \circblockopen \circif ~ bufferEmpty = \true ~ \circthen ~ \\ \t1 \circblockopen \circblockopen waitOnMissionCall~.~fbMission~.~Writer~!~\then \\waitOnMissionRet~.~fbMission~.~Writer\then \\\Skip \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot bufferEmpty = \true \circthen \Skip \\ \circfi \circblockclose \circblockclose \circseq \\ writeCall~.~fbMission~.~Writer~!~i\then \\writeRet~.~fbMission~.~Writer\then \\\Skip \circseq \\ i := i + 1 \circblockclose \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot terminationPending = \true) \circthen \Skip \\ \circfi \circblockclose \circblockclose
+\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot terminationPending = \true) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \circblockopen bufferEmptyCall~.~fbMission\then \\bufferEmptyRet~.~fbMission~?~bufferEmpty\then \\\Skip \circseq \\ \circblockopen \circmu X \circspot \\ \circblockopen \circif ~ bufferEmpty = \true ~ \circthen ~ \\ \t1 \circblockopen \circblockopen waitOnMissionCall~.~fbMission~.~WriterThread\then \\waitOnMissionRet~.~fbMission~.~WriterThread\then \\\Skip \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot bufferEmpty = \true \circthen \Skip \\ \circfi \circblockclose \circblockclose \circseq \\ writeCall~.~fbMission~.~WriterThread~!~i\then \\writeRet~.~fbMission~.~WriterThread\then \\\Skip \circseq \\ i := i + 1 \circblockclose \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot terminationPending = \true) \circthen \Skip \\ \circfi \circblockclose \circblockclose
   \circblockclose
  \circseq \\
 	runRet~.~Writer \then \\

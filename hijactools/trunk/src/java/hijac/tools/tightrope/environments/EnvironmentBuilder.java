@@ -462,7 +462,6 @@ public class EnvironmentBuilder
 		while (i.hasNext())
 		{
 			Tree s = i.next();
-			System.out.println("\t *** Tree = " + s);
 			// TODO if this is only ever going to return one value at a time
 			// then it shouldn't be a map
 			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor,

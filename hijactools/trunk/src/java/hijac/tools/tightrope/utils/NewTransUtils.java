@@ -52,15 +52,14 @@ public class NewTransUtils extends TransUtils
 					case BOOLEAN:
 						returnString = "\\boolean";
 						break;
-					case BYTE:
-						returnString = "byte";
-						break;
+						//I changed this, rather a coarse coverage of these three. Will not produce good model checking results
+					case BYTE:						
 					case INT:
-						returnString = "int";
-						break;
 					case LONG:
-						returnString = "long";
+						returnString = "\\num";
 						break;
+
+						//TODO What do I do with these?
 					case FLOAT:
 						returnString = "float";
 						break;

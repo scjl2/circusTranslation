@@ -77,8 +77,8 @@ public class MethodBodyVisitor extends
 	private static final String TYPE_TEMPLATE = "L2Type.ftl";
 	private static final String EXPR_TEMPLATE = "L2Expr.ftl";
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
-	
-	private static final List<MethodEnv> MISSION_API_METHODS = new ArrayList<MethodEnv>(); 
+
+	private static final List<MethodEnv> MISSION_API_METHODS = new ArrayList<MethodEnv>();
 	/**
 	 * Used to store values for 'future' calls to methods of the visitor
 	 */
@@ -97,19 +97,20 @@ public class MethodBodyVisitor extends
 		assert context != null;
 		CONTEXT = context;
 		this.object = object;
-		
+
 		initAPIMeths();
-		
+
 	}
 
 	private void initAPIMeths()
 	{
 		MISSION_API_METHODS.add(new MethodEnv("getMission", "Mission"));
-		MISSION_API_METHODS.add(new MethodEnv("getSequencer", "MissionSequencer" ));
+		MISSION_API_METHODS.add(new MethodEnv("getSequencer",
+				"MissionSequencer"));
 		MISSION_API_METHODS.add(new MethodEnv("missionMemorySize", "int"));
 		MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean"));
 		MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean"));
-		
+
 	}
 
 	public MethodBodyVisitor(NewSCJApplication context, ObjectEnv object,
@@ -120,7 +121,7 @@ public class MethodBodyVisitor extends
 		CONTEXT = context;
 		this.object = object;
 		this.methodEnv = env;
-		
+
 		initAPIMeths();
 	}
 
@@ -516,7 +517,7 @@ public class MethodBodyVisitor extends
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
 			sb.append("~!~thread \\then ");
-			sb.append("\\\\");
+			sb.append(" \\\\ ");
 			sb.append("\\Skip");
 
 			return sb.toString();
@@ -527,12 +528,12 @@ public class MethodBodyVisitor extends
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
 			sb.append("~!~thread \\then");
-			sb.append("\\\\");
+			sb.append(" \\\\ ");
 			sb.append("waitRet~.~");
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
 			sb.append("~!~thread \\then");
-			sb.append("\\\\");
+			sb.append(" \\\\ ");
 			sb.append("\\Skip");
 
 			return sb.toString();
@@ -541,27 +542,44 @@ public class MethodBodyVisitor extends
 		{
 			MethodEnv method = getMethodEnvBeingCalled(node);
 
-			System.out.println("!// method being called (returned) = " + method.getMethodName());
-			
+			// System.out.println("!// method being called (returned) = " +
+			// method.getMethodName());
+
 			String returnString = method.getReturnType();
 			List<? extends ExpressionTree> parameters = node.getArguments();
-			
+
 			sb.append(identifier);
 			sb.append("Call");
 			sb.append("~.~");
 			sb.append(((MemberSelectTree) node.getMethodSelect())
 					.getExpression().toString());
-			sb.append("~.~");
-			sb.append(objectEnvName.toString());
+			if (method.isSynchronised())
+			{
+				sb.append("~.~");
+				sb.append(objectEnvName.toString());
+				sb.append("Thread");
+			}
+			
 			if (!parameters.isEmpty())
 			{
 				for (ExpressionTree s : parameters)
 				{
-					sb.append("~!~");
+
 					if (s instanceof IdentifierTree)
 					{
-						
+						sb.append("~!~");
 						sb.append(((IdentifierTree) s).getName().toString());
+					}
+					else if (s instanceof LiteralTree)
+					{
+						if (s.getKind().equals(Tree.Kind.STRING_LITERAL))
+						{
+
+						}
+						else
+						{
+							sb.append(((LiteralTree) s).getValue().toString());
+						}
 					}
 				}
 			}
@@ -572,20 +590,33 @@ public class MethodBodyVisitor extends
 			sb.append("~.~");
 			sb.append(((MemberSelectTree) node.getMethodSelect())
 					.getExpression().toString());
-			sb.append("~.~");
-			sb.append(objectEnvName.toString());
-			
-			System.out.println("!// !returnString.contains('null') =  " + (!returnString.contains("null")));
+			if (method.isSynchronised())
+			{
+				sb.append("~.~");
+				sb.append(objectEnvName.toString());
+				sb.append("Thread");
+			}
+
+			System.out.println("!// !returnString.contains('null') =  "
+					+ (!returnString.contains("null")));
 			System.out.println("!// returnString =  " + returnString);
 			if (!returnString.contains("null"))
 			{
 				sb.append("~?~");
-				System.out.println("!// return string not 'null', getting key: " + 
-						((MemberSelectTree) node.getMethodSelect()).getIdentifier().toString().toString() +
-						" value: " + 
-						timeMachine.get(((MemberSelectTree) node.getMethodSelect()).getIdentifier().toString()).toString());
-						
-				sb.append(timeMachine.get(((MemberSelectTree) node.getMethodSelect()).getIdentifier().toString()).toString());
+				System.out
+						.println("!// return string not 'null', getting key: "
+								+ ((MemberSelectTree) node.getMethodSelect())
+										.getIdentifier().toString().toString()
+								+ " value: "
+								+ timeMachine.get(
+										((MemberSelectTree) node
+												.getMethodSelect())
+												.getIdentifier().toString())
+										.toString());
+
+				sb.append(timeMachine.get(
+						((MemberSelectTree) node.getMethodSelect())
+								.getIdentifier().toString()).toString());
 			}
 			sb.append("\\then \\\\");
 			sb.append("\\Skip");
@@ -719,8 +750,6 @@ public class MethodBodyVisitor extends
 		System.out.println("/// node...getIdenitifer = "
 				+ mst.getIdentifier().toString());
 
-		
-
 		String varType = "";
 		final boolean objectNotNull = object != null;
 		System.out.println("/// objectNotNull = " + objectNotNull);
@@ -738,11 +767,10 @@ public class MethodBodyVisitor extends
 				// we're in...
 				if (t.getSimpleName().contentEquals(object.getName()))
 				{
-				
-					
+
 					// ... then that's our class tree!
 					ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
-					
+
 					List<Tree> members = (List<Tree>) ct.getMembers();
 					Iterator<Tree> i = members.iterator();
 
@@ -781,13 +809,11 @@ public class MethodBodyVisitor extends
 
 			System.out.println("/// varType = " + varType);
 
-			
 			// Then we get the Type Element of the variable we're calling the
 			// method on
 			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 			{
 				System.out.println("!// t = " + t.getSimpleName());
-			
 
 				final Name simpleName = t.getSimpleName();
 
@@ -806,14 +832,12 @@ public class MethodBodyVisitor extends
 					methods.addAll(o.getSyncMeths());
 					methods.addAll(o.getMeths());
 					methods.addAll(MISSION_API_METHODS);
-					
-					
 
 					// TODO This falls over for API methods...
 					for (MethodEnv mEnv : methods)
 					{
 						System.out.println("/// mEnv.getMethodName = "
-								+ mEnv.getMethodName()); 
+								+ mEnv.getMethodName());
 						if (mEnv.getMethodName().contentEquals(identifier))
 						{
 							// Then get the method env of the method we're
@@ -934,8 +958,13 @@ public class MethodBodyVisitor extends
 
 			if (isNotMyMethod(mit))
 			{
-				System.out.println("!// not my method, variable, putting key: " +((MemberSelectTree) mit.getMethodSelect()).getIdentifier().toString() + " value: " + node.getName().toString());
-				timeMachine.putIfAbsent(((MemberSelectTree) mit.getMethodSelect()).getIdentifier().toString(), node.getName().toString());
+				System.out.println("!// not my method, variable, putting key: "
+						+ ((MemberSelectTree) mit.getMethodSelect())
+								.getIdentifier().toString() + " value: "
+						+ node.getName().toString());
+				timeMachine.putIfAbsent(((MemberSelectTree) mit
+						.getMethodSelect()).getIdentifier().toString(), node
+						.getName().toString());
 				return visitMethodInvocation(mit, ctxt);
 			}
 			else

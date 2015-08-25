@@ -193,12 +193,15 @@ public class ObjectEnv
 
 	public void addMeth(MethodEnv me)
 	{
+		me.setSynchronised(false);
 		meths.add(me);
 	}
 
 	public void addSyncMeth(MethodEnv me)
 	{
+		me.setSynchronised(true);
 		syncMeths.add(me);
+		
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

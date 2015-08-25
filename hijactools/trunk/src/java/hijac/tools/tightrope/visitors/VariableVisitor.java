@@ -3,6 +3,7 @@ package hijac.tools.tightrope.visitors;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.NewTransUtils;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -610,7 +611,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		{
 			if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
 			{
-				objectEnv.addVariable(varName.toString(), varType.toString(),
+				
+				objectEnv.addVariable(varName.toString(), NewTransUtils.encodeType(varType),
 						init, true);
 			}
 			else if ((!(objectEnv.getName().toString().contains(varType
