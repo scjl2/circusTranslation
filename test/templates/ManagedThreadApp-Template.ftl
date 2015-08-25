@@ -30,7 +30,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (<#if Variables?size != 0> Init \circseq</#if> Methods) \circinterrupt (end\_managedThread\_app~.~${ProcessID} \then \Skip)
+<#include MainAction-Template.ftl> \circinterrupt (end\_managedThread\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

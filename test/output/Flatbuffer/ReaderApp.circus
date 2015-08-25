@@ -1,9 +1,9 @@
 \begin{zsection}
-  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds, ReaderClass
+  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
 \end{zsection}
 %
 \begin{circus}
-\circprocess ReaderApp \circdef   fbMission : MissionID
+\circprocess ReaderApp \circdef   fbMission : MissionID  \circspot
  \circbegin
 \end{circus}
 
