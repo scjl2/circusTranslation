@@ -1,6 +1,10 @@
 \begin{zsection}
   \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  
 
+  \t1 , \\
+FlatBufferMissionMethChan
+
+
 \end{zsection}
 %
 \begin{circus}

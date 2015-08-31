@@ -396,7 +396,7 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			mtMap = mtEnv.toMap();
-			
+			System.out.println("!// managed threads parents = " + mtEnv.getParents().toString());
 			procName = mtEnv.getName().toString();
 			translateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName
 					+ APP_CIRCUS);

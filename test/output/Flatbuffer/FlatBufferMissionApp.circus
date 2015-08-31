@@ -2,6 +2,7 @@
   \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , FlatBufferMissionClass
 
+ \t1 
 \end{zsection}
 %\begin{circus}
 %\circchannelset FlatBufferMissionAppSync == \\

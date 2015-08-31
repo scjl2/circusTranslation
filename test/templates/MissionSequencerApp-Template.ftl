@@ -1,6 +1,7 @@
 \begin{zsection}
   \SECTION ~ ${ProcessID}App ~ \parents ~ TopLevelMissionSequencerChan,\\
   \t1 MissionId, MissionIds, SchedulableId  <#include "CommonImports-Template.ftl">
+  \t1 <#include "Parent-Template.ftl">
 \end{zsection}
 %\begin{circus}
 %\circchannelset ${ProcessID}AppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset

@@ -90,6 +90,11 @@ public class MethodBodyVisitor extends
 
 	protected final NewSCJApplication CONTEXT;
 
+	/**
+	 * Constructor for the Method Body Visitor
+	 * @param context The NewSCJApplication object for this application 
+	 * @param object The object in which the method on which we are operating resides
+	 */
 	public MethodBodyVisitor(NewSCJApplication context, ObjectEnv object)
 	{
 		super(NewTransUtils.FAILED_RESULT);
@@ -112,6 +117,12 @@ public class MethodBodyVisitor extends
 
 	}
 
+	/**
+	 * Constructor for the Method Body Visitor
+	 * @param context The NewSCJApplication object for this application 
+	 * @param object The object in which the method on which we are operating resides
+	 * @param env The environment for the method of which we exploring the body
+	 */
 	public MethodBodyVisitor(NewSCJApplication context, ObjectEnv object,
 			MethodEnv env)
 	{
@@ -514,6 +525,7 @@ public class MethodBodyVisitor extends
 
 		if (identifier.contentEquals("notify"))
 		{
+			//TODO add thread and object parent?
 			sb.append("notify~.~");
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
@@ -525,6 +537,7 @@ public class MethodBodyVisitor extends
 		}
 		else if (identifier.contentEquals("wait"))
 		{
+			//TODO add thread and object parent?
 			sb.append("waitCall~.~");
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
@@ -542,6 +555,7 @@ public class MethodBodyVisitor extends
 		else if (isNotMyMethod(node))
 		{
 			MethodEnv method = getMethodEnvBeingCalled(node);
+			object.addParent(getObjectEnvOfMethod(node).getName().toString()+"MethChan");
 
 			// System.out.println("!// method being called (returned) = " +
 			// method.getMethodName());
@@ -718,11 +732,14 @@ public class MethodBodyVisitor extends
 		String expressionString = et.toString();
 
 		if (expressionString.contentEquals(object.getName().toString()))
+			
 		{
+			
 			return false;
 		}
 		else
 		{
+			System.out.println("/// not my method, it's from " + expressionString);
 			return true;
 		}
 
@@ -740,13 +757,35 @@ public class MethodBodyVisitor extends
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	
 	private MethodEnv getMethodEnvBeingCalled(MethodInvocationTree node)
 	{
 		MemberSelectTree mst = (MemberSelectTree) node.getMethodSelect();
 
-		ExpressionTree expression = mst.getExpression();
+		
 		Name identifier = mst.getIdentifier();
+
+		System.out.println("/// node.getMethodSelect = " + mst.toString());
+
+		System.out.println("/// node...getExpression = "
+				+ mst.getExpression().toString());
+
+		System.out.println("/// node...getIdenitifer = "
+				+ mst.getIdentifier().toString());
+		ObjectEnv o = getObjectEnvOfMethod(node);
+		
+		System.out.println("/// o is " + o.getName());
+		
+		return getMethodEnvFromObject(identifier, o);
+		
+	}
+	
+	private ObjectEnv getObjectEnvOfMethod(MethodInvocationTree node)
+	{
+		MemberSelectTree mst = (MemberSelectTree) node.getMethodSelect();
+
+		ExpressionTree expression = mst.getExpression();
+	
 
 		System.out.println("/// node.getMethodSelect = " + mst.toString());
 
@@ -830,28 +869,30 @@ public class MethodBodyVisitor extends
 					// variable we're calling the method on
 					ObjectEnv o = TightRopeTest.getProgramEnv().getObjectEnv(
 							simpleName);
-
-					System.out
-							.println("/// o name = " + o.getName().toString());
-
-					List<MethodEnv> methods = new ArrayList<MethodEnv>();
-					methods.addAll(o.getSyncMeths());
-					methods.addAll(o.getMeths());
-					methods.addAll(MISSION_API_METHODS);
-
-					// TODO This falls over for API methods...
-					for (MethodEnv mEnv : methods)
-					{
-						System.out.println("/// mEnv.getMethodName = "
-								+ mEnv.getMethodName());
-						if (mEnv.getMethodName().contentEquals(identifier))
-						{
-							// Then get the method env of the method we're
-							// calling.
-							return mEnv;
-						}
-					}
+					return o;
 				}
+			}
+		}
+		return null;
+	}
+
+	private MethodEnv getMethodEnvFromObject(Name identifier, ObjectEnv o)
+	{
+		List<MethodEnv> methods = new ArrayList<MethodEnv>();
+		methods.addAll(o.getSyncMeths());
+		methods.addAll(o.getMeths());
+		methods.addAll(MISSION_API_METHODS);
+
+		// TODO This falls over for API methods...
+		for (MethodEnv mEnv : methods)
+		{
+			System.out.println("/// mEnv.getMethodName = "
+					+ mEnv.getMethodName());
+			if (mEnv.getMethodName().contentEquals(identifier))
+			{
+				// Then get the method env of the method we're
+				// calling.
+				return mEnv;
 			}
 		}
 		return null;

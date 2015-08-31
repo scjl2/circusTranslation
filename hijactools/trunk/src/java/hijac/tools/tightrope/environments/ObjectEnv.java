@@ -27,25 +27,48 @@ public class ObjectEnv
 	protected static final String IMPORT_NAME = "ImportName";
 	protected static final String HANDLER_TYPE = "HandlerType";
 	protected static final String PARAMETERS_STR = "Parameters";
+	protected static final String PARENTS_STR = "Parents";
 	// ClassTree classTree;
 	/**
 	 * The name of the entity this environment represents
 	 */
-	Name name;
+	private Name name;
+	/**
+	 * The variables of this object
+	 */
 	List<VariableEnv> variables;
+	/**
+	 * The parameters of this object
+	 */
 	List<VariableEnv> parameters;
+	/**
+	 * The non-synchronised methods of this object
+	 */
 	protected List<MethodEnv> meths;
+	/**
+	 * The synchronised methods of this object
+	 */
 	protected List<MethodEnv> syncMeths;
 	/**
-	 * A list of custom channels required by this object. I.E. the new channels that need creating for it.
-	 */	
+	 * The custom channels required by this object. I.E. the new channels that
+	 * need creating for it.
+	 */
 	private List<ChannelEnv> newChannels;
+	/**
+	 * The required parents of this object. I.E. the files that this object's
+	 * file will depend on to parse
+	 */
+	private List<String> parents;
 
+	/**
+	 * The standard constructor, which simply instantiates the lists
+	 */
 	public ObjectEnv()
 	{
 		variables = new ArrayList<VariableEnv>();
 		parameters = new ArrayList<VariableEnv>();
 		newChannels = new ArrayList<ChannelEnv>();
+		parents = new ArrayList<String>();
 	}
 
 	public Name getName()
@@ -66,25 +89,32 @@ public class ObjectEnv
 	}
 
 	/**
-	 * Gets a variable environment from this object which shares the same name as <code>name</code>. 
-	 * If the variable doesn't exist in this object environment, then this method will return <code>null</code>
-	 * This method use <code>getVariable(String name)</code> internally
+	 * Gets a variable environment from this object which shares the same name
+	 * as <code>name</code>. If the variable doesn't exist in this object
+	 * environment, then this method will return <code>null</code> This method
+	 * use <code>getVariable(String name)</code> internally
 	 * 
-	 * @param name The name of the variable you're looking for, as a <code>Name</code>
-	 * @return The <code>VariableEnv</code> representing the variable you're looking for, or <code>null</code>
+	 * @param name
+	 *            The name of the variable you're looking for, as a
+	 *            <code>Name</code>
+	 * @return The <code>VariableEnv</code> representing the variable you're
+	 *         looking for, or <code>null</code>
 	 */
 	public VariableEnv getVariable(Name name)
 	{
 		return this.getVariable(name.toString());
 	}
 
-	
 	/**
-	 * Gets a variable environment from this object which shares the same name as <code>name</code>. 
-	 * If the variable doesn't exist in this object environment, then this method will return <code>null</code>
+	 * Gets a variable environment from this object which shares the same name
+	 * as <code>name</code>. If the variable doesn't exist in this object
+	 * environment, then this method will return <code>null</code>
 	 * 
-	 * @param name The name of the variable you're looking for, as a <code>String</code>
-	 * @return The <code>VariableEnv</code> representing the variable you're looking for, or <code>null</code>
+	 * @param name
+	 *            The name of the variable you're looking for, as a
+	 *            <code>String</code>
+	 * @return The <code>VariableEnv</code> representing the variable you're
+	 *         looking for, or <code>null</code>
 	 */
 	public VariableEnv getVariable(String name)
 	{
@@ -138,25 +168,27 @@ public class ObjectEnv
 	}
 
 	/**
-	 * Gets the <code>VariableEnv</code> representing the parameter that shares its name with the parameter.
-	 * May return <code>null</code>
+	 * Gets the <code>VariableEnv</code> representing the parameter that shares
+	 * its name with the parameter. May return <code>null</code>
 	 * 
-	 * @param name The name of the parameter we're looking for
-	 * @return The <code>VariableEnv</code> representing the parameter we're looking for, or <code>null</code> 
+	 * @param name
+	 *            The name of the parameter we're looking for
+	 * @return The <code>VariableEnv</code> representing the parameter we're
+	 *         looking for, or <code>null</code>
 	 */
 	public VariableEnv getParameter(String name)
 	{
-		for(VariableEnv v : parameters)
+		for (VariableEnv v : parameters)
 		{
-			if(v.getVariableName().contentEquals(name))
+			if (v.getVariableName().contentEquals(name))
 			{
 				return v;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public List<VariableEnv> getParameters()
 	{
 		return parameters;
@@ -201,7 +233,7 @@ public class ObjectEnv
 	{
 		me.setSynchronised(true);
 		syncMeths.add(me);
-		
+
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -251,7 +283,6 @@ public class ObjectEnv
 		{
 			Map methodMap = methodToMap(me);
 
-
 			returnList.add(methodMap);
 		}
 
@@ -276,17 +307,16 @@ public class ObjectEnv
 	protected Map methodToMap(MethodEnv me)
 	{
 		Map methodMap = new HashMap();
-		
-		
+
 		String s = me.getMethodName();
-	
-		methodMap.put( METHOD_NAME, s);
+
+		methodMap.put(METHOD_NAME, s);
 		methodMap.put(RETURN_TYPE, me.getReturnType());
 		methodMap.put("ReturnValue", me.getReturnValue());
 		methodMap.put(PARAMETERS_STR, me.getParameters());
 		methodMap.put(ACCESS, me.getAccessString());
 		methodMap.put(BODY, me.getBody());
-		
+
 		return methodMap;
 	}
 
@@ -294,7 +324,7 @@ public class ObjectEnv
 	{
 		return meths;
 	}
-	
+
 	public List<MethodEnv> getSyncMeths()
 	{
 		return syncMeths;
@@ -304,11 +334,31 @@ public class ObjectEnv
 	{
 		return newChannels;
 	}
-	
+
 	public void addNewChannel(String channelName, String channelType)
 	{
 		newChannels.add(new ChannelEnv(channelName, channelType));
 	}
-	
+
+	public void addParent(String parentName)
+	{
+		boolean exists = false;
+		for (String s : parents)
+		{
+			if (s.contains(parentName))
+			{
+				exists = true;
+			}
+		}
+		if (!exists)
+		{
+			parents.add(parentName);
+		}
+	}
+
+	public List<String> getParents()
+	{
+		return parents;
+	}
 
 }
