@@ -60,88 +60,122 @@ CleanupPhase \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-Meth \circdef 
+bufferEmptyMeth \circdef 
+\circvar ret : \boolean \circspot
 \\
 \circblockopen
-Call~.~FlatBufferMission 
-~?~name
+bufferEmptyCall~.~FlatBufferMission 
 \then \\
-ret := this~.~bufferEmpty(name)  \circseq  \\
+ret := this~.~bufferEmpty()  \circseq  \\
 
+bufferEmptyRet~.~FlatBufferMission~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}	
 %
 \begin{circusaction}
-SyncMeth \circdef 
+writeSyncMeth \circdef 
 \\
 \circblockopen
-Call~.~FlatBufferMission~?~thread 
+writeCall~.~FlatBufferMission~?~thread 
 ~?~update
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
 lockAcquired~.~FlatBufferMission~.~thread \then \\
+
   \circblockopen
+
+
+
 
 
   buffer := update ~
 
+ 
 
-  \circseq \\
+   \circseq \\ 
+
+
 notify~.~FlatBufferMissionObject~!~thread \then  \\ \Skip
+ 
 
   \circblockclose
+
  \circseq  \\
 endSyncMeth~.~FlatBufferMission~.~thread \then  \\
+writeRet~.~FlatBufferMission~!~ret~!~thread \then \\
 \Skip
 \circblockclose
 \end{circusaction}	
 \begin{circusaction}
-SyncMeth \circdef 
+readSyncMeth \circdef 
+\circvar ret : \num \circspot
 \\
 \circblockopen
-Call~.~FlatBufferMission~?~thread 
+readCall~.~FlatBufferMission~?~thread 
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
 lockAcquired~.~FlatBufferMission~.~thread \then \\
-  \circblockopen
-  \circvar out : int \circspot out := buffer ~
 
-  \circseq \\
+  \circblockopen
+
+
+  \circvar out : int \circspot out := buffer ~
+ 
+
+   \circseq \\ 
+
+
+
 
 
   buffer := 0 ~
 
+ 
 
-  \circseq \\
+   \circseq \\ 
+
+
 notify~.~FlatBufferMissionObject~!~thread \then  \\ \Skip
+ 
 
-  \circseq \\
+   \circseq \\ 
+
+
   ret := out
+ 
 
   \circblockclose
+
  \circseq  \\
 endSyncMeth~.~FlatBufferMission~.~thread \then  \\
+readRet~.~FlatBufferMission~!~ret~!~thread \then \\
 \Skip
 \circblockclose
 \end{circusaction}	
 \begin{circusaction}
-SyncMeth \circdef 
+waitOnMissionSyncMeth \circdef 
 \\
 \circblockopen
-Call~.~FlatBufferMission~?~thread 
-~?~name
+waitOnMissionCall~.~FlatBufferMission~?~thread 
 \then \\
 startSyncMeth~.~FlatBufferMission~.~thread \then \\
 lockAcquired~.~FlatBufferMission~.~thread \then \\
+
   \circblockopen
 
 
+
+
+
 waitCall~.~FlatBufferMissionObject~!~thread \then \\ waitRet~.~FlatBufferMissionObject~!~thread \then \\ \Skip
+ 
 
   \circblockclose
+
  \circseq  \\
 endSyncMeth~.~FlatBufferMission~.~thread \then  \\
+waitOnMissionRet~.~FlatBufferMission~!~ret~!~thread \then \\
 \Skip
 \circblockclose
 \end{circusaction}	

@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.NewTransUtils;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
@@ -112,7 +114,7 @@ public class MethodEnv
 				return returnValues.get(0).toString();
 			}
 			else
-			{
+			{	
 				return returnValues.toString();
 			}
 		}

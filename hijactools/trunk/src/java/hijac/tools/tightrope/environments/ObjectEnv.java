@@ -282,7 +282,7 @@ public class ObjectEnv
 	
 		methodMap.put( METHOD_NAME, s);
 		methodMap.put(RETURN_TYPE, me.getReturnType());
-		methodMap.put("returnValue", me.getReturnValue());
+		methodMap.put("ReturnValue", me.getReturnValue());
 		methodMap.put(PARAMETERS_STR, me.getParameters());
 		methodMap.put(ACCESS, me.getAccessString());
 		methodMap.put(BODY, me.getBody());

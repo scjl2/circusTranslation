@@ -1,10 +1,5 @@
 package hijac.tools.tightrope.visitors;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.lang.model.element.Name;
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.application.TightRopeTest;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
@@ -12,6 +7,12 @@ import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.lang.model.element.Name;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.PrimitiveTypeTree;
@@ -59,7 +60,11 @@ public class MethodVisitor
 
 		for (VariableTree vt : mt.getParameters())
 		{
-			parameters.put(vt.getName().toString(), vt.getType());
+			if (!(vt.getType().toString().contains("String")))
+			{
+				parameters.put(vt.getName().toString(),
+						NewTransUtils.encodeType(vt.getType()));
+			}
 		}
 
 		Tree returnType = mt.getReturnType();

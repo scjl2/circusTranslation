@@ -14,8 +14,9 @@ public class ProgramEnv
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 
 
-	MissionIdsEnv missionIds;
-	SchedulableIdsEnv schedulableIds;
+	private MissionIdsEnv missionIds;
+	private SchedulableIdsEnv schedulableIds;
+	private ThreadIdsEnv threadIds;
 
 	public ProgramEnv(SCJAnalysis context)
 	{
@@ -24,6 +25,7 @@ public class ProgramEnv
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
+		threadIds = new ThreadIdsEnv();
 	}
 
 	public void addSafelet(Name safelet)
@@ -40,7 +42,7 @@ public class ProgramEnv
 	public void addMission(Name mission)
 	{
 		structureEnv.addMission(mission);
-		missionIds.addMission(mission);
+		missionIds.addIdNames(mission);
 	}
 
 	public FrameworkEnv getFrameworkEnv()
@@ -78,7 +80,8 @@ public class ProgramEnv
 	public void addSchedulable(SchedulableTypeE type, Name name)
 	{
 		structureEnv.addSchedulable(type, name);
-		schedulableIds.addSchedulable(name);
+		schedulableIds.addIdNames(name);
+		threadIds.addIdNames(name);
 	}
 
 	public boolean containsScheudlable(Name name)
@@ -262,6 +265,12 @@ public class ProgramEnv
 		}
 		
 		return null;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public Map getThreadIdsMap()
+	{
+		return threadIds.toMap();
 	}
 
 }

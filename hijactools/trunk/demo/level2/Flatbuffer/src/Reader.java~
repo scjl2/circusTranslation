@@ -25,7 +25,7 @@ public class Reader extends ManagedThread
 
 		//rewritten, only variables in boolean conditions
 		boolean terminationPending = fbMission.terminationPending();
-		while (!fbMission.terminationPending())
+		while (!terminationPending)
 		{
 			try
 			{

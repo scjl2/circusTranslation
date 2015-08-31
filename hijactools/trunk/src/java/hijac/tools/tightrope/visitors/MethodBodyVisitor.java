@@ -21,7 +21,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
 
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -273,7 +272,7 @@ public class MethodBodyVisitor extends
 	public String visitAssignment(AssignmentTree node, MethodVisitorContext ctxt)
 	{
 		/* Should we check that we are not inside an expression? */
-		// System.out.println("/// AssignmentTree node = " + node);
+		System.out.println("/// AssignmentTree node = " + node);
 		if (node.getExpression() instanceof MethodInvocationTree)
 		{
 			MethodInvocationTree mit = (MethodInvocationTree) node
@@ -506,6 +505,8 @@ public class MethodBodyVisitor extends
 	public String visitMethodInvocation(MethodInvocationTree node,
 			MethodVisitorContext ctxt)
 	{
+		System.out.println("/// methodInvocation node = " + node);
+
 		Name identifier = ((MemberSelectTree) node.getMethodSelect())
 				.getIdentifier();
 		Name objectEnvName = object.getName();
@@ -559,7 +560,7 @@ public class MethodBodyVisitor extends
 				sb.append(objectEnvName.toString());
 				sb.append("Thread");
 			}
-			
+
 			if (!parameters.isEmpty())
 			{
 				for (ExpressionTree s : parameters)
@@ -617,9 +618,14 @@ public class MethodBodyVisitor extends
 				sb.append(timeMachine.get(
 						((MemberSelectTree) node.getMethodSelect())
 								.getIdentifier().toString()).toString());
+				sb.append("\\then \\\\");
+
 			}
-			sb.append("\\then \\\\");
-			sb.append("\\Skip");
+			else
+			{
+				sb.append("\\then \\\\");
+				sb.append("\\Skip");
+			}
 
 			return sb.toString();
 		}
@@ -949,7 +955,7 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitVariable(VariableTree node, MethodVisitorContext ctxt)
 	{
-		// System.out.println("/// VariableTree node = " + node);
+		System.out.println("/// VariableTree node = " + node);
 
 		if (node.getInitializer() instanceof MethodInvocationTree)
 		{
@@ -962,9 +968,11 @@ public class MethodBodyVisitor extends
 						+ ((MemberSelectTree) mit.getMethodSelect())
 								.getIdentifier().toString() + " value: "
 						+ node.getName().toString());
+
 				timeMachine.putIfAbsent(((MemberSelectTree) mit
 						.getMethodSelect()).getIdentifier().toString(), node
 						.getName().toString());
+
 				return visitMethodInvocation(mit, ctxt);
 			}
 			else

@@ -340,6 +340,7 @@
   \circfi
   \circblockclose
   \circblockclose
+  \\
 </@keep_newlines>
 </@compact>
 </#macro>

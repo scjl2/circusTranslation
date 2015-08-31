@@ -1,22 +1,22 @@
 <#list Methods as meth>
 \begin{circusaction}
-${meth.methodName}Meth \circdef 
-<#if meth.returnType != 'null'>
-\circvar ret : ${meth.returnType} \circspot
+${meth.MethodName}Meth \circdef 
+<#if meth.ReturnType != 'null'>
+\circvar ret : ${meth.ReturnType} \circspot
 </#if>
 \\
 \circblockopen
-${meth.methodName}Call~.~${ProcessID} 
+${meth.MethodName}Call~.~${ProcessID} 
 <#list meth.Parameters?keys as param>
 ~?~${param}
 </#list>
 \then \\
 ${meth.Body}  \circseq  \\
 
-<#if meth.returnType != 'null'>
-${meth.methodName}Ret~.~${ProcessID}~!~ret \then \\
+<#if meth.ReturnType != 'null'>
+${meth.MethodName}Ret~.~${ProcessID}~!~ret \then \\
 <#else>
-${meth.methodName}Ret~.~${ProcessID} \then \\
+${meth.MethodName}Ret~.~${ProcessID} \then \\
 </#if>
 \Skip
 \circblockclose
@@ -25,13 +25,13 @@ ${meth.methodName}Ret~.~${ProcessID} \then \\
 %
 <#list SyncMethods as meth >
 \begin{circusaction}
-${meth.methodName}SyncMeth \circdef 
-<#if meth.returnType != 'null'>
-\circvar ret : ${meth.returnType} \circspot
+${meth.MethodName}SyncMeth \circdef 
+<#if meth.ReturnType != 'null'>
+\circvar ret : ${meth.ReturnType} \circspot
 </#if>
 \\
 \circblockopen
-${meth.methodName}Call~.~${ProcessID}~?~thread 
+${meth.MethodName}Call~.~${ProcessID}~?~thread 
 <#list meth.Parameters?keys as param>
 ~?~${param}
 </#list>
@@ -40,10 +40,10 @@ startSyncMeth~.~${ProcessID}~.~thread \then \\
 lockAcquired~.~${ProcessID}~.~thread \then \\
 ${meth.Body} \circseq  \\
 endSyncMeth~.~${ProcessID}~.~thread \then  \\
-<#if meth.returnType != 'VOID'>
-${meth.methodName}Ret~.~${ProcessID}~!~ret~!~thread \then \\
+<#if meth.ReturnType != 'VOID'>
+${meth.MethodName}Ret~.~${ProcessID}~!~ret~!~thread \then \\
 <#else>
-${meth.methodName}Ret~.~${ProcessID}~.~thread \then \\
+${meth.MethodName}Ret~.~${ProcessID}~.~thread \then \\
 </#if>
 \Skip
 \circblockclose

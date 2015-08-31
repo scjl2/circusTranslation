@@ -5,6 +5,7 @@
 %
 \begin{circus}
 \circprocess ReaderApp \circdef   fbMission : MissionID
+\circspot 
  \circbegin
 \end{circus}
 
@@ -13,13 +14,17 @@
 Run \circdef \\
 \circblockopen
 	runCall~.~Reader \then \\
-	  \circblockopen
+	
+  \circblockopen
 
 
-terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\\Skip
-  \circseq \\
-\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot terminationPending = \true) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen \circblockopen bufferEmptyCall~.~fbMission\then \\bufferEmptyRet~.~fbMission~?~bufferEmpty\then \\\Skip \circseq \\ \circblockopen \circmu X \circspot \\ \circblockopen \circif ~ bufferEmpty = \true ~ \circthen ~ \\ \t1 \circblockopen \circblockopen waitOnMissionCall~.~fbMission~.~ReaderThread\then \\waitOnMissionRet~.~fbMission~.~ReaderThread\then \\\Skip \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot bufferEmpty = \true \circthen \Skip \\ \circfi \circblockclose \circblockclose \circseq \\ readCall~.~fbMission~.~ReaderThread\then \\readRet~.~fbMission~.~ReaderThread~?~value\then \\\Skip \circseq \\ \circblockclose \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot terminationPending = \true) \circthen \Skip \\ \circfi \circblockclose \circblockclose
+
+
+terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\ 
+
+\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot terminationPending = \true) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen bufferEmptyCall~.~fbMission\then \\bufferEmptyRet~.~fbMission~?~bufferEmpty\then \\ \circblockopen \circmu X \circspot \\ \circblockopen \circif ~ bufferEmpty = \true ~ \circthen ~ \\ \t1 \circblockopen waitOnMissionCall~.~fbMission~.~ReaderThread\then \\waitOnMissionRet~.~fbMission~.~ReaderThread\then \\\Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot bufferEmpty = \true \circthen \Skip \\ \circfi \circblockclose \circblockclose \\ \circseq \\ readCall~.~fbMission~.~ReaderThread\then \\readRet~.~fbMission~.~ReaderThread~?~value\then \\ \Skip \circblockclose \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot terminationPending = \true) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\ 
   \circblockclose
+
  \circseq \\
 	runRet~.~Reader \then \\
 	\Skip

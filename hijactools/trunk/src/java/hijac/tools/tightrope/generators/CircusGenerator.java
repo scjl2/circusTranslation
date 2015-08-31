@@ -52,6 +52,8 @@ public class CircusGenerator
 	private static final String TEMPLATE_DIRECTORY = "/home/matt/Documents/Translation/test/templates";
 	private static final String OUTPUT_DIRECTORY = "/home/matt/Documents/Translation/test/output/";
 	private static final String CUSTOM_CHANNELS_TEMPLATE_FTL = "CustomChannels-Templat.ftl";
+	private static final String THREAD_IDS_TEMPLATE_FTL = "ThreadIds-Template.ftl";
+	private static final String THREAD_IDS_CIRCUS = "ThreadIds.circus";
 
 	private freemarker.template.Configuration cfg;
 	private ProgramEnv programEnv;
@@ -66,6 +68,7 @@ public class CircusGenerator
 	 * @param programEnv
 	 *            The environment of the program that is being translated
 	 */
+	@SuppressWarnings("deprecation")
 	public CircusGenerator(String programName, ProgramEnv programEnv)
 	{
 		/* You should do this ONLY ONCE in the whole application life-cycle: */
@@ -191,6 +194,7 @@ public class CircusGenerator
 	private void translateIDFiles()
 	{
 		System.out.println("+++ Generating ID Files +++");
+		//Ian Duncan Smith? 
 		Map Ids = programEnv.getMissionIdsMap();
 
 		translateCommon(Ids, MISSION_IDS_TEMPLATE_FTL, MISSION_IDS_CIRCUS);
@@ -199,6 +203,11 @@ public class CircusGenerator
 
 		translateCommon(Ids, SCHEDULABLE_IDS_TEMPLATE_FTL,
 				SCHEDULABLE_IDS_CIRCUS);
+		
+		Ids = programEnv.getThreadIdsMap();
+		
+		translateCommon(Ids, THREAD_IDS_TEMPLATE_FTL,
+				THREAD_IDS_CIRCUS);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -222,7 +231,7 @@ public class CircusGenerator
 		translateCommon(root, NETWORK_TEMPLATE_FTL, NETWORK_CIRCUS);
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void translateSafelet()
 	{
 		System.out.println("+++ Translating Safelet +++ ");
@@ -238,6 +247,7 @@ public class CircusGenerator
 		// Custom Channels
 		if (!safelet.getMeths().isEmpty() || !safelet.getSyncMeths().isEmpty())
 		{
+			root.put("IDType", "");
 			translateCommon(root, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
 		}
@@ -254,7 +264,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void translateTopLevelMissionSequencers()
 	{
 		System.out.println("+++ Translating Top Level Mission Sequencers +++");
@@ -276,6 +286,7 @@ public class CircusGenerator
 			if (!tlmsEnv.getMeths().isEmpty()
 					|| !tlmsEnv.getSyncMeths().isEmpty())
 			{
+				tlms.put("IDType", "SchedulableID");
 				translateCommon(tlms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 						+ "MethChan.circus");
 			}
@@ -293,7 +304,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void translateMissions()
 	{
 		System.out.println("+++ Translating Missions +++");
@@ -313,6 +324,7 @@ public class CircusGenerator
 			// Custom Channels
 			if (!mEnv.getMeths().isEmpty() || !mEnv.getSyncMeths().isEmpty())
 			{
+				missionMap.put("IDType", "MissionID");
 				translateCommon(missionMap, CUSTOM_CHANNELS_TEMPLATE_FTL,
 						procName + "MethChan.circus");
 			}
@@ -332,7 +344,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void translateNestedMissionSequencers()
 	{
 		System.out.println("+++ Translating Nested Mission Sequencers +++");
@@ -354,6 +366,7 @@ public class CircusGenerator
 			if (!smsEnv.getMeths().isEmpty()
 					|| !smsEnv.getSyncMeths().isEmpty())
 			{
+				sms.put("IDType", "SchedulableID");
 				translateCommon(sms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 						+ "MethChan.circus");
 			}
@@ -371,7 +384,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void translateManagedThreads()
 	{
 		System.out.println("+++ Translating Managed Threads +++ ");
@@ -392,7 +405,7 @@ public class CircusGenerator
 			if (!mtEnv.getMeths().isEmpty() || !mtEnv.getSyncMeths().isEmpty())
 			{
 				mtEnv.getMeths().remove("run");
-				
+				mtMap.put("IDType", "SchedulableID");
 				translateCommon(mtMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 						+ "MethChan.circus");
 			}
@@ -412,7 +425,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void translateOneShotEventHandlers()
 	{
 		System.out.println("+++ Translating One Shot Event Handlers +++");
@@ -433,6 +446,8 @@ public class CircusGenerator
 			if (!osehEnv.getMeths().isEmpty()
 					|| !osehEnv.getSyncMeths().isEmpty())
 			{
+				osehEnv.getMeths().remove("handleAsyncEvent");
+				osehMap.put("IDType", "SchedulableID");
 				translateCommon(osehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 						+ "MethChan.circus");
 			}
@@ -450,7 +465,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void translatePeriodicEventHandlers()
 	{
 		System.out.println("+++ Translating Periodic Event Handlers +++");
@@ -471,6 +486,8 @@ public class CircusGenerator
 			if (!pehEnv.getMeths().isEmpty()
 					|| !pehEnv.getSyncMeths().isEmpty())
 			{
+				pehEnv.getMeths().remove("handleAsyncEvent");
+				pehhMap.put("IDType", "SchedulableID");
 				translateCommon(pehhMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 						+ "MethChan.circus");
 			}
@@ -488,7 +505,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void translateAperiodicEventHandlers()
 	{
 		System.out.println("+++ Translating One Shot Event Handlers +++");
@@ -509,6 +526,8 @@ public class CircusGenerator
 			if (!apehEnv.getMeths().isEmpty()
 					|| !apehEnv.getSyncMeths().isEmpty())
 			{
+				apehEnv.getMeths().remove("handleAsyncEvent");
+				apehMap.put("IDType", "SchedulableID");
 				translateCommon(apehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 						+ "MethChan.circus");
 			}

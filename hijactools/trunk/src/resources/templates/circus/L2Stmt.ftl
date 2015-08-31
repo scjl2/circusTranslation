@@ -56,22 +56,37 @@
 <#-- Block Tree -->
 <#---------------->
 
+
 <#macro Block statements>
-  \circblockopen
+
 <#if statements?has_content>
+  \circblockopen
 <#list statements as statement>
 <#assign stmtTrans=TRANS(statement, CTXT)>
-  ${stmtTrans}<#lt/>
-<#if stmtTrans="">
 
-<#elseif statement_has_next>
-  \circseq \\
+<#if stmtTrans="">
+<#if statement_has_next>
+
+<#else>
+\Skip
+</#if>
+
+<#elseif stmtTrans?contains("~?~")>
+	${stmtTrans}<#lt/> 
+<#else>
+
+${stmtTrans}<#lt/> 
+
+<#if statement_has_next>
+   \circseq \\ 
+</#if>
 </#if>
 </#list>
+  \circblockclose
 <#else>
   <@EmptyStatement/>
 </#if>
-  \circblockclose
+
 </#macro>
 
 <#----------------------------->
@@ -320,7 +335,7 @@
 
 <#-------------------->
 <#-- WhileLoop Tree   <@keep_newlines>  </@keep_newlines> -->
-<#-------------------->
+<#-------------------- \circblockopen    \circblockclose  -->
 
 
 <#macro WhileLoop condition statement>
@@ -333,9 +348,9 @@
   \circif ~ ${TRANS(condition, CTXT.enterExpression())} ~ \circthen ~
   \\
   \t1
-  \circblockopen
+  
   ${TRANS(statement, CTXT)}
-  \circblockclose
+
   \circseq X
   \\
   \circelse ~ ~ \lnot ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
@@ -343,6 +358,6 @@
   \circfi
   \circblockclose
   \circblockclose
-
+	\\
 </@compact>
 </#macro>

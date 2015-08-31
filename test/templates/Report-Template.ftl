@@ -29,6 +29,9 @@
 
 \subsection{SchedulablesIds}
 \input{SchedulableIds.circus}
+
+\subsection{ThreadIds}
+\input{ThreadIds.circus}
 \newpage
 
 \section{Safelet}
