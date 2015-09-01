@@ -53,16 +53,16 @@
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
-  \t1 AperiodicEventHandlerFW, App, App, \\
+  \t1 AperiodicEventHandlerFW, FlatBufferApp, FlatBufferMissionSequencerApp, \\
   \t1 
 
 
-App, 
+FlatBufferMissionApp, 
 
 
-App 
+ReaderApp 
 ,
-App 
+WriterApp 
 \end{zsection}
 %
 \begin{circus}

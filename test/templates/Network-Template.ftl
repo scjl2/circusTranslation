@@ -80,18 +80,18 @@ requestTermination~.~${cluster.Mission}~.~${cluster.Sequencer}
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
-  \t1 AperiodicEventHandlerFW, ${SafeletName}App, ${TopLevelSequencer}App, \\
+  \t1 AperiodicEventHandlerFW, ${Safelet.Name}App, ${TopLevelSequencer.Name}App, \\
   \t1 
 <#list Tiers as tier >
 <#list tier as cluster>
 
 
-${cluster.Mission}App, 
+${cluster.Mission.Name}App, 
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
 <#list schedulables as schedulable>
-${schedulable}App 
+${schedulable.Name}App 
 	<#if schedulable_has_next>
 ,
 	</#if>
