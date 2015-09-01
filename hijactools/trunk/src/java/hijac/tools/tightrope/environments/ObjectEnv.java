@@ -200,11 +200,11 @@ public class ObjectEnv
 	}
 
 	public void addParameter(String variableName, String variableType,
-			Object variableInit, String variableInput, boolean primitive)
+			 String programType, boolean primitive)
 
 	{
 		parameters.add(new VariableEnv(variableName, variableType,
-				variableInit, variableInput, primitive));
+				programType, primitive));
 
 	}
 
@@ -265,8 +265,9 @@ public class ObjectEnv
 			Map varMap = new HashMap();
 			varMap.put(VAR_NAME, v.getVariableName().toString());
 			varMap.put(VAR_TYPE, v.getVariableType());
-			varMap.put(VAR_INIT, v.getVariableInit().toString());
-			varMap.put(VAR_INPUT, v.getVariableInput());
+//			varMap.put(VAR_INIT, v.getVariableInit().toString());
+//			varMap.put(VAR_INPUT, v.getVariableInput());
+			varMap.put("ProgramType", v.getProgramType());
 
 			returnList.add(varMap);
 		}

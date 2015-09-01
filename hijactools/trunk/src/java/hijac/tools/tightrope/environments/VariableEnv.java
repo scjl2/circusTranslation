@@ -7,6 +7,7 @@ public class VariableEnv
 	private Object variableInit;
 	private boolean variableInput;
 	private boolean primitive;
+	private String programType;
 
 	public VariableEnv()
 	{
@@ -30,6 +31,15 @@ public class VariableEnv
 		}
 		
 		this.variableInput = false;
+	}
+	
+	public VariableEnv(String variableName, String variableType,
+			String programType, boolean primitive)
+	{
+		this.variableName = variableName;
+		this.variableType = variableType;
+		this.programType = programType;
+		this.primitive = primitive;
 	}
 
 	public VariableEnv(String variableName, String variableType,
@@ -88,6 +98,16 @@ public class VariableEnv
 	public void setVariableInput(boolean variableInput)
 	{
 		this.variableInput = variableInput;
+	}
+
+	public String getProgramType()
+	{
+		return programType;
+	}
+
+	public void setProgramType(String programType)
+	{
+		this.programType = programType;
 	}
 
 	

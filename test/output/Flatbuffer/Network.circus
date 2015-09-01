@@ -126,9 +126,9 @@ FlatBufferMissionSequencerApp\\
 FlatBufferMissionApp\\
 \interleave \\
 
-ReaderApp ( ?param?  ) \\
+ReaderApp ( FlatBufferMission  ) \\
 \interleave \\
-WriterApp ( ?param?  ) \\
+WriterApp ( FlatBufferMission  ) \\
 \circblockclose
 \end{circus}
 %

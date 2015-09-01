@@ -624,9 +624,13 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 					// TODO HACKY! need to get what kind of ID here!
 					final String variableInitAndInput = "?"
 							+ varName.toString() + "In";
+					
+					
+					System.out.println("!// VarType = " + varType);		
+
 
 					objectEnv.addParameter(varName.toString(), "MissionID",
-							variableInitAndInput, variableInitAndInput, false);
+							 varType.toString(), false);
 				}
 			}
 			else if (programEnv.getSchedulable(varName) != null)

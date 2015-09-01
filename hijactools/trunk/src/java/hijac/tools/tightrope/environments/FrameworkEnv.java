@@ -385,11 +385,20 @@ public class FrameworkEnv
 			return schedulablesList;
 		}
 
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		private Map makeSchedulableMap(ObjectEnv p)
 		{
 			Map sMap = new HashMap();
 			sMap.put("Name", p.getName());
-			sMap.put("Parameters", p.getParameters());
+			
+			ArrayList<String> params = new ArrayList<String>();
+			for(VariableEnv v : p.getParameters())
+			{
+				//This adds the type from the program E.G. FlatBufferMission not MissionID
+				params.add(v.getProgramType());
+			}
+			
+			sMap.put("Parameters", params);
 			return sMap;
 		}
 
