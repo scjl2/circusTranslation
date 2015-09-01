@@ -21,6 +21,7 @@ public class MethodEnv
 	private Object body;
 	private boolean synchronised;
 	private AccessMod accesMod = null;
+	private boolean APIMethod;
 	
 	
 	public MethodEnv(Name name)
@@ -66,10 +67,11 @@ public class MethodEnv
 		this.parameters = params;
 	}
 
-	public MethodEnv(String name, String returnType)
+	public MethodEnv(String name, String returnType, boolean APIMethod)
 	{
 		methodName = name;
 		this.returnType = returnType;
+		this.APIMethod = APIMethod;
 	}
 
 	public String getMethodName()
@@ -164,5 +166,15 @@ public class MethodEnv
 	public void setBody(Object body)
 	{
 		this.body = body;
+	}
+
+	public boolean isAPIMethod()
+	{
+		return APIMethod;
+	}
+
+	public void setAPIMethod(boolean aPIMethod)
+	{
+		APIMethod = aPIMethod;
 	}
 }

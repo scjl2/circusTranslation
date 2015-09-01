@@ -108,12 +108,12 @@ public class MethodBodyVisitor extends
 
 	private void initAPIMeths()
 	{
-		MISSION_API_METHODS.add(new MethodEnv("getMission", "Mission"));
+		MISSION_API_METHODS.add(new MethodEnv("getMission", "Mission", true));
 		MISSION_API_METHODS.add(new MethodEnv("getSequencer",
-				"MissionSequencer"));
-		MISSION_API_METHODS.add(new MethodEnv("missionMemorySize", "int"));
-		MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean"));
-		MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean"));
+				"MissionSequencer", true));
+		MISSION_API_METHODS.add(new MethodEnv("missionMemorySize", "int", true));
+		MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean", true));
+		MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean", true));
 
 	}
 
@@ -379,6 +379,7 @@ public class MethodBodyVisitor extends
 		// TODO HACKERY!
 		if (node.toString().contains("Console"))
 		{
+			System.out.println("*** Console so ignoring *** ");
 			return "";
 		}
 		else
@@ -555,7 +556,25 @@ public class MethodBodyVisitor extends
 		else if (isNotMyMethod(node))
 		{
 			MethodEnv method = getMethodEnvBeingCalled(node);
-			object.addParent(getObjectEnvOfMethod(node).getName().toString()+"MethChan");
+			if(method.isAPIMethod())
+			{
+				
+				for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
+				{
+					if(t.getSimpleName().contentEquals(getObjectEnvOfMethod(node).getName()))
+					{
+						String name = t.getSuperclass().toString();
+						name = name.substring(name.lastIndexOf('.')+1);
+						
+						object.addParent(name+"MethChan");
+					}
+				}
+				
+			}
+			else
+			{
+				object.addParent(getObjectEnvOfMethod(node).getName().toString()+"MethChan");
+			}
 
 			// System.out.println("!// method being called (returned) = " +
 			// method.getMethodName());
