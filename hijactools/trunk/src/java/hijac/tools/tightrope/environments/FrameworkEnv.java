@@ -840,6 +840,9 @@ public class FrameworkEnv
 			tierList.add(tier.toList());
 		}
 		networkMap.put("Tiers", tierList);
+		
+
+		
 
 		return networkMap;
 	}

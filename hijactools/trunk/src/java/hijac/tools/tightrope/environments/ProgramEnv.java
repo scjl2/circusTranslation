@@ -3,6 +3,7 @@ package hijac.tools.tightrope.environments;
 import hijac.tools.analysis.SCJAnalysis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class ProgramEnv
 	private MissionIdsEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
 	private ThreadIdsEnv threadIds;
+	
 
 	public ProgramEnv(SCJAnalysis context)
 	{
@@ -133,7 +135,9 @@ public class ProgramEnv
 	@SuppressWarnings("rawtypes")
 	public Map geNetworkMap()
 	{
-		return structureEnv.getNetworkMap();
+		Map returnMap = structureEnv.getNetworkMap();
+		returnMap.put("Objects", getObjectIdsMap());
+		return returnMap;
 	}
 
 	public ArrayList<NestedMissionSequencerEnv> getNestedMissionSequencers()
@@ -273,4 +277,20 @@ public class ProgramEnv
 		return threadIds.toMap();
 	}
 
+	public Map getObjectIdsMap()
+	{
+		HashMap map = new HashMap();
+		
+		ArrayList<Name> list = new ArrayList<Name>();
+		
+		list.add(structureEnv.getControlTier().getSafeletEnv().getName());
+		list.addAll(missionIds.idNames);
+		list.addAll(schedulableIds.idNames);
+		
+		map.put("Objects", list);
+		
+		return map;
+	}
+
 }
+;

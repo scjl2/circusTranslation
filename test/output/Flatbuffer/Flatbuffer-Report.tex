@@ -32,6 +32,10 @@
 
 \subsection{ThreadIds}
 \input{ThreadIds.circus}
+
+
+\subsection{ObjectIds}
+\input{ObjectIds.circus}
 \newpage
 
 \section{Safelet}

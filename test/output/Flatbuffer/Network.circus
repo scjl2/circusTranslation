@@ -133,6 +133,29 @@ WriterApp ( FlatBufferMission  ) \\
 \end{circus}
 %
 \begin{circus}
-\circprocess Program \circdef Framework \lpar AppSync \rpar Application
+Locking \circdef \\
+\circblockopen
+\circblockopen
+ThreadFW(ReaderThread, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(WriterThread, MinPriority) \\
+
+\circblockclose \\
+\interleave \\
+\circblockopen
+ObjectFW(FlatBuffer) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(FlatBufferMission) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(Reader) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(Writer) \\
+
+\circblockclose
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circprocess Program \circdef Framework \lpar AppSync \rpar Application \lpar LockingSync \rpar Locking
 \end{circus}
 

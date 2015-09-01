@@ -54,6 +54,8 @@ public class CircusGenerator
 	private static final String CUSTOM_CHANNELS_TEMPLATE_FTL = "CustomChannels-Templat.ftl";
 	private static final String THREAD_IDS_TEMPLATE_FTL = "ThreadIds-Template.ftl";
 	private static final String THREAD_IDS_CIRCUS = "ThreadIds.circus";
+	private static final String OBJECT_IDS_TEMPLATE_FTL = "ObjectIds-Template.ftl";
+	private static final String OBJECT_IDS_CIRCUS = "ObjectIds.circus";
 
 	private freemarker.template.Configuration cfg;
 	private ProgramEnv programEnv;
@@ -208,6 +210,11 @@ public class CircusGenerator
 		
 		translateCommon(Ids, THREAD_IDS_TEMPLATE_FTL,
 				THREAD_IDS_CIRCUS);
+		
+		Ids = programEnv.getObjectIdsMap();
+		
+		translateCommon(Ids, OBJECT_IDS_TEMPLATE_FTL,
+				OBJECT_IDS_CIRCUS);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

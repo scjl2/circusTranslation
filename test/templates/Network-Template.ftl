@@ -314,6 +314,25 @@ ${schedulable.Name}App<#if schedulable.Parameters?size != 0> (<#list schedulable
 \end{circus}
 %
 \begin{circus}
-\circprocess Program \circdef Framework \lpar AppSync \rpar Application
+Locking \circdef \\
+\circblockopen
+\circblockopen
+<#list schedulables as schedulable>
+ThreadFW(${schedulable.Name}Thread, MinPriority) \\
+<#sep>\t1 \lpar ThreadSync \rpar\\</#sep>
+</#list>
+\circblockclose \\
+\interleave \\
+\circblockopen
+<#list Objects.Objects as object>
+ObjectFW(${object}) \\
+<#sep>\t1 \lpar ObjectSync \rpar\\</#sep>
+</#list>
+\circblockclose
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circprocess Program \circdef Framework \lpar AppSync \rpar Application \lpar LockingSync \rpar Locking
 \end{circus}
 
