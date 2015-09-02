@@ -312,11 +312,11 @@ ${stmtTrans}<#lt/>
 <#-- Variable Tree -->
 <#------------------->
 
-<#macro Variable name initializer="">
+<#macro Variable name type initializer="">
 <#if initializer?has_content>
-  <@InitVariable name NODE.type initializer/> ~
+  <@InitVariable name type initializer/> ~
 <#else>
-  <@PlainVariable name NODE.type/> ~
+  <@PlainVariable name type/> ~
 </#if>
 </#macro>
 

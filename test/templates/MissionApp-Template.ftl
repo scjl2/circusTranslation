@@ -1,7 +1,7 @@
 \begin{zsection}
   \SECTION ~ ${ProcessID}App ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan <#include "CommonImports-Template.ftl">
- \t1 <#include "Parent-Template.ftl">
+  \t1 <#include "Parent-Template.ftl">, ${ProcessID}MethChan
 \end{zsection}
 %\begin{circus}
 %\circchannelset ${ProcessID}AppSync == \\

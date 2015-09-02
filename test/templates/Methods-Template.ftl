@@ -34,18 +34,20 @@ ${meth.MethodName}SyncMeth \circdef
 ${meth.MethodName}Call~.~${ProcessID}~?~thread 
 <#list meth.Parameters?keys as param>
 ~?~${param}
-</#list>
-\then \\
-startSyncMeth~.~${ProcessID}~.~thread \then \\
-lockAcquired~.~${ProcessID}~.~thread \then \\
+</#list> \then \\
+\circblockopen
+startSyncMeth~.~${ProcessID}Object~.~thread \then \\
+lockAcquired~.~${ProcessID}Object~.~thread \then \\
 ${meth.Body} \circseq  \\
-endSyncMeth~.~${ProcessID}~.~thread \then  \\
-<#if meth.ReturnType != 'VOID'>
-${meth.MethodName}Ret~.~${ProcessID}~!~ret~!~thread \then \\
+endSyncMeth~.~${ProcessID}Object~.~thread \then  \\
+
+<#if meth.ReturnType != 'null'>
+${meth.MethodName}Ret~.~${ProcessID}~!~thread~!~ret \then \\
 <#else>
 ${meth.MethodName}Ret~.~${ProcessID}~.~thread \then \\
 </#if>
 \Skip
+\circblockclose
 \circblockclose
 \end{circusaction}	
 </#list>

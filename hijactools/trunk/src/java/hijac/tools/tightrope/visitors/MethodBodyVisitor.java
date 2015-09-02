@@ -284,6 +284,10 @@ public class MethodBodyVisitor extends
 	{
 		/* Should we check that we are not inside an expression? */
 		System.out.println("/// AssignmentTree node = " + node);
+		System.out.println("/// AssignmentTree variable = " + node.getVariable());
+		System.out.println("/// AssignmentTree expression = " + node.getExpression());
+		
+		
 		if (node.getExpression() instanceof MethodInvocationTree)
 		{
 			MethodInvocationTree mit = (MethodInvocationTree) node
@@ -301,11 +305,16 @@ public class MethodBodyVisitor extends
 		}
 		else
 		{
-
-			return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
-					node.getExpression());
+			if(object.getVariable(node.getVariable().toString()) ==null)
+			{
+				return "this~.~"+node.getVariable().toString() + " :=" + node.getExpression();
+			}
+			else
+			{
+				return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
+						node.getExpression());
+			}			
 		}
-
 	}
 
 	@Override
@@ -399,6 +408,8 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitIdentifier(IdentifierTree node, MethodVisitorContext ctxt)
 	{
+		
+		
 		return callExprMacro(node, ctxt, "Identifier", node.getName());
 	}
 
@@ -526,7 +537,10 @@ public class MethodBodyVisitor extends
 
 		if (identifier.contentEquals("notify"))
 		{
-			//TODO add thread and object parent?
+			object.addParent("ObjectChan");
+			object.addParent("ObjectIds");
+			object.addParent("ThreadIds");
+			
 			sb.append("notify~.~");
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
@@ -538,7 +552,10 @@ public class MethodBodyVisitor extends
 		}
 		else if (identifier.contentEquals("wait"))
 		{
-			//TODO add thread and object parent?
+			object.addParent("ObjectChan");
+			object.addParent("ObjectIds");
+			object.addParent("ThreadIds");
+			
 			sb.append("waitCall~.~");
 			sb.append(objectEnvName.toString());
 			sb.append("Object");
@@ -570,10 +587,21 @@ public class MethodBodyVisitor extends
 					}
 				}
 				
+				if(method.isSynchronised())
+				{
+					object.addParent("ObjectIds");
+					object.addParent("ThreadIds");
+				}
+				
 			}
 			else
 			{
 				object.addParent(getObjectEnvOfMethod(node).getName().toString()+"MethChan");
+				if(method.isSynchronised())
+				{
+					object.addParent("ObjectIds");
+					object.addParent("ThreadIds");
+				}
 			}
 
 			// System.out.println("!// method being called (returned) = " +
@@ -1037,14 +1065,22 @@ public class MethodBodyVisitor extends
 			}
 			else
 			{
-				return callStmtMacro(node, ctxt, "Variable", node.getName(),
+				return callStmtMacro(node, ctxt, "Variable", node.getName(), NewTransUtils.encodeType(node.getType()),
 						node.getInitializer());
 			}
 		}
 		else
 		{
-			return callStmtMacro(node, ctxt, "Variable", node.getName(),
+			if(object.getVariable(node.getInitializer().toString()) ==null)
+			{				
+				return "\\circvar " + node.getName() + " : " + NewTransUtils.encodeType(node.getType()) + " \\circspot " + 
+				node.getName() + " := this~.~"+node.getInitializer().toString() ;
+			}
+			else
+			{
+			return callStmtMacro(node, ctxt, "Variable", node.getName(), NewTransUtils.encodeType(node.getType()),
 					node.getInitializer());
+			}
 		}
 
 	}

@@ -69,6 +69,7 @@ public class NewTransUtils extends TransUtils
 					case CHAR:
 						returnString = "char";
 						break;
+					
 					default:
 						break;
 				}

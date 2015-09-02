@@ -81,6 +81,7 @@ public class MethodEnv
 
 	public String getReturnType()
 	{
+		
 		if(returnType != null)
 		{
 			return returnType;
@@ -93,6 +94,7 @@ public class MethodEnv
 
 	public void setReturnType(TypeKind returnType)
 	{
+		System.out.println("/// returnType.toString()" + returnType.toString());
 		this.returnType = returnType.toString();
 	}
 

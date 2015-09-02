@@ -12,6 +12,7 @@ import com.sun.source.tree.Tree;
 
 public class ObjectEnv
 {
+	private static final String RETURN_VALUE = "ReturnValue";
 	protected static final String ACCESS = "Access";
 	protected static final String BODY = "Body";
 	protected static final String RETURN_TYPE = "ReturnType";
@@ -36,11 +37,11 @@ public class ObjectEnv
 	/**
 	 * The variables of this object
 	 */
-	List<VariableEnv> variables;
+	protected List<VariableEnv> variables;
 	/**
 	 * The parameters of this object
 	 */
-	List<VariableEnv> parameters;
+	protected List<VariableEnv> parameters;
 	/**
 	 * The non-synchronised methods of this object
 	 */
@@ -313,7 +314,7 @@ public class ObjectEnv
 
 		methodMap.put(METHOD_NAME, s);
 		methodMap.put(RETURN_TYPE, me.getReturnType());
-		methodMap.put("ReturnValue", me.getReturnValue());
+		methodMap.put(RETURN_VALUE, me.getReturnValue());
 		methodMap.put(PARAMETERS_STR, me.getParameters());
 		methodMap.put(ACCESS, me.getAccessString());
 		methodMap.put(BODY, me.getBody());

@@ -277,6 +277,7 @@ public class ProgramEnv
 		return threadIds.toMap();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map getObjectIdsMap()
 	{
 		HashMap map = new HashMap();
