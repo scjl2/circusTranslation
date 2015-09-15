@@ -61,18 +61,7 @@ public class MissionLevel2Visitor
 			Tree tlst = i.next();
 			System.out.println("Mission Visistor: tlst = " + tlst.getKind());
 
-			//
-
-			// if (tlst instanceof VariableTree)
-			// {
-			// VariableTree vt = (VariableTree) tlst;
-			// System.out.println("Mission Visitor: Variable Tree Found");
-			// // System.out.println("-> " + vt.toString());
-			// // System.out.println("-> Name:" + vt.getName());
-			// // System.out.println("-> Type: " + vt.getType());
-			//
-			//
-			// }
+			
 
 			if (tlst instanceof MethodTree)
 			{

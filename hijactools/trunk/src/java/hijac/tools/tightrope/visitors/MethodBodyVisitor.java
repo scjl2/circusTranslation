@@ -92,8 +92,12 @@ public class MethodBodyVisitor extends
 
 	/**
 	 * Constructor for the Method Body Visitor
-	 * @param context The NewSCJApplication object for this application 
-	 * @param object The object in which the method on which we are operating resides
+	 * 
+	 * @param context
+	 *            The NewSCJApplication object for this application
+	 * @param object
+	 *            The object in which the method on which we are operating
+	 *            resides
 	 */
 	public MethodBodyVisitor(NewSCJApplication context, ObjectEnv object)
 	{
@@ -111,17 +115,25 @@ public class MethodBodyVisitor extends
 		MISSION_API_METHODS.add(new MethodEnv("getMission", "Mission", true));
 		MISSION_API_METHODS.add(new MethodEnv("getSequencer",
 				"MissionSequencer", true));
-		MISSION_API_METHODS.add(new MethodEnv("missionMemorySize", "int", true));
-		MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean", true));
-		MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean", true));
+		MISSION_API_METHODS
+				.add(new MethodEnv("missionMemorySize", "int", true));
+		MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean",
+				true));
+		MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean",
+				true));
 
 	}
 
 	/**
 	 * Constructor for the Method Body Visitor
-	 * @param context The NewSCJApplication object for this application 
-	 * @param object The object in which the method on which we are operating resides
-	 * @param env The environment for the method of which we exploring the body
+	 * 
+	 * @param context
+	 *            The NewSCJApplication object for this application
+	 * @param object
+	 *            The object in which the method on which we are operating
+	 *            resides
+	 * @param env
+	 *            The environment for the method of which we exploring the body
 	 */
 	public MethodBodyVisitor(NewSCJApplication context, ObjectEnv object,
 			MethodEnv env)
@@ -284,10 +296,11 @@ public class MethodBodyVisitor extends
 	{
 		/* Should we check that we are not inside an expression? */
 		System.out.println("/// AssignmentTree node = " + node);
-		System.out.println("/// AssignmentTree variable = " + node.getVariable());
-		System.out.println("/// AssignmentTree expression = " + node.getExpression());
-		
-		
+		System.out.println("/// AssignmentTree variable = "
+				+ node.getVariable());
+		System.out.println("/// AssignmentTree expression = "
+				+ node.getExpression());
+
 		if (node.getExpression() instanceof MethodInvocationTree)
 		{
 			MethodInvocationTree mit = (MethodInvocationTree) node
@@ -305,15 +318,16 @@ public class MethodBodyVisitor extends
 		}
 		else
 		{
-			if(object.getVariable(node.getVariable().toString()) ==null)
+			if (object.getVariable(node.getVariable().toString()) == null)
 			{
-				return "this~.~"+node.getVariable().toString() + " :=" + node.getExpression();
+				return "this~.~" + node.getVariable().toString() + " :="
+						+ node.getExpression();
 			}
 			else
 			{
-				return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
-						node.getExpression());
-			}			
+				return callStmtMacro(node, ctxt, "Assignment",
+						node.getVariable(), node.getExpression());
+			}
 		}
 	}
 
@@ -408,8 +422,7 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitIdentifier(IdentifierTree node, MethodVisitorContext ctxt)
 	{
-		
-		
+
 		return callExprMacro(node, ctxt, "Identifier", node.getName());
 	}
 
@@ -530,184 +543,208 @@ public class MethodBodyVisitor extends
 	{
 		System.out.println("/// methodInvocation node = " + node);
 
-		Name identifier = ((MemberSelectTree) node.getMethodSelect())
-				.getIdentifier();
+		ExpressionTree methodSelect = node.getMethodSelect();
+		Name identifier = null;
+
+		if (methodSelect instanceof MemberSelectTree)
+		{
+
+			MemberSelectTree mst = (MemberSelectTree) methodSelect;
+			identifier = mst.getIdentifier();
+		}
+		else if (methodSelect instanceof IdentifierTree)
+		{
+			IdentifierTree it = (IdentifierTree) methodSelect;
+
+			identifier = it.getName();
+		}
+
 		Name objectEnvName = object.getName();
 		StringBuilder sb = new StringBuilder();
 
-		if (identifier.contentEquals("notify"))
+		if (identifier != null)
 		{
-			object.addParent("ObjectChan");
-			object.addParent("ObjectIds");
-			object.addParent("ThreadIds");
-			
-			sb.append("notify~.~");
-			sb.append(objectEnvName.toString());
-			sb.append("Object");
-			sb.append("~!~thread \\then ");
-			sb.append(" \\\\ ");
-			sb.append("\\Skip");
-
-			return sb.toString();
-		}
-		else if (identifier.contentEquals("wait"))
-		{
-			object.addParent("ObjectChan");
-			object.addParent("ObjectIds");
-			object.addParent("ThreadIds");
-			
-			sb.append("waitCall~.~");
-			sb.append(objectEnvName.toString());
-			sb.append("Object");
-			sb.append("~!~thread \\then");
-			sb.append(" \\\\ ");
-			sb.append("waitRet~.~");
-			sb.append(objectEnvName.toString());
-			sb.append("Object");
-			sb.append("~!~thread \\then");
-			sb.append(" \\\\ ");
-			sb.append("\\Skip");
-
-			return sb.toString();
-		}
-		else if (isNotMyMethod(node))
-		{
-			MethodEnv method = getMethodEnvBeingCalled(node);
-			if(method.isAPIMethod())
+			if (identifier.contentEquals("notify"))
 			{
-				
-				for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
-				{
-					if(t.getSimpleName().contentEquals(getObjectEnvOfMethod(node).getName()))
-					{
-						String name = t.getSuperclass().toString();
-						name = name.substring(name.lastIndexOf('.')+1);
-						
-						object.addParent(name+"MethChan");
-					}
-				}
-				
-				if(method.isSynchronised())
-				{
-					object.addParent("ObjectIds");
-					object.addParent("ThreadIds");
-				}
-				
-			}
-			else
-			{
-				object.addParent(getObjectEnvOfMethod(node).getName().toString()+"MethChan");
-				if(method.isSynchronised())
-				{
-					object.addParent("ObjectIds");
-					object.addParent("ThreadIds");
-				}
-			}
+				object.addParent("ObjectChan");
+				object.addParent("ObjectIds");
+				object.addParent("ThreadIds");
 
-			// System.out.println("!// method being called (returned) = " +
-			// method.getMethodName());
-
-			String returnString = method.getReturnType();
-			List<? extends ExpressionTree> parameters = node.getArguments();
-
-			sb.append(identifier);
-			sb.append("Call");
-			sb.append("~.~");
-			sb.append(((MemberSelectTree) node.getMethodSelect())
-					.getExpression().toString());
-			if (method.isSynchronised())
-			{
-				sb.append("~.~");
+				sb.append("notify~.~");
 				sb.append(objectEnvName.toString());
-				sb.append("Thread");
-			}
-
-			if (!parameters.isEmpty())
-			{
-				for (ExpressionTree s : parameters)
-				{
-
-					if (s instanceof IdentifierTree)
-					{
-						sb.append("~!~");
-						sb.append(((IdentifierTree) s).getName().toString());
-					}
-					else if (s instanceof LiteralTree)
-					{
-						if (s.getKind().equals(Tree.Kind.STRING_LITERAL))
-						{
-
-						}
-						else
-						{
-							sb.append(((LiteralTree) s).getValue().toString());
-						}
-					}
-				}
-			}
-			sb.append("\\then \\\\");
-
-			sb.append(identifier);
-			sb.append("Ret");
-			sb.append("~.~");
-			sb.append(((MemberSelectTree) node.getMethodSelect())
-					.getExpression().toString());
-			if (method.isSynchronised())
-			{
-				sb.append("~.~");
-				sb.append(objectEnvName.toString());
-				sb.append("Thread");
-			}
-
-			System.out.println("!// !returnString.contains('null') =  "
-					+ (!returnString.contains("null")));
-			System.out.println("!// returnString =  " + returnString);
-			if (!returnString.contains("null"))
-			{
-				sb.append("~?~");
-				System.out
-						.println("!// return string not 'null', getting key: "
-								+ ((MemberSelectTree) node.getMethodSelect())
-										.getIdentifier().toString().toString()
-								+ " value: "
-								+ timeMachine.get(
-										((MemberSelectTree) node
-												.getMethodSelect())
-												.getIdentifier().toString())
-										.toString());
-
-				sb.append(timeMachine.get(
-						((MemberSelectTree) node.getMethodSelect())
-								.getIdentifier().toString()).toString());
-				sb.append("\\then \\\\");
-
-			}
-			else
-			{
-				sb.append("\\then \\\\");
+				sb.append("Object");
+				sb.append("~!~thread \\then ");
+				sb.append(" \\\\ ");
 				sb.append("\\Skip");
-			}
 
-			return sb.toString();
+				return sb.toString();
+			}
+			else if (identifier.contentEquals("wait"))
+			{
+				object.addParent("ObjectChan");
+				object.addParent("ObjectIds");
+				object.addParent("ThreadIds");
+
+				sb.append("waitCall~.~");
+				sb.append(objectEnvName.toString());
+				sb.append("Object");
+				sb.append("~!~thread \\then");
+				sb.append(" \\\\ ");
+				sb.append("waitRet~.~");
+				sb.append(objectEnvName.toString());
+				sb.append("Object");
+				sb.append("~!~thread \\then");
+				sb.append(" \\\\ ");
+				sb.append("\\Skip");
+
+				return sb.toString();
+			}
+			else if (isNotMyMethod(node))
+			{
+				MethodEnv method = getMethodEnvBeingCalled(node);
+				if (method.isAPIMethod())
+				{
+					Name nodeName = getObjectEnvOfMethod(methodSelect)
+							.getName();
+					for (TypeElement t : CONTEXT.getAnalysis()
+							.getTypeElements())
+					{
+						if (t.getSimpleName().contentEquals(nodeName))
+						{
+							String name = t.getSuperclass().toString();
+							name = name.substring(name.lastIndexOf('.') + 1);
+
+							object.addParent(name + "MethChan");
+						}
+					}
+
+					if (method.isSynchronised())
+					{
+						object.addParent("ObjectIds");
+						object.addParent("ThreadIds");
+					}
+
+				}
+				else
+				{
+					object.addParent(getObjectEnvOfMethod(methodSelect)
+							.getName().toString() + "MethChan");
+					if (method.isSynchronised())
+					{
+						object.addParent("ObjectIds");
+						object.addParent("ThreadIds");
+					}
+				}
+
+				// System.out.println("!// method being called (returned) = " +
+				// method.getMethodName());
+
+				String returnString = method.getReturnType();
+				List<? extends ExpressionTree> parameters = node.getArguments();
+
+				sb.append(identifier);
+				sb.append("Call");
+				sb.append("~.~");
+				sb.append(((MemberSelectTree) node.getMethodSelect())
+						.getExpression().toString());
+				if (method.isSynchronised())
+				{
+					sb.append("~.~");
+					sb.append(objectEnvName.toString());
+					sb.append("Thread");
+				}
+
+				if (!parameters.isEmpty())
+				{
+					for (ExpressionTree s : parameters)
+					{
+
+						if (s instanceof IdentifierTree)
+						{
+							sb.append("~!~");
+							sb.append(((IdentifierTree) s).getName().toString());
+						}
+						else if (s instanceof LiteralTree)
+						{
+							if (s.getKind().equals(Tree.Kind.STRING_LITERAL))
+							{
+
+							}
+							else
+							{
+								sb.append(((LiteralTree) s).getValue()
+										.toString());
+							}
+						}
+					}
+				}
+				sb.append("\\then \\\\");
+
+				sb.append(identifier);
+				sb.append("Ret");
+				sb.append("~.~");
+				sb.append(((MemberSelectTree) node.getMethodSelect())
+						.getExpression().toString());
+				if (method.isSynchronised())
+				{
+					sb.append("~.~");
+					sb.append(objectEnvName.toString());
+					sb.append("Thread");
+				}
+
+				System.out.println("!// !returnString.contains('null') =  "
+						+ (!returnString.contains("null")));
+				System.out.println("!// returnString =  " + returnString);
+				if (!returnString.contains("null"))
+				{
+
+					sb.append("~?~");
+					System.out
+							.println("!// return string not 'null', getting key: "
+									+ identifier.toString()
+									+ " value: "
+									+ timeMachine.get(identifier.toString()));
+
+					sb.append(timeMachine.get(identifier.toString()));
+					sb.append("\\then \\\\");
+
+				}
+				else
+				{
+					sb.append("\\then \\\\");
+					sb.append("\\Skip");
+				}
+
+				return sb.toString();
+			}
+			else
+			{
+				ExecutableElement method = TreeUtils.elementFromUse(node);
+				List<? extends VariableElement> params = method.getParameters();
+				List<ExpressionTree> arguments = new ArrayList<ExpressionTree>();
+				for (int index = 0; index < params.size(); index++)
+				{
+					if (!CONTEXT.ANNOTS.isInteractionCode(params.get(index))
+							&& !CONTEXT.ANNOTS.isIgnored(params.get(index)))
+					{
+						arguments.add(node.getArguments().get(index));
+					}
+				}
+				/*
+				 * Infer the method here that is called and pass to it the
+				 * macro.
+				 */
+				/* Question: Is that generally feasible? */
+				return callExprMacro(node, ctxt, "MethodInvocation",
+						node.getMethodSelect(), arguments);
+
+			}
 		}
 		else
 		{
-			ExecutableElement method = TreeUtils.elementFromUse(node);
-			List<? extends VariableElement> params = method.getParameters();
-			List<ExpressionTree> arguments = new ArrayList<ExpressionTree>();
-			for (int index = 0; index < params.size(); index++)
-			{
-				if (!CONTEXT.ANNOTS.isInteractionCode(params.get(index))
-						&& !CONTEXT.ANNOTS.isIgnored(params.get(index)))
-				{
-					arguments.add(node.getArguments().get(index));
-				}
-			}
-			/* Infer the method here that is called and pass to it the macro. */
-			/* Question: Is that generally feasible? */
-			return callExprMacro(node, ctxt, "MethodInvocation",
-					node.getMethodSelect(), arguments);
-
+			System.out
+					.println("*** Identifier was null, returning empty string***");
+			return "";
 		}
 		//
 		// TODO if the object in which the method I'm invoking resides is an API
@@ -772,22 +809,39 @@ public class MethodBodyVisitor extends
 	{
 		// MethodEnv method = getMethodEnvBeingCalled(node);
 
-		MemberSelectTree methodSelect = (MemberSelectTree) node
-				.getMethodSelect();
+		ExpressionTree methodSelect = node.getMethodSelect();
 
-		ExpressionTree et = methodSelect.getExpression();
-		String expressionString = et.toString();
-
-		if (expressionString.contentEquals(object.getName().toString()))
-			
+		if (methodSelect instanceof MemberSelectTree)
 		{
-			
+
+			MemberSelectTree mst = (MemberSelectTree) methodSelect;
+
+			ExpressionTree et = mst.getExpression();
+			String expressionString = et.toString();
+
+			if (expressionString.contentEquals(object.getName().toString()))
+
+			{
+
+				return false;
+			}
+			else
+			{
+				System.out.println("/// not my method, it's from "
+						+ expressionString);
+				return true;
+			}
+
+		}
+		else if (methodSelect instanceof IdentifierTree)
+		{
+			System.out.println("// I can just call it, so it's my method");
 			return false;
 		}
 		else
 		{
-			System.out.println("/// not my method, it's from " + expressionString);
-			return true;
+			System.out.println("/// not sure if it's my method");
+			return false;
 		}
 
 	}
@@ -804,122 +858,168 @@ public class MethodBodyVisitor extends
 		}
 	}
 
-	
 	private MethodEnv getMethodEnvBeingCalled(MethodInvocationTree node)
 	{
-		MemberSelectTree mst = (MemberSelectTree) node.getMethodSelect();
-
-		
-		Name identifier = mst.getIdentifier();
-
-		System.out.println("/// node.getMethodSelect = " + mst.toString());
-
-		System.out.println("/// node...getExpression = "
-				+ mst.getExpression().toString());
-
-		System.out.println("/// node...getIdenitifer = "
-				+ mst.getIdentifier().toString());
-		ObjectEnv o = getObjectEnvOfMethod(node);
-		
-		System.out.println("/// o is " + o.getName());
-		
-		return getMethodEnvFromObject(identifier, o);
-		
-	}
-	
-	private ObjectEnv getObjectEnvOfMethod(MethodInvocationTree node)
-	{
-		MemberSelectTree mst = (MemberSelectTree) node.getMethodSelect();
-
-		ExpressionTree expression = mst.getExpression();
-	
-
-		System.out.println("/// node.getMethodSelect = " + mst.toString());
-
-		System.out.println("/// node...getExpression = "
-				+ mst.getExpression().toString());
-
-		System.out.println("/// node...getIdenitifer = "
-				+ mst.getIdentifier().toString());
-
-		String varType = "";
-		final boolean objectNotNull = object != null;
-		System.out.println("/// objectNotNull = " + objectNotNull);
-		if (objectNotNull)
+		ExpressionTree methodSelect = node.getMethodSelect();
+		Name identifier = null;
+		if (methodSelect instanceof MemberSelectTree)
 		{
-			System.out.println("/// object name = " + object.getName());
 
-			// For all the type elements in the program...
-			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
+			MemberSelectTree mst = (MemberSelectTree) methodSelect;
+
+			System.out.println("/// node.getMethodSelect = " + mst.toString());
+
+			System.out.println("/// node...getExpression = "
+					+ mst.getExpression().toString());
+
+			System.out.println("/// node...getIdenitifer = "
+					+ mst.getIdentifier().toString());
+
+			identifier = mst.getIdentifier();
+
+			ObjectEnv o = getObjectEnvOfMethod(methodSelect);
+
+			System.out.println("/// o is " + o.getName());
+
+			return getMethodEnvFromObject(identifier, o);
+		}
+		else if (methodSelect instanceof IdentifierTree)
+		{
+			IdentifierTree it = (IdentifierTree) methodSelect;
+
+			identifier = it.getName();
+
+			return getMethodEnvFromObject(identifier, object);
+		}
+
+		return null;
+
+	}
+
+	private ObjectEnv getObjectEnvOfMethod(ExpressionTree methodSelect)
+	{
+		// MemberSelectTree mst = (MemberSelectTree) node.getMethodSelect();
+
+		ExpressionTree expression = methodSelect;// .getExpression();
+		// = mst.getExpression();
+
+		// System.out.println("/// node.getMethodSelect = " + mst.toString());
+		//
+		// System.out.println("/// node...getExpression = "
+		// + expression.toString());
+		// System.out
+		// .println("/// node expression type = " + expression.getKind());
+		//
+		// System.out.println("/// node...getIdenitifer = "
+		// + mst.getIdentifier().toString());
+
+		// while(expression instanceof MemberSelectTree)
+		// {
+		// System.out.println("/// Expression: " + expression +
+		// " Is a MemberSelectTree");
+		//
+		// expression = ((MemberSelectTree) expression).getExpression();
+		// }
+
+		if (expression instanceof MemberSelectTree)
+		{
+			expression = ((MemberSelectTree) methodSelect).getExpression();
+
+			String varType = "";
+			final boolean objectNotNull = object != null;
+			System.out.println("/// objectNotNull = " + objectNotNull);
+			if (objectNotNull)
 			{
-				System.out.println("///** t.getSimpleName() = "
-						+ t.getSimpleName());
+				System.out.println("/// object name = " + object.getName());
 
-				// ...if the name of the type equals the name of the object
-				// we're in...
-				if (t.getSimpleName().contentEquals(object.getName()))
+				// For all the type elements in the program...
+				for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 				{
+					System.out.println("///** t.getSimpleName() = "
+							+ t.getSimpleName());
 
-					// ... then that's our class tree!
-					ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
-
-					List<Tree> members = (List<Tree>) ct.getMembers();
-					Iterator<Tree> i = members.iterator();
-
-					// iterate through all the members of our class...
-					while (i.hasNext())
+					// ...if the name of the type equals the name of the object
+					// we're in...
+					if (t.getSimpleName().contentEquals(object.getName()))
 					{
-						Tree tree = i.next();
 
-						if (tree instanceof VariableTree)
+						// ... then that's our class tree!
+						ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
+
+						List<Tree> members = (List<Tree>) ct.getMembers();
+						Iterator<Tree> i = members.iterator();
+
+						// iterate through all the members of our class...
+						while (i.hasNext())
 						{
-							VariableTree vt = (VariableTree) tree;
+							Tree tree = i.next();
 
-							System.out.println("/// vt.getName = "
-									+ vt.getName());
-							// / ... to find the variable with the same name as
-							// the expression in our method call
-							// i.e. expression.methodCall()
-							if (vt.getName().contentEquals(
-									expression.toString()))
+							if (tree instanceof VariableTree)
 							{
-								Tree typeTree = vt.getType();
+								VariableTree vt = (VariableTree) tree;
 
-								if (typeTree instanceof IdentifierTree)
+								System.out.println("/// vt.getName = "
+										+ vt.getName());
+								// / ... to find the variable with the same name
+								// as
+								// the expression in our method call
+								// i.e. expression.methodCall()
+								if (vt.getName().contentEquals(
+										expression.toString()))
 								{
+									Tree typeTree = vt.getType();
 
-									IdentifierTree it = (IdentifierTree) typeTree;
-									// And finally get the TYPE (as a String) of
-									// the variable we are calling the method of
-									varType = it.getName().toString();
+									System.out.println("/// typeTree = "
+											+ typeTree);
+
+									if (typeTree instanceof IdentifierTree)
+									{
+
+										IdentifierTree it = (IdentifierTree) typeTree;
+										// And finally get the TYPE (as a
+										// String) of
+										// the variable we are calling the
+										// method of
+										varType = it.getName().toString();
+									}
+								}
+								else
+								{
+									System.out
+											.println("/// vt not equal to the expression. vt = "
+													+ vt
+													+ " and expresison = "
+													+ expression);
 								}
 							}
 						}
 					}
 				}
-			}
 
-			System.out.println("/// varType = " + varType);
+				System.out.println("/// varType = " + varType);
 
-			// Then we get the Type Element of the variable we're calling the
-			// method on
-			for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
-			{
-				System.out.println("!// t = " + t.getSimpleName());
-
-				final Name simpleName = t.getSimpleName();
-
-				System.out.println("/// t simpleName = " + simpleName);
-				if (simpleName.contentEquals(varType))
+				// Then we get the Type Element of the variable we're calling
+				// the
+				// method on
+				for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 				{
-					// Get the object env of the class, that represents the
-					// variable we're calling the method on
-					ObjectEnv o = TightRopeTest.getProgramEnv().getObjectEnv(
-							simpleName);
-					return o;
+					System.out.println("!// t = " + t.getSimpleName());
+
+					final Name simpleName = t.getSimpleName();
+
+					System.out.println("/// t simpleName = " + simpleName);
+					if (simpleName.contentEquals(varType))
+					{
+						// Get the object env of the class, that represents the
+						// variable we're calling the method on
+						ObjectEnv o = TightRopeTest.getProgramEnv()
+								.getObjectEnv(simpleName);
+						return o;
+					}
 				}
 			}
 		}
+
 		return null;
 	}
 
@@ -1065,21 +1165,25 @@ public class MethodBodyVisitor extends
 			}
 			else
 			{
-				return callStmtMacro(node, ctxt, "Variable", node.getName(), NewTransUtils.encodeType(node.getType()),
+				return callStmtMacro(node, ctxt, "Variable", node.getName(),
+						NewTransUtils.encodeType(node.getType()),
 						node.getInitializer());
 			}
 		}
 		else
 		{
-			if(object.getVariable(node.getInitializer().toString()) ==null)
-			{				
-				return "\\circvar " + node.getName() + " : " + NewTransUtils.encodeType(node.getType()) + " \\circspot " + 
-				node.getName() + " := this~.~"+node.getInitializer().toString() ;
+			if (object.getVariable(node.getInitializer().toString()) == null)
+			{
+				return "\\circvar " + node.getName() + " : "
+						+ NewTransUtils.encodeType(node.getType())
+						+ " \\circspot " + node.getName() + " := this~.~"
+						+ node.getInitializer().toString();
 			}
 			else
 			{
-			return callStmtMacro(node, ctxt, "Variable", node.getName(), NewTransUtils.encodeType(node.getType()),
-					node.getInitializer());
+				return callStmtMacro(node, ctxt, "Variable", node.getName(),
+						NewTransUtils.encodeType(node.getType()),
+						node.getInitializer());
 			}
 		}
 

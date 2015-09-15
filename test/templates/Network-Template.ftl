@@ -40,6 +40,18 @@
 \circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
 	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
 \end{circus}
+%
+\begin{circus}
+\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
+\end{circus}
+
+\begin{circus}
+\circchannelset ~ ThreadSync == \\ \t1  \lchanset 	\rchanset
+\end{circus}
+
+\begin{circus}
+\circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify  \rchanset
+\end{circus}
 
 %IDs wont type check
 <#list Tiers as tier >
@@ -81,6 +93,7 @@ requestTermination~.~${cluster.Mission}~.~${cluster.Sequencer}
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
   \t1 AperiodicEventHandlerFW, ${Safelet.Name}App, ${TopLevelSequencer.Name}App, \\
+  \t1 ObjectFW, ThreadFW,
   \t1 
 <#list Tiers as tier >
 <#list tier as cluster>
@@ -325,13 +338,13 @@ ThreadFW(${schedulable.Name}Thread, MinPriority) \\
 \interleave \\
 \circblockopen
 <#list Objects.Objects as object>
-ObjectFW(${object}) \\
+ObjectFW(${object}Object) \\
 <#sep>\t1 \lpar ObjectSync \rpar\\</#sep>
 </#list>
 \circblockclose
 \circblockclose
 \end{circus}
-%
+% 
 \begin{circus}
 \circprocess Program \circdef Framework \lpar AppSync \rpar Application \lpar LockingSync \rpar Locking
 \end{circus}

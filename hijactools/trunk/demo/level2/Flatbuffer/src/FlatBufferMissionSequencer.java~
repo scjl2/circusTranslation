@@ -1,5 +1,4 @@
 package scjlevel2examples.flatbuffer;
-
 import javax.realtime.PriorityParameters;
 import javax.safetycritical.Mission;
 import javax.safetycritical.MissionSequencer;
@@ -38,25 +37,4 @@ public class FlatBufferMissionSequencer extends MissionSequencer<Mission>
 		}
 	}
 
-	public void run()
-	{
-		Console.println("Reader!");
-
-		while (true)
-		{
-			
-				int value = 0;
-				while (value == 0)
-				{
-					getNextMission();
-				}
-				
-				
-				Console.println("Reader Read " + value
-						+ " from Buffer");	
-
-			
-
-		}
-	}
 }

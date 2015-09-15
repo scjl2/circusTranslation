@@ -1,7 +1,10 @@
 package scjlevel2examples.flatbuffer;
 
 import javax.realtime.PriorityParameters;
-import javax.safetycritical.*;
+import javax.safetycritical.Mission;
+import javax.safetycritical.MissionSequencer;
+import javax.safetycritical.Safelet;
+import javax.safetycritical.StorageParameters;
 import javax.safetycritical.annotate.Level;
 import javax.scj.util.Const;
 
@@ -37,7 +40,6 @@ public class FlatBuffer implements Safelet<Mission>
 	@Override
 	public void initializeApplication()
 	{
+
 	}
-
-
 }

@@ -19,31 +19,38 @@ public class Writer extends ManagedThread
 		this.fbMission = fbMission;
 	}
 
-
 	public void run()
 	{
 		Console.println("Writer!");
 
-		//rewritten, only variables in boolean conditions
 		boolean terminationPending = fbMission.terminationPending();
 		while (!terminationPending)
 		{
-			try
-			{
-				//rewritten, only variables in boolean conditions
-				boolean bufferEmpty = fbMission.bufferEmpty("Writer");
-				while (bufferEmpty)
+		
+//				while (!fbMission.buffer.bufferEmpty("Writer"))
+//				{
+					try
+					{
+						fbMission.write(i);
+					}
+					catch (InterruptedException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+//				}
+
+				
+				i++;
+				
+				boolean keepWriting = i >= 5 ;
+				if(keepWriting)
 				{
-					fbMission.waitOnMission("Writer");
+					fbMission.requestTermination();
 				}
 
-				fbMission.write(i);
-				i++;
-
-			} catch (InterruptedException ie)
-			{
-				// Handle Interruption
-			}
+				
+			terminationPending = fbMission.terminationPending();
 		}
 
 	}

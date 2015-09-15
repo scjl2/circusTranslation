@@ -18,33 +18,34 @@ public class Reader extends ManagedThread
 		this.fbMission = fbMission;
 	}
 
-	
 	public void run()
 	{
 		Console.println("Reader!");
 
-		//rewritten, only variables in boolean conditions
 		boolean terminationPending = fbMission.terminationPending();
 		while (!terminationPending)
 		{
-			try
-			{
-				//rewritten, only variables in boolean conditions
-				boolean bufferEmpty = fbMission.bufferEmpty("Reader");
-				while (bufferEmpty)
+			
+//				while (fbMission.buffer.bufferEmpty("Reader"))
+//				{
+//					fbMission.buffer.waitOnBuffer("Reader");
+//				}
+
+				int result=999;
+				try
 				{
-					fbMission.waitOnMission("Reader");
+					result = fbMission.read();
 				}
-				
-				int value = fbMission.read();
-				Console.println("Reader Read " + value
-						+ " from Buffer");	
+				catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Console.println("Reader Read " + result
+						+ " from Buffer");			
 
-			} catch (InterruptedException ie)
-			{
-				// Handle Interruption
-			}
 
+			terminationPending = fbMission.terminationPending();
 		}
 	}
 }

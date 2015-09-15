@@ -38,6 +38,18 @@
 \circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
 	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
 \end{circus}
+%
+\begin{circus}
+\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
+\end{circus}
+
+\begin{circus}
+\circchannelset ~ ThreadSync == \\ \t1  \lchanset 	\rchanset
+\end{circus}
+
+\begin{circus}
+\circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify  \rchanset
+\end{circus}
 
 %IDs wont type check
 %
@@ -54,6 +66,7 @@
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
   \t1 AperiodicEventHandlerFW, FlatBufferApp, FlatBufferMissionSequencerApp, \\
+  \t1 ObjectFW, ThreadFW,
   \t1 
 
 
@@ -143,18 +156,18 @@ ThreadFW(WriterThread, MinPriority) \\
 \circblockclose \\
 \interleave \\
 \circblockopen
-ObjectFW(FlatBuffer) \\
+ObjectFW(FlatBufferObject) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(FlatBufferMission) \\
+ObjectFW(FlatBufferMissionObject) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(Reader) \\
+ObjectFW(ReaderObject) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(Writer) \\
+ObjectFW(WriterObject) \\
 
 \circblockclose
 \circblockclose
 \end{circus}
-%
+% 
 \begin{circus}
 \circprocess Program \circdef Framework \lpar AppSync \rpar Application \lpar LockingSync \rpar Locking
 \end{circus}
