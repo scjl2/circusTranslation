@@ -166,7 +166,8 @@ lockAcquired~.~FlatBufferMissionObject~.~thread \then \\
    \circseq \\ 
 
 
-\circvar out : \num \circspot out := this~.~buffer 
+  \circvar out : \num \circspot out := buffer ~
+ 
 
    \circseq \\ 
 

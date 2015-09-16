@@ -1144,8 +1144,9 @@ public class MethodBodyVisitor extends
 	public String visitVariable(VariableTree node, MethodVisitorContext ctxt)
 	{
 		System.out.println("/// VariableTree node = " + node);
+		ExpressionTree initializer = node.getInitializer();
 
-		if (node.getInitializer() instanceof MethodInvocationTree)
+		if (initializer instanceof MethodInvocationTree)
 		{
 			MethodInvocationTree mit = (MethodInvocationTree) node
 					.getInitializer();
@@ -1167,26 +1168,32 @@ public class MethodBodyVisitor extends
 			{
 				return callStmtMacro(node, ctxt, "Variable", node.getName(),
 						NewTransUtils.encodeType(node.getType()),
-						node.getInitializer());
+						initializer);
 			}
+		}
+		else if(initializer instanceof LiteralTree) {
+			return "\\circvar " + node.getName() + " : "
+					+ NewTransUtils.encodeType(node.getType())
+					+ " \\circspot " + node.getName() + " :=~"
+					+ initializer.toString();
 		}
 		else
 		{
-			if (object.getVariable(node.getInitializer().toString()) == null)
+						
+			if (object.getVariable(initializer.toString()) != null)
 			{
 				return "\\circvar " + node.getName() + " : "
 						+ NewTransUtils.encodeType(node.getType())
 						+ " \\circspot " + node.getName() + " := this~.~"
-						+ node.getInitializer().toString();
+						+ initializer.toString();
 			}
 			else
 			{
 				return callStmtMacro(node, ctxt, "Variable", node.getName(),
 						NewTransUtils.encodeType(node.getType()),
-						node.getInitializer());
+						initializer);
 			}
 		}
-
 	}
 
 	@Override
