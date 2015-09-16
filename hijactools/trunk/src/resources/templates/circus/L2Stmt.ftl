@@ -72,7 +72,12 @@
 </#if>
 
 <#elseif stmtTrans?contains("~?~")>
-	${stmtTrans}<#lt/> 
+	${stmtTrans}
+<#if statement_has_next>
+
+<#else>
+ \Skip<#lt/>
+</#if> 
 <#else>
 
 ${stmtTrans}<#lt/> 
