@@ -66,7 +66,7 @@
 
 <#macro ConditionalExpression condition true_expression false_expression>
 <@compact>
-  \IF ~ ${TRANS(condition, CTXT)} ~ \THEN ~ ${TRANS(true_expression, CTXT)} ~ \ELSE ~ ${TRANS(false_expression, CTXT)} 
+  \IF ~ ${TRANS(condition, CTXT)} ~ \THEN ~ ${TRANS(true_expression, CTXT)} ~ \ELSE ~ ${TRANS(false_expression, CTXT)} \circseq \\
 </@compact>
 </#macro>
 
