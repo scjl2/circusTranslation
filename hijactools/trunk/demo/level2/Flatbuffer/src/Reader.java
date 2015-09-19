@@ -9,6 +9,7 @@ import devices.Console;
 public class Reader extends ManagedThread
 {
 	private final FlatBufferMission fbMission;
+	
 
 	public Reader(PriorityParameters priority, StorageParameters storage,
 			FlatBufferMission fbMission)
@@ -22,8 +23,8 @@ public class Reader extends ManagedThread
 	{
 		Console.println("Reader!");
 
-		boolean terminationPending = fbMission.terminationPending();
-		while (!terminationPending)
+		//boolean terminationPending = fbMission.terminationPending();
+		while (!fbMission.terminationPending())
 		{
 			
 //				while (fbMission.buffer.bufferEmpty("Reader"))
@@ -32,6 +33,7 @@ public class Reader extends ManagedThread
 //				}
 
 				int result=999;
+				
 				try
 				{
 					result = fbMission.read();
@@ -45,7 +47,7 @@ public class Reader extends ManagedThread
 						+ " from Buffer");			
 
 
-			terminationPending = fbMission.terminationPending();
+			//terminationPending = fbMission.terminationPending();
 		}
 	}
 }

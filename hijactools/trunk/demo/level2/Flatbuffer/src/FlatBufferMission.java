@@ -45,14 +45,14 @@ public class FlatBufferMission extends Mission
 
 	public synchronized void write(int update) throws InterruptedException
 	{
-		boolean bufferEmpty = bufferEmpty("Writer");
-		while (!bufferEmpty)
+		//boolean bufferEmpty = bufferEmpty("Writer");
+		while (!bufferEmpty("Writer"))
 		{
 			Console.println("Writer" + " Waiting on Buffer");
 			
 			this.wait();
 			
-			bufferEmpty =  bufferEmpty("Writer");
+			//bufferEmpty =  bufferEmpty("Writer");
 		}
 
 		Console.println("writing " + update + " to Buffer");
@@ -62,15 +62,15 @@ public class FlatBufferMission extends Mission
 
 	public synchronized int read() throws InterruptedException
 	{
-		boolean bufferEmpty = bufferEmpty("Reader");
-		while(bufferEmpty)
+		//boolean bufferEmptyCond = bufferEmpty("Reader");
+		while(bufferEmpty("Reader"))
 		{
 			Console.println("Reader" + " Waiting on Buffer");
 			
 			
 			this.wait();
 			
-			bufferEmpty = bufferEmpty("Reader");
+			//bufferEmptyCond = bufferEmpty("Reader");
 		}
 
 		int out = buffer;

@@ -312,8 +312,20 @@ public class MethodBodyVisitor extends
 			}
 			else
 			{
-				return callStmtMacro(node, ctxt, "Assignment",
-						node.getVariable(), node.getExpression());
+				// TODO fix this, it's outputting " " which is BADNESS 90000
+				// return "this~.~" + node.getVariable().toString() + " :="
+				// + node.getExpression() ;
+				if (node.getExpression().toString().contains("~?~"))
+				{
+					return visitMethodInvocation(mit, ctxt) + " \\\\ "
+							+ node.getVariable().toString() + " :="
+							+ node.getExpression();
+				}
+				else
+				{
+					return callStmtMacro(node, ctxt, "Assignment",
+							node.getVariable(), node.getExpression());
+				}
 			}
 		}
 		else
@@ -377,7 +389,7 @@ public class MethodBodyVisitor extends
 	{
 		return callExprMacro(node, ctxt, "ConditionalExpression",
 				node.getCondition(), node.getTrueExpression(),
-				node.getFalseExpression()); 	
+				node.getFalseExpression());
 	}
 
 	@Override
@@ -577,6 +589,7 @@ public class MethodBodyVisitor extends
 				sb.append(" \\\\ ");
 				sb.append("\\Skip");
 
+				timeMachine.put("methodCall", false);
 				return sb.toString();
 			}
 			else if (identifier.contentEquals("wait"))
@@ -597,6 +610,7 @@ public class MethodBodyVisitor extends
 				sb.append(" \\\\ ");
 				sb.append("\\Skip");
 
+				timeMachine.put("methodCall", false);
 				return sb.toString();
 			}
 			else if (isNotMyMethod(node))
@@ -699,13 +713,15 @@ public class MethodBodyVisitor extends
 				{
 
 					sb.append("~?~");
+					final Object identifierString = timeMachine.get(identifier.toString());
 					System.out
 							.println("!// return string not 'null', getting key: "
 									+ identifier.toString()
 									+ " value: "
-									+ timeMachine.get(identifier.toString()));
+									+ identifierString);
 
-					sb.append(timeMachine.get(identifier.toString()));
+					sb.append(identifier.toString());
+					timeMachine.put("variableIdentifier", identifier);
 					sb.append("\\then \\\\");
 
 				}
@@ -715,6 +731,7 @@ public class MethodBodyVisitor extends
 					sb.append("\\Skip");
 				}
 
+				timeMachine.put("methodCall", false);
 				return sb.toString();
 			}
 			else
@@ -730,6 +747,8 @@ public class MethodBodyVisitor extends
 						arguments.add(node.getArguments().get(index));
 					}
 				}
+
+				timeMachine.put("methodCall", true);
 				/*
 				 * Infer the method here that is called and pass to it the
 				 * macro.
@@ -848,7 +867,7 @@ public class MethodBodyVisitor extends
 
 	private boolean isSyncMethod(MethodInvocationTree node)
 	{
-		if (getMethodEnvBeingCalled(node) != null)
+		if (getMethodEnvBeingCalled(node).isSynchronised())
 		{
 			return true;
 		}
@@ -1153,33 +1172,41 @@ public class MethodBodyVisitor extends
 
 			if (isNotMyMethod(mit))
 			{
+				final MemberSelectTree memberSelectTree = (MemberSelectTree) mit.getMethodSelect();
 				System.out.println("!// not my method, variable, putting key: "
-						+ ((MemberSelectTree) mit.getMethodSelect())
+						+ memberSelectTree
 								.getIdentifier().toString() + " value: "
 						+ node.getName().toString());
 
-				timeMachine.putIfAbsent(((MemberSelectTree) mit
-						.getMethodSelect()).getIdentifier().toString(), node
+				timeMachine.putIfAbsent(memberSelectTree.getIdentifier().toString(), node
 						.getName().toString());
 
-				return visitMethodInvocation(mit, ctxt);
+				return visitMethodInvocation(mit, ctxt)
+						+ "\\\\ \\circvar "
+						+ node.getName()
+						+ " : "
+						+ NewTransUtils.encodeType(node.getType())
+						+ " \\circspot "
+						+ node.getName()
+						+ " :=~"
+						+ memberSelectTree
+								.getIdentifier().toString() + "\\\\";
 			}
 			else
 			{
 				return callStmtMacro(node, ctxt, "Variable", node.getName(),
-						NewTransUtils.encodeType(node.getType()),
-						initializer);
+						NewTransUtils.encodeType(node.getType()), initializer);
 			}
 		}
-		else if(initializer instanceof LiteralTree) {
+		else if (initializer instanceof LiteralTree)
+		{
 			return "\\circvar " + node.getName() + " : "
-					+ NewTransUtils.encodeType(node.getType())
-					+ " \\circspot " + node.getName() + " :=~"
-					+ initializer.toString();
+					+ NewTransUtils.encodeType(node.getType()) + " \\circspot "
+					+ node.getName() + " :=~" + initializer.toString();
 		}
 		else
 		{
-						
+
 			if (object.getVariable(initializer.toString()) != null)
 			{
 				return "\\circvar " + node.getName() + " : "
@@ -1190,8 +1217,7 @@ public class MethodBodyVisitor extends
 			else
 			{
 				return callStmtMacro(node, ctxt, "Variable", node.getName(),
-						NewTransUtils.encodeType(node.getType()),
-						initializer);
+						NewTransUtils.encodeType(node.getType()), initializer);
 			}
 		}
 	}
@@ -1206,7 +1232,41 @@ public class MethodBodyVisitor extends
 	@Override
 	public String visitWhileLoop(WhileLoopTree node, MethodVisitorContext ctxt)
 	{
-		return callStmtMacro(node, ctxt, "WhileLoop", node.getCondition(),
-				node.getStatement());
+		ExpressionTree condition = node.getCondition();
+		System.out.println("/// WHile Loop condition = " + condition.toString()
+				+ " kind = " + condition.getKind());
+
+		// TODO HACKY, just checks for a ( to get if it's a method invocation.
+		if (condition.toString().contains("("))
+		{
+			String conditionTrans = visit(condition, ctxt);
+			String conditionString = "";
+			System.out.println("/// conditionTrans = " + conditionTrans);
+
+			boolean isStillMethodCall = (boolean) timeMachine.get("methodCall");
+			if (isStillMethodCall)
+			{
+				conditionString = "\\circvar loopVar : \\bool \\circspot loopVar :=~"
+						+ conditionTrans + "\\circseq \\\\";
+
+				// return callStmtMacro(node, ctxt, "WhileLoopMethCond",
+				// conditionString, node.getStatement());
+			}
+			else
+			{
+				conditionString = conditionTrans + "\\\\"
+						+ "\\circvar loopVar : \\bool \\circspot loopVar :=~"
+						+ timeMachine.get("variableIdentifier") + "\\circseq \\\\";
+
+			}
+
+			return callStmtMacro(node, ctxt, "WhileLoopMethCond",
+					conditionString, node.getStatement());
+		}
+		else
+		{
+			return callStmtMacro(node, ctxt, "WhileLoop", condition,
+					node.getStatement());
+		}
 	}
 }

@@ -60,36 +60,35 @@
 <#macro Block statements>
 
 <#if statements?has_content>
-  \circblockopen
-<#list statements as statement>
-<#assign stmtTrans=TRANS(statement, CTXT)>
+      \circblockopen
+    <#list statements as statement>
+        <#assign stmtTrans=TRANS(statement, CTXT)>
 
-<#if stmtTrans="">
-<#if statement_has_next>
+        <#if stmtTrans="">
+            <#if statement_has_next>
 
+            <#else>
+                \Skip
+            </#if>
+
+        <#elseif stmtTrans?contains("~?~")>
+            ${stmtTrans}
+            <#if statement_has_next>
+
+            <#else>
+                 \Skip<#lt/>
+            </#if> 
+        <#else>
+            ${stmtTrans}<#lt/> 
+
+            <#if statement_has_next>
+               \circseq \\ 
+            </#if>
+        </#if>
+    </#list>
+        \circblockclose  
 <#else>
-\Skip
-</#if>
-
-<#elseif stmtTrans?contains("~?~")>
-	${stmtTrans}
-<#if statement_has_next>
-
-<#else>
- \Skip<#lt/>
-</#if> 
-<#else>
-
-${stmtTrans}<#lt/> 
-
-<#if statement_has_next>
-   \circseq \\ 
-</#if>
-</#if>
-</#list>
-  \circblockclose
-<#else>
-  <@EmptyStatement/>
+   <@EmptyStatement/>
 </#if>
 
 </#macro>
@@ -165,7 +164,7 @@ ${stmtTrans}<#lt/>
   \\
   \circelse ~ \lnot ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
   \\
-  \circfi
+  \circfi \circseq \\
 </#if>
 </#macro>
 
@@ -359,6 +358,35 @@ ${stmtTrans}<#lt/>
   \circseq X
   \\
   \circelse ~ ~ \lnot ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+  \circblockclose
+	\\
+</@compact>
+</#macro>
+
+
+<#-------------------->
+<#-- WhileLoop Tree   <@keep_newlines>  </@keep_newlines> -->
+<#-------------------- \circblockopen    \circblockclose  -->
+
+
+<#macro WhileLoopMethCond condition statement>
+<@compact>
+
+  \circblockopen
+  \circmu X \circspot
+  \\ 
+  \circblockopen
+  ${condition} 
+  \circif ~ (loopVar) ~ \circthen ~
+  \\
+  \t1
+  
+  ${TRANS(statement, CTXT)} \circseq X
+  \\
+  \circelse ~ ~ \lnot(loopVar) \circthen \Skip
   \\
   \circfi
   \circblockclose

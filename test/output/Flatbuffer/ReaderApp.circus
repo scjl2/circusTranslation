@@ -25,17 +25,14 @@ Run \circdef \\
 \circblockopen
 	runCall~.~Reader \then \\
 	
-  \circblockopen
+      \circblockopen
 
 
 
 
-	terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\
-
-
-	\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot terminationPending = \true) ~ \circthen ~ \\ \t1 \circblockopen \circvar result : \num \circspot result :=~999 \circseq \\ \circblockopen readCall~.~fbMission~.~ReaderThread\then \\readRet~.~fbMission~.~ReaderThread~?~null\then \\ \Skip \circblockclose terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\ \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot terminationPending = \true) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+            \circblockopen \circmu X \circspot \\ \circblockopen (\lnot terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\)\\\circvar loopVar : \bool \circspot loopVar :=~terminationPending\circseq \\ \circif ~ (loopVar) ~ \circthen ~ \\ \t1 \circblockopen \circvar result : \num \circspot result :=~999 \circseq \\ \circblockopen readCall~.~fbMission~.~ReaderThread\then \\readRet~.~fbMission~.~ReaderThread~?~read\then \\ \Skip \circblockclose \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot(loopVar) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 \Skip
-  \circblockclose
+        \circblockclose  
 
  \circseq \\
 	runRet~.~Reader \then \\

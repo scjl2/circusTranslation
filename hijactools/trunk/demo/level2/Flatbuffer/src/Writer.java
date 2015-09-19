@@ -23,8 +23,8 @@ public class Writer extends ManagedThread
 	{
 		Console.println("Writer!");
 
-		boolean terminationPending = fbMission.terminationPending();
-		while (!terminationPending)
+		//boolean terminationPending = fbMission.terminationPending();
+		while (!fbMission.terminationPending())
 		{
 		
 //				while (!fbMission.buffer.bufferEmpty("Writer"))
@@ -50,7 +50,7 @@ public class Writer extends ManagedThread
 				}
 
 				
-			terminationPending = fbMission.terminationPending();
+			//terminationPending = fbMission.terminationPending();
 		}
 
 	}

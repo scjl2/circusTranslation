@@ -38,17 +38,14 @@ Run \circdef \\
 \circblockopen
 	runCall~.~Writer \then \\
 	
-  \circblockopen
+      \circblockopen
 
 
 
 
-	terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\
-
-
-	\circblockopen \circmu X \circspot \\ \circblockopen \circif ~ (\lnot terminationPending = \true) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen writeCall~.~fbMission~.~WriterThread~!~i\then \\writeRet~.~fbMission~.~WriterThread\then \\\Skip \circblockclose \circseq \\ i := i + 1 \circseq \\ \circvar keepWriting : \boolean \circspot keepWriting := (i \geq 5) ~ \circseq \\ \circif ~ (\lnot keepWriting = \true) ~ \circthen ~ \\ \t1 \circblockopen requestTerminationCall~.~fbMission\then \\requestTerminationRet~.~fbMission~?~null\then \\ \Skip \circblockclose \\ \circelse ~ \lnot (\lnot keepWriting = \true) \circthen \Skip \\ \circfi terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\ \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot (\lnot terminationPending = \true) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+            \circblockopen \circmu X \circspot \\ \circblockopen (\lnot terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\)\\\circvar loopVar : \bool \circspot loopVar :=~terminationPending\circseq \\ \circif ~ (loopVar) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen writeCall~.~fbMission~.~WriterThread~!~i\then \\writeRet~.~fbMission~.~WriterThread\then \\\Skip \circblockclose \circseq \\ i := i + 1 \circseq \\ \circvar keepWriting : \boolean \circspot keepWriting := (i \geq 5) ~ \circseq \\ \circif ~ (\lnot keepWriting = \true) ~ \circthen ~ \\ \t1 \circblockopen requestTerminationCall~.~fbMission\then \\requestTerminationRet~.~fbMission~?~requestTermination\then \\ \Skip \circblockclose \\ \circelse ~ \lnot (\lnot keepWriting = \true) \circthen \Skip \\ \circfi \circseq \\ \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot(loopVar) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 \Skip
-  \circblockclose
+        \circblockclose  
 
  \circseq \\
 	runRet~.~Writer \then \\
