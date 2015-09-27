@@ -12,6 +12,7 @@ public class FlatBufferMission extends Mission
 {
 	//Buffer buffer;
 	private volatile int buffer;
+	private testClass t;
 
 
 	public FlatBufferMission()
@@ -62,15 +63,15 @@ public class FlatBufferMission extends Mission
 
 	public synchronized int read() throws InterruptedException
 	{
-		boolean bufferEmptyCond = bufferEmpty("Reader");
-		while(bufferEmptyCond)
+		//boolean bufferEmptyCond = bufferEmpty("Reader");
+		while(bufferEmpty("Reader"))
 		{
 			Console.println("Reader" + " Waiting on Buffer");
 			
 			
 			this.wait();
 			
-			bufferEmptyCond = bufferEmpty("Reader");
+			//bufferEmptyCond = bufferEmpty("Reader");
 		}
 
 		int out = buffer;

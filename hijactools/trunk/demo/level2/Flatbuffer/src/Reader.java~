@@ -19,6 +19,18 @@ public class Reader extends ManagedThread
 		this.fbMission = fbMission;
 	}
 
+	public boolean test(int input)
+	{
+		if(input < 50)
+		{
+			return 	false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
 	public void run()
 	{
 		Console.println("Reader!");
@@ -47,7 +59,7 @@ public class Reader extends ManagedThread
 						+ " from Buffer");			
 
 
-			terminationPending = fbMission.terminationPending();
+			//terminationPending = fbMission.terminationPending();
 		}
 	}
 }

@@ -1246,6 +1246,8 @@ public class MethodBodyVisitor extends
 			boolean isStillMethodCall = (boolean) timeMachine.get("methodCall");
 			if (isStillMethodCall)
 			{
+				
+				
 				conditionString = "\\circvar loopVar : \\bool \\circspot loopVar :=~"
 						+ conditionTrans + "\\circseq \\\\";
 
@@ -1254,9 +1256,25 @@ public class MethodBodyVisitor extends
 			}
 			else
 			{
-				conditionString = conditionTrans + "\\\\"
-						+ "\\circvar loopVar : \\bool \\circspot loopVar :=~"
+				//TODO SUPER HACKY!
+				conditionTrans = conditionTrans.substring(1, conditionTrans.length()-1);
+				System.out.println("/// conditionTrans sub = " + conditionTrans);
+				
+				boolean negative = conditionTrans.startsWith("\\lnot");
+				
+				if(negative)
+				{
+					conditionTrans=  conditionTrans.substring(5);
+					
+					conditionString = conditionTrans + "\\"
+							+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
+							+ " (\\lnot "+ timeMachine.get("variableIdentifier") + ") \\circseq \\\\";				}
+				else
+				{
+				conditionString = conditionTrans + "\\"
+						+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
 						+ timeMachine.get("variableIdentifier") + "\\circseq \\\\";
+				}
 
 			}
 

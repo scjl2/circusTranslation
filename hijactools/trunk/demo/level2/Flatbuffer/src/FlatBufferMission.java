@@ -12,6 +12,7 @@ public class FlatBufferMission extends Mission
 {
 	//Buffer buffer;
 	private volatile int buffer;
+	private testClass t;
 
 
 	public FlatBufferMission()
@@ -19,6 +20,7 @@ public class FlatBufferMission extends Mission
 		Console.println("FlatBufferMission");
 		buffer = 0;
 		Services.setCeiling(this, 20);
+		t = new testClass();
 	}
 
 	protected void initialize()
