@@ -50,7 +50,7 @@ public class TightRope
 		System.out.println();
 		System.out.println("+++ Tight Rope - SCJ to Circus translator +++");
 		System.out.println("+++ " + VERSION + " +++");
-		System.out.println("+++ Matt Luckcuck +++");
+		
 		System.out.println();
 
 		setUncaughtExceptionHandler();
