@@ -1,0 +1,28 @@
+\begin{zsection}
+  \SECTION ~ HandlerMethChan ~ \parents ~ HandlerId, EventId, scj\_prelude
+\end{zsection}
+\extracircusvspace
+%
+We introduce a channels pair to model calls to \code{handleAsyncEvent()} in the \code{AperiodicEventHandler} class.
+%
+\begin{circus}
+  \circchannel ~ handleAsyncEventCall : HandlerId
+  \also
+  \circchannel ~ handleAsyncEventRet : HandlerId
+\end{circus}
+%
+We moreover introduce a channel pair to model calls to \code{handle\-AsyncLong\-Event(int value)} in the \code{Aperiodic\-Long\-Event\-Handler} class.
+%
+\begin{circus}
+  \circchannel ~ handleAsyncLongEventCall : HandlerId \cross EventId
+  \also
+  \circchannel ~ handleAsyncLongEventRet : HandlerId
+\end{circus}
+%
+For convenience, we introduce a channel set that includes all method channels.
+%
+\begin{circus}
+  \circchannelset ~ HandlerMethChan ~ ==\\
+  \t1 \lchanset handleAsyncEventCall, handleAsyncEventRet,\\
+  \t1 handleAsyncLongEventCall, handleAsyncLongEventRet \rchanset
+\end{circus}

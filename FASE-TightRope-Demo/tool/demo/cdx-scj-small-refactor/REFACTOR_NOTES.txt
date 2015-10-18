@@ -1,0 +1,13 @@
+
+REFACTORING NOTES
+=================
+
+(1) cdx.Level0Safelet has been moved into a directory "obsolete" since it is not needed for the Level 1 application.
+
+(2) The MissionSequencer of the application was constructed as an annonymous class within cdx.Level1Safelet. I factored it out into a separate class cdx.CDXMissionSequencer. The implementation mosty constitutes of the body of the getSequencer() method in cdx.Level1Safelet. 
+
+(3) An instance of the cdx.Level1Safelet class was also used for the mission. Again, I factored the mission part into a separate class CDxMission. This is essentially only moving the initialize(), cleanup() and missionMemorySize() methods.
+
+(4) The class declaration for Level1Safelet has been altered not to extend Mission anymore.
+
+(4) The inner class cdx.StateTable.R has been extracted into a separate class StateTable_R.

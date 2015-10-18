@@ -1,0 +1,14 @@
+\begin{zsection}
+  \SECTION ~ SCJEventFWChan ~ \parents ~ HandlerId, SCJEventId
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circchannel ~ bind\_handlers : SCJEventId \cross \finset HandlerId
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ release\_handler : HandlerId
+  \also
+  \circchannel ~ release\_handlers
+\end{circus}

@@ -1,0 +1,66 @@
+
+\begin{circus}
+  \circclass ~ ThrottleControllerClass ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ State}
+  \circprivate ~ speedo : SpeedMonitorClass\\
+  \circprivate ~ schedule\_throttle : boolean\\
+  \circprivate ~ accelerating : boolean\\
+  \circprivate ~ maintainSpeed : boolean\\
+  \circprivate ~ cruiseSpeed : int\\
+  \circprivate ~ voltage : float
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ State
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ setCruiseSpeed ~ \circdef ~
+  \circval ~ kph : int \circspot
+  \\
+  \t1
+  \circblockopen
+  cruiseSpeed := kph ~
+  \circseq
+  \\
+  maintainSpeed := jtrue ~
+  \circseq
+  \\
+  accelerating := jfalse ~
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ accelerate ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  accelerating := jtrue ~
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ schedulePeriodic ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  schedule\_throttle := jtrue ~
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ deschedulePeriodic ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  schedule\_throttle := jfalse ~
+  \circblockclose
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,15 @@
+\begin{zsection}
+  \SECTION ~ SafeletMethChan ~ \parents ~ scj\_prelude
+\end{zsection}
+
+\begin{circus}
+  \circchannel ~ setUpCall, setUpRet
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ tearDownCall, tearDownRet
+\end{circus}
+%
+\begin{circus}
+  \circchannelset ~ SafeletMethChan ~ == ~ \lchanset setUpCall, setUpRet, tearDownCall, tearDownRet \rchanset
+\end{circus}

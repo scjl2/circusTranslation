@@ -1,0 +1,72 @@
+\begin{zsection}
+  \SECTION ~ MainHandlerApp ~ \parents\\
+  \t1 MainHandlerMethChan, MainHandlerClass, MainHandler\_ImmortalEntryClass,\\
+  \t1 HandlerMethChan, HandlerIds, MissionIds, ImmortalMemory, MemoryArea, RunnableClass
+\end{zsection}
+
+\begin{circus}
+  \circprocess ~ MainHandlerApp ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{schema}{MainHandlerAppState}
+  this : MainHandler
+\end{schema}
+
+\begin{circusaction}
+  \circstate MainHandlerAppState
+\end{circusaction}
+\vspaceafterzpara
+
+%Should the caller or callee construct the new data object?
+
+\red{The below produces an error because we assign the component of a state variable.}
+%
+\begin{circusaction*}
+  MainHandlerAppInit ~ \circdef\\
+  \t1 MainHandlerInitCall~.~MainHandlerId~?~obj~?~args \then\\
+  \t2 (this := \circref obj \circseq (\circderef this).releaseTimes := args.releaseTimes) \circseq\\
+  \t1 MainHandlerInitRet \then Skip
+\end{circusaction*}
+
+\begin{circusaction}
+  Init ~ \circdef ~ Skip
+\end{circusaction}
+\vspaceafterzpara
+
+%It may be nice to invent some abbreviation for actions that correspond to method calls, like\\$requestTerminationCall~!~MainMissionId \then Skip \circseq\\requestTerminationRet~!~MainMissionId \then Skip$.
+
+\red{The following method creates an active local object!}
+%
+\begin{circusaction}
+  handleEventMeth ~ \circdef\\
+  \t1 handleEventCall~.~MainHandlerId \then Skip \circseq\\
+  \t1 \circif ~ (\circderef this).index < \# (\circderef (\circderef this).releaseTimes) \circthen\\
+  \t2 (\circvar tmp1 : ImmortalMemory; tmp2 : Runnable \circspot\\
+  \t3 tmp2 := \circref (\circnew RunnableClass) \circseq\\
+  \t3 MemoryArea\_executeInAreaCall~.~tmp1~.~tmp2 \then Skip \circseq\\
+  \t3 MemoryArea\_executeInAreaRet~.~tmp1 \then Skip)\\
+  \t1 \circelse ~ \lnot (\circderef this).index < \# (\circderef (\circderef this).releaseTimes) \circthen\\
+  \t2 requestTerminationCall~!~MainMissionId \then Skip \circseq\\
+  \t2 requestTerminationRet~!~MainMissionId \then Skip\\
+  \t1 \circfi \circseq\\
+  \t1 handleEventRet~.~MainHandlerId \then Skip
+\end{circusaction}
+
+\begin{circusaction}
+  Methods ~ \circdef ~ \circmu X \circspot handleEventMeth \circseq X
+\end{circusaction}
+
+\begin{circusaction}
+  StopHandler ~ \circdef ~ stop\_handler~.~MainHandlerId \then Skip
+\end{circusaction}
+
+\begin{circusaction}
+  \circspot ~ (\circmu X \circspot Init \circseq (Methods \circinterrupt StopHandler)) \circinterrupt ~ end\_mission\_fw \then Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
+\vspaceafterzpara
+
+\red{In the above spec we do not model the call the the super constructor.}

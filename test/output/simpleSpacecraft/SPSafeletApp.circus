@@ -1,5 +1,7 @@
 \begin{zsection}
-  \SECTION ~ SPSafeletApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan
+  \SECTION ~ SPSafeletApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  
+
+  \t1 
 \end{zsection}
 %\begin{circus}
 %\circchannelset SPSafeletAppSync \circdef \\
@@ -12,7 +14,13 @@
 %\end{circus}     
   
 \begin{circus}
-\circprocess SPSafeletApp  \circdef \circbegin
+\circprocess SPSafeletApp  \circdef   storageParameters_topLevelSequencer : MissionID
+,
+  storageParameters_nestedSequencer : MissionID
+,
+  storageParameters_Schedulable : MissionID
+\circspot 
+ \circbegin
 \end{circus}
 
 
@@ -37,18 +45,25 @@ GetSequencer \circdef \\
 \circblockclose
 \end{circusaction}
 
+%
+%
+
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
 	GetSequencer \\
 	\extchoice  \\
 	InitializeApplication  \\
+%
+%
+%
 \circblockclose
 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-	\circspot (Methods) \circinterrupt (end\_safelet\_app \then \Skip) 
+\circspot ( Methods) 
+ \circinterrupt (end\_safelet\_app \then \Skip) 
 \end{circusaction}
 
 \begin{circus}

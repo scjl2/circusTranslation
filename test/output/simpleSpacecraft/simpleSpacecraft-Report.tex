@@ -11,7 +11,14 @@
 
 \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 
+\title{simpleSpacecraft}
+
+\author{Tight Rope v0.6}
+
 \begin{document}
+
+\maketitle
+
 \section{Network}
 \input{Network.circus}
 \newpage
@@ -22,14 +29,31 @@
 
 \subsection{SchedulablesIds}
 \input{SchedulableIds.circus}
+
+\subsection{ThreadIds}
+\input{ThreadIds.circus}
+
+
+\subsection{ObjectIds}
+\input{ObjectIds.circus}
 \newpage
 
 \section{Safelet}
 \input{SPSafeletApp.circus}
+\IfFileExists{SPSafeletClass.circus}{\newpage
+\input{SPSafeletClass.circus}}{}
+\newpage
+\IfFileExists{SPSafeletMethChan.circus}{\newpage
+\input{SPSafeletMethChan.circus}}{}
 \newpage
 
 \section{Top Level Mission Sequencer}
 \input{MainMissionSequencerApp.circus}
+\IfFileExists{MainMissionSequencerClass.circus}{\newpage
+\input{MainMissionSequencerClass.circus}}{}
+\newpage
+\IfFileExists{MainMissionSequencerMethChan.circus}{\newpage
+\input{MainMissionSequencerMethChan.circus}}{}
 \newpage
 
 \section{Missions}
@@ -37,63 +61,14 @@
 
 \subsection{MainMission}
 \input{MainMissionApp.circus}
+\IfFileExists{MainMissionClass.circus}{\newpage
+\input{MainMissionClass.circus}}{}
+\newpage
+\IfFileExists{MainMissionMethChan.circus}{\newpage
+\input{MainMissionMethChan.circus}}{}
 \newpage
 
-\subsection{Schedulables of MainMission}
-
-\input{SPModeChangerApp.circus}
-\newpage
-
-\input{ControlHandlerApp.circus}
-\newpage
-
-\input{EnvironmentMonitorApp.circus}
-\newpage
-
-\input{AperiodicSimulatorApp.circus}
-
-\subsection{LaunchMission}
-\input{LaunchMissionApp.circus}
-\newpage
-
-\subsection{Schedulables of LaunchMission}
-
-\input{LaunchHandlerApp.circus}
-\newpage
-
-\input{LaunchCountdownApp.circus}
-\subsection{CruiseMission}
-\input{CruiseMissionApp.circus}
-\newpage
-
-\subsection{Schedulables of CruiseMission}
-
-\input{BurnActivationHandlerApp.circus}
-\newpage
-
-\input{BurnDurationHandlerApp.circus}
-\newpage
-
-\input{CruiseConditionsMonitorApp.circus}
-\newpage
-
-\input{AperiodicSimulatorApp.circus}
-\subsection{LandMission}
-\input{LandMissionApp.circus}
-\newpage
-
-\subsection{Schedulables of LandMission}
-
-\input{LandingGearHandlerApp.circus}
-\newpage
-
-\input{ParachuteHandlerApp.circus}
-\newpage
-
-\input{AirSpeedMonitorApp.circus}
-\newpage
-
-\input{GroundDistanceMonitorApp.circus}
+\subsection{Schedulables of }
 
 
 \end{document}

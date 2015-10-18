@@ -1,0 +1,95 @@
+package hijac.tools.modelgen.circus.datamodel;
+
+import hijac.tools.modelgen.circus.SCJApplication;
+
+import java.util.Set;
+
+import javax.lang.model.element.Modifier;
+
+/**
+ * Data model for the modifiers of a field or method.
+ *
+ * @author Frank Zeyda
+ * @version $Revision: 213 $
+ */
+public class ModifiersModel extends DataModel {
+   /**
+    * A set of JDK model element representing the modifiers in the data model.
+    */
+   public final Set<Modifier> modifiers;
+
+   /**
+    * Constructs a data model for the modifiers of a field or method.
+    *
+    * @param context SCJ application context of the data model.
+    * @param modifiers Set of JDK model elements for each modifier.
+    */
+   public ModifiersModel(SCJApplication context, Set<Modifier> modifiers) {
+      super(context);
+      assert modifiers != null;
+      this.modifiers = modifiers;
+   }
+
+   /**
+    * Determines the presence of the {@code public} modifier.
+    *
+    * @return True if the {@code public} modifier is present.
+    */
+   public boolean isPublic() {
+      return modifiers.contains(Modifier.PUBLIC);
+   }
+
+   /**
+    * Determines the presence of the {@code protected} modifier.
+    *
+    * @return True if the {@code protected} modifier is present.
+    */
+   public boolean isProtected() {
+      return modifiers.contains(Modifier.PROTECTED);
+   }
+
+   /**
+    * Determines the presence of the {@code private} modifier.
+    *
+    * @return True if the {@code private} modifier is present.
+    */
+   public boolean isPrivate() {
+      return modifiers.contains(Modifier.PRIVATE);
+   }
+
+   /**
+    * Determines the presence of the {@code static} modifier.
+    *
+    * @return True if the {@code static} modifier is present.
+    */
+   public boolean isStatic() {
+      return modifiers.contains(Modifier.STATIC);
+   }
+
+   /**
+    * Determines the presence of the {@code final} modifier.
+    *
+    * @return True if the {@code final} modifier is present.
+    */
+   public boolean isFinal() {
+      return modifiers.contains(Modifier.FINAL);
+   }
+
+   /**
+    * Determines the presence of the {@code synchronized} modifier.
+    *
+    * @return True if the {@code synchronized} modifier is present.
+    */
+   public boolean isSync() {
+      return modifiers.contains(Modifier.SYNCHRONIZED);
+   }
+
+   /**
+    * Determines the presence of the {@code abstract} modifier.
+    *
+    * @return True if the {@code abstract} modifier is present.
+    */
+   public boolean isAbstract() {
+      return modifiers.contains(Modifier.ABSTRACT);
+   }
+}

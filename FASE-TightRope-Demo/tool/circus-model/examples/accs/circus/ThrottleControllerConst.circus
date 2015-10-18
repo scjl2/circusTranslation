@@ -1,0 +1,10 @@
+\begin{zsection}
+  \SECTION ~ ThrottleControllerConst ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+  ThrottleControllerPeriod : \nat_1\\
+  ThrottleControllerJitter : \nat_1\\
+  ThrottleControllerDeadline : \nat_1
+\end{axdef}

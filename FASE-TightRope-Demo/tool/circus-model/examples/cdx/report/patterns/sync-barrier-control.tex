@@ -1,0 +1,73 @@
+\begin{pattern}{sync-barrier-control}
+\begin{circusaction*}
+  \circblockopen
+    \circmu X \circspot start \then
+    \circblockopen
+      (notify~!~1 \then \Skip) ~ \interleave
+      \\
+      (notify~!~2 \then \Skip) ~ \interleave
+      \\
+      \dots
+      \\
+      (notify~!~n \then \Skip)
+    \circblockclose
+    \circseq done \then \Skip \circseq sync \then X
+  \circblockclose
+  \also
+  \t1 \equiv
+  \also
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        \circmu X \circspot reset \then start \then X \circseq sync \then X
+      \circblockclose
+      \also
+      \t1 \lpar \emptyset | \lchanset start, sync \rchanset | \emptyset \rpar
+      \also
+      \circblockopen
+        \circmu X \circspot start \then notify~!~1 \then \Skip \circseq sync \then X
+      \circblockclose
+      \also
+      \t1 \lpar \emptyset | \lchanset start, sync \rchanset | \emptyset \rpar
+      \also
+      \circblockopen
+        \circmu X \circspot start \then notify~!~2 \then \Skip \circseq sync \then X
+      \circblockclose
+      \also
+      \t1 \lpar \emptyset | \lchanset start, sync \rchanset | \emptyset \rpar
+      \also
+      \t1 \dots
+      \also
+      \t1 \lpar \emptyset | \lchanset start, sync \rchanset | \emptyset \rpar
+      \also
+      \circblockopen
+        \circmu X \circspot start \then notify~!~n \then \Skip \circseq sync \then X
+      \circblockclose
+    \circblockclose
+    \also
+    \t1 \lpar \emptyset | \lchanset reset, notify, sync \rchanset | \emptyset \rpar
+    \also
+    \circblockopen
+      \circvar active : \power ~ (1 \upto n) \circspot
+      \\
+      \t1 \circmu X \circspot
+      \circblockopen
+        (reset \then active := 1 \upto n)
+        \\
+        \t1 \extchoice
+        \\
+        (notify~?~x \then
+        \circblockopen
+          active := active \setdiff \{x\} \circseq
+          \\
+          \circif active = \emptyset \circthen done \then \Skip\\
+          \circelse ~ \lnot active = \emptyset \circthen \Skip\\
+          \circfi
+        \circblockclose)
+      \circblockclose
+      \circseq X
+    \circblockclose
+  \circblockclose
+  \circhide \lchanset reset \rchanset
+\end{circusaction*}
+\end{pattern}

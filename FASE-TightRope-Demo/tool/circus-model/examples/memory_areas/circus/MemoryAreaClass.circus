@@ -1,0 +1,54 @@
+\begin{zsection}
+  \SECTION ~ MemoryAreaClass ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{ohcircus}
+  \circclass ~ MemoryAreaClass ~ \circdef ~ \circbegin
+\end{ohcircus}
+
+\begin{schema}{\circstateignore MemoryAreaState}
+  size : long\\
+  consumed : long 
+\where
+  consumed \leq size
+\end{schema}
+
+\begin{schema}{\circinitial MemoryAreaStateInit}
+  MemoryAreaState~'
+\where
+  consumed' = 0
+\end{schema}
+
+\begin{schema}{\circpublic MemoryArea\_size}
+  \Xi MemoryAreaState\\
+  result? : long
+\where
+  result? = size
+\end{schema}
+
+\begin{schema}{\circpublic MemoryArea\_memoryConsumed}
+  \Xi MemoryAreaState\\
+  result? : long
+\where
+  result? = consumed
+\end{schema}
+
+\begin{schema}{\circpublic MemoryArea\_memoryRemaining}
+  \Xi MemoryAreaState\\
+  result? : long
+\where
+  result? = size - consumed
+\end{schema}
+
+\begin{ohcircus}
+  \circend
+\end{ohcircus}
+\vspace{0.5em}
+
+\begin{zed}
+  MemoryAreaClass ~ == ~ MemoryAreaState
+\end{zed}
+
+\begin{zed}
+  MemoryArea ~ == ~ \circreftype MemoryAreaClass
+\end{zed}

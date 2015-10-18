@@ -1,0 +1,73 @@
+<dump>
+  <flight_plan name="demo 1" lon0="10.5481887029753594" max_dist_from_home="500" ground_alt="0" security_height="25" qfu="270" alt="250" lat0="52.3163232526151631">
+    <waypoints>
+      <waypoint y="0.0" name="HOME" x="0.0" alt="0."/>
+      <waypoint name="road_start" x="-337" y="17" alt="60."/>
+      <waypoint name="road_end" x="238" y="-30" alt="40."/>
+    </waypoints>
+    <blocks>
+      <block name="Takeoff" no="0">
+        <exception cond="estimator_z > ground_alt+25" deroute="survey road 1"/>
+        <set value="0" var="kill_throttle" no="0"/>
+        <set value="0" var="estimator_flight_time" no="1"/>
+        <set value="1" var="launch" no="2"/>
+        <go from="HOME" throttle="1.0" vmode="throttle" wp="road_start" pitch="15" no="3"/>
+      </block>
+      <block name="survey road 1" no="1">
+        <go from="HOME" wp="road_start" no="0"/>
+        <go wp="road_end" no="1"/>
+      </block>
+      <block name="survey road 2" no="2">
+        <while cond="TRUE" no="0">
+          <go wp="road_start" from="road_end" hmode="route" no="1"/>
+          <go wp="road_end" from="road_start" hmode="route" no="2"/>
+        </while>
+      </block>
+      <block name="circle" no="3">
+        <circle wp="road_end" alt="ground_alt+50" radius="75" no="0"/>
+      </block>
+      <block name="HOME" no="4">
+        <home no="0"/>
+      </block>
+    </blocks>
+    <exceptions/>
+  </flight_plan>
+  <stages>
+    <stage block="4" block_name="HOME" stage="0">
+      <home no="0"/>
+    </stage>
+    <stage block="3" block_name="circle" stage="0">
+      <circle wp="road_end" alt="ground_alt+50" radius="75" no="0"/>
+    </stage>
+    <stage block="2" block_name="survey road 2" stage="2">
+      <go wp="road_end" from="road_start" hmode="route" no="2"/>
+    </stage>
+    <stage block="2" block_name="survey road 2" stage="1">
+      <go wp="road_start" from="road_end" hmode="route" no="1"/>
+    </stage>
+    <stage block="2" block_name="survey road 2" stage="0">
+      <while cond="TRUE" no="0">
+        <go wp="road_start" from="road_end" hmode="route" no="1"/>
+        <go wp="road_end" from="road_start" hmode="route" no="2"/>
+      </while>
+    </stage>
+    <stage block="1" block_name="survey road 1" stage="1">
+      <go wp="road_end" no="1"/>
+    </stage>
+    <stage block="1" block_name="survey road 1" stage="0">
+      <go from="HOME" wp="road_start" no="0"/>
+    </stage>
+    <stage block="0" block_name="Takeoff" stage="3">
+      <go from="HOME" throttle="1.0" vmode="throttle" wp="road_start" pitch="15" no="3"/>
+    </stage>
+    <stage block="0" block_name="Takeoff" stage="2">
+      <set value="1" var="launch" no="2"/>
+    </stage>
+    <stage block="0" block_name="Takeoff" stage="1">
+      <set value="0" var="estimator_flight_time" no="1"/>
+    </stage>
+    <stage block="0" block_name="Takeoff" stage="0">
+      <set value="0" var="kill_throttle" no="0"/>
+    </stage>
+  </stages>
+</dump>

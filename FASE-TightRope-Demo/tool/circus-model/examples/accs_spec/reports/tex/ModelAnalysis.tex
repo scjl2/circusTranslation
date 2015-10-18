@@ -1,0 +1,69 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                Model Analysis                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Model Analysis}
+
+\subsection{State Machine}
+
+Part of the behavioural requirements of the cruise controller are captured by a state transition diagram~\cite{Wel04}. In this section we discuss its impact on the formal model, and the assumptions we make about its semantics.
+
+\paragraph{Semantics of Transitions}
+
+In the original diagram in~\cite{Wel04}, which is based on the cruise controller case study in~\cite{HP87}, we do not have an outgoing transition for every event from every state. In one or two cases this was an erroneous omission, but there are also cases where it may be viewed as intentional; specifically with regards to the lever events which it disallows from certain states. For instance, we may prohibit the $lever~.~activate$ event from a state where we are braking or running in low gear.
+
+The questions is hence what does it \emph{mean} if there is no outgoing transition for a particular event in a given state. The simple answer is that such an event cannot occur. Thus we either make an assumption that the environment will `behave' and never engage in such an event, or otherwise the interface, namely the hardware, prohibits it by some physical mechanism. A locking contraption, for example, prevent us from putting the lever into the activate position if we are not running in top gear.
+
+A better view is that events in the specification do not actually correspond to physical happenings, but already involve some level of interpretation by the hardware and software. For one, it might not be possible to stop the brake pedal from being pressed, or to stop the command lever from being operated. And besides it should not fall to some physical mechanism in the lever to determine whether we can enter cruise mode or not~(such a mechanism may be a critical point of failure). Hence, I believe a more coherent view is:
+%
+\begin{center}
+\bluebox{Events generally do not correspond to physical happenings but detectable interrupts.}
+\end{center}
+%
+This means that we do not necessarily assume there is something physical that stops the user from switching the position of the lever or pressing the brake pedal at the same time. Instead, we assume that those events give rise to interrupts, and the interrupts correspond to interactions with the environment where there are first observed from the program's point of view. The underlying physical events causing the interrupts are a different issue, and we may model the relationship between physical events and interrupts, or we may not. If we do, different approaches are conceivable; however, in the cruise controller we decide not to.
+
+This means that in the cruise controller, effectively, the program can `prohibit' events by disabling interrupts. It does not necessarily mean that we cannot physically press the brake pedal or operate the lever at certain points in time; if we do, there could be different resolutions such as ignoring the event or buffering it, but we choose it is outside the scope of our program model to formalise this relationship.
+%
+\begin{center}
+\bluebox{Physical happenings are an aspect of the model that we may consider, or may not consider.}
+\end{center}
+%
+An implication of this is that when we subsequently impose requirements on the inter-arrival time of aperiodic events, this does not actually relate to the physical events but the \emph{mechanism that responds to physical events}.
+
+Such mechanism may de-bounce the contact of a switch, limit the frequency of events in a certain interval, or ensure that events have a minimal inter-arrival time. Indeed, no software system will be able to respond in a scenario where events can take place in arbitrary short succession and density. If we did model the relationship between physical happenings and interrupts, there would need to be requirements that physical happenings cannot occur in arbitrary short succession, or if they do they may be ignored by the application. But this is not a problem, just a level of detail that we chose not to treat in the program model.
+
+\paragraph{Behavioural Requirements}
+
+The state machine fulfils two purposes. First, it restricts interaction of the environment with the program. For instance, if we are running in a low gear and the driver tries to put the lever into the activate position, nothing should happen~(or alternatively it may not even be possible). In an SCJ implementation this effectively requires to take control of interrupts within the handler methods. The implementation must also ensure perfect synchronity:~that is no event (interrupt) can occur before the transition and action according to some earlier event has been carried out, whatever this means.
+
+But even identifying the actions that correspond to the transitions~(we can think of them as internal outputs) we still have the two design alternatives: should lever interrupts be possible all the time? The cruise controller implementation in~\cite{Wel04} does not restrict interrupts, and hence suggests an abstract model where we can operate the lever even in a state where activation does not succeed. Here, simply nothing happens in the system. In accordance, I present two revised models for the cruise controller state transition diagram:~one that restricts interaction via lever event~(Appendix~\ref{apx:asm1}) and one where lever events can always occur~(Appendix~\ref{apx:asm2}). My conjecture after talking to Andy Wellings is that both models are implementable and make sense. We could even envisage a third model where the actions are factored out into a separate state diagram, however I decided that this separation does not aid the understanding of the system.
+%
+\begin{center}
+\bluebox{The purpose of state diagrams is twofold:~restrict user interaction and specify associated actions.}
+\end{center}
+%
+We may also conclude that we can capture such diagrams by a particular abstract modelling pattern in {\Circus} as well as a particular implementation that may need to take charge of enabling / disabling interrupts. It is clear, however, that the diagram captures and essential part of the behavioural requirements, and cannot be ignored in terms of providing a model for the entire cruise control system. We could, of course, express it as a process in different ways, namely by changing the representation of the state. However, my personal take is that we should allow the requirements engineer to use whatever notation seems most familiar and easy to understand, and rather shift the problem in terms of giving a semantics to that notation~(here some state chart formalism) in terms of our unifying {\Circus} notation.
+
+\paragraph{Timing Requirements}
+
+Where no timing information is giving in a state transition diagram, one typically assume that transitions are \emph{instantaneous}, hence take not time. I believe that in our interpretation of the diagram we ought to relax this view:~rather than saying something explicit about time, we acknowledge that we simply do not have information how much time particular transitions take. The reasons for this are:
+%
+\begin{enumerate}
+  \item Time should be a separate concern from the behavioural perspective of the diagram.
+
+  \item In a real system it may be too strong to assume that transitions are instantaneous. A program may take some time to record them in suitable data objects, and knowledge of that time may be a crucial factor in reasoning about the correctness of the SCJ program.
+\end{enumerate}
+%
+In summary, the only invariant requirement we make is that of perfect synchroniety, namely that events can only take place when transitions have been fully committed and the underlying actions have been performed. Time, at the level of the state diagram, is only an issue as far as the diagram is \emph{implementable}. And for this we identify a certain amount of time, captured by non-deterministic waits in the abstract model, that enables an implementation to carry out the internal data operations that correspond to the state changes.
+
+On the other hand, if some (or all) actions of transitions are performed \emph{synchronously} rather than \emph{asynchronously}, and hence we anticipate they take a specific amount of time, this information needs to be added to the model. Here, we do not examine in detail how this may be done. An obvious possibility is to each annotate transition with a minimal time or alternatively time interval that reflects the time the actual system (program) may take to carry out the underlying action.
+
+In the cruise controller, the actions of transitions are all asynchronous and considered as virtually instantaneous. In the model, they correspond to internal events that request activation ($activate$), deactivation ($deactivate$) and acceleration ($accelerate$) mode. Thus, the only time we have to account for is effectively to allow the program to record the state transitions.
+%
+\begin{center}
+\bluebox{Actions associated with transitions in the cruise controller diagram are executed asynchronously.}
+\end{center}
+
+\paragraph{Conclusions}
+
+State charts seem to be a formalism that engineers are familiar with. Hence, it is worth to investigate if we can integrate them with our general approach of specifying systems in {\Circus}. Clearly, there are some semantic issues that need to be addressed, and the objective here was at least to shed some light into them. Eventually, we are seeking for a notation that will hide the details of the {\Circus} model, and it is conceivable that such a notation will borrow from different languages and notations used for functional, behavioural and timing requirements by defining a semantics for them in terms of {\Circus} while ensuring non-interference of modelling concerns. The account here is mostly given so that the {\Circus} models presented in the next section can be traced back to the diagrams in the appendix.

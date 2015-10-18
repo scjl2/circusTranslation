@@ -1,0 +1,22 @@
+\begin{zsection}
+  \SECTION ~ MainHandlerClass ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{ohcircus}
+  \circclass ~ MainHandlerClass ~ \circdef ~ \circbegin
+\end{ohcircus}
+
+\begin{schema}{\circstateignore MainHandler\_State}
+\end{schema}
+
+\begin{schema}{\circinitial MainHandler\_Init}
+  MainHandler\_State~'
+\end{schema}
+
+\begin{ohcircus}
+  \circend
+\end{ohcircus}
+
+\begin{zed}
+  MainHandlerClass ~ == ~ MainHandler\_State
+\end{zed}

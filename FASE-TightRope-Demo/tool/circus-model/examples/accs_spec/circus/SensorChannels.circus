@@ -1,0 +1,65 @@
+\begin{zsection}
+  \SECTION ~ SensorChannels ~ \parents ~ Preliminaries
+\end{zsection}
+
+\subsection{Shaft Sensor}
+
+The following event is raised with each rotation of the wheel shaft. It is used by the speed monitor component to periodically calculate the current speed of the vehicle.
+%
+\begin{circus}
+  \circchannel ~ wheel\_shaft
+\end{circus}
+
+\subsection{Engine Sensor}
+
+The following parameterised event occurs when the engine is turned on and off.
+%
+\begin{circus}
+  \circchannel ~ engine : BOOL
+\end{circus}
+
+\subsection{Brake Sensor}
+
+The following events occur when the brake pedal is engaged and subsequently
+released.
+%
+\begin{circus}
+  \circchannel ~ brake\_engaged, brake\_disengaged
+\end{circus}
+
+\subsection{Gear Sensor}
+
+The following events occur when the driver changes into and out of top gear.
+%
+\begin{circus}
+  \circchannel ~ top\_gear\_engaged, top\_gear\_disengaged
+\end{circus}
+
+\subsection{Lever Sensor}
+
+The following type is used for the possible positions (input values) of the command lever.
+%
+\begin{zed}
+  LEVER ::=\\
+  \t1 ACTIVATE |\\
+  \t1 DEACTIVATE |\\
+  \t1 START\_ACCELERATION |\\
+  \t1 STOP\_ACCELERATION |\\
+  \t1 RESUME
+\end{zed}
+
+\nid
+The following parametrised event occurs when the command lever is operated.
+%
+\begin{circus}
+  \circchannel ~ lever : LEVER
+\end{circus}
+
+\subsection{Channel Sets}
+
+We define a channel set for all sensor events of the cruise controller.
+%
+\begin{circus}
+  \circchannelset SensorEvents ~ ==\\
+  \t1 \lchanset engine, brake\_engaged, brake\_disengaged, top\_gear\_engaged, top\_gear\_disengaged, lever \rchanset
+\end{circus}

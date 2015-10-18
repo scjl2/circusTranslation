@@ -1,0 +1,8 @@
+\begin{zsection}
+  \SECTION ~ WheelShaftFW ~ \parents ~ EventHandler, HandlerIds
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circprocess WheelShaftFW ~ \circdef ~ EventHandlerFW(WheelShaftId)
+\end{circus}

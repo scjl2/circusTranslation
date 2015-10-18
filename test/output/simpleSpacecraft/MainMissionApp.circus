@@ -1,36 +1,44 @@
 \begin{zsection}
   \SECTION ~ MainMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , MainMissionClass
+
+  \t1 , MainMissionMethChan
 \end{zsection}
 %\begin{circus}
-%\circchannelset MissionAppSync == \\
+%\circchannelset MainMissionAppSync == \\
 %	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
 %\end{circus}
 
 %\begin{circus}
-%\circchannelset MissionAppChanSet == \\
+%\circchannelset MainMissionAppChanSet == \\
 % \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
 
-%    register~.~SPModeChanger~.~MainMission 
-%    register~.~EnvironmentMonitor~.~MainMission 
-%    register~.~ControlHandler~.~MainMission 
-%    register~.~AperiodicSimulator~.~MainMission 
 %\rchanset
 %\end{circus}
 
 \begin{circus}
-\circprocess MainMissionApp \circdef \circbegin
+\circprocess MainMissionApp \circdef  \circbegin
 \end{circus}
+
+\begin{schema}{State}
+  this : \circreftype MainMissionClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew MainMissionClass()\\ 
+\end{schema}
 
 \begin{circusaction}
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~MainMission \then \\
   
-	register~!~SPModeChanger~!~MainMission \then   \\
-	register~!~EnvironmentMonitor~!~MainMission \then   \\
-	register~!~ControlHandler~!~MainMission \then   \\
-	register~!~AperiodicSimulator~!~MainMission \then   \\
 
 
   initializeRet~.~MainMission \then \\
@@ -42,23 +50,45 @@ InitializePhase \circdef \\
 CleanupPhase \circdef  \\
 \circblockopen
  cleanupMissionCall~.~MainMission \then \\
- cleanupMissionRet~.~MainMission~?~\false \then \\
+
+ cleanupMissionRet~.~MainMission~!~\false \then \\
  \Skip
 \circblockclose
 \end{circusaction}
 
 \begin{circusaction}
-Methods \circdef \\
+environmentBadMeth \circdef 
+\\
+\circblockopen
+environmentBadCall~.~MainMission 
+\then \\
+this~.~environmentBad()  \circseq  \\
+
+environmentBadRet~.~MainMission \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
+%
+%
+
+\begin{circusaction}
+Methods \circdef 
 \circblockopen
 	InitializePhase \\
 	\extchoice \\
-	CleanupPhase
+	CleanupPhase \\
+%
+\extchoice \\
+	environmentBadMeth \\ 
+%
+%
 \circblockclose 
 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_mission\_app~.~MainMission \then \Skip)
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~MainMission \then \Skip)
 \end{circusaction}
 
 \begin{circus}

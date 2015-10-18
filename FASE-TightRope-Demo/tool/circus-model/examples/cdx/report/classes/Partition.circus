@@ -1,0 +1,94 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ Partition ~ \parents ~ cdx\_preliminaries, cdx\_mock\_objects
+\end{zsection}
+\end{comment}
+
+\begin{comment}
+\begin{zed}
+  ListArray[X] ~ == ~ Array[List[X]]
+\end{zed}
+\end{comment}
+
+%%Zword \Partition PartitionClass
+
+\newcommand{\Partition}{Partition}
+
+%%Zword \idarg idarg
+
+\newcommand{\idarg}{id}
+
+\begin{circusflow}
+\begin{circus}
+  \circclass ~ \Partition ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore PartitionState}
+  \circprivate parts : ListArray[List[Motion]];\\
+  \circprivate counter : int
+\where
+  parts \neq \circnull \land 0 \leq counter < parts.length~\emptytuple
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ PartitionState
+\end{circusaction}
+\end{comment}
+%
+\begin{circusmethod}
+  \circinitial ~ Init ~ \circdef \circval n : int \circspot
+  \\
+  \t1
+  \circblockopen
+    parts := \circnewM ~ ListArray(n) \circseq
+    \\
+    \circblockopen
+      \circfor index = 0 \circto parts~.~length~\emptytuple - 1 \circspot
+      \\
+      \t1 parts~.~setA(index, \circnewM LinkedList())
+    \circblockclose
+    \circseq \\
+    counter := 0
+  \circblockclose
+\end{circusmethod}
+%
+\begin{circusmethod}
+  \circpublic ~ \circsync ~ clear ~ \circdef\\
+  \t1
+  \circblockopen
+    (\circfor index = 0 \circto parts~.~length~\emptytuple - 1 \circspot parts~.~clear~\emptytuple) \circseq
+    \\
+    counter := 0
+  \circblockclose
+\end{circusmethod}
+\extracircusvspace
+%
+\begin{circusmethod}
+  \circpublic ~ \circsync ~ recordVoxelMotions(motions : List[Motions]) ~ \circdef
+  \\
+  \t1
+  \circblockopen
+    parts~.~getA(counter)~.~add(motions) \circseq
+    \\
+    counter := (counter + 1) \mod parts~.~length~\emptytuple
+  \circblockclose
+\end{circusmethod}
+\extracircusvspace
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ getDetectorWork ~ \circdef ~ \circval \idarg : int;
+  \\
+  \t1 \circres ~ \circret : List[List[Motion]] \circspot \circret := parts~.~getA(\idarg - 1)
+\end{circusaction}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}

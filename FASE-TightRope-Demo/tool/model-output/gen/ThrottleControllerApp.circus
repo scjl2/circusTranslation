@@ -1,0 +1,114 @@
+
+\begin{circus}
+  \circprocess ~ ThrottleControllerApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+  \circstate State ~ == ~ [this : \circreftype ThrottleControllerClass]
+\end{circusaction}
+%
+\begin{circusaction}
+  Init ~ == ~ ThrottleControllerInit~?~obj \then this := obj
+\end{circusaction}
+%
+\begin{circusaction}
+  increaseVoltageMeth ~ \circdef ~ \\
+  \t1 increaseVoltageCall~.~ThrottleHId ~ \circthen ~ \\
+  \t1
+  \circblockopen
+  \circblockopen \circif ~ (voltage \leq 8) ~ \circthen ~ \\ \t1 \circblockopen voltage := voltage + VOLTAGE\_INCREMENT \circseq \\ voltage := Math.min(voltage, 8) ~ \circblockclose \\ \circelse ~ \lnot (voltage \leq 8) \circthen \Skip \\ \circfi \circseq \\ writeVoltage() \circblockclose \circseq
+  \\
+  increaseVoltageRet~.~ThrottleHId ~ \circthen ~ \Skip
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  decreaseVoltageMeth ~ \circdef ~ \\
+  \t1 decreaseVoltageCall~.~ThrottleHId ~ \circthen ~ \\
+  \t1
+  \circblockopen
+  \circblockopen \circif ~ (voltage \geq 0) ~ \circthen ~ \\ \t1 \circblockopen voltage := voltage - VOLTAGE\_INCREMENT \circseq \\ voltage := Math.max(voltage, 0) ~ \circblockclose \\ \circelse ~ \lnot (voltage \geq 0) \circthen \Skip \\ \circfi \circseq \\ writeVoltage() \circblockclose \circseq
+  \\
+  decreaseVoltageRet~.~ThrottleHId ~ \circthen ~ \Skip
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  resetVoltageMeth ~ \circdef ~ \\
+  \t1 resetVoltageCall~.~ThrottleHId ~ \circthen ~ \\
+  \t1
+  \circblockopen
+  \circblockopen voltage := 0 ~ \circseq \\ writeVoltage() \circblockclose \circseq
+  \\
+  resetVoltageRet~.~ThrottleHId ~ \circthen ~ \Skip
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  Methods ~ \circdef ~ \\
+  \t1
+  \circblockopen
+  increaseVoltageMeth ~ \extchoice ~ \\
+  decreaseVoltageMeth ~ \extchoice ~ \\
+  resetVoltageMeth
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  handleAsyncEvent ~ \circdef ~
+  \\
+  \t1
+\circblockopen \circif ~ schedule\_throttle = jtrue ~ \circthen ~ \\ \t1 \circblockopen \circif ~ accelerating = jtrue ~ \circthen ~ \\ \t1 \circblockopen increaseVoltage() \circblockclose \\ \circelse ~ \lnot accelerating = jtrue ~ \circthen ~ \\ \t1 \circblockopen \circif ~ maintainSpeed = jtrue ~ \circthen ~ \\ \t1 \circblockopen \circif ~ ((cruiseSpeed - speedo.getCurrentSpeed()) > 2) ~ \circthen ~ \\ \t1 \circblockopen increaseVoltage() \circblockclose \\ \circelse ~ \lnot ((cruiseSpeed - speedo.getCurrentSpeed()) > 2) ~ \circthen ~ \\ \t1 \circif ~ ((cruiseSpeed - speedo.getCurrentSpeed()) < -2) ~ \circthen ~ \\ \t1 \circblockopen resetVoltage() \circblockclose \\ \circelse ~ \lnot ((cruiseSpeed - speedo.getCurrentSpeed()) < -2) ~ \circthen ~ \\ \t1 \circblockopen \circvar volts : float \circspot volts := (\invalid * ((cruiseSpeed - speedo.getCurrentSpeed()) + \invalid)) ~ \circseq \\ \circif ~ (volts > voltage) ~ \circthen ~ \\ \t1 \circblockopen increaseVoltage() \circblockclose \\ \circelse ~ \lnot (volts > voltage) ~ \circthen ~ \\ \t1 \circblockopen decreaseVoltage() \circblockclose \\ \circfi \circblockclose \\ \circfi \\ \circfi \circblockclose \\ \circelse ~ \lnot maintainSpeed = jtrue \circthen \Skip \\ \circfi \circblockclose \\ \circfi \circblockclose \\ \circelse ~ \lnot schedule\_throttle = jtrue \circthen \Skip \\ \circfi \circblockclose\end{circusaction}
+%
+\begin{circusaction}
+  Execute ~ \circdef ~ enter\_dispatch~.~ThrottleHId \then
+  \\
+  \t1 (Dispatch \lpar \{this\} | \lchanset release\_handler \rchanset | \emptyset \rpar Release) 
+\end{circusaction}
+%
+\begin{circusaction}
+  Dispatch ~ \circdef ~ \\
+  \t1
+  \circblockopen
+    \circmu X \circspot
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          Methods ~ ~ \extchoice ~
+          \\
+          release\_handler~.~ThrottleHId ~ \then
+          \\
+          handleAsyncEvent
+        \circblockclose
+        \circseq X
+      \circblockclose
+      \\
+      \extchoice
+      \\
+      leave\_dispatch~.~ThrottleHId \then \Skip
+    \circblockclose
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  Release ~ \circdef ~ \\
+  \t1
+  \circblockopen
+    \circmu X \circspot
+    \circblockopen
+      release\_handler~.~ThrottleHId \then \Skip \circseq
+      \\
+      \circwait this~.~period
+    \circblockclose
+  \circblockclose
+  \\
+  \t2 \circinterrupt ~ leave\_dispatch~.~ThrottleHId \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot (\circmu X \circspot Init \circseq Execute \circseq X) \circinterrupt end\_mission\_fw \then \Skip
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

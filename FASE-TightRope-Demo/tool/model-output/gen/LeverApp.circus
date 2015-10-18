@@ -1,0 +1,56 @@
+
+\begin{circus}
+  \circprocess ~ LeverApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+  \circstate State ~ == ~ [this : \circreftype LeverClass]
+\end{circusaction}
+%
+\begin{circusaction}
+  Init ~ == ~ LeverInit~?~obj \then this := obj
+\end{circusaction}
+%
+\begin{circusaction}
+  Methods ~ \circdef ~ \Stop
+\end{circusaction}
+%
+\begin{circusaction}
+  handleAsyncEvent ~ \circdef ~ \circval inp : LEVEL\_INPUT \circspot 
+  \\
+  \t1
+\circblockopen \circvar event : int \circspot event := \invalid ~ \circseq \\ \circif ~ event = ACTIVATE ~ \then \\ \t1 \circblockopen cruise.activate() \circseq \\ \Skip \circblockclose \\ \circelse ~ ~ event = DEACTIVATE ~ \then \\ \t1 \circblockopen cruise.deactivate() \circseq \\ \Skip \circblockclose \\ \circelse ~ ~ event = START\_ACCELERATING ~ \then \\ \t1 \circblockopen cruise.startAccelerating() \circseq \\ \Skip \circblockclose \\ \circelse ~ ~ event = STOP\_ACCELERATING ~ \then \\ \t1 \circblockopen cruise.stopAccelerating() \circseq \\ \Skip \circblockclose \\ \circelse ~ ~ event = RESUME ~ \then \\ \t1 \circblockopen cruise.resume() \circseq \\ \Skip \circblockclose \\ \circelse ~ ~ \lnot \circblockopen event = ACTIVATE \lor \\ event = DEACTIVATE \lor \\ event = START\_ACCELERATING \lor \\ event = STOP\_ACCELERATING \lor \\ event = RESUME \lor \\ false \circblockclose ~ \then \\ \t1 \circblockopen \Div \circblockclose \\ \circfi \circblockclose\end{circusaction}
+%
+\begin{circusaction}
+  Execute ~ \circdef ~ enter\_dispatch~.~LeverHId \then Dispatch
+\end{circusaction}
+%
+\begin{circusaction}
+  Dispatch ~ \circdef ~ \\
+  \t1
+  \circblockopen
+    \circmu X \circspot
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          Methods ~ ~ \extchoice ~
+          \\
+          (lever~?~inp \then handleAsyncEvent(inp))
+        \circblockclose
+        \circseq X
+      \circblockclose
+      \\
+      \extchoice
+      \\
+      leave\_dispatch~.~LeverHId \then \Skip
+    \circblockclose
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot (\circmu X \circspot Init \circseq Execute \circseq X) \circinterrupt end\_mission\_fw \then \Skip
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

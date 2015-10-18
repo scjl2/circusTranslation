@@ -1,0 +1,8 @@
+\begin{zsection}
+  \SECTION ~ LeverMethChan ~ \parents ~ scj\_toolkit, scj\_library, LeverClass
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circchannel ~ LeverInit : LeverClass
+\end{circus}

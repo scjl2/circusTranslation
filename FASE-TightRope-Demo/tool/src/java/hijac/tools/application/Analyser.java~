@@ -1,0 +1,267 @@
+package hijac.tools.application;
+
+import hijac.tools.analysis.AnalysisError;
+import hijac.tools.analysis.Domain;
+import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.analysis.SCJClassTag;
+import hijac.tools.analysis.SCJMethodTag;
+import hijac.tools.analysis.TaskProcessor;
+import hijac.tools.analysis.tasks.ClassTagsTask;
+import hijac.tools.analysis.tasks.MethodCallDepTask;
+import hijac.tools.analysis.tasks.MethodTagsTask;
+import hijac.tools.collections.Relation;
+import hijac.tools.collections.Sorters;
+import hijac.tools.compiler.SCJCompilationConfig;
+import hijac.tools.compiler.SCJCompilationException;
+import hijac.tools.compiler.SCJCompilationTask;
+import hijac.tools.config.Config;
+import hijac.tools.config.Statics;
+import hijac.tools.config.Types;
+import hijac.tools.utils.ShellUtils;
+import hijac.tools.utils.Strings;
+import hijac.tools.utils.StringConverter;
+
+import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
+
+/**
+ * @author Frank Zeyda
+ * @version $Revision: 226 $
+ */
+public class Analyser {
+   public static SCJAnalysis ANALYSIS;
+
+   static {
+      Statics.kickstart();
+   }
+
+   /* Creations of various analysis reports. */
+
+   public static void printReports() {
+      if (Config.getTypesReport()) {
+         createTypesReport();
+      }
+      if (Config.getMethodsReport()) {
+         createMethodsReport();
+      }
+      if (Config.getMethodDepReport()) {
+         createDependsReport();
+      }
+      ShellUtils.hline();
+   }
+
+   /* Creation of the types report. */
+
+   public static void createTypesReport() {
+      ShellUtils.hline();
+      System.out.println("[Types Report]");
+      ShellUtils.hline();
+      Map<TypeElement, SCJClassTag> class_tags =
+         ANALYSIS.get(ClassTagsTask.KEY1);
+      Set<TypeElement> classes = ANALYSIS.get(ClassTagsTask.KEY2);
+      for (TypeElement type_element : Sorters.TypeElement(classes)) {
+         assert class_tags.containsKey(type_element);
+         Set<TypeElement> fw_super = getFrameworkSuperclasses(type_element);
+         Set<TypeElement> fw_inter = getFrameworkInterfaces(type_element);
+         if (!fw_super.isEmpty() || !fw_inter.isEmpty()) {
+            System.out.print("[F] ");
+         }
+         else if (Types.isJavaType(type_element.getQualifiedName())) {
+            System.out.print("[J] ");
+         }
+         else {
+            System.out.print("[U] ");
+         }
+         System.out.println(class_tags.get(type_element));
+         if (!fw_super.isEmpty()) {
+            System.out.print("  [EXTENDS] ");
+            System.out.println(toStringFrameworkType(fw_super));
+         }
+         if (!fw_inter.isEmpty()) {
+            System.out.print("  [IMPLEMENTS] ");
+            System.out.println(toStringFrameworkType(fw_inter));
+         }
+      }
+   }
+
+   /* Creation of the methods report. */
+
+   public static void createMethodsReport() {
+      ShellUtils.hline();
+      System.out.println("[Methods Report]");
+      ShellUtils.hline();
+      Map<ExecutableElement, SCJMethodTag>
+         method_tags = ANALYSIS.get(MethodTagsTask.KEY1);
+      Relation<ExecutableElement, ExecutableElement>
+         call_dep = ANALYSIS.get(MethodCallDepTask.KEY);
+      Set<ExecutableElement> methods = ANALYSIS.get(MethodTagsTask.KEY2);
+      for (ExecutableElement method : Sorters.ExecutableElement(methods)) {
+         assert method_tags.containsKey(method);
+         SCJMethodTag method_tag = method_tags.get(method);
+         String method_str = method_tag.toString();
+         method_str = prependDomain(
+            method_str, method_tag.getDomain());
+         System.out.println(method_str);
+         /* Display the framework methods called. */
+         if (method_tag.callsFramework()) {
+            for (ExecutableElement callee : call_dep.image(method)) {
+               assert method_tags.containsKey(callee);
+               SCJMethodTag callee_tag = method_tags.get(callee);
+               if (callee_tag.isFramework()) {
+                  System.out.println("-> " + callee_tag);
+               }
+            }
+         }
+      }
+   }
+
+   /* Creation of the method dependency report. */
+
+   public static void createDependsReport() {
+      ShellUtils.hline();
+      System.out.println("[Call Dependencies]");
+      ShellUtils.hline();
+      Map<TypeElement, SCJClassTag> class_tags =
+         ANALYSIS.get(ClassTagsTask.KEY1);
+      Map<ExecutableElement, SCJMethodTag>
+         method_tags = ANALYSIS.get(MethodTagsTask.KEY1);
+      Relation<ExecutableElement, ExecutableElement>
+         call_dep = ANALYSIS.get(MethodCallDepTask.KEY);
+      Set<TypeElement> classes = ANALYSIS.get(ClassTagsTask.KEY2);
+      for (TypeElement type_element : Sorters.TypeElement(classes)) {
+         assert class_tags.containsKey(type_element);
+         SCJClassTag class_tag = class_tags.get(type_element);
+         System.out.println("[Class " + class_tag.getName() + "]");
+         List<ExecutableElement> scan = new ArrayList<ExecutableElement>();
+         List<? extends Element> elements = type_element.getEnclosedElements();
+         /* Using ExecutableElementComparator shouldn't make a difference. */
+         scan.addAll(Sorters.LEXICAL(ElementFilter.constructorsIn(elements)));
+         scan.addAll(Sorters.LEXICAL(ElementFilter.methodsIn(elements)));
+         for (ExecutableElement method : scan) {
+            /* The following may be too strong. For instance, there is an
+             * implicit method valueOf(String) in the CarEventType enum of,
+             * the ACCS which, however, cannot be found in the code. */
+            if (!method_tags.containsKey(method)) {
+               System.out.println("[WARNING] Ignoring " +
+                  method.getEnclosingElement() + "." + method.toString() +
+                  " which does not have a tag recorded.");
+               continue;
+            }
+            SCJMethodTag method_tag = method_tags.get(method);
+            System.out.print("  [");
+            System.out.print(method_tag.isCtor() ? "Constructor" : "Method");
+            System.out.print(" ");
+            System.out.println(method_tag.toString() + "]");
+            for (ExecutableElement callee :
+               Sorters.ExecutableElement(call_dep.image(method))) {
+               assert method_tags.containsKey(callee);
+               SCJMethodTag callee_tag = method_tags.get(callee);
+               System.out.println(
+                  "    [Calls " + callee_tag.toString() + "]");
+            }
+         }
+      }
+   }
+
+   /* Utility functions used when creating the various reports. */
+
+   public static Set<TypeElement>
+      getFrameworkSuperclasses(TypeElement type_element) {
+      Set<TypeElement> framework_types = new HashSet<TypeElement>();
+      for (TypeElement super_type :
+         ANALYSIS.getAllSuperclasses(type_element)) {
+         if (Types.isFrameworkType(super_type.getQualifiedName())) {
+            framework_types.add(super_type);
+         }
+      }
+      return framework_types;
+   }
+
+   public static Set<TypeElement>
+      getFrameworkInterfaces(TypeElement type_element) {
+      Set<TypeElement> framework_types = new HashSet<TypeElement>();
+      for (TypeElement super_type :
+         ANALYSIS.getAllInterfaces(type_element)) {
+         if (Types.isFrameworkType(super_type.getQualifiedName())) {
+            framework_types.add(super_type);
+         }
+      }
+      return framework_types;
+   }
+
+   public static String toStringFrameworkType(
+      Collection<TypeElement> type_elements) {
+      StringConverter<TypeElement> conv =
+         new StringConverter<TypeElement>() {
+            public String toString(TypeElement e) {
+               return e.getSimpleName().toString();
+            }
+      };
+      return Strings.toString(type_elements, conv, "", "", ", ");
+   }
+
+   public static String prependDomain(String str, Domain domain) {
+      switch (domain) {
+         case FRAMEWORK:
+            str = "[SCJ] " + str; break;
+         case JAVA:
+            str = "[JAVA] " + str; break;
+         case USER:
+            str = "[USER] " + str; break;
+         default:
+            assert false;
+      }
+      return str;
+   }
+
+   /* Main Program */
+
+   public static void main(String[] args) throws IOException {
+      SCJCompilationTask compiler =
+         new SCJCompilationTask(SCJCompilationConfig.getDefault());
+
+      System.out.println("Compiling SCJ sources...");
+
+      try {
+         ANALYSIS = SCJAnalysis.create(compiler);
+      }
+      catch(SCJCompilationException e) {
+         e.getDiagnostics().print(System.out);
+         System.exit(-1);
+      }
+
+      System.out.println("Analyising SCJ sources...");
+
+      TaskProcessor processor = TaskProcessor.DEFAULT;
+
+      if (processor.invoke(ANALYSIS)) {
+         System.out.println("All tasks succeeded.");
+      }
+      else {
+         System.out.println("Task execution failed.");
+         for (AnalysisError error : processor.getErrors()) {
+            System.out.println(error);
+         }
+         /* So that we can analyse the icecap SCJ library... */
+         System.out.println("However, let's try and continue...");
+         /*System.exit(-1);*/
+      }
+
+      System.out.println("Printing reports...");
+
+      printReports();
+
+      System.exit(0);
+   }
+}

@@ -1,0 +1,6 @@
+Notes added by Frank Zeyda
+==========================
+
+I had to make some minor modifications to the code in order to compile it with scj.jar from the OSCJ distribution.
+
+A problem that arose though is that the Java Compiler API seems to have a bug which surfaces in the context of visiting elements with a modifier "final". Thus, I removed all final modifiers and made some changes that eradicate errors in the code that occurred as a consequence.

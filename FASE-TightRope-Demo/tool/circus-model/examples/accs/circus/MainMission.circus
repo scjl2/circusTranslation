@@ -1,0 +1,22 @@
+\begin{zsection}
+  \SECTION ~ MainMission ~ \parents ~ MissionFW, MainMissionApp
+\end{zsection}
+
+\begin{circus}
+  \circchannelset MainMissionChan ~ ==\\
+  \t1 \lchanset initializeCall, initializeRet, cleanupCall, cleanupRet, register, end\_mission\_app \rchanset
+\end{circus}
+%
+\begin{circus}
+  \circprocess ~ MainMission ~ \circdef\\
+  \t1 (MissionFW \lpar MainMissionChan \rpar MainMissionApp) \circhide MainMissionChan
+\end{circus}
+\begin{circus*}
+  \circexposes ~ \lchanset start\_mission, done\_mission,\\
+  \t1 activate\_handlers, stop\_handlers, done\_handlers,\\
+  \t1 start\_handler, stop\_handler, done\_handler,\\
+  \t1 requestTerminationCall, requestTerminationRet,\\
+  \t1 terminationPendingCall, terminationPendingRet,\\
+  \t1 missionMemorySizeCall, missionMemorySizeRet,\\
+  \t1 end\_mission\_fw \rchanset
+\end{circus*}

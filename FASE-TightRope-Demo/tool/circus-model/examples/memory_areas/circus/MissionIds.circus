@@ -1,0 +1,11 @@
+\begin{zsection}
+  \SECTION ~ MissionIds ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{axdef}
+  Mission1Id : MissionId\\
+  Mission2Id : MissionId\\
+  Mission3Id : MissionId
+\where
+  distinct \langle nullMId, Mission1Id, Mission2Id, Mission3Id \rangle
+\end{axdef}

@@ -1,0 +1,27 @@
+The files
+
+  classic_hijac.xml and hijac.lang
+
+are needed for the colouration of HiJaC reports produced by the Analyser tool in gedit.
+
+The installation and configuration instructions currently only apply to Linux.
+
+============
+INSTALLATION
+============
+
+Copy (or create soft links of):
+
+  classical_hijac.xml in ~/.local/share/gtksourceview-2.0/styles
+
+and
+
+  hijac.lang in ~/.gnome2/gtksourceview-1.0/language-specs
+
+=============
+CONFIGURATION
+=============
+
+- In gedit, change the colour scheme (Edit -> Preferences -> Font & Colours tab) to HiJaC.
+
+- Change the highlight mode to HiJaC Report for individual files (View -> Highlight Mode -> Others -> HiJaC Report).

@@ -1,0 +1,57 @@
+\begin{zsection}
+  \SECTION ~ EngineApp ~ \parents ~ EngineClass, EngineMethChan, EngineConst, HandlerIds, Events
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circprocess ~ EngineApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore EngineState}
+  this : EngineClass
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ EngineState
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  Init ~ \circdef ~ EngineInit~?~obj \then this \circrefassign obj
+\end{circusaction}
+%
+\begin{circusaction*}
+  handleAsyncLongEventMeth ~ \circdef\\
+  \t1 \circval evt : EventId \circspot this.handleAsyncLongEvent(evt)
+\end{circusaction*}
+%
+\begin{comment}
+\begin{circusaction}
+  handleAsyncLongEventMeth ~ \circdef\\
+  \t1 \circval evt : EventId \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  Execute ~ \circdef ~ enter\_dispatch \then Dispatch
+\end{circusaction}
+%
+\begin{circusaction}
+  Dispatch ~ \circdef ~ \circmu X \circspot  (leave\_dispatch \then \Skip) ~ ~ \extchoice\\
+  \t1 ((engine\_on \then handleAsyncLongEventMeth(EngineOnEvtId) ~ ~ \extchoice\\
+  \t1 ~~~~~ engine\_off \then handleAsyncLongEventMeth(EngineOffEvtId)) \circseq\\
+  \t1 \circwait 0..EngineDeadline \circseq X)
+\end{circusaction}
+%
+\begin{circusaction}
+  Terminate ~ \circdef ~ done\_handler~.~EngineId \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot (\circmu X \circspot Init \circseq Execute \circseq Terminate \circseq X) \circinterrupt ~ end\_mission\_fw \then \Skip
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
