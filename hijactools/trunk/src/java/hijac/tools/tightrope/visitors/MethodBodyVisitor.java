@@ -713,7 +713,8 @@ public class MethodBodyVisitor extends
 				{
 
 					sb.append("~?~");
-					final Object identifierString = timeMachine.get(identifier.toString());
+					final Object identifierString = timeMachine.get(identifier
+							.toString());
 					System.out
 							.println("!// return string not 'null', getting key: "
 									+ identifier.toString()
@@ -741,8 +742,16 @@ public class MethodBodyVisitor extends
 				List<ExpressionTree> arguments = new ArrayList<ExpressionTree>();
 				for (int index = 0; index < params.size(); index++)
 				{
-					if (!CONTEXT.ANNOTS.isInteractionCode(params.get(index))
-							&& !CONTEXT.ANNOTS.isIgnored(params.get(index)))
+					if (TightRope.useAnnotations())
+					{
+						if (!CONTEXT.ANNOTS
+								.isInteractionCode(params.get(index))
+								&& !CONTEXT.ANNOTS.isIgnored(params.get(index)))
+						{
+							arguments.add(node.getArguments().get(index));
+						}
+					}
+					else
 					{
 						arguments.add(node.getArguments().get(index));
 					}
@@ -1031,8 +1040,8 @@ public class MethodBodyVisitor extends
 					{
 						// Get the object env of the class, that represents the
 						// variable we're calling the method on
-						ObjectEnv o = TightRope.getProgramEnv()
-								.getObjectEnv(simpleName);
+						ObjectEnv o = TightRope.getProgramEnv().getObjectEnv(
+								simpleName);
 						return o;
 					}
 				}
@@ -1172,25 +1181,20 @@ public class MethodBodyVisitor extends
 
 			if (isNotMyMethod(mit))
 			{
-				final MemberSelectTree memberSelectTree = (MemberSelectTree) mit.getMethodSelect();
+				final MemberSelectTree memberSelectTree = (MemberSelectTree) mit
+						.getMethodSelect();
 				System.out.println("!// not my method, variable, putting key: "
-						+ memberSelectTree
-								.getIdentifier().toString() + " value: "
-						+ node.getName().toString());
+						+ memberSelectTree.getIdentifier().toString()
+						+ " value: " + node.getName().toString());
 
-				timeMachine.putIfAbsent(memberSelectTree.getIdentifier().toString(), node
-						.getName().toString());
+				timeMachine.putIfAbsent(memberSelectTree.getIdentifier()
+						.toString(), node.getName().toString());
 
-				return visitMethodInvocation(mit, ctxt)
-						+ "\\\\ \\circvar "
-						+ node.getName()
-						+ " : "
+				return visitMethodInvocation(mit, ctxt) + "\\\\ \\circvar "
+						+ node.getName() + " : "
 						+ NewTransUtils.encodeType(node.getType())
-						+ " \\circspot "
-						+ node.getName()
-						+ " :=~"
-						+ memberSelectTree
-								.getIdentifier().toString() + "\\\\";
+						+ " \\circspot " + node.getName() + " :=~"
+						+ memberSelectTree.getIdentifier().toString() + "\\\\";
 			}
 			else
 			{
@@ -1246,8 +1250,7 @@ public class MethodBodyVisitor extends
 			boolean isStillMethodCall = (boolean) timeMachine.get("methodCall");
 			if (isStillMethodCall)
 			{
-				
-				
+
 				conditionString = "\\circvar loopVar : \\bool \\circspot loopVar :=~"
 						+ conditionTrans + "\\circseq \\\\";
 
@@ -1256,24 +1259,32 @@ public class MethodBodyVisitor extends
 			}
 			else
 			{
-				//TODO SUPER HACKY!
-				conditionTrans = conditionTrans.substring(1, conditionTrans.length()-1);
-				System.out.println("/// conditionTrans sub = " + conditionTrans);
-				
+				// TODO SUPER HACKY!
+				conditionTrans = conditionTrans.substring(1,
+						conditionTrans.length() - 1);
+				System.out
+						.println("/// conditionTrans sub = " + conditionTrans);
+
 				boolean negative = conditionTrans.startsWith("\\lnot");
-				
-				if(negative)
+
+				if (negative)
 				{
-					conditionTrans=  conditionTrans.substring(5);
-					
-					conditionString = conditionTrans + "\\"
+					conditionTrans = conditionTrans.substring(5);
+
+					conditionString = conditionTrans
+							+ "\\"
 							+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
-							+ " (\\lnot "+ timeMachine.get("variableIdentifier") + ") \\circseq \\\\";				}
+							+ " (\\lnot "
+							+ timeMachine.get("variableIdentifier")
+							+ ") \\circseq \\\\";
+				}
 				else
 				{
-				conditionString = conditionTrans + "\\"
-						+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
-						+ timeMachine.get("variableIdentifier") + "\\circseq \\\\";
+					conditionString = conditionTrans
+							+ "\\"
+							+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
+							+ timeMachine.get("variableIdentifier")
+							+ "\\circseq \\\\";
 				}
 
 			}
