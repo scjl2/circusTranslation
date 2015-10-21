@@ -974,6 +974,7 @@ public class MethodBodyVisitor extends
 						// ... then that's our class tree!
 						ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
 
+						@SuppressWarnings("unchecked")
 						List<Tree> members = (List<Tree>) ct.getMembers();
 						Iterator<Tree> i = members.iterator();
 

@@ -21,6 +21,7 @@ public class ClassEnv extends ParadigmEnv
 		map.put(METHODS, methsList());
 		map.put(SYNC_METHODS, syncMethsList());
 		map.put(VARIABLES_STR, varsList());
+		map.put(INITED_VARIABLES, initedVarsList());
 
 		return map;
 	}

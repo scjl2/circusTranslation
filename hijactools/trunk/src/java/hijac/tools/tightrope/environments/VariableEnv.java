@@ -11,7 +11,7 @@ public class VariableEnv
 
 	public VariableEnv()
 	{
-		super();		
+		super();
 	}
 
 	public VariableEnv(String variableName, String variableType,
@@ -21,7 +21,8 @@ public class VariableEnv
 		this.variableName = variableName;
 		this.variableType = variableType;
 		this.primitive = primitive;
-		if(variableInit == null)
+
+		if (variableInit == null)
 		{
 			this.variableInit = "init\\_placeholder";
 		}
@@ -29,10 +30,10 @@ public class VariableEnv
 		{
 			this.variableInit = variableInit;
 		}
-		
+
 		this.variableInput = false;
 	}
-	
+
 	public VariableEnv(String variableName, String variableType,
 			String programType, boolean primitive)
 	{
@@ -45,9 +46,9 @@ public class VariableEnv
 	public VariableEnv(String variableName, String variableType,
 			Object variableInit, String variableInput, boolean primitive)
 	{
-		this(variableName, variableType, variableInit, primitive );
-		
-		this.variableInput = true;		
+		this(variableName, variableType, variableInit, primitive);
+
+		this.variableInput = true;
 	}
 
 	public String getVariableName()
@@ -109,7 +110,4 @@ public class VariableEnv
 	{
 		this.programType = programType;
 	}
-
-	
-
 }

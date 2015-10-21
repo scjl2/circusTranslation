@@ -1,0 +1,17 @@
+\begin{zsection}
+  \SECTION ~ ObjectIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	SPSafeletObject : ObjectID \\
+	MainMissionObject : ObjectID \\
+ 
+\where
+  distinct \langle 
+	SPSafeletObject
+	,\\
+	MainMissionObject
+  \rangle
+\end{axdef}
+

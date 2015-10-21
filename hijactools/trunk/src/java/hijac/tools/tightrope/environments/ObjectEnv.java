@@ -22,6 +22,7 @@ public class ObjectEnv
 	private static final String VAR_TYPE = "VarType";
 	private static final String VAR_NAME = "VarName";
 	protected static final String VARIABLES_STR = "Variables";
+	protected static final String INITED_VARIABLES = "InitedVariables";
 	protected static final String SYNC_METHODS = "SyncMethods";
 	protected static final String METHODS = "Methods";
 	protected static final String PROCESS_ID = "ProcessID";
@@ -134,7 +135,7 @@ public class ObjectEnv
 		return variables;
 	}
 
-	public void addVariableInit(Name varName, Tree init)
+	public void addVariableInit(String varName, Tree init)
 	{
 		for (VariableEnv varEnv : getVariables())
 		{
@@ -201,11 +202,11 @@ public class ObjectEnv
 	}
 
 	public void addParameter(String variableName, String variableType,
-			 String programType, boolean primitive)
+			String programType, boolean primitive)
 
 	{
-		parameters.add(new VariableEnv(variableName, variableType,
-				programType, primitive));
+		parameters.add(new VariableEnv(variableName, variableType, programType,
+				primitive));
 
 	}
 
@@ -257,6 +258,28 @@ public class ObjectEnv
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<Map> initedVarsList()
+	{
+		List<Map> returnList = new ArrayList<>();
+
+		for (VariableEnv v : variables)
+		{
+			if (v.getVariableInit().toString() != "")
+			{
+				Map varMap = new HashMap();
+				varMap.put(VAR_NAME, v.getVariableName().toString());
+				varMap.put(VAR_TYPE, v.getVariableType());
+				varMap.put(VAR_INIT, v.getVariableInit().toString());
+				varMap.put(VAR_INPUT, v.getVariableInput());
+
+				returnList.add(varMap);
+			}
+		}
+
+		return returnList;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Map> paramsList()
 	{
 		List<Map> returnList = new ArrayList<>();
@@ -266,8 +289,8 @@ public class ObjectEnv
 			Map varMap = new HashMap();
 			varMap.put(VAR_NAME, v.getVariableName().toString());
 			varMap.put(VAR_TYPE, v.getVariableType());
-//			varMap.put(VAR_INIT, v.getVariableInit().toString());
-//			varMap.put(VAR_INPUT, v.getVariableInput());
+			// varMap.put(VAR_INIT, v.getVariableInit().toString());
+			// varMap.put(VAR_INPUT, v.getVariableInput());
 			varMap.put("ProgramType", v.getProgramType());
 
 			returnList.add(varMap);

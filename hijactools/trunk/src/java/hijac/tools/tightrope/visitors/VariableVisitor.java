@@ -204,7 +204,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			returnMap.put(varName, expressionTree);
 			if (objectEnv != null && arg1 == true)
 			{
-				objectEnv.addVariableInit(varName, expressionTree);
+				objectEnv.addVariableInit(NewTransUtils.encodeName(varName), expressionTree);
 				// objectEnv.addVariableInit(varName.toString(),
 				// "?"+varName.toString()+"In");
 
@@ -595,7 +595,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 //				+ arg0.getType() + " Init = " + arg0.getInitializer());
 
 		Name varName = arg0.getName();
-
+		
 		Tree varType = arg0.getType();
 
 		String init = "";
@@ -603,33 +603,29 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		{
 			init = arg0.getInitializer().toString();
 		}
+		
 
 		r.put(varName, varType);
 
-		// System.out.println("+++ r is null : " + r == null + " +++");
+
 		if (objectEnv != null && arg1 == true)
 		{
 			if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
-			{
-				
-				objectEnv.addVariable(varName.toString(), NewTransUtils.encodeType(varType),
+			{				
+				objectEnv.addVariable(NewTransUtils.encodeName(varName), NewTransUtils.encodeType(varType),
 						init, true);
 			}
-			else if ((!(objectEnv.getName().toString().contains(varType
-					.toString()))))
+			else if ((!(objectEnv.getName().toString().contains(varType.toString()))))
 			{
 				//if (programEnv.getSchedulable(varName) != null)
 				{
-
 					// TODO HACKY! need to get what kind of ID here!
 					final String variableInitAndInput = "?"
-							+ varName.toString() + "In";
+							+ varName.toString() + "In";					
 					
-					
-					System.out.println("!// VarType = " + varType);		
+					System.out.println("!// VarType = " + varType);	
 
-
-					objectEnv.addParameter(varName.toString(), "MissionID",
+					objectEnv.addParameter(NewTransUtils.encodeName(varName), "MissionID",
 							 varType.toString(), false);
 				}
 			}
@@ -639,14 +635,11 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			}
 			else
 			{
-
 				objectEnv.addVariable("\\circreftype " + varName.toString()
 						+ "Class", varType.toString() + "Class", "\\circnew "
 						+ varType.toString() + "Class()", false);
 			}
-
 		}
-
 		return r;
 	}
 

@@ -1,0 +1,10 @@
+\begin{zsection}
+  \SECTION ~ ReaderMethChan ~ \parents ~ scj\_prelude, GlobalTypes 
+\end{zsection}
+%
+\begin{circus}
+\t1 \circchannel runCall  \\
+\t1 \circchannel runRet \\
+\end{circus}
+%
+%

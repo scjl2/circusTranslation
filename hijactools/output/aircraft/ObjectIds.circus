@@ -1,0 +1,17 @@
+\begin{zsection}
+  \SECTION ~ ObjectIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	ACSafeletObject : ObjectID \\
+	MainMissionObject : ObjectID \\
+ 
+\where
+  distinct \langle 
+	ACSafeletObject
+	,\\
+	MainMissionObject
+  \rangle
+\end{axdef}
+
