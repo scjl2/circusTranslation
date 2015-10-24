@@ -136,7 +136,7 @@ FlatBufferApp\\
 \interleave \\
 FlatBufferMissionSequencerApp\\
 \interleave \\
-FlatBufferMissionApp\\
+FlatBufferMissionApp ( hijac.tools.tightrope.environments.VariableEnv@45ca843   ) \\
 \interleave \\
 
 ReaderApp ( FlatBufferMission  ) \\

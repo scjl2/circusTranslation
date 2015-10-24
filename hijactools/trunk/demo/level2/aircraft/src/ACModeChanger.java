@@ -1,8 +1,8 @@
 /** Aircraft - Mode Change Example
- * 
+ *
  * 	This is the mode changer for the Aircraft application,
  * 	it controls which mode the application is in
- * 
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -40,7 +40,7 @@ public class ACModeChanger extends MissionSequencer<ModeMission> implements
 
 	/**
 	 * Class constructor
-	 * 
+	 *
 	 * @param priority
 	 *            the priority parameters for this mission sequencer
 	 * @param storage

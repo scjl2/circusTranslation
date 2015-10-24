@@ -587,20 +587,21 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitVariable(VariableTree arg0, Boolean arg1)
 	{
 
-//		System.out.println("Var Visitor: Variable for " + arg0);
+		System.out.println("Var Visitor: Variable for " + arg0);
 
 		HashMap<Name, Tree> r = new HashMap<Name, Tree>();
 
-//		System.out.println("-> Name = " + arg0.getName() + " Type = "
-//				+ arg0.getType() + " Init = " + arg0.getInitializer());
+		System.out.println("-> Name = " + arg0.getName() + " Type = "
+				+ arg0.getType() + " Init = " + arg0.getInitializer());
 
 		Name varName = arg0.getName();
+		
 		
 		Tree varType = arg0.getType();
 
 		String init = "";
 		if (arg0.getInitializer() != null)
-		{
+		{			
 			init = arg0.getInitializer().toString();
 		}
 		
@@ -610,13 +611,16 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		if (objectEnv != null && arg1 == true)
 		{
+			System.out.println("var Visitor If");
 			if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
 			{				
+				System.out.println("var Visitor Primitive Type");
 				objectEnv.addVariable(NewTransUtils.encodeName(varName), NewTransUtils.encodeType(varType),
 						init, true);
 			}
 			else if ((!(objectEnv.getName().toString().contains(varType.toString()))))
 			{
+				System.out.println("var Visitor var type not Objdect name");
 				//if (programEnv.getSchedulable(varName) != null)
 				{
 					// TODO HACKY! need to get what kind of ID here!
@@ -631,10 +635,12 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			}
 			else if (programEnv.getSchedulable(varName) != null)
 			{
-				
+				System.out.println("Var Visitor var name is a schedulable");
 			}
 			else
 			{
+				System.out.println("var Visitor add var to Object Env");
+				
 				objectEnv.addVariable("\\circreftype " + varName.toString()
 						+ "Class", varType.toString() + "Class", "\\circnew "
 						+ varType.toString() + "Class()", false);
