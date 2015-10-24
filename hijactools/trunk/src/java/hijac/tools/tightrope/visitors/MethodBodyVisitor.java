@@ -556,6 +556,20 @@ public class MethodBodyVisitor extends
 		System.out.println("/// methodInvocation node = " + node);
 
 		ExpressionTree methodSelect = node.getMethodSelect();
+
+		// ExpressionTree methodSelect = node.getMethodSelect();
+
+		if (methodSelect instanceof MemberSelectTree)
+		{
+
+			MemberSelectTree mst = (MemberSelectTree) methodSelect;
+
+			if (mst.getExpression().toString().startsWith("System"))
+			{
+				return "\n";
+			}
+		}
+
 		Name identifier = null;
 
 		if (methodSelect instanceof MemberSelectTree)
@@ -613,7 +627,7 @@ public class MethodBodyVisitor extends
 				timeMachine.put("methodCall", false);
 				return sb.toString();
 			}
-			else if (isNotMyMethod(node))
+			else if (isNotMyMethod(node, methodSelect))
 			{
 				MethodEnv method = getMethodEnvBeingCalled(node);
 				if (method.isAPIMethod())
@@ -833,11 +847,12 @@ public class MethodBodyVisitor extends
 		// return returnString;
 	}
 
-	private boolean isNotMyMethod(MethodInvocationTree node)
+	private boolean isNotMyMethod(MethodInvocationTree node,
+			ExpressionTree methodSelect)
 	{
 		// MethodEnv method = getMethodEnvBeingCalled(node);
 
-		ExpressionTree methodSelect = node.getMethodSelect();
+		// ExpressionTree methodSelect = node.getMethodSelect();
 
 		if (methodSelect instanceof MemberSelectTree)
 		{
@@ -850,7 +865,6 @@ public class MethodBodyVisitor extends
 			if (expressionString.contentEquals(object.getName().toString()))
 
 			{
-
 				return false;
 			}
 			else
@@ -1180,7 +1194,7 @@ public class MethodBodyVisitor extends
 			MethodInvocationTree mit = (MethodInvocationTree) node
 					.getInitializer();
 
-			if (isNotMyMethod(mit))
+			if (isNotMyMethod(mit, mit.getMethodSelect()))
 			{
 				final MemberSelectTree memberSelectTree = (MemberSelectTree) mit
 						.getMethodSelect();

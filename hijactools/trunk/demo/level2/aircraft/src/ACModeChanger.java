@@ -14,6 +14,8 @@ import javax.safetycritical.StorageParameters;
 import scjlevel2examples.modechange.Mode;
 import scjlevel2examples.modechange.ModeChanger;
 
+import devices.Console;
+
 public class ACModeChanger extends MissionSequencer<ModeMission> implements
 		ModeChanger
 {

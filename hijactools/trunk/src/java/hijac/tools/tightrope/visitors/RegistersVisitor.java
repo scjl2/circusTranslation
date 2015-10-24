@@ -1,10 +1,15 @@
 package hijac.tools.tightrope.visitors;
 
+import java.util.HashMap;
+
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.application.TightRope;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 
 import javax.lang.model.element.Name;
+import javax.lang.model.element.TypeElement;
+
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -26,6 +31,7 @@ import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ErroneousTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
@@ -63,13 +69,20 @@ import com.sun.source.tree.WildcardTree;
 public class RegistersVisitor implements TreeVisitor<Name, Void>
 {
 	private MissionEnv missionEnv;
-//	private static SCJAnalysis analysis;
+	private HashMap<Name, Tree> initVarMap;
+
+	// private static SCJAnalysis analysis;
 
 	public RegistersVisitor(MissionEnv missionEnv, SCJAnalysis analysis)
 	{
 		this.missionEnv = missionEnv;
-//		RegistersVisitor.analysis = analysis;
+	}
 
+	public RegistersVisitor(MissionEnv missionEnv, SCJAnalysis analysis,
+			HashMap<Name, Tree> initVarMap)
+	{
+		this.missionEnv = missionEnv;
+		this.initVarMap = initVarMap;
 	}
 
 	// private schedulableType getSchedulableType(Name name)
@@ -341,56 +354,85 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	{
 
 		Name name = null;
-		
-		if (arg0.getIdentifier().contentEquals("register"))
+
+		final Name memberSelected = arg0.getIdentifier();
+		if (memberSelected.contentEquals("register"))
 		{
 			System.out.println("Rgisters Visitor: " + arg0);
-			System.out.println("Rgisters Visitor: Expression "
-					+ arg0.getExpression());
-			System.out.println("Rgisters Visitor: Identifier "
-					+ arg0.getIdentifier());
+			final ExpressionTree expression = arg0.getExpression();
+			System.out.println("Rgisters Visitor: Expression " + expression);
+			System.out
+					.println("Rgisters Visitor: Identifier " + memberSelected);
 
-			if(arg0.getExpression() instanceof IdentifierTree)
+			if (expression instanceof IdentifierTree)
 			{
-			
-				IdentifierTree identifier = (IdentifierTree) arg0.getExpression();
-			System.out.println("Registers Visitor: getExpression().getName() "
-					+ (identifier.getName()));
 
-			System.out.println("Registers Visitor: Returning "
-					+ missionEnv.getVariable(identifier.getName()));
-			// ArrayList<Name> a = new ArrayList<Name>();
-			// a.add( (Name) variables.get(((MethodTree)
-			// arg0.getExpression()).getName()) );
-			Name identifirerName = identifier.getName();
-			
-			VariableEnv vEnv = missionEnv.getVariable(identifirerName);
-			
-			if(vEnv != null)
-			{
-			name = 
-					((IdentifierTree) vEnv).getName();
-			}
-			
+				IdentifierTree expressionIdentifierTree = (IdentifierTree) expression;
+				System.out
+						.println("Registers Visitor: getExpression().getName() "
+								+ (expressionIdentifierTree.getName()));
 
-			// programEnv.addSchedulable(getSchedulableType(name), name);
-
-			return name;
-			}
-			
-			if(arg0.getExpression() instanceof NewClassTree)
-			{
-				NewClassTree newClass = (NewClassTree) arg0.getExpression();
-				
-				System.out.println("Registers Visitor: getExpression().getName() "
-						+ (((IdentifierTree) newClass.getIdentifier()).getName()));
-				
 				System.out.println("Registers Visitor: Returning "
-						+ missionEnv.getVariable(((IdentifierTree) newClass.getIdentifier()).getName()));
-				
+						+ missionEnv.getVariable(expressionIdentifierTree
+								.getName()));
+				// ArrayList<Name> a = new ArrayList<Name>();
+				// a.add( (Name) variables.get(((MethodTree)
+				// arg0.getExpression()).getName()) );
+				Name identifirerName = expressionIdentifierTree.getName();
+
+				VariableEnv vEnv = missionEnv.getVariable(identifirerName);
+
+				if (vEnv != null)
+				{
+					name = ((IdentifierTree) vEnv).getName();
+				}
+				else
+				{
+					assert (initVarMap != null);
+
+					if (initVarMap.containsKey(identifirerName))
+					{
+						System.out.println("*** initVarMap returns " +initVarMap.get(identifirerName));
+						
+						
+						
+						
+						for(TypeElement te : TightRope.ANALYSIS.getTypeElements())
+						{
+							if(te.getSimpleName().contentEquals(initVarMap.get(identifirerName).toString()))
+							{
+							name = te.getSimpleName() ;
+							}
+						}
+						
+						
+					}
+				}
+
+				// programEnv.addSchedulable(getSchedulableType(name), name);
+
+				return name;
+			}
+
+			if (expression instanceof NewClassTree)
+			{
+				NewClassTree newClass = (NewClassTree) expression;
+
+				System.out
+						.println("Registers Visitor: getExpression().getName() "
+								+ (((IdentifierTree) newClass.getIdentifier())
+										.getName()));
+
+				System.out.println("Registers Visitor: Returning "
+						+ missionEnv.getVariable(((IdentifierTree) newClass
+								.getIdentifier()).getName()));
+
 				name = (((IdentifierTree) newClass.getIdentifier()).getName());
-				
-//						((IdentifierTree) programEnv.getVariable(((IdentifierTree) newClass.getIdentifier()).getName())).getName();
+
+				// ((IdentifierTree) programEnv.getVariable(((IdentifierTree)
+				// newClass.getIdentifier()).getName())).getName();
+
+				// ALSO need to check for variables in this method
 
 				return name;
 			}
@@ -615,8 +657,9 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	public Name visitVariable(VariableTree arg0, Void arg1)
 	{
 		System.out.println("Registers Visitor: Variable Tree Found");
-//		missionEnv.addVariable(arg0.getName().toString(), arg0.getType().toString(), "");
-		
+		// missionEnv.addVariable(arg0.getName().toString(),
+		// arg0.getType().toString(), "");
+
 		return null;
 	}
 

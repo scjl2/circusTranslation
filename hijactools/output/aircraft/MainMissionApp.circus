@@ -17,7 +17,25 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess MainMissionApp \circdef  \circbegin
+\circprocess MainMissionApp \circdef   storageParameters : MissionID
+,
+  storageParametersSchedulable : MissionID
+,
+  aCModeChanger : MissionID
+,
+  environmentMonitor : MissionID
+,
+  controlHandler : MissionID
+,
+  flightSensMon : MissionID
+,
+  commsHandler : MissionID
+,
+  controlSim : MissionID
+,
+  commsSim : MissionID
+\circspot 
+ \circbegin
 \end{circus}
 
 \begin{schema}{State}

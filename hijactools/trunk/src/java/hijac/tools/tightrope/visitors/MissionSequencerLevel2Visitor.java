@@ -41,7 +41,7 @@ public class MissionSequencerLevel2Visitor
 
 		trees = analysis.TREES;
 
-		returnVisitor = new ReturnVisitor();
+		returnVisitor = new ReturnVisitor(varMap);
 		methodVisitor = new MethodVisitor(analysis, sequencerEnv);
 
 	}

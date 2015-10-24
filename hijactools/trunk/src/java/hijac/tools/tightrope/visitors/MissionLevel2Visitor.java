@@ -7,6 +7,7 @@ import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -30,72 +31,100 @@ public class MissionLevel2Visitor
 	private static Trees trees;
 
 	private MissionEnv missionEnv;
+	private ArrayList<Name> schedulables;
+	private ProgramEnv programEnv;
 
 	public MissionLevel2Visitor(ProgramEnv programEnv, MissionEnv missionEnv,
 			SCJAnalysis analysis)
 	{
 		MissionLevel2Visitor.analysis = analysis;
-		// MissionLevel2Visitor.programEnv = programEnv;
+		this.programEnv = programEnv;
 		this.missionEnv = missionEnv;
 
 		trees = analysis.TREES;
 		analysis.getCompilationUnits();
 		analysis.getTypeElements();
 
+		schedulables = new ArrayList<Name>();
 		registersVisitor = new RegistersVisitor(missionEnv, analysis);
 
 	}
 
 	@SuppressWarnings("unchecked")
-	public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
+	public ArrayList<Name> visitType(TypeElement missionTypeElement, Void arg1)
 	{
-		ArrayList<Name> schedulables = new ArrayList<Name>();
-		ClassTree ct = trees.getTree(arg0);
+		ClassTree missionClassTree = trees.getTree(missionTypeElement);
 
-		List<Tree> members = (List<Tree>) ct.getMembers();
-		Iterator<Tree> i = members.iterator();
-		while (i.hasNext())
+		List<Tree> missionMembers = (List<Tree>) missionClassTree.getMembers();
+		Iterator<Tree> missionMembersIterator = missionMembers.iterator();
+
+		while (missionMembersIterator.hasNext())
 		{
-			System.out.println("Mission Visitor: I Iterator");
+			System.out.println("Mission Visitor: Mission Members Iterator");
 
-			Tree tlst = i.next();
-			System.out.println("Mission Visistor: tlst = " + tlst.getKind());
+			Tree missionMemberTree = missionMembersIterator.next();
+			System.out.println("Mission Visistor: mission member tree = "
+					+ missionMemberTree.getKind());
 
-			
-
-			if (tlst instanceof MethodTree)
+			if (missionMemberTree instanceof MethodTree)
 			{
 				// capture the method
-				MethodTree mt = (MethodTree) tlst;
-				final boolean notIgnoredMethod = !(mt.getName().contentEquals(
-						"<init>") || mt.getName().contentEquals(
-						"missionMemorySize"));
-				final boolean syncMethod = mt.getModifiers().getFlags()
-						.contains(Modifier.SYNCHRONIZED);
+				MethodTree missionMethodTree = (MethodTree) missionMemberTree;
+				final boolean notIgnoredMethod = !(missionMethodTree.getName()
+						.contentEquals("<init>") || missionMethodTree.getName()
+						.contentEquals("missionMemorySize"));
+				final boolean syncMethod = missionMethodTree.getModifiers()
+						.getFlags().contains(Modifier.SYNCHRONIZED);
 
-				if (mt.getName().contentEquals("initialize"))
+				final boolean currentMethodIsInitialize = missionMethodTree
+						.getName().contentEquals("initialize");
+
+				if (currentMethodIsInitialize)
 				{
-					System.out.println("Mission Visitor: J iterator");
-					List<StatementTree> s = (List<StatementTree>) mt.getBody()
-							.getStatements();
+					System.out
+							.println("Mission Visitor: methodStatementIterator");
+					List<StatementTree> methodStatements = (List<StatementTree>) missionMethodTree
+							.getBody().getStatements();
 
-					Iterator<StatementTree> j = s.iterator();
+					Iterator<StatementTree> methodStatementsIterator = methodStatements
+							.iterator();
 
+					VariableVisitor varVisitor = new VariableVisitor(
+							programEnv, missionEnv);
 					// iterate through the statements in the Init method
-					while (j.hasNext())
+					HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
+					StatementTree methodStatementTree;
+
+					while (methodStatementsIterator.hasNext())
 					{
-						StatementTree st = j.next();
+						methodStatementTree = methodStatementsIterator.next();
 
-						System.out.println("Mission Visistor: j = "
-								+ st.getKind());
-
-						// ArrayList<Name> name =
-						Name name = st.accept(registersVisitor, null);
-
-						if (name != null)
+						HashMap<Name, Tree> m = (HashMap<Name, Tree>) methodStatementTree
+								.accept(varVisitor, true);
+						// assert (m != null);
+						if (m != null)
 						{
-							schedulables.add(name);
+
+							// TODO this is a bit of a hack...
+
+							for (Name n : m.keySet())
+							{
+								// System.out.println("\t*** Name = " + n +
+								// " Type = "
+								// + m.get(n) + " Kind = " +
+								// m.get(n).getKind());
+								varMap.putIfAbsent(n, m.get(n));
+							}
 						}
+
+					}
+					methodStatementsIterator = methodStatements.iterator();
+
+					while (methodStatementsIterator.hasNext())
+					{
+						methodStatementTree = methodStatementsIterator.next();
+						findSchedulables(schedulables, methodStatementTree,
+								varMap);
 					}
 				}
 				else
@@ -110,25 +139,29 @@ public class MissionLevel2Visitor
 						// missionEnv.addSyncMeth(mt.getName(), typeKind,
 						// returns,
 						// paramMap);
-						MethodEnv m = methodVisitor.visitMethod(mt, null);
-						setMethodAccess(mt, m);
+						MethodEnv m = methodVisitor.visitMethod(
+								missionMethodTree, null);
+						setMethodAccess(missionMethodTree, m);
 						missionEnv.addSyncMeth(m);
-						
-						System.out.println("/// method params =" + m.getParameters());
+
+						System.out.println("/// method params ="
+								+ m.getParameters());
 					}
 					else
 					{
 						if (notIgnoredMethod)
 						{
-							MethodEnv m = methodVisitor.visitMethod(mt, null);
-								
-									
-							setMethodAccess(mt, m);
+							MethodEnv m = methodVisitor.visitMethod(
+									missionMethodTree, null);
+
+							setMethodAccess(missionMethodTree, m);
 							missionEnv.getClassEnv().addMeth(m);
 
-							MethodEnv m2 = methodVisitor.visitMethod(mt, null);
-							
-							System.out.println("/// method params 2 =" + m2.getParameters());
+							MethodEnv m2 = methodVisitor.visitMethod(
+									missionMethodTree, null);
+
+							System.out.println("/// method params 2 ="
+									+ m2.getParameters());
 							StringBuilder body;
 
 							if (m2.getReturnType() == "null")
@@ -151,7 +184,7 @@ public class MissionLevel2Visitor
 							}
 
 							body.append("this~.~");
-							body.append(m2.getMethodName()); 
+							body.append(m2.getMethodName());
 							body.append("(");
 							body.append(parametersString.toString());
 							body.append(")");
@@ -165,6 +198,22 @@ public class MissionLevel2Visitor
 		}
 		return schedulables;
 
+	}
+
+	private void findSchedulables(ArrayList<Name> schedulables,
+			StatementTree methodStatementTree, HashMap<Name, Tree> varMap)
+	{
+
+		System.out.println("Mission Visistor: methodStatementTree = "
+				+ methodStatementTree.getKind());
+
+		Name schedulableName = methodStatementTree.accept(new RegistersVisitor(
+				missionEnv, analysis, varMap), null);
+
+		if (schedulableName != null)
+		{
+			schedulables.add(schedulableName);
+		}
 	}
 
 	private void setMethodAccess(MethodTree mt, MethodEnv m)
