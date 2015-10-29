@@ -67,6 +67,10 @@ public class ObjectEnv
 	 */
 	public ObjectEnv()
 	{
+
+		meths = new ArrayList<MethodEnv>();
+		syncMeths = new ArrayList<MethodEnv>();
+
 		variables = new ArrayList<VariableEnv>();
 		parameters = new ArrayList<VariableEnv>();
 		newChannels = new ArrayList<ChannelEnv>();

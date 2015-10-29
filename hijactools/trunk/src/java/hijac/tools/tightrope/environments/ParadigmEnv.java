@@ -14,8 +14,6 @@ public abstract class ParadigmEnv extends ObjectEnv
 	{
 		super();
 
-		meths = new ArrayList<MethodEnv>();
-		syncMeths = new ArrayList<MethodEnv>();
 //		classEnv = new ClassEnv();
 		classEnv = null;
 		

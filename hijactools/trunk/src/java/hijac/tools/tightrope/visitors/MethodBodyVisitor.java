@@ -78,8 +78,8 @@ public class MethodBodyVisitor extends
 	private static final String EXPR_TEMPLATE = "L2Expr.ftl";
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
 
-	private static final List<MethodEnv> MISSION_API_METHODS = new ArrayList<MethodEnv>();
-	private static final List<MethodEnv> EVENT_HANDLER_API_METHODS = new ArrayList<MethodEnv>();
+	
+	
 	/**
 	 * Used to store values for 'future' calls to methods of the visitor
 	 */
@@ -108,25 +108,11 @@ public class MethodBodyVisitor extends
 		CONTEXT = context;
 		this.object = object;
 
-		initAPIMeths();
+	
 
 	}
 
-	private void initAPIMeths()
-	{
-		MISSION_API_METHODS.add(new MethodEnv("getMission", "Mission", true));
-		MISSION_API_METHODS.add(new MethodEnv("getSequencer",
-				"MissionSequencer", true));
-		MISSION_API_METHODS
-				.add(new MethodEnv("missionMemorySize", "int", true));
-		MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean",
-				true));
-		MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean",
-				true));
-
-		EVENT_HANDLER_API_METHODS.add(new MethodEnv("release", "void" , true));
-	}
-
+	
 	/**
 	 * Constructor for the Method Body Visitor
 	 * 
@@ -147,7 +133,6 @@ public class MethodBodyVisitor extends
 		this.object = object;
 		this.methodEnv = env;
 
-		initAPIMeths();
 	}
 
 	/**
