@@ -12,8 +12,9 @@ import javax.realtime.PriorityParameters;
 import javax.realtime.RelativeTime;
 import javax.safetycritical.StorageParameters;
 import javax.scj.util.Const;
+import javax.safetycritical.Mission;
 
-public class LandMission extends ModeMission implements LandingGearUser
+public class LandMission extends Mission //implements LandingGearUser
 {
 	private final MainMission controllingMission;
 
@@ -52,7 +53,7 @@ public class LandMission extends ModeMission implements LandingGearUser
 				storageParametersSchedulable, this);
 		groundDistanceMonitor.register();
 
-		LandingGearHandler landingHandler = new LandingGearHandler(
+		LandingGearHandlerLand landingHandler = new LandingGearHandlerLand(
 				new PriorityParameters(5), new AperiodicParameters(),
 				storageParametersSchedulable, "Landing Handler", this);
 
@@ -91,13 +92,13 @@ public class LandMission extends ModeMission implements LandingGearUser
 
 	}
 
-	@Override
+	
 	public void stowLandingGear()
 	{
 		landingGearDeployed = false;
 	}
 
-	@Override
+	
 	public boolean isLandingGearDeployed()
 	{
 		return landingGearDeployed;

@@ -18,6 +18,7 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
+		System.out.println("EventHandlerName = " + getName());
 		Map map = super.toMap();
 		
 		map.put(HANDLER_TYPE, getHandlerType());

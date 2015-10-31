@@ -125,7 +125,7 @@ public class MainMission extends Mission
 						new RelativeTime(10, 0), null),
 				storageParametersSchedulable, commsHandler);
 
-		commsSim.register();
+		//commsSim.register();
 	}
 
 	/**

@@ -58,7 +58,7 @@ public class CruiseMission extends ModeMission
 				new PriorityParameters(5), new PeriodicParameters(
 						new RelativeTime(0, 0), new RelativeTime(10, 0)),
 				storageParametersSchedulable, beginLandingHandler);
-		landSim.register();
+		//landSim.register();
 
 	}
 

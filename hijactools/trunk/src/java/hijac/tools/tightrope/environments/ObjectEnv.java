@@ -82,9 +82,9 @@ public class ObjectEnv
 		return name;
 	}
 
-	public void setName(Name safelet)
+	public void setName(Name objectName)
 	{
-		this.name = safelet;
+		this.name = objectName;
 	}
 
 	public void addVariable(String variableName, String variableType,
@@ -336,7 +336,7 @@ public class ObjectEnv
 	protected Map methodToMap(MethodEnv me)
 	{
 		Map methodMap = new HashMap();
-
+		
 		String s = me.getMethodName();
 
 		methodMap.put(METHOD_NAME, s);
@@ -389,5 +389,7 @@ public class ObjectEnv
 	{
 		return parents;
 	}
+
+	
 
 }

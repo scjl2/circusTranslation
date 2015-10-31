@@ -1,6 +1,5 @@
 package hijac.tools.tightrope.environments;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

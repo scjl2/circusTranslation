@@ -52,6 +52,28 @@
 \end{circus}
 
 %IDs wont type check
+\begin{circus}
+\circchannelset ~ Tier0Sync == \\ 
+\t1 \lchanset 	
+done\_toplevel\_sequencer, done\_safeletFW, \\
+start\_mission~.~, done\_mission~.~,\\ 
+\t1 initializeRet~.~, 
+requestTermination~.~~.~
+
+, \\
+start\_mission~.~, done\_mission~.~,\\ 
+\t1 initializeRet~.~, 
+requestTermination~.~~.~
+
+, \\
+start\_mission~.~, done\_mission~.~,\\ 
+\t1 initializeRet~.~, 
+requestTermination~.~~.~
+
+
+\rchanset
+\end{circus}
+%
 %
 %
 %
@@ -73,6 +95,50 @@
 MainMissionApp, 
 
 
+ACModeChangerApp 
+,
+ControlHandlerApp 
+,
+CommunicationsHandlerApp 
+,
+EnvironmentMonitorApp 
+,
+FlightSensorsMonitorApp 
+,
+AperiodicSimulatorApp 
+,
+
+
+TakeOffMissionApp, 
+
+
+LandingGearHandlerTakeOffApp 
+,
+TakeOffFailureHandlerApp 
+,
+TakeOffMonitorApp 
+,
+
+
+CruiseMissionApp, 
+
+
+BeginLandingHandlerApp 
+,
+NavigationMonitorApp 
+,
+
+
+LandMissionApp, 
+
+
+LandingGearHandlerLandApp 
+,
+SafeLandingHandlerApp 
+,
+GroundDistanceMonitorApp 
+,
+InstrumentLandingSystemMonitorApp 
 \end{zsection}
 %
 \begin{circus}
@@ -102,7 +168,121 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
+			SchedulableMissionSequencerFW()\\
+\t1 \lpar SchedulablesSync \rpar\\
 
+
+\circblockopen
+			AperiodicEventHandlerFW()\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			AperiodicEventHandlerFW()\\
+\circblockclose \\
+
+
+\t1 \lpar SchedulablesSync \rpar\\
+
+
+
+\circblockopen
+			PeriodicEventHandlerFW()\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			PeriodicEventHandlerFW()\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			PeriodicEventHandlerFW()\\
+\circblockclose \\ 
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circprocess Tier1 \circdef \\
+
+\circblockopen
+	MissionFW(TakeOffMission)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+
+
+
+
+
+
+
+\circblockopen
+			AperiodicEventHandlerFW()\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			AperiodicEventHandlerFW()\\
+\circblockclose \\
+
+
+\t1 \lpar SchedulablesSync \rpar\\
+
+
+
+			PeriodicEventHandlerFW()\\
+		\circblockclose
+\circblockclose
+	\\ \t1 \lpar ClusterSync \rpar \\
+
+\circblockopen
+	MissionFW(CruiseMission)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+
+
+
+
+
+
+
+			AperiodicEventHandlerFW()\\
+
+\t1 \lpar SchedulablesSync \rpar\\
+
+
+
+			PeriodicEventHandlerFW()\\
+		\circblockclose
+\circblockclose
+	\\ \t1 \lpar ClusterSync \rpar \\
+
+\circblockopen
+	MissionFW(LandMission)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+
+
+
+
+
+
+
+\circblockopen
+			AperiodicEventHandlerFW()\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			AperiodicEventHandlerFW()\\
+\circblockclose \\
+
+
+\t1 \lpar SchedulablesSync \rpar\\
+
+
+
+\circblockopen
+			PeriodicEventHandlerFW()\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			PeriodicEventHandlerFW()\\
+\circblockclose \\ 
 
 		\circblockclose
 \circblockclose
@@ -118,6 +298,8 @@ ControlTier \\
 \t1 \lpar TierSync \rpar \\
  \circblockopen
 Tier0
+\\ \t1 \lpar Tier0Sync \rpar \\
+Tier1
 \circblockclose
 \circblockclose
 \end{circus}
@@ -130,9 +312,47 @@ ACSafeletApp\\
 \interleave \\
 MainMissionSequencerApp\\
 \interleave \\
-MainMissionApp ( hijac.tools.tightrope.environments.VariableEnv@8c3619e ,   hijac.tools.tightrope.environments.VariableEnv@4331d187 ,   hijac.tools.tightrope.environments.VariableEnv@6f63b475 ,   hijac.tools.tightrope.environments.VariableEnv@554e218 ,   hijac.tools.tightrope.environments.VariableEnv@1608bcbd ,   hijac.tools.tightrope.environments.VariableEnv@5bf8fa12 ,   hijac.tools.tightrope.environments.VariableEnv@29ca3d04 ,   hijac.tools.tightrope.environments.VariableEnv@b2c5e07 ,   hijac.tools.tightrope.environments.VariableEnv@5812f68b   ) \\
+MainMissionApp ( hijac.tools.tightrope.environments.VariableEnv@71c27ee8 ,   hijac.tools.tightrope.environments.VariableEnv@3e7dd664 ,   hijac.tools.tightrope.environments.VariableEnv@5b1ebf56 ,   hijac.tools.tightrope.environments.VariableEnv@294a6b8e ,   hijac.tools.tightrope.environments.VariableEnv@4b1d6571 ,   hijac.tools.tightrope.environments.VariableEnv@1b835480 ,   hijac.tools.tightrope.environments.VariableEnv@3549bca9 ,   hijac.tools.tightrope.environments.VariableEnv@4f25b795 ,   hijac.tools.tightrope.environments.VariableEnv@6fb365ed   ) \\
 \interleave \\
 
+ACModeChangerApp ( MainMission ,  MainMission  ) \\
+\interleave \\
+ControlHandlerApp\\
+\interleave \\
+CommunicationsHandlerApp\\
+\interleave \\
+EnvironmentMonitorApp ( MainMission  ) \\
+\interleave \\
+FlightSensorsMonitorApp ( MainMission  ) \\
+\interleave \\
+AperiodicSimulatorApp ( AperiodicEventHandler  ) \\
+\interleave \\
+TakeOffMissionApp ( hijac.tools.tightrope.environments.VariableEnv@6e950bcf ,   hijac.tools.tightrope.environments.VariableEnv@16414e40 ,   hijac.tools.tightrope.environments.VariableEnv@74bada02 ,   hijac.tools.tightrope.environments.VariableEnv@525575   ) \\
+\interleave \\
+
+LandingGearHandlerTakeOffApp ( TakeOffMission  ) \\
+\interleave \\
+TakeOffFailureHandlerApp ( TakeOffMission  ) \\
+\interleave \\
+TakeOffMonitorApp ( TakeOffMission ,  AperiodicEventHandler  ) \\
+\interleave \\
+CruiseMissionApp ( hijac.tools.tightrope.environments.VariableEnv@46dffdc3 ,   hijac.tools.tightrope.environments.VariableEnv@5a709816 ,   hijac.tools.tightrope.environments.VariableEnv@78383390 ,   hijac.tools.tightrope.environments.VariableEnv@6ad3381f   ) \\
+\interleave \\
+
+BeginLandingHandlerApp ( Mission  ) \\
+\interleave \\
+NavigationMonitorApp ( CruiseMission  ) \\
+\interleave \\
+LandMissionApp ( hijac.tools.tightrope.environments.VariableEnv@53dbe163 ,   hijac.tools.tightrope.environments.VariableEnv@db57326 ,   hijac.tools.tightrope.environments.VariableEnv@34a875b3 ,   hijac.tools.tightrope.environments.VariableEnv@4748a0f9 ,   hijac.tools.tightrope.environments.VariableEnv@4b14918a   ) \\
+\interleave \\
+
+LandingGearHandlerLandApp ( LandMission  ) \\
+\interleave \\
+SafeLandingHandlerApp ( LandMission  ) \\
+\interleave \\
+GroundDistanceMonitorApp ( LandMission  ) \\
+\interleave \\
+InstrumentLandingSystemMonitorApp ( LandMission  ) \\
 \circblockclose
 \end{circus}
 %
@@ -140,12 +360,56 @@ MainMissionApp ( hijac.tools.tightrope.environments.VariableEnv@8c3619e ,   hija
 Locking \circdef \\
 \circblockopen
 \circblockopen
+ThreadFW(LandingGearHandlerLandThread, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(SafeLandingHandlerThread, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(GroundDistanceMonitorThread, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(InstrumentLandingSystemMonitorThread, MinPriority) \\
+
 \circblockclose \\
 \interleave \\
 \circblockopen
 ObjectFW(ACSafeletObject) \\
 \t1 \lpar ObjectSync \rpar\\
 ObjectFW(MainMissionObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(TakeOffMissionObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(CruiseMissionObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(LandMissionObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(ACModeChangerObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(EnvironmentMonitorObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(ControlHandlerObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(FlightSensorsMonitorObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(CommunicationsHandlerObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(AperiodicSimulatorObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(LandingGearHandlerTakeOffObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(TakeOffMonitorObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(TakeOffFailureHandlerObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(BeginLandingHandlerObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(NavigationMonitorObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(GroundDistanceMonitorObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(LandingGearHandlerLandObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(InstrumentLandingSystemMonitorObject) \\
+\t1 \lpar ObjectSync \rpar\\
+ObjectFW(SafeLandingHandlerObject) \\
 
 \circblockclose
 \circblockclose

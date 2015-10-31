@@ -92,11 +92,11 @@ public class EnvironmentBuilder
 
 	public SchedulableTypeE getSchedulableType(Name s)
 	{
-		 System.out.println("+++ getSchedulableType: Name = " + s + " +++");
+		System.out.println("+++ getSchedulableType: Name = " + s + " +++");
 		for (TypeElement elem : type_elements)
 		{
-			 System.out.println("+++  simpleName = "+elem.getSimpleName()
-			 +" +++");
+			System.out.println("+++  simpleName = " + elem.getSimpleName()
+					+ " +++");
 			if (elem.getSimpleName().contentEquals(s))
 			{
 				TypeMirror superclass = elem.getSuperclass();
@@ -218,15 +218,18 @@ public class EnvironmentBuilder
 		tlmsClassEnv.setName(tlms);
 		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
-		ArrayList<Name> missions = new MissionSequencerLevel2Visitor(
-				programEnv, tlmsClassEnv, analysis)
+		MissionSequencerLevel2Visitor msl2Visitor = new MissionSequencerLevel2Visitor(programEnv, tlmsClassEnv, analysis);
+		
+		msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
+		
+		ArrayList<Name> missions = msl2Visitor
 				.visitType(tlmsElement, null);
 
 		topLevelMissionSequencer.addVariable(THIS,
 				CIRCREFTYPE + tlms.toString() + CLASS,
 				CIRCNEW + tlms.toString() + CLASS_BRACKETS, false);
 
-		getVariables(tlmsElement, tlmsClassEnv);
+		
 
 		assert (missions != null);
 		if (missions.isEmpty())
@@ -288,7 +291,7 @@ public class EnvironmentBuilder
 		else
 		{
 			System.out.println("*** Schedulables = " + schedulables.toString());
-			
+
 			buildSchedulables(missionEnv, schedulables);
 		}
 
@@ -305,8 +308,9 @@ public class EnvironmentBuilder
 
 			// TODO need to get rid of this stupid method call. I add to the
 			// Cluster and to the Mission envs
-			System.out.println("*** Scheudlable name = "+ s+ " type = " + type );
-			
+			System.out.println("*** Scheudlable name = " + s + " type = "
+					+ type);
+
 			programEnv.addSchedulable(type, s);
 
 			assert (programEnv.containsScheudlable(s));
@@ -411,9 +415,14 @@ public class EnvironmentBuilder
 
 			nestedMissionSequencer = programEnv
 					.getNestedMissionSequencer(sequencer);
+			System.out.println("nestedMissionSequencer = " + nestedMissionSequencer);
+			
+			MissionSequencerLevel2Visitor msl2Visitor = new MissionSequencerLevel2Visitor(programEnv,
+					nestedMissionSequencer, analysis);
+			
+			msl2Visitor.setVarMap(getVariables(tlmsElement, nestedMissionSequencer));
 
-			missions = new MissionSequencerLevel2Visitor(programEnv,
-					nestedMissionSequencer, analysis).visitType(tlmsElement,
+			missions = msl2Visitor.visitType(tlmsElement,
 					null);
 
 			assert (missions != null);
@@ -477,7 +486,7 @@ public class EnvironmentBuilder
 			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor,
 					true);
 			assert (m != null);
-
+			System.out.println("getVariables m = " + m);
 			// TODO this is a bit of a hack...
 
 			for (Name n : m.keySet())
@@ -487,8 +496,8 @@ public class EnvironmentBuilder
 				varMap.putIfAbsent(n, m.get(n));
 			}
 		}
+		System.out.println("getVariables varMap = " + varMap);
 		return varMap;
 
 	}
-
 }

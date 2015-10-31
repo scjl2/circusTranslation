@@ -167,7 +167,11 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		ArrayList<StatementTree> branches = new ArrayList<StatementTree>();
 
 		branches.add(arg0.getThenStatement());
-		branches.add(arg0.getElseStatement());
+		
+		if(arg0.getElseStatement() != null)
+		{
+			branches.add(arg0.getElseStatement());
+		}
 
 		ArrayList<Name> ifRetunrn = new ArrayList<Name>();
 

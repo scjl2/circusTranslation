@@ -2,7 +2,7 @@ package hijac.tools.tightrope.environments;
 
 public class VariableEnv
 {
-	private static final String[] APITypes = {"Safelet", "Mission"};
+//	private static final String[] APITypes = {"Safelet", "Mission"};
 		
 	private String variableName;
 	private String variableType;

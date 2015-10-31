@@ -5,12 +5,56 @@
 %
 \begin{axdef}
 MainMissionSequencer : SchedulableID\\
+	ACModeChanger : SchedulableID\\
+	EnvironmentMonitor : SchedulableID\\
+	ControlHandler : SchedulableID\\
+	FlightSensorsMonitor : SchedulableID\\
+	CommunicationsHandler : SchedulableID\\
+	AperiodicSimulator : SchedulableID\\
+	LandingGearHandlerTakeOff : SchedulableID\\
+	TakeOffMonitor : SchedulableID\\
+	TakeOffFailureHandler : SchedulableID\\
+	BeginLandingHandler : SchedulableID\\
+	NavigationMonitor : SchedulableID\\
+	GroundDistanceMonitor : SchedulableID\\
+	LandingGearHandlerLand : SchedulableID\\
+	InstrumentLandingSystemMonitor : SchedulableID\\
+	SafeLandingHandler : SchedulableID\\
  %eg MainMissionSequencer : SchedulableID\\
  % NestedMissionSequencer : SchedulableID\\
  % NestedOneShotEventHandler : SchedulableID\\   
   
 \where
   distinct \langle nullSequencerId, nullSchedulableId,
+	ACModeChanger
+	,\\
+	EnvironmentMonitor
+	,\\
+	ControlHandler
+	,\\
+	FlightSensorsMonitor
+	,\\
+	CommunicationsHandler
+	,\\
+	AperiodicSimulator
+	,\\
+	LandingGearHandlerTakeOff
+	,\\
+	TakeOffMonitor
+	,\\
+	TakeOffFailureHandler
+	,\\
+	BeginLandingHandler
+	,\\
+	NavigationMonitor
+	,\\
+	GroundDistanceMonitor
+	,\\
+	LandingGearHandlerLand
+	,\\
+	InstrumentLandingSystemMonitor
+	,\\
+	SafeLandingHandler
   \rangle
 \end{axdef}
 

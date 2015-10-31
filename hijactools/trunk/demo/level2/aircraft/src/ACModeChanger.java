@@ -10,13 +10,14 @@ package scjlevel2examples.aircraft;
 import javax.realtime.PriorityParameters;
 import javax.safetycritical.MissionSequencer;
 import javax.safetycritical.StorageParameters;
+import javax.safetycritical.Mission;
 
 import scjlevel2examples.modechange.Mode;
 import scjlevel2examples.modechange.ModeChanger;
 
 import devices.Console;
 
-public class ACModeChanger extends MissionSequencer<ModeMission> implements
+public class ACModeChanger extends MissionSequencer<Mission> implements
 		ModeChanger
 {
 	private MainMission controllingMission;
@@ -97,9 +98,27 @@ public class ACModeChanger extends MissionSequencer<ModeMission> implements
 	 * <code>advanceMode</code> or <code>changeTo</code>
 	 */
 	@Override
-	protected ModeMission getNextMission()
+	protected Mission getNextMission()
 	{
-		return (ModeMission) currentMode;
+		//return (ModeMission) currentMode;
+
+		if (modesLeft == 3)
+		{
+			modesLeft--;  
+		
+			return new TakeOffMission(controllingMission);
+		} else if (modesLeft == 2)
+		{
+			modesLeft--;
+			return new CruiseMission(controllingMission);
+		} else if (modesLeft == 1)
+		{
+			modesLeft--;
+			return new LandMission(controllingMission);
+		} else
+		{
+			return null;
+		}
 	}
 
 }

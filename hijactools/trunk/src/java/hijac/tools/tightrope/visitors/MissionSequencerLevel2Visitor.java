@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
@@ -29,7 +30,7 @@ public class MissionSequencerLevel2Visitor
 	private Trees trees;
 	private ReturnVisitor returnVisitor;
 	private ObjectEnv sequencerEnv;
-	private HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
+	private Map<Name, Tree> varMap ;
 	private MethodVisitor methodVisitor;
 
 	public MissionSequencerLevel2Visitor(ProgramEnv programEnv,
@@ -40,10 +41,16 @@ public class MissionSequencerLevel2Visitor
 		this.sequencerEnv = sequencerEnv;
 
 		trees = analysis.TREES;
-
-		returnVisitor = new ReturnVisitor(varMap);
+		
+		
 		methodVisitor = new MethodVisitor(analysis, sequencerEnv);
 
+	}
+	
+	public void setVarMap(Map<Name, Tree> varMap)
+	{
+		this.varMap = varMap;
+		returnVisitor = new ReturnVisitor(varMap);
 	}
 
 	// TODO Tuning: have this method accept an empty ArrayList to fill
@@ -82,13 +89,16 @@ public class MissionSequencerLevel2Visitor
 			{
 				System.out.println("MS VIsitor: Variable Tree Found");
 
-				// VariableTree vt = (VariableTree) tlst;
-				//
-				// System.out.println("-> " + vt.toString());
-				// System.out.println("-> Name:" + vt.getName());
-				// System.out.println("-> Type: " + vt.getType());
-				//
-				// programEnv.addVariable(vt.getName(), vt.getType());
+				 VariableTree vt = (VariableTree) tlst;
+//				//
+				 System.out.println("-> " + vt.toString());
+				 System.out.println("-> Name:" + vt.getName());
+				 System.out.println("-> Type: " + vt.getType());
+//				//
+				 
+				 
+				 
+//				 programEnv.addVariable(vt.getName(), vt.getType());
 			}
 
 			if (tlst instanceof MethodTree)

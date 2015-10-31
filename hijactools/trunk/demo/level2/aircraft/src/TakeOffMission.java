@@ -13,8 +13,9 @@ import javax.safetycritical.PriorityScheduler;
 import javax.safetycritical.StorageParameters;
 import javax.scj.util.Const;
 import javax.realtime.PeriodicParameters;
+import javax.safetycritical.Mission;
 
-public class TakeOffMission extends ModeMission implements LandingGearUser
+public class TakeOffMission extends Mission //implements LandingGearUser
 {
 	final double SAFE_AIRSPEED_THRESHOLD = 10.00;
 	final double TAKEOFF_ALTITUDE = 10.00;
@@ -48,7 +49,7 @@ public class TakeOffMission extends ModeMission implements LandingGearUser
 
 		// Load the schedulables for this mission
 
-		LandingGearHandler landingGearHandler = new LandingGearHandler(
+		LandingGearHandlerTakeOff landingGearHandler = new LandingGearHandlerTakeOff(
 				new PriorityParameters(5), new AperiodicParameters(),
 				storageParametersSchedulable, "Landing Gear Handler", this);
 
@@ -96,7 +97,7 @@ public class TakeOffMission extends ModeMission implements LandingGearUser
 		this.controllingMission = controllingMission;
 	}
 
-	@Override
+	
 	public synchronized void deployLandingGear()
 	{
 		landingGearDeployed = true;
@@ -109,13 +110,13 @@ public class TakeOffMission extends ModeMission implements LandingGearUser
 		return !abort;
 	}
 
-	@Override
+	
 	public void stowLandingGear()
 	{
 		landingGearDeployed = false;
 	}
 
-	@Override
+	
 	public boolean isLandingGearDeployed()
 	{
 		return landingGearDeployed;

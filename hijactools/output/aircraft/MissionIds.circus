@@ -5,12 +5,21 @@
 %
 \begin{axdef}
 	MainMission : MissionID\\
+	TakeOffMission : MissionID\\
+	CruiseMission : MissionID\\
+	LandMission : MissionID\\
  %eg MainMission : MissionID\\
 %  NestedMission : MissionID\\
  
 \where
   distinct \langle nullMissionId, 
 	MainMission
+	,\\
+	TakeOffMission
+	,\\
+	CruiseMission
+	,\\
+	LandMission
   \rangle
 \end{axdef}
 

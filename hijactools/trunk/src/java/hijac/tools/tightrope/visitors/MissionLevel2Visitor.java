@@ -89,8 +89,8 @@ public class MissionLevel2Visitor
 					Iterator<StatementTree> methodStatementsIterator = methodStatements
 							.iterator();
 
-					VariableVisitor varVisitor = new VariableVisitor(
-							programEnv, missionEnv);
+					VariableVisitor varVisitor = 
+							new VariableVisitor(programEnv, missionEnv);
 					// iterate through the statements in the Init method
 					HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 					StatementTree methodStatementTree;

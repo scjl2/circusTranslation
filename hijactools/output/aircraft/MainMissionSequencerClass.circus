@@ -32,7 +32,8 @@
 
       \circblockopen
 
-this~.~returnedMission :=true
+  returnedMission := \true ~
+
  
 
                \circseq \\ 
