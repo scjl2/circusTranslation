@@ -44,12 +44,12 @@ public class MissionEnv extends ParadigmEnv
 	{
 		List<Map> missionMethodsList = super.methsList();
 
-		for (MethodEnv me : MISSION_API_METHODS)
-		{
-			Map methodMap = methodToMap(me);
-
-			missionMethodsList.add(methodMap);
-		}
+//		for (MethodEnv me : MISSION_API_METHODS)
+//		{
+//			Map methodMap = methodToMap(me);
+//
+//			missionMethodsList.add(methodMap);
+//		}
 
 		return missionMethodsList;
 	}
@@ -60,6 +60,11 @@ public class MissionEnv extends ParadigmEnv
 		Map map = super.toMap();
 
 		map.put("RegisteredSchedulables", schedulables);
+		
+//		System.out.println("MissionEnv toMap = " + map);
+		System.out.println();
+		System.out.println("MissionEnv for "+getName()+" Map Methos = " + map.get("Methods"));
+		System.out.println();
 
 		return map;
 	}
