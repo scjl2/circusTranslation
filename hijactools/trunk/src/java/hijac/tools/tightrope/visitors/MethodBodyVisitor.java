@@ -529,7 +529,7 @@ public class MethodBodyVisitor extends
 		ExpressionTree methodSelect = node.getMethodSelect();
 		
 		String output ="";
-
+		Name identifier = null;
 		System.out.println("methodSelect = " + methodSelect + " and type = "
 				+ methodSelect.getKind());
 
@@ -543,16 +543,19 @@ public class MethodBodyVisitor extends
 			{
 				//This is for is the method call is: o.meth1().meth2();
 				output = visitMethodInvocation((MethodInvocationTree) expresison, ctxt);
+				output += "\\\\";
 				
 				System.out.println("Output = " + output);
 				
 				methodSelect = ((MethodInvocationTree) expresison).getMethodSelect();
 				
+				identifier = ((MemberSelectTree) methodSelect).getIdentifier();
+				
 				System.out.println("/*/* methodSelect = "+ methodSelect);
 			}
 		}
 
-		Name identifier = null;
+		
 
 		if (methodSelect instanceof MemberSelectTree)
 		{

@@ -1,9 +1,10 @@
 <#if Parameters?has_content>
+\\ \qquad 
 <#list Parameters as param>
   ${param.VarName} : ${param.VarType}
-<#if param_has_next>
-,
-</#if> 
+<#sep>
+, \\ \qquad 
+</#sep> 
 </#list>
 \circspot 
 </#if>

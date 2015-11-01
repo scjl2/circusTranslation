@@ -2,5 +2,9 @@
 <#list Parents as parent>
 ${parent}
 <#sep>, </#sep>
+<#if parent?counter % 5 == 0>
+\\
+</#if>
+
 </#list> 
 </#if>
