@@ -71,7 +71,7 @@
 \newpage
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
-\subsection{Schedulables of ${cluster.Mission}}
+\subsection{Schedulables of ${cluster.Mission.Name}}
 <#list schedulables as schedulable>
 
 \input{${schedulable.Name}App.circus}
