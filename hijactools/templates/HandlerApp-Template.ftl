@@ -31,7 +31,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-<#include MainAction-Template.ftl>  \circinterrupt (end\_${HandlerType}\_app~.~${ProcessID} \then \Skip)
+<#include "MainAction-Template.ftl">  \circinterrupt (end\_${HandlerType}\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

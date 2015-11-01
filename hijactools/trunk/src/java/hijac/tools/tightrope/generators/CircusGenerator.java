@@ -153,8 +153,7 @@ public class CircusGenerator
 			temp = cfg.getTemplate(template);
 		}
 		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
+		{			
 			e.printStackTrace();
 		}
 
