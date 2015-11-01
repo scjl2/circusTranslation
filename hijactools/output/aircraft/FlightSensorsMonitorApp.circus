@@ -1,0 +1,70 @@
+\begin{zsection}
+  \SECTION ~ FlightSensorsMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+ \t1  , \\
+MainMissionMethChan
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess FlightSensorsMonitorApp \circdef   controllingMission : MissionID
+\circspot 
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~FlightSensorsMonitor \then \\
+	
+      \circblockopen
+
+\Skip
+ 
+
+               \circseq \\ 
+
+setAirSpeedCall~.~controllingMission~!~0\then \\setAirSpeedRet~.~controllingMission\then \\\Skip
+ 
+
+               \circseq \\ 
+
+setAltitudeCall~.~controllingMission~!~0\then \\setAltitudeRet~.~controllingMission\then \\\Skip
+ 
+
+               \circseq \\ 
+
+setHeadingCall~.~controllingMission~!~0\then \\setHeadingRet~.~controllingMission\then \\\Skip
+ 
+
+        \circblockclose  
+
+
+    handleAsyncEventRet~.~FlightSensorsMonitor \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+    
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handlerAsyncEvent \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_periodic\_app~.~FlightSensorsMonitor \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

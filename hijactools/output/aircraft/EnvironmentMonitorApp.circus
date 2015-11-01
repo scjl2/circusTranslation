@@ -1,0 +1,70 @@
+\begin{zsection}
+  \SECTION ~ EnvironmentMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+ \t1  , \\
+MainMissionMethChan
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess EnvironmentMonitorApp \circdef   controllingMission : MissionID
+\circspot 
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~EnvironmentMonitor \then \\
+	
+      \circblockopen
+
+\Skip
+ 
+
+               \circseq \\ 
+
+setCabinPressureCall~.~controllingMission~!~0\then \\setCabinPressureRet~.~controllingMission\then \\\Skip
+ 
+
+               \circseq \\ 
+
+setEmergencyOxygenCall~.~controllingMission~!~0\then \\setEmergencyOxygenRet~.~controllingMission\then \\\Skip
+ 
+
+               \circseq \\ 
+
+setFuelRemainingCall~.~controllingMission~!~0\then \\setFuelRemainingRet~.~controllingMission\then \\\Skip
+ 
+
+        \circblockclose  
+
+
+    handleAsyncEventRet~.~EnvironmentMonitor \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+    
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handlerAsyncEvent \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_periodic\_app~.~EnvironmentMonitor \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

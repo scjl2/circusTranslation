@@ -1,0 +1,93 @@
+\begin{zsection}
+  \SECTION ~ LandingGearHandlerLandApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds
+ \t1  , \\
+LandMissionMethChan
+, 
+ObjectIds
+, 
+ThreadIds
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess LandingGearHandlerLandApp \circdef   mission : MissionID
+\circspot 
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~LandingGearHandlerLand \then \\
+	
+      \circblockopen
+
+\Skip
+ 
+
+               \circseq \\ 
+
+            isLandingGearDeployedCall~.~mission\then \\isLandingGearDeployedRet~.~mission~?~isLandingGearDeployed\then \\\\ \circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed\\
+
+
+  \circif ~ landingGearIsDeployed = \true ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+stowLandingGearCall~.~mission\then \\stowLandingGearRet~.~mission\then \\\Skip
+ 
+
+        \circblockclose  
+
+
+  \\
+  \circelse ~ \lnot landingGearIsDeployed = \true ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+deployLandingGearCall~.~mission~.~LandingGearHandlerLandThread\then \\deployLandingGearRet~.~mission~.~LandingGearHandlerLandThread\then \\\Skip
+ 
+
+        \circblockclose  
+
+
+  \\
+  \circfi
+ 
+
+        \circblockclose  
+
+
+    handleAsyncEventRet~.~LandingGearHandlerLand \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+    
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handlerAsyncEvent \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_aperiodic\_app~.~LandingGearHandlerLand \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
