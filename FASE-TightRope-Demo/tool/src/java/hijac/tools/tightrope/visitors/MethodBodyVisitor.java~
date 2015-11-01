@@ -4,16 +4,8 @@ import hijac.tools.application.TightRope;
 import hijac.tools.modelgen.circus.templates.CircusTemplateFactory;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
-import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
-import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
-import hijac.tools.tightrope.environments.MissionEnv;
-import hijac.tools.tightrope.environments.MissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
-import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
-import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
-import hijac.tools.tightrope.environments.SafeletEnv;
-import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
@@ -85,6 +77,7 @@ public class MethodBodyVisitor extends
 	private static final String EXPR_TEMPLATE = "L2Expr.ftl";
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
 
+	private static final List<MethodEnv> MISSION_API_METHODS = new ArrayList<MethodEnv>();
 	/**
 	 * Used to store values for 'future' calls to methods of the visitor
 	 */
@@ -94,8 +87,6 @@ public class MethodBodyVisitor extends
 	private LiteralTree trueLiteral = null;
 	private LiteralTree falseLiteral = null;
 	private ObjectEnv object;
-
-	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = new ArrayList<String>();
 
 	protected final NewSCJApplication CONTEXT;
 
@@ -114,6 +105,22 @@ public class MethodBodyVisitor extends
 		assert context != null;
 		CONTEXT = context;
 		this.object = object;
+
+		initAPIMeths();
+
+	}
+
+	private void initAPIMeths()
+	{
+		MISSION_API_METHODS.add(new MethodEnv("getMission", "Mission", true));
+		MISSION_API_METHODS.add(new MethodEnv("getSequencer",
+				"MissionSequencer", true));
+		MISSION_API_METHODS
+				.add(new MethodEnv("missionMemorySize", "int", true));
+		MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean",
+				true));
+		MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean",
+				true));
 
 	}
 
@@ -137,6 +144,7 @@ public class MethodBodyVisitor extends
 		this.object = object;
 		this.methodEnv = env;
 
+		initAPIMeths();
 	}
 
 	/**
@@ -204,18 +212,6 @@ public class MethodBodyVisitor extends
 
 			};
 		}
-	}
-
-	private void initGenericParadigmTypes()
-	{
-
-		GENERIC_PARADIGM_TYPES.add("Safelet");
-		GENERIC_PARADIGM_TYPES.add("Mission");
-		GENERIC_PARADIGM_TYPES.add("MissionSequencer");
-		GENERIC_PARADIGM_TYPES.add("AperiodicEventHandler");
-		GENERIC_PARADIGM_TYPES.add("OneShotEventHandler");
-		GENERIC_PARADIGM_TYPES.add("PeriodicEventHandler");
-		GENERIC_PARADIGM_TYPES.add("ManagedThread");
 	}
 
 	public void initMacroModel(Tree node, MethodVisitorContext ctxt)
@@ -507,6 +503,39 @@ public class MethodBodyVisitor extends
 	public String visitMemberSelect(MemberSelectTree node,
 			MethodVisitorContext ctxt)
 	{
+		// Name identifier = node.getIdentifier();
+		// Name objectEnvName = object.getName();
+		// StringBuilder sb = new StringBuilder();
+		//
+		// if(identifier.contentEquals("notify"))
+		// {
+		// sb.append("notify~.~");
+		// sb.append(objectEnvName.toString());
+		// sb.append("Object");
+		// sb.append("~?~thread \\then ");
+		// sb.append("\\\\");
+		// sb.append("\\Skip");
+		//
+		// return sb.toString() ;
+		// }
+		// else if (identifier.contentEquals("wait"))
+		// {
+		// sb.append("waitCall~.~");
+		// sb.append(objectEnvName.toString());
+		// sb.append("Object");
+		// sb.append("~?~thread \\then");
+		// sb.append("\\\\");
+		// sb.append("waitRet~.~");
+		// sb.append(objectEnvName.toString());
+		// sb.append("Object");
+		// sb.append("~?~thread \\then");
+		// sb.append("\\\\");
+		// sb.append("\\Skip");
+		//
+		// return sb.toString() ;
+		// }
+		// else
+		// {
 
 		/* Are MemberSelect nodes also used for selecting methods too? */
 		return callExprMacro(node, ctxt, "MemberSelect", node.getExpression(),
@@ -527,42 +556,12 @@ public class MethodBodyVisitor extends
 		System.out.println("/// methodInvocation node = " + node);
 
 		ExpressionTree methodSelect = node.getMethodSelect();
-		
-		String output ="";
-
-		System.out.println("methodSelect = " + methodSelect + " and type = "
-				+ methodSelect.getKind());
-
-		if (methodSelect instanceof MemberSelectTree)
-		{
-			ExpressionTree expresison = ((MemberSelectTree) methodSelect).getExpression();
-
-			System.out.println("expression = " + expresison + " and type = "
-					+ expresison.getKind());
-			if (expresison instanceof MethodInvocationTree)
-			{
-				//This is for is the method call is: o.meth1().meth2();
-				output = visitMethodInvocation((MethodInvocationTree) expresison, ctxt);
-				
-				System.out.println("Output = " + output);
-				
-				methodSelect = ((MethodInvocationTree) expresison).getMethodSelect();
-				
-				System.out.println("/*/* methodSelect = "+ methodSelect);
-			}
-		}
-
 		Name identifier = null;
 
 		if (methodSelect instanceof MemberSelectTree)
 		{
+
 			MemberSelectTree mst = (MemberSelectTree) methodSelect;
-
-			if (mst.getExpression().toString().startsWith("System"))
-			{
-				return "\\Skip";
-			}
-
 			identifier = mst.getIdentifier();
 		}
 		else if (methodSelect instanceof IdentifierTree)
@@ -614,22 +613,16 @@ public class MethodBodyVisitor extends
 				timeMachine.put("methodCall", false);
 				return sb.toString();
 			}
-			else if (isNotMyMethod( methodSelect))
+			else if (isNotMyMethod(node))
 			{
-				MethodEnv method = getMethodEnvBeingCalled(methodSelect);
-
+				MethodEnv method = getMethodEnvBeingCalled(node);
 				if (method.isAPIMethod())
 				{
-					ObjectEnv oEnv = getObjectEnvOfMethod(methodSelect);
-					System.out.println(oEnv);
-
-					Name nodeName = oEnv.getName();
-
+					Name nodeName = getObjectEnvOfMethod(methodSelect)
+							.getName();
 					for (TypeElement t : CONTEXT.getAnalysis()
 							.getTypeElements())
 					{
-						System.out.println(t.getSimpleName());
-						System.out.println(nodeName);
 						if (t.getSimpleName().contentEquals(nodeName))
 						{
 							String name = t.getSuperclass().toString();
@@ -657,8 +650,7 @@ public class MethodBodyVisitor extends
 					}
 				}
 
-				// System.out.println("!// method being called (returned) = "
-				// +
+				// System.out.println("!// method being called (returned) = " +
 				// method.getMethodName());
 
 				String returnString = method.getReturnType();
@@ -680,10 +672,10 @@ public class MethodBodyVisitor extends
 				{
 					for (ExpressionTree s : parameters)
 					{
-						sb.append("~!~");
+
 						if (s instanceof IdentifierTree)
 						{
-							
+							sb.append("~!~");
 							sb.append(((IdentifierTree) s).getName().toString());
 						}
 						else if (s instanceof LiteralTree)
@@ -694,7 +686,6 @@ public class MethodBodyVisitor extends
 							}
 							else
 							{
-								
 								sb.append(((LiteralTree) s).getValue()
 										.toString());
 							}
@@ -722,8 +713,7 @@ public class MethodBodyVisitor extends
 				{
 
 					sb.append("~?~");
-					final Object identifierString = timeMachine.get(identifier
-							.toString());
+					final Object identifierString = timeMachine.get(identifier.toString());
 					System.out
 							.println("!// return string not 'null', getting key: "
 									+ identifier.toString()
@@ -742,9 +732,7 @@ public class MethodBodyVisitor extends
 				}
 
 				timeMachine.put("methodCall", false);
-
 				return sb.toString();
-
 			}
 			else
 			{
@@ -753,16 +741,8 @@ public class MethodBodyVisitor extends
 				List<ExpressionTree> arguments = new ArrayList<ExpressionTree>();
 				for (int index = 0; index < params.size(); index++)
 				{
-					if (TightRope.useAnnotations())
-					{
-						if (!CONTEXT.ANNOTS
-								.isInteractionCode(params.get(index))
-								&& !CONTEXT.ANNOTS.isIgnored(params.get(index)))
-						{
-							arguments.add(node.getArguments().get(index));
-						}
-					}
-					else
+					if (!CONTEXT.ANNOTS.isInteractionCode(params.get(index))
+							&& !CONTEXT.ANNOTS.isIgnored(params.get(index)))
 					{
 						arguments.add(node.getArguments().get(index));
 					}
@@ -774,7 +754,7 @@ public class MethodBodyVisitor extends
 				 * macro.
 				 */
 				/* Question: Is that generally feasible? */
-				return output + callExprMacro(node, ctxt, "MethodInvocation",
+				return callExprMacro(node, ctxt, "MethodInvocation",
 						node.getMethodSelect(), arguments);
 
 			}
@@ -785,15 +765,70 @@ public class MethodBodyVisitor extends
 					.println("*** Identifier was null, returning empty string***");
 			return "";
 		}
+		//
+		// TODO if the object in which the method I'm invoking resides is an API
+		// app process, translate to call/ret comms
+		// String returnString = "";
+		// ExpressionTree et = node.getMethodSelect();
+		// MemberSelectTree mst = null;
+		// if (et instanceof MemberSelectTree)
+		// {
+		// mst = (MemberSelectTree) et;
+		// }
 
+		// TODO what I need to get here is the MethodEnv (or similar) of the
+		// method we're calling so I know it's parameters and return value.
+
+		// TypeElement te =
+		// CONTEXT.getAnalysis().getTypeElement("scjlevel2examples.flatbuffer.FlatBufferMission");
+
+		// object = TightRopeTest.getProgramEnv().getObjectEnv();
+		// //
+		// ((NewCircusTemplates) CONTEXT.getTemplates()).setObjectEnv(object);
+		// ObjectEnv objectWhereMethodResides = null;
+		// String returnType = "";
+		// String methodName = mst.getIdentifier().toString();
+		//
+		// for (VariableEnv v : object.getVariables())
+		// {
+		// if (v.getVariableName().contentEquals(
+		// mst.getExpression().toString()))
+		// {
+		//
+		// objectWhereMethodResides = TightRopeTest.getProgramEnv()
+		// .getObjectEnv(v.getVariableType().toString());
+		//
+		// MethodEnv methodWeAreCalling;
+		// for (MethodEnv m : ((ParadigmEnv) objectWhereMethodResides)
+		// .getMeths())
+		// {
+		// if (m.getMethodName().contentEquals(methodName))
+		// {
+		// methodWeAreCalling = m;
+		//
+		// returnType = "~?~" + methodWeAreCalling.getReturnType();
+		// }
+		// }
+		//
+		// }
+		// }
+
+		// returnString = methodName + "Call";
+		// returnString += "\\then \\\\";
+		//
+		// returnString += methodName + "Ret" + returnType;
+		// returnString += "\\then \\Skip";
+		// //
+		// // returnString = node.get
+		//
+		// return returnString;
 	}
 
-	private boolean isNotMyMethod(
-			ExpressionTree methodSelect)
+	private boolean isNotMyMethod(MethodInvocationTree node)
 	{
 		// MethodEnv method = getMethodEnvBeingCalled(node);
 
-		// ExpressionTree methodSelect = node.getMethodSelect();
+		ExpressionTree methodSelect = node.getMethodSelect();
 
 		if (methodSelect instanceof MemberSelectTree)
 		{
@@ -806,6 +841,7 @@ public class MethodBodyVisitor extends
 			if (expressionString.contentEquals(object.getName().toString()))
 
 			{
+
 				return false;
 			}
 			else
@@ -831,7 +867,7 @@ public class MethodBodyVisitor extends
 
 	private boolean isSyncMethod(MethodInvocationTree node)
 	{
-		if (getMethodEnvBeingCalled(node.getMethodSelect()).isSynchronised())
+		if (getMethodEnvBeingCalled(node).isSynchronised())
 		{
 			return true;
 		}
@@ -841,36 +877,10 @@ public class MethodBodyVisitor extends
 		}
 	}
 
-	private MethodEnv getMethodEnvBeingCalled(ExpressionTree methodSelect)
+	private MethodEnv getMethodEnvBeingCalled(MethodInvocationTree node)
 	{
-//		ExpressionTree methodSelect = node.getMethodSelect();
+		ExpressionTree methodSelect = node.getMethodSelect();
 		Name identifier = null;
-
-		ArrayList<MethodEnv> APIMethods = new ArrayList<MethodEnv>();
-		// APIMethods.addAll(MISSION_API_METHODS);
-		// APIMethods.addAll(EVENT_HANDLER_API_METHODS);
-
-		String methodName = "";
-		if (methodSelect instanceof MemberSelectTree)
-		{
-			methodName = ((MemberSelectTree) methodSelect).getIdentifier()
-					.toString();
-		}
-		else if (methodSelect instanceof IdentifierTree)
-		{
-			methodName = ((IdentifierTree) methodSelect).getName().toString();
-		}
-
-		for (MethodEnv me : APIMethods)
-		{
-			if (me.getMethodName().contains(methodName))
-			{
-				System.out.println("getMethodEnv returning method env for "
-						+ me.getMethodName());
-				return me;
-			}
-		}
-
 		if (methodSelect instanceof MemberSelectTree)
 		{
 
@@ -886,24 +896,14 @@ public class MethodBodyVisitor extends
 
 			identifier = mst.getIdentifier();
 
-			System.out.println("/// identifier = " + identifier);
+			ObjectEnv o = getObjectEnvOfMethod(methodSelect);
 
-			// if (isAPIMethod(node, methodSelect))
-			// {
-			// return new MethodEnv(identifier.toString(), "void", true);
-			// }
-			// else
-			{
-				ObjectEnv o = getObjectEnvOfMethod(methodSelect);
-				System.out.println("methodSelect = " + methodSelect);
-				System.out.println("/// o is " + o.getName());
+			System.out.println("/// o is " + o.getName());
 
-				return getMethodEnvFromObject(identifier, o);
-			}
+			return getMethodEnvFromObject(identifier, o);
 		}
 		else if (methodSelect instanceof IdentifierTree)
 		{
-
 			IdentifierTree it = (IdentifierTree) methodSelect;
 
 			identifier = it.getName();
@@ -919,40 +919,32 @@ public class MethodBodyVisitor extends
 	{
 		// MemberSelectTree mst = (MemberSelectTree) node.getMethodSelect();
 
-		ObjectEnv returnObject = null;
-		ExpressionTree expression = methodSelect;
+		ExpressionTree expression = methodSelect;// .getExpression();
+		// = mst.getExpression();
 
-		// Doesn't cater to API objects and methods
+		// System.out.println("/// node.getMethodSelect = " + mst.toString());
+		//
+		// System.out.println("/// node...getExpression = "
+		// + expression.toString());
+		// System.out
+		// .println("/// node expression type = " + expression.getKind());
+		//
+		// System.out.println("/// node...getIdenitifer = "
+		// + mst.getIdentifier().toString());
+
+		// while(expression instanceof MemberSelectTree)
+		// {
+		// System.out.println("/// Expression: " + expression +
+		// " Is a MemberSelectTree");
+		//
+		// expression = ((MemberSelectTree) expression).getExpression();
+		// }
+
 		if (expression instanceof MemberSelectTree)
 		{
-
-			IdentifierTree identifier = null;
-
 			expression = ((MemberSelectTree) methodSelect).getExpression();
 
-			while (identifier == null)
-			{
-				System.out.println("/// Expression = " + expression
-						+ " its kind = " + expression.getKind());
-
-				if (expression instanceof MemberSelectTree)
-				{
-					expression = ((MemberSelectTree) expression)
-							.getExpression();
-				}
-				else if (expression instanceof MethodInvocationTree)
-				{
-					expression = ((MethodInvocationTree) expression)
-							.getMethodSelect();
-				}
-				else if (expression instanceof IdentifierTree)
-				{
-					identifier = (IdentifierTree) expression;
-				}
-
-			}
-
-			Name varType = null;
+			String varType = "";
 			final boolean objectNotNull = object != null;
 			System.out.println("/// objectNotNull = " + objectNotNull);
 			if (objectNotNull)
@@ -969,10 +961,10 @@ public class MethodBodyVisitor extends
 					// we're in...
 					if (t.getSimpleName().contentEquals(object.getName()))
 					{
+
 						// ... then that's our class tree!
 						ClassTree ct = CONTEXT.getAnalysis().TREES.getTree(t);
 
-						@SuppressWarnings("unchecked")
 						List<Tree> members = (List<Tree>) ct.getMembers();
 						Iterator<Tree> i = members.iterator();
 
@@ -988,10 +980,11 @@ public class MethodBodyVisitor extends
 								System.out.println("/// vt.getName = "
 										+ vt.getName());
 								// / ... to find the variable with the same name
-								// as the expression in our method call
+								// as
+								// the expression in our method call
 								// i.e. expression.methodCall()
 								if (vt.getName().contentEquals(
-										identifier.toString()))
+										expression.toString()))
 								{
 									Tree typeTree = vt.getType();
 
@@ -1006,9 +999,7 @@ public class MethodBodyVisitor extends
 										// String) of
 										// the variable we are calling the
 										// method of
-										varType = it.getName();
-										// String varTypeString =
-										// varType.toString();
+										varType = it.getName().toString();
 									}
 								}
 								else
@@ -1017,7 +1008,7 @@ public class MethodBodyVisitor extends
 											.println("/// vt not equal to the expression. vt = "
 													+ vt
 													+ " and expresison = "
-													+ identifier);
+													+ expression);
 								}
 							}
 						}
@@ -1027,99 +1018,28 @@ public class MethodBodyVisitor extends
 				System.out.println("/// varType = " + varType);
 
 				// Then we get the Type Element of the variable we're calling
-				// the method on
-				if (varIsGenericParadigm(varType))
+				// the
+				// method on
+				for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 				{
-					System.out.println("var is Generic Paradigm");
-					returnObject = genericParadigm(varType);
-					System.out.println("returnObject = " + returnObject);
-				}
-				else
-				{
-					for (TypeElement t : CONTEXT.getAnalysis()
-							.getTypeElements())
+					System.out.println("!// t = " + t.getSimpleName());
+
+					final Name simpleName = t.getSimpleName();
+
+					System.out.println("/// t simpleName = " + simpleName);
+					if (simpleName.contentEquals(varType))
 					{
-						System.out.println("!// t = " + t.getSimpleName());
-
-						final Name simpleName = t.getSimpleName();
-
-						System.out.println("/// t simpleName = " + simpleName);
-						if (simpleName.contentEquals(varType))
-						{
-							// Get the object env of the class, that represents
-							// the
-							// variable we're calling the method on
-							ObjectEnv o = TightRope.getProgramEnv()
-									.getObjectEnv(simpleName);
-							returnObject = o;
-						}
+						// Get the object env of the class, that represents the
+						// variable we're calling the method on
+						ObjectEnv o = TightRope.getProgramEnv()
+								.getObjectEnv(simpleName);
+						return o;
 					}
 				}
 			}
 		}
 
-		System.out.println("returning returnObject = " + returnObject);
-		return returnObject;
-	}
-
-	private ObjectEnv genericParadigm(Name varType)
-	{
-		System.out.println("In genericParadigm, varType = " + varType);
-		ObjectEnv returnObject;
-
-		switch (varType.toString())
-		{
-			case "Safelet":
-				System.out.println("Triggered Safelet");
-				returnObject = new SafeletEnv();
-
-				break;
-			case "Mission":
-				System.out.println("Triggered Mission");
-				returnObject = new MissionEnv();
-				break;
-			case "MissionSequencer":
-				System.out.println("Triggered MissionSequencer");
-				returnObject = new MissionSequencerEnv();
-				break;
-			case "AperiodicEventHandler":
-				System.out.println("Triggered AperiodicEventHandler");
-				returnObject = new AperiodicEventHandlerEnv();
-				break;
-			case "OneShotEventHandler":
-				System.out.println("Triggered OneShotEventHandler");
-				returnObject = new OneShotEventHandlerEnv();
-				break;
-			case "PeriodicEventHandler":
-				System.out.println("Triggered PeriodicEventHandler");
-				returnObject = new PeriodicEventHandlerEnv();
-				break;
-			case "ManagedThread":
-				System.out.println("Triggered ManagedThread");
-				returnObject = new ManagedThreadEnv();
-				break;
-			default:
-				System.out.println("Triggered null");
-				returnObject = null;
-				break;
-		}
-
-		returnObject.setName(varType);
-		return returnObject;
-	}
-
-	private boolean varIsGenericParadigm(Name varType)
-	{
-		initGenericParadigmTypes();
-
-		if (GENERIC_PARADIGM_TYPES.contains(varType.toString()))
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return null;
 	}
 
 	private MethodEnv getMethodEnvFromObject(Name identifier, ObjectEnv o)
@@ -1127,8 +1047,7 @@ public class MethodBodyVisitor extends
 		List<MethodEnv> methods = new ArrayList<MethodEnv>();
 		methods.addAll(o.getSyncMeths());
 		methods.addAll(o.getMeths());
-		// methods.addAll(MISSION_API_METHODS);
-		// methods.addAll(EVENT_HANDLER_API_METHODS);
+		methods.addAll(MISSION_API_METHODS);
 
 		// TODO This falls over for API methods...
 		for (MethodEnv mEnv : methods)
@@ -1251,22 +1170,27 @@ public class MethodBodyVisitor extends
 			MethodInvocationTree mit = (MethodInvocationTree) node
 					.getInitializer();
 
-			if (isNotMyMethod(mit.getMethodSelect()))
+			if (isNotMyMethod(mit))
 			{
-				final MemberSelectTree memberSelectTree = (MemberSelectTree) mit
-						.getMethodSelect();
+				final MemberSelectTree memberSelectTree = (MemberSelectTree) mit.getMethodSelect();
 				System.out.println("!// not my method, variable, putting key: "
-						+ memberSelectTree.getIdentifier().toString()
-						+ " value: " + node.getName().toString());
+						+ memberSelectTree
+								.getIdentifier().toString() + " value: "
+						+ node.getName().toString());
 
-				timeMachine.putIfAbsent(memberSelectTree.getIdentifier()
-						.toString(), node.getName().toString());
+				timeMachine.putIfAbsent(memberSelectTree.getIdentifier().toString(), node
+						.getName().toString());
 
-				return visitMethodInvocation(mit, ctxt) + "\\\\ \\circvar "
-						+ node.getName() + " : "
+				return visitMethodInvocation(mit, ctxt)
+						+ "\\\\ \\circvar "
+						+ node.getName()
+						+ " : "
 						+ NewTransUtils.encodeType(node.getType())
-						+ " \\circspot " + node.getName() + " :=~"
-						+ memberSelectTree.getIdentifier().toString() + "\\\\";
+						+ " \\circspot "
+						+ node.getName()
+						+ " :=~"
+						+ memberSelectTree
+								.getIdentifier().toString() + "\\\\";
 			}
 			else
 			{
@@ -1322,7 +1246,8 @@ public class MethodBodyVisitor extends
 			boolean isStillMethodCall = (boolean) timeMachine.get("methodCall");
 			if (isStillMethodCall)
 			{
-
+				
+				
 				conditionString = "\\circvar loopVar : \\bool \\circspot loopVar :=~"
 						+ conditionTrans + "\\circseq \\\\";
 
@@ -1331,32 +1256,24 @@ public class MethodBodyVisitor extends
 			}
 			else
 			{
-				// TODO SUPER HACKY!
-				conditionTrans = conditionTrans.substring(1,
-						conditionTrans.length() - 1);
-				System.out
-						.println("/// conditionTrans sub = " + conditionTrans);
-
+				//TODO SUPER HACKY!
+				conditionTrans = conditionTrans.substring(1, conditionTrans.length()-1);
+				System.out.println("/// conditionTrans sub = " + conditionTrans);
+				
 				boolean negative = conditionTrans.startsWith("\\lnot");
-
-				if (negative)
+				
+				if(negative)
 				{
-					conditionTrans = conditionTrans.substring(5);
-
-					conditionString = conditionTrans
-							+ "\\"
+					conditionTrans=  conditionTrans.substring(5);
+					
+					conditionString = conditionTrans + "\\"
 							+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
-							+ " (\\lnot "
-							+ timeMachine.get("variableIdentifier")
-							+ ") \\circseq \\\\";
-				}
+							+ " (\\lnot "+ timeMachine.get("variableIdentifier") + ") \\circseq \\\\";				}
 				else
 				{
-					conditionString = conditionTrans
-							+ "\\"
-							+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
-							+ timeMachine.get("variableIdentifier")
-							+ "\\circseq \\\\";
+				conditionString = conditionTrans + "\\"
+						+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
+						+ timeMachine.get("variableIdentifier") + "\\circseq \\\\";
 				}
 
 			}
