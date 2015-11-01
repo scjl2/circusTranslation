@@ -26,8 +26,6 @@ import com.sun.source.tree.Tree;
 
 public class EnvironmentBuilder
 {
-	private static final String VARIABLE_VISITOR_RETURNED_NULL = "+++ Variable Visitor Returned Null +++";
-
 	private static final String BUILD_MISSION = "+++ Build Mission: ";
 
 	private static final String NO_MISSIONS = "+++ No Missions +++";
@@ -319,8 +317,12 @@ public class EnvironmentBuilder
 			{
 				nestedSequencers.add(s);
 			}
+			else
+			{
+				buildShedulable(s);
+			}
 
-			buildShedulable(s);
+			
 		}
 
 		if (!nestedSequencers.isEmpty())

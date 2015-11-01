@@ -315,7 +315,7 @@ MainMissionSequencerApp\\
 MainMissionApp ( hijac.tools.tightrope.environments.VariableEnv@71c27ee8 ,   hijac.tools.tightrope.environments.VariableEnv@3e7dd664 ,   hijac.tools.tightrope.environments.VariableEnv@5b1ebf56 ,   hijac.tools.tightrope.environments.VariableEnv@294a6b8e ,   hijac.tools.tightrope.environments.VariableEnv@4b1d6571 ,   hijac.tools.tightrope.environments.VariableEnv@1b835480 ,   hijac.tools.tightrope.environments.VariableEnv@3549bca9 ,   hijac.tools.tightrope.environments.VariableEnv@4f25b795 ,   hijac.tools.tightrope.environments.VariableEnv@6fb365ed   ) \\
 \interleave \\
 
-ACModeChangerApp ( MainMission ,  MainMission  ) \\
+ACModeChangerApp ( MainMission  ) \\
 \interleave \\
 ControlHandlerApp\\
 \interleave \\
