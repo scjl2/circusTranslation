@@ -773,7 +773,7 @@ public class MethodBodyVisitor extends
 				 * macro.
 				 */
 				/* Question: Is that generally feasible? */
-				return callExprMacro(node, ctxt, "MethodInvocation",
+				return output + callExprMacro(node, ctxt, "MethodInvocation",
 						node.getMethodSelect(), arguments);
 
 			}

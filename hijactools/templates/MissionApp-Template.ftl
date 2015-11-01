@@ -44,7 +44,7 @@ CleanupPhase \circdef  \\
 \circblockopen
  cleanupMissionCall~.~${ProcessID} \then \\
 
- cleanupMissionRet~.~${ProcessID}~!~\false \then \\
+ cleanupMissionRet~.~${ProcessID}~!~\true \then \\
  \Skip
 \circblockclose
 \end{circusaction}

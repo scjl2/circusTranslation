@@ -70,12 +70,12 @@ public class MissionLevel2Visitor
 			{
 				// capture the method
 				MethodTree missionMethodTree = (MethodTree) missionMemberTree;
+				
 				final boolean notIgnoredMethod = !(missionMethodTree.getName()
 						.contentEquals("<init>") || missionMethodTree.getName()
 						.contentEquals("missionMemorySize"));
 				final boolean syncMethod = missionMethodTree.getModifiers()
 						.getFlags().contains(Modifier.SYNCHRONIZED);
-
 				final boolean currentMethodIsInitialize = missionMethodTree
 						.getName().contentEquals("initialize");
 
