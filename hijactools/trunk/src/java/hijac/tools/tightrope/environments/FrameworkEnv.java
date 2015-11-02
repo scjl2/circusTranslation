@@ -19,6 +19,34 @@ public class FrameworkEnv
 
 	private TierEnv currentTier;
 	private ClusterEnv currentCluster;
+	
+	
+	private String outputMethods(String output, List<MethodEnv> methods)
+	{
+		if (methods.size() <= 0)
+		{
+			output += "\t\t\t No Methods";
+		}
+		else
+		{
+
+			for (MethodEnv me : methods)
+			{
+				String params = "";
+				Map<String, Type> parameterMap = me.getParameters();
+				if (parameterMap != null)
+				{
+					params = parameterMap.toString();
+				}
+
+				output += "\t\t\t" + me.getReturnType() + ":" + me.getMethodName()
+						+ "(" + params + ")";
+				output += LINE_SEPARATOR;
+			}
+		}
+		return  output;
+	}
+	
 
 	class ControlTierEnv
 	{
@@ -67,19 +95,20 @@ public class FrameworkEnv
 		public String toString()
 		{
 			String output = "";
-			output += "Safelet: " + safeletEnv.getName();
+			output +=  "\t Safelet: " + safeletEnv.getName();
 			output += LINE_SEPARATOR;
-			output += "Safelet Methods:";
+			output += "\t Safelet Methods:";
 			output += LINE_SEPARATOR;
-
 			List<MethodEnv> methods = safeletEnv.getMeths();
 			// TODO Output sync meths?
 			output = outputMethods(output, methods);
+			
+			
 			output += LINE_SEPARATOR;
-			output += "Top-Level Mission Sequencer: "
+			output += "\t Top-Level Mission Sequencer: "
 					+ topLevelMissionSequencerEnv.getName();
 			output += LINE_SEPARATOR;
-			output += "Top Level Sequencer Methods:";
+			output += "\t Top Level Sequencer Methods:";
 			output += LINE_SEPARATOR;
 
 			methods = topLevelMissionSequencerEnv.getMeths();
@@ -89,30 +118,7 @@ public class FrameworkEnv
 
 		}
 
-		private String outputMethods(String output, List<MethodEnv> methods)
-		{
-			if (methods.size() <= 0)
-			{
-				output += "No Methods";
-			}
-			else
-			{
-
-				for (MethodEnv me : methods)
-				{
-					String params = "";
-					Map<String, Type> parameterMap = me.getParameters();
-					if (parameterMap != null)
-					{
-						params = parameterMap.toString();
-					}
-
-					output += me.getReturnType() + ":" + me.getMethodName()
-							+ "(" + params + ")";
-				}
-			}
-			return output;
-		}
+		
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
@@ -186,7 +192,7 @@ public class FrameworkEnv
 		{
 			if (clusters.isEmpty())
 			{
-				return "Tier Empty";
+				return "\tTier Empty";
 			}
 			else
 			{
@@ -275,10 +281,17 @@ public class FrameworkEnv
 
 		public String toString()
 		{
-			String output = "Cluster Environment:";
+			String output = "\tCluster Environment:";
 			output += LINE_SEPARATOR;
-			output += "\t Mission = " + missionEnv.getName();
+			output += "\t\t Mission: " + missionEnv.getName();
 			output += LINE_SEPARATOR;
+			output += "\t\t Mission Methods:";
+			output += LINE_SEPARATOR;
+			List<MethodEnv> methods = new ArrayList<MethodEnv>();
+				methods.addAll(	missionEnv.getMeths());
+				methods.addAll(missionEnv.getSyncMeths());			
+			output = outputMethods(output, methods);
+			
 			output += schedulablesEnv.toString();
 
 			return output;
@@ -459,65 +472,65 @@ public class FrameworkEnv
 		public String toString()
 		{
 
-			StringBuilder output = new StringBuilder("Schedulables:");
+			StringBuilder output = new StringBuilder("\t\tSchedulables:");
 			output.append(LINE_SEPARATOR);
 
 			if (!periodEventHandlerEnvs.isEmpty())
 			{
-				output.append("Periodic Event Handlers:");
+				output.append("\t\t\tPeriodic Event Handlers:");
 				output.append(LINE_SEPARATOR);
 
 				for (PeriodicEventHandlerEnv p : periodEventHandlerEnvs)
 				{
-					output.append("\t" + p.getName());
+					output.append("\t\t\t\t" + p.getName());
 					output.append(LINE_SEPARATOR);
 				}
 			}
 
 			if (!aperiodicEventHandlerEnvs.isEmpty())
 			{
-				output.append("Aperidic Event Handlers:");
+				output.append("\t\t\tAperidic Event Handlers:");
 				output.append(LINE_SEPARATOR);
 
 				for (ObjectEnv p : aperiodicEventHandlerEnvs)
 				{
-					output.append("\t" + p.getName());
+					output.append("\t\t\t\t" + p.getName());
 					output.append(LINE_SEPARATOR);
 				}
 			}
 
 			if (!oneShotEventHandlerEnvs.isEmpty())
 			{
-				output.append("OneShot Event Handlers:");
+				output.append("\t\t\tOneShot Event Handlers:");
 				output.append(LINE_SEPARATOR);
 
 				for (OneShotEventHandlerEnv p : oneShotEventHandlerEnvs)
 				{
-					output.append("\t" + p.getName());
+					output.append("\t\t\t\t" + p.getName());
 					output.append(LINE_SEPARATOR);
 				}
 			}
 
 			if (!schedulableMissionSequencerEnvs.isEmpty())
 			{
-				output.append("Schedulable Mission Sequencers:");
+				output.append("\t\t\tSchedulable Mission Sequencers:");
 				output.append(LINE_SEPARATOR);
 
 				for (NestedMissionSequencerEnv p : schedulableMissionSequencerEnvs)
 				{
-					output.append("\t" + p.getName());
+					output.append("\t\t\t\t" + p.getName());
 					output.append(LINE_SEPARATOR);
 				}
 			}
 
 			if (!managedThreadEnvs.isEmpty())
 			{
-				output.append("Managed Threads:");
+				output.append("\t\t\tManaged Threads:");
 				output.append(LINE_SEPARATOR);
 
 				for (ManagedThreadEnv p : managedThreadEnvs)
 				{
-					output.append("\t" + p.getName());
+					output.append("\t\t\t\t" + p.getName());
 					output.append(LINE_SEPARATOR);
 
 				}
@@ -635,10 +648,11 @@ public class FrameworkEnv
 		top += (LINE_SEPARATOR);
 		top += (controlTier.toString());
 		top += (LINE_SEPARATOR);
-		top += ("Number of Tiers = ");
-		top += (tiers.size());
+		top += ("Number of Tiers = " +tiers.size());
 		top += (LINE_SEPARATOR);
-
+		top += ("____________________________________________________________________________________");
+		top +=(LINE_SEPARATOR);
+		
 		StringBuilder output = new StringBuilder(top);
 
 		int i = 0;
@@ -648,12 +662,14 @@ public class FrameworkEnv
 			output.append(i);
 			output.append(":");
 			output.append(LINE_SEPARATOR);
-			output.append("Number of Clusters in Tier ");
+			output.append("\tNumber of Clusters in Tier ");
 			output.append(i);
 			output.append(" = ");
 			output.append(tier.clusters.size());
 			output.append(LINE_SEPARATOR);
 			output.append(tier.toString());
+			output.append("____________________________________________________________________________________");
+			output.append(LINE_SEPARATOR);
 
 			i++;
 
