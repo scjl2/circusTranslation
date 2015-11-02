@@ -47,14 +47,17 @@ public class TakeOffFailureHandler extends AperiodicEventHandler
 	}
 
 	/**
-	 * Called when the handler is fired Launches the craft
+	 * Called when the handler is fired. Checks if the take off should be aborted
 	 */
 	@Override
 	public void handleAsyncEvent()
 	{
 
-		double currentSpeed = takeoffMission.getControllingMission()
-				.getAirSpeed();
+		double currentSpeed = takeoffMission.getControllingMission().getAirSpeed();
+
+		//MainMission mission = takeoffMission.getControllingMission();
+
+		//double currentSpeed = mission.getAirSpeed();
 
 		// in both cases this failure should be flagged somewhere
 		if (currentSpeed < threshold)

@@ -22,6 +22,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 
 import com.sun.source.util.Trees;
+import com.sun.tools.javac.util.Pair;
 
 public class MissionLevel2Visitor
 {
@@ -92,6 +93,8 @@ public class MissionLevel2Visitor
 					VariableVisitor varVisitor = 
 							new VariableVisitor(programEnv, missionEnv);
 					// iterate through the statements in the Init method
+															
+					
 					HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 					StatementTree methodStatementTree;
 
@@ -100,7 +103,7 @@ public class MissionLevel2Visitor
 						methodStatementTree = methodStatementsIterator.next();
 
 						HashMap<Name, Tree> m = (HashMap<Name, Tree>) methodStatementTree
-								.accept(varVisitor, true);
+								.accept(varVisitor, false);
 						// assert (m != null);
 						if (m != null)
 						{
