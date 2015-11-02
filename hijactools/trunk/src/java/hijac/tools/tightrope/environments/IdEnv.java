@@ -14,19 +14,18 @@ import javax.lang.model.element.Name;
 
 public abstract class IdEnv
 {
-	protected ArrayList<Name> idNames = new ArrayList<Name>();
+	protected ArrayList<String> idNames = new ArrayList<String>();
+	protected static final String ID_STR = "ID";
 			
 	@SuppressWarnings("rawtypes")
 	public abstract Map toMap();
 
-	public ArrayList<Name> getIdNames()
+	public ArrayList<String> getIdNames()
 	{
 		return idNames;
 	}
 
-	public void addIdNames(Name idName)
-	{
-		idNames.add(idName);
-	}
+	public abstract void addIdNames(String idName);
+	
 
 }

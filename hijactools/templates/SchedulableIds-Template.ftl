@@ -4,7 +4,7 @@
 \extracircusvspace
 %
 \begin{axdef}
-${toplevelSequencer} : SchedulableID\\
+${toplevelSequencer}ID : SchedulableID\\
 <#list Schedulables as schedulable>
 	${schedulable} : SchedulableID\\
 </#list>
@@ -13,12 +13,16 @@ ${toplevelSequencer} : SchedulableID\\
  % NestedOneShotEventHandler : SchedulableID\\   
   
 \where
-  distinct \langle nullSequencerId, nullSchedulableId,
+  distinct \langle nullSequencerId, nullSchedulableId, ${toplevelSequencer}ID, \\
   <#list Schedulables as schedulable>
 	${schedulable}
-	<#if schedulable_has_next>
+	<sep>
+	<#if schedulable?counter % 2 == 0>
 	,\\
+	<#else>
+	,
 	</#if>
+	</#sep>
 </#list>
   \rangle
 \end{axdef}

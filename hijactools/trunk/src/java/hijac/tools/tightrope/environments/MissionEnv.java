@@ -64,11 +64,6 @@ public class MissionEnv extends ParadigmEnv
 		Map map = super.toMap();
 
 		map.put("RegisteredSchedulables", schedulables);
-		
-//		System.out.println("MissionEnv toMap = " + map);
-		System.out.println();
-		System.out.println("MissionEnv for "+getName()+" Map Size = "+meths.size()+ " Methos = " + map.get("Methods"));
-		System.out.println();
 
 		return map;
 	}

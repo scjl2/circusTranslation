@@ -12,6 +12,7 @@ import javax.lang.model.element.Name;
 public class SchedulableIdsEnv extends IdEnv
 {
 
+
 	private static final String SCHEDULABLES_STR = "Schedulables";
 	private static final String TOPLEVEL_SEQUENCER = "toplevelSequencer";
 	
@@ -31,5 +32,10 @@ public class SchedulableIdsEnv extends IdEnv
 		map.put(SCHEDULABLES_STR, getIdNames());
 
 		return map;
+	}
+	
+	public void addIdNames(String idName)
+	{
+		idNames.add(idName+ID_STR);
 	}
 }

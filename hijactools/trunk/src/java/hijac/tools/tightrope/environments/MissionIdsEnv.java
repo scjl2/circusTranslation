@@ -15,4 +15,9 @@ public class MissionIdsEnv extends IdEnv
 
 		return map;
 	}
+	
+	public void addIdNames(String idName)
+	{
+		idNames.add(idName+ID_STR);
+	}
 }

@@ -13,6 +13,7 @@ import java.util.Map;
 public class ThreadIdsEnv extends IdEnv
 {
 
+	private static final String THREAD_ID_STR = "Thread"+ID_STR;
 	private static final String THREADS_STR = "Threads";
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -22,6 +23,11 @@ public class ThreadIdsEnv extends IdEnv
 		map.put(THREADS_STR, getIdNames());
 
 		return map;
+	}
+	
+	public void addIdNames(String idName)
+	{
+		idNames.add(idName+THREAD_ID_STR);
 	}
 
 }

@@ -14,9 +14,13 @@
   distinct \langle nullMissionId, 
   <#list Missions as mission>
 	${mission}
-	<#if mission_has_next>
+	<sep>
+	<#if mission?counter % 2 == 0>
 	,\\
+	<#else>
+	,
 	</#if>
+	</#sep>
 </#list>
   \rangle
 \end{axdef}

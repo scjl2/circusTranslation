@@ -3,7 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-
+\usepackage[UKenglish]{babel}
 \usepackage{xcolor}
 
 \usepackage{circus}
@@ -15,28 +15,33 @@
 
 \author{Tight Rope ${Version}}
 
+\date{\today}
+
 \begin{document}
 
 \maketitle
+
+\section{ID Files}
+\subsection{MissionIds}
+\input{MissionIds.circus}
+\newpage
+
+\subsection{SchedulablesIds}
+\input{SchedulableIds.circus}
+\newpage
+
+\subsection{ThreadIds}
+\input{ThreadIds.circus}
+\newpage
+
+\subsection{ObjectIds}
+\input{ObjectIds.circus}
+\newpage
 
 \section{Network}
 \input{Network.circus}
 \newpage
 
-\section{ID Files}
-\subsection{MissionIds}
-\input{MissionIds.circus}
-
-\subsection{SchedulablesIds}
-\input{SchedulableIds.circus}
-
-\subsection{ThreadIds}
-\input{ThreadIds.circus}
-
-
-\subsection{ObjectIds}
-\input{ObjectIds.circus}
-\newpage
 
 \section{Safelet}
 \input{${Safelet.Name}App.circus}

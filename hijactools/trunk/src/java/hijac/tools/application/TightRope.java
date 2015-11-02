@@ -12,6 +12,7 @@ import hijac.tools.application.UncaughtExceptionHandler;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -86,8 +87,7 @@ public class TightRope
 		
 		if(RUN_FREEMARKER)
 		{
-			CircusGenerator circGen = new CircusGenerator(customName, programEnv);
-			circGen.translate();
+			runFreemarker();
 		}
 
 		if(RUN_LATEX)
@@ -104,6 +104,13 @@ public class TightRope
 		System.out.println(duration + " nanoseconds");
 
 		System.exit(0);
+	}
+
+	private static void runFreemarker() throws IOException,
+			FileNotFoundException
+	{
+		CircusGenerator circGen = new CircusGenerator(customName, programEnv);
+		circGen.translate();
 	}
 
 	private static void setCustomName()

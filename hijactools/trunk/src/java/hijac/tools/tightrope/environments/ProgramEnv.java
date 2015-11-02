@@ -3,7 +3,7 @@ package hijac.tools.tightrope.environments;
 import hijac.tools.analysis.SCJAnalysis;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,11 +14,10 @@ public class ProgramEnv
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 
-
 	private MissionIdsEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
 	private ThreadIdsEnv threadIds;
-	
+	private ObjectIdsEnv objectIds;
 
 	public ProgramEnv(SCJAnalysis context)
 	{
@@ -28,11 +27,13 @@ public class ProgramEnv
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
 		threadIds = new ThreadIdsEnv();
+		objectIds = new ObjectIdsEnv();
 	}
 
 	public void addSafelet(Name safelet)
 	{
 		structureEnv.addSafelet(safelet);
+		objectIds.addIdNames(safelet.toString());
 	}
 
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
@@ -44,7 +45,9 @@ public class ProgramEnv
 	public void addMission(Name mission)
 	{
 		structureEnv.addMission(mission);
-		missionIds.addIdNames(mission);
+		final String missionString = mission.toString();
+		missionIds.addIdNames(missionString);
+		objectIds.addIdNames(missionString);
 	}
 
 	public FrameworkEnv getFrameworkEnv()
@@ -76,14 +79,18 @@ public class ProgramEnv
 		System.out.println(nonParadigmObjectEnvs.toString());
 		System.out.println("--------------------------------");
 		System.out.println("Variables");
-		
+
 	}
 
 	public void addSchedulable(SchedulableTypeE type, Name name)
 	{
 		structureEnv.addSchedulable(type, name);
-		schedulableIds.addIdNames(name);
-		threadIds.addIdNames(name);
+
+		final String nameString = name.toString();
+
+		schedulableIds.addIdNames(nameString);
+		threadIds.addIdNames(nameString);
+		objectIds.addIdNames(nameString);
 	}
 
 	public boolean containsScheudlable(Name name)
@@ -186,17 +193,20 @@ public class ProgramEnv
 	}
 
 	/**
-	 * Gets the <code>ParadigmEnv</code> that represents the schedulable sharing a name with the parameter.
-	 * May return <code>null</code>
+	 * Gets the <code>ParadigmEnv</code> that represents the schedulable sharing
+	 * a name with the parameter. May return <code>null</code>
 	 * 
-	 * @param name The name of the schedulable that we're looking for, as a <code>Name</code>
-	 * @return The <code>ParadigmEnv</code> we're looking for, or <code>null</code>
+	 * @param name
+	 *            The name of the schedulable that we're looking for, as a
+	 *            <code>Name</code>
+	 * @return The <code>ParadigmEnv</code> we're looking for, or
+	 *         <code>null</code>
 	 */
 	public ParadigmEnv getSchedulable(Name name)
 	{
-		for(ParadigmEnv obj : getSchedulables())
+		for (ParadigmEnv obj : getSchedulables())
 		{
-			if(obj.getName().contentEquals(name))
+			if (obj.getName().contentEquals(name))
 			{
 				return obj;
 			}
@@ -207,67 +217,71 @@ public class ProgramEnv
 	private List<ParadigmEnv> getSchedulables()
 	{
 		ArrayList<ParadigmEnv> schedulables = new ArrayList<ParadigmEnv>();
-		
+
 		schedulables.addAll(getPeriodicEventHandlers());
 		schedulables.addAll(getAperiodicEventHandlers());
 		schedulables.addAll(getOneShotEventHandlers());
 		schedulables.addAll(getNestedMissionSequencers());
 		schedulables.addAll(getManagedThreads());
-				
+
 		return schedulables;
 	}
 
 	public NestedMissionSequencerEnv getNestedMissionSequencer(Name sequencer)
 	{
-		for(NestedMissionSequencerEnv n : getNestedMissionSequencers())
+		for (NestedMissionSequencerEnv n : getNestedMissionSequencers())
 		{
-			if(n.getName().contentEquals(sequencer))
+			if (n.getName().contentEquals(sequencer))
 			{
 				return n;
 			}
 		}
-		
+
 		return null;
 	}
 
 	/**
-	 * Gets the object environment within this program environment that shares the same name as the parameter, if
-	 * it does not exists this method will return <code>null</code>. 
-	 * Internally, this method calls <code>getObjectEnv(String objectName)</code>.
+	 * Gets the object environment within this program environment that shares
+	 * the same name as the parameter, if it does not exists this method will
+	 * return <code>null</code>. Internally, this method calls
+	 * <code>getObjectEnv(String objectName)</code>.
 	 * 
-	 * @param objectName The name of the object we're looking for
-	 * @return The <code>ObjectEnv</code> representing the object we're looking for, or <code>null</code>
+	 * @param objectName
+	 *            The name of the object we're looking for
+	 * @return The <code>ObjectEnv</code> representing the object we're looking
+	 *         for, or <code>null</code>
 	 */
 	public ObjectEnv getObjectEnv(Name objectName)
 	{
 		return getObjectEnv(objectName.toString());
 	}
-		
+
 	/**
-	 * Gets the object environment within this program environment that shares the same name as the parameter, if
-	 * it does not exists this method will return <code>null</code>
+	 * Gets the object environment within this program environment that shares
+	 * the same name as the parameter, if it does not exists this method will
+	 * return <code>null</code>
 	 * 
-	 * @param objectName The name of the object we're looking for
-	 * @return The <code>ObjectEnv</code> representing the object we're looking for, or <code>null</code>
+	 * @param objectName
+	 *            The name of the object we're looking for
+	 * @return The <code>ObjectEnv</code> representing the object we're looking
+	 *         for, or <code>null</code>
 	 */
 	public ObjectEnv getObjectEnv(String objectName)
 	{
 		ArrayList<ObjectEnv> objects = new ArrayList<ObjectEnv>();
-		objects.addAll(	getMissions() );
+		objects.addAll(getMissions());
 		objects.addAll(getTopLevelMissionSequencers());
 		objects.addAll(getNestedMissionSequencers());
 		objects.addAll(getSchedulables());
-		
-		
-		
-		for(ObjectEnv o : objects)
+
+		for (ObjectEnv o : objects)
 		{
-			if(o.getName().contentEquals(objectName))
+			if (o.getName().contentEquals(objectName))
 			{
 				return o;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -280,18 +294,9 @@ public class ProgramEnv
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map getObjectIdsMap()
 	{
-		HashMap map = new HashMap();
-		
-		ArrayList<Name> list = new ArrayList<Name>();
-		
-		list.add(structureEnv.getControlTier().getSafeletEnv().getName());
-		list.addAll(missionIds.idNames);
-		list.addAll(schedulableIds.idNames);
-		
-		map.put("Objects", list);
-		
-		return map;
+
+		return objectIds.toMap();
+
 	}
 
-}
-;
+};

@@ -5,17 +5,21 @@
 %
 \begin{axdef}
 <#list Threads as thread>
-	${thread}Thread : ThreadID \\
+	${thread} : ThreadID \\
 </#list>
  
 \where
   distinct \langle SafeletThreadId, 
   nullThreadId, \\ 
   <#list Threads as thread>
-	${thread}Thread
-	<#if thread_has_next>
+	${thread}
+	<sep>
+	<#if thread?counter % 2 == 0>
 	,\\
+	<#else>
+	,
 	</#if>
+	</#sep>
 </#list>
   \rangle
 \end{axdef}

@@ -5,15 +5,19 @@
 %
 \begin{axdef}
 <#list Objects as object>
-	${object}Object : ObjectID \\
+	${object} : ObjectID \\
 </#list>
  
 \where
   distinct \langle 
    <#list Objects as object>
-	${object}Object
-	<#sep>
+	${object}
+	<sep>
+	<#if object?counter % 2 == 0>
 	,\\
+	<#else>
+	,
+	</#if>
 	</#sep>
 </#list>
   \rangle
