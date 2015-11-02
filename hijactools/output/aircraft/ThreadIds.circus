@@ -1,0 +1,57 @@
+\begin{zsection}
+  \SECTION ~ ThreadIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	ACModeChangerThreadID : ThreadID \\
+	EnvironmentMonitorThreadID : ThreadID \\
+	ControlHandlerThreadID : ThreadID \\
+	FlightSensorsMonitorThreadID : ThreadID \\
+	CommunicationsHandlerThreadID : ThreadID \\
+	AperiodicSimulatorThreadID : ThreadID \\
+	LandingGearHandlerTakeOffThreadID : ThreadID \\
+	TakeOffMonitorThreadID : ThreadID \\
+	TakeOffFailureHandlerThreadID : ThreadID \\
+	BeginLandingHandlerThreadID : ThreadID \\
+	NavigationMonitorThreadID : ThreadID \\
+	GroundDistanceMonitorThreadID : ThreadID \\
+	LandingGearHandlerLandThreadID : ThreadID \\
+	InstrumentLandingSystemMonitorThreadID : ThreadID \\
+	SafeLandingHandlerThreadID : ThreadID \\
+ 
+\where
+  distinct \langle SafeletThreadId, 
+  nullThreadId, \\ 
+	ACModeChangerThreadID
+	,
+	EnvironmentMonitorThreadID
+	,\\
+	ControlHandlerThreadID
+	,
+	FlightSensorsMonitorThreadID
+	,\\
+	CommunicationsHandlerThreadID
+	,
+	AperiodicSimulatorThreadID
+	,\\
+	LandingGearHandlerTakeOffThreadID
+	,
+	TakeOffMonitorThreadID
+	,\\
+	TakeOffFailureHandlerThreadID
+	,
+	BeginLandingHandlerThreadID
+	,\\
+	NavigationMonitorThreadID
+	,
+	GroundDistanceMonitorThreadID
+	,\\
+	LandingGearHandlerLandThreadID
+	,
+	InstrumentLandingSystemMonitorThreadID
+	,\\
+	SafeLandingHandlerThreadID
+  \rangle
+\end{axdef}
+

@@ -1,0 +1,62 @@
+\begin{zsection}
+  \SECTION ~ NavigationMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+ \t1  , \\
+CruiseMissionMethChan
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess NavigationMonitorApp \circdef \\ \qquad 
+  mission : CruiseMission
+\circspot 
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~NavigationMonitor \then \\
+	
+      \circblockopen
+
+            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar heading : double \circspot heading :=~getHeading\\
+
+
+            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar airSpeed : double \circspot airSpeed :=~getAirSpeed\\
+
+
+            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : double \circspot altitude :=~getAltitude\\
+\Skip
+        \circblockclose  
+
+ \circseq \\
+    handleAsyncEventRet~.~NavigationMonitor \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+    
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handlerAsyncEvent \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_periodic\_app~.~NavigationMonitor \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
