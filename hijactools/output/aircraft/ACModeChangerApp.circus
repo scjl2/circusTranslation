@@ -34,7 +34,7 @@
 \begin{schema}{Init}
   State~' \\
 \where
-  modesLeft' = 3\\ 
+  modesLeft' = \\ 
   \circreftype currentModeClass' = \circnew ModeClass()\\ 
   \circreftype launchModeClass' = \circnew ModeClass()\\ 
   \circreftype cruiseModeClass' = \circnew ModeClass()\\ 

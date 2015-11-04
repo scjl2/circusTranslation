@@ -495,7 +495,13 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitNewClass(NewClassTree arg0, Boolean addToEnv)
 	{
-		// TODO Auto-generated method stub
+		System.out.println("*** VarVisitor: New Class Tree");
+		
+		List<? extends ExpressionTree> args = arg0.getArguments();
+		
+		//TODO WHAT TO DO?
+				
+				
 		return null;
 	}
 
@@ -595,7 +601,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		return null;
 	}
 
-	@Override
+	@Override //return VariableEnv
 	public Map<Name, Tree> visitVariable(VariableTree arg0, Boolean addToEnv)
 	{
 
@@ -613,7 +619,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		String init = "";
 		if (arg0.getInitializer() != null)
 		{
-			init = arg0.getInitializer().toString();
+			Map<Name, Tree> initialiser = arg0.getInitializer().accept(this, addToEnv);
+			System.out.println("/*/* Init of " + arg0.getName() + " is = " + initialiser);
 		}
 
 		r.put(varName, varType);
