@@ -9,7 +9,7 @@ TakeOffMissionMethChan
 
 \begin{circus}
 \circprocess TakeOffFailureHandlerApp \circdef \\ \qquad 
-  takeoffMission : TakeOffMission1
+  takeoffMission : TakeOffMission
 \circspot 
   \circbegin
 \end{circus}

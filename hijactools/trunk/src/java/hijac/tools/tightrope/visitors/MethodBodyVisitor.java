@@ -11,6 +11,7 @@ import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.MissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
+import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
@@ -95,7 +96,7 @@ public class MethodBodyVisitor extends
 	private LiteralTree falseLiteral = null;
 	private ObjectEnv object;
 
-	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = new ArrayList<String>();
+	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = ParadigmEnv.getGenericParadigmTypes();
 
 	protected final NewSCJApplication CONTEXT;
 
@@ -206,17 +207,7 @@ public class MethodBodyVisitor extends
 		}
 	}
 
-	private void initGenericParadigmTypes()
-	{
-
-		GENERIC_PARADIGM_TYPES.add("Safelet");
-		GENERIC_PARADIGM_TYPES.add("Mission");
-		GENERIC_PARADIGM_TYPES.add("MissionSequencer");
-		GENERIC_PARADIGM_TYPES.add("AperiodicEventHandler");
-		GENERIC_PARADIGM_TYPES.add("OneShotEventHandler");
-		GENERIC_PARADIGM_TYPES.add("PeriodicEventHandler");
-		GENERIC_PARADIGM_TYPES.add("ManagedThread");
-	}
+	
 
 	public void initMacroModel(Tree node, MethodVisitorContext ctxt)
 	{
@@ -1113,8 +1104,6 @@ public class MethodBodyVisitor extends
 
 	private boolean varIsGenericParadigm(Name varType)
 	{
-		initGenericParadigmTypes();
-
 		if (GENERIC_PARADIGM_TYPES.contains(varType.toString()))
 		{
 			return true;

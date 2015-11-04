@@ -9,7 +9,7 @@ LandMissionMethChan
 
 \begin{circus}
 \circprocess GroundDistanceMonitorApp \circdef \\ \qquad 
-  mission : LandMission1
+  mission : LandMission
 \circspot 
   \circbegin
 \end{circus}

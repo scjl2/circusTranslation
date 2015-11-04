@@ -1,16 +1,20 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.tightrope.environments.ObjectEnv;
+import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.utils.NewTransUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
+
+import org.apache.commons.lang3.text.WordUtils;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
@@ -74,9 +78,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 {
 	// TODO This returns Names and Trees, it should return Names and
 	// TypeKinds....but how?
-	
-	
-	//TODO CLEAN UP
+
+	// TODO CLEAN UP
 	// private Tree save;
 	// private ArrayList<Name> returns = new ArrayList<Name>();
 	// private ClassTree tree;
@@ -84,6 +87,9 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	// private Iterator<StatementTree> i ;
 	private ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
+
+	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = ParadigmEnv
+			.getGenericParadigmTypes();
 
 	public VariableVisitor(ProgramEnv programEnv, ObjectEnv objectEnv)
 	{
@@ -112,7 +118,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	}
 
 	@Override
-	public Map<Name, Tree> visitArrayAccess(ArrayAccessTree arg0, Boolean addToEnv)
+	public Map<Name, Tree> visitArrayAccess(ArrayAccessTree arg0,
+			Boolean addToEnv)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -136,8 +143,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitAssignment(AssignmentTree arg0, Boolean addToEnv)
 	{
 
-//		System.out.println("Var Visitor: Assignment");
-//		System.out.println("-> " + arg0);
+		// System.out.println("Var Visitor: Assignment");
+		// System.out.println("-> " + arg0);
 
 		Map<Name, Tree> returnMap = null;
 
@@ -199,12 +206,13 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		if (varName != null & expressionTree != null)
 		{
-//			System.out.println("Adding to Var Map");
+			// System.out.println("Adding to Var Map");
 			returnMap = new HashMap<Name, Tree>();
 			returnMap.put(varName, expressionTree);
 			if (objectEnv != null && addToEnv == true)
 			{
-				objectEnv.addVariableInit(NewTransUtils.encodeName(varName), expressionTree);
+				objectEnv.addVariableInit(NewTransUtils.encodeName(varName),
+						expressionTree);
 				// objectEnv.addVariableInit(varName.toString(),
 				// "?"+varName.toString()+"In");
 
@@ -226,8 +234,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitBlock(BlockTree arg0, Boolean addToEnv)
 	{
 
-//		System.out.println("Var Visitor: Block");
-//		System.out.println(arg0);
+		// System.out.println("Var Visitor: Block");
+		// System.out.println(arg0);
 		HashMap<Name, Tree> returnMap = new HashMap<Name, Tree>();
 
 		List<? extends StatementTree> statements = arg0.getStatements();
@@ -237,18 +245,19 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		while (i.hasNext())
 		{
 			StatementTree st = i.next();
-//			System.out.println("Var Visitor Block: st kind = " + st.getKind());
+			// System.out.println("Var Visitor Block: st kind = " +
+			// st.getKind());
 			Map<Name, Tree> statementReturn = st.accept(this, addToEnv);
 
 			if (statementReturn != null)
 			{
-//				System.out.println("Var Visitor: Block: Returned Adding");
+				// System.out.println("Var Visitor: Block: Returned Adding");
 				returnMap.putAll(statementReturn);
 			}
-//			else
-//			{
-//				System.out.println("Var Visitor: Block: Returned Null");
-//			}
+			// else
+			// {
+			// System.out.println("Var Visitor: Block: Returned Null");
+			// }
 		}
 
 		return returnMap;
@@ -315,7 +324,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	}
 
 	@Override
-	public Map<Name, Tree> visitDoWhileLoop(DoWhileLoopTree arg0, Boolean addToEnv)
+	public Map<Name, Tree> visitDoWhileLoop(DoWhileLoopTree arg0,
+			Boolean addToEnv)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -349,7 +359,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			ExpressionStatementTree arg0, Boolean addToEnv)
 	{
 
-//		System.out.println("Var Visitor: Expression Statement Tree");
+		// System.out.println("Var Visitor: Expression Statement Tree");
 		return arg0.getExpression().accept(this, addToEnv);
 
 	}
@@ -434,7 +444,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	}
 
 	@Override
-	public Map<Name, Tree> visitMemberSelect(MemberSelectTree arg0, Boolean addToEnv)
+	public Map<Name, Tree> visitMemberSelect(MemberSelectTree arg0,
+			Boolean addToEnv)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -446,14 +457,14 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		if (arg0.getName().contentEquals("<init>"))
 		{
-//			System.out
-//					.println("+++ Var Visitor : Method Visitor found <init> +++");
+			// System.out
+			// .println("+++ Var Visitor : Method Visitor found <init> +++");
 			return arg0.getBody().accept(this, true);
 		}
 		else
 		{
-//			System.out
-//					.println("+++ Var Visitor : Method Visitor found method +++");
+			// System.out
+			// .println("+++ Var Visitor : Method Visitor found method +++");
 			return arg0.getBody().accept(this, false);
 		}
 
@@ -534,7 +545,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	}
 
 	@Override
-	public Map<Name, Tree> visitSynchronized(SynchronizedTree arg0, Boolean addToEnv)
+	public Map<Name, Tree> visitSynchronized(SynchronizedTree arg0,
+			Boolean addToEnv)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -595,41 +607,55 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 				+ arg0.getType() + " Init = " + arg0.getInitializer());
 
 		Name varName = arg0.getName();
-		
-		
+
 		Tree varType = arg0.getType();
 
 		String init = "";
 		if (arg0.getInitializer() != null)
-		{			
+		{
 			init = arg0.getInitializer().toString();
 		}
-		
 
 		r.put(varName, varType);
-
 
 		if (objectEnv != null && addToEnv == true)
 		{
 			System.out.println("var Visitor If");
 			if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
-			{				
+			{
 				System.out.println("var Visitor Primitive Type");
-				objectEnv.addVariable(NewTransUtils.encodeName(varName), NewTransUtils.encodeType(varType),
-						init, true);
+				objectEnv.addVariable(NewTransUtils.encodeName(varName),
+						NewTransUtils.encodeType(varType), init, true);
 			}
-			else if ((!(objectEnv.getName().toString().contains(varType.toString()))))
+			else if ((!(objectEnv.getName().toString().contains(varType
+					.toString()))))
 			{
 				System.out.println("var Visitor var type not Objdect name");
-				//if (programEnv.getSchedulable(varName) != null)
+				// if (programEnv.getSchedulable(varName) != null)
 				{
-					System.out.println("*/*/ New Parameter for " + objectEnv.getName() + " with name= " + NewTransUtils.encodeName(varName) 
-								+ " type = " + varType.toString() + " programType = " + varType.toString() + " and primitve = " + false);
+					System.out.println("*/*/ New Parameter for "
+							+ objectEnv.getName() + " with name= "
+							+ NewTransUtils.encodeName(varName) + " type = "
+							+ varType.toString() + " programType = "
+							+ varType.toString() + " and primitve = " + false);
 
 					String encodedName = NewTransUtils.encodeName(varName);
-					
-					objectEnv.addParameter(encodedName, varType.toString()+"1",
-							varType.toString()+"ID", false);
+					String varTypeString = varType.toString();
+
+					if (GENERIC_PARADIGM_TYPES.contains(varTypeString))
+					{
+						String varTypefromName = WordUtils
+								.capitalize(encodedName) + "ID";
+
+						objectEnv.addParameter(encodedName, varTypeString,
+								varTypefromName, false);
+
+					}
+					else
+					{
+						objectEnv.addParameter(encodedName, varTypeString,
+								varType.toString() + "ID", false);
+					}
 				}
 			}
 			else if (programEnv.getSchedulable(varName) != null)
@@ -639,7 +665,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			else
 			{
 				System.out.println("var Visitor add var to Object Env");
-				
+
 				objectEnv.addVariable("\\circreftype " + varName.toString()
 						+ "Class", varType.toString() + "Class", "\\circnew "
 						+ varType.toString() + "Class()", false);

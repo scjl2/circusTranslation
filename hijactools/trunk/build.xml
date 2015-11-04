@@ -64,6 +64,8 @@
       remoteUrl="http://types.cs.washington.edu/m2-repo"/>
   </target>
 
+ 
+
   <target name="freemarker" depends="macros">
     <fetch-m2
       groupId="org.freemarker"
@@ -99,6 +101,8 @@
       <link href="http://download.oracle.com/javase/6/docs/api/"/>
       <link href="http://download.oracle.com/javase/6/docs/jdk/api/javac/tree/"/>
       <link href="http://freemarker.sourceforge.net/docs/api"/>
+ 	<link href="https://commons.apache.org/proper/commons-lang/javadocs/api-release/index.html"/>
+	
     </javadoc>
   </target>
 

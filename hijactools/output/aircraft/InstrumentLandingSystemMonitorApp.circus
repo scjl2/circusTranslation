@@ -5,7 +5,7 @@
 
 \begin{circus}
 \circprocess InstrumentLandingSystemMonitorApp \circdef \\ \qquad 
-  mission : LandMission1
+  mission : LandMission
 \circspot 
   \circbegin
 \end{circus}

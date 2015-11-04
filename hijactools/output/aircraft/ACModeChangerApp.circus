@@ -14,7 +14,7 @@
 
 \begin{circus}
 \circprocess ACModeChangerApp \circdef \\ \qquad 
-  controllingMission : MainMission1
+  controllingMission : MainMission
 \circspot 
  \circbegin\\ 
 \end{circus}

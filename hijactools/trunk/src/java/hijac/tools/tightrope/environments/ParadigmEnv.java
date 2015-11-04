@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.environments;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +8,8 @@ public abstract class ParadigmEnv extends ObjectEnv
 {
 	protected static final String HAS_CLASS = "HasClass";
 	protected ClassEnv classEnv;
+	
+	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = new ArrayList<String>();
 	
 
 	public ParadigmEnv()
@@ -16,9 +19,10 @@ public abstract class ParadigmEnv extends ObjectEnv
 //		classEnv = new ClassEnv();
 		classEnv = null;
 		
+		
 
 	}
-
+	
 	public void addClassEnv(ClassEnv classEnv)
 	{
 		this.classEnv = classEnv;
@@ -62,4 +66,26 @@ public abstract class ParadigmEnv extends ObjectEnv
 //	{
 //		this.hasClass = hasClass;
 //	}
+
+	private static void initGenericParadigmTypes()
+	{
+	
+		GENERIC_PARADIGM_TYPES.add("Safelet");
+		GENERIC_PARADIGM_TYPES.add("Mission");
+		GENERIC_PARADIGM_TYPES.add("MissionSequencer");
+		GENERIC_PARADIGM_TYPES.add("AperiodicEventHandler");
+		GENERIC_PARADIGM_TYPES.add("OneShotEventHandler");
+		GENERIC_PARADIGM_TYPES.add("PeriodicEventHandler");
+		GENERIC_PARADIGM_TYPES.add("ManagedThread");
+	}
+
+	public static ArrayList<String> getGenericParadigmTypes()
+	{
+		if(GENERIC_PARADIGM_TYPES.isEmpty())
+		{
+			initGenericParadigmTypes();
+		}
+		
+		return GENERIC_PARADIGM_TYPES;
+	}
 }

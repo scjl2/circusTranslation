@@ -9,7 +9,7 @@ LandMissionMethChan
 
 \begin{circus}
 \circprocess SafeLandingHandlerApp \circdef \\ \qquad 
-  landMission : LandMission1
+  landMission : LandMission
 \circspot 
   \circbegin
 \end{circus}

@@ -325,7 +325,7 @@ EnvironmentMonitorApp ( MainMissionID  ) \\
 \interleave \\
 FlightSensorsMonitorApp ( MainMissionID  ) \\
 \interleave \\
-AperiodicSimulatorApp ( AperiodicEventHandlerID  ) \\
+AperiodicSimulatorApp ( EventID  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
@@ -334,12 +334,12 @@ LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
 \interleave \\
 TakeOffFailureHandlerApp ( TakeOffMissionID  ) \\
 \interleave \\
-TakeOffMonitorApp ( TakeOffMissionID ,  AperiodicEventHandlerID  ) \\
+TakeOffMonitorApp ( TakeOffMissionID ,  LandingGearHandlerID  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
-BeginLandingHandlerApp ( MissionID  ) \\
+BeginLandingHandlerApp ( ControllingMissionID  ) \\
 \interleave \\
 NavigationMonitorApp ( CruiseMissionID  ) \\
 \interleave \\
