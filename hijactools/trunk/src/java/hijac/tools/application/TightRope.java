@@ -224,7 +224,7 @@ public class TightRope
 
 		} catch (Exception e)
 		{
-			System.out.println("exception happened - here's what I know: ");
+			System.out.println("An exception happened - here's what I know: ");
 			e.printStackTrace();
 			System.exit(-1);
 		}

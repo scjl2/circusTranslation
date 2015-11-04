@@ -360,56 +360,78 @@ InstrumentLandingSystemMonitorApp ( LandMission  ) \\
 Locking \circdef \\
 \circblockopen
 \circblockopen
-ThreadFW(LandingGearHandlerLandThread, MinPriority) \\
+ThreadFW(ACModeChangerThreadID, MinPriority) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(SafeLandingHandlerThread, MinPriority) \\
+ThreadFW(EnvironmentMonitorThreadID, MinPriority) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(GroundDistanceMonitorThread, MinPriority) \\
+ThreadFW(ControlHandlerThreadID, MinPriority) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(InstrumentLandingSystemMonitorThread, MinPriority) \\
+ThreadFW(FlightSensorsMonitorThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(CommunicationsHandlerThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(AperiodicSimulatorThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(LandingGearHandlerTakeOffThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(TakeOffMonitorThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(TakeOffFailureHandlerThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(BeginLandingHandlerThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(NavigationMonitorThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(GroundDistanceMonitorThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(LandingGearHandlerLandThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(InstrumentLandingSystemMonitorThreadID, MinPriority) \\
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(SafeLandingHandlerThreadID, MinPriority) \\
 
 \circblockclose \\
 \interleave \\
 \circblockopen
-ObjectFW(ACSafeletObjectIDObject) \\
+ObjectFW(ACSafeletObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(MainMissionObjectIDObject) \\
+ObjectFW(MainMissionObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(ACModeChangerObjectIDObject) \\
+ObjectFW(ACModeChangerObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(EnvironmentMonitorObjectIDObject) \\
+ObjectFW(EnvironmentMonitorObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(ControlHandlerObjectIDObject) \\
+ObjectFW(ControlHandlerObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(FlightSensorsMonitorObjectIDObject) \\
+ObjectFW(FlightSensorsMonitorObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(CommunicationsHandlerObjectIDObject) \\
+ObjectFW(CommunicationsHandlerObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(AperiodicSimulatorObjectIDObject) \\
+ObjectFW(AperiodicSimulatorObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(TakeOffMissionObjectIDObject) \\
+ObjectFW(TakeOffMissionObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(LandingGearHandlerTakeOffObjectIDObject) \\
+ObjectFW(LandingGearHandlerTakeOffObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(TakeOffMonitorObjectIDObject) \\
+ObjectFW(TakeOffMonitorObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(TakeOffFailureHandlerObjectIDObject) \\
+ObjectFW(TakeOffFailureHandlerObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(CruiseMissionObjectIDObject) \\
+ObjectFW(CruiseMissionObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(BeginLandingHandlerObjectIDObject) \\
+ObjectFW(BeginLandingHandlerObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(NavigationMonitorObjectIDObject) \\
+ObjectFW(NavigationMonitorObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(LandMissionObjectIDObject) \\
+ObjectFW(LandMissionObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(GroundDistanceMonitorObjectIDObject) \\
+ObjectFW(GroundDistanceMonitorObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(LandingGearHandlerLandObjectIDObject) \\
+ObjectFW(LandingGearHandlerLandObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(InstrumentLandingSystemMonitorObjectIDObject) \\
+ObjectFW(InstrumentLandingSystemMonitorObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
-ObjectFW(SafeLandingHandlerObjectIDObject) \\
+ObjectFW(SafeLandingHandlerObjectID) \\
 
 \circblockclose
 \circblockclose

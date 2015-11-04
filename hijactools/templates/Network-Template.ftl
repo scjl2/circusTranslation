@@ -330,15 +330,15 @@ ${schedulable.Name}App<#if schedulable.Parameters?size != 0> (<#list schedulable
 Locking \circdef \\
 \circblockopen
 \circblockopen
-<#list schedulables as schedulable>
-ThreadFW(${schedulable.Name}Thread, MinPriority) \\
+<#list Threads.Threads as thread>
+ThreadFW(${thread}, MinPriority) \\
 <#sep>\t1 \lpar ThreadSync \rpar\\</#sep>
 </#list>
 \circblockclose \\
 \interleave \\
 \circblockopen
 <#list Objects.Objects as object>
-ObjectFW(${object}Object) \\
+ObjectFW(${object}) \\
 <#sep>\t1 \lpar ObjectSync \rpar\\</#sep>
 </#list>
 \circblockclose

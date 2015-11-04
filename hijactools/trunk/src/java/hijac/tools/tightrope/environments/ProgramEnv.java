@@ -139,11 +139,14 @@ public class ProgramEnv
 		return structureEnv.getManagedThreads();
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map geNetworkMap()
 	{
 		Map returnMap = structureEnv.getNetworkMap();
 		returnMap.put("Objects", getObjectIdsMap());
+		returnMap.put("Threads", getThreadIdsMap());
+		
+		System.out.println("Threads = " +returnMap.get("Threads"));
 		return returnMap;
 	}
 
@@ -291,12 +294,10 @@ public class ProgramEnv
 		return threadIds.toMap();
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes"})
 	public Map getObjectIdsMap()
 	{
-
 		return objectIds.toMap();
-
 	}
 
 };
