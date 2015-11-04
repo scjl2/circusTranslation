@@ -9,7 +9,7 @@ CruiseMissionMethChan
 
 \begin{circus}
 \circprocess NavigationMonitorApp \circdef \\ \qquad 
-  mission : CruiseMission
+  mission : CruiseMission1
 \circspot 
   \circbegin
 \end{circus}

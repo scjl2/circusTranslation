@@ -146,7 +146,6 @@ public class ProgramEnv
 		returnMap.put("Objects", getObjectIdsMap());
 		returnMap.put("Threads", getThreadIdsMap());
 		
-		System.out.println("Threads = " +returnMap.get("Threads"));
 		return returnMap;
 	}
 

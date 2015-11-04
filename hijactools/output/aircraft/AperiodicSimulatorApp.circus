@@ -5,7 +5,7 @@
 
 \begin{circus}
 \circprocess AperiodicSimulatorApp \circdef \\ \qquad 
-  event : AperiodicEventHandler
+  event : AperiodicEventHandler1
 \circspot 
   \circbegin
 \end{circus}

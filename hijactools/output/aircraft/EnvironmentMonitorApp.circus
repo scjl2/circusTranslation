@@ -9,7 +9,7 @@ MainMissionMethChan
 
 \begin{circus}
 \circprocess EnvironmentMonitorApp \circdef \\ \qquad 
-  controllingMission : MainMission
+  controllingMission : MainMission1
 \circspot 
   \circbegin
 \end{circus}

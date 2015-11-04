@@ -626,8 +626,10 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 					System.out.println("*/*/ New Parameter for " + objectEnv.getName() + " with name= " + NewTransUtils.encodeName(varName) 
 								+ " type = " + varType.toString() + " programType = " + varType.toString() + " and primitve = " + false);
 
-					objectEnv.addParameter(NewTransUtils.encodeName(varName), varType.toString(),
-							 varType.toString(), false);
+					String encodedName = NewTransUtils.encodeName(varName);
+					
+					objectEnv.addParameter(encodedName, varType.toString()+"1",
+							varType.toString()+"ID", false);
 				}
 			}
 			else if (programEnv.getSchedulable(varName) != null)
