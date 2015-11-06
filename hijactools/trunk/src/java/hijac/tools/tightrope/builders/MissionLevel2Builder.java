@@ -25,9 +25,9 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 
 import com.sun.source.util.Trees;
-import com.sun.tools.javac.util.Pair;
 
-public class MissionLevel2Builder
+
+public class MissionLevel2Builder extends ParadigmBuilder
 {
 	// private static ProgramEnv programEnv;
 	private static SCJAnalysis analysis;
@@ -41,6 +41,7 @@ public class MissionLevel2Builder
 	public MissionLevel2Builder(ProgramEnv programEnv, MissionEnv missionEnv,
 			SCJAnalysis analysis)
 	{
+		super(analysis, programEnv);
 		MissionLevel2Builder.analysis = analysis;
 		this.programEnv = programEnv;
 		this.missionEnv = missionEnv;
@@ -55,10 +56,12 @@ public class MissionLevel2Builder
 	}
 
 	@SuppressWarnings("unchecked")
-	public ArrayList<Name> visitType(TypeElement missionTypeElement, Void arg1)
+	public ArrayList<Name> build(TypeElement missionTypeElement)
 	{
 		ClassTree missionClassTree = trees.getTree(missionTypeElement);
 
+		getVariables(missionTypeElement, missionEnv);
+		
 		List<Tree> missionMembers = (List<Tree>) missionClassTree.getMembers();
 		Iterator<Tree> missionMembersIterator = missionMembers.iterator();
 
@@ -93,6 +96,7 @@ public class MissionLevel2Builder
 					Iterator<StatementTree> methodStatementsIterator = methodStatements
 							.iterator();
 
+					//FOR PARAMS?
 					VariableVisitor varVisitor = 
 							new VariableVisitor(programEnv, missionEnv);
 					// iterate through the statements in the Init method

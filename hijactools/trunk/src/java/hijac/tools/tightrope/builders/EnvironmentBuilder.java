@@ -164,10 +164,7 @@ public class EnvironmentBuilder
 
 		for (Name n : topLevelMissionSequners)
 		{
-			// System.out.println("+++ top Level Sequencer: " + n + " ***");
-
-			// programEnv.addMission(n);
-
+			// Which will call buildMission etc
 			buildTopLevelMissionSequencer(n);
 		}
 
@@ -195,7 +192,7 @@ public class EnvironmentBuilder
 				
 				programEnv.addSafelet(safeletName);
 
-				getVariables(elem, programEnv.getSafelet());
+				//getVariables(elem, programEnv.getSafelet());
 
 				return elem;
 			}
@@ -218,7 +215,7 @@ public class EnvironmentBuilder
 
 		//get TLMS list from visitor
 		topLevelMissionSequencers = 
-					safeletLevel2Visitor.visitType(safelet,	null);
+					safeletLevel2Visitor.build(safelet);
 		
 		//explore TLMSs
 		for (Name n : topLevelMissionSequencers)
@@ -244,12 +241,13 @@ public class EnvironmentBuilder
 		tlmsClassEnv.setName(tlms);
 		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
-		MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(programEnv, tlmsClassEnv, analysis);
+		MissionSequencerLevel2Builder msl2Visitor = 
+				new MissionSequencerLevel2Builder(programEnv, topLevelMissionSequencer, analysis);
 		
-		msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
+//		msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
 		
 		ArrayList<Name> missions = msl2Visitor
-				.visitType(tlmsElement, null);
+				.build(tlmsElement);
 
 		topLevelMissionSequencer.addVariable(THIS,
 				CIRCREFTYPE + tlms.toString() + CLASS,
@@ -301,13 +299,13 @@ public class EnvironmentBuilder
 		TypeElement missionTypeElem = elems.getTypeElement(fullName);
 
 		// HashMap<Name, Tree> variables =
-		getVariables(missionTypeElem, missionClassEnv);
+		//getVariables(missionTypeElem, missionClassEnv);
 
 		missionEnv.addVariable(THIS, CIRCREFTYPE + n.toString() + CLASS,
 				CIRCNEW + n.toString() + CLASS_BRACKETS, true);
 
 		ArrayList<Name> schedulables = new MissionLevel2Builder(programEnv,
-				missionEnv, analysis).visitType(missionTypeElem, null);
+				missionEnv, analysis).build(missionTypeElem);
 
 		assert (schedulables != null);
 		if (schedulables.isEmpty())
@@ -437,23 +435,32 @@ public class EnvironmentBuilder
 		TypeElement tlmsElement;
 		ArrayList<Name> missions;
 		NestedMissionSequencerEnv nestedMissionSequencer;
+		
+		
+
 
 		for (Name sequencer : nestedSequencers)
 		{
 			tlmsElement = analysis.ELEMENTS.getTypeElement(packagePrefix
 					+ sequencer);
 
+			
+			
 			nestedMissionSequencer = programEnv
 					.getNestedMissionSequencer(sequencer);
+			
+			ClassEnv smsClassEnv = new ClassEnv();
+			smsClassEnv.setName(sequencer);
+			nestedMissionSequencer.addClassEnv(smsClassEnv);
+			
 			System.out.println("nestedMissionSequencer = " + nestedMissionSequencer);
 			
 			MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(programEnv,
 					nestedMissionSequencer, analysis);
 			
-			msl2Visitor.setVarMap(getVariables(tlmsElement, nestedMissionSequencer));
+//			msl2Visitor.setVarMap(getVariables(tlmsElement, nestedMissionSequencer));
 
-			missions = msl2Visitor.visitType(tlmsElement,
-					null);
+			missions = msl2Visitor.build(tlmsElement);
 
 			assert (missions != null);
 			if (missions.isEmpty())

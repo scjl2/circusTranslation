@@ -14,7 +14,6 @@
 \begin{schema}{\circinitial Init}
   State~'
 \where
-  returnedMission' = false\\ 
 \end{schema}
 
 
@@ -32,8 +31,7 @@
 
       \circblockopen
 
-  returnedMission := \true ~
-
+this~.~returnedMission :=true
  
 
                \circseq \\ 

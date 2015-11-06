@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ ACModeChangerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId   \\
+  \t1 MissionId, MissionIds, SchedulableId  , ACModeChangerClass \\
 
   \t1 
 \end{zsection}
@@ -19,27 +19,6 @@
  \circbegin\\ 
 \end{circus}
    
-\begin{schema}{State}
-  modesLeft : \num\\ 
-  \circreftype currentModeClass : ModeClass\\ 
-  \circreftype launchModeClass : ModeClass\\ 
-  \circreftype cruiseModeClass : ModeClass\\ 
-  \circreftype landModeClass : ModeClass\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  modesLeft' = \\ 
-  \circreftype currentModeClass' = \circnew ModeClass()\\ 
-  \circreftype launchModeClass' = \circnew ModeClass()\\ 
-  \circreftype cruiseModeClass' = \circnew ModeClass()\\ 
-  \circreftype landModeClass' = \circnew ModeClass()\\ 
-\end{schema}
 
 \begin{circusaction}
 GetNextMission \circdef \circvar ret : MissionID \circspot \\
@@ -69,109 +48,6 @@ this~.~currentMode :=newMode
   \circseq  \\
 
 changeToRet~.~ACModeChanger \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-getNextMissionMeth \circdef 
-\circvar ret : MissionID \circspot
-\\
-\circblockopen
-getNextMissionCall~.~ACModeChanger 
-\then \\
-
-      \circblockopen
-
-  \circif ~ (modesLeft = 3) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  ret := TakeOffMission
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 3) ~ \circthen ~
-  \\
-  \t1
-  \circif ~ (modesLeft = 2) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  ret := CruiseMission
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 2) ~ \circthen ~
-  \\
-  \t1
-  \circif ~ (modesLeft = 1) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  ret := LandMission
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 1) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  ret := nullMissionId
- 
-
-        \circblockclose  
-
-
-  \\
-  \circfi
-
-  \\
-  \circfi
-
-  \\
-  \circfi
- 
-
-        \circblockclose  
-
-  \circseq  \\
-
-getNextMissionRet~.~ACModeChanger~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}	
@@ -301,8 +177,6 @@ Methods \circdef  \\
 %
 \extchoice \\
 	changeToMeth \\ 
-\extchoice \\
-	getNextMissionMeth \\ 
 %
 	\extchoice \\
 	advanceModeSyncMeth \\	
@@ -312,7 +186,7 @@ Methods \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~ACModeChanger \then \Skip)
 \end{circusaction}

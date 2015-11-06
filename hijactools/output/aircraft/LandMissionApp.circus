@@ -21,7 +21,10 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess LandMissionApp \circdef  \circbegin
+\circprocess LandMissionApp \circdef \\ \qquad 
+  controllingMission : MainMission
+\circspot 
+ \circbegin
 \end{circus}
 
 \begin{schema}{State}

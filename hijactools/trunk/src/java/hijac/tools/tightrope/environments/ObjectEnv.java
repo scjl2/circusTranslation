@@ -200,10 +200,10 @@ public class ObjectEnv
 		return parameters;
 	}
 
-	public void addParameter(VariableEnv parameter)
-	{
-		parameters.add(parameter);
-	}
+//	public void addParameter(VariableEnv parameter)
+//	{
+//		parameters.add(parameter);
+//	}
 
 	public void addParameter(String variableName, String variableType,
 			String programType, boolean primitive)

@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.visitors;
 
+import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -85,8 +86,9 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	// private ClassTree tree;
 
 	// private Iterator<StatementTree> i ;
-	private ProgramEnv programEnv;
+	private final ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
+	private ClassEnv classEnv;
 
 	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = ParadigmEnv
 			.getGenericParadigmTypes();
@@ -95,11 +97,12 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	{
 		this.programEnv = programEnv;
 		this.objectEnv = objectEnv;
+		classEnv = ((ParadigmEnv) objectEnv).getClassEnv();
 	}
 
 	public VariableVisitor(ProgramEnv programEnv)
 	{
-		// this.programEnv = programEnv;
+		 this.programEnv = programEnv;
 	}
 
 	@Override
@@ -607,7 +610,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		System.out.println("Var Visitor: Variable for " + arg0);
 
-		HashMap<Name, Tree> r = new HashMap<Name, Tree>();
+		HashMap<Name, Tree> returnMap = new HashMap<Name, Tree>();
 
 		System.out.println("-> Name = " + arg0.getName() + " Type = "
 				+ arg0.getType() + " Init = " + arg0.getInitializer());
@@ -621,17 +624,21 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		{
 			Map<Name, Tree> initialiser = arg0.getInitializer().accept(this, addToEnv);
 			System.out.println("/*/* Init of " + arg0.getName() + " is = " + initialiser);
+			init = arg0.getInitializer().toString();
 		}
 
-		r.put(varName, varType);
-
-		if (objectEnv != null && addToEnv == true)
+		returnMap.put(varName, varType);
+		
+		assert (varName != null);
+	//	assert (programEnv != null);
+		
+		if (classEnv != null && addToEnv == true)
 		{
 			System.out.println("var Visitor If");
 			if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
 			{
 				System.out.println("var Visitor Primitive Type");
-				objectEnv.addVariable(NewTransUtils.encodeName(varName),
+				classEnv.addVariable(NewTransUtils.encodeName(varName),
 						NewTransUtils.encodeType(varType), init, true);
 			}
 			else if ((!(objectEnv.getName().toString().contains(varType
@@ -641,7 +648,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 				// if (programEnv.getSchedulable(varName) != null)
 				{
 					System.out.println("*/*/ New Parameter for "
-							+ objectEnv.getName() + " with name= "
+							+ classEnv.getName() + " with name= "
 							+ NewTransUtils.encodeName(varName) + " type = "
 							+ varType.toString() + " programType = "
 							+ varType.toString() + " and primitve = " + false);
@@ -653,7 +660,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 					{
 						String varTypefromName = WordUtils
 								.capitalize(encodedName) + "ID";
-
+						
 						objectEnv.addParameter(encodedName, varTypeString,
 								varTypefromName, false);
 
@@ -663,6 +670,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 						objectEnv.addParameter(encodedName, varTypeString,
 								varType.toString() + "ID", false);
 					}
+					
+					System.out.println("*/*/ Adding Parameter " + encodedName + " to ObjectEnv " +objectEnv.getName() + "of type " + objectEnv.getClass().getCanonicalName());
 				}
 			}
 			else if (programEnv.getSchedulable(varName) != null)
@@ -673,12 +682,12 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			{
 				System.out.println("var Visitor add var to Object Env");
 
-				objectEnv.addVariable("\\circreftype " + varName.toString()
+				classEnv.addVariable("\\circreftype " + varName.toString()
 						+ "Class", varType.toString() + "Class", "\\circnew "
 						+ varType.toString() + "Class()", false);
 			}
 		}
-		return r;
+		return returnMap;
 	}
 
 	@Override

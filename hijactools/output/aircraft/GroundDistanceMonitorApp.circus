@@ -14,19 +14,6 @@ LandMissionMethChan
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  readingOnGround : double\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  readingOnGround' = \\ 
-\end{schema}
 
 \begin{circusaction}
 handlerAsyncEvent \circdef \\
@@ -89,7 +76,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_periodic\_app~.~GroundDistanceMonitor \then \Skip)
 \end{circusaction}
 

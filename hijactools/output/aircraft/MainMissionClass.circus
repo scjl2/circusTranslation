@@ -20,6 +20,7 @@
 \begin{schema}{\circinitial Init}
   State~'
 \where
+  ALTITUDE\_READING\_ON\_GROUND' = 0.0\\ 
 \end{schema}
 
 

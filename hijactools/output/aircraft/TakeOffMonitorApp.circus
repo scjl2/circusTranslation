@@ -16,19 +16,6 @@ TakeOffMissionMethChan
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  takeOffAltitude : double\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  takeOffAltitude' = takeOffAltitude\\ 
-\end{schema}
 
 \begin{circusaction}
 handlerAsyncEvent \circdef \\
@@ -95,7 +82,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_periodic\_app~.~TakeOffMonitor \then \Skip)
 \end{circusaction}
 

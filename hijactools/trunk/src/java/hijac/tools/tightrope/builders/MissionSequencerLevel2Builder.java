@@ -2,6 +2,7 @@ package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
+import hijac.tools.tightrope.environments.MissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.visitors.MethodVisitor;
@@ -25,20 +26,22 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
-public class MissionSequencerLevel2Builder
+public class MissionSequencerLevel2Builder extends ParadigmBuilder
 {
 	ProgramEnv programEnv;
 	SCJAnalysis analysis;
 
 	private Trees trees;
 	private ReturnVisitor returnVisitor;
-	private ObjectEnv sequencerEnv;
+	private MissionSequencerEnv sequencerEnv;
 	private Map<Name, Tree> varMap ;
 	private MethodVisitor methodVisitor;
 
 	public MissionSequencerLevel2Builder(ProgramEnv programEnv,
-			ObjectEnv sequencerEnv, SCJAnalysis analysis)
+			MissionSequencerEnv sequencerEnv, SCJAnalysis analysis)
 	{
+		super(analysis, programEnv);
+		
 		this.analysis = analysis;
 		this.programEnv = programEnv;
 		this.sequencerEnv = sequencerEnv;
@@ -50,19 +53,23 @@ public class MissionSequencerLevel2Builder
 
 	}
 	
-	public void setVarMap(Map<Name, Tree> varMap)
-	{
-		this.varMap = varMap;
-		returnVisitor = new ReturnVisitor(varMap);
-	}
+//	public void setVarMap(Map<Name, Tree> varMap)
+//	{
+//		this.varMap = varMap;
+//		returnVisitor = new ReturnVisitor(varMap);
+//	}
 
 	// TODO Tuning: have this method accept an empty ArrayList to fill
-	public ArrayList<Name> visitType(TypeElement arg0, Void arg1)
+	public ArrayList<Name> build(TypeElement arg0)
 	{
 		System.out.println();
 		System.out.println("+++ Mission Sequencer Variables +++");
 		System.out.println();
 
+		assert(sequencerEnv != null);
+		
+		varMap = getVariables(arg0, sequencerEnv);
+		
 		for (Name n : varMap.keySet())
 		{
 			System.out.println("+++ Variable " + n + " = " + varMap.get(n));
@@ -143,7 +150,7 @@ public class MissionSequencerLevel2Builder
 						m = methodVisitor.visitMethod(o, null);
 						setMethodAccess(m, o);
 
-						sequencerEnv.addMeth(m);
+						sequencerEnv.getClassEnv().addMeth(m);
 					}
 					else
 					{// ADD METHOD TO MISSION ENV

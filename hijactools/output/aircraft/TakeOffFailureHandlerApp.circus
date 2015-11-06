@@ -14,19 +14,6 @@ TakeOffMissionMethChan
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  threshold : double\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  threshold' = threshold\\ 
-\end{schema}
 
 \begin{circusaction}
 handlerAsyncEvent \circdef \\
@@ -100,7 +87,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_aperiodic\_app~.~TakeOffFailureHandler \then \Skip)
 \end{circusaction}
 
