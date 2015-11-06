@@ -1,4 +1,4 @@
-package hijac.tools.tightrope.visitors;
+package hijac.tools.tightrope.builders;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,7 +68,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 
-public class ManagedThreadVisitor implements TreeVisitor<ArrayList<Name>, Void>
+public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 {
 	// Going to use this to test for synchronised methods
 
@@ -81,7 +81,7 @@ public class ManagedThreadVisitor implements TreeVisitor<ArrayList<Name>, Void>
 	HashMap<Name, Tree> variables;
 	String packagePrefix;
 
-	public ManagedThreadVisitor(ProgramEnv programEnv, SCJAnalysis analysis,
+	public ManagedThreadBuilder(ProgramEnv programEnv, SCJAnalysis analysis,
 			HashMap<Name, Tree> vars, String packagePrefix)
 	{
 		this.programEnv = programEnv;

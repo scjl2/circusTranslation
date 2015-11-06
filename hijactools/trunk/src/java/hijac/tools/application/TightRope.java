@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import hijac.tools.tightrope.environments.EnvironmentBuilder;
+import hijac.tools.tightrope.builders.EnvironmentBuilder;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.generators.CircusGenerator;
 import hijac.tools.tightrope.generators.NewSCJApplication;

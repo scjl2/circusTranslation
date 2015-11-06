@@ -1,10 +1,13 @@
-package hijac.tools.tightrope.visitors;
+package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.visitors.MethodVisitor;
+import hijac.tools.tightrope.visitors.RegistersVisitor;
+import hijac.tools.tightrope.visitors.VariableVisitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +27,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.Trees;
 import com.sun.tools.javac.util.Pair;
 
-public class MissionLevel2Visitor
+public class MissionLevel2Builder
 {
 	// private static ProgramEnv programEnv;
 	private static SCJAnalysis analysis;
@@ -35,10 +38,10 @@ public class MissionLevel2Visitor
 	private ArrayList<Name> schedulables;
 	private ProgramEnv programEnv;
 
-	public MissionLevel2Visitor(ProgramEnv programEnv, MissionEnv missionEnv,
+	public MissionLevel2Builder(ProgramEnv programEnv, MissionEnv missionEnv,
 			SCJAnalysis analysis)
 	{
-		MissionLevel2Visitor.analysis = analysis;
+		MissionLevel2Builder.analysis = analysis;
 		this.programEnv = programEnv;
 		this.missionEnv = missionEnv;
 

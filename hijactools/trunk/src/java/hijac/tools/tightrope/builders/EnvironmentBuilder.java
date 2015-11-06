@@ -1,10 +1,18 @@
-package hijac.tools.tightrope.environments;
+package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.ClassEnv;
+import hijac.tools.tightrope.environments.EventHandlerEnv;
+import hijac.tools.tightrope.environments.ManagedThreadEnv;
+import hijac.tools.tightrope.environments.MissionEnv;
+import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
+import hijac.tools.tightrope.environments.ObjectEnv;
+import hijac.tools.tightrope.environments.ParadigmEnv;
+import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.SchedulableTypeE;
+import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
 import hijac.tools.tightrope.visitors.MethodVisitor;
-import hijac.tools.tightrope.visitors.MissionLevel2Visitor;
-import hijac.tools.tightrope.visitors.MissionSequencerLevel2Visitor;
-import hijac.tools.tightrope.visitors.SafeletLevel2Visitor;
+
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
 import java.util.ArrayList;
@@ -26,6 +34,8 @@ import com.sun.source.tree.Tree;
 
 public class EnvironmentBuilder
 {
+	private static final String BUILDING_TOP_LEVEL_SEQUENCER = "+++ Building Top Level Sequencer +++";
+
 	private static final String BUILD_MISSION = "+++ Build Mission: ";
 
 	private static final String NO_MISSIONS = "+++ No Missions +++";
@@ -136,11 +146,21 @@ public class EnvironmentBuilder
 
 	}
 
+	/**
+	 * Start the exploration of the program represented by the <code>SCJAnalysis</code>
+	 * supplied to this class's constructor. It begins by getting the Safelet and building it,
+	 * and continues from there down the tiers.
+	 * 
+	 * @return <code>ProgramEnv</code> the program environment for this program
+	 */
 	public ProgramEnv explore()
 	{
+		System.out.println();
 		System.out.println("+++ Building Environments +++");
 		System.out.println();
-		ArrayList<Name> topLevelMissionSequners = buildSafelet(getSafelet());
+		
+		TypeElement safeletType = findSafelet();
+		ArrayList<Name> topLevelMissionSequners = buildSafelet(safeletType);
 
 		for (Name n : topLevelMissionSequners)
 		{
@@ -154,8 +174,12 @@ public class EnvironmentBuilder
 		return programEnv;
 	}
 
-	private TypeElement getSafelet()
+	private TypeElement findSafelet()
 	{
+		System.out.println();
+		System.out.println("+++ Finding Safelet +++");
+		System.out.println();
+		
 		// TypeElement safelet = null;
 		for (TypeElement elem : type_elements)
 		{
@@ -163,11 +187,13 @@ public class EnvironmentBuilder
 			// presented with multiple interfaces
 			if (elem.getInterfaces().toString().contains("Safelet"))
 			{
-				System.out.println("Found Safelet");
-				// safelet = elem;
+				final Name safeletName = elem.getSimpleName();
+				
+				System.out.println("+++ Found Safelet " + safeletName + END_PLUSES);
+				
 				packagePrefix = findPackagePrefix(elem);
-
-				programEnv.addSafelet(elem.getSimpleName());
+				
+				programEnv.addSafelet(safeletName);
 
 				getVariables(elem, programEnv.getSafelet());
 
@@ -179,32 +205,34 @@ public class EnvironmentBuilder
 
 	private ArrayList<Name> buildSafelet(TypeElement safelet)
 	{
-
+		System.out.println();
+		System.out.println("+++ Building Saflet +++");
+		System.out.println();
+		
+		//init return list
 		ArrayList<Name> topLevelMissionSequencers = null;
 
-		SafeletLevel2Visitor safeletLevel2Visitor = new SafeletLevel2Visitor(
-				programEnv, analysis);
+		//init Safelet visitor
+		SafeletLevel2Builder safeletLevel2Visitor = 
+				new SafeletLevel2Builder(programEnv, analysis);
 
-		topLevelMissionSequencers = safeletLevel2Visitor.visitType(safelet,
-				null);
-
-		final String output = "+++ Exploring Top Level Sequencer ";
-
+		//get TLMS list from visitor
+		topLevelMissionSequencers = 
+					safeletLevel2Visitor.visitType(safelet,	null);
+		
+		//explore TLMSs
 		for (Name n : topLevelMissionSequencers)
-		{
-			System.out.println();
-
-			System.out.println(output + n + END_PLUSES);
-			System.out.println();
+		{		
 			programEnv.addTopLevelMissionSequencer(n);
 		}
+		
 		return topLevelMissionSequencers;
 	}
 
 	private void buildTopLevelMissionSequencer(Name tlms)
 	{
 		System.out.println();
-		System.out.println("+++ Building Top Level Sequencer +++");
+		System.out.println(BUILDING_TOP_LEVEL_SEQUENCER);
 		System.out.println();
 
 		TypeElement tlmsElement = analysis.ELEMENTS
@@ -216,7 +244,7 @@ public class EnvironmentBuilder
 		tlmsClassEnv.setName(tlms);
 		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
-		MissionSequencerLevel2Visitor msl2Visitor = new MissionSequencerLevel2Visitor(programEnv, tlmsClassEnv, analysis);
+		MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(programEnv, tlmsClassEnv, analysis);
 		
 		msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
 		
@@ -278,7 +306,7 @@ public class EnvironmentBuilder
 		missionEnv.addVariable(THIS, CIRCREFTYPE + n.toString() + CLASS,
 				CIRCNEW + n.toString() + CLASS_BRACKETS, true);
 
-		ArrayList<Name> schedulables = new MissionLevel2Visitor(programEnv,
+		ArrayList<Name> schedulables = new MissionLevel2Builder(programEnv,
 				missionEnv, analysis).visitType(missionTypeElem, null);
 
 		assert (schedulables != null);
@@ -419,7 +447,7 @@ public class EnvironmentBuilder
 					.getNestedMissionSequencer(sequencer);
 			System.out.println("nestedMissionSequencer = " + nestedMissionSequencer);
 			
-			MissionSequencerLevel2Visitor msl2Visitor = new MissionSequencerLevel2Visitor(programEnv,
+			MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(programEnv,
 					nestedMissionSequencer, analysis);
 			
 			msl2Visitor.setVarMap(getVariables(tlmsElement, nestedMissionSequencer));

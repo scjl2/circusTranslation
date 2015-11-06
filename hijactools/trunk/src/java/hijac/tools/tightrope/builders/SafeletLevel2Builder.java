@@ -1,9 +1,11 @@
-package hijac.tools.tightrope.visitors;
+package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
+import hijac.tools.tightrope.visitors.MethodVisitor;
+import hijac.tools.tightrope.visitors.ReturnVisitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +29,7 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
-public class SafeletLevel2Visitor
+public class SafeletLevel2Builder extends ParadigmBuilder
 {
 
 //	private static ProgramEnv programEnv;
@@ -38,9 +40,9 @@ public class SafeletLevel2Visitor
 	
 	private SafeletEnv safeletEnv;
 
-	public SafeletLevel2Visitor(ProgramEnv programEnv, SCJAnalysis analysis)
+	public SafeletLevel2Builder(ProgramEnv programEnv, SCJAnalysis analysis)
 	{
-		SafeletLevel2Visitor.analysis = analysis;
+		this.analysis = analysis;
 //		SafeletLevel2Visitor.programEnv = programEnv;
 
 		trees = analysis.TREES;
