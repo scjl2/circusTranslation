@@ -1,17 +1,11 @@
 \begin{zsection}
-  \SECTION ~ AperiodicSimulatorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ BeginLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds
  \t1  
 \end{zsection}
 
 \begin{circus}
-\circprocess AperiodicSimulatorApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
-  PeriodicParameters : 
-, \\ \qquad 
-  storageParametersSchedulable : 
-, \\ \qquad 
-  beginLandingHandler : 
+\circprocess BeginLandingHandlerApp \circdef \\ \qquad 
+  controllingMission : Mission
 \circspot 
   \circbegin
 \end{circus}
@@ -20,7 +14,7 @@
 \begin{circusaction}
 handlerAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~AperiodicSimulator \then \\
+	handleAsyncEventCall~.~BeginLandingHandler \then \\
 	
       \circblockopen
 
@@ -29,13 +23,13 @@ handlerAsyncEvent \circdef \\
 
                \circseq \\ 
 
-            releaseCall~.~event\then \\releaseRet~.~event~?~release\then \\
+            requestTerminationCall~.~controllingMission\then \\requestTerminationRet~.~controllingMission~?~requestTermination\then \\
 
 \Skip
         \circblockclose  
 
  \circseq \\
-    handleAsyncEventRet~.~AperiodicSimulator \then \\
+    handleAsyncEventRet~.~BeginLandingHandler \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -56,7 +50,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~AperiodicSimulator \then \Skip)
+  \circinterrupt (end\_aperiodic\_app~.~BeginLandingHandler \then \Skip)
 \end{circusaction}
 
 \begin{circus}

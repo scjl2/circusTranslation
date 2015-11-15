@@ -1,0 +1,104 @@
+\begin{zsection}
+  \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+ \t1  , \\
+TakeOffMissionMethChan
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess TakeOffMonitorApp \circdef \\ \qquad 
+  takeoffMission : TakeOffMission
+, \\ \qquad 
+  landingGearHandler : AperiodicEventHandler
+\circspot 
+  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  takeOffAltitude : double\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  takeOffAltitude' = takeOffAltitude\\ 
+\end{schema}
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~TakeOffMonitor \then \\
+	
+      \circblockopen
+
+\Skip
+ 
+
+               \circseq \\ 
+
+            getControllingMissionCall~.~takeoffMission.getControllingMission()\then \\getControllingMissionRet~.~takeoffMission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : double \circspot altitude :=~getAltitude\\
+
+
+              \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+\Skip
+ 
+
+               \circseq \\ 
+
+            releaseCall~.~landingGearHandler\then \\releaseRet~.~landingGearHandler~?~release\then \\
+
+
+
+            requestTerminationCall~.~takeoffMission\then \\requestTerminationRet~.~takeoffMission~?~requestTermination\then \\
+
+\Skip
+        \circblockclose  
+
+
+  \\
+  \circelse ~ \lnot (altitude > takeOffAltitude) \circthen \Skip
+  \\
+  \circfi \circseq \\
+
+\Skip
+        \circblockclose  
+
+ \circseq \\
+    handleAsyncEventRet~.~TakeOffMonitor \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+    
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handlerAsyncEvent \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  \circinterrupt (end\_periodic\_app~.~TakeOffMonitor \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

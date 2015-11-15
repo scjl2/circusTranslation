@@ -5,13 +5,7 @@
 
 \begin{circus}
 \circprocess AperiodicSimulatorApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
-  PeriodicParameters : 
-, \\ \qquad 
-  storageParametersSchedulable : 
-, \\ \qquad 
-  beginLandingHandler : 
+  event : AperiodicEventHandler
 \circspot 
   \circbegin
 \end{circus}

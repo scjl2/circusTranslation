@@ -168,14 +168,14 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			SchedulableMissionSequencerFW(ACModeChanger)\\
+			SchedulableMissionSequencerFW()\\
 \t1 \lpar SchedulablesSync \rpar\\
 
 
 \circblockopen
-			AperiodicEventHandlerFW(ControlHandler)\\
+			AperiodicEventHandlerFW()\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(CommunicationsHandler)\\
+			AperiodicEventHandlerFW()\\
 \circblockclose \\
 
 
@@ -184,11 +184,11 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			PeriodicEventHandlerFW(EnvironmentMonitor)\\
+			PeriodicEventHandlerFW()\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(FlightSensorsMonitor)\\
+			PeriodicEventHandlerFW()\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(AperiodicSimulator)\\
+			PeriodicEventHandlerFW()\\
 \circblockclose \\ 
 
 		\circblockclose
@@ -213,9 +213,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			AperiodicEventHandlerFW(LandingGearHandlerTakeOff)\\
+			AperiodicEventHandlerFW()\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(TakeOffFailureHandler)\\
+			AperiodicEventHandlerFW()\\
 \circblockclose \\
 
 
@@ -223,7 +223,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			PeriodicEventHandlerFW(TakeOffMonitor)\\
+			PeriodicEventHandlerFW()\\
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
@@ -242,13 +242,13 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			AperiodicEventHandlerFW(BeginLandingHandler)\\
+			AperiodicEventHandlerFW()\\
 
 \t1 \lpar SchedulablesSync \rpar\\
 
 
 
-			PeriodicEventHandlerFW(NavigationMonitor)\\
+			PeriodicEventHandlerFW()\\
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
@@ -268,9 +268,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			AperiodicEventHandlerFW(LandingGearHandlerLand)\\
+			AperiodicEventHandlerFW()\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(SafeLandingHandler)\\
+			AperiodicEventHandlerFW()\\
 \circblockclose \\
 
 
@@ -279,9 +279,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			PeriodicEventHandlerFW(GroundDistanceMonitor)\\
+			PeriodicEventHandlerFW()\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(InstrumentLandingSystemMonitor)\\
+			PeriodicEventHandlerFW()\\
 \circblockclose \\ 
 
 		\circblockclose
@@ -303,7 +303,7 @@ Tier1
 \circblockclose
 \circblockclose
 \end{circus}
-% APPLICATION
+%
 \begin{circus}
 \circprocess  Application \circdef \\
 \circblockopen
@@ -315,44 +315,44 @@ MainMissionSequencerApp\\
 MainMissionApp\\
 \interleave \\
 
-ACModeChangerApp\\
+ACModeChangerApp ( MainMission  ) \\
 \interleave \\
 ControlHandlerApp\\
 \interleave \\
 CommunicationsHandlerApp\\
 \interleave \\
-EnvironmentMonitorApp\\
+EnvironmentMonitorApp ( MainMission  ) \\
 \interleave \\
-FlightSensorsMonitorApp\\
+FlightSensorsMonitorApp ( MainMission  ) \\
 \interleave \\
-AperiodicSimulatorApp (  ,   ,   ,    ) \\
+AperiodicSimulatorApp ( AperiodicEventHandler  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
 
-LandingGearHandlerTakeOffApp\\
+LandingGearHandlerTakeOffApp ( TakeOffMission  ) \\
 \interleave \\
-TakeOffFailureHandlerApp\\
+TakeOffFailureHandlerApp ( TakeOffMission  ) \\
 \interleave \\
-TakeOffMonitorApp\\
+TakeOffMonitorApp ( TakeOffMission ,  AperiodicEventHandler  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
-BeginLandingHandlerApp\\
+BeginLandingHandlerApp ( Mission  ) \\
 \interleave \\
-NavigationMonitorApp\\
+NavigationMonitorApp ( CruiseMission  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
 
-LandingGearHandlerLandApp\\
+LandingGearHandlerLandApp ( LandMission  ) \\
 \interleave \\
-SafeLandingHandlerApp\\
+SafeLandingHandlerApp ( LandMission  ) \\
 \interleave \\
-GroundDistanceMonitorApp\\
+GroundDistanceMonitorApp ( LandMission  ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp\\
+InstrumentLandingSystemMonitorApp ( LandMission  ) \\
 \circblockclose
 \end{circus}
 %
@@ -360,36 +360,6 @@ InstrumentLandingSystemMonitorApp\\
 Locking \circdef \\
 \circblockopen
 \circblockopen
-ThreadFW(ACModeChangerThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(EnvironmentMonitorThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(ControlHandlerThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(FlightSensorsMonitorThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(CommunicationsHandlerThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(AperiodicSimulatorThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(LandingGearHandlerTakeOffThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(TakeOffMonitorThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(TakeOffFailureHandlerThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(BeginLandingHandlerThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(NavigationMonitorThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(GroundDistanceMonitorThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(LandingGearHandlerLandThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(InstrumentLandingSystemMonitorThreadID, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(SafeLandingHandlerThreadID, MinPriority) \\
-
 \circblockclose \\
 \interleave \\
 \circblockopen
