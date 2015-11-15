@@ -8,7 +8,12 @@ public class AperiodicEventHandlerEnv extends EventHandlerEnv
 {
 
 	private static final String IMPORT_NAME = "Aperiodic";
-	private static final String HANDLER_TYPE = "aperiodic";
+	private static final String APERIODIC_HANDLER_TYPE = "aperiodic";
+	private static final String APERIODIC_LONG_HANDLER_TYPE = "aperiodicLong";
+	
+	private enum HandlerType {aperiodic, aperiodicLong};
+	private HandlerType handlerType;
+	
 	// TODO remove this stop-gap in favour of using the API
 	private final List<MethodEnv> EVENT_HANDLER_API_METHODS = new ArrayList<MethodEnv>();
 
@@ -20,7 +25,16 @@ public class AperiodicEventHandlerEnv extends EventHandlerEnv
 	@Override
 	public String getHandlerType()
 	{
-		return HANDLER_TYPE;
+		if(handlerType ==  HandlerType.aperiodic)
+		{
+			return APERIODIC_HANDLER_TYPE;
+		}
+		else
+			if (handlerType ==  HandlerType.aperiodicLong)
+			{
+				return APERIODIC_LONG_HANDLER_TYPE;
+			}
+		return null;
 	}
 
 	@Override

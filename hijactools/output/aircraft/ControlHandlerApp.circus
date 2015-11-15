@@ -42,7 +42,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~ControlHandler \then \Skip)
+  \circinterrupt (end\_\_app~.~ControlHandler \then \Skip)
 \end{circusaction}
 
 \begin{circus}

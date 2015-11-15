@@ -179,7 +179,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 </#if>
 
 <#list cluster.Schedulables.Oneshots as oneshot>			
-	OneShotEventHandlerFW(${oneshot})\\
+	OneShotEventHandlerFW(${oneshot.Name})\\
 	<#if oneshot_has_next>
 		\t1 \lpar SchedulablesSync \rpar\\
 	</#if>
@@ -206,7 +206,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockopen 
 </#if>
 		<#list cluster.Schedulables.NestedSequencers as sequencer>			
-			SchedulableMissionSequencerFW(${sequencer})\\
+			SchedulableMissionSequencerFW(${sequencer.Name})\\
 			<#if sequencer_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
@@ -229,7 +229,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockopen
 </#if>
 		<#list cluster.Schedulables.Aperiodics as aperiodic>			
-			AperiodicEventHandlerFW(${aperiodic})\\
+			AperiodicEventHandlerFW(${aperiodic.Name})\\
 			<#if aperiodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
@@ -255,7 +255,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockopen
 </#if>
 		<#list cluster.Schedulables.Periodics as periodic>			
-			PeriodicEventHandlerFW(${periodic})\\
+			PeriodicEventHandlerFW(${periodic.Name})\\
 			<#if periodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
@@ -294,23 +294,23 @@ Tier${tier_index}
 \circblockclose
 \circblockclose
 \end{circus}
-%
+% APPLICATION
 \begin{circus}
 \circprocess  Application \circdef \\
 \circblockopen
 
-${Safelet.Name}App<#if Safelet.Parameters?size != 0> (<#list Safelet.Parameters as param>${param} <#sep>,</#sep>  </#list>) </#if>\\
+${Safelet.Name}App<#if Safelet.Parameters?size != 0> (<#list Safelet.Parameters as param>${param.VarName} <#sep>,</#sep>  </#list>) </#if>\\
 \interleave \\
-${TopLevelSequencer.Name}App<#if TopLevelSequencer.Parameters?size != 0> (<#list TopLevelSequencer.Parameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
+${TopLevelSequencer.Name}App<#if TopLevelSequencer.Parameters?size != 0> (<#list TopLevelSequencer.Parameters as param> ${param.VarName} <#sep>,</#sep>  </#list>) </#if>\\
 \interleave \\
 <#list Tiers as tier >
 <#list tier as cluster>
-${cluster.Mission.Name}App<#if cluster.Mission.Parameters?size != 0> (<#list cluster.Mission.Parameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
+${cluster.Mission.Name}App<#if cluster.Mission.Parameters?size != 0> (<#list cluster.Mission.Parameters as param> ${param.VarName} <#sep>,</#sep>  </#list>) </#if>\\
 \interleave \\
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
 <#list schedulables as schedulable>
-${schedulable.Name}App<#if schedulable.Parameters?size != 0> (<#list schedulable.Parameters as param> ${param} <#sep>,</#sep> </#list>) </#if>\\
+${schedulable.Name}App<#if schedulable.Parameters?size != 0> (<#list schedulable.Parameters as param> ${param.VarName} <#sep>,</#sep> </#list>) </#if>\\
 			<#if schedulable_has_next>
 \interleave \\
 			</#if>

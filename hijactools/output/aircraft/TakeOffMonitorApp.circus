@@ -8,12 +8,7 @@ TakeOffMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess TakeOffMonitorApp \circdef \\ \qquad 
-  takeoffMission : TakeOffMission
-, \\ \qquad 
-  landingGearHandler : AperiodicEventHandler
-\circspot 
-  \circbegin
+\circprocess TakeOffMonitorApp \circdef   \circbegin
 \end{circus}
 
 

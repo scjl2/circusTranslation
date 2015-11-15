@@ -318,10 +318,14 @@ public class CircusGenerator
 
 		for (MissionEnv mEnv : programEnv.getMissions())
 		{
+			System.out.println(mEnv.getName());
+			
 			/* Create a data-model */
 			missionMap = mEnv.toMap();
 			
 			procName = (String) missionMap.get(PROCESS_ID);
+			
+			
 
 			// Application Process
 			translateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName

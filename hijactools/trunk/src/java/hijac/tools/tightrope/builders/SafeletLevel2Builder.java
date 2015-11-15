@@ -104,7 +104,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 //					MethodEnv me = new MethodEnv(mt.getName(), typeKind, returns,
 //							paramMap);
 //					
-					safeletEnv.addInitMethod(methodVisitor.visitMethod(mt, null));
+					safeletEnv.addInitMethod(methodVisitor.visitMethod(mt, false));
 				}
 				else
 				{
@@ -113,7 +113,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 
 						if (isSyncMethod)
 						{
-							MethodEnv m = methodVisitor.visitMethod(mt, null);
+							MethodEnv m = methodVisitor.visitMethod(mt, false);
 							setMethodAccess(m, mt);
 							safeletEnv.getClassEnv().addSyncMeth(m);
 						}
@@ -122,7 +122,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 							if (notIgnoredMethod)
 							{
 								MethodEnv m = methodVisitor.visitMethod(mt,
-										null);
+										false);
 								setMethodAccess(m, mt);
 								safeletEnv.addMeth(m);
 							}

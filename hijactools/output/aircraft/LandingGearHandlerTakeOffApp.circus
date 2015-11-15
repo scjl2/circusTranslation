@@ -14,10 +14,7 @@ ThreadIds
 \end{zsection}
 
 \begin{circus}
-\circprocess LandingGearHandlerTakeOffApp \circdef \\ \qquad 
-  mission : TakeOffMission
-\circspot 
-  \circbegin
+\circprocess LandingGearHandlerTakeOffApp \circdef   \circbegin
 \end{circus}
 
 
@@ -89,7 +86,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~LandingGearHandlerTakeOff \then \Skip)
+  \circinterrupt (end\_\_app~.~LandingGearHandlerTakeOff \then \Skip)
 \end{circusaction}
 
 \begin{circus}

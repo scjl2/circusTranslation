@@ -21,7 +21,39 @@
 
 \begin{circus}
 \circprocess TakeOffMissionApp \circdef \\ \qquad 
-  controllingMission : MainMission
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  this : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+  this : 
+, \\ \qquad 
+  TAKEOFF_ALTITUDE : 
+, \\ \qquad 
+  landingGearHandler : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  this : 
+, \\ \qquad 
+  SAFE_AIRSPEED_THRESHOLD : 
 \circspot 
  \circbegin
 \end{circus}

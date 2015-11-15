@@ -123,6 +123,8 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 				{
 					System.out.println("Release the Visitor!");
 
+					methodVisitor.visitMethod(o, true);
+					
 					o.accept(returnVisitor, false);
 
 				}
@@ -147,14 +149,14 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 							missions.addAll(getNextReturns);
 						}
 
-						m = methodVisitor.visitMethod(o, null);
+						m = methodVisitor.visitMethod(o, false);
 						setMethodAccess(m, o);
 
 						sequencerEnv.getClassEnv().addMeth(m);
 					}
 					else
 					{// ADD METHOD TO MISSION ENV
-						m = methodVisitor.visitMethod(o, null);
+						m = methodVisitor.visitMethod(o, false);
 						setMethodAccess(m, o);
 
 						final boolean isSyncMethod = o.getModifiers()

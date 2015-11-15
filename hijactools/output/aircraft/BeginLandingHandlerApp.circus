@@ -4,10 +4,7 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess BeginLandingHandlerApp \circdef \\ \qquad 
-  controllingMission : Mission
-\circspot 
-  \circbegin
+\circprocess BeginLandingHandlerApp \circdef   \circbegin
 \end{circus}
 
 
@@ -50,7 +47,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~BeginLandingHandler \then \Skip)
+  \circinterrupt (end\_\_app~.~BeginLandingHandler \then \Skip)
 \end{circusaction}
 
 \begin{circus}

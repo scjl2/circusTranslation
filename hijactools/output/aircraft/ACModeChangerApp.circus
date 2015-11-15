@@ -13,10 +13,7 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess ACModeChangerApp \circdef \\ \qquad 
-  controllingMission : MainMission
-\circspot 
- \circbegin\\ 
+\circprocess ACModeChangerApp \circdef  \circbegin\\ 
 \end{circus}
    
 

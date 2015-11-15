@@ -398,7 +398,7 @@ public class EnvironmentBuilder
 				{
 
 					schedulableEnv.getClassEnv().addSyncMeth(
-							methodVisitor.visitMethod(mt, null));
+							methodVisitor.visitMethod(mt, false));
 
 				}
 				else if (!(mt.getName().contentEquals("<init>")))
@@ -407,18 +407,18 @@ public class EnvironmentBuilder
 					{
 						((ManagedThreadEnv) schedulableEnv)
 								.addRunMethod(methodVisitor.visitMethod(mt,
-										null));
+										false));
 					}
 					else if ((mt.getName().contentEquals("handleAsyncEvent")))
 					{
 						((EventHandlerEnv) schedulableEnv)
 								.addHandleAsyncMethod(methodVisitor
-										.visitMethod(mt, null));
+										.visitMethod(mt, false));
 					}
 					else
 					{
 						schedulableEnv.addMeth(methodVisitor.visitMethod(mt,
-								null));
+								false));
 					}
 				}
 			}

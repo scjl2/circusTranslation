@@ -20,7 +20,33 @@
 
 \begin{circus}
 \circprocess CruiseMissionApp \circdef \\ \qquad 
-  controllingMission : MainMission
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  this : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  this : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+  beginLandingHandler : 
 \circspot 
  \circbegin
 \end{circus}

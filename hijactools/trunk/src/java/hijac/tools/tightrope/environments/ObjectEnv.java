@@ -200,17 +200,38 @@ public class ObjectEnv
 		return parameters;
 	}
 
-//	public void addParameter(VariableEnv parameter)
-//	{
-//		parameters.add(parameter);
-//	}
+	 public void addParameter(VariableEnv parameter)
+	 {
+	 parameters.add(parameter);
+	 }
 
 	public void addParameter(String variableName, String variableType,
-			String programType, boolean primitive)
+			String programType, boolean primitive, String init)
 
 	{
-		parameters.add(new VariableEnv(variableName, variableType, programType,
-				primitive));
+		boolean isNew = true;
+
+		for (VariableEnv v : parameters)
+		{
+			if (v.getVariableName().equals(variableName))
+			{
+//				v.setVariableName(variableName);
+//				v.setVariableType(variableType);
+//				v.setProgramType(programType);
+//				v.setPrimitive(primitive);
+				v.setVariableInit(init);
+
+				isNew = false;
+			}
+		}
+
+		if (isNew)
+		{
+			VariableEnv e = new VariableEnv(variableName, variableType,
+					programType, primitive);
+			e.setVariableInit(init);
+			parameters.add(e);
+		}
 
 	}
 
@@ -336,7 +357,7 @@ public class ObjectEnv
 	protected Map methodToMap(MethodEnv me)
 	{
 		Map methodMap = new HashMap();
-		
+
 		String s = me.getMethodName();
 
 		methodMap.put(METHOD_NAME, s);
@@ -390,6 +411,16 @@ public class ObjectEnv
 		return parents;
 	}
 
-	
+	public void addParameterInit(String paramName, String paramInit)
+	{
+		for (VariableEnv v : parameters)
+		{
+			if (v.getVariableName().equals(paramName))
+			{
+				v.setVariableInit(paramInit);
+			}
+		}
+
+	}
 
 }

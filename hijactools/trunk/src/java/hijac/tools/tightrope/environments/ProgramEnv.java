@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.FrameworkEnv;
 
 import java.util.ArrayList;
 
@@ -159,7 +160,7 @@ public class ProgramEnv
 		return structureEnv.getOneShotEventHandlers();
 	}
 
-	public ArrayList<PeriodicEventHandlerEnv> getPeriodicEventHandlers()
+	public ArrayList<PeriodicEventHandlerEnv> getPeriodicEventHandlers() 
 	{
 		return structureEnv.getPeriodicEventHandlers();
 	}

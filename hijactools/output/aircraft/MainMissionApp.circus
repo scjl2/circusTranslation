@@ -23,7 +23,66 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess MainMissionApp \circdef  \circbegin
+\circprocess MainMissionApp \circdef \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParameters : 
+, \\ \qquad 
+  this : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  this : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  this : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+  controlHandler : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+  commsHandler : 
+\circspot 
+ \circbegin
 \end{circus}
 
 \begin{schema}{State}

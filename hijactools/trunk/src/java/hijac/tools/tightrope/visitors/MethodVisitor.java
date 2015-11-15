@@ -43,8 +43,8 @@ public class MethodVisitor
 				object);
 	}
 
-	// TODO Tuning: have this method accept an empty ArrayList to fill
-	public MethodEnv visitMethod(MethodTree mt, Boolean arg1)
+	
+	public MethodEnv visitMethod(MethodTree mt, Boolean isConstructor)
 	{
 		// get name
 		Name methodName = mt.getName();
@@ -58,14 +58,32 @@ public class MethodVisitor
 
 		Map<Object, Object> parameters = new HashMap<>();
 
-		for (VariableTree vt : mt.getParameters())
+		if(isConstructor)
 		{
-			if (!(vt.getType().toString().contains("String")))
+			for (VariableTree vt : mt.getParameters())
 			{
-				parameters.put(vt.getName().toString(),
-						NewTransUtils.encodeType(vt.getType()));
+				if (!(vt.getType().toString().contains("String")))
+				{
+//					object.addParameter(vt.getName().toString(),
+//							NewTransUtils.encodeType(vt.getType()),
+//							NewTransUtils.encodeType(vt.getType()), 
+//							(vt.getType() instanceof PrimitiveTypeTree), "FromMethVis"); 					
+//					
+				}
 			}
 		}
+		else
+		{
+			for (VariableTree vt : mt.getParameters())
+			{
+				if (!(vt.getType().toString().contains("String")))
+				{
+					parameters.put(vt.getName().toString(),
+							NewTransUtils.encodeType(vt.getType()));
+				}
+			}
+		}
+		
 
 		Tree returnType = mt.getReturnType();
 

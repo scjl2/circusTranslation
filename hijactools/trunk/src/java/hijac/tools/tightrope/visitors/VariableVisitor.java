@@ -661,14 +661,14 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 						String varTypefromName = WordUtils
 								.capitalize(encodedName) + "ID";
 						
-						objectEnv.addParameter(encodedName, varTypeString,
-								varTypefromName, false);
+////						objectEnv.addParameter(encodedName, varTypeString,
+//								varTypefromName, false, init);
 
 					}
 					else
 					{
-						objectEnv.addParameter(encodedName, varTypeString,
-								varType.toString() + "ID", false);
+//						objectEnv.addParameter(encodedName, varTypeString,
+//								varType.toString() + "ID", false, init);
 					}
 					
 					System.out.println("*/*/ Adding Parameter " + encodedName + " to ObjectEnv " +objectEnv.getName() + "of type " + objectEnv.getClass().getCanonicalName());

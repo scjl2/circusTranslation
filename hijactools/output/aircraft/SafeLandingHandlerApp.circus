@@ -8,10 +8,7 @@ LandMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess SafeLandingHandlerApp \circdef \\ \qquad 
-  landMission : LandMission
-\circspot 
-  \circbegin
+\circprocess SafeLandingHandlerApp \circdef   \circbegin
 \end{circus}
 
 
@@ -78,7 +75,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~SafeLandingHandler \then \Skip)
+  \circinterrupt (end\_\_app~.~SafeLandingHandler \then \Skip)
 \end{circusaction}
 
 \begin{circus}

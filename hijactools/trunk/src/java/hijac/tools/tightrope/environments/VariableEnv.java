@@ -13,6 +13,12 @@ public class VariableEnv
 	public VariableEnv()
 	{
 		super();
+		
+		variableName = "";
+		variableType = "";
+		variableInit = "";
+		
+		programType = "";
 	}
 
 	public VariableEnv(String variableName, String variableType,

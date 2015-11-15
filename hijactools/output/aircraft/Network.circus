@@ -168,14 +168,14 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			SchedulableMissionSequencerFW()\\
+			SchedulableMissionSequencerFW(ACModeChanger)\\
 \t1 \lpar SchedulablesSync \rpar\\
 
 
 \circblockopen
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(ControlHandler)\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(CommunicationsHandler)\\
 \circblockclose \\
 
 
@@ -184,11 +184,11 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(EnvironmentMonitor)\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(FlightSensorsMonitor)\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(AperiodicSimulator)\\
 \circblockclose \\ 
 
 		\circblockclose
@@ -213,9 +213,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(LandingGearHandlerTakeOff)\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(TakeOffFailureHandler)\\
 \circblockclose \\
 
 
@@ -223,7 +223,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(TakeOffMonitor)\\
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
@@ -242,13 +242,13 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(BeginLandingHandler)\\
 
 \t1 \lpar SchedulablesSync \rpar\\
 
 
 
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(NavigationMonitor)\\
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
@@ -268,9 +268,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(LandingGearHandlerLand)\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(SafeLandingHandler)\\
 \circblockclose \\
 
 
@@ -279,9 +279,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(GroundDistanceMonitor)\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(InstrumentLandingSystemMonitor)\\
 \circblockclose \\ 
 
 		\circblockclose
@@ -303,7 +303,7 @@ Tier1
 \circblockclose
 \circblockclose
 \end{circus}
-%
+% APPLICATION
 \begin{circus}
 \circprocess  Application \circdef \\
 \circblockopen
@@ -312,47 +312,47 @@ ACSafeletApp\\
 \interleave \\
 MainMissionSequencerApp\\
 \interleave \\
-MainMissionApp\\
+MainMissionApp (  ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,      ) \\
 \interleave \\
 
-ACModeChangerApp ( MainMissionID  ) \\
+ACModeChangerApp\\
 \interleave \\
 ControlHandlerApp\\
 \interleave \\
 CommunicationsHandlerApp\\
 \interleave \\
-EnvironmentMonitorApp ( MainMissionID  ) \\
+EnvironmentMonitorApp\\
 \interleave \\
-FlightSensorsMonitorApp ( MainMissionID  ) \\
+FlightSensorsMonitorApp\\
 \interleave \\
-AperiodicSimulatorApp ( EventID  ) \\
+AperiodicSimulatorApp\\
 \interleave \\
-TakeOffMissionApp ( hijac.tools.tightrope.environments.VariableEnv@74bada02   ) \\
-\interleave \\
-
-LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
-\interleave \\
-TakeOffFailureHandlerApp ( TakeOffMissionID  ) \\
-\interleave \\
-TakeOffMonitorApp ( TakeOffMissionID ,  LandingGearHandlerID  ) \\
-\interleave \\
-CruiseMissionApp ( hijac.tools.tightrope.environments.VariableEnv@525575   ) \\
+TakeOffMissionApp (  ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,      ) \\
 \interleave \\
 
-BeginLandingHandlerApp ( ControllingMissionID  ) \\
+LandingGearHandlerTakeOffApp\\
 \interleave \\
-NavigationMonitorApp ( CruiseMissionID  ) \\
+TakeOffFailureHandlerApp\\
 \interleave \\
-LandMissionApp ( hijac.tools.tightrope.environments.VariableEnv@46dffdc3   ) \\
+TakeOffMonitorApp\\
+\interleave \\
+CruiseMissionApp (  ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,      ) \\
 \interleave \\
 
-LandingGearHandlerLandApp ( LandMissionID  ) \\
+BeginLandingHandlerApp\\
 \interleave \\
-SafeLandingHandlerApp ( LandMissionID  ) \\
+NavigationMonitorApp\\
 \interleave \\
-GroundDistanceMonitorApp ( LandMissionID  ) \\
+LandMissionApp (  ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,    ,      ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
+
+LandingGearHandlerLandApp\\
+\interleave \\
+SafeLandingHandlerApp\\
+\interleave \\
+GroundDistanceMonitorApp\\
+\interleave \\
+InstrumentLandingSystemMonitorApp\\
 \circblockclose
 \end{circus}
 %

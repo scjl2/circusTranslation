@@ -8,10 +8,7 @@ MainMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess FlightSensorsMonitorApp \circdef \\ \qquad 
-  controllingMission : MainMission
-\circspot 
-  \circbegin
+\circprocess FlightSensorsMonitorApp \circdef   \circbegin
 \end{circus}
 
 
