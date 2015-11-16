@@ -279,10 +279,10 @@ public class ProgramEnv
 
 		for (ObjectEnv o : objects)
 		{
-			System.out.println("ObjectName = " + objectName + " and o.getName = " +o.getName());
+//			System.out.println("ObjectName = " + objectName + " and o.getName = " +o.getName());
 			if (o.getName().contentEquals(objectName))
 			{
-				System.out.println("returning " + o.getName());
+//				System.out.println("returning " + o.getName());
 				return o;
 			}
 		}

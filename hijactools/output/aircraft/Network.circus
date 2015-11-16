@@ -315,44 +315,44 @@ MainMissionSequencerApp\\
 MainMissionApp\\
 \interleave \\
 
-ACModeChangerApp (  ,   ,    ) \\
+ACModeChangerApp ( PriorityParameters ,  storageParameters ,  this  ) \\
 \interleave \\
-ControlHandlerApp (  ,   ,   ,    ) \\
+ControlHandlerApp ( PriorityParameters ,  AperiodicParameters ,  storageParametersSchedulable ,  MainMission  ) \\
 \interleave \\
-CommunicationsHandlerApp (  ,   ,   ,    ) \\
+CommunicationsHandlerApp ( PriorityParameters ,  AperiodicParameters ,  storageParametersSchedulable ,  MainMission  ) \\
 \interleave \\
-EnvironmentMonitorApp (  ,   ,   ,   ,    ) \\
+EnvironmentMonitorApp ( PriorityParameters ,  PeriodicParameters ,  storageParametersSchedulable ,  MainMission ,  this  ) \\
 \interleave \\
-FlightSensorsMonitorApp (  ,   ,   ,   ,    ) \\
+FlightSensorsMonitorApp ( PriorityParameters ,  PeriodicParameters ,  storageParametersSchedulable ,  MainMission ,  this  ) \\
 \interleave \\
-AperiodicSimulatorApp (  ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,    ) \\
+AperiodicSimulatorApp ( PriorityParameters ,  PeriodicParameters ,  storageParametersSchedulable ,  controlHandler ,  PriorityParameters ,  PeriodicParameters ,  storageParametersSchedulable ,  commsHandler ,  PriorityParameters ,  PeriodicParameters ,  storageParametersSchedulable ,  beginLandingHandler  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
 
-LandingGearHandlerTakeOffApp (  ,   ,   ,   ,    ) \\
+LandingGearHandlerTakeOffApp ( PriorityParameters ,  AperiodicParameters ,  storageParametersSchedulable ,  TakeOffMission ,  this  ) \\
 \interleave \\
-TakeOffFailureHandlerApp (  ,   ,   ,   ,   ,    ) \\
+TakeOffFailureHandlerApp ( PriorityParameters ,  AperiodicParameters ,  storageParametersSchedulable ,  TakeOffMission ,  this ,  SAFE_AIRSPEED_THRESHOLD  ) \\
 \interleave \\
-TakeOffMonitorApp (  ,   ,   ,   ,   ,    ) \\
+TakeOffMonitorApp ( PriorityParameters ,  PeriodicParameters ,  storageParametersSchedulable ,  this ,  TAKEOFF_ALTITUDE ,  landingGearHandler  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
-BeginLandingHandlerApp (  ,   ,   ,   ,    ) \\
+BeginLandingHandlerApp ( PriorityParameters ,  AperiodicParameters ,  storageParametersSchedulable ,  CruiseMission ,  this  ) \\
 \interleave \\
-NavigationMonitorApp (  ,   ,   ,   ,    ) \\
+NavigationMonitorApp ( PriorityParameters ,  PeriodicParameters ,  storageParametersSchedulable ,  CruiseMission ,  this  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
 
-LandingGearHandlerLandApp (  ,   ,   ,   ,    ) \\
+LandingGearHandlerLandApp ( PriorityParameters ,  AperiodicParameters ,  storageParametersSchedulable ,  LandMission ,  this  ) \\
 \interleave \\
-SafeLandingHandlerApp (  ,   ,   ,   ,   ,    ) \\
+SafeLandingHandlerApp ( PriorityParameters ,  AperiodicParameters ,  storageParametersSchedulable ,  LandMission ,  this ,  SAFE_LANDING_ALTITUDE  ) \\
 \interleave \\
-GroundDistanceMonitorApp (  ,   ,   ,    ) \\
+GroundDistanceMonitorApp ( PriorityParameters ,  PeriodicParameters ,  storageParametersSchedulable ,  this  ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp (  ,   ,   ,   ,    ) \\
+InstrumentLandingSystemMonitorApp ( PriorityParameters ,  PeriodicParameters ,  storageParametersSchedulable ,  LandMission ,  this  ) \\
 \circblockclose
 \end{circus}
 %

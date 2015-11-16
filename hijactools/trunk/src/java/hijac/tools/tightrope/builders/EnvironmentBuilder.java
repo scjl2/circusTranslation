@@ -630,7 +630,7 @@ public class EnvironmentBuilder
 						if (objectWithParams != null)
 						{
 							objectWithParams.addParameter(returns);
-							System.out.println("Adding to " + objectWithParams.getName());
+							System.out.println("Adding "+ returns.toString() +" to " + objectWithParams.getName());
 						}
 						else
 						{

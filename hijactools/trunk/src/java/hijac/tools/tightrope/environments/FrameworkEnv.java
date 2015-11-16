@@ -196,7 +196,7 @@ public class FrameworkEnv
 				List<String> params = new ArrayList<String>();
 				for(VariableEnv v : c.getMissionEnv().getParameters())
 				{
-					params.add(v.getVariableName());
+					params.add(v.toString());
 				}
 				
 				missionMap.put("Parameters", params);
@@ -388,10 +388,12 @@ public class FrameworkEnv
 			for(VariableEnv v : p.getParameters())
 			{
 				//This adds the type from the program E.G. FlatBufferMission not MissionID
-				params.add(v.getProgramType());
+				params.add(v.getVariableName());
 			}
 			
 			sMap.put("Parameters", params);
+			
+			
 			return sMap;
 		}
 

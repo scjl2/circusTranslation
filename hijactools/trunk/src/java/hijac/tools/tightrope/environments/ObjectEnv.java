@@ -200,10 +200,11 @@ public class ObjectEnv
 		return parameters;
 	}
 
-	 public void addParameter(VariableEnv parameter)
-	 {
-	 parameters.add(parameter);
-	 }
+	public void addParameter(VariableEnv parameter)
+	{
+		parameters.add(parameter);
+		assert(parameters.contains(parameter));
+	}
 
 	public void addParameter(String variableName, String variableType,
 			String programType, boolean primitive, String init)
@@ -215,10 +216,10 @@ public class ObjectEnv
 		{
 			if (v.getVariableName().equals(variableName))
 			{
-//				v.setVariableName(variableName);
-//				v.setVariableType(variableType);
-//				v.setProgramType(programType);
-//				v.setPrimitive(primitive);
+				// v.setVariableName(variableName);
+				// v.setVariableType(variableType);
+				// v.setProgramType(programType);
+				// v.setPrimitive(primitive);
 				v.setVariableInit(init);
 
 				isNew = false;
