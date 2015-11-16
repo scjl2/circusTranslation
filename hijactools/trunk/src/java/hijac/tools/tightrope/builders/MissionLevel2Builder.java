@@ -3,11 +3,8 @@ package hijac.tools.tightrope.builders;
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
-import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
-import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.visitors.MethodVisitor;
-import hijac.tools.tightrope.visitors.ParametersVisitor;
 import hijac.tools.tightrope.visitors.RegistersVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
@@ -22,13 +19,10 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
-import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
 public class MissionLevel2Builder extends ParadigmBuilder
@@ -43,9 +37,9 @@ public class MissionLevel2Builder extends ParadigmBuilder
 	private ProgramEnv programEnv;
 
 	public MissionLevel2Builder(ProgramEnv programEnv, MissionEnv missionEnv,
-			SCJAnalysis analysis)
+			SCJAnalysis analysis, EnvironmentBuilder environmentBuilder)
 	{
-		super(analysis, programEnv);
+		super(analysis, programEnv, environmentBuilder);
 		MissionLevel2Builder.analysis = analysis;
 		this.programEnv = programEnv;
 		this.missionEnv = missionEnv;
@@ -202,9 +196,9 @@ public class MissionLevel2Builder extends ParadigmBuilder
 			{
 				methodStatementTree = methodStatementsIterator.next();
 
-				
-				
-				getParameters(methodStatementTree);
+				//TODO Should only add the right trees I suppose..
+				environmentBuilder.addDeferredParam(methodStatementTree);
+//				getParameters(methodStatementTree);
 
 				HashMap<Name, Tree> m = (HashMap<Name, Tree>) methodStatementTree
 						.accept(varVisitor, false);
@@ -272,106 +266,106 @@ public class MissionLevel2Builder extends ParadigmBuilder
 		}
 	}
 
-	private void getParameters( Tree tree)
-	{
-		System.out.println("*** Get Params *** ");
-
-		List<? extends ExpressionTree> args = new ArrayList();
-
-		ObjectEnv objectWithParams = null;
-
-		if (tree instanceof VariableTree)
-		{
-			System.out.println("Tree: " + tree + " instance of VairableTree ");
-
-			ExpressionTree et = ((VariableTree) tree).getInitializer();
-			if (et instanceof NewClassTree)
-			{
-				args = ((NewClassTree) et).getArguments();
-			}
-
-			System.out.println("trying to get objectEnv for " + ((VariableTree) tree)
-					.getType().toString());
-			objectWithParams = programEnv.getObjectEnv(((VariableTree) tree)
-					.getType().toString());
-
-		}
-		else if (tree instanceof NewClassTree)
-		{
-			System.out.println("Tree: " + tree + " instance of NewClassTree ");
-
-			args = ((NewClassTree) tree).getArguments();
-
-			ExpressionTree identifier = ((NewClassTree) tree).getIdentifier();
-
-			System.out.println("trying to get objectEnv for " + identifier);
-			objectWithParams = programEnv.getObjectEnv(identifier.toString());
-
-		}
-
-		System.out.println("args = " + args.toString());
-
-		if (!args.isEmpty())
-		{
-			ParametersVisitor paramVisitor = new ParametersVisitor(programEnv,
-					missionEnv, null);
-
-			List<VariableEnv> params = new ArrayList();
-
-			for (ExpressionTree et : args)
-			{
-				System.out.println("visiting " + et.toString());
-
-				VariableEnv returns = et.accept(paramVisitor, null);
-
-				if (returns != null)
-				{
-					System.out
-							.println("returns = " + returns.getVariableName());
-					if (objectWithParams != null)
-					{
-						objectWithParams.addParameter(returns);
-					}
-					else
-					{
-						System.out.println("objectWithParams was null");
-					}
-				}
-				else
-				{
-					System.out.println("returns = null");
-				}
-			}
-
-		}
-
-		// if (tree instanceof NewClassTree)
-		// {
-		// List<? extends ExpressionTree> args = ((NewClassTree) tree)
-		// .getArguments();
-		//
-		// for (ExpressionTree et : args)
-		// {
-		// System.out.println(et);
-		// VariableEnv varEnv = new VariableEnv();
-		//
-		// params = et.accept(paramVisitor, null);
-		//
-		// }
-		//
-		// }
-		//
-		// // System.out.println("/*/* Params = " + params);
-		//
-		// if (params != null)
-		// {
-		// for (VariableEnv v : params)
-		// {
-		// missionEnv.addParameter(v);
-		// System.out.println("/*/* Param for "
-		// + missionEnv.getName().toString() + " is "
-		// + v.getVariableName());
-		// }
-		// }
-	}
+//	private void getParameters( Tree tree)
+//	{
+//		System.out.println("*** Get Params *** ");
+//
+//		List<? extends ExpressionTree> args = new ArrayList();
+//
+////		ObjectEnv objectWithParams = null;
+//
+//		if (tree instanceof VariableTree)
+//		{
+//			System.out.println("Tree: " + tree + " instance of VairableTree ");
+//
+//			ExpressionTree et = ((VariableTree) tree).getInitializer();
+//			if (et instanceof NewClassTree)
+//			{
+//				args = ((NewClassTree) et).getArguments();
+//			}
+//
+//			System.out.println("trying to get objectEnv for " + ((VariableTree) tree)
+//					.getType().toString());
+////			objectWithParams = programEnv.getObjectEnv(((VariableTree) tree)
+////					.getType().toString());
+//
+//		}
+//		else if (tree instanceof NewClassTree)
+//		{
+//			System.out.println("Tree: " + tree + " instance of NewClassTree ");
+//
+//			args = ((NewClassTree) tree).getArguments();
+//
+//			ExpressionTree identifier = ((NewClassTree) tree).getIdentifier();
+//
+//			System.out.println("trying to get objectEnv for " + identifier);
+////			objectWithParams = programEnv.getObjectEnv(identifier.toString());
+//
+//		}
+//
+//		System.out.println("args = " + args.toString());
+//
+//		if (!args.isEmpty())
+//		{
+//			ParametersVisitor paramVisitor = new ParametersVisitor(programEnv,
+//					missionEnv, null);
+//
+//			List<VariableEnv> params = new ArrayList();
+//
+//			for (ExpressionTree et : args)
+//			{
+//				System.out.println("visiting " + et.toString());
+//
+//				VariableEnv returns = et.accept(paramVisitor, null);
+//
+//				if (returns != null)
+//				{
+//					System.out
+//							.println("returns = " + returns.getVariableName());
+//					if (objectWithParams != null)
+//					{
+//						objectWithParams.addParameter(returns);
+//					}
+//					else
+//					{
+//						System.out.println("objectWithParams was null");
+//					}
+//				}
+//				else
+//				{
+//					System.out.println("returns = null");
+//				}
+//			}
+//
+//		}
+//
+//		// if (tree instanceof NewClassTree)
+//		// {
+//		// List<? extends ExpressionTree> args = ((NewClassTree) tree)
+//		// .getArguments();
+//		//
+//		// for (ExpressionTree et : args)
+//		// {
+//		// System.out.println(et);
+//		// VariableEnv varEnv = new VariableEnv();
+//		//
+//		// params = et.accept(paramVisitor, null);
+//		//
+//		// }
+//		//
+//		// }
+//		//
+//		// // System.out.println("/*/* Params = " + params);
+//		//
+//		// if (params != null)
+//		// {
+//		// for (VariableEnv v : params)
+//		// {
+//		// missionEnv.addParameter(v);
+//		// System.out.println("/*/* Param for "
+//		// + missionEnv.getName().toString() + " is "
+//		// + v.getVariableName());
+//		// }
+//		// }
+//	}
 }

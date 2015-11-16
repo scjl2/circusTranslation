@@ -14,7 +14,18 @@ ThreadIds
 \end{zsection}
 
 \begin{circus}
-\circprocess LandingGearHandlerLandApp \circdef   \circbegin
+\circprocess LandingGearHandlerLandApp \circdef \\ \qquad 
+  PriorityParameters : 
+, \\ \qquad 
+  AperiodicParameters : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  this : 
+\circspot 
+  \circbegin
 \end{circus}
 
 

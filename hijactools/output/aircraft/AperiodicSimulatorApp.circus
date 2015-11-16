@@ -11,6 +11,22 @@
 , \\ \qquad 
   storageParametersSchedulable : 
 , \\ \qquad 
+  controlHandler : 
+, \\ \qquad 
+  PriorityParameters : 
+, \\ \qquad 
+  PeriodicParameters : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+  commsHandler : 
+, \\ \qquad 
+  PriorityParameters : 
+, \\ \qquad 
+  PeriodicParameters : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
   beginLandingHandler : 
 \circspot 
   \circbegin

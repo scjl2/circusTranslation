@@ -92,7 +92,7 @@ public class ParametersVisitor implements
 	{
 		super();
 		this.programEnv = programEnv;
-		this.objectEnv = objectEnv;
+		this.objectEnv = whereTheVariableNameIs;
 		this.classEnv = classEnv;
 	}
 

@@ -20,11 +20,13 @@ public abstract class ParadigmBuilder
 {
 	 protected ProgramEnv programEnv;
 	 protected static SCJAnalysis analysis;
+	 protected EnvironmentBuilder environmentBuilder;
 	
-	 public ParadigmBuilder(SCJAnalysis analysis, ProgramEnv programEnv)
+	 public ParadigmBuilder(SCJAnalysis analysis, ProgramEnv programEnv, EnvironmentBuilder environmentBuilder)
 	 {
 		 this.analysis = analysis;
 		 this.programEnv = programEnv;
+		 this.environmentBuilder = environmentBuilder;
 	 }
 	 
 	public abstract ArrayList<Name> build(TypeElement paradigmTypeElement);

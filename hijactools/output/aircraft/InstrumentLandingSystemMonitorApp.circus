@@ -4,7 +4,18 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess InstrumentLandingSystemMonitorApp \circdef   \circbegin
+\circprocess InstrumentLandingSystemMonitorApp \circdef \\ \qquad 
+  PriorityParameters : 
+, \\ \qquad 
+  PeriodicParameters : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+  this : 
+\circspot 
+  \circbegin
 \end{circus}
 
 

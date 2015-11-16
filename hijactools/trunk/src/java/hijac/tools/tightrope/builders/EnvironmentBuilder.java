@@ -11,7 +11,9 @@ import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SchedulableTypeE;
 import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.visitors.MethodVisitor;
+import hijac.tools.tightrope.visitors.ParametersVisitor;
 
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
@@ -28,12 +30,17 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 
 public class EnvironmentBuilder
 {
+	private static final String FINDING_PROCESS_PARAMETERS = "+++ Finding Process Parameters +++";
+
 	private static final String BUILDING_TOP_LEVEL_SEQUENCER = "+++ Building Top Level Sequencer +++";
 
 	private static final String BUILD_MISSION = "+++ Build Mission: ";
@@ -72,6 +79,8 @@ public class EnvironmentBuilder
 
 	public static SCJAnalysis analysis;
 
+	public List<Tree> deferredParamsList;
+
 	// private Trees trees;
 	// private Set<CompilationUnitTree> units;
 	private Set<TypeElement> type_elements;
@@ -90,6 +99,7 @@ public class EnvironmentBuilder
 		// units = analysis.getCompilationUnits();
 		type_elements = analysis.getTypeElements();
 		elems = analysis.ELEMENTS;
+		deferredParamsList = new ArrayList<Tree>();
 
 	}
 
@@ -147,9 +157,10 @@ public class EnvironmentBuilder
 	}
 
 	/**
-	 * Start the exploration of the program represented by the <code>SCJAnalysis</code>
-	 * supplied to this class's constructor. It begins by getting the Safelet and building it,
-	 * and continues from there down the tiers.
+	 * Start the exploration of the program represented by the
+	 * <code>SCJAnalysis</code> supplied to this class's constructor. It begins
+	 * by getting the Safelet and building it, and continues from there down the
+	 * tiers.
 	 * 
 	 * @return <code>ProgramEnv</code> the program environment for this program
 	 */
@@ -158,7 +169,7 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println("+++ Building Environments +++");
 		System.out.println();
-		
+
 		TypeElement safeletType = findSafelet();
 		ArrayList<Name> topLevelMissionSequners = buildSafelet(safeletType);
 
@@ -168,6 +179,8 @@ public class EnvironmentBuilder
 			buildTopLevelMissionSequencer(n);
 		}
 
+		findParameters();
+
 		return programEnv;
 	}
 
@@ -176,7 +189,7 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println("+++ Finding Safelet +++");
 		System.out.println();
-		
+
 		// TypeElement safelet = null;
 		for (TypeElement elem : type_elements)
 		{
@@ -185,14 +198,15 @@ public class EnvironmentBuilder
 			if (elem.getInterfaces().toString().contains("Safelet"))
 			{
 				final Name safeletName = elem.getSimpleName();
-				
-				System.out.println("+++ Found Safelet " + safeletName + END_PLUSES);
-				
+
+				System.out.println("+++ Found Safelet " + safeletName
+						+ END_PLUSES);
+
 				packagePrefix = findPackagePrefix(elem);
-				
+
 				programEnv.addSafelet(safeletName);
 
-				//getVariables(elem, programEnv.getSafelet());
+				// getVariables(elem, programEnv.getSafelet());
 
 				return elem;
 			}
@@ -205,24 +219,23 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println("+++ Building Saflet +++");
 		System.out.println();
-		
-		//init return list
+
+		// init return list
 		ArrayList<Name> topLevelMissionSequencers = null;
 
-		//init Safelet visitor
-		SafeletLevel2Builder safeletLevel2Visitor = 
-				new SafeletLevel2Builder(programEnv, analysis);
+		// init Safelet visitor
+		SafeletLevel2Builder safeletLevel2Visitor = new SafeletLevel2Builder(
+				programEnv, analysis, this);
 
-		//get TLMS list from visitor
-		topLevelMissionSequencers = 
-					safeletLevel2Visitor.build(safelet);
-		
-		//explore TLMSs
+		// get TLMS list from visitor
+		topLevelMissionSequencers = safeletLevel2Visitor.build(safelet);
+
+		// explore TLMSs
 		for (Name n : topLevelMissionSequencers)
-		{		
+		{
 			programEnv.addTopLevelMissionSequencer(n);
 		}
-		
+
 		return topLevelMissionSequencers;
 	}
 
@@ -241,19 +254,16 @@ public class EnvironmentBuilder
 		tlmsClassEnv.setName(tlms);
 		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
-		MissionSequencerLevel2Builder msl2Visitor = 
-				new MissionSequencerLevel2Builder(programEnv, topLevelMissionSequencer, analysis);
-		
-//		msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
-		
-		ArrayList<Name> missions = msl2Visitor
-				.build(tlmsElement);
+		MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(
+				programEnv, topLevelMissionSequencer, analysis, this);
+
+		// msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
+
+		ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
 
 		topLevelMissionSequencer.addVariable(THIS,
 				CIRCREFTYPE + tlms.toString() + CLASS,
 				CIRCNEW + tlms.toString() + CLASS_BRACKETS, false);
-
-		
 
 		assert (missions != null);
 		if (missions.isEmpty())
@@ -299,13 +309,13 @@ public class EnvironmentBuilder
 		TypeElement missionTypeElem = elems.getTypeElement(fullName);
 
 		// HashMap<Name, Tree> variables =
-		//getVariables(missionTypeElem, missionClassEnv);
+		// getVariables(missionTypeElem, missionClassEnv);
 
 		missionEnv.addVariable(THIS, CIRCREFTYPE + n.toString() + CLASS,
 				CIRCNEW + n.toString() + CLASS_BRACKETS, true);
 
 		ArrayList<Name> schedulables = new MissionLevel2Builder(programEnv,
-				missionEnv, analysis).build(missionTypeElem);
+				missionEnv, analysis, this).build(missionTypeElem);
 
 		assert (schedulables != null);
 		if (schedulables.isEmpty())
@@ -348,7 +358,6 @@ public class EnvironmentBuilder
 				buildShedulable(s);
 			}
 
-			
 		}
 
 		if (!nestedSequencers.isEmpty())
@@ -435,30 +444,27 @@ public class EnvironmentBuilder
 		TypeElement tlmsElement;
 		ArrayList<Name> missions;
 		NestedMissionSequencerEnv nestedMissionSequencer;
-		
-		
-
 
 		for (Name sequencer : nestedSequencers)
 		{
 			tlmsElement = analysis.ELEMENTS.getTypeElement(packagePrefix
 					+ sequencer);
 
-			
-			
 			nestedMissionSequencer = programEnv
 					.getNestedMissionSequencer(sequencer);
-			
+
 			ClassEnv smsClassEnv = new ClassEnv();
 			smsClassEnv.setName(sequencer);
 			nestedMissionSequencer.addClassEnv(smsClassEnv);
-			
-			System.out.println("nestedMissionSequencer = " + nestedMissionSequencer);
-			
-			MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(programEnv,
-					nestedMissionSequencer, analysis);
-			
-//			msl2Visitor.setVarMap(getVariables(tlmsElement, nestedMissionSequencer));
+
+			System.out.println("nestedMissionSequencer = "
+					+ nestedMissionSequencer);
+
+			MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(
+					programEnv, nestedMissionSequencer, analysis, this);
+
+			// msl2Visitor.setVarMap(getVariables(tlmsElement,
+			// nestedMissionSequencer));
 
 			missions = msl2Visitor.build(tlmsElement);
 
@@ -536,5 +542,95 @@ public class EnvironmentBuilder
 		System.out.println("getVariables varMap = " + varMap);
 		return varMap;
 
+	}
+
+	private void findParameters()
+	{
+		System.out.println();
+		System.out.println(FINDING_PROCESS_PARAMETERS);
+		System.out.println();
+
+		List<? extends ExpressionTree> args = new ArrayList<ExpressionTree>();
+
+		for (Tree tree : deferredParamsList)
+		{
+
+			ObjectEnv objectWithParams = null;
+
+			if (tree instanceof VariableTree)
+			{
+				System.out.println("Tree: " + tree
+						+ " instance of VairableTree ");
+
+				ExpressionTree et = ((VariableTree) tree).getInitializer();
+				if (et instanceof NewClassTree)
+				{
+					args = ((NewClassTree) et).getArguments();
+				}
+
+				System.out.println("trying to get objectEnv for "
+						+ ((VariableTree) tree).getType().toString());
+				objectWithParams = programEnv
+						.getObjectEnv(((VariableTree) tree).getType()
+								.toString());
+
+			}
+			else if (tree instanceof NewClassTree)
+			{
+				System.out.println("Tree: " + tree
+						+ " instance of NewClassTree ");
+
+				args = ((NewClassTree) tree).getArguments();
+
+				ExpressionTree identifierTree = ((NewClassTree) tree)
+						.getIdentifier();
+
+				System.out.println("trying to get objectEnv for "
+						+ identifierTree);
+				objectWithParams = programEnv.getObjectEnv(identifierTree
+						.toString());
+
+			}
+
+			System.out.println("args = " + args.toString());
+
+			if (!args.isEmpty())
+			{
+				ParametersVisitor paramVisitor = new ParametersVisitor(
+						programEnv, objectWithParams, null);
+
+				List<VariableEnv> params = new ArrayList<VariableEnv>();
+
+				for (ExpressionTree et : args)
+				{
+					System.out.println("visiting " + et.toString());
+
+					VariableEnv returns = et.accept(paramVisitor, null);
+
+					if (returns != null)
+					{
+						System.out.println("returns = "
+								+ returns.getVariableName());
+						if (objectWithParams != null)
+						{
+							objectWithParams.addParameter(returns);
+						}
+						else
+						{
+							System.out.println("objectWithParams was null");
+						}
+					}
+					else
+					{
+						System.out.println("returns = null");
+					}
+				}
+			}
+		}
+	}
+
+	public void addDeferredParam(Tree tree)
+	{
+		deferredParamsList.add(tree);
 	}
 }

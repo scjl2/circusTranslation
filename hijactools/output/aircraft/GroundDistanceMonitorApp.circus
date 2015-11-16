@@ -8,7 +8,16 @@ LandMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess GroundDistanceMonitorApp \circdef   \circbegin
+\circprocess GroundDistanceMonitorApp \circdef \\ \qquad 
+  PriorityParameters : 
+, \\ \qquad 
+  PeriodicParameters : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+  this : 
+\circspot 
+  \circbegin
 \end{circus}
 
 

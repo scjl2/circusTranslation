@@ -315,44 +315,44 @@ MainMissionSequencerApp\\
 MainMissionApp\\
 \interleave \\
 
-ACModeChangerApp\\
+ACModeChangerApp (  ,   ,    ) \\
 \interleave \\
-ControlHandlerApp\\
+ControlHandlerApp (  ,   ,   ,    ) \\
 \interleave \\
-CommunicationsHandlerApp\\
+CommunicationsHandlerApp (  ,   ,   ,    ) \\
 \interleave \\
-EnvironmentMonitorApp\\
+EnvironmentMonitorApp (  ,   ,   ,   ,    ) \\
 \interleave \\
-FlightSensorsMonitorApp\\
+FlightSensorsMonitorApp (  ,   ,   ,   ,    ) \\
 \interleave \\
-AperiodicSimulatorApp (  ,   ,   ,    ) \\
+AperiodicSimulatorApp (  ,   ,   ,   ,   ,   ,   ,   ,   ,   ,   ,    ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
 
-LandingGearHandlerTakeOffApp\\
+LandingGearHandlerTakeOffApp (  ,   ,   ,   ,    ) \\
 \interleave \\
-TakeOffFailureHandlerApp\\
+TakeOffFailureHandlerApp (  ,   ,   ,   ,   ,    ) \\
 \interleave \\
-TakeOffMonitorApp\\
+TakeOffMonitorApp (  ,   ,   ,   ,   ,    ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
-BeginLandingHandlerApp\\
+BeginLandingHandlerApp (  ,   ,   ,   ,    ) \\
 \interleave \\
-NavigationMonitorApp\\
+NavigationMonitorApp (  ,   ,   ,   ,    ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
 
-LandingGearHandlerLandApp\\
+LandingGearHandlerLandApp (  ,   ,   ,   ,    ) \\
 \interleave \\
-SafeLandingHandlerApp\\
+SafeLandingHandlerApp (  ,   ,   ,   ,   ,    ) \\
 \interleave \\
-GroundDistanceMonitorApp\\
+GroundDistanceMonitorApp (  ,   ,   ,    ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp\\
+InstrumentLandingSystemMonitorApp (  ,   ,   ,   ,    ) \\
 \circblockclose
 \end{circus}
 %

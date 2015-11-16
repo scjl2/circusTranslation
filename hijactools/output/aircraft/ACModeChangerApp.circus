@@ -13,7 +13,14 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess ACModeChangerApp \circdef  \circbegin\\ 
+\circprocess ACModeChangerApp \circdef \\ \qquad 
+  PriorityParameters : 
+, \\ \qquad 
+  storageParameters : 
+, \\ \qquad 
+  this : 
+\circspot 
+ \circbegin\\ 
 \end{circus}
    
 

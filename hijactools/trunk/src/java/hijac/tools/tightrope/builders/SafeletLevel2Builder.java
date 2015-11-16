@@ -38,9 +38,9 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 	
 	private SafeletEnv safeletEnv;
 
-	public SafeletLevel2Builder(ProgramEnv programEnv, SCJAnalysis analysis)
+	public SafeletLevel2Builder(ProgramEnv programEnv, SCJAnalysis analysis, EnvironmentBuilder environmentBuilder)
 	{
-		super(analysis, programEnv);
+		super(analysis, programEnv, environmentBuilder);
 		
 //		SafeletLevel2Visitor.programEnv = programEnv;
 

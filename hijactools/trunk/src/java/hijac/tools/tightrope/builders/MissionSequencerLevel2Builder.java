@@ -38,9 +38,9 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 	private MethodVisitor methodVisitor;
 
 	public MissionSequencerLevel2Builder(ProgramEnv programEnv,
-			MissionSequencerEnv sequencerEnv, SCJAnalysis analysis)
+			MissionSequencerEnv sequencerEnv, SCJAnalysis analysis, EnvironmentBuilder environmentBuilder)
 	{
-		super(analysis, programEnv);
+		super(analysis, programEnv, environmentBuilder);
 		
 		this.analysis = analysis;
 		this.programEnv = programEnv;

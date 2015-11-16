@@ -4,7 +4,16 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess CommunicationsHandlerApp \circdef   \circbegin
+\circprocess CommunicationsHandlerApp \circdef \\ \qquad 
+  PriorityParameters : 
+, \\ \qquad 
+  AperiodicParameters : 
+, \\ \qquad 
+  storageParametersSchedulable : 
+, \\ \qquad 
+   : 
+\circspot 
+  \circbegin
 \end{circus}
 
 
