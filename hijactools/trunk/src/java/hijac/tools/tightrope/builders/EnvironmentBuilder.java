@@ -79,7 +79,18 @@ public class EnvironmentBuilder
 
 	public static SCJAnalysis analysis;
 
-	public List<Tree> deferredParamsList;
+	private List<DeferredParamter> deferredParamsList;
+	
+	public class DeferredParamter
+	{
+		Tree tree;
+		String originClass;		
+		
+		public String toString()
+		{
+			return "Origin: " + originClass + " Tree:" + tree;
+		}
+	}
 
 	// private Trees trees;
 	// private Set<CompilationUnitTree> units;
@@ -99,7 +110,7 @@ public class EnvironmentBuilder
 		// units = analysis.getCompilationUnits();
 		type_elements = analysis.getTypeElements();
 		elems = analysis.ELEMENTS;
-		deferredParamsList = new ArrayList<Tree>();
+		deferredParamsList = new ArrayList<DeferredParamter>();
 
 	}
 
@@ -550,17 +561,22 @@ public class EnvironmentBuilder
 		System.out.println(FINDING_PROCESS_PARAMETERS);
 		System.out.println();
 
-		List<? extends ExpressionTree> args = new ArrayList<ExpressionTree>();
+		
 
-		for (Tree tree : deferredParamsList)
+//		System.out.println("Deferred Params = " + deferredParamsList.toString());
+		for (DeferredParamter deferred : deferredParamsList)
 		{
-
+			System.out.println("*** start of Loop *** ");
+			List<? extends ExpressionTree> args = new ArrayList<ExpressionTree>();
+			
 			ObjectEnv objectWithParams = null;
 
+			Tree tree = deferred.tree;
+			
 			if (tree instanceof VariableTree)
 			{
-				System.out.println("Tree: " + tree
-						+ " instance of VairableTree ");
+//				System.out.println("Tree: " + tree
+//						+ " instance of VairableTree ");
 
 				ExpressionTree et = ((VariableTree) tree).getInitializer();
 				if (et instanceof NewClassTree)
@@ -577,14 +593,14 @@ public class EnvironmentBuilder
 			}
 			else if (tree instanceof NewClassTree)
 			{
-				System.out.println("Tree: " + tree
-						+ " instance of NewClassTree ");
+//				System.out.println("Tree: " + tree
+//						+ " instance of NewClassTree ");
 
 				args = ((NewClassTree) tree).getArguments();
 
 				ExpressionTree identifierTree = ((NewClassTree) tree)
 						.getIdentifier();
-
+//
 				System.out.println("trying to get objectEnv for "
 						+ identifierTree);
 				objectWithParams = programEnv.getObjectEnv(identifierTree
@@ -597,7 +613,7 @@ public class EnvironmentBuilder
 			if (!args.isEmpty())
 			{
 				ParametersVisitor paramVisitor = new ParametersVisitor(
-						programEnv, objectWithParams, null);
+						programEnv, objectWithParams, null, deferred.originClass);
 
 				List<VariableEnv> params = new ArrayList<VariableEnv>();
 
@@ -614,6 +630,7 @@ public class EnvironmentBuilder
 						if (objectWithParams != null)
 						{
 							objectWithParams.addParameter(returns);
+							System.out.println("Adding to " + objectWithParams.getName());
 						}
 						else
 						{
@@ -629,8 +646,12 @@ public class EnvironmentBuilder
 		}
 	}
 
-	public void addDeferredParam(Tree tree)
+	public void addDeferredParam(Tree tree, String originClass)
 	{
-		deferredParamsList.add(tree);
+		DeferredParamter d = new DeferredParamter();
+		d.tree=tree;
+		d.originClass = originClass;
+		
+		deferredParamsList.add(d);
 	}
 }

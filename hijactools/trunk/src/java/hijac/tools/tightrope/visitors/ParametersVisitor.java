@@ -83,17 +83,20 @@ public class ParametersVisitor implements
 	private final ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
 	private ClassEnv classEnv;
+	
+	private String originClass;
 
 	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = ParadigmEnv
 			.getGenericParadigmTypes();
 
 	public ParametersVisitor(ProgramEnv programEnv,
-			ObjectEnv whereTheVariableNameIs, ClassEnv classEnv)
+			ObjectEnv whereTheVariableNameIs, ClassEnv classEnv, String originClass)
 	{
 		super();
 		this.programEnv = programEnv;
 		this.objectEnv = whereTheVariableNameIs;
 		this.classEnv = classEnv;
+		this.originClass = originClass;
 	}
 
 	@Override
@@ -256,28 +259,7 @@ public class ParametersVisitor implements
 	{
 		System.out.println("Param Visitor : Literal");
 		
-		if (arg1 != null)
-		{
-		if (arg0 != null)
-		{
-			Object value = arg0.getValue();
-			if (value != null)
-			{
-				if (value.toString().equals("this"))
-				{
-					arg1.setVariableType("Probably Mission");
-				}
-				else
-				{
-					// ?
-				}
-				arg1.setVariableInit(arg0.getValue());
-			}
-		}
-		return null;
-		}
-		else
-		{
+	
 			if (arg0 != null)
 			{
 				Object value = arg0.getValue();
@@ -285,6 +267,8 @@ public class ParametersVisitor implements
 				{
 				
 					VariableEnv v = new VariableEnv();
+					
+					v.setVariableName(originClass);
 					
 					if (value.toString().equals("this"))
 					{
@@ -296,13 +280,12 @@ public class ParametersVisitor implements
 					}
 					v.setVariableInit(arg0.getValue());
 					
-					List<VariableEnv> params = new ArrayList<VariableEnv> ();
-					params.add(v);
+					
 					return v;
 					
 				}
 			}
-		}
+		
 		return null;
 	}
 

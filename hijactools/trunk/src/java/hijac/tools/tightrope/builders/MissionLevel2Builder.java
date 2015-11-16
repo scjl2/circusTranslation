@@ -197,7 +197,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 				methodStatementTree = methodStatementsIterator.next();
 
 				//TODO Should only add the right trees I suppose..
-				environmentBuilder.addDeferredParam(methodStatementTree);
+				environmentBuilder.addDeferredParam(methodStatementTree, missionEnv.getName().toString() );
 //				getParameters(methodStatementTree);
 
 				HashMap<Name, Tree> m = (HashMap<Name, Tree>) methodStatementTree
