@@ -16,9 +16,9 @@
 \circprocess ACModeChangerApp \circdef \\ \qquad 
   PriorityParameters : 
 , \\ \qquad 
-  storageParameters : 
+   : 
 , \\ \qquad 
-  this : 
+   : Probably Mission
 \circspot 
  \circbegin\\ 
 \end{circus}

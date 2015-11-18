@@ -13,13 +13,13 @@ TakeOffMissionMethChan
 , \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
-  storageParametersSchedulable : 
+   : 
 , \\ \qquad 
   TakeOffMission : 
 , \\ \qquad 
-  this : 
+   : Probably Mission
 , \\ \qquad 
-  SAFE_AIRSPEED_THRESHOLD : 
+   : 
 \circspot 
   \circbegin
 \end{circus}

@@ -117,57 +117,12 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 					return initialiser.accept(this, param);
 				}
-
 			}
 		}
 
 		return null;
 
-		// Name varName = arg0.getName();
-		//
-		// Tree varType = arg0.getType();
-		//
-		// String encodedName = NewTransUtils.encodeName(varName);
-		// String varTypeString = varType.toString();
-		//
-		// String init = "";
-		// if (arg0.getInitializer() != null)
-		// {
-		// // Map<Name, Tree> initialiser = arg0.getInitializer().accept(this,
-		// arg1);
-		// // System.out.println("/*/* Init of " + arg0.getName() + " is = " +
-		// initialiser);
-		// // init = arg0.getInitializer().toString();
-		//
-		// param = arg0.getInitializer().accept(this, param);
-		// }
-		//
-		//
-		//
-		//
-		// if (GENERIC_PARADIGM_TYPES.contains(varTypeString))
-		// {
-		// // String varTypefromName = WordUtils
-		// // .capitalize(encodedName) + "ID";
-		// param.setVariableName(encodedName);
-		//
-		// objectEnv.addParameter(encodedName, varTypeString,
-		// varType.toString(), false, init);
-		//
-		// }
-		// else
-		// {
-		// objectEnv.addParameter(encodedName, varTypeString,
-		// varType.toString() + "ID", false, init);
-		// }
-		//
-		// System.out.println("*/*/ Adding Parameter " + encodedName +
-		// " to ObjectEnv " +objectEnv.getName() + "of type " +
-		// objectEnv.getClass().getCanonicalName());
-		//
-		//
-		//
-		// return param;
+		
 	}
 
 	@Override
@@ -178,50 +133,11 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 		List<? extends VariableTree> initParams = null;
 
-		// System.out.println("Expression = " + etc.toString());
-
-		//
-		// ///WHAT THE HELL DOES THIS DO??
-		// //for each type element in the program...
-		// for (TypeElement te : TightRope.ANALYSIS.getTypeElements())
-		// {
-		//
-		// System.out.println("te.simpleName = " + te.getSimpleName().toString()
-		// + "\t\t arg0.id = " +arg0.getIdentifier().toString() ) ;
-		// // ...if the type element equals the identifier of this new class...
-		// if (te.getSimpleName().toString()
-		// .equals(arg0.getIdentifier().toString()))
-		// {
-		// //...for each tree in the members of this type element...
-		// for (Tree t : TightRope.ANALYSIS.TREES.getTree(te).getMembers())
-		// {
-		// //...if it's a method
-		// if (t instanceof MethodTree)
-		// {
-		// MethodTree mt = (MethodTree) t;
-		// //...if its the constructor
-		// if(mt.getName().contentEquals("<init>"))
-		// {
-		// initParams = mt.getParameters();
-		// break;
-		// //get all the params and for each...
-		//
-		// }
-		//
-		// // System.out.println("v.getType = " + v.getType() +
-		// " \t\t arg0.getIdentifier() = " + arg0.getIdentifier().toString());
-		//
-		// }
-		// }
-		// }
-		// }
 
 		VariableEnv v = new VariableEnv();
 		v.setVariableName(arg0.getIdentifier().toString());
 		v.setProgramType(arg0.getIdentifier().toString());
-		// }
-
-		// System.out.println("returnList = " + returnList.toString());
+		
 		return v;
 	}
 
@@ -254,14 +170,19 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				
 				VariableEnv varEnv =  objectEnv.getVariable(varName);
 				
-				
-						
+				if(varEnv != null)
+				{
 				if (varEnv.getProgramType().equals("StorageParameters"))
 				{
 					System.out.println("Ignored Arg " + varEnv.getProgramType());
 				}
 				v.setVariableName(arg0.getName().toString());
 				v.setProgramType(arg0.getName().toString());
+				}
+				else
+				{
+					System.out.println("VAR ENV NULL");
+				}
 			}
 			List<VariableEnv> params = new ArrayList<VariableEnv>();
 			params.add(v);

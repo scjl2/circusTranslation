@@ -9,25 +9,25 @@
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-  storageParametersSchedulable : 
+   : 
 , \\ \qquad 
-  controlHandler : 
-, \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
-  PeriodicParameters : 
-, \\ \qquad 
-  storageParametersSchedulable : 
-, \\ \qquad 
-  commsHandler : 
+   : 
 , \\ \qquad 
   PriorityParameters : 
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-  storageParametersSchedulable : 
+   : 
 , \\ \qquad 
-  beginLandingHandler : 
+   : 
+, \\ \qquad 
+  PriorityParameters : 
+, \\ \qquad 
+  PeriodicParameters : 
+, \\ \qquad 
+   : 
+, \\ \qquad 
+   : 
 \circspot 
   \circbegin
 \end{circus}

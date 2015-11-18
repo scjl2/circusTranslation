@@ -13,11 +13,11 @@ MainMissionMethChan
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-  storageParametersSchedulable : 
+   : 
 , \\ \qquad 
   MainMission : 
 , \\ \qquad 
-  this : 
+   : Probably Mission
 \circspot 
   \circbegin
 \end{circus}

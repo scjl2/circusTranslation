@@ -9,11 +9,11 @@
 , \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
-  storageParametersSchedulable : 
+   : 
 , \\ \qquad 
   CruiseMission : 
 , \\ \qquad 
-  this : 
+   : Probably Mission
 \circspot 
   \circbegin
 \end{circus}

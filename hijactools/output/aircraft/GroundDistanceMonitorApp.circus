@@ -13,9 +13,9 @@ LandMissionMethChan
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-  storageParametersSchedulable : 
+   : 
 , \\ \qquad 
-  this : 
+   : Probably Mission
 \circspot 
   \circbegin
 \end{circus}
