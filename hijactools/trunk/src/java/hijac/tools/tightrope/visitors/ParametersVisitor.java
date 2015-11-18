@@ -122,7 +122,6 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 		return null;
 
-		
 	}
 
 	@Override
@@ -133,11 +132,10 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 		List<? extends VariableTree> initParams = null;
 
-
 		VariableEnv v = new VariableEnv();
 		v.setVariableName(arg0.getIdentifier().toString());
 		v.setProgramType(arg0.getIdentifier().toString());
-		
+
 		return v;
 	}
 
@@ -146,46 +144,47 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	{
 
 		System.out.println("Param Visitor: Identifier");
-		if (arg1 != null)
-		{
 
-			arg1.setVariableName(arg0.getName().toString());
-			return null;
-		}
-		else
 		{
 
 			VariableEnv v = new VariableEnv();
 
+			System.out.println("arg = " + arg0.getName().toString());
 			if (arg0.getName().toString().equals("this"))
 			{
+			
+
 				v.setVariableType("Probably Mission");
-				v.setProgramType(originClass+"ID");
+				v.setProgramType(originClass + "ID");
 			}
 			else
 			{
 				Name varName = arg0.getName();
-						
+
 				ObjectEnv objectEnv = programEnv.getObjectEnv(originClass);
+
 				
-				VariableEnv varEnv =  objectEnv.getVariable(varName);
 				
-				if(varEnv != null)
+				//TODO Need to get whatever variable I need to get here to see what its type is to see if I can ignore it.
+				
+
+				if (varEnv != null)
 				{
-				if (varEnv.getProgramType().equals("StorageParameters"))
-				{
-					System.out.println("Ignored Arg " + varEnv.getProgramType());
-				}
-				v.setVariableName(arg0.getName().toString());
-				v.setProgramType(arg0.getName().toString());
+					if (varEnv.getProgramType().equals("StorageParameters"))
+					{
+						System.out.println("Ignored Arg "
+								+ varEnv.getProgramType());
+						return null;
+					}
+					v.setVariableName(arg0.getName().toString());
+					v.setProgramType(arg0.getName().toString());
 				}
 				else
 				{
 					System.out.println("VAR ENV NULL");
 				}
 			}
-			List<VariableEnv> params = new ArrayList<VariableEnv>();
-			params.add(v);
+
 			return v;
 		}
 
@@ -206,22 +205,20 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 				v.setVariableName(originClass);
 
-				
-					VariableEnv objVar = objectEnv
-							.getVariable(value.toString());
-					if (objVar != null)
+				VariableEnv objVar = objectEnv.getVariable(value.toString());
+				if (objVar != null)
+				{
+					String varType = (objVar.getVariableType());
+					if (varType.equals("StorageParameters"))
 					{
-						String varType = (objVar.getVariableType());
-						if (varType.equals("StorageParameters"))
-						{
-							System.out.println("Ignored Arg " + varType);
-						}
-						else
-						{
-							v.setProgramType(varType);
-						}
+						System.out.println("Ignored Arg " + varType);
 					}
-				
+					else
+					{
+						v.setProgramType(varType);
+					}
+				}
+
 				v.setVariableInit(arg0.getValue());
 
 				System.out.println("Returning " + v.toString()

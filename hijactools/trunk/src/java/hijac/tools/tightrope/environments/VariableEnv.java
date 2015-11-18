@@ -2,7 +2,7 @@ package hijac.tools.tightrope.environments;
 
 public class VariableEnv
 {
-		
+
 	private String variableName;
 	private String variableType;
 	private Object variableInit;
@@ -13,11 +13,11 @@ public class VariableEnv
 	public VariableEnv()
 	{
 		super();
-		
+
 		variableName = "";
 		variableType = "";
 		variableInit = "";
-		
+
 		programType = "";
 	}
 
@@ -116,5 +116,12 @@ public class VariableEnv
 	public void setProgramType(String programType)
 	{
 		this.programType = programType;
+	}
+
+	public String toString()
+	{
+		return "VarEnv: name = " + variableName + " type = " + variableType
+				+ " init = " + variableInit + " input = " + variableInput
+				+ " programType = " + programType + " primitive = " + primitive;
 	}
 }

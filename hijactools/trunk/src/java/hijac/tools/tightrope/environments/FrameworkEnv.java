@@ -388,7 +388,8 @@ public class FrameworkEnv
 			for(VariableEnv v : p.getParameters())
 			{
 				//This adds the type from the program E.G. FlatBufferMission not MissionID
-				params.add(v.getVariableName());
+//				params.add(v.getVariableName());
+				params.add(v.getProgramType());
 			}
 			
 			sMap.put("Parameters", params);
