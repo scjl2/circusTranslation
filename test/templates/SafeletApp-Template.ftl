@@ -1,27 +1,29 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessName}App ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan
+  \SECTION ~ ${ProcessID}App ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  <#include "CommonImports-Template.ftl">
+  \t1 <#include "Parent-Template.ftl">
 \end{zsection}
 %\begin{circus}
-%\circchannelset ${ProcessName}AppSync \circdef \\
+%\circchannelset ${ProcessID}AppSync \circdef \\
 %   \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
 %\end{circus}    
     
 %\begin{circus}
-%\circchannelset ${ProcessName}ChanSet \circdef \\
+%\circchannelset ${ProcessID}ChanSet \circdef \\
 %  \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
 %\end{circus}     
   
 \begin{circus}
-\circprocess ${ProcessName}App  \circdef \circbegin
+\circprocess ${ProcessID}App  \circdef <#include "Params-Template.ftl"> \circbegin
 \end{circus}
 
+<#include "State-Template.ftl">
 
 \begin{circusaction}
 InitializeApplication \circdef \\
 \circblockopen
      initializeApplicationCall \then \\
 
-	 ${initializeApplicationMethod}	
+	 ${initializeApplicationMethod.body}	
 
      initializeApplicationRet \then \\
      \Skip
@@ -37,18 +39,21 @@ GetSequencer \circdef \\
 \circblockclose
 \end{circusaction}
 
+<#include "Methods-Template.ftl">
+
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
 	GetSequencer \\
 	\extchoice  \\
 	InitializeApplication  \\
+<#include "MethodsAction-Template.ftl">
 \circblockclose
 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-	\circspot (Methods) \circinterrupt (end\_safelet\_app \then \Skip) 
+<#include "MainAction-Template.ftl"> \circinterrupt (end\_safelet\_app \then \Skip) 
 \end{circusaction}
 
 \begin{circus}

@@ -61,7 +61,8 @@ public class CircusTemplateFactory {
     * a data operation.
     */
    public final  DataOpMethodModel DATAOP_METHOD;
-
+ 
+   
    /**
     * The constructor of the <i>Circus</i> template factory configures
     * additional directives and methods that can be used by the templates.

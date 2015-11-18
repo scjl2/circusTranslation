@@ -1,46 +1,41 @@
 package hijac.tools.tightrope.environments;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
 
+/**
+ * Environment class for the Schedulable Ids. 
+ * @author Matt Luckcuck
+ */
+public class SchedulableIdsEnv extends IdEnv
+{
 
 
-	public class SchedulableIdsEnv 
-	{		
-		
-		ArrayList<Name> schedulables;
-		Name topLevelSequencer;
-		
-		public SchedulableIdsEnv()
-		{
-			schedulables = new ArrayList<Name>();
-		}
-		
-		public SchedulableIdsEnv(ArrayList<Name> schedulables)
-		{
-			this.schedulables = schedulables;
-		}
-		
-		public void addSchedulable(Name schedulableName)
-		{
-			schedulables.add(schedulableName);
-		}
-		
-		public void addTopLevelSequencer(Name topLevelSequencer)
-		{
-			this.topLevelSequencer = topLevelSequencer;
-		}
-		
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public Map toMap()
-		{
-			Map map = new HashMap();
-			map.put("toplevelSequencer", topLevelSequencer);
-			map.put("Schedulables", schedulables);
-						
-			return map;
-		}		
-	}	
+	private static final String SCHEDULABLES_STR = "Schedulables";
+	private static final String TOPLEVEL_SEQUENCER = "toplevelSequencer";
+	
+	private Name topLevelSequencer;
+
+
+	public void addTopLevelSequencer(Name topLevelSequencer)
+	{
+		this.topLevelSequencer = topLevelSequencer;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Map toMap()
+	{
+		Map map = new HashMap();
+		map.put(TOPLEVEL_SEQUENCER, topLevelSequencer);
+		map.put(SCHEDULABLES_STR, getIdNames());
+
+		return map;
+	}
+	
+	public void addIdNames(String idName)
+	{
+		idNames.add(idName+ID_STR);
+	}
+}

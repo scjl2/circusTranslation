@@ -1,36 +1,31 @@
 package hijac.tools.tightrope.environments;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.lang.model.element.Name;
+public class ManagedThreadEnv extends ParadigmEnv
+{
+	private MethodEnv runMethod;
 
-import com.sun.source.tree.MethodTree;
-
-
-
+	public void addRunMethod(MethodEnv method)
+	{
+		runMethod = method;
+	}
 	
-	public class ManagedThreadEnv extends ParadigmEnv
-	{		
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		public Map toMap()
-		{
-			Map map = new HashMap();
-			map.put("SchedulableID", name.toString());
-//			map.put("initializeApplicationMethod", "");
-					
-//			if (tlmsNames.length == 1)
-//			{
-//				map.put("SchedulableID", tlmsNames[0]);
-//			}
-				
-			
-			
-			return map;
-		}
+	public MethodEnv getRunMethod()
+	{
+		return runMethod;
 	}
 	
 	
-	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Map toMap()
+	{
+		Map map = super.toMap();
+		
+		Map runMethodMap =  methodToMap(runMethod);		
+		
+		map.put("Run", runMethodMap);
+
+		return map;
+	}
+}

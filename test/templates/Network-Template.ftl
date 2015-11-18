@@ -40,6 +40,18 @@
 \circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
 	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
 \end{circus}
+%
+\begin{circus}
+\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
+\end{circus}
+
+\begin{circus}
+\circchannelset ~ ThreadSync == \\ \t1  \lchanset 	\rchanset
+\end{circus}
+
+\begin{circus}
+\circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify  \rchanset
+\end{circus}
 
 %IDs wont type check
 <#list Tiers as tier >
@@ -80,18 +92,19 @@ requestTermination~.~${cluster.Mission}~.~${cluster.Sequencer}
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
-  \t1 AperiodicEventHandlerFW, ${SafeletName}App, ${TopLevelSequencer}App, \\
+  \t1 AperiodicEventHandlerFW, ${Safelet.Name}App, ${TopLevelSequencer.Name}App, \\
+  \t1 ObjectFW, ThreadFW,
   \t1 
 <#list Tiers as tier >
 <#list tier as cluster>
 
 
-${cluster.Mission}App, 
+${cluster.Mission.Name}App, 
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
 <#list schedulables as schedulable>
-${schedulable}App 
+${schedulable.Name}App 
 	<#if schedulable_has_next>
 ,
 	</#if>
@@ -111,7 +124,7 @@ ${schedulable}App
 \circblockopen
 SafeletFW \\
 \t1 \lpar ControlTierSync \rpar \\
-TopLevelMissionSequencerFW(${TopLevelSequencer})
+TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockclose
 \end{circus}
 %
@@ -132,33 +145,27 @@ TopLevelMissionSequencerFW(${TopLevelSequencer})
 <#list tier as cluster>
 
 \circblockopen
-	MissionFW(${cluster.Mission})\\
+	MissionFW(${cluster.Mission.Name})\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
-<#if cluster.Schedulables.Threads?size gte 1>
-<#if cluster.Schedulables.Threads?size gte 2>
-\circblockopen
-</#if>
+
 		<#list cluster.Schedulables.Threads as thread>			
-			ManagedThreadFW(${thread})\\
+			ManagedThreadFW(${thread.Name})\\
 			<#if thread_has_next>
+			<#if thread?counter % 2 == 0>
+			\circblockclosed
+			\circblockopen
+			</#if>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
-		</#list>
+		</#list>	
 
 <#assign syncNeeded=false>
 
-<#if cluster.Schedulables.Threads?size gte 2>
-\circblockclose \\
 
-</#if>
 
-<#if cluster.Schedulables.Threads?size gte 1>
-\t1 \lpar SchedulablesSync \rpar\\
-</#if>
-</#if>
 
 <#if cluster.Schedulables.Oneshots?size gte 1>
 
@@ -292,18 +299,18 @@ Tier${tier_index}
 \circprocess  Application \circdef \\
 \circblockopen
 
-${SafeletName}App\\
+${Safelet.Name}App<#if Safelet.Parameters?size != 0> (<#list Safelet.Parameters as param>${param} <#sep>,</#sep>  </#list>) </#if>\\
 \interleave \\
-${TopLevelSequencer}App\\
+${TopLevelSequencer.Name}App<#if TopLevelSequencer.Parameters?size != 0> (<#list TopLevelSequencer.Parameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
 \interleave \\
 <#list Tiers as tier >
 <#list tier as cluster>
-${cluster.Mission}App\\
+${cluster.Mission.Name}App<#if cluster.Mission.Parameters?size != 0> (<#list cluster.Mission.Parameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
 \interleave \\
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
 <#list schedulables as schedulable>
-${schedulable}App\\
+${schedulable.Name}App<#if schedulable.Parameters?size != 0> (<#list schedulable.Parameters as param> ${param} <#sep>,</#sep> </#list>) </#if>\\
 			<#if schedulable_has_next>
 \interleave \\
 			</#if>
@@ -320,6 +327,25 @@ ${schedulable}App\\
 \end{circus}
 %
 \begin{circus}
-\circprocess Program \circdef Framework \lpar AppSync \rpar Application
+Locking \circdef \\
+\circblockopen
+\circblockopen
+<#list schedulables as schedulable>
+ThreadFW(${schedulable.Name}Thread, MinPriority) \\
+<#sep>\t1 \lpar ThreadSync \rpar\\</#sep>
+</#list>
+\circblockclose \\
+\interleave \\
+\circblockopen
+<#list Objects.Objects as object>
+ObjectFW(${object}Object) \\
+<#sep>\t1 \lpar ObjectSync \rpar\\</#sep>
+</#list>
+\circblockclose
+\circblockclose
+\end{circus}
+% 
+\begin{circus}
+\circprocess Program \circdef Framework \lpar AppSync \rpar Application \lpar LockingSync \rpar Locking
 \end{circus}
 

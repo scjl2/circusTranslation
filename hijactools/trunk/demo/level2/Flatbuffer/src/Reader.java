@@ -4,43 +4,50 @@ import javax.realtime.PriorityParameters;
 import javax.safetycritical.ManagedThread;
 import javax.safetycritical.StorageParameters;
 
+import devices.Console;
+
 public class Reader extends ManagedThread
 {
-	private final Writer writer;
 	private final FlatBufferMission fbMission;
+	
 
 	public Reader(PriorityParameters priority, StorageParameters storage,
-			FlatBufferMission fbMission, Writer writer)
+			FlatBufferMission fbMission)
 	{
 		super(priority, storage);
 
 		this.fbMission = fbMission;
-		this.writer = writer;
 	}
 
-	
 	public void run()
 	{
-		System.out.println("Reader!");
+		Console.println("Reader!");
 
+		//boolean terminationPending = fbMission.terminationPending();
 		while (!fbMission.terminationPending())
 		{
-			try
-			{
-				while (fbMission.bufferEmpty())
+			
+//				while (fbMission.buffer.bufferEmpty("Reader"))
+//				{
+//					fbMission.buffer.waitOnBuffer("Reader");
+//				}
+
+				int result=999;
+				
+				try
 				{
-					fbMission.waitOnMission(); //synchronised
+					result = fbMission.read();
 				}
+				catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Console.println("Reader Read " + result
+						+ " from Buffer");			
 
-				System.out.println("I Read: " + fbMission.read()); // synchronised
 
-				fbMission.notifyOnMission(); //synchronised
-			}
-			catch (InterruptedException ie)
-			{
-				//Handle Interruption
-			}
-
+			//terminationPending = fbMission.terminationPending();
 		}
 	}
 }

@@ -1,28 +1,37 @@
 \begin{zsection}
-  \SECTION ~ ${SchedulableID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
+  \SECTION ~ ${ProcessID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  <#include "CommonImports-Template.ftl">
+  \t1 <#include "Parent-Template.ftl">
 \end{zsection}
 %
 \begin{circus}
-\circprocess ${SchedulableID}App \circdef \circbegin
+\circprocess ${ProcessID}App \circdef <#include "Params-Template.ftl"> \circbegin
 \end{circus}
 
-\begin{circusaction}
-Methods \circdef \\
-	Run \circseq Methods
-\end{circusaction}
+<#include "State-Template.ftl">
 
 \begin{circusaction}
 Run \circdef \\
 \circblockopen
-	runCall~.~${SchedulableID} \then \\
-		
-	runRet~.~${SchedulableID} \then \\
+	runCall~.~${ProcessID} \then \\
+	${Run.Body} \circseq \\
+	runRet~.~${ProcessID} \then \\
 	\Skip
 \circblockclose
 \end{circusaction}	
 
+<#include "Methods-Template.ftl">
+
 \begin{circusaction}
-\circspot (Methods) \circinterrupt (end\_managedThread\_app~.~${SchedulableID} \then \Skip)
+Methods \circdef \\
+\circblockopen
+	Run \\
+<#include "MethodsAction-Template.ftl">
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+<#include "MainAction-Template.ftl">  \circinterrupt (end\_managedThread\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

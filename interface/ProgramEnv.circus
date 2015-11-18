@@ -12,7 +12,8 @@
 \begin{schema}{ObjectEnv}
 name : Name \\
 variables : \seq Name \\
-methods : MethodSet
+methods : MethodSet \\
+syncMethods : MethodSet \\
 \end{schema}
 %
 \begin{schema}{addMethod}
@@ -22,7 +23,8 @@ m? : Method \\
 m \notin methods\\
 methods' = methods \cup \{m?\} \\
 name' = name \\
-variables' = variables
+variables' = variables \\
+syncMethods' = syncMethods
 \end{schema}
 %
 \begin{schema}{setName}
@@ -31,7 +33,8 @@ n? : Name \\
 \where
 name' = n? \\
 variables' = variables \\
-methods' = methods 
+methods' = methods \\
+syncMethods' = syncMethods
 \end{schema}
 %
 %\begin{schema}{SafeletEnv}

@@ -24,6 +24,8 @@ public class SCJApplication {
       assert analysis != null;
       ANALYSIS = analysis;
    }
+   
+ 
 
    /**
     * Returns the analysis of the application context.

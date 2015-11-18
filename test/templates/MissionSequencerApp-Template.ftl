@@ -1,40 +1,46 @@
 \begin{zsection}
-  \SECTION ~ ${MissionSequencerID}App ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId 
+  \SECTION ~ ${ProcessID}App ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \t1 MissionId, MissionIds, SchedulableId  <#include "CommonImports-Template.ftl">
+  \t1 <#include "Parent-Template.ftl">
 \end{zsection}
 %\begin{circus}
-%\circchannelset MissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
+%\circchannelset ${ProcessID}AppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
 %\end{circus}
 
 %\begin{circus}
-%\circchannelset MySequencerAppChanSet == MissionSequencerAppSync
+%\circchannelset ${ProcessID}AppChanSet == ${ProcessID}AppSync
 %\end{circus}
 
 \begin{circus}
-\circprocess ${MissionSequencerID}App \circdef \circbegin\\ 
+\circprocess ${ProcessID}App \circdef <#include "Params-Template.ftl"> \circbegin\\ 
 \end{circus}
    
+<#include "State-Template.ftl">
+
 \begin{circusaction}
-GetNextMission \circdef \\
+GetNextMission \circdef \circvar ret : MissionID \circspot \\
 \circblockopen
-    getNextMissionCall~.~${MissionSequencerID} \then \\
-	
-	getNextMissionRet~.~${MissionSequencerID}~!~${MissionID}  \then \\
-	\Skip
+    getNextMissionCall~.~${ProcessID} \then \\
+	ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~${ProcessID}~!~ret  \then \\
+\Skip
 \circblockclose	
 \end{circusaction}
+
+<#include "Methods-Template.ftl">
 
 \begin{circusaction}
 Methods \circdef  \\
 \circblockopen
 	GetNextMission \\
+<#include "MethodsAction-Template.ftl">
 \circblockclose 
 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-\circspot (Methods) %\circhide MissionSequencerAppStateSync
-\circinterrupt (end\_sequencer\_app~.~${MissionSequencerID} \then \Skip)
+<#include "MainAction-Template.ftl">  %\circhide MissionSequencerAppStateSync
+\circinterrupt (end\_sequencer\_app~.~${ProcessID} \then \Skip)
 \end{circusaction}
 
 \begin{circus}

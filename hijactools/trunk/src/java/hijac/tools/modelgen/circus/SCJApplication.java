@@ -14,12 +14,12 @@ public class SCJApplication extends hijac.tools.modelgen.SCJApplication {
    /**
     * Utility objects that provides access to annotation types.
     */
-   public final AnnotationTypes ANNOTS;
+   public /*final*/ AnnotationTypes ANNOTS;
 
    /**
     * Utility objects that provides access to FreeMarker templates.
     */
-   public final CircusTemplates TEMPLATES;
+   public /*final*/ CircusTemplates TEMPLATES;
 
    /**
     * Constructs an SCJ application context for a given analysis.
@@ -30,6 +30,10 @@ public class SCJApplication extends hijac.tools.modelgen.SCJApplication {
       TEMPLATES = new CircusTemplates(this);
    }
 
+   public SCJApplication(SCJAnalysis analysis, boolean skip)
+   {
+	   super(analysis);
+   }
    /**
     * Returns the utility object providing annotation types.
     *

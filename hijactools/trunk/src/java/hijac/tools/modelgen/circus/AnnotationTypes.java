@@ -109,8 +109,13 @@ public class AnnotationTypes {
     * @param name Name of the annotation whose {@link TypeMirror} is obtained.
     */
    protected TypeMirror getAnnotationType(String name) {
+	   System.out.println("Getting Annotation Type. Name = " + name + " SCJPackagePrefix = " + Config.getSCJPackagePrefix() );
+	   System.out.println( Config.getSCJPackagePrefix() + ".annotate." + name);
+	   
       return MODEL.ELEMENTS.getTypeElement(
-         Config.getSCJPackagePrefix() + ".annotate." + name).asType();
+         Config.getSCJPackagePrefix() + 
+         ".annotate." + name)
+         .asType();
    }
 
    /**

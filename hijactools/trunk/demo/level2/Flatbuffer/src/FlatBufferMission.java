@@ -4,67 +4,89 @@ import javax.realtime.PriorityParameters;
 import javax.safetycritical.Mission;
 import javax.safetycritical.StorageParameters;
 import javax.scj.util.Const;
+import javax.safetycritical.Services;
 
+import devices.Console;
 
 public class FlatBufferMission extends Mission
 {
-	private volatile int[] buffer;
-	private Writer writer;
-	private Reader reader;
+	//Buffer buffer;
+	private volatile int buffer;
+	private testClass t;
+
 
 	public FlatBufferMission()
 	{
-		buffer = new int[1];
-		buffer[0] = 0;
-
-		System.out.println("FlatBufferMission");
+		Console.println("FlatBufferMission");
+		buffer = 0;
+		Services.setCeiling(this, 20);
+		t = new testClass();
 	}
 
-	//@Registers({"Reader","Writer"})
 	protected void initialize()
 	{
-		StorageParameters storageParameters = new StorageParameters(1048576,
-				new long[] { Const.HANDLER_STACK_SIZE }, 1048576, 1048576,
+		StorageParameters storageParameters = new StorageParameters(150 * 1000,
+				new long[] { Const.HANDLER_STACK_SIZE },
+				Const.PRIVATE_MEM_DEFAULT, Const.IMMORTAL_MEM_DEFAULT,
 				Const.MISSION_MEM_DEFAULT - 100 * 1000);
 
-		reader = new Reader(new PriorityParameters(5), storageParameters, this,
-				writer);
-		reader.register();
+		new Reader(new PriorityParameters(10), storageParameters, this).register();
 
-		writer = new Writer(new PriorityParameters(5), storageParameters, this,
-				reader);
+		new Writer(new PriorityParameters(10), storageParameters, this).register();
+		
+		//buffer = new Buffer();
 
-		writer.register();
-
-		System.out.println("FlatBufferMission init");
+		Console.println("FlatBufferMission init");
 	}
 
-	public boolean bufferEmpty()
+	public boolean bufferEmpty(String name)
 	{
-		return buffer[0] == 0;
+		Console.println(name + " Checking Buffer Empty");
+		return buffer == 0;
 	}
 
-	public synchronized void write(int update)
+	public synchronized void write(int update) throws InterruptedException
 	{
-		buffer[0] = update;
+		//boolean bufferEmpty = bufferEmpty("Writer");
+		while (!bufferEmpty("Writer"))
+		{
+			Console.println("Writer" + " Waiting on Buffer");
+			
+			this.wait();
+			
+			//bufferEmpty =  bufferEmpty("Writer");
+		}
+
+		Console.println("writing " + update + " to Buffer");
+		buffer = update;
+		this.notify();
 	}
 
-	public synchronized int read()
+	public synchronized int read() throws InterruptedException
 	{
-		int out = buffer[0];
-		this.buffer[0] = 0;
+		//boolean bufferEmptyCond = bufferEmpty("Reader");
+		while(bufferEmpty("Reader"))
+		{
+			Console.println("Reader" + " Waiting on Buffer");
+			
+			
+			this.wait();
+			
+			//bufferEmptyCond = bufferEmpty("Reader");
+		}
+
+		int out = buffer;
+		Console.println("Reading " + out + " from Buffer");
+		buffer = 0;
+		this.notify();
 
 		return out;
 	}
 	
-	public synchronized void waitOnMission() throws InterruptedException
+	public boolean cleanUp()
 	{
-		this.wait();
-	}
-	
-	public synchronized void notifyOnMission() throws InterruptedException
-	{
-		this.notify();
+		Console.print("FlatBufferMission Cleanup");
+		return false;
 	}
 
 	public long missionMemorySize()
