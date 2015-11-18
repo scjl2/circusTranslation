@@ -10,6 +10,7 @@ import hijac.tools.tightrope.environments.VariableEnv;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 
 import com.sun.source.tree.AnnotatedTypeTree;
@@ -68,8 +69,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 
-public class ParametersVisitor implements
-		TreeVisitor<VariableEnv, VariableEnv>
+public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 {
 	// TODO This returns Names and Trees, it should return Names and
 	// TypeKinds....but how?
@@ -83,14 +83,15 @@ public class ParametersVisitor implements
 	private final ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
 	private ClassEnv classEnv;
-	
+
 	private String originClass;
 
 	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = ParadigmEnv
 			.getGenericParadigmTypes();
 
 	public ParametersVisitor(ProgramEnv programEnv,
-			ObjectEnv whereTheVariableNameIs, ClassEnv classEnv, String originClass)
+			ObjectEnv whereTheVariableNameIs, ClassEnv classEnv,
+			String originClass)
 	{
 		super();
 		this.programEnv = programEnv;
@@ -217,20 +218,17 @@ public class ParametersVisitor implements
 
 		VariableEnv v = new VariableEnv();
 		v.setVariableName(arg0.getIdentifier().toString());
-		returnList.add(v);
-
+		v.setProgramType(arg0.getIdentifier().toString());
 		// }
 
 		// System.out.println("returnList = " + returnList.toString());
 		return v;
 	}
 
-
 	@Override
-	public VariableEnv visitIdentifier(IdentifierTree arg0,
-			VariableEnv arg1)
+	public VariableEnv visitIdentifier(IdentifierTree arg0, VariableEnv arg1)
 	{
-		
+
 		System.out.println("Param Visitor: Identifier");
 		if (arg1 != null)
 		{
@@ -240,56 +238,81 @@ public class ParametersVisitor implements
 		}
 		else
 		{
+
 			VariableEnv v = new VariableEnv();
-			
-			v.setVariableName(arg0.getName().toString());
-			
+
+			if (arg0.getName().toString().equals("this"))
+			{
+				v.setVariableType("Probably Mission");
+				v.setProgramType(originClass+"ID");
+			}
+			else
+			{
+				Name varName = arg0.getName();
+						
+				ObjectEnv objectEnv = programEnv.getObjectEnv(originClass);
+				
+				VariableEnv varEnv =  objectEnv.getVariable(varName);
+				
+				
+						
+				if (varEnv.getProgramType().equals("StorageParameters"))
+				{
+					System.out.println("Ignored Arg " + varEnv.getProgramType());
+				}
+				v.setVariableName(arg0.getName().toString());
+				v.setProgramType(arg0.getName().toString());
+			}
 			List<VariableEnv> params = new ArrayList<VariableEnv>();
 			params.add(v);
 			return v;
 		}
 
-		
 	}
-
-
 
 	@Override
 	public VariableEnv visitLiteral(LiteralTree arg0, VariableEnv arg1)
 	{
 		System.out.println("Param Visitor : Literal");
-		
-	
-			if (arg0 != null)
+
+		if (arg0 != null)
+		{
+			Object value = arg0.getValue();
+			if (value != null)
 			{
-				Object value = arg0.getValue();
-				if (value != null)
-				{
+
+				VariableEnv v = new VariableEnv();
+
+				v.setVariableName(originClass);
+
 				
-					VariableEnv v = new VariableEnv();
-					
-					v.setVariableName(originClass);
-					
-					if (value.toString().equals("this"))
+					VariableEnv objVar = objectEnv
+							.getVariable(value.toString());
+					if (objVar != null)
 					{
-						v.setVariableType("Probably Mission");
+						String varType = (objVar.getVariableType());
+						if (varType.equals("StorageParameters"))
+						{
+							System.out.println("Ignored Arg " + varType);
+						}
+						else
+						{
+							v.setProgramType(varType);
+						}
 					}
-					else
-					{
-						// ?
-					}
-					v.setVariableInit(arg0.getValue());
-					
-					
-					return v;
-					
-				}
+				
+				v.setVariableInit(arg0.getValue());
+
+				System.out.println("Returning " + v.toString()
+						+ " from literal");
+				return v;
+
 			}
-		
+		}
+
+		System.out.println("Returning null form Literal");
 		return null;
 	}
-
-
 
 	@Override
 	public VariableEnv visitMethodInvocation(MethodInvocationTree arg0,
