@@ -1,0 +1,308 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ cdx\_anchor\_o3 ~ \parents ~ cdx\_anchor\_a, cdx\_mock\_objects
+\end{zsection}
+\end{comment}
+
+%%Zword \aposns posns2
+%%Zword \amotions motions2
+%%Zword \acurrentFrame currentFrame2
+%%Zword \astate state2
+%%Zword \acollisions collisions2
+
+%%Zword \cposns posns3
+%%Zword \cmotions motions3
+%%Zword \ccurrentFrame currentFrame3
+%%Zword \cstate state3
+%%Zword \cwork work3
+%%Zword \ccollisions collisions3
+
+\renewcommand{\aposns}{posns_2}
+\renewcommand{\amotions}{motions_2}
+\renewcommand{\acurrentFrame}{currentFrame_2}
+
+\renewcommand{\astate}{state_2}
+\newcommand{\acollisions}{collisions_2}
+
+\renewcommand{\cposns}{posns_3}
+\renewcommand{\cmotions}{motions_3}
+\renewcommand{\ccurrentFrame}{currentFrame_3}
+\renewcommand{\cstate}{state_3}
+\newcommand{\cwork}{work_3}
+\renewcommand{\ccollisions}{collisions_3}
+
+%%Zword \argfour {}
+
+\newcommand{\argfour}{(4)}
+
+\subsubsection*{Refinement 2}
+
+The second refinement of \name{SD} introduces the shared variable $work$ of type $Partition$. It is a shared object between the handlers and used to distribute the computational work determined by $voxel\_map$. We hence concurrently introduce the local variable $voxel\_map$, too. The latter records aircraft positions and motions in a $HashMap$ object that maps $Vector2d$ to $List[Motion]$ objects. In the program, this corresponds to the voxel hashing performed by \verb"ReducerHandler" of which \verb"voxel_map" is a local variable. The type $Vector2d$ is used to index the voxel space. The $Motion$ class records the call sign, current position, and previous position of an aircraft, and $List$ models a standard (Java) list. The class specifications for $Partition$, $Motion$, $Vector2d$, $HashMap$, and $List$ can all be found in the Appendix~\ref{app:classes}.
+
+\subsubsection*{Refining State}
+
+The state of the refining process is given by the following state schema.
+%
+\begin{schema}{OSD2StateCDx}
+  \cposns : Frame\\
+  \cmotions : Frame\\
+  \ccurrentFrame : RawFrame\\
+  \cstate : StateTable\\
+  \cwork : Partition\\
+  \ccollisions : int
+\end{schema}
+%
+Again, all state components of the previous model are retained. Subscripts are used for disambiguation. We note that $voxel\_map$ has not been added as a state component.
+
+\subsubsection*{Retrieve Relation}
+
+\begin{comment}
+\begin{schema}{OSD1StateCDx}
+  \aposns : Frame\\
+  \amotions : Frame\\
+  \acurrentFrame : RawFrame\\
+  \astate : StateTable\\
+  \acollisions : int
+\end{schema}
+\end{comment}
+
+The retrieve relation of the second refinement relates $work$ and $voxel\_map$.
+%
+\begin{schema}{OSD2RetrCDx}
+  OSD1StateCDx\\
+  OSD2StateCDx
+\where
+  \cposns = \aposns \land \cmotions = \amotions
+  \\
+  \ccurrentFrame = \acurrentFrame \land \cstate = \astate
+  \\
+  \cwork \neq \circnull
+  \\
+  \exists voxel\_map : HashMap[Vector2d,List[Motion]] | voxel\_map \neq \circnull @
+  \\
+  \circblockopen
+    \forall a_1, a_2 : Aircraft | \{a_1, a_2\} \subseteq \dom \cposns @
+    \\
+    \t1 (a_1, a_2) \in CalcCollisionSet(\cposns, \cmotions) \implies
+    \\
+    \t2
+    \circblockopen
+      \exists l : List[Motion] |
+      l \in \hidemath{(}voxel\_map~.~values~\emptytuple\hidemath{)}~.~elems~\emptytuple @\\
+      \t1 MkMotion(a_1, \cposns~a_1 \vminus \cmotions~a_1, \cposns~a_1) \in l~.~elems~\emptytuple \land\\
+      \t1 MkMotion(a_2, \cposns~a_2 \vminus \cmotions~a_2, \cposns~a_2) \in l~.~elems~\emptytuple
+    \circblockclose
+    \\
+    \hidemath{(}voxel\_map~.~values~\emptytuple\hidemath{)}~.~elems~\emptytuple = \bigcup ~ \{i : 1 \upto 4 @ \hidemath{(}\cwork~.~getDetectorWork(i)\hidemath{)}~.~elems~\emptytuple\}
+  \circblockclose
+  \\
+  \ccollisions = \acollisions
+\end{schema}
+%
+As before, $voxel\_map$ and $work$ must not be $\circnull$ to avoid undefinedness issues. We observe $voxel\_map$ has been introduced as a local variable rather than a state component of the process. Above we furthermore make use of an auxiliary function $MkMotion$, loosely specified below.
+%
+\begin{axdef*}
+  MkMotion : Aircraft \cross Vector \cross Vector \fun Motion
+\end{axdef*}
+%
+It yields a $Motion$ object for an $Aircraft$ and its previous and current position. It corresponds to the constructor of the \verb"Motion" class in the SCJ program of the parallel {\CDx}. We recall that the logical method $elems()$ returns the elements of a $List$ object as a set. The results of the method call $\cwork~.~getDetectorWork(i)$ determines the voxels to be checked by detector $i$; it is of type $List[List[Motion]]$. The method call $voxel\_map~.~values~\emptytuple$ returns the list of values in the hash table (it is also of type $List[List[Motion]]$).
+
+%\newpage
+
+\subsubsection*{Refining Process}
+
+The process for the second refinement of the \name{SD} phase is presented below.
+%
+\begin{circusflow}
+\begin{circus}
+  \circprocess ~ OSD2BReqsCDx ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ OSD2StateCDx}
+  \cposns : Frame\\
+  \cmotions : Frame\\
+  \ccurrentFrame : RawFrame\\
+  \cstate : StateTable\\
+  \cwork : Partition\\
+  \ccollisions : int
+\where
+  \dom \cposns = \dom \cmotions
+  \\
+  \ccurrentFrame \neq \circnull \land \cstate \neq \circnull \land \cwork \neq \circnull
+  \\
+  \exists voxel\_map : HashMap[Vector2d,List[Motion]] | voxel\_map \neq \circnull @
+  \\
+  \circblockopen
+    \cposns =
+    \circblockopen
+      \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+        \t1
+        \circblockopen
+          \LET i == \ccurrentFrame~.~find(a) @\\
+          \t1 MkVector
+          \circblockopen
+            \ccurrentFrame~.~positions~.~getA(3 * i),\\
+            \ccurrentFrame~.~positions~.~getA(3 * i + 1),\\
+            \ccurrentFrame~.~positions~.~getA(3 * i + 2)
+          \circblockclose
+       \circblockclose
+    \circblockclose
+    \also
+    \cmotions =
+    \circblockopen
+      \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+      \t1
+      \circblockopen
+        \LET prev == \cstate~.~position\_map~.~get(MkCallSign(a)) @\\
+        \t1 \IF prev \neq \circnull\\
+        \t1 \THEN ~ \cposns(a) \vminus MkVector(prev~.~x, prev~.~y, prev~.~z)\\
+        \t1 \ELSE ~ ZeroV
+      \circblockclose
+    \circblockclose
+    \also
+    \circblockopen
+      \forall a_1, a_2 : Aircraft | \{a_1, a_2\} \subseteq \dom \cposns @
+      \\
+      \t1 (a_1, a_2) \in CalcCollisionSet(\cposns, \cmotions) \implies
+      \\
+      \t2
+      \circblockopen
+        \exists l : List[Motion] |
+        l \in \hidemath{(}voxel\_map~.~values~\emptytuple\hidemath{)}~.~elems~\emptytuple @\\
+        \t1 MkMotion(a_1, \cposns~a_1 \vminus \cmotions~a_1, \cposns~a_1) \in l~.~elems~\emptytuple \land\\
+        \t1 MkMotion(a_2, \cposns~a_2 \vminus \cmotions~a_2, \cposns~a_2) \in l~.~elems~\emptytuple
+      \circblockclose
+    \circblockclose
+    \also
+    \hidemath{(}voxel\_map~.~values~\emptytuple\hidemath{)}~.~elems~\emptytuple = \bigcup ~ \{i : 1 \upto 4 @ \hidemath{(}\cwork~.~getDetectorWork(i)\hidemath{)}~.~elems~\emptytuple\}
+    \also
+    \exists collset : \finset ~ (Aircraft \cross Aircraft) | collset = CalcCollisionSet(\cposns, \cmotions) @\\
+    \t1 (\# collset = 0 \land \ccollisions = 0) \lor (\# collset > 0 \land \ccollisions \geq (\# collset) \div 2)
+  \circblockclose
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ OSD2StateCDx
+\end{circusaction}
+\end{comment}
+%
+\begin{schema}{Init}
+  OSD2StateCDx~'
+\where
+  \cposns' = \emptyset \land \cmotions' = \emptyset
+  \\
+  \ccurrentFrame' = \circnew RawFrame
+  \\
+  \cstate' = \circnew StateTable
+  \\
+  \cwork' = \circnew Partition \argfour
+  \\
+  \ccollisions' = 0
+\end{schema}
+%
+\begin{schema}{RecordFrame}
+  \Delta OSD2StateCDx\\
+  frame? : Frame
+\where
+  \cposns' = frame?
+  \\
+  \cmotions' = \{a : \dom \cposns' @ a \mapsto \IF a \in \dom \cposns \THEN (\cposns' ~ a) \vminus (\cposns ~ a) \ELSE ZeroV\}
+  \\
+  \exists voxel\_map : HashMap[Vector2d,List[Motion]] | voxel\_map \neq \circnull @
+  \\
+  \circblockopen
+    \cposns =
+    \circblockopen
+      \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+        \t1
+        \circblockopen
+          \LET i == \ccurrentFrame~.~find(a) @\\
+          \t1 MkVector
+          \circblockopen
+            \ccurrentFrame~.~positions~.~getA(3 * i),\\
+            \ccurrentFrame~.~positions~.~getA(3 * i + 1),\\
+            \ccurrentFrame~.~positions~.~getA(3 * i + 2)
+          \circblockclose
+       \circblockclose
+    \circblockclose
+    \also
+    \cposns' =
+    \circblockopen
+      \lambda a : Aircraft | \ccurrentFrame'~.~find(a) \neq \negate 1 @\\
+        \t1
+        \circblockopen
+          \LET i == \ccurrentFrame'~.~find(a) @\\
+          \t1 MkVector
+          \circblockopen
+            \ccurrentFrame'~.~positions~.~getA(3 * i),\\
+            \ccurrentFrame'~.~positions~.~getA(3 * i + 1),\\
+            \ccurrentFrame'~.~positions~.~getA(3 * i + 2)
+          \circblockclose
+       \circblockclose
+    \circblockclose
+    \also
+    \cmotions' =
+    \circblockopen
+      \lambda a : Aircraft | \ccurrentFrame'~.~find(a) \neq \negate 1 @\\
+      \t1
+      \circblockopen
+        \LET prev == \cstate'~.~position\_map~.~get(MkCallSign(a)) @\\
+        \t1 \IF prev \neq \circnull\\
+        \t1 \THEN ~ \cposns'(a) \vminus MkVector(prev~.~x, prev~.~y, prev~.~z)\\
+        \t1 \ELSE ~ ZeroV
+      \circblockclose
+    \circblockclose
+    \also
+    \circblockopen
+      \forall a_1, a_2 : Aircraft | \{a_1, a_2\} \subseteq \dom \cposns' @
+      \\
+      \t1 (a_1, a_2) \in CalcCollisionSet(\cposns', \cmotions') \implies
+      \\
+      \t2
+      \circblockopen
+        \exists l : List[Motion] |
+        l \in \hidemath{(}voxel\_map~.~values~\emptytuple\hidemath{)}~.~elems~\emptytuple @\\
+        \t1 MkMotion(a_1, \cposns'~a_1 \vminus \cmotions'~a_1, \cposns'~a_1) \in l~.~elems~\emptytuple \land\\
+        \t1 MkMotion(a_2, \cposns'~a_2 \vminus \cmotions'~a_2, \cposns'~a_2) \in l~.~elems~\emptytuple
+      \circblockclose
+    \circblockclose
+    \also
+    \hidemath{(}voxel\_map~.~values~\emptytuple\hidemath{)}~.~elems~\emptytuple = \bigcup ~ \{i : 1 \upto 4 @ \hidemath{(}\cwork'~.~getDetectorWork(i)\hidemath{)}~.~elems~\emptytuple\}
+    \also
+    \exists collset : \finset ~ (Aircraft \cross Aircraft) | collset = CalcCollisionSet(\cposns', \cmotions') @\\
+    \t1 (\# collset = 0 \land \ccollisions' = 0) \lor (\# collset > 0 \land \ccollisions' \geq (\# collset) \div 2)
+  \circblockclose
+\end{schema}
+%
+\begin{schema}{CalcCollisions}
+  \Xi OSD2StateCDx\\
+  colls! : \nat
+\where
+  colls! = \ccollisions
+\end{schema}
+%
+\begin{circusaction}
+  BReq1 ~ \circdef ~ next\_frame~?~frame ~ \then
+  \\
+  \t1
+  \circblockopen
+    RecordFrame \circseq
+    \\
+    \circvar colls : \nat \circspot CalcCollisions \circseq output\_collisions~!~colls \then BReq1
+  \circblockclose
+\end{circusaction}
+\extracircusvspace
+%
+\begin{circusaction}
+  \circspot \lschexpract Init \rschexpract \circseq BReq1
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}
+%
+With the above refinement we have introduced all shared data. In addition to recording the frame, updating the motions and calculation collisions, $RecordFrame$ here also constructs the voxel map and carries out the calculation for dividing the computational work between the detector handlers by setting $work$.
+
+This concludes the models for \name{SD} and in order to finalise the \name{O} anchor, the subsequent and last phase eliminates the auxiliary model variables $\cposns$ and $\cmotions$.

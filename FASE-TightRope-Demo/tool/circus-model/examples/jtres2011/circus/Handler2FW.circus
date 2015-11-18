@@ -1,0 +1,7 @@
+\begin{zsection}
+  \SECTION ~ Handler2FW ~ \parents ~ EventHandler, HandlerIds
+\end{zsection}
+
+\begin{circus}
+  \circprocess Handler2FW ~ \circdef ~ EventHandlerFW(Handler2Id)
+\end{circus}

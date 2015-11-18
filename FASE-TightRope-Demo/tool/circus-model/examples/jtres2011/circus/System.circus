@@ -1,0 +1,65 @@
+\begin{zsection}
+  \SECTION ~ System ~ \parents ~ MainSafelet, MainMissionSequencer, MainMission, Handler1, Handler2
+\end{zsection}
+\vspace{1.5em}
+
+\paragraph{Channel Sets}
+
+\begin{circus}
+  \circchannelset ~ MissionSequencerSyncChan ~ ==\\
+  \t1 \lchanset start\_sequencer, done\_sequencer \rchanset
+\end{circus}
+
+\begin{circus}
+  \circchannelset ~ MissionSyncChan ~ ==\\
+  \t1 \lchanset start\_mission, done\_mission, end\_mission\_fw \rchanset
+\end{circus}
+
+\begin{circus}
+  \circchannelset ~ MissionHideChan ~ ==\\
+  \t1 \lchanset start\_mission, done\_mission \rchanset
+\end{circus}
+
+\begin{circus}
+  \circchannelset ~ AllHandlersSyncChan ~ ==\\
+  \t1 \lchanset start\_handler, stop\_handler, done\_handler, activate\_handlers, end\_mission\_fw \rchanset
+\end{circus}
+
+\begin{circus}
+  \circchannelset ~ AllHandlersHideChan ~ ==\\
+  \t1 \lchanset start\_handler, stop\_handler, done\_handler, activate\_handlers \rchanset
+\end{circus}
+\vspace{1.5em}
+
+\paragraph{Handlers Process}
+
+\begin{circus}
+  \circchannelset ~ HandlerSyncChan ~ ==\\
+  \t1 \lchanset activate\_handlers, end\_mission\_fw \rchanset
+\end{circus}
+\vspace{0.5em}
+
+\begin{circus}
+  \circprocess Handlers ~ \circdef (Handler1 \lpar HandlerSyncChan \rpar Handler2)\\
+\end{circus}
+\vspace{1.5em}
+
+\paragraph{System Process}
+
+\begin{circus}
+  \circchannelset ~ SystemMethChan ~ ==\\
+  \t1 SafeletMethChan \cup MissionSequencerMethChan \cup MissionMethChan \cup HandlerMethChan
+\end{circus}
+
+\begin{circus}
+  \circchannelset ~ SystemHideChan ~ ==\\
+  \t1 SystemMethChan \cup \lchanset end\_mission\_fw \rchanset
+\end{circus}
+\vspace{0.5em}
+
+\begin{circus}
+  \circprocess System ~ \circdef ~ ((((((MainSafelet\\
+  \t1 \lpar MissionSequencerSyncChan \rpar MainMissionSequencer) \circhide MissionSequencerSyncChan)\\
+  \t1 \lpar MissionSyncChan \rpar MainMission) \circhide MissionHideChan)\\
+  \t1 \lpar AllHandlersSyncChan \rpar Handlers) \circhide AllHandlersHideChan) \circhide SystemHideChan
+\end{circus}

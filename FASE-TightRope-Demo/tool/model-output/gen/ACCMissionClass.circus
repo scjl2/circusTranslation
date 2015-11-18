@@ -1,0 +1,27 @@
+
+\begin{circus}
+  \circclass ~ ACCMissionClass ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+  \circpublic ~ cleanup ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  unregisterISRs()
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ missionMemorySize ~ \circdef ~
+  \circres ~ ret : long \circspot
+  \\
+  \t1
+  \circblockopen
+  ret := 131072
+  \circblockclose
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

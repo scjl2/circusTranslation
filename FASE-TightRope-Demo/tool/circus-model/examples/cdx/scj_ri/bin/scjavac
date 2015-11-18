@@ -1,0 +1,10 @@
+#!/bin/bash
+RTSJ_SCJ_HOME=$(readlink -f $(dirname $0))/..
+
+SCJ_RI_LIB=$RTSJ_SCJ_HOME/classes
+
+CLASSPATH=$SCJ_RI_LIB:$CLASSPATH
+
+JAVAC=jamaicac
+
+$JAVAC $*

@@ -1,0 +1,11 @@
+=========
+IMPORTANT
+=========
+
+Execute the command
+
+  source set_env.sh  (or just ". set_env.sh")
+  
+once in each shell first.
+
+This sets some shell environment variables needed by the makefiles and CZT to located the SCJ specification files and toolkits.

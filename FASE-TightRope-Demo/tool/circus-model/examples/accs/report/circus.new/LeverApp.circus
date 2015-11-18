@@ -1,0 +1,95 @@
+\begin{zsection}
+  \SECTION ~ LeverApp ~ \parents ~ LeverClass, LeverMethChan, LeverConst, HandlerIds, Events
+\end{zsection}
+
+\begin{comment}
+\begin{zed}
+  LEVER ::=\\
+  \t1 ACTIVATE |\\
+  \t1 DEACTIVATE |\\
+  \t1 START\_ACCELERATION |\\
+  \t1 STOP\_ACCELERATION |\\
+  \t1 RESUME
+\end{zed}
+%
+\begin{circus}
+  \circchannel ~ setLeverCall : LEVER
+  \also
+  \circchannel ~ setLeverRet
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ lever : LEVER
+\end{circus}
+\end{comment}
+
+\begin{circusbox}
+\begin{circus}
+  \circprocess ~ LeverApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ LeverState}
+  this : LeverClass
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ LeverState
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  Init ~ \circdef ~ LeverInit~?~obj \then this := obj
+\end{circusaction}
+%
+\begin{circusaction*}
+  handleAsyncEventMeth ~ \circdef ~ this~.~handleAsyncEvent()
+\end{circusaction*}
+%
+\begin{comment}
+\begin{circusaction}
+  handleAsyncEventMeth ~ \circdef ~ \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  Execute ~ \circdef ~ enter\_dispatch \then Dispatch
+\end{circusaction}
+%
+\begin{circusaction}
+  Dispatch ~ \circdef ~\\
+  \t1 \circmu X \circspot
+  \circblockopen
+    (leave\_dispatch \then \Skip)
+    \\
+    \t1 \extchoice
+    \\
+    \circblockopen
+      lever~?~param \then SetInput(param) \circseq
+      \\
+      \circwait 0..LeverDeadline \circseq handleAsyncEventMeth
+    \circblockclose
+  \circblockclose
+  \circseq X
+\end{circusaction}
+%
+\begin{circusaction}
+  SetInput ~ \circdef ~ \circval param : LEVER \circspot
+  \\
+  \t1 setLeverCall~!~param \then \Skip \circseq setLeverRet \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  Terminate ~ \circdef ~ done\_handler~.~LeverId \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot (\circmu X \circspot Init \circseq Execute \circseq Terminate \circseq X) \circinterrupt ~ end\_mission\_fw \then \Skip
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusbox}
+%
+The value read from the hardware is writing into mission memory. The interrupt handler achieving this is less generic here as it needs to know where to write the data and ensure that the write operation is atomic. Hence, we specify a separate action $SetInput$ for it. The synchronisations $setLeverCall$ and $setLeverRet$ invoke the \code{setLever(...)} method to set the value for the lever.

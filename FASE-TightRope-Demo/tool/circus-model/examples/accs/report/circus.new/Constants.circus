@@ -1,0 +1,22 @@
+\begin{zsection}
+  \SECTION ~ Constants ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\nid The following type defines possible inputs for the lever.
+%
+\begin{zed}
+  LEVER ::=\\
+  \t1 ACTIVATE |\\
+  \t1 DEACTIVATE |\\
+  \t1 START\_ACCELERATION |\\
+  \t1 STOP\_ACCELERATION |\\
+  \t1 RESUME
+\end{zed}
+
+\nid The following constant defines the integer range for voltage outputs on the throttle.
+%
+\begin{zed}
+  VOLTAGE\_RANGE ~ == ~ 0..80
+\end{zed}
+%
+It corresponds to the physical range from $0$ to $8$ volts, hence one unit represents $0.1$ volts.

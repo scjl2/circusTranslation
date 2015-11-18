@@ -1,0 +1,31 @@
+<flight_plan NAME="demo 1" LON0="10.5481887029753594" MAX_DIST_FROM_HOME="500" GROUND_ALT="0" SECURITY_HEIGHT="25" QFU="270" ALT="250" LAT0="52.3163232526151631">
+
+
+  <waypoints>
+    <waypoint Y="0.0" NAME="HOME" X="0.0" ALT="0."/>
+    <waypoint name="road_start" x="-337" y="17" alt="60."/>
+    <waypoint name="road_end" x="238" y="-30" alt="40."/>
+  </waypoints>
+  <blocks>
+    <block name="Takeoff">
+      <exception cond="estimator_z > ground_alt+25" deroute="survey road 1"/>
+      <set value="0" var="kill_throttle"/>
+      <set value="0" var="estimator_flight_time"/>
+      <set value="1" var="launch" />
+      <go from="HOME" throttle="1.0" vmode="throttle" wp="road_start" pitch="15"/>
+    </block>
+    <block name="survey road 1">
+      <go from="HOME" wp="road_start"/>
+      <go wp="road_end"/>
+    </block>
+    <block NAME="survey road 2">
+      <while cond="TRUE">
+        <go wp="road_start" from="road_end" hmode="route"/>
+        <go wp="road_end" from="road_start" hmode="route"/>
+      </while>
+    </block>
+    <block name="circle">
+      <circle wp="road_end" ALT="ground_alt+50" radius="75"/>
+    </block>
+  </blocks>
+</flight_plan>

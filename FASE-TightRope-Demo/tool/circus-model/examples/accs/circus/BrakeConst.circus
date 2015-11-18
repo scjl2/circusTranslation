@@ -1,0 +1,8 @@
+\begin{zsection}
+  \SECTION ~ BrakeConst ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+  BrakeDeadline : \nat_1
+\end{axdef}

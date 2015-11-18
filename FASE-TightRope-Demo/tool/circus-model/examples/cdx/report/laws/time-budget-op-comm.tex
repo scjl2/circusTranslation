@@ -1,0 +1,7 @@
+\begin{circustimelaw}{time-budget-op-comm}
+\begin{circusaction*}
+  P(Op \circseq \circwait t_1 \upto t_2) ~ \equiv ~ P(\circwait t_1 \upto t_2 \circseq Op) \; \provided \; \mbox{$Op$ is a data operation}
+\end{circusaction*}
+%
+This law is in fact non-compositional:~it is a law about processes rather than actions. Hence, it only holds if the underlying action $Op \circseq \circwait t_1 \upto t_2$ is embedded in a process $P$. The justification for the law comes from the structure and semantics of processes that prevents one from observing the precise time at which an (internal) state change takes place. It is proved by induction over the structure of processes.
+\end{circustimelaw}

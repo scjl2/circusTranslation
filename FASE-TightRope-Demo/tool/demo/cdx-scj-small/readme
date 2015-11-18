@@ -1,0 +1,10 @@
+
+A customized and fixed version of the Purdue CD benchmark.  This version is
+intended to be SCJ-compliant.  It is impossible to know for sure, as there
+is no SCJ-compliant implementation at the moment.  There also may be bugs.
+
+Most of the code can run with the RI, but not all. It has to be slightly
+modified for the RI.
+
+Both L0 and L1 should be supported - cdx.Level0Safelet and cdx.Level1Safelet
+

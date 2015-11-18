@@ -1,0 +1,67 @@
+\section{Primitive Types}
+
+\begin{zsection}
+  \SECTION ~ PrimitiveTypes ~ \parents ~ scj\_prelude
+\end{zsection}
+
+\subsection{Boolean values}
+
+We have to use the prefix $j$ as not to clash with the predefined predicates $true$ and $false$.
+%
+\begin{zed}
+  boolean ::= jtrue | jfalse
+\end{zed}
+
+\subsection{Byte values}
+                                          
+We give the signed range here.
+%
+\begin{zed}
+  byte == ~128..127
+\end{zed}
+%
+An open question is whether there is benefit of expressing the bounds in terms of exponentiation.
+
+\subsection{Integer values}
+
+We give the signed range here. Integers are 32 bits in Java.
+%
+\begin{zed}
+  int == ~2147483648..2147483647 
+\end{zed}
+%
+An open question is whether there is benefit of expressing the bounds in terms of exponentiation.
+
+\subsection{Long values}
+
+We give the signed range here. Longs are 64 bits in Java.
+%
+\begin{zed}
+  long == ~9223372036854775808..9223372036854775807
+\end{zed}
+%
+An open question is whether there is benefit of expressing the bounds in terms of exponentiation.
+
+\subsection{Float values}
+
+There is currently no model for floats.
+%
+\begin{zed}
+  [float]
+\end{zed}
+
+\subsection{Double values}
+
+There is currently no model for doubles.
+%
+\begin{zed}
+  [double]
+\end{zed}
+
+\subsection{Char values}
+
+Unicode characters are represented by 16 bit unsigned values.
+%
+\begin{zed}
+  char == 0..65535
+\end{zed}

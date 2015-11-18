@@ -1,0 +1,165 @@
+\begin{circusbox}
+\begin{zsection}
+  \SECTION ~ ThrottleControl ~ \parents ~ Preliminaries, GlobalConstants, Channels
+\end{zsection}
+\vspaceafterzpara
+
+We first introduce an axiomatic definition for a function that yields the tolerance interval that we are willing to accept in place of the \emph{ideal} calculated voltage.
+%
+\begin{axdef}
+  TOLERANCE : VOLTAGE \fun \power VOLTAGE
+\where
+  \forall v : VOLTAGE @ TOLERANCE ~ v =\\
+  \t1 (max ~ \{v - voltage\_tolerance, 0\})..(min ~ \{v + voltage\_tolerance, 80\})
+\end{axdef}
+\end{circusbox}
+%
+It assumes that the $+$ / $-$ voltage tolerance is given by $voltage\_tolerance$.
+
+\nid Below is given the process for the throttle controller component.
+%
+\begin{circusbox}
+\begin{circus}
+  \circprocess ThrottleControl ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore ~ State}
+  cruise\_speed : \nat\\
+  voltage : VOLTAGE
+\end{schema}
+
+\begin{schema}{Init}
+  State~'
+\where
+  cruise\_speed' = 0 \land voltage' = 0
+\end{schema}
+
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ State                                                                  
+\end{circusaction}
+\end{comment}
+
+\begin{schema}{ResetVoltage}
+  \Delta State
+\where
+  voltage' = 0
+\end{schema}
+%
+\begin{schema}{IncreaseVoltage}
+  \Delta State
+\where
+  (voltage < 80 \implies voltage' = voltage + 1)\\
+  (voltage = 80 \implies voltage' = voltage)
+\end{schema}
+
+\begin{schema}{AdjustInRangeVoltage}
+  \Delta State\\
+  speed\_diff? : \num
+\where
+  voltage' = 2 * (speed\_diff? + 2)
+\end{schema}
+
+\begin{schema}{RetainCruiseSpeed}
+  \Delta State
+\where
+  cruise\_speed' = cruise\_speed
+\end{schema}
+
+\begin{schema}{SpeedBelow}
+  speed\_diff? : \nat
+\where
+  speed\_diff? < \negate 2
+\end{schema}
+
+\begin{schema}{SpeedInRange}
+  speed\_diff? : \nat
+\where
+  \negate 2 \leq speed\_diff? \leq 2
+\end{schema}
+
+\begin{schema}{SpeedAbove}
+  speed\_diff? : \nat
+\where
+  speed\_diff? > 2
+\end{schema}
+
+\begin{zed}
+  RecalcVoltageCruiseSchOp ~ == ~ RetainCruiseSpeed \land\\
+  \t1 ((SpeedBelow \land ResetVoltage) \lor\\
+  \t1 (SpeedInRange \land AdjustInRangeVoltage) \lor\\
+  \t1 (SpeedAbove \land IncreaseVoltage))
+\end{zed}
+
+% TODO: Use the schema calculus to specify the data part of the following action.
+
+%\begin{circusaction}
+%  RecalcVoltageCruise ~ \circdef ~ get\_current\_speed~?~current\_speed ~ \then\\
+%  \t1 \circvar speed\_diff : \num \circspot speed\_diff := cruise\_speed - current\_speed %\circseq\\
+%  \t2 \circif speed\_diff < \negate 2 \circthen \lschexpract ResetVoltage \rschexpract\\
+%  \t2 \circelse ~ speed\_diff > 2 \circthen \lschexpract IncreaseVoltage \rschexpract\\
+%  \t2 \circelse ~ \negate 2 \leq speed\_diff \leq 2 \circthen \lschexpract AdjustInRangeVoltage \rschexpract \circfi
+%\end{circusaction}
+
+\begin{circusaction}
+  RecalcVoltageCruise ~ \circdef ~ get\_current\_speed~?~current\_speed ~ \then\\
+  \t1 \circvar speed\_diff : \num \circspot speed\_diff := cruise\_speed - current\_speed \circseq \lschexpract RecalcVoltageCruiseSchOp \rschexpract
+\end{circusaction}
+
+\begin{circusaction}
+  RecalcVoltageAccel ~ \circdef ~ \lschexpract IncreaseVoltage \rschexpract
+\end{circusaction}
+\end{circusbox}
+
+\begin{circusbox}
+\begin{circusaction}
+  Idle ~ \circdef ~ (write\_voltage \then (set\_voltage~.~0 \then Idle \circdeadline 0)) ~~ \extchoice\\
+  \t1 (activate \then get\_current\_speed~?~current\_speed \then cruise\_speed := current\_speed \circseq Cruise)
+\end{circusaction}
+
+\begin{circusaction}
+  Cruise ~ \circdef ~ (write\_voltage ~ \then\\
+  \t2 RecalcVoltageCruise \circseq (\Intchoice v : TOLERANCE(voltage) \circspot set\_voltage~!~v \then Cruise \circdeadline 0))~~ \extchoice\\
+  \t1 (start\_accelerate \then Accel) ~~ \extchoice\\
+  \t1 (deactivate \then Idle)
+\end{circusaction}
+
+\begin{circusaction}
+  Accel ~ \circdef ~ (write\_voltage ~ \then\\
+  \t2 RecalcVoltageAccel \circseq (\Intchoice v : TOLERANCE(voltage) \circspot set\_voltage~!~v \then Accel \circdeadline 0)) ~~ \extchoice\\
+  \t1 (stop\_accelerate ~ \then\\
+  \t2 get\_current\_speed~?~current\_speed ~ \then cruise\_speed := current\_speed \circseq Cruise) ~~ \extchoice\\
+  \t1 (deactivate \then Idle)
+\end{circusaction}
+
+\begin{circusaction}
+  \circspot \lschexpract Init \rschexpract \circseq Idle
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusbox}
+%
+There are two important points to highlight. First, I decided to introduce a tolerance when outputting the voltage, and indeed this is the only tolerance in the model (the speed is always calculated accurately.)
+
+Discussing this with Andy Wellings I concluded that in in the cruise controller, tolerances are a more natural way of thinking about the system. The tolerance of the throttle voltage accounts for \emph{all} inaccuracies in an implementation, such as jitters of internal timers, latencies in computing values, and also the possibly use of out-of-date data due to scheduling policies. Refinement later on has to somewhat distribute this functional nondeterminism into the aforementioned artefacts of an implementation model (P model).
+
+Secondly I made use of a further internal event $write\_voltage$. I would have liked to eliminate this, and possibly move the timing requirements directly into this process, however the problem is that, for instance, for the $Cruise$ action we cannot simply have:
+%
+\begin{circusaction*}
+  Cruise ~ \circdef ~ (RecalcVoltageCruise \circseq (\Intchoice v : TOLERANCE(voltage) \circspot set\_voltage~!~v \then Cruise \circdeadline 0))~~ \extchoice\\
+  \t1 (start\_accelerate \then Accel) ~~ \extchoice\\
+  \t1 (deactivate \then Idle)
+\end{circusaction*}%
+%
+This is because $RecalcVoltageCruise$ is not a mere data operation but synchronises on the internal channel $get\_current\_speed$ in order to obtain the current speed. So above, this synchronisation would happen instantaneously, and the action would refuse any other event than $set\_voltage~.~v$. Also, when $set\_voltage~.~v$ actually happens, the corresponding value $v$ that is communicated might already be out of date due to the time that passed from the point where $set\_voltage~.~v$ was offered by the action to the point where it took place. A solution may attempt to synchronise on $get\_current\_speed$ \strong{after} $set\_voltage~.~v$ but this produces a paradox:~we need to know the current speed in order to calculate the voltage and write it out. Those observations lead me to retain the $write\_voltage$ channel as an artifact of the model although I had some thoughts whether we can do without it, namely by merging the $ThrottleControl$ and $ThrottleTiming$ processes.
+
+%\nid I am not sure yet whether we have to incorporate some jitter into the model. My understanding is that the $write\_voltage$ handler will execute at a high priority, hence its effect will take place instantaneously. Regarding the updating of the voltage, this is an internal process. What voltage we actually observe might depend on jitters in the periodic event handlers being dispatched. Maybe this needs to be accounted for in the model too, I am not certain about this. If so, however, it will not be a difficult issue to incorporate jitter already at the level of the specification.
+
+\paragraph{Note}
+
+\begin{alert}
+A concern here is that after we deactivate cruise mode, the next $set\_voltage$ output communication must set the voltage to zero. If we assume that an implementation can still be in the process of outputting a non-zero value when $deactivate$ is raised, that implementation would be wrong. Similarly, when switching between cruise and acceleration mode, the voltage output may result from the wrong calculation for one (or a small number of) set\_voltage events. I did not try and capture this in the specification, however it is still something that maybe needs addressing. We might need to change the specification in a way that the first (few) communication(s) after changing modes can still yield values consistent with the previous mode, accounting for the parallelism between the periodic handler that writes out the voltage (class \code{WriteVoltage}), and the aperiodic handler that controls mode switches (class \code{CruiseControl}).
+\end{alert}
+

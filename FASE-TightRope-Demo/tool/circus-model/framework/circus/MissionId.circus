@@ -1,0 +1,11 @@
+\begin{zsection}
+  \SECTION ~ MissionId ~ \parents ~ scj\_prelude
+\end{zsection}
+
+\begin{zed}
+  [MissionId]
+\end{zed}
+%
+\begin{axdef}
+  nullMId : MissionId
+\end{axdef}

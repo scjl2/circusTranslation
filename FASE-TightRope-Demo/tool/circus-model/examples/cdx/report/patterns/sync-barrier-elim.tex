@@ -1,0 +1,60 @@
+\begin{pattern}{sync-barrier-elim}
+\begin{circusaction*}
+  \circblockopen
+    (\circmu X \circspot start \then A_1 \circseq done \then \Skip \circseq sync \then X)
+    \also
+    \t1 \lpar ns_1 | cs_1 | ns_2 \cup \dots \cup ns_n \rpar
+    \also
+    (\circmu X \circspot start \then A_2 \circseq done \then \Skip \circseq sync \then X)
+    \also
+    \t1 \lpar ns_2 | cs_2 | ns_3 \cup \dots \cup ns_n \rpar
+    \also
+    \t2 \dots
+    \also
+    \t1 \lpar ns_{n-1} | cs_{n-1} | ns_{n} \rpar
+    \also
+    (\circmu X \circspot start \then A_n \circseq done \then \Skip \circseq sync \then X)
+  \circblockclose
+  \also
+  \t1 \equiv
+  \also
+  \circblockopen
+    \circblockopen
+      (\circmu X \circspot start \then A_1 \circseq notify~!~1 \then \Skip \circseq sync \then X)
+      \also
+      \t1 \lpar ns_1 | cs_1 \setdiff \lchanset done \rchanset | ns_2 \cup \dots \cup ns_n \rpar
+      \also
+      (\circmu X \circspot start \then A_2 \circseq notify~!~2 \then \Skip \circseq sync \then X)
+      \also
+      \t1 \lpar ns_2 | cs_2 \setdiff \lchanset done \rchanset | ns_3 \cup \dots \cup ns_n \rpar
+      \also
+      \t2 \dots
+      \also
+      \t1 \lpar ns_{n-1} | cs_{n-1} \setdiff \lchanset done \rchanset | ns_{n} \rpar
+      \also
+      (\circmu X \circspot start \then A_n \circseq notify~!~n \then \Skip \circseq sync \then X)
+    \circblockclose
+    \also
+    \t1 \lpar ns_1 \cup \dots \cup ns_n | \lchanset start, notify, sync \rchanset | \emptyset \rpar
+    \also
+    \circblockopen
+      \circmu X \circspot start \then
+      \circblockopen
+        (notify~!~1 \then \Skip) ~ \interleave
+        \\
+        (notify~!~2 \then \Skip) ~ \interleave
+        \\
+        \dots
+        \\
+        (notify~!~n \then \Skip)
+      \circblockclose
+      \circseq done \then \Skip \circseq sync \then X
+    \circblockclose
+  \circblockclose
+  \circhide \lchanset notify \rchanset
+  \also
+  \provided \; \lchanset start, done, sync \rchanset \subseteq cs_i \land \{start, done, sync\} \cap \usedC(A_i) = \emptyset \; \mbox{for all} \; i : 1 \upto n
+  \also
+  \provand \; \mbox{$notify$ is a fresh channel of type $\nat$}
+\end{circusaction*}
+\end{pattern}

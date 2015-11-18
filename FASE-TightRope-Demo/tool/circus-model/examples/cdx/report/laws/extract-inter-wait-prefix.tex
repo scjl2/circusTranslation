@@ -1,0 +1,7 @@
+\begin{circustimelaw}{extract-inter-wait-prefix}
+\begin{circusaction*}
+  (c~\circat~t \then (A(t) \interleave \circwait ~ (t_1 - t))) \circdeadlinesync d ~ \equiv ~ ((c~\circat~t \then A(t)) \circdeadlinesync d) \interleave \circwait t_1
+  \also
+  \provided \; d \leq t_1
+\end{circusaction*}
+\end{circustimelaw}

@@ -1,0 +1,161 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ cdx\_mock\_objects ~ \parents ~ cdx\_anchor\_a
+\end{zsection}
+\end{comment}
+
+\newcommand{\vspacebetweenzpara}{\vspace{-2em}}
+
+Dummy definitions that enable the parsing and type-checking of the models.
+
+\subsection{Unit Type}
+\vspace{-0.5em}
+
+\begin{zed}
+  [unit]
+\end{zed}
+
+\paragraph{Empty Tuple}
+
+\begin{verbatim}
+%%Zword \emptytuple emptytuple
+\end{verbatim}
+%
+\begin{circusbox}
+\begin{axdef}
+  emptytuple : unit
+\end{axdef}
+\end{circusbox}
+
+\subsection{Array Types}
+\vspace{-0.5em}
+
+\begin{schema}{Array}[X]
+  getA : int \fun X\\
+  setA : int \cross X \fun X\\
+  length : unit \fun int
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{zed}
+  intArray ~ == ~ Array[int]
+\end{zed}
+\vspacebetweenzpara
+%
+\begin{zed}
+  byteArray ~ == ~ Array[byte]
+\end{zed}
+\vspacebetweenzpara
+%
+\begin{zed}
+  floatArray ~ == ~ Array[float]
+\end{zed}
+\vspacebetweenzpara
+%
+\begin{zed}
+  booleanArray ~ == ~ Array[boolean]
+\end{zed}
+
+\subsection{Classes Types}
+\vspace{-0.5em}
+
+\begin{zed}
+  [Object]
+\end{zed}
+\vspacebetweenzpara
+%
+\begin{schema}{List}[X]
+  elems : unit \fun \power X
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{HashMap}[X, Y]
+  get : X \fun Y\\
+  values : unit \fun List[Y]
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{CallSign}
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{Vector2d}
+  x : \real\\
+  y : \real
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{Vector3d}
+  x : \real\\
+  y : \real\\
+  z : \real
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{RawFrame}
+  planeCnt : int\\
+  positions : Array[\real]\\
+  getCallSign : int \fun Aircraft\\
+  getCallSignOffset : int \fun int\\
+  find : Aircraft \fun int
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{FrameBuffer}
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{StateTable}
+  position\_map : HashMap[CallSign,Vector3d]
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{Motion}
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{Partition}
+  getDetectorWork : int \fun List[List[Motion]]
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{DetectorControl}
+\end{schema}
+
+\subsection{Infrastructure Classes}
+\vspace{-0.5em}
+
+\begin{schema}{AperiodicEvent}
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{InputHandler}
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{OutputHandler}
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{ReducerHandler}
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{DetectorHandler}
+\end{schema}
+\vspacebetweenzpara
+%
+\begin{schema}{DetectorHandlerArray}
+\end{schema}
+
+\subsection{Auxiliary Functions}
+\vspace{-0.5em}
+
+\begin{axdef}
+  MkCallSign : Aircraft \fun CallSign
+\end{axdef}
+\vspacebetweenzpara
+%
+\begin{axdef}
+  MkMotion : (Aircraft \cross Vector \cross Vector) \fun Motion
+\end{axdef}

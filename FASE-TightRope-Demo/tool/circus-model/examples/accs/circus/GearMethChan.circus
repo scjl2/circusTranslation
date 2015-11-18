@@ -1,0 +1,8 @@
+\begin{zsection}
+  \SECTION ~ GearMethChan ~ \parents ~ scj\_toolkit, scj\_library, GearClass
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circchannel ~ GearInit : GearClass
+\end{circus}

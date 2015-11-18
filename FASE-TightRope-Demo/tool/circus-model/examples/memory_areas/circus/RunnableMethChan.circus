@@ -1,0 +1,9 @@
+\begin{zsection}
+  \SECTION ~ RunnableMethChan ~ \parents ~ RunnableClass, scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{circus}
+  \circchannel ~ Runnable\_runCall : Runnable
+  \also
+  \circchannel ~ Runnable\_runRet : Runnable
+\end{circus}

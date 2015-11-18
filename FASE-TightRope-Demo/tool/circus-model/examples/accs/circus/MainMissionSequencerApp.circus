@@ -1,0 +1,49 @@
+\begin{zsection}
+  \SECTION ~ MainMissionSequencerApp ~ \parents ~ MissionSequencerChan, MissionIds, scj\_toolkit,\\
+  \t1 scj\_library
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circprocess ~ MainMissionSequencerApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore MainMissionSequencerState}
+  mission\_done : boolean
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ MainMissionSequencerState
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  Init ~ \circdef ~ mission\_done := jfalse
+\end{circusaction}
+%
+\begin{circusaction}
+  getNextMissionMeth ~ \circdef ~ getNextMissionCall ~ \then\\
+  \t1 \circif ~ mission\_done = jfalse ~ \circthen\\
+  \t2
+  \circblockopen
+    mission\_done := jtrue \circseq
+    \\
+    getNextMissionRet~!~MainMissionId \then \Skip\\
+  \circblockclose
+  \\
+  \t1 \circelse ~ mission\_done = jtrue \circthen getNextMissionRet~!~nullMId \then \Skip\\
+  \t1 \circfi
+\end{circusaction}
+%
+\begin{circusaction}
+  Methods ~ \circdef ~ \circmu X \circspot getNextMissionMeth \circseq X
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot Init \circseq (Methods ~ \circinterrupt ~ end\_sequencer\_app \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

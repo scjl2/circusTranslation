@@ -1,0 +1,34 @@
+\begin{zsection}
+  \SECTION ~ MainHandlerClass ~ \parents ~ scj\_toolkit, scj\_library, AbsoluteTime
+\end{zsection}
+
+\begin{ohcircus}
+  \circclass ~ MainHandlerClass ~ \circdef ~ \circbegin
+\end{ohcircus}
+\vspaceafterzpara
+
+\red{Arrays are modelled by sequences. The type constructor $\circarray T$ in fact yields $\circreftype(\seq T)$}
+%
+\begin{schema}{\circstateignore MainHandler\_State}
+  releaseTimes : \circarray AbsoluteTime\\
+  index : int
+\end{schema}
+
+\begin{schema}{\circinitial MainHandler\_Init}
+  MainHandler\_State~'
+\where
+  index' = 0
+\end{schema}
+
+\begin{ohcircus}
+  \circend
+\end{ohcircus}
+\vspace{0.5em}
+
+\begin{zed}
+  MainHandlerClass ~ == ~ MainHandler\_State
+\end{zed}
+
+\begin{zed}
+  MainHandler ~ == ~ \circreftype MainHandlerClass
+\end{zed}

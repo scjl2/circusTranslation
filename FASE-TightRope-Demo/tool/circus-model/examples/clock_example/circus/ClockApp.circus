@@ -1,0 +1,50 @@
+\begin{zsection}
+  \SECTION ~ ClockApp ~ \parents ~ scj\_toolkit, scj\_library,\\
+  \t1 ClockFWChan, ClockMethChan, ClockConst, HighResolutionTime, AbsoluteTime, MissionFWChan
+\end{zsection}
+
+\begin{circus}
+  \circprocess ~ ClockApp ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{schema}{ClockApp\_State}
+  time : HighResolutionTimeClass
+\end{schema}
+
+\begin{circusaction}
+  \circstate ClockApp\_State
+\end{circusaction}
+
+\begin{schema}{ClockApp\_Init}
+  ClockApp\_State~'
+\where
+  time' = \circnew AbsoluteTimeClass
+\end{schema}
+
+\begin{circusaction*}
+  Tick ~ \circdef ~ ClockTick \then time := time.add(Clock\_resolution)
+\end{circusaction*}
+
+\begin{circusaction}
+  Tick ~ \circdef ~ Skip
+\end{circusaction}
+
+\begin{circusaction}
+  getTimeMeth ~ \circdef ~ getTimeCall \then getTimeRet~!~time \then Skip 
+\end{circusaction}
+
+\begin{circusaction}
+  getResolutionMeth ~ \circdef ~ getResolutionCall \then getResolutionRet~!~Clock\_resolution \then Skip 
+\end{circusaction}
+
+\begin{circusaction}
+  Methods ~ \circdef ~ \circmu X \circspot (getTimeMeth \extchoice getResolutionMeth) \circseq X
+\end{circusaction}
+
+\begin{circusaction}
+  \circspot (\lschexpract ClockApp\_Init \rschexpract \circseq (\circmu X \circspot (Methods \extchoice Tick) \circseq X)) \circinterrupt end\_mission\_fw \then Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

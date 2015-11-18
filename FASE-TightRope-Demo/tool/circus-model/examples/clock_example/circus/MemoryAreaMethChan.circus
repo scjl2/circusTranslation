@@ -1,0 +1,9 @@
+\begin{zsection}
+  \SECTION ~ MemoryAreaMethChan ~ \parents ~ MemoryAreaClass, RunnableClass, scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{circus}
+  \circchannel ~ MemoryArea\_executeInAreaCall : (MemoryArea \cross Runnable)
+  \also
+  \circchannel ~ MemoryArea\_executeInAreaRet : MemoryArea
+\end{circus}

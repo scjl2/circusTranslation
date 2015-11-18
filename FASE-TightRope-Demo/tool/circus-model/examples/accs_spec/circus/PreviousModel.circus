@@ -1,0 +1,286 @@
+\begin{circusbox}
+\begin{zsection}
+  \SECTION ~ PreviousModel ~ \parents ~ Preliminaries, GlobalConstants, Channels
+\end{zsection}
+
+\begin{zed}
+  CRUISE\_STATE ::=\\
+  \t1 ENGINE\_OFF |\\
+  \t1 RUNNING\_IN\_LOW\_GEAR |\\
+  \t1 RUNNING\_IN\_TOP\_GEAR |\\
+  \t1 BRAKING\_IN\_LOW\_GEAR |\\
+  \t1 BRAKING\_IN\_TOP\_GEAR |\\
+  \t1 CRUISING |\\
+  \t1 ACCELERATING
+\end{zed}
+
+\begin{circus}
+  \circprocess ~ CruiseController ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{schema}{ControllerState}
+  cruise\_state : CRUISE\_STATE\\
+  activated : BOOL\\
+  cruise\_speed : \nat
+\end{schema}
+
+\begin{schema}{WheelShaftState}
+  rotations : \nat
+\end{schema}
+
+\begin{schema}{SpeedMonitorState}
+  current\_speed : \nat
+\end{schema}
+
+\begin{schema}{ThrottleState}
+  voltage : VOLTAGE
+\end{schema}
+\vspaceafterzpara
+
+%As a modelling decision, we split the state into two parts:~$ControllerState$ and $ThrottleState$. This is to express the operation that adjusts the throttle voltage more elegantly within the schema calculus of Z. We observe that this operation only alters $voltage$, but not the...
+
+\begin{alert}
+I factored the state into four parts rather than just $ControllerState$ and $ThrottleState$.
+\end{alert}
+%
+\begin{circusaction}
+  \circstate ~ CruiseControllerState ~ == ~ ControllerState \land WheelShaftState \land SpeedMonitorState \land ThrottleState
+\end{circusaction}
+\vspaceafterzpara
+
+\begin{alert}
+The values of other variables should actually not matter if we assume the engine is switched off.
+\end{alert}
+%
+\begin{schema}{Init}
+  CruiseControllerState~'
+\where
+  cruise\_state' = ENGINE\_OFF
+\end{schema}
+\end{circusbox}
+
+\begin{alert}
+The following action was previously called $Reset$. I think $TurnEngineOn$ is more approriate. We assume this is only possible when we are running in low gear.
+\end{alert}
+%
+\begin{circusbox}
+\begin{schema}{TurnEngineOn}
+  CruiseControllerState~'
+\where
+  cruise\_state' = RUNNING\_IN\_LOW\_GEAR \land activated' = FALSE\\
+  rotations' = 0\\
+  current\_speed' = 0\\
+  voltage' = 0
+\end{schema}
+\vspace{1em}
+
+\subsubsection*{WheelShaft}
+
+\begin{note}
+The $WheelShaft$ action corresponds to the counting of shaft rotations.
+\end{note}
+%
+\begin{circusaction}
+  WheelShaft ~ \circdef ~ \circmu X \circspot wheel\_shaft \then rotations := rotations + 1 \circseq X
+\end{circusaction}
+\vspace{1.5em}
+
+\subsubsection*{Speed Monitor}
+\vspace{-1em}
+
+\begin{schema}{RecalcSpeed}
+  \Delta SpeedMonitorState;\\
+  \Delta WheelShaftState
+\where
+  current\_speed' = (rotations * cm\_per\_rotation * speed\_updates\_per\_hour) \div 100000\\
+  rotations' = 0
+\end{schema}
+\vspaceafterzpara
+
+\begin{note}
+The $UpdateSpeed$ action corresponds to the behaviour of the speed monitor.
+\end{note}
+%
+\begin{circusaction}
+  SpeedMonitor ~ \circdef ~ \circmu X \circspot update\_speed \then \lschexpract RecalcSpeed \rschexpract \circseq X
+\end{circusaction}
+\vspace{1.5em}
+
+\subsubsection*{Parallel Composition}
+
+\begin{alert}
+  Both parallel actions write to the same variable.
+\end{alert}
+%
+\begin{circusaction}
+  Test ~ \circdef ~ WheelShaft \lpar \{rotations\} | \emptyset | \{rotations, current\_speed\} \rpar SpeedMonitor
+\end{circusaction}
+\end{circusbox}
+
+\begin{schema}{ResetVoltageThrottle}
+  \Delta ThrottleState\\
+  speed\_diff? : \num\\
+  cruise\_state : CRUISE\_STATE
+\where
+  speed\_diff? < \negate 2 \land cruise\_state = CRUISING \land\\
+  voltage' = 0
+\end{schema}
+%
+\begin{schema}{IncreaseVoltageThrottle}
+  \Delta ThrottleState\\
+  speed\_diff? : \num\\
+  cruise\_state : CRUISE\_STATE
+\where
+  ((speed\_diff? > 2 \land cruise\_state = CRUISING) \lor cruise\_state = ACCELERATING) \land\\
+  (voltage < 80 \implies voltage' = voltage + 1) \land\\
+  (voltage = 80 \implies voltage' = voltage)
+\end{schema}
+%
+\begin{schema}{ChangeInRangeVoltageThrottle}
+  \Delta ThrottleState\\
+  speed\_diff? : \num\\
+  cruise\_state : CRUISE\_STATE
+\where
+  (\negate 2 \leq speed\_diff? \leq 2 \land cruise\_state = CRUISING)\\
+  voltage' = 2 * (speed\_diff? + 2)
+\end{schema}
+%
+\begin{schema}{RetainVoltageThrottle}
+  \Xi ThrottleState\\
+  speed\_diff? : \num\\
+  cruise\_state : CRUISE\_STATE
+\where
+  cruise\_state \notin \{ACCELERATING, CRUISING\} \land\\
+  voltage' = voltage
+\end{schema}
+%
+\begin{zed}
+  UpdateVoltageThrottle ==\\
+  \t1 ResetVoltageThrottle \lor IncreaseVoltageThrottle \lor ChangeInRangeVoltageThrottle \lor\\
+  \t1 RetainVoltageThrottle
+\end{zed}
+%
+\begin{schema}{UpdateVoltageFrame}
+  \Xi ControllerState\\
+  \Delta ThrottleState\\
+  speed\_diff? : \num
+\where 
+  speed\_diff? = cruise\_speed - current\_speed
+\end{schema}
+%
+\begin{circusaction}
+  UpdateVoltage ~ \circdef ~ update\_voltage \then\\
+  \t1 \lschexpract (UpdateVoltageThrottle \land UpdateVoltageFrame) \hide (speed\_diff?) \rschexpract
+\end{circusaction}
+%
+\begin{circusaction}
+  WriteVoltage ~ \circdef ~ write\_voltage \then\\
+  \t1 \circif ~ cruise\_state \in \{CRUISING, ACCELERATING\} ~ \circthen\\
+  \t3 set\_voltage~!~voltage \then Skip ~ \circelse\\
+  \t1 \lnot (cruise\_state \in \{CRUISING, ACCELERATING\}) ~ \circthen ~ Skip ~ \circfi
+\end{circusaction}
+%
+\begin{circusaction}
+  WriteZeroVoltage ~ \circdef ~ set\_voltage~!~0 \then Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  EngineOn ~ \circdef ~ engine~.~TRUE \then \circif ~ cruise\_state = ENGINE\_OFF \circthen \lschexpract TurnEngineOn \rschexpract ~ \circfi
+\end{circusaction}
+%
+\begin{circusaction}
+  EngineOff ~ \circdef ~ engine~.~FALSE \then\\
+  \t2 \circif ~ \lnot cruise\_state = ENGINE\_OFF \circthen cruise\_state := ENGINE\_OFF ~ \circfi
+\end{circusaction}
+%
+\begin{circusaction}
+  BrakeEngaged ~ \circdef\\
+  \t1 \lcircguard cruise\_state \in \{RUNNING\_IN\_TOP\_GEAR, CRUISING, ACCELERATING\} \rcircguard ~~ \circguard\\
+  \t2 brake\_engaged \then (cruise\_state := BRAKING\_IN\_TOP\_GEAR \circseq WriteZeroVoltage)\\
+  \t3 \extchoice\\
+  \t1 \lcircguard cruise\_state = RUNNING\_IN\_LOW\_GEAR \rcircguard ~~ \circguard\\
+  \t2 brake\_engaged \then (cruise\_state := BRAKING\_IN\_LOW\_GEAR \circseq WriteZeroVoltage)
+\end{circusaction}
+%
+\begin{circusaction}
+  BrakeDisengaged ~ \circdef\\
+  \t1 \lcircguard cruise\_state = BRAKING\_IN\_LOW\_GEAR \rcircguard ~~ \circguard\\
+  \t2 brake\_disengaged \then cruise\_state := RUNNING\_IN\_LOW\_GEAR\\
+  \t3 \extchoice\\
+  \t1 \lcircguard cruise\_state = BRAKING\_IN\_TOP\_GEAR \rcircguard ~~ \circguard\\
+  \t2 brake\_disengaged \then cruise\_state := RUNNING\_IN\_TOP\_GEAR
+\end{circusaction}
+%
+\begin{circusaction}
+  TopGearEngaged ~ \circdef\\
+  \t1 \lcircguard cruise\_state = RUNNING\_IN\_LOW\_GEAR \rcircguard ~~ \circguard\\
+  \t2 top\_gear\_engaged \then (cruise\_state := RUNNING\_IN\_TOP\_GEAR \circseq WriteZeroVoltage)\\
+  \t3 \extchoice\\
+  \t1 \lcircguard cruise\_state = BRAKING\_IN\_LOW\_GEAR \rcircguard ~~ \circguard\\
+  \t2 top\_gear\_engaged \then (cruise\_state := BRAKING\_IN\_TOP\_GEAR \circseq WriteZeroVoltage)
+\end{circusaction}
+%
+\begin{circusaction}
+  TopGearDisengaged ~ \circdef\\
+  \t1 \lcircguard cruise\_state \in \{RUNNING\_IN\_TOP\_GEAR, CRUISING, ACCELERATING\} \rcircguard ~~ \circguard\\
+  \t2 top\_gear\_disengaged \then\\
+  \t3 (cruise\_state := RUNNING\_IN\_LOW\_GEAR \circseq WriteZeroVoltage)\\
+  \t4 \extchoice\\
+  \t1 \lcircguard cruise\_state = BRAKING\_IN\_TOP\_GEAR \rcircguard ~~ \circguard\\
+  \t2 top\_gear\_disengaged \then\\
+  \t3(cruise\_state := BRAKING\_IN\_LOW\_GEAR \circseq WriteZeroVoltage)
+\end{circusaction}
+%
+\begin{circusaction}
+  Activate ~ \circdef ~ \lcircguard cruise\_state = RUNNING\_IN\_TOP\_GEAR \rcircguard ~~ \circguard\\
+  \t1 lever~.~ACTIVATE \then\\
+  \t2 (cruise\_state := CRUISING ~ \circseq\\
+  \t2 cruise\_speed := current\_speed ~ \circseq\\
+  \t2 activated := TRUE)
+\end{circusaction}
+%
+\begin{circusaction}
+  Deactivate ~ \circdef ~ \lcircguard cruise\_state \in \{CRUISING, ACCELERATING\} \rcircguard ~~ \circguard\\
+  \t1 lever~.~DEACTIVATE \then\\
+  \t2 (cruise\_state := RUNNING\_IN\_TOP\_GEAR \circseq WriteZeroVoltage)
+\end{circusaction}
+%
+\begin{circusaction}
+  StartAcceleration ~ \circdef ~ \lcircguard cruise\_state = RUNNING\_IN\_TOP\_GEAR \rcircguard ~~ \circguard\\
+  \t1 lever~.~START\_ACCELERATION \then cruise\_state := ACCELERATING
+\end{circusaction}
+%
+\begin{circusaction}
+  StopAcceleration ~ \circdef ~ \lcircguard cruise\_state = ACCELERATING \rcircguard ~~ \circguard\\
+  \t1 lever~.~STOP\_ACCELERATION \then\\
+  \t2 (cruise\_state := CRUISING ~ \circseq\\
+  \t2 cruise\_speed := current\_speed)
+\end{circusaction}
+%
+\begin{circusaction}
+  Resume ~ \circdef ~ \lcircguard cruise\_state = RUNNING\_IN\_TOP\_GEAR \land activated = TRUE \rcircguard ~~ \circguard\\
+  \t1 lever~.~RESUME \then cruise\_state := CRUISING
+\end{circusaction}
+%
+\red{The sensor events all acquire a lock that effectively renders their update to the system state atomic with respect to each other. Hence I did not model them as concurrent activities. The only issue here is inversion of execution order!}
+%
+\begin{circusaction}
+  SensorEvents ~ \circdef ~ EngineOn ~ \extchoice ~ EngineOff ~ \extchoice ~ BrakeEngaged ~ \extchoice ~ BrakeDisengaged ~ \extchoice\\
+  \t1 TopGearEngaged ~ \extchoice ~ TopGearDisengaged ~ \extchoice\\
+  \t1 Activate ~ \extchoice ~ Deactivate ~ \extchoice ~ StartAcceleration ~ \extchoice ~ StopAcceleration ~ \extchoice ~ Resume
+\end{circusaction}
+%
+%\begin{circusaction}
+%  \circspot \lschexpract Init \rschexpract \circseq \circmu X \circspot (SensorEvents ~ \parallel ~ WheelShaft ~ \parallel ~ UpdateSpeed ~ \parallel ~ UpdateVoltage ~ \parallel ~ WriteVoltage) \circseq X
+%\end{circusaction}
+%
+\begin{circusaction}
+  \circspot Skip
+\end{circusaction}
+\begin{circus}
+  \circend
+\end{circus}
+
+%\paragraph{\red{Question for Andy}}
+
+%An open question with the model is whether we can have certain events in direct succession, such as $break\_engaged$ or $top\_gear\_engaged$. For instance, can we have two  $brake\_engaged$ events in succession without a $brake\_released$ event in between? We currently assume this is not possible, however a consequence of this would be that the specification has to account for $brake\_engaged$ taking place when we are already in one of the breaking states. There are other events where this needs to be investigated too, such as $top\_gear\_engaged$, $break\_released$,  the lever events, etc.

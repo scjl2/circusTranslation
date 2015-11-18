@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+HIJAC_HOME=$(readlink -f $(dirname $0))/..
+
+$HIJAC_HOME/run TransCircus
+
+make -s -C model-output
