@@ -135,9 +135,23 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 		List<? extends VariableTree> initParams = null;
 
+		ExpressionTree identifierTree = arg0.getIdentifier();
 		VariableEnv v = new VariableEnv();
+		if (identifierTree.toString().equals("PriorityParameters"))
+		{
+
+			List<? extends ExpressionTree> args = arg0.getArguments();
+			assert(args.size() == 1);
+			
+			ExpressionTree arg = args.get(0);
+			
+			v.setProgramType(arg.toString());
+
+		}
+		
+
 		v.setVariableName(arg0.getIdentifier().toString());
-		v.setProgramType(arg0.getIdentifier().toString());
+		
 
 		return v;
 	}
@@ -166,15 +180,15 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				ObjectEnv originObject = programEnv.getObjectEnv(originClass);
 
 				Tree varTree = varMap.get(varName);
-				if(varTree != null)
+				if (varTree != null)
 				{
-				if (varTree.toString().equals("StorageParameters"))
-				{
-					System.out.println("Ignored Arg " + varName);
-					return null;
-				}
-				v.setVariableName(arg0.getName().toString());
-				v.setProgramType(arg0.getName().toString());
+					if (varTree.toString().equals("StorageParameters"))
+					{
+						System.out.println("Ignored Arg " + varName);
+						return null;
+					}
+					v.setVariableName(arg0.getName().toString());
+					v.setProgramType(arg0.getName().toString());
 				}
 				else
 				{
