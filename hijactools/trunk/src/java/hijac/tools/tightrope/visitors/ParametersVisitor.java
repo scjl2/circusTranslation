@@ -136,17 +136,49 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 		List<? extends VariableTree> initParams = null;
 
 		ExpressionTree identifierTree = arg0.getIdentifier();
+		String identifiterTree = identifierTree.toString();
+		
+		List<? extends ExpressionTree> args = arg0.getArguments();
+		
 		VariableEnv v = new VariableEnv();
-		if (identifierTree.toString().equals("PriorityParameters"))
-		{
-
-			List<? extends ExpressionTree> args = arg0.getArguments();
+		if (identifiterTree.equals("PriorityParameters"))
+		{		
 			assert(args.size() == 1);
 			
 			ExpressionTree arg = args.get(0);
 			
 			v.setProgramType(arg.toString());
 
+		}
+		else if (identifiterTree.equals("PeriodicParameters"))
+		{
+			if(args.size() == 2)
+			{
+			
+			ExpressionTree time =  args.get(0);
+			ExpressionTree deadlineMisHandler =  args.get(1);
+			
+			
+			v.setProgramType("("+ time.toString() + ","+ deadlineMisHandler +")");
+			}
+			
+		}
+		else if(identifiterTree.equals("AperiodicParameters"))
+		{
+//			assert(args.size() == 2 || args.size() == 0);
+			if(args.size() == 2 )
+			{
+			ExpressionTree deadline =  args.get(0);
+			ExpressionTree deadlineMisHandler =  args.get(1);
+			
+			
+			v.setProgramType("("+ deadline.toString() + ","+ deadlineMisHandler +")");
+			}
+			
+		}
+		else
+		{
+			v.setProgramType(arg0.getIdentifier().toString());
 		}
 		
 

@@ -321,11 +321,11 @@ ControlHandlerApp ( 5 ,   ,    ) \\
 \interleave \\
 CommunicationsHandlerApp ( 5 ,   ,    ) \\
 \interleave \\
-EnvironmentMonitorApp ( 5 ,   ,   ,  MainMissionID  ) \\
+EnvironmentMonitorApp ( 5 ,  (new RelativeTime(10, 0),null) ,   ,  MainMissionID  ) \\
 \interleave \\
-FlightSensorsMonitorApp ( 5 ,   ,   ,  MainMissionID  ) \\
+FlightSensorsMonitorApp ( 5 ,  (new RelativeTime(10, 0),null) ,   ,  MainMissionID  ) \\
 \interleave \\
-AperiodicSimulatorApp ( 5 ,   ,  controlHandler ,  5 ,   ,  commsHandler ,  5 ,   ,  beginLandingHandler  ) \\
+AperiodicSimulatorApp ( 5 ,  (new RelativeTime(10, 0),null) ,  controlHandler ,  5 ,  (new RelativeTime(10, 0),null) ,  commsHandler ,  5 ,  (new RelativeTime(0, 0),new RelativeTime(10, 0)) ,  beginLandingHandler  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
@@ -334,14 +334,14 @@ LandingGearHandlerTakeOffApp ( 5 ,   ,   ,  TakeOffMissionID  ) \\
 \interleave \\
 TakeOffFailureHandlerApp ( 5 ,   ,   ,  TakeOffMissionID ,    ) \\
 \interleave \\
-TakeOffMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,   ,  TakeOffMissionID ,   ,  landingGearHandler  ) \\
+TakeOffMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,  (new RelativeTime(0, 0),new RelativeTime(500, 0)) ,  TakeOffMissionID ,   ,  landingGearHandler  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
 BeginLandingHandlerApp ( 5 ,   ,   ,  CruiseMissionID  ) \\
 \interleave \\
-NavigationMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,   ,   ,  CruiseMissionID  ) \\
+NavigationMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,  (new RelativeTime(0, 0),new RelativeTime(10, 0)) ,   ,  CruiseMissionID  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
@@ -350,9 +350,9 @@ LandingGearHandlerLandApp ( 5 ,   ,   ,  LandMissionID  ) \\
 \interleave \\
 SafeLandingHandlerApp ( 5 ,   ,   ,  LandMissionID ,    ) \\
 \interleave \\
-GroundDistanceMonitorApp ( 5 ,   ,  LandMissionID  ) \\
+GroundDistanceMonitorApp ( 5 ,  (new RelativeTime(0, 0),new RelativeTime(10, 0)) ,  LandMissionID  ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp ( 5 ,   ,   ,  LandMissionID  ) \\
+InstrumentLandingSystemMonitorApp ( 5 ,  (new RelativeTime(0, 0),new RelativeTime(10, 0)) ,   ,  LandMissionID  ) \\
 \circblockclose
 \end{circus}
 %
