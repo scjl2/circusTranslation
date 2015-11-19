@@ -13,8 +13,6 @@ TakeOffMissionMethChan
 , \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
-   : 
-, \\ \qquad 
   TakeOffMission : 
 , \\ \qquad 
    : Probably Mission

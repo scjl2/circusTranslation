@@ -8,6 +8,7 @@ import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.lang.model.element.Name;
@@ -83,6 +84,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	private final ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
 	private ClassEnv classEnv;
+	private HashMap<Name, Tree> varMap;
 
 	private String originClass;
 
@@ -91,13 +93,14 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 	public ParametersVisitor(ProgramEnv programEnv,
 			ObjectEnv whereTheVariableNameIs, ClassEnv classEnv,
-			String originClass)
+			String originClass, HashMap<Name, Tree> varMap)
 	{
 		super();
 		this.programEnv = programEnv;
 		this.objectEnv = whereTheVariableNameIs;
 		this.classEnv = classEnv;
 		this.originClass = originClass;
+		this.varMap = varMap;
 	}
 
 	@Override
@@ -152,7 +155,6 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			System.out.println("arg = " + arg0.getName().toString());
 			if (arg0.getName().toString().equals("this"))
 			{
-			
 
 				v.setVariableType("Probably Mission");
 				v.setProgramType(originClass + "ID");
@@ -161,27 +163,22 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			{
 				Name varName = arg0.getName();
 
-				ObjectEnv objectEnv = programEnv.getObjectEnv(originClass);
+				ObjectEnv originObject = programEnv.getObjectEnv(originClass);
 
-				
-				
-				//TODO Need to get whatever variable I need to get here to see what its type is to see if I can ignore it.
-				
-
-				if (varEnv != null)
+				Tree varTree = varMap.get(varName);
+				if(varTree != null)
 				{
-					if (varEnv.getProgramType().equals("StorageParameters"))
-					{
-						System.out.println("Ignored Arg "
-								+ varEnv.getProgramType());
-						return null;
-					}
-					v.setVariableName(arg0.getName().toString());
-					v.setProgramType(arg0.getName().toString());
+				if (varTree.toString().equals("StorageParameters"))
+				{
+					System.out.println("Ignored Arg " + varName);
+					return null;
+				}
+				v.setVariableName(arg0.getName().toString());
+				v.setProgramType(arg0.getName().toString());
 				}
 				else
 				{
-					System.out.println("VAR ENV NULL");
+					System.out.println("VAR TREE NULL");
 				}
 			}
 

@@ -84,7 +84,8 @@ public class EnvironmentBuilder
 	public class DeferredParamter
 	{
 		Tree tree;
-		String originClass;		
+		String originClass;
+		public HashMap<Name, Tree> varMap;		
 		
 		public String toString()
 		{
@@ -613,7 +614,7 @@ public class EnvironmentBuilder
 			if (!args.isEmpty())
 			{
 				ParametersVisitor paramVisitor = new ParametersVisitor(
-						programEnv, objectWithParams, null, deferred.originClass);
+						programEnv, objectWithParams, null, deferred.originClass, deferred.varMap);
 
 				List<VariableEnv> params = new ArrayList<VariableEnv>();
 
@@ -646,11 +647,12 @@ public class EnvironmentBuilder
 		}
 	}
 
-	public void addDeferredParam(Tree tree, String originClass)
+	public void addDeferredParam(Tree tree, String originClass, HashMap<Name, Tree> varMap)
 	{
 		DeferredParamter d = new DeferredParamter();
 		d.tree=tree;
 		d.originClass = originClass;
+		d.varMap = varMap;
 		
 		deferredParamsList.add(d);
 	}

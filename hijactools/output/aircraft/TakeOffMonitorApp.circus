@@ -13,13 +13,11 @@ TakeOffMissionMethChan
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-   : 
-, \\ \qquad 
    : Probably Mission
 , \\ \qquad 
    : 
 , \\ \qquad 
-   : 
+  landingGearHandler : 
 \circspot 
   \circbegin
 \end{circus}

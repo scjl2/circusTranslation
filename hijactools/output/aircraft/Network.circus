@@ -315,44 +315,44 @@ MainMissionSequencerApp\\
 MainMissionApp\\
 \interleave \\
 
-ACModeChangerApp ( PriorityParameters ,   ,  MainMissionID  ) \\
+ACModeChangerApp ( PriorityParameters ,  MainMissionID  ) \\
 \interleave \\
-ControlHandlerApp ( PriorityParameters ,  AperiodicParameters ,   ,    ) \\
+ControlHandlerApp ( PriorityParameters ,  AperiodicParameters ,    ) \\
 \interleave \\
-CommunicationsHandlerApp ( PriorityParameters ,  AperiodicParameters ,   ,    ) \\
+CommunicationsHandlerApp ( PriorityParameters ,  AperiodicParameters ,    ) \\
 \interleave \\
-EnvironmentMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,   ,  MainMissionID  ) \\
+EnvironmentMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,  MainMissionID  ) \\
 \interleave \\
-FlightSensorsMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,   ,  MainMissionID  ) \\
+FlightSensorsMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,  MainMissionID  ) \\
 \interleave \\
-AperiodicSimulatorApp ( PriorityParameters ,  PeriodicParameters ,   ,   ,  PriorityParameters ,  PeriodicParameters ,   ,   ,  PriorityParameters ,  PeriodicParameters ,   ,    ) \\
+AperiodicSimulatorApp ( PriorityParameters ,  PeriodicParameters ,  controlHandler ,  PriorityParameters ,  PeriodicParameters ,  commsHandler ,  PriorityParameters ,  PeriodicParameters ,  beginLandingHandler  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
 
-LandingGearHandlerTakeOffApp ( PriorityParameters ,  AperiodicParameters ,   ,   ,  TakeOffMissionID  ) \\
+LandingGearHandlerTakeOffApp ( PriorityParameters ,  AperiodicParameters ,   ,  TakeOffMissionID  ) \\
 \interleave \\
-TakeOffFailureHandlerApp ( PriorityParameters ,  AperiodicParameters ,   ,   ,  TakeOffMissionID ,    ) \\
+TakeOffFailureHandlerApp ( PriorityParameters ,  AperiodicParameters ,   ,  TakeOffMissionID ,    ) \\
 \interleave \\
-TakeOffMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,  TakeOffMissionID ,   ,    ) \\
+TakeOffMonitorApp ( PriorityParameters ,  PeriodicParameters ,  TakeOffMissionID ,   ,  landingGearHandler  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
-BeginLandingHandlerApp ( PriorityParameters ,  AperiodicParameters ,   ,   ,  CruiseMissionID  ) \\
+BeginLandingHandlerApp ( PriorityParameters ,  AperiodicParameters ,   ,  CruiseMissionID  ) \\
 \interleave \\
-NavigationMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,   ,  CruiseMissionID  ) \\
+NavigationMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,  CruiseMissionID  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
 
-LandingGearHandlerLandApp ( PriorityParameters ,  AperiodicParameters ,   ,   ,  LandMissionID  ) \\
+LandingGearHandlerLandApp ( PriorityParameters ,  AperiodicParameters ,   ,  LandMissionID  ) \\
 \interleave \\
-SafeLandingHandlerApp ( PriorityParameters ,  AperiodicParameters ,   ,   ,  LandMissionID ,    ) \\
+SafeLandingHandlerApp ( PriorityParameters ,  AperiodicParameters ,   ,  LandMissionID ,    ) \\
 \interleave \\
-GroundDistanceMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,  LandMissionID  ) \\
+GroundDistanceMonitorApp ( PriorityParameters ,  PeriodicParameters ,  LandMissionID  ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,   ,  LandMissionID  ) \\
+InstrumentLandingSystemMonitorApp ( PriorityParameters ,  PeriodicParameters ,   ,  LandMissionID  ) \\
 \circblockclose
 \end{circus}
 %

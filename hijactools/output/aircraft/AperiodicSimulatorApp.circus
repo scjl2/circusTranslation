@@ -9,25 +9,19 @@
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-   : 
-, \\ \qquad 
-   : 
+  controlHandler : 
 , \\ \qquad 
   PriorityParameters : 
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-   : 
-, \\ \qquad 
-   : 
+  commsHandler : 
 , \\ \qquad 
   PriorityParameters : 
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-   : 
-, \\ \qquad 
-   : 
+  beginLandingHandler : 
 \circspot 
   \circbegin
 \end{circus}

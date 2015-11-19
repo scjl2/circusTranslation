@@ -16,8 +16,6 @@
 \circprocess ACModeChangerApp \circdef \\ \qquad 
   PriorityParameters : 
 , \\ \qquad 
-   : 
-, \\ \qquad 
    : Probably Mission
 \circspot 
  \circbegin\\ 

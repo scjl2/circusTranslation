@@ -13,8 +13,6 @@ CruiseMissionMethChan
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-   : 
-, \\ \qquad 
   CruiseMission : 
 , \\ \qquad 
    : Probably Mission
