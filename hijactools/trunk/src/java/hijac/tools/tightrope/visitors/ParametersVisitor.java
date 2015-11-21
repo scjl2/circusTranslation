@@ -217,12 +217,11 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				{
 					period = "NULL";
 				}
-				
-				if(deadlineMissHandler.equals("null"))
+
+				if (deadlineMissHandler.equals("null"))
 				{
 					deadlineMissHandler = "nullSchedulableId";
 				}
-				
 
 				v.setProgramType("(" + start + "," + period + "," + deadline
 						+ "," + deadlineMissHandler + ")");
@@ -286,21 +285,35 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				ObjectEnv originObject = programEnv.getObjectEnv(originClass);
 
 				Tree varTree = varMap.get(varName);
+				System.out.println(varName);
+				System.out.println(varMap);
+				System.out.println(varTree);
+
 				if (varTree != null)
 				{
 					String varTreeString = varTree.toString();
+
+					
 					if (varTreeString.equals("StorageParameters"))
 					{
 						System.out.println("Ignored Arg " + varName);
 						return null;
 					}
-					
-					ObjectEnv parameterObject = programEnv.getObjectEnv(varTreeString);
-					//If it's a paradigm Object... OH
-					if(parameterObject instanceof ParadigmEnv )
+
+					ObjectEnv parameterObject = programEnv
+							.getObjectEnv(varTreeString);
+
+					if (parameterObject instanceof ParadigmEnv)
 					{
-						v.setVariableName(arg0.getName().toString()+ "ID");
-						v.setProgramType(arg0.getName().toString()+ "ID");
+						v.setVariableName(arg0.getName().toString() + "ID");
+						v.setProgramType(arg0.getName().toString() + "ID");
+					}
+					else if (originObject.getVariable(varTreeString) != null)
+					{
+						VariableEnv thisVar = originObject
+								.getVariable(varTreeString);
+
+						v.setProgramType(thisVar.getVariableInit().toString());
 					}
 					else
 					{
@@ -311,6 +324,18 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				else
 				{
 					System.out.println("VAR TREE NULL");
+					
+					VariableEnv theVar = originObject
+							.getVariable(varName);
+					
+					if(theVar == null)
+					{
+						theVar = ((ParadigmEnv) originObject).getClassEnv().getVariable(varName);
+					}
+					
+					System.out.println("originObject = " + originObject.getName() );
+					
+					System.out.println(theVar);
 				}
 			}
 
@@ -329,7 +354,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			Object value = arg0.getValue();
 			if (value != null)
 			{
-				//Ignoring all string params
+				// Ignoring all string params
 				if (value instanceof String)
 				{
 					return null;

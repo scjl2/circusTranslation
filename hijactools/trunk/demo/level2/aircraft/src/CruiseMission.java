@@ -40,13 +40,14 @@ public class CruiseMission extends ModeMission
 				storageParametersSchedulable, "Begin Landing Handler", this);
 		beginLandingHandler.register();
 
+		int maxP = PriorityScheduler.instance().getMaxPriority();
+
 		/**
 		 * Handler for monitoring the cruising conditions and updating
 		 * <code>okToCruise</code>
 		 */
 		NavigationMonitor navigationMonitor = new NavigationMonitor(
-				new PriorityParameters(PriorityScheduler.instance()
-						.getMaxPriority()), new PeriodicParameters(
+				new PriorityParameters(maxP), new PeriodicParameters(
 						new RelativeTime(0, 0), new RelativeTime(10, 0)),
 				storageParametersSchedulable, "Cruise Controller", this);
 		navigationMonitor.register();

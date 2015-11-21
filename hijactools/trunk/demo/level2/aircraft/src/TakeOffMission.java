@@ -54,10 +54,11 @@ public class TakeOffMission extends Mission //implements LandingGearUser
 				storageParametersSchedulable, "Landing Gear Handler", this);
 
 		landingGearHandler.register();
-
+			
+		int maxP = PriorityScheduler.instance().getMaxPriority();
+			
 		TakeOffMonitor takeOffMonitor = new TakeOffMonitor(
-				new PriorityParameters(PriorityScheduler.instance()
-						.getMaxPriority()), new PeriodicParameters(
+				new PriorityParameters(maxP), new PeriodicParameters(
 						new RelativeTime(0, 0), new RelativeTime(500, 0)),
 				storageParametersSchedulable, this, TAKEOFF_ALTITUDE,
 				landingGearHandler);

@@ -126,8 +126,20 @@ public class ObjectEnv
 	{
 		for (VariableEnv v : variables)
 		{
-			if (v.getVariableName().equals(name))
+			System.out.println("variable name = " + v.getVariableName());
+
+			String vName = v.getVariableName();
+			if (vName.contains("\\"))
 			{
+
+				String[] vNameSplit = vName.split("\\");
+
+				vName = vNameSplit.toString();
+			}
+
+			if (vName.equals(name))
+			{
+
 				return v;
 			}
 		}
@@ -203,7 +215,7 @@ public class ObjectEnv
 	public void addParameter(VariableEnv parameter)
 	{
 		parameters.add(parameter);
-		assert(parameters.contains(parameter));
+		assert (parameters.contains(parameter));
 	}
 
 	public void addParameter(String variableName, String variableType,
