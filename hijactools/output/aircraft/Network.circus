@@ -317,42 +317,42 @@ MainMissionApp\\
 
 ACModeChangerApp ( 5 ,  MainMissionID  ) \\
 \interleave \\
-ControlHandlerApp ( 5 ,   ,    ) \\
+ControlHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,    ) \\
 \interleave \\
-CommunicationsHandlerApp ( 5 ,   ,    ) \\
+CommunicationsHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,    ) \\
 \interleave \\
-EnvironmentMonitorApp ( 5 ,  (new RelativeTime(10, 0),null) ,   ,  MainMissionID  ) \\
+EnvironmentMonitorApp ( 5 ,  (10,0,NULL,null) ,   ,  MainMissionID  ) \\
 \interleave \\
-FlightSensorsMonitorApp ( 5 ,  (new RelativeTime(10, 0),null) ,   ,  MainMissionID  ) \\
+FlightSensorsMonitorApp ( 5 ,  (10,0,NULL,null) ,   ,  MainMissionID  ) \\
 \interleave \\
-AperiodicSimulatorApp ( 5 ,  (new RelativeTime(10, 0),null) ,  controlHandler ,  5 ,  (new RelativeTime(10, 0),null) ,  commsHandler ,  5 ,  (new RelativeTime(0, 0),new RelativeTime(10, 0)) ,  beginLandingHandler  ) \\
+AperiodicSimulatorApp ( 5 ,  (10,0,NULL,null) ,  controlHandler ,  5 ,  (10,0,NULL,null) ,  commsHandler ,  5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  beginLandingHandler  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
 
-LandingGearHandlerTakeOffApp ( 5 ,   ,   ,  TakeOffMissionID  ) \\
+LandingGearHandlerTakeOffApp ( 5 ,  (NULL,nullSchedulableId) ,   ,  TakeOffMissionID  ) \\
 \interleave \\
-TakeOffFailureHandlerApp ( 5 ,   ,   ,  TakeOffMissionID ,    ) \\
+TakeOffFailureHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,   ,  TakeOffMissionID ,    ) \\
 \interleave \\
-TakeOffMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,  (new RelativeTime(0, 0),new RelativeTime(500, 0)) ,  TakeOffMissionID ,   ,  landingGearHandler  ) \\
+TakeOffMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,  (0,0,NULL,new RelativeTime(500, 0)) ,  TakeOffMissionID ,   ,  landingGearHandler  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
-BeginLandingHandlerApp ( 5 ,   ,   ,  CruiseMissionID  ) \\
+BeginLandingHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,   ,  CruiseMissionID  ) \\
 \interleave \\
-NavigationMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,  (new RelativeTime(0, 0),new RelativeTime(10, 0)) ,   ,  CruiseMissionID  ) \\
+NavigationMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,  (0,0,NULL,new RelativeTime(10, 0)) ,   ,  CruiseMissionID  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
 
-LandingGearHandlerLandApp ( 5 ,   ,   ,  LandMissionID  ) \\
+LandingGearHandlerLandApp ( 5 ,  (NULL,nullSchedulableId) ,   ,  LandMissionID  ) \\
 \interleave \\
-SafeLandingHandlerApp ( 5 ,   ,   ,  LandMissionID ,    ) \\
+SafeLandingHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,   ,  LandMissionID ,    ) \\
 \interleave \\
-GroundDistanceMonitorApp ( 5 ,  (new RelativeTime(0, 0),new RelativeTime(10, 0)) ,  LandMissionID  ) \\
+GroundDistanceMonitorApp ( 5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  LandMissionID  ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp ( 5 ,  (new RelativeTime(0, 0),new RelativeTime(10, 0)) ,   ,  LandMissionID  ) \\
+InstrumentLandingSystemMonitorApp ( 5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,   ,  LandMissionID  ) \\
 \circblockclose
 \end{circus}
 %

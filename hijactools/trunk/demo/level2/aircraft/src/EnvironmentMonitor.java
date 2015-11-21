@@ -28,8 +28,10 @@ public class EnvironmentMonitor extends PeriodicEventHandler
 	 *            private memory size
 	 */
 	public EnvironmentMonitor(PriorityParameters priority,
-			PeriodicParameters periodic, StorageParameters storage,
-			String name, MainMission mainMission)
+			PeriodicParameters periodic, 
+			StorageParameters storage,
+			String name, 
+			MainMission mainMission)
 	{
 		super(priority, periodic, storage);
 		controllingMission = mainMission;
