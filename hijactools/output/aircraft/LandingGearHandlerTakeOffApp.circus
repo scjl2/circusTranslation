@@ -19,8 +19,6 @@ ThreadIds
 , \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
-  TakeOffMission : 
-, \\ \qquad 
    : Probably Mission
 \circspot 
   \circbegin

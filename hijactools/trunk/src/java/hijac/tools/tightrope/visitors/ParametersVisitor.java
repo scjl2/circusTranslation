@@ -317,6 +317,11 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			Object value = arg0.getValue();
 			if (value != null)
 			{
+				//Ignoring all string params
+				if (value instanceof String)
+				{
+					return null;
+				}
 
 				VariableEnv v = new VariableEnv();
 

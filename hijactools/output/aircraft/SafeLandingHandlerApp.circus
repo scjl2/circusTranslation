@@ -13,8 +13,6 @@ LandMissionMethChan
 , \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
-  LandMission : 
-, \\ \qquad 
    : Probably Mission
 , \\ \qquad 
    : 

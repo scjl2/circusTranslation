@@ -13,8 +13,6 @@ MainMissionMethChan
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-  MainMission : 
-, \\ \qquad 
    : Probably Mission
 \circspot 
   \circbegin
