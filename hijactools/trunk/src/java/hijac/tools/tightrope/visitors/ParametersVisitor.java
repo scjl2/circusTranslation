@@ -185,20 +185,47 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 						periodTree = timeParams.get(1);
 						period = periodTree.toString();
-						
+
 						deadlineTree = timeParams.get(2);
 						deadline = deadlineTree.toString();
 
+						if (deadline.equals("null"))
+						{
+							deadline = "NULL";
+						}
+
 						deadlineMissTree = timeParams.get(3);
 						deadlineMiss = deadlineMissTree.toString();
+
+						if (deadlineMiss.equals("null"))
+						{
+							deadlineMiss = "nullSchedulableId";
+						}
 					}
 
 				}
 
-				ExpressionTree deadlineMisHandler = args.get(1);
+				ExpressionTree deadlineMisHandlerTree = args.get(1);
+				String deadlineMissHandler = deadlineMisHandlerTree.toString();
+
+				if (start.equals("null"))
+				{
+					start = "NULL";
+				}
+
+				if (period.equals("null"))
+				{
+					period = "NULL";
+				}
+				
+				if(deadlineMissHandler.equals("null"))
+				{
+					deadlineMissHandler = "nullSchedulableId";
+				}
+				
 
 				v.setProgramType("(" + start + "," + period + "," + deadline
-						+ "," + deadlineMisHandler + ")");
+						+ "," + deadlineMissHandler + ")");
 
 			}
 
@@ -216,7 +243,6 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				ExpressionTree deadlineMisHandlerTree = args.get(1);
 				deadlineMisHandler = deadlineMisHandlerTree.toString();
 
-				
 			}
 			else
 			{
@@ -224,8 +250,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				deadlineMisHandler = "nullSchedulableId";
 			}
 
-			v.setProgramType("(" + deadline + "," + deadlineMisHandler
-					+ ")");
+			v.setProgramType("(" + deadline + "," + deadlineMisHandler + ")");
 		}
 		else
 		{
@@ -301,11 +326,11 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				if (objVar != null)
 				{
 					String varType = (objVar.getVariableType());
-					if (varType.equals("StorageParameters") || value instanceof String)
+					if (varType.equals("StorageParameters"))
 					{
 						System.out.println("Ignored Arg " + varType);
-						return null;
-					}					
+
+					}
 					else
 					{
 						v.setProgramType(varType);
@@ -319,8 +344,6 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				return v;
 
 			}
-			
-			
 		}
 
 		System.out.println("Returning null form Literal");

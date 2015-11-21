@@ -321,11 +321,11 @@ ControlHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,    ) \\
 \interleave \\
 CommunicationsHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,    ) \\
 \interleave \\
-EnvironmentMonitorApp ( 5 ,  (10,0,NULL,null) ,   ,  MainMissionID  ) \\
+EnvironmentMonitorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,   ,  MainMissionID  ) \\
 \interleave \\
-FlightSensorsMonitorApp ( 5 ,  (10,0,NULL,null) ,   ,  MainMissionID  ) \\
+FlightSensorsMonitorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,   ,  MainMissionID  ) \\
 \interleave \\
-AperiodicSimulatorApp ( 5 ,  (10,0,NULL,null) ,  controlHandler ,  5 ,  (10,0,NULL,null) ,  commsHandler ,  5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  beginLandingHandler  ) \\
+AperiodicSimulatorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  controlHandler ,  5 ,  (10,0,NULL,nullSchedulableId) ,  commsHandler ,  5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  beginLandingHandler  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
