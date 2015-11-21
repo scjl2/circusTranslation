@@ -288,13 +288,25 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				Tree varTree = varMap.get(varName);
 				if (varTree != null)
 				{
-					if (varTree.toString().equals("StorageParameters"))
+					String varTreeString = varTree.toString();
+					if (varTreeString.equals("StorageParameters"))
 					{
 						System.out.println("Ignored Arg " + varName);
 						return null;
 					}
-					v.setVariableName(arg0.getName().toString());
-					v.setProgramType(arg0.getName().toString());
+					
+					ObjectEnv parameterObject = programEnv.getObjectEnv(varTreeString);
+					//If it's a paradigm Object... OH
+					if(parameterObject instanceof ParadigmEnv )
+					{
+						v.setVariableName(arg0.getName().toString()+ "ID");
+						v.setProgramType(arg0.getName().toString()+ "ID");
+					}
+					else
+					{
+						v.setVariableName(arg0.getName().toString());
+						v.setProgramType(arg0.getName().toString());
+					}
 				}
 				else
 				{

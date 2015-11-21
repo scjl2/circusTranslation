@@ -325,7 +325,7 @@ EnvironmentMonitorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  MainMissionID  ) \
 \interleave \\
 FlightSensorsMonitorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  MainMissionID  ) \\
 \interleave \\
-AperiodicSimulatorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  controlHandler ,  5 ,  (10,0,NULL,nullSchedulableId) ,  commsHandler ,  5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  beginLandingHandler  ) \\
+AperiodicSimulatorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  controlHandlerID ,  5 ,  (10,0,NULL,nullSchedulableId) ,  commsHandlerID ,  5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  beginLandingHandlerID  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
@@ -334,7 +334,7 @@ LandingGearHandlerTakeOffApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID
 \interleave \\
 TakeOffFailureHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID ,    ) \\
 \interleave \\
-TakeOffMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,  (0,0,NULL,new RelativeTime(500, 0)) ,  TakeOffMissionID ,   ,  landingGearHandler  ) \\
+TakeOffMonitorApp ( PriorityScheduler.instance().getMaxPriority() ,  (0,0,NULL,new RelativeTime(500, 0)) ,  TakeOffMissionID ,   ,  landingGearHandlerID  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\

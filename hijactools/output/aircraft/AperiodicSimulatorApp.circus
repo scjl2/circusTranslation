@@ -9,19 +9,19 @@
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-  controlHandler : 
+  controlHandlerID : 
 , \\ \qquad 
   PriorityParameters : 
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-  commsHandler : 
+  commsHandlerID : 
 , \\ \qquad 
   PriorityParameters : 
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-  beginLandingHandler : 
+  beginLandingHandlerID : 
 \circspot 
   \circbegin
 \end{circus}
