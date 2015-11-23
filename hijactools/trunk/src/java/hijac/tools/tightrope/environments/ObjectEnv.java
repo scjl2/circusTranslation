@@ -129,13 +129,13 @@ public class ObjectEnv
 			System.out.println("variable name = " + v.getVariableName());
 
 			String vName = v.getVariableName();
-			if (vName.contains("\\"))
-			{
-
-				String[] vNameSplit = vName.split("\\");
-
-				vName = vNameSplit.toString();
-			}
+//			if (vName.contains("\\"))
+//			{
+//
+//				String[] vNameSplit = vName.split("\\");
+//
+//				vName = vNameSplit.toString();
+//			}
 
 			if (vName.equals(name))
 			{
