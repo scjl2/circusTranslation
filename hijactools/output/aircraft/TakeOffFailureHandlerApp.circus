@@ -15,7 +15,7 @@ TakeOffMissionMethChan
 , \\ \qquad 
    : Probably Mission
 , \\ \qquad 
-   : 
+  SAFE\_AIRSPEED\_THRESHOLD : double
 \circspot 
   \circbegin
 \end{circus}

@@ -15,7 +15,7 @@ LandMissionMethChan
 , \\ \qquad 
    : Probably Mission
 , \\ \qquad 
-   : 
+  SAFE\_LANDING\_ALTITUDE : double
 \circspot 
   \circbegin
 \end{circus}

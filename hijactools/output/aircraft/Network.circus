@@ -332,9 +332,9 @@ TakeOffMissionApp\\
 
 LandingGearHandlerTakeOffApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID  ) \\
 \interleave \\
-TakeOffFailureHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID ,    ) \\
+TakeOffFailureHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0  ) \\
 \interleave \\
-TakeOffMonitorApp ( maxP ,  (0,0,NULL,new RelativeTime(500, 0)) ,  TakeOffMissionID ,   ,  landingGearHandlerID  ) \\
+TakeOffMonitorApp ( maxP ,  (0,0,NULL,new RelativeTime(500, 0)) ,  TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
@@ -348,7 +348,7 @@ LandMissionApp\\
 
 LandingGearHandlerLandApp ( 5 ,  (NULL,nullSchedulableId) ,  LandMissionID  ) \\
 \interleave \\
-SafeLandingHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  LandMissionID ,    ) \\
+SafeLandingHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  LandMissionID ,  10.0  ) \\
 \interleave \\
 GroundDistanceMonitorApp ( 5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  LandMissionID  ) \\
 \interleave \\

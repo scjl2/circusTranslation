@@ -15,7 +15,7 @@ TakeOffMissionMethChan
 , \\ \qquad 
    : Probably Mission
 , \\ \qquad 
-   : 
+  TAKEOFF\_ALTITUDE : double
 , \\ \qquad 
   landingGearHandlerID : 
 \circspot 

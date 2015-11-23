@@ -129,20 +129,30 @@ public class ObjectEnv
 			System.out.println("variable name = " + v.getVariableName());
 
 			String vName = v.getVariableName();
-//			if (vName.contains("\\"))
-//			{
-//
-//				String[] vNameSplit = vName.split("\\");
-//
-//				vName = vNameSplit.toString();
-//			}
+			if (vName.contains("\\"))
+			{
+				//Matches \
+				String[] vNameSplit = vName.split("\\\\");
 
+				StringBuilder sb = new StringBuilder();
+				for(String s : vNameSplit)
+				{
+					sb.append(s);
+				}
+				vName = sb.toString();
+				
+				System.out.println("\t Var After Split = " + vName);
+			}
+
+			System.out.println("name = " + name);
+			System.out.println("vName = " + vName);
 			if (vName.equals(name))
 			{
-
+				System.out.println("Returning " + v.toString());
 				return v;
 			}
 		}
+		System.out.println("retruning Null");
 		return null;
 	}
 

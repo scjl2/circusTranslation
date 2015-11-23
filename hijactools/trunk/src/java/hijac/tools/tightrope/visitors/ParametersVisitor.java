@@ -336,6 +336,9 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					System.out.println("originObject = " + originObject.getName() );
 					
 					System.out.println(theVar);
+					theVar.setProgramType(theVar.getVariableInit().toString());
+					
+					v = theVar;
 				}
 			}
 
