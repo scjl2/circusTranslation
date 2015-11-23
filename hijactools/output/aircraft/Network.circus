@@ -334,14 +334,14 @@ LandingGearHandlerTakeOffApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID
 \interleave \\
 TakeOffFailureHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0  ) \\
 \interleave \\
-TakeOffMonitorApp ( maxP ,  (0,0,NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
+TakeOffMonitorApp ( AmaxP ,  (0,0,NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
 BeginLandingHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  CruiseMissionID  ) \\
 \interleave \\
-NavigationMonitorApp ( maxP ,  (0,0,NULL,nullSchedulableId) ,  CruiseMissionID  ) \\
+NavigationMonitorApp ( AmaxP ,  (0,0,NULL,nullSchedulableId) ,  CruiseMissionID  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\

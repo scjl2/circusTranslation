@@ -618,7 +618,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		Name varName = arg0.getName();
 
 		Tree varType = arg0.getType();
-
+		
 		String init = "";
 		if (arg0.getInitializer() != null)
 		{

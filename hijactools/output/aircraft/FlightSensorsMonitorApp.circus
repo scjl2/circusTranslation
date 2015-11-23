@@ -13,7 +13,7 @@ MainMissionMethChan
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
-   : Probably Mission
+   : MainMissionID
 \circspot 
   \circbegin
 \end{circus}

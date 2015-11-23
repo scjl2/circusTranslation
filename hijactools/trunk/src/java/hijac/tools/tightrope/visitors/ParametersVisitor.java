@@ -131,9 +131,9 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	public VariableEnv visitNewClass(NewClassTree arg0, VariableEnv arg1)
 	{
 		System.out.println("Params Visitor: New Class " + arg0.toString());
-		ArrayList<VariableEnv> returnList = new ArrayList<VariableEnv>();
+		// ArrayList<VariableEnv> returnList = new ArrayList<VariableEnv>();
 
-		List<? extends VariableTree> initParams = null;
+		// List<? extends VariableTree> initParams = null;
 
 		ExpressionTree identifierTree = arg0.getIdentifier();
 		String identifiterTree = identifierTree.toString();
@@ -146,45 +146,51 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			assert (args.size() == 1);
 
 			ExpressionTree arg = args.get(0);
-			System.out.println("arg "+ arg.toString()+ " in PriParams is " + arg.getKind());
+			System.out.println("arg " + arg.toString() + " in PriParams is "
+					+ arg.getKind());
+
+			
+//			System.out.println(programEnv.getObjectEnv(originClass).getVariables().toString());
+//			System.out.println(((ParadigmEnv) programEnv.getObjectEnv(originClass)).getClassEnv().getVariables().toString());
+			
 			
 			if (arg instanceof IdentifierTree)
 			{
-				if(varMap.get(((IdentifierTree) arg).getName()) != null)
-				{
-					Tree varThing = varMap.get(((IdentifierTree) arg).getName());
-					
-					v.setProgramType(varThing.toString());
-				}
-				else
-				{
+//				if (varMap.get(((IdentifierTree) arg).getName()) != null)
+//				{
+//					Tree varThing = varMap
+//							.get(((IdentifierTree) arg).getName());
+//
+//					v.setProgramType(varThing.toString());
+//				}
+//				else
+//				{
 					VariableEnv vTemp = arg.accept(this, null);
-					v.setProgramType( vTemp.getProgramType());
-				}				
+					v.setProgramType(vTemp.getProgramType());
+//				}
 			}
-
-			v.setProgramType(arg.toString());
-
+			else if (arg instanceof LiteralTree)
+			{
+				v.setProgramType(arg.toString());
+			}
 		}
 		else if (identifiterTree.equals("PeriodicParameters"))
 		{
-			
+
 			ExpressionTree time = args.get(0);
 
 			String start = "", period = "", deadline = "", deadlineMissHandler = "";
-			
+
 			ExpressionTree startTree, periodTree, deadlineTree, deadlineMissTree;
-			
+
 			if (args.size() == 2)
 			{
-				
+
 				// Assuming time is either Relative or Absolute Time
 				if (time instanceof NewClassTree)
 				{
 					List<? extends ExpressionTree> timeParams = ((NewClassTree) time)
 							.getArguments();
-
-					
 
 					if (timeParams.size() >= 2)
 					{
@@ -222,13 +228,12 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 							deadlineMissHandler = "nullSchedulableId";
 						}
 					}
-
-				}				
+				}
 			}
 			else
 			{
 				ExpressionTree deadlineMisHandlerTree = args.get(1);
-				 deadlineMissHandler = deadlineMisHandlerTree.toString();
+				deadlineMissHandler = deadlineMisHandlerTree.toString();
 
 				if (start.equals("null"))
 				{
@@ -244,13 +249,10 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				{
 					deadlineMissHandler = "nullSchedulableId";
 				}
-
-				
-
 			}
-			
-			v.setProgramType("(" + start + "," + period + "," + deadline
-					+ "," + deadlineMissHandler + ")");
+
+			v.setProgramType("(" + start + "," + period + "," + deadline + ","
+					+ deadlineMissHandler + ")");
 
 		}
 		else if (identifiterTree.equals("AperiodicParameters"))
@@ -288,18 +290,15 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	@Override
 	public VariableEnv visitIdentifier(IdentifierTree arg0, VariableEnv arg1)
 	{
-
 		System.out.println("Param Visitor: Identifier");
 
 		{
-
 			VariableEnv v = new VariableEnv();
 
 			System.out.println("arg = " + arg0.getName().toString());
 			if (arg0.getName().toString().equals("this"))
 			{
-
-				v.setVariableType("Probably Mission");
+				v.setVariableType(originClass + "ID");
 				v.setProgramType(originClass + "ID");
 			}
 			else
@@ -317,7 +316,6 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				{
 					String varTreeString = varTree.toString();
 
-					
 					if (varTreeString.equals("StorageParameters"))
 					{
 						System.out.println("Ignored Arg " + varName);
@@ -339,29 +337,33 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 						v.setProgramType(thisVar.getVariableInit().toString());
 					}
-					else
+					else//In the VarMap, but it's type isn't a ParadigmEnv and its name isn't a variable in the OriginObject 
 					{
 						v.setVariableName(arg0.getName().toString());
-						v.setProgramType(arg0.getName().toString());
+						
+						
+						
+						v.setProgramType("A"+arg0.getName().toString());
 					}
 				}
 				else
 				{
 					System.out.println("VAR TREE NULL");
-					
-					VariableEnv theVar = originObject
-							.getVariable(varName);
-					
-					if(theVar == null)
+
+					VariableEnv theVar = originObject.getVariable(varName);
+
+					if (theVar == null)
 					{
-						theVar = ((ParadigmEnv) originObject).getClassEnv().getVariable(varName);
+						theVar = ((ParadigmEnv) originObject).getClassEnv()
+								.getVariable(varName);
 					}
-					
-					System.out.println("originObject = " + originObject.getName() );
-					
+
+					System.out.println("originObject = "
+							+ originObject.getName());
+
 					System.out.println(theVar);
 					theVar.setProgramType(theVar.getVariableInit().toString());
-					
+
 					v = theVar;
 				}
 			}

@@ -13,7 +13,7 @@ LandMissionMethChan
 , \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
-   : Probably Mission
+   : LandMissionID
 , \\ \qquad 
   SAFE\_LANDING\_ALTITUDE : double
 \circspot 
