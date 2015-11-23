@@ -513,10 +513,10 @@ public class EnvironmentBuilder
 		return packagePrefix;
 	}
 
-	private HashMap<Name, Tree> getVariables(TypeElement arg0,
+	private List<VariableEnv> getVariables(TypeElement arg0,
 			ObjectEnv objectEnv)
 	{
-		HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
+		List<VariableEnv> varMap = new ArrayList<VariableEnv>();
 
 		VariableVisitor varVisitor;
 
@@ -538,17 +538,18 @@ public class EnvironmentBuilder
 			Tree s = i.next();
 			// TODO if this is only ever going to return one value at a time
 			// then it shouldn't be a map
-			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor,
+List<VariableEnv> m =  s.accept(varVisitor,
 					true);
 			assert (m != null);
 			System.out.println("getVariables m = " + m);
 			// TODO this is a bit of a hack...
 
-			for (Name n : m.keySet())
+			for (VariableEnv n : m)
 			{
 				// System.out.println("\t*** Name = " + n + " Type = "
 				// + m.get(n) + " Kind = " + m.get(n).getKind());
-				varMap.putIfAbsent(n, m.get(n));
+//				varMap.addIfAbsent(n, m.get(n));
+				varMap.add(n);
 			}
 		}
 		System.out.println("getVariables varMap = " + varMap);

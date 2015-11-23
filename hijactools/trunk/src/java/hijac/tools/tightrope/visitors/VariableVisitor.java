@@ -75,7 +75,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.WildcardTree;
 
-public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
+public class VariableVisitor implements TreeVisitor<List<VariableEnv>, Boolean>
 {
 	// TODO This returns Names and Trees, it should return Names and
 	// TypeKinds....but how?
@@ -105,51 +105,15 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		 this.programEnv = programEnv;
 	}
 
+	
 	@Override
-	public Map<Name, Tree> visitAnnotatedType(AnnotatedTypeTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitAnnotation(AnnotationTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitArrayAccess(ArrayAccessTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitArrayType(ArrayTypeTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitAssert(AssertTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitAssignment(AssignmentTree arg0, Boolean addToEnv)
+	public List<VariableEnv> visitAssignment(AssignmentTree arg0, Boolean addToEnv)
 	{
 
 		// System.out.println("Var Visitor: Assignment");
 		// System.out.println("-> " + arg0);
 
-		Map<Name, Tree> returnMap = null;
+		List<VariableEnv> returnMap = null;
 
 		ExpressionTree variable = arg0.getVariable();
 		Name varName = null;
@@ -205,13 +169,14 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		if (expression instanceof LiteralTree)
 		{
 			expressionTree = expression;
+			
 		}
 
 		if (varName != null & expressionTree != null)
 		{
 			// System.out.println("Adding to Var Map");
-			returnMap = new HashMap<Name, Tree>();
-			returnMap.put(varName, expressionTree);
+			returnMap = new ArrayList<VariableEnv>();
+			returnMap.add(new VariableEnv(varName.toString(), expressionTree.toString(), (Object)expressionTree, false));
 			if (objectEnv != null && addToEnv == true)
 			{
 				objectEnv.addVariableInit(NewTransUtils.encodeName(varName),
@@ -226,20 +191,15 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 	}
 
-	@Override
-	public Map<Name, Tree> visitBinary(BinaryTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override
-	public Map<Name, Tree> visitBlock(BlockTree arg0, Boolean addToEnv)
+	public List<VariableEnv> visitBlock(BlockTree arg0, Boolean addToEnv)
 	{
 
 		// System.out.println("Var Visitor: Block");
 		// System.out.println(arg0);
-		HashMap<Name, Tree> returnMap = new HashMap<Name, Tree>();
+		List<VariableEnv> returnMap = new ArrayList<VariableEnv>();
 
 		List<? extends StatementTree> statements = arg0.getStatements();
 
@@ -250,12 +210,12 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			StatementTree st = i.next();
 			// System.out.println("Var Visitor Block: st kind = " +
 			// st.getKind());
-			Map<Name, Tree> statementReturn = st.accept(this, addToEnv);
+			List<VariableEnv> statementReturn = st.accept(this, addToEnv);
 
 			if (statementReturn != null)
 			{
 				// System.out.println("Var Visitor: Block: Returned Adding");
-				returnMap.putAll(statementReturn);
+				returnMap.addAll(statementReturn);
 			}
 			// else
 			// {
@@ -267,236 +227,10 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 	}
 
+	
+	
 	@Override
-	public Map<Name, Tree> visitBreak(BreakTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitCase(CaseTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitCatch(CatchTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitClass(ClassTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitCompilationUnit(CompilationUnitTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitCompoundAssignment(CompoundAssignmentTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitConditionalExpression(
-			ConditionalExpressionTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitContinue(ContinueTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitDoWhileLoop(DoWhileLoopTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitEmptyStatement(EmptyStatementTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitEnhancedForLoop(EnhancedForLoopTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitErroneous(ErroneousTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitExpressionStatement(
-			ExpressionStatementTree arg0, Boolean addToEnv)
-	{
-
-		// System.out.println("Var Visitor: Expression Statement Tree");
-		return arg0.getExpression().accept(this, addToEnv);
-
-	}
-
-	@Override
-	public Map<Name, Tree> visitForLoop(ForLoopTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitIdentifier(IdentifierTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitIf(IfTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitImport(ImportTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitInstanceOf(InstanceOfTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitIntersectionType(IntersectionTypeTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitLabeledStatement(LabeledStatementTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitLambdaExpression(LambdaExpressionTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitLiteral(LiteralTree arg0, Boolean addToEnv)
-	{
-
-		Map<Name, Tree> returnMap = new HashMap<Name, Tree>();
-
-		// returnMap.put(null, (Tree) arg0.);
-
-		return returnMap;
-
-	}
-
-	@Override
-	public Map<Name, Tree> visitMemberReference(MemberReferenceTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitMemberSelect(MemberSelectTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitMethod(MethodTree arg0, Boolean addToEnv)
-	{
-
-		if (arg0.getName().contentEquals("<init>"))
-		{
-			// System.out
-			// .println("+++ Var Visitor : Method Visitor found <init> +++");
-			return arg0.getBody().accept(this, true);
-		}
-		else
-		{
-			// System.out
-			// .println("+++ Var Visitor : Method Visitor found method +++");
-			return arg0.getBody().accept(this, false);
-		}
-
-	}
-
-	@Override
-	public Map<Name, Tree> visitMethodInvocation(MethodInvocationTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitModifiers(ModifiersTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitNewArray(NewArrayTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitNewClass(NewClassTree arg0, Boolean addToEnv)
+	public List<VariableEnv> visitNewClass(NewClassTree arg0, Boolean addToEnv)
 	{
 		System.out.println("*** VarVisitor: New Class Tree");
 		
@@ -508,109 +242,15 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		return null;
 	}
 
-	@Override
-	public Map<Name, Tree> visitOther(Tree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitParameterizedType(ParameterizedTypeTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitParenthesized(ParenthesizedTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitPrimitiveType(PrimitiveTypeTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitReturn(ReturnTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitSwitch(SwitchTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitSynchronized(SynchronizedTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitThrow(ThrowTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitTry(TryTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitTypeCast(TypeCastTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitTypeParameter(TypeParameterTree arg0,
-			Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitUnary(UnaryTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Map<Name, Tree> visitUnionType(UnionTypeTree arg0, Boolean addToEnv)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 	@Override //return VariableEnv
-	public Map<Name, Tree> visitVariable(VariableTree arg0, Boolean addToEnv)
+	public List<VariableEnv> visitVariable(VariableTree arg0, Boolean addToEnv)
 	{
 
 		System.out.println("Var Visitor: Variable for " + arg0);
 
-		HashMap<Name, Tree> returnMap = new HashMap<Name, Tree>();
+		List<VariableEnv> returnMap = new ArrayList<VariableEnv>();
 
 		System.out.println("-> Name = " + arg0.getName() + " Type = "
 				+ arg0.getType() + " Init = " + arg0.getInitializer());
@@ -622,12 +262,16 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		String init = "";
 		if (arg0.getInitializer() != null)
 		{
-			Map<Name, Tree> initialiser = arg0.getInitializer().accept(this, addToEnv);
+			List<VariableEnv> initialiser = arg0.getInitializer().accept(this, addToEnv);
 			System.out.println("/*/* Init of " + arg0.getName() + " is = " + initialiser);
 			init = arg0.getInitializer().toString();
 		}
 
-		returnMap.put(varName, varType);
+		VariableEnv v = new VariableEnv();
+		v.setVariableName(varName.toString());
+		v.setVariableType(varType.toString());
+		
+		returnMap.add(v);
 		
 		assert (varName != null);
 	//	assert (programEnv != null);
@@ -691,16 +335,365 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	}
 
 	@Override
-	public Map<Name, Tree> visitWhileLoop(WhileLoopTree arg0, Boolean addToEnv)
+	public List<VariableEnv> visitAnnotatedType(AnnotatedTypeTree arg0,
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Map<Name, Tree> visitWildcard(WildcardTree arg0, Boolean addToEnv)
+	public List<VariableEnv> visitAnnotation(AnnotationTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<VariableEnv> visitArrayAccess(ArrayAccessTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitArrayType(ArrayTypeTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitAssert(AssertTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitBinary(BinaryTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitBreak(BreakTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitCase(CaseTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitCatch(CatchTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitClass(ClassTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitCompilationUnit(CompilationUnitTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitCompoundAssignment(
+			CompoundAssignmentTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitConditionalExpression(
+			ConditionalExpressionTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitContinue(ContinueTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitDoWhileLoop(DoWhileLoopTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitEmptyStatement(EmptyStatementTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitEnhancedForLoop(EnhancedForLoopTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitErroneous(ErroneousTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitExpressionStatement(
+			ExpressionStatementTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitForLoop(ForLoopTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitIdentifier(IdentifierTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitIf(IfTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitImport(ImportTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitInstanceOf(InstanceOfTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitIntersectionType(IntersectionTypeTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitLabeledStatement(LabeledStatementTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitLambdaExpression(LambdaExpressionTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitLiteral(LiteralTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitMemberReference(MemberReferenceTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitMemberSelect(MemberSelectTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitMethod(MethodTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitMethodInvocation(MethodInvocationTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitModifiers(ModifiersTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitNewArray(NewArrayTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitOther(Tree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitParameterizedType(ParameterizedTypeTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitParenthesized(ParenthesizedTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitPrimitiveType(PrimitiveTypeTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitReturn(ReturnTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitSwitch(SwitchTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitSynchronized(SynchronizedTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitThrow(ThrowTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitTry(TryTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitTypeCast(TypeCastTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitTypeParameter(TypeParameterTree arg0,
+			Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitUnary(UnaryTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitUnionType(UnionTypeTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitWhileLoop(WhileLoopTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<VariableEnv> visitWildcard(WildcardTree arg0, Boolean arg1)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

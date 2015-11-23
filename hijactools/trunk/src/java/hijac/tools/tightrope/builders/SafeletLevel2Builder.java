@@ -4,6 +4,7 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.ReturnVisitor;
 
@@ -59,7 +60,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 				analysis, safeletEnv);
 		ClassTree ct = trees.getTree(e);
 
-		HashMap<Name, Tree> varMap = getVariables(e, safeletEnv);
+		List<VariableEnv> varMap = getVariables(e, safeletEnv);
 		// programEnv.getSafelet().setClassTree(ct);
 
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();

@@ -1,5 +1,8 @@
 package hijac.tools.tightrope.visitors;
 
+import hijac.tools.application.TightRope;
+import hijac.tools.tightrope.environments.VariableEnv;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -73,9 +76,9 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	// private Iterator<StatementTree> i ;
 	// private ProgramEnv programEnv;
 
-	private Map<Name, Tree> varMap;
+	private List<VariableEnv> varMap;
 
-	public ReturnVisitor(Map<Name, Tree> varMap)
+	public ReturnVisitor(List<VariableEnv> varMap)
 	{
 		this.varMap = varMap;
 
@@ -83,7 +86,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 
 	public ReturnVisitor()
 	{
-		this.varMap = new HashMap<Name, Tree>();
+		this.varMap = new ArrayList<VariableEnv>();
 
 	}
 
@@ -602,19 +605,32 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		if (varMap != null)
 		{
 			System.out.println("varmap = " + varMap.toString());
-			System.out.println("-> getVariable = " + varMap.get(n));
-			Tree t = (varMap.get(n));
+//			System.out.println("-> getVariable = " + varMap.get(n));
+			
+			VariableEnv retreivedVar = null;
+			
+			for(VariableEnv var: varMap)
+			{
+				if(var.getVariableName().equals(n.toString()))
+				{
+					retreivedVar = var;
+				}
+			}
+			
+//			Tree t = (varMap.get(n));
 
-			System.out.println("-> t = " + t);
+//			System.out.println("-> t = " + t);
 
 			ArrayList<Name> tcReturns = new ArrayList<Name>();
 
 			if (n != null)
 			{
-				System.out.println("T type= " + t.getKind());
-				IdentifierTree id = (IdentifierTree) t;
+//				System.out.println("T type= " + t.getKind());
+//				IdentifierTree id = (IdentifierTree) t;
 				// returns.add(id.getName());
-				tcReturns.add(id.getName());
+				
+				
+				tcReturns.add(retreivedVar.getVariableType());
 			}
 			// return arg0.getExpression().accept(this, arg1);
 			return tcReturns;
