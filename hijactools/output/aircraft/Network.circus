@@ -325,7 +325,7 @@ EnvironmentMonitorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  MainMissionID  ) \
 \interleave \\
 FlightSensorsMonitorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  MainMissionID  ) \\
 \interleave \\
-AperiodicSimulatorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  controlHandlerID ,  5 ,  (10,0,NULL,nullSchedulableId) ,  commsHandlerID ,  5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  beginLandingHandlerID  ) \\
+AperiodicSimulatorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  controlHandlerID ,  5 ,  (10,0,NULL,nullSchedulableId) ,  commsHandlerID ,  5 ,  (0,0,NULL,nullSchedulableId) ,  beginLandingHandlerID  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
@@ -334,14 +334,14 @@ LandingGearHandlerTakeOffApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID
 \interleave \\
 TakeOffFailureHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0  ) \\
 \interleave \\
-TakeOffMonitorApp ( maxP ,  (0,0,NULL,new RelativeTime(500, 0)) ,  TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
+TakeOffMonitorApp ( maxP ,  (0,0,NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
 BeginLandingHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  CruiseMissionID  ) \\
 \interleave \\
-NavigationMonitorApp ( maxP ,  (0,0,NULL,new RelativeTime(10, 0)) ,  CruiseMissionID  ) \\
+NavigationMonitorApp ( maxP ,  (0,0,NULL,nullSchedulableId) ,  CruiseMissionID  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
@@ -350,9 +350,9 @@ LandingGearHandlerLandApp ( 5 ,  (NULL,nullSchedulableId) ,  LandMissionID  ) \\
 \interleave \\
 SafeLandingHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  LandMissionID ,  10.0  ) \\
 \interleave \\
-GroundDistanceMonitorApp ( 5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  LandMissionID  ) \\
+GroundDistanceMonitorApp ( 5 ,  (0,0,NULL,nullSchedulableId) ,  LandMissionID  ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp ( 5 ,  (0,0,NULL,new RelativeTime(10, 0)) ,  LandMissionID  ) \\
+InstrumentLandingSystemMonitorApp ( 5 ,  (0,0,NULL,nullSchedulableId) ,  LandMissionID  ) \\
 \circblockclose
 \end{circus}
 %

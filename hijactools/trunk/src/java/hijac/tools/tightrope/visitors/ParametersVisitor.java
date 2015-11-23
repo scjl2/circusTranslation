@@ -146,25 +146,45 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			assert (args.size() == 1);
 
 			ExpressionTree arg = args.get(0);
+			System.out.println("arg "+ arg.toString()+ " in PriParams is " + arg.getKind());
+			
+			if (arg instanceof IdentifierTree)
+			{
+				if(varMap.get(((IdentifierTree) arg).getName()) != null)
+				{
+					Tree varThing = varMap.get(((IdentifierTree) arg).getName());
+					
+					v.setProgramType(varThing.toString());
+				}
+				else
+				{
+					VariableEnv vTemp = arg.accept(this, null);
+					v.setProgramType( vTemp.getProgramType());
+				}				
+			}
 
 			v.setProgramType(arg.toString());
 
 		}
 		else if (identifiterTree.equals("PeriodicParameters"))
 		{
+			
+			ExpressionTree time = args.get(0);
+
+			String start = "", period = "", deadline = "", deadlineMissHandler = "";
+			
+			ExpressionTree startTree, periodTree, deadlineTree, deadlineMissTree;
+			
 			if (args.size() == 2)
 			{
-
-				ExpressionTree time = args.get(0);
-
-				String start = "", period = "", deadline = "", deadlineMiss = "";
+				
 				// Assuming time is either Relative or Absolute Time
 				if (time instanceof NewClassTree)
 				{
 					List<? extends ExpressionTree> timeParams = ((NewClassTree) time)
 							.getArguments();
 
-					ExpressionTree startTree, periodTree, deadlineTree, deadlineMissTree;
+					
 
 					if (timeParams.size() >= 2)
 					{
@@ -175,7 +195,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 						period = periodTree.toString();
 
 						deadline = "NULL";
-						deadlineMiss = "nullSchedulableId";
+						deadlineMissHandler = "nullSchedulableId";
 
 					}
 					else
@@ -195,18 +215,20 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 						}
 
 						deadlineMissTree = timeParams.get(3);
-						deadlineMiss = deadlineMissTree.toString();
+						deadlineMissHandler = deadlineMissTree.toString();
 
-						if (deadlineMiss.equals("null"))
+						if (deadlineMissHandler.equals("null"))
 						{
-							deadlineMiss = "nullSchedulableId";
+							deadlineMissHandler = "nullSchedulableId";
 						}
 					}
 
-				}
-
+				}				
+			}
+			else
+			{
 				ExpressionTree deadlineMisHandlerTree = args.get(1);
-				String deadlineMissHandler = deadlineMisHandlerTree.toString();
+				 deadlineMissHandler = deadlineMisHandlerTree.toString();
 
 				if (start.equals("null"))
 				{
@@ -223,10 +245,12 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					deadlineMissHandler = "nullSchedulableId";
 				}
 
-				v.setProgramType("(" + start + "," + period + "," + deadline
-						+ "," + deadlineMissHandler + ")");
+				
 
 			}
+			
+			v.setProgramType("(" + start + "," + period + "," + deadline
+					+ "," + deadlineMissHandler + ")");
 
 		}
 		else if (identifiterTree.equals("AperiodicParameters"))
