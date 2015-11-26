@@ -47,7 +47,7 @@ public class CruiseMission extends ModeMission
 		 * <code>okToCruise</code>
 		 */
 		NavigationMonitor navigationMonitor = new NavigationMonitor(
-				new PriorityParameters(maxP), new PeriodicParameters(
+				new PriorityParameters(5), new PeriodicParameters(
 						new RelativeTime(0, 0), new RelativeTime(10, 0)),
 				storageParametersSchedulable, "Cruise Controller", this);
 		navigationMonitor.register();

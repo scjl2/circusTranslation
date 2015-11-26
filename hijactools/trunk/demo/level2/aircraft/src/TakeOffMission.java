@@ -24,6 +24,9 @@ public class TakeOffMission extends Mission //implements LandingGearUser
 
 	private boolean abort = false;
 
+	//int maxP = 5;//PriorityScheduler.instance().getMaxPriority();
+	//Limitation: only literals as params for params
+
 	/**
 	 * Is the landing gear deployed?
 	 */
@@ -55,10 +58,10 @@ public class TakeOffMission extends Mission //implements LandingGearUser
 
 		landingGearHandler.register();
 			
-		int maxP = PriorityScheduler.instance().getMaxPriority();
+		
 			
 		TakeOffMonitor takeOffMonitor = new TakeOffMonitor(
-				new PriorityParameters(maxP), new PeriodicParameters(
+				new PriorityParameters(5), new PeriodicParameters(
 						new RelativeTime(0, 0), new RelativeTime(500, 0)),
 				storageParametersSchedulable, this, TAKEOFF_ALTITUDE,
 				landingGearHandler);

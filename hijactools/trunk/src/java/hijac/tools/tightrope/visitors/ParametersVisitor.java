@@ -324,13 +324,14 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 					ObjectEnv parameterObject = programEnv
 							.getObjectEnv(varTreeString);
-
+					
+				
 					if (parameterObject instanceof ParadigmEnv)
 					{
 						v.setVariableName(arg0.getName().toString() + "ID");
 						v.setProgramType(arg0.getName().toString() + "ID");
 					}
-					else if (originObject.getVariable(varTreeString) != null)
+					else if (originObject.getVariable(varName) != null)
 					{
 						VariableEnv thisVar = originObject
 								.getVariable(varTreeString);
@@ -344,6 +345,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 						
 						
 						v.setProgramType("A"+arg0.getName().toString());
+						
 					}
 				}
 				else
