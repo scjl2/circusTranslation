@@ -318,7 +318,7 @@ public class VariableVisitor implements TreeVisitor<List<VariableEnv>, Boolean>
 					System.out.println("*/*/ Adding Parameter " + encodedName + " to ObjectEnv " +objectEnv.getName() + "of type " + objectEnv.getClass().getCanonicalName());
 				}
 			}
-			else if (programEnv.getSchedulable(varName) != null)
+			else if (programEnv.getSchedulable(varName.toString()) != null)
 			{
 				System.out.println("Var Visitor var name is a schedulable");
 			}

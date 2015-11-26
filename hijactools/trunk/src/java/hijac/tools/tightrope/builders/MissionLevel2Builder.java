@@ -4,6 +4,7 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.RegistersVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
@@ -33,7 +34,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 	private static Trees trees;
 
 	private MissionEnv missionEnv;
-	private ArrayList<Name> schedulables;
+	private ArrayList<String> schedulables;
 	private ProgramEnv programEnv;
 
 	public MissionLevel2Builder(ProgramEnv programEnv, MissionEnv missionEnv,
@@ -48,13 +49,13 @@ public class MissionLevel2Builder extends ParadigmBuilder
 		analysis.getCompilationUnits();
 		analysis.getTypeElements();
 
-		schedulables = new ArrayList<Name>();
+		schedulables = new ArrayList<String>();
 		registersVisitor = new RegistersVisitor(missionEnv, analysis);
 
 	}
 
 	@SuppressWarnings("unchecked")
-	public ArrayList<Name> build(TypeElement missionTypeElement)
+	public ArrayList<String> build(TypeElement missionTypeElement)
 	{
 		ClassTree missionClassTree = trees.getTree(missionTypeElement);
 
@@ -189,8 +190,9 @@ public class MissionLevel2Builder extends ParadigmBuilder
 			VariableVisitor varVisitor = new VariableVisitor(programEnv,
 					missionEnv);
 
-			HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
+//			HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 			StatementTree methodStatementTree;
+			List<VariableEnv> varMap = new ArrayList<VariableEnv>();
 
 			while (methodStatementsIterator.hasNext())
 			{
@@ -198,23 +200,9 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 				// getParameters(methodStatementTree);
 
-				HashMap<Name, Tree> m = (HashMap<Name, Tree>) methodStatementTree
+				 varMap = methodStatementTree
 						.accept(varVisitor, false);
-				// assert (m != null);
-				if (m != null)
-				{
-
-					// TODO this is a bit of a hack...
-
-					for (Name n : m.keySet())
-					{
-						// System.out.println("\t*** Name = " + n +
-						// " Type = "
-						// + m.get(n) + " Kind = " +
-						// m.get(n).getKind());
-						varMap.putIfAbsent(n, m.get(n));
-					}
-				}
+				
 
 			}
 			methodStatementsIterator = methodStatements.iterator();
@@ -238,8 +226,8 @@ public class MissionLevel2Builder extends ParadigmBuilder
 		}
 	}
 
-	private void findSchedulables(ArrayList<Name> schedulables,
-			StatementTree methodStatementTree, HashMap<Name, Tree> varMap)
+	private void findSchedulables(ArrayList<String> schedulables,
+			StatementTree methodStatementTree, List<VariableEnv> varMap)
 	{
 
 		System.out.println("Mission Visistor: methodStatementTree = "
@@ -250,7 +238,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 		if (schedulableName != null)
 		{
-			schedulables.add(schedulableName);
+			schedulables.add(schedulableName.toString());
 		}
 	}
 

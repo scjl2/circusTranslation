@@ -53,7 +53,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 	}
 
 	@SuppressWarnings("unchecked")
-	public ArrayList<Name> build(TypeElement e)
+	public ArrayList<String> build(TypeElement e)
 	{
 		// System.out.println(e);
 		MethodVisitor methodVisitor = new MethodVisitor(
@@ -90,7 +90,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 							.getPrimitiveTypeKind();
 
 				}
-				ArrayList<Name> returns = mt.accept(new ReturnVisitor(varMap),
+				ArrayList<String> returns = mt.accept(new ReturnVisitor(varMap),
 						null);
 
 				@SuppressWarnings("rawtypes")

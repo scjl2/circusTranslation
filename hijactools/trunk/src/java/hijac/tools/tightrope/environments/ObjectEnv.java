@@ -34,7 +34,7 @@ public class ObjectEnv
 	/**
 	 * The name of the entity this environment represents
 	 */
-	private Name name;
+	private String name;
 	/**
 	 * The variables of this object
 	 */
@@ -77,12 +77,12 @@ public class ObjectEnv
 		parents = new ArrayList<String>();
 	}
 
-	public Name getName()
-	{
+	public String getName() 
+	{ 
 		return name;
 	}
 
-	public void setName(Name objectName)
+	public void setName(String objectName)
 	{
 		this.name = objectName;
 	}
@@ -259,15 +259,15 @@ public class ObjectEnv
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void addMeth(Name methName, TypeKind returnType,
-			ArrayList<Name> returnValues, Map params)
+	public void addMeth(String methName, String returnType,
+			ArrayList<String> returnValues, Map params)
 	{
 		meths.add(new MethodEnv(methName, returnType, returnValues, params));
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void addSyncMeth(Name methName, TypeKind returnType,
-			ArrayList<Name> returnValues, Map params)
+	public void addSyncMeth(String methName, String returnType,
+			ArrayList<String> returnValues, Map params)
 	{
 		syncMeths
 				.add(new MethodEnv(methName, returnType, returnValues, params));

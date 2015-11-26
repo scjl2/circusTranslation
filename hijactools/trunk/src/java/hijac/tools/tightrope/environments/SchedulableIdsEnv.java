@@ -16,12 +16,12 @@ public class SchedulableIdsEnv extends IdEnv
 	private static final String SCHEDULABLES_STR = "Schedulables";
 	private static final String TOPLEVEL_SEQUENCER = "toplevelSequencer";
 	
-	private Name topLevelSequencer;
+	private String topLevelSequencer;
 
 
-	public void addTopLevelSequencer(Name topLevelSequencer)
+	public void addTopLevelSequencer(String topLevelMissionSequencer)
 	{
-		this.topLevelSequencer = topLevelSequencer;
+		this.topLevelSequencer = topLevelMissionSequencer;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

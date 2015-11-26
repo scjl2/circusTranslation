@@ -38,7 +38,7 @@ public abstract class ParadigmEnv extends ObjectEnv
 	public Map toMap()
 	{
 		Map map = new HashMap();
-		map.put(PROCESS_ID, getName().toString());
+		map.put(PROCESS_ID, getName());
 		map.put(PARAMETERS_STR, paramsList());
 		map.put(VARIABLES_STR, varsList());
 		map.put(PARENTS_STR, getParents());

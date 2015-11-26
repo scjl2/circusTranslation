@@ -53,7 +53,7 @@ public class MethodVisitor
 		MethodEnv m;
 
 		// return values
-		ArrayList<Name> returnsValues = mt
+		ArrayList<String> returnsValues = mt
 				.accept(new ReturnVisitor(null), null);
 
 		Map<Object, Object> parameters = new HashMap<>();
@@ -93,12 +93,12 @@ public class MethodVisitor
 		{
 			body = mt.accept(franksMethodVisitor, new MethodVisitorContext());
 
-			m = new MethodEnv(methodName, NewTransUtils.encodeType(returnType),
+			m = new MethodEnv(methodName.toString(), NewTransUtils.encodeType(returnType),
 					returnsValues, parameters, body);
 		}
 		else
 		{
-			m = new MethodEnv(methodName, NewTransUtils.encodeType(returnType),
+			m = new MethodEnv(methodName.toString(), NewTransUtils.encodeType(returnType),
 					returnsValues, parameters, "");
 
 			franksMethodVisitor = new MethodBodyVisitor(application, object, m);

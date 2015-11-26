@@ -5,6 +5,7 @@ import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.ReturnVisitor;
 
@@ -34,7 +35,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 	private Trees trees;
 	private ReturnVisitor returnVisitor;
 	private MissionSequencerEnv sequencerEnv;
-	private Map<Name, Tree> varMap ;
+	private List<VariableEnv> varMap ;
 	private MethodVisitor methodVisitor;
 
 	public MissionSequencerLevel2Builder(ProgramEnv programEnv,
@@ -60,7 +61,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 //	}
 
 	// TODO Tuning: have this method accept an empty ArrayList to fill
-	public ArrayList<Name> build(TypeElement arg0)
+	public ArrayList<String> build(TypeElement arg0)
 	{
 		System.out.println();
 		System.out.println("+++ Mission Sequencer Variables +++");
@@ -70,12 +71,12 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 		
 		varMap = getVariables(arg0, sequencerEnv);
 		
-		for (Name n : varMap.keySet())
-		{
-			System.out.println("+++ Variable " + n + " = " + varMap.get(n));
-		}
+//		for (Name n : varMap.keySet())
+//		{
+//			System.out.println("+++ Variable " + n + " = " + varMap.get(n));
+//		}
 
-		ArrayList<Name> missions = new ArrayList<Name>();
+		ArrayList<String> missions = new ArrayList<String>();
 
 		// System.out.println("In MS Visitor for " + arg0);
 
@@ -140,14 +141,10 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 					if (isGetNextMissionMethod)
 					{
 
-						ArrayList<Name> getNextReturns = null;
+						
+						missions = o.accept(returnVisitor, false);
 
-						getNextReturns = o.accept(returnVisitor, false);
-
-						if (getNextReturns != null)
-						{
-							missions.addAll(getNextReturns);
-						}
+						
 
 						m = methodVisitor.visitMethod(o, false);
 						setMethodAccess(m, o);

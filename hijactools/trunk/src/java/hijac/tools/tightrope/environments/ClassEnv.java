@@ -15,7 +15,7 @@ public class ClassEnv extends ParadigmEnv
 	public Map toMap()
 	{
 		Map map = new HashMap();
-		map.put(PROCESS_ID, getName().toString());
+		map.put(PROCESS_ID, getName());
 		// map.put("handlerType", "aperiodic");
 		// map.put("importName", "Aperiodic");
 		map.put(METHODS, methsList());

@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.visitors;
 
 import java.util.HashMap;
+import java.util.List;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.application.TightRope;
@@ -69,9 +70,7 @@ import com.sun.source.tree.WildcardTree;
 public class RegistersVisitor implements TreeVisitor<Name, Void>
 {
 	private MissionEnv missionEnv;
-	private HashMap<Name, Tree> initVarMap;
-
-	// private static SCJAnalysis analysis;
+	private List<VariableEnv> initVarMap;
 
 	public RegistersVisitor(MissionEnv missionEnv, SCJAnalysis analysis)
 	{
@@ -79,31 +78,11 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	}
 
 	public RegistersVisitor(MissionEnv missionEnv, SCJAnalysis analysis,
-			HashMap<Name, Tree> initVarMap)
+			List<VariableEnv> initVarMap)
 	{
 		this.missionEnv = missionEnv;
 		this.initVarMap = initVarMap;
 	}
-
-	// private schedulableType getSchedulableType(Name name)
-	// {
-	// TypeElement element = null;
-	//
-	// for (TypeElement t : analysis.getTypeElements())
-	// {
-	// if (t.getSimpleName() == name)
-	// {
-	// element = t;
-	// }
-	// }
-	//
-	// if (element.getSuperclass().toString().contains("ManagedThread"))
-	// {
-	// return FrameworkEnv.schedulableType.MT;
-	// }
-	//
-	// return null;
-	// }
 
 	@Override
 	public Name visitAnnotatedType(AnnotatedTypeTree arg0, Void arg1)
@@ -379,6 +358,8 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 				// a.add( (Name) variables.get(((MethodTree)
 				// arg0.getExpression()).getName()) );
 				Name identifirerName = expressionIdentifierTree.getName();
+				
+				
 
 				VariableEnv vEnv = missionEnv.getVariable(identifirerName);
 
@@ -389,27 +370,24 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 				else
 				{
 					assert (initVarMap != null);
-
-					if (initVarMap.containsKey(identifirerName))
+					
+					
+					for(VariableEnv v : initVarMap)
 					{
-						System.out.println("*** initVarMap returns " +initVarMap.get(identifirerName));
-						
-						
-						
-						
-						for(TypeElement te : TightRope.ANALYSIS.getTypeElements())
+						if(v.getVariableName().equals(identifirerName.toString()))
 						{
-							if(te.getSimpleName().contentEquals(initVarMap.get(identifirerName).toString()))
+							for (TypeElement te : TightRope.ANALYSIS
+									.getTypeElements())
 							{
-							name = te.getSimpleName() ;
+								if (te.getSimpleName().contentEquals(v.getVariableName()))
+								{
+									name = te.getSimpleName();
+								}
 							}
 						}
-						
-						
-					}
+					}					
 				}
 
-				// programEnv.addSchedulable(getSchedulableType(name), name);
 
 				return name;
 			}

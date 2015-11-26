@@ -85,7 +85,7 @@ public class EnvironmentBuilder
 	{
 		Tree tree;
 		String originClass;
-		public HashMap<Name, Tree> varMap;		
+		public List<VariableEnv> varMap;		
 		
 		public String toString()
 		{
@@ -120,7 +120,7 @@ public class EnvironmentBuilder
 		return programEnv;
 	}
 
-	public SchedulableTypeE getSchedulableType(Name s)
+	public SchedulableTypeE getSchedulableType(String s)
 	{
 		System.out.println("+++ getSchedulableType: Name = " + s + " +++");
 		for (TypeElement elem : type_elements)
@@ -183,9 +183,9 @@ public class EnvironmentBuilder
 		System.out.println();
 
 		TypeElement safeletType = findSafelet();
-		ArrayList<Name> topLevelMissionSequners = buildSafelet(safeletType);
+		ArrayList<String> topLevelMissionSequners = buildSafelet(safeletType);
 
-		for (Name n : topLevelMissionSequners)
+		for (String n : topLevelMissionSequners)
 		{
 			// Which will call buildMission etc
 			buildTopLevelMissionSequencer(n);
@@ -209,7 +209,7 @@ public class EnvironmentBuilder
 			// presented with multiple interfaces
 			if (elem.getInterfaces().toString().contains("Safelet"))
 			{
-				final Name safeletName = elem.getSimpleName();
+				final String safeletName = elem.getSimpleName().toString();
 
 				System.out.println("+++ Found Safelet " + safeletName
 						+ END_PLUSES);
@@ -226,14 +226,14 @@ public class EnvironmentBuilder
 		return null;
 	}
 
-	private ArrayList<Name> buildSafelet(TypeElement safelet)
+	private ArrayList<String> buildSafelet(TypeElement safelet)
 	{
 		System.out.println();
 		System.out.println("+++ Building Saflet +++");
 		System.out.println();
 
 		// init return list
-		ArrayList<Name> topLevelMissionSequencers = null;
+		ArrayList<String> topLevelMissionSequencers = null;
 
 		// init Safelet visitor
 		SafeletLevel2Builder safeletLevel2Visitor = new SafeletLevel2Builder(
@@ -243,7 +243,7 @@ public class EnvironmentBuilder
 		topLevelMissionSequencers = safeletLevel2Visitor.build(safelet);
 
 		// explore TLMSs
-		for (Name n : topLevelMissionSequencers)
+		for (String n : topLevelMissionSequencers)
 		{
 			programEnv.addTopLevelMissionSequencer(n);
 		}
@@ -251,7 +251,7 @@ public class EnvironmentBuilder
 		return topLevelMissionSequencers;
 	}
 
-	private void buildTopLevelMissionSequencer(Name tlms)
+	private void buildTopLevelMissionSequencer(String tlms)
 	{
 		System.out.println();
 		System.out.println(BUILDING_TOP_LEVEL_SEQUENCER);
@@ -271,7 +271,7 @@ public class EnvironmentBuilder
 
 		// msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
 
-		ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
+		ArrayList<String> missions = msl2Visitor.build(tlmsElement);
 
 		topLevelMissionSequencer.addVariable(THIS,
 				CIRCREFTYPE + tlms.toString() + CLASS,
@@ -287,7 +287,7 @@ public class EnvironmentBuilder
 			programEnv.newTier();
 			final String output = "+++ Exploring Mission ";
 
-			for (Name n : missions)
+			for (String n : missions)
 			{
 				programEnv.newCluster(tlms);
 
@@ -299,7 +299,7 @@ public class EnvironmentBuilder
 		}
 	}
 
-	private void buildMission(Name n)
+	private void buildMission(String n)
 	{
 		System.out.println();
 		System.out.println(BUILDING_MISSION + n + END_PLUSES);
@@ -326,7 +326,7 @@ public class EnvironmentBuilder
 		missionEnv.addVariable(THIS, CIRCREFTYPE + n.toString() + CLASS,
 				CIRCNEW + n.toString() + CLASS_BRACKETS, true);
 
-		ArrayList<Name> schedulables = new MissionLevel2Builder(programEnv,
+		ArrayList<String> schedulables = new MissionLevel2Builder(programEnv,
 				missionEnv, analysis, this).build(missionTypeElem);
 
 		assert (schedulables != null);
@@ -344,11 +344,11 @@ public class EnvironmentBuilder
 	}
 
 	private void buildSchedulables(MissionEnv missionEnv,
-			ArrayList<Name> schedulables)
+			ArrayList<String> schedulables)
 	{
 
-		ArrayList<Name> nestedSequencers = new ArrayList<Name>();
-		for (Name s : schedulables)
+		ArrayList<String> nestedSequencers = new ArrayList<String>();
+		for (String s : schedulables)
 		{
 			SchedulableTypeE type = getSchedulableType(s);
 
@@ -379,7 +379,7 @@ public class EnvironmentBuilder
 	}
 
 	@SuppressWarnings("unchecked")
-	private void buildShedulable(Name s)
+	private void buildShedulable(String s)
 	{
 		System.out.println();
 		System.out.println(BUILDING_SCHEDULABLE + s + END_PLUSES);
@@ -447,17 +447,17 @@ public class EnvironmentBuilder
 	}
 
 	private void buildSchedulableMissionSequencer(
-			ArrayList<Name> nestedSequencers)
+			ArrayList<String> nestedSequencers)
 	{
 		System.out.println();
 		System.out.println(BUILDING_SCHEDULABLE_MISSION_SEQUENCERS);
 		System.out.println();
 
 		TypeElement tlmsElement;
-		ArrayList<Name> missions;
+		ArrayList<String> missions;
 		NestedMissionSequencerEnv nestedMissionSequencer;
 
-		for (Name sequencer : nestedSequencers)
+		for (String sequencer : nestedSequencers)
 		{
 			tlmsElement = analysis.ELEMENTS.getTypeElement(packagePrefix
 					+ sequencer);
@@ -491,7 +491,7 @@ public class EnvironmentBuilder
 				// + " missions +++ ");
 				programEnv.newTier();
 
-				for (Name n : missions)
+				for (String n : missions)
 				{
 					programEnv.newCluster(sequencer);
 
@@ -648,7 +648,7 @@ List<VariableEnv> m =  s.accept(varVisitor,
 		}
 	}
 
-	public void addDeferredParam(Tree tree, String originClass, HashMap<Name, Tree> varMap)
+	public void addDeferredParam(Tree tree, String originClass, List<VariableEnv> varMap)
 	{
 		DeferredParamter d = new DeferredParamter();
 		d.tree=tree;

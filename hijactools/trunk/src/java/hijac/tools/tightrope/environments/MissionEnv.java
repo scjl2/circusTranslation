@@ -8,16 +8,16 @@ import javax.lang.model.element.Name;
 
 public class MissionEnv extends ParadigmEnv
 {
-	private ArrayList<Name> schedulables;
+	private ArrayList<String> schedulables;
 	// TODO remove this stop-gap in favour of using the API
 	private final List<MethodEnv> MISSION_API_METHODS = new ArrayList<MethodEnv>();
 
 	
-	public MissionEnv()
+	public MissionEnv() 
 	{
 		super();
 
-		schedulables = new ArrayList<Name>();
+		schedulables = new ArrayList<String>();
 
 //		MISSION_API_METHODS.add(new MethodEnv("getMission", "Mission", true));
 		MISSION_API_METHODS.add(new MethodEnv("getSequencer",
@@ -68,7 +68,7 @@ public class MissionEnv extends ParadigmEnv
 		return map;
 	}
 
-	public void addSchedulable(Name schedulable)
+	public void addSchedulable(String schedulable)
 	{
 		schedulables.add(schedulable);
 	}

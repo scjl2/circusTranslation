@@ -31,19 +31,19 @@ public class ProgramEnv
 		objectIds = new ObjectIdsEnv();
 	}
 
-	public void addSafelet(Name safelet)
+	public void addSafelet(String safelet)
 	{
 		structureEnv.addSafelet(safelet);
 		objectIds.addIdNames(safelet.toString());
 	}
 
-	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
+	public void addTopLevelMissionSequencer(String topLevelMissionSequencer)
 	{
 		structureEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 		schedulableIds.addTopLevelSequencer(topLevelMissionSequencer);
 	}
 
-	public void addMission(Name mission)
+	public void addMission(String mission)
 	{
 		structureEnv.addMission(mission);
 		final String missionString = mission.toString();
@@ -83,7 +83,7 @@ public class ProgramEnv
 
 	}
 
-	public void addSchedulable(SchedulableTypeE type, Name name)
+	public void addSchedulable(SchedulableTypeE type, String name)
 	{
 		structureEnv.addSchedulable(type, name);
 
@@ -94,7 +94,7 @@ public class ProgramEnv
 		objectIds.addIdNames(nameString);
 	}
 
-	public boolean containsScheudlable(Name name)
+	public boolean containsScheudlable(String name)
 	{
 		return structureEnv.containsSchedulable(name);
 	}
@@ -107,7 +107,7 @@ public class ProgramEnv
 		structureEnv.newTier();
 	}
 
-	public void newCluster(Name sequencer)
+	public void newCluster(String sequencer)
 	{
 		System.out.println("+++ New Cluster +++");
 		System.out.println();
@@ -130,7 +130,7 @@ public class ProgramEnv
 		return structureEnv.getMissions();
 	}
 
-	public void addMissionSequencerMission(Name tlms, Name n)
+	public void addMissionSequencerMission(String tlms, String n)
 	{
 		structureEnv.addMissionSequencerMission(tlms, n);
 	}
@@ -182,7 +182,7 @@ public class ProgramEnv
 		return schedulableIds.toMap();
 	}
 
-	public TopLevelMissionSequencerEnv getTopLevelMissionSequencer(Name tlms)
+	public TopLevelMissionSequencerEnv getTopLevelMissionSequencer(String tlms)
 	{
 		for (TopLevelMissionSequencerEnv tlmsEnv : getTopLevelMissionSequencers())
 		{
@@ -205,7 +205,7 @@ public class ProgramEnv
 	 * @return The <code>ParadigmEnv</code> we're looking for, or
 	 *         <code>null</code>
 	 */
-	public ParadigmEnv getSchedulable(Name name)
+	public ParadigmEnv getSchedulable(String name)
 	{
 		for (ParadigmEnv obj : getSchedulables())
 		{
@@ -230,7 +230,7 @@ public class ProgramEnv
 		return schedulables;
 	}
 
-	public NestedMissionSequencerEnv getNestedMissionSequencer(Name sequencer)
+	public NestedMissionSequencerEnv getNestedMissionSequencer(String sequencer)
 	{
 		for (NestedMissionSequencerEnv n : getNestedMissionSequencers())
 		{

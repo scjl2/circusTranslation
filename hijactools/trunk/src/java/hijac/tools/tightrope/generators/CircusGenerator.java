@@ -318,7 +318,7 @@ public class CircusGenerator
 
 		for (MissionEnv mEnv : programEnv.getMissions())
 		{
-			System.out.println(mEnv.getName());
+			System.out.println(mEnv.getName()); 
 			
 			/* Create a data-model */
 			missionMap = mEnv.toMap();

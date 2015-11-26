@@ -566,7 +566,7 @@ public class MethodBodyVisitor extends
 			identifier = it.getName();
 		}
 
-		Name objectEnvName = object.getName();
+		String objectEnvName = object.getName();
 		StringBuilder sb = new StringBuilder();
 
 		if (identifier != null)
@@ -578,7 +578,7 @@ public class MethodBodyVisitor extends
 				object.addParent("ThreadIds");
 
 				sb.append("notify~.~");
-				sb.append(objectEnvName.toString());
+				sb.append(objectEnvName);
 				sb.append("Object");
 				sb.append("~!~thread \\then ");
 				sb.append(" \\\\ ");
@@ -617,7 +617,7 @@ public class MethodBodyVisitor extends
 					ObjectEnv oEnv = getObjectEnvOfMethod(methodSelect);
 					System.out.println(oEnv);
 
-					Name nodeName = oEnv.getName();
+					String nodeName = oEnv.getName();
 
 					for (TypeElement t : CONTEXT.getAnalysis()
 							.getTypeElements())
@@ -1098,7 +1098,7 @@ public class MethodBodyVisitor extends
 				break;
 		}
 
-		returnObject.setName(varType);
+		returnObject.setName(varType.toString());
 		return returnObject;
 	}
 

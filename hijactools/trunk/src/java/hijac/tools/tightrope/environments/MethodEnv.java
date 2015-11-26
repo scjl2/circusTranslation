@@ -17,53 +17,42 @@ public class MethodEnv
 	private String methodName;
 	private String returnType;
 	private Map<String, Type> parameters;
-	private ArrayList<Name> returnValues;
+	private ArrayList<String> returnValues;
 	private Object body;
 	private boolean synchronised;
 	private AccessMod accesMod = null;
 	private boolean APIMethod;
 	
 	
-	public MethodEnv(Name name)
+	public MethodEnv(String name)
 	{
 		this.methodName = name.toString();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params)
+	public MethodEnv(String name, String returnType, ArrayList<String> returnValues ,Map params)
 	{
-		this.methodName = name.toString();
-		this.returnType = returnType.toString();
+		this.methodName = name;
+		this.returnType = returnType;
 		this.parameters = params;
 		this.returnValues = returnValues;
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues ,Map params, Object body)
+	public MethodEnv(String name, String returnType, ArrayList<String> returnValues ,Map params, Object body)
 	{
-		this.methodName = name.toString();
-		this.returnType = returnType.toString();
-		this.parameters = params;
-		this.returnValues = returnValues;
-		this.setBody(body);
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MethodEnv(Name name, String returnType, ArrayList<Name> returnValues ,Map params, Object body)
-	{
-		this.methodName = name.toString();
-		
+		this.methodName = name;
 		this.returnType = returnType;
 		this.parameters = params;
 		this.returnValues = returnValues;
 		this.setBody(body);
-	}
+	}	
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MethodEnv(Name name, TypeKind returnType, Map params)
+	public MethodEnv(String name, String returnType, Map params)
 	{
-		this.methodName = name.toString();
-		this.returnType = returnType.toString();
+		this.methodName = name;
+		this.returnType = returnType;
 		this.parameters = params;
 	}
 

@@ -54,12 +54,12 @@ public class FrameworkEnv
 			this.topLevelMissionSequencerEnv = topLevelMissionSequencerEnv;
 		}
 
-		public void addSafelet(Name safelet)
+		public void addSafelet(String safelet)
 		{
 			this.safeletEnv.setName(safelet);
 		}
 
-		public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
+		public void addTopLevelMissionSequencer(String topLevelMissionSequencer)
 		{
 			this.topLevelMissionSequencerEnv.setName(topLevelMissionSequencer);
 			safeletEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
@@ -126,9 +126,9 @@ public class FrameworkEnv
 			this.clusters.add(cluster);
 		}
 
-		public ArrayList<Name> getMissions()
+		public ArrayList<String> getMissions()
 		{
-			ArrayList<Name> missions = new ArrayList<Name>();
+			ArrayList<String> missions = new ArrayList<String>();
 
 			for (ClusterEnv c : clusters)
 			{
@@ -138,9 +138,9 @@ public class FrameworkEnv
 			return missions;
 		}
 
-		public ArrayList<Name> getMissionSequencers()
+		public ArrayList<String> getMissionSequencers()
 		{
-			ArrayList<Name> misssionSequeners = new ArrayList<Name>();
+			ArrayList<String> misssionSequeners = new ArrayList<String>();
 
 			for (ClusterEnv c : clusters)
 			{
@@ -228,18 +228,18 @@ public class FrameworkEnv
 
 	private class ClusterEnv
 	{
-		private Name sequencer;
+		private String sequencer;
 		private MissionEnv missionEnv;
 		private SchedulablesEnv schedulablesEnv;
 
-		public ClusterEnv(Name sequencer)
+		public ClusterEnv(String sequencer)
 		{
 			missionEnv = new MissionEnv();
 			schedulablesEnv = new SchedulablesEnv();
 			this.sequencer = sequencer;
 		}
 
-		public Name getSequencer()
+		public String getSequencer()
 		{
 			return sequencer;
 		}
@@ -254,7 +254,7 @@ public class FrameworkEnv
 			return schedulablesEnv;
 		}
 
-		public void addSchedulable(SchedulableTypeE type, Name name)
+		public void addSchedulable(SchedulableTypeE type, String name)
 		{
 			schedulablesEnv.addSchedulable(type, name);
 		}
@@ -418,7 +418,7 @@ public class FrameworkEnv
 			return managedThreadEnvs;
 		}
 
-		public void addSchedulable(SchedulableTypeE type, Name name)
+		public void addSchedulable(SchedulableTypeE type, String name)
 		{
 			if (type == SchedulableTypeE.MT)
 			{
@@ -524,7 +524,7 @@ public class FrameworkEnv
 
 		// Could trigger false positive if two schedulable of different types
 		// have the same name
-		public boolean containsSchedulable(Name name)
+		public boolean containsSchedulable(String name)
 		{
 			for (ObjectEnv p : getAperiodicEventHandlerEnvs())
 			{
@@ -593,22 +593,22 @@ public class FrameworkEnv
 		return tiers.get(0);
 	}
 
-	public void addSafelet(Name safelet)
+	public void addSafelet(String safelet)
 	{
 		controlTier.addSafelet(safelet);
 	}
 
-	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
+	public void addTopLevelMissionSequencer(String topLevelMissionSequencer)
 	{
 		controlTier.addTopLevelMissionSequencer(topLevelMissionSequencer);
 	}
 
-	public void addMission(Name mission)
+	public void addMission(String mission)
 	{
 		currentCluster.getMissionEnv().setName(mission);
 	}
 
-	public void newCluster(Name sequencer)
+	public void newCluster(String sequencer)
 	{
 		currentCluster = new ClusterEnv(sequencer);
 
@@ -661,13 +661,13 @@ public class FrameworkEnv
 		return output.toString();
 	}
 
-	public void addSchedulable(SchedulableTypeE type, Name name)
+	public void addSchedulable(SchedulableTypeE type, String name)
 	{
 		currentCluster.addSchedulable(type, name);
 		currentCluster.missionEnv.addSchedulable(name);
 	}
 
-	public ArrayList<Name> missionsBelow(TierEnv tier)
+	public ArrayList<String> missionsBelow(TierEnv tier)
 	{
 		if (tiers.contains(tier))
 		{
@@ -681,7 +681,7 @@ public class FrameworkEnv
 		return null;
 	}
 
-	public ArrayList<Name> sequencersAbove(TierEnv tier)
+	public ArrayList<String> sequencersAbove(TierEnv tier)
 	{
 		if (tiers.contains(tier))
 		{
@@ -697,7 +697,7 @@ public class FrameworkEnv
 		return null;
 	}
 
-	public boolean containsSchedulable(Name name)
+	public boolean containsSchedulable(String name)
 	{
 		boolean present = false;
 		for (TierEnv t : tiers)
@@ -729,7 +729,7 @@ public class FrameworkEnv
 		return missions;
 	}
 
-	public MissionEnv getMission(Name n)
+	public MissionEnv getMission(String n)
 	{
 		for (TierEnv t : tiers)
 		{
@@ -746,8 +746,8 @@ public class FrameworkEnv
 	}
 
 	// Bit hacky
-	public void addMissionSequencerMission(Name missionSequencerName,
-			Name missionName)
+	public void addMissionSequencerMission(String missionSequencerName,
+			String missionName)
 	{
 		// System.out.println("*** Adding " + n + " to " + tlms + " ***");
 		if (controlTier.topLevelMissionSequencerEnv.getName() == missionSequencerName)

@@ -32,7 +32,7 @@ public class SafeletEnv extends ParadigmEnv
 	
 	
 	// temp
-	ArrayList<Name> tlmsNames = new ArrayList<Name>();
+	ArrayList<String> tlmsNames = new ArrayList<String>();
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
@@ -42,7 +42,7 @@ public class SafeletEnv extends ParadigmEnv
 //		map.put("initializeApplicationMethod", methodToMap(initMethod));
 		map.put("initializeApplicationMethod", "");
 
-		for (Name n : tlmsNames)
+		for (String n : tlmsNames)
 		{
 			map.put("SchedulableID", n);
 		}
@@ -52,8 +52,8 @@ public class SafeletEnv extends ParadigmEnv
 		return map;
 	}
 
-	public void addTopLevelMissionSequencer(Name name)
+	public void addTopLevelMissionSequencer(String topLevelMissionSequencer)
 	{
-		tlmsNames.add(name);
+		tlmsNames.add(topLevelMissionSequencer);
 	}
 }
