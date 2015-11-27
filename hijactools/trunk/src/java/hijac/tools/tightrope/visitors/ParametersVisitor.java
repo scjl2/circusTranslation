@@ -153,7 +153,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 //			System.out.println(programEnv.getObjectEnv(originClass).getVariables().toString());
 //			System.out.println(((ParadigmEnv) programEnv.getObjectEnv(originClass)).getClassEnv().getVariables().toString());
 			
-			
+			//TODO This doesn't work. As a limitation of the tool, it only works if you have a param that is a literal
 			if (arg instanceof IdentifierTree)
 			{
 //				if (varMap.get(((IdentifierTree) arg).getName()) != null)
@@ -341,11 +341,8 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					else//In the VarMap, but it's type isn't a ParadigmEnv and its name isn't a variable in the OriginObject 
 					{
 						v.setVariableName(arg0.getName().toString());
-						
-						
-						
-						v.setProgramType("A"+arg0.getName().toString());
-						
+												
+						v.setProgramType("A"+arg0.getName().toString());						
 					}
 				}
 				else
