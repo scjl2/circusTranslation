@@ -87,6 +87,8 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	private HashMap<Name, Tree> varMap;
 
 	private String originClass;
+	private Tree tree;
+	private String nameOfClass;
 
 	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = ParadigmEnv
 			.getGenericParadigmTypes();
@@ -166,13 +168,18 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 //				else
 //				{
 					VariableEnv vTemp = arg.accept(this, null);
-					v.setProgramType(vTemp.getProgramType());
+					System.out.println("vTemp = " + vTemp.toString());
+					programEnv.setThreadPriority(nameOfClass, vTemp.getProgramType());
 //				}
 			}
 			else if (arg instanceof LiteralTree)
 			{
-				v.setProgramType(arg.toString());
+//				v.setProgramType(arg.toString());
+				System.out.println("arg.toString = " + arg.toString());
+				programEnv.setThreadPriority(nameOfClass, arg.toString());
 			}
+			
+			return null;
 		}
 		else if (identifiterTree.equals("PeriodicParameters"))
 		{
@@ -780,6 +787,14 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	
+
+	public void setName(String nameOfClassBeingTranslated)
+	{
+		this.nameOfClass = nameOfClassBeingTranslated;
+		
 	}
 
 }

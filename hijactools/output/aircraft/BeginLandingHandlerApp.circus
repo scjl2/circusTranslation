@@ -5,8 +5,6 @@
 
 \begin{circus}
 \circprocess BeginLandingHandlerApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
    : CruiseMissionID

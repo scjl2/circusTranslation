@@ -9,8 +9,6 @@ LandMissionMethChan
 
 \begin{circus}
 \circprocess GroundDistanceMonitorApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
    : LandMissionID

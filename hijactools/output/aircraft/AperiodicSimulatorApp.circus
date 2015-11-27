@@ -5,19 +5,13 @@
 
 \begin{circus}
 \circprocess AperiodicSimulatorApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
   controlHandlerID : 
 , \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
   commsHandlerID : 
-, \\ \qquad 
-  PriorityParameters : 
 , \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 

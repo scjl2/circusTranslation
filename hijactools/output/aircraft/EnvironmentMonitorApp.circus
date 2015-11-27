@@ -9,8 +9,6 @@ MainMissionMethChan
 
 \begin{circus}
 \circprocess EnvironmentMonitorApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
    : MainMissionID

@@ -15,8 +15,6 @@ ThreadIds
 
 \begin{circus}
 \circprocess LandingGearHandlerLandApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
    : LandMissionID

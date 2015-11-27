@@ -327,22 +327,27 @@ ${schedulable.Name}App<#if schedulable.Parameters?size != 0> (<#list schedulable
 \end{circus}
 %
 \begin{circus}
-Locking \circdef \\
+Threads \circdef  \\
 \circblockopen
-\circblockopen
-<#list Threads.Threads as thread>
-ThreadFW(${thread}, MinPriority) \\
+<#list Threads?keys as thread>
+ThreadFW(${thread}, ${Threads[thread]}) \\
 <#sep>\t1 \lpar ThreadSync \rpar\\</#sep>
 </#list>
-\circblockclose \\
-\interleave \\
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+Objects \circdef \\
 \circblockopen
 <#list Objects.Objects as object>
 ObjectFW(${object}) \\
 <#sep>\t1 \lpar ObjectSync \rpar\\</#sep>
 </#list>
 \circblockclose
-\circblockclose
+\end{circus}
+%
+\begin{circus}
+Locking \circdef Threads \interleave Objects
 \end{circus}
 % 
 \begin{circus}

@@ -315,83 +315,85 @@ MainMissionSequencerApp\\
 MainMissionApp\\
 \interleave \\
 
-ACModeChangerApp ( 5 ,  MainMissionID  ) \\
+ACModeChangerApp ( MainMissionID  ) \\
 \interleave \\
-ControlHandlerApp ( 5 ,  (NULL,nullSchedulableId)  ) \\
+ControlHandlerApp ( (NULL,nullSchedulableId)  ) \\
 \interleave \\
-CommunicationsHandlerApp ( 5 ,  (NULL,nullSchedulableId)  ) \\
+CommunicationsHandlerApp ( (NULL,nullSchedulableId)  ) \\
 \interleave \\
-EnvironmentMonitorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  MainMissionID  ) \\
+EnvironmentMonitorApp ( (10,0,NULL,nullSchedulableId) ,  MainMissionID  ) \\
 \interleave \\
-FlightSensorsMonitorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  MainMissionID  ) \\
+FlightSensorsMonitorApp ( (10,0,NULL,nullSchedulableId) ,  MainMissionID  ) \\
 \interleave \\
-AperiodicSimulatorApp ( 5 ,  (10,0,NULL,nullSchedulableId) ,  controlHandlerID ,  5 ,  (10,0,NULL,nullSchedulableId) ,  commsHandlerID ,  5 ,  (0,0,NULL,nullSchedulableId) ,  beginLandingHandlerID  ) \\
+AperiodicSimulatorApp ( (10,0,NULL,nullSchedulableId) ,  controlHandlerID ,  (10,0,NULL,nullSchedulableId) ,  commsHandlerID ,  (0,0,NULL,nullSchedulableId) ,  beginLandingHandlerID  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
 
-LandingGearHandlerTakeOffApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID  ) \\
+LandingGearHandlerTakeOffApp ( (NULL,nullSchedulableId) ,  TakeOffMissionID  ) \\
 \interleave \\
-TakeOffFailureHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0  ) \\
+TakeOffFailureHandlerApp ( (NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0  ) \\
 \interleave \\
-TakeOffMonitorApp ( 5 ,  (0,0,NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
+TakeOffMonitorApp ( (0,0,NULL,nullSchedulableId) ,  TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
-BeginLandingHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  CruiseMissionID  ) \\
+BeginLandingHandlerApp ( (NULL,nullSchedulableId) ,  CruiseMissionID  ) \\
 \interleave \\
-NavigationMonitorApp ( 5 ,  (0,0,NULL,nullSchedulableId) ,  CruiseMissionID  ) \\
+NavigationMonitorApp ( (0,0,NULL,nullSchedulableId) ,  CruiseMissionID  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
 
-LandingGearHandlerLandApp ( 5 ,  (NULL,nullSchedulableId) ,  LandMissionID  ) \\
+LandingGearHandlerLandApp ( (NULL,nullSchedulableId) ,  LandMissionID  ) \\
 \interleave \\
-SafeLandingHandlerApp ( 5 ,  (NULL,nullSchedulableId) ,  LandMissionID ,  10.0  ) \\
+SafeLandingHandlerApp ( (NULL,nullSchedulableId) ,  LandMissionID ,  10.0  ) \\
 \interleave \\
-GroundDistanceMonitorApp ( 5 ,  (0,0,NULL,nullSchedulableId) ,  LandMissionID  ) \\
+GroundDistanceMonitorApp ( (0,0,NULL,nullSchedulableId) ,  LandMissionID  ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp ( 5 ,  (0,0,NULL,nullSchedulableId) ,  LandMissionID  ) \\
+InstrumentLandingSystemMonitorApp ( (0,0,NULL,nullSchedulableId) ,  LandMissionID  ) \\
 \circblockclose
 \end{circus}
 %
 \begin{circus}
-Locking \circdef \\
+Threads \circdef  \\
 \circblockopen
-\circblockopen
-ThreadFW(ACModeChangerThreadID, MinPriority) \\
+ThreadFW(SafeLandingHandlerThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(EnvironmentMonitorThreadID, MinPriority) \\
+ThreadFW(ACModeChangerThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(ControlHandlerThreadID, MinPriority) \\
+ThreadFW(TakeOffFailureHandlerThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(FlightSensorsMonitorThreadID, MinPriority) \\
+ThreadFW(InstrumentLandingSystemMonitorThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(CommunicationsHandlerThreadID, MinPriority) \\
+ThreadFW(FlightSensorsMonitorThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(AperiodicSimulatorThreadID, MinPriority) \\
+ThreadFW(TakeOffMonitorThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(LandingGearHandlerTakeOffThreadID, MinPriority) \\
+ThreadFW(AperiodicSimulatorThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(TakeOffMonitorThreadID, MinPriority) \\
+ThreadFW(LandingGearHandlerLandThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(TakeOffFailureHandlerThreadID, MinPriority) \\
+ThreadFW(LandingGearHandlerTakeOffThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(BeginLandingHandlerThreadID, MinPriority) \\
+ThreadFW(GroundDistanceMonitorThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(NavigationMonitorThreadID, MinPriority) \\
+ThreadFW(ControlHandlerThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(GroundDistanceMonitorThreadID, MinPriority) \\
+ThreadFW(CommunicationsHandlerThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(LandingGearHandlerLandThreadID, MinPriority) \\
+ThreadFW(BeginLandingHandlerThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(InstrumentLandingSystemMonitorThreadID, MinPriority) \\
+ThreadFW(NavigationMonitorThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
-ThreadFW(SafeLandingHandlerThreadID, MinPriority) \\
+ThreadFW(EnvironmentMonitorThreadID, 5) \\
 
-\circblockclose \\
-\interleave \\
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+Objects \circdef \\
 \circblockopen
 ObjectFW(ACSafeletObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
@@ -434,7 +436,10 @@ ObjectFW(InstrumentLandingSystemMonitorObjectID) \\
 ObjectFW(SafeLandingHandlerObjectID) \\
 
 \circblockclose
-\circblockclose
+\end{circus}
+%
+\begin{circus}
+Locking \circdef Threads \interleave Objects
 \end{circus}
 % 
 \begin{circus}

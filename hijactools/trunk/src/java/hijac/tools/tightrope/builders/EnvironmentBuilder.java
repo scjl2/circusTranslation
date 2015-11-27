@@ -573,6 +573,7 @@ public class EnvironmentBuilder
 			ObjectEnv objectWithParams = null;
 
 			Tree tree = deferred.tree;
+			String nameOfClassBeingTranslated = "";
 			
 			if (tree instanceof VariableTree)
 			{
@@ -590,6 +591,8 @@ public class EnvironmentBuilder
 				objectWithParams = programEnv
 						.getObjectEnv(((VariableTree) tree).getType()
 								.toString());
+				
+				nameOfClassBeingTranslated = ((VariableTree) tree).getType().toString();
 
 			}
 			else if (tree instanceof NewClassTree)
@@ -604,8 +607,12 @@ public class EnvironmentBuilder
 //
 				System.out.println("trying to get objectEnv for "
 						+ identifierTree);
+				
+				
 				objectWithParams = programEnv.getObjectEnv(identifierTree
 						.toString());
+				
+				nameOfClassBeingTranslated = ((NewClassTree) tree).getIdentifier().toString();
 
 			}
 
@@ -615,6 +622,8 @@ public class EnvironmentBuilder
 			{
 				ParametersVisitor paramVisitor = new ParametersVisitor(
 						programEnv, objectWithParams, null, deferred.originClass, deferred.varMap);
+				
+				paramVisitor.setName(nameOfClassBeingTranslated);
 
 				List<VariableEnv> params = new ArrayList<VariableEnv>();
 

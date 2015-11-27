@@ -14,8 +14,6 @@
 
 \begin{circus}
 \circprocess ACModeChangerApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
    : MainMissionID
 \circspot 
  \circbegin\\ 

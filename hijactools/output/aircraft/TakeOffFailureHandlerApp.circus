@@ -9,8 +9,6 @@ TakeOffMissionMethChan
 
 \begin{circus}
 \circprocess TakeOffFailureHandlerApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
    : TakeOffMissionID

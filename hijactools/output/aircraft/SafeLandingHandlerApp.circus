@@ -9,8 +9,6 @@ LandMissionMethChan
 
 \begin{circus}
 \circprocess SafeLandingHandlerApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   AperiodicParameters : 
 , \\ \qquad 
    : LandMissionID

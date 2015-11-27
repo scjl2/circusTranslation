@@ -9,8 +9,6 @@ TakeOffMissionMethChan
 
 \begin{circus}
 \circprocess TakeOffMonitorApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
    : TakeOffMissionID

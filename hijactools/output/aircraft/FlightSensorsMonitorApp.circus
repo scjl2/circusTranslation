@@ -9,8 +9,6 @@ MainMissionMethChan
 
 \begin{circus}
 \circprocess FlightSensorsMonitorApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
    : MainMissionID

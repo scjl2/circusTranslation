@@ -5,8 +5,6 @@
 
 \begin{circus}
 \circprocess InstrumentLandingSystemMonitorApp \circdef \\ \qquad 
-  PriorityParameters : 
-, \\ \qquad 
   PeriodicParameters : 
 , \\ \qquad 
    : LandMissionID

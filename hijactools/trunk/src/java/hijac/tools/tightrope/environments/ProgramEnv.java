@@ -90,8 +90,13 @@ public class ProgramEnv
 		final String nameString = name.toString();
 
 		schedulableIds.addIdNames(nameString);
+		
+//TODO this should only happen if there is a Wait or Notify or Synchronised method 
+//		if()
+		
 		threadIds.addIdNames(nameString);
 		objectIds.addIdNames(nameString);
+		
 	}
 
 	public boolean containsScheudlable(Name name)
@@ -300,6 +305,12 @@ public class ProgramEnv
 	public Map getObjectIdsMap()
 	{
 		return objectIds.toMap();
+	}
+
+	public void setThreadPriority(String threadID, String priority)
+	{
+		threadIds.setThreadPriority( threadID,  priority);
+		
 	}
 
 };
