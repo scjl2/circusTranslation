@@ -718,8 +718,8 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	@Override
 	public VariableEnv visitReturn(ReturnTree arg0, VariableEnv arg1)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		
+		return arg0.getExpression().accept(this, arg1);
 	}
 
 	@Override

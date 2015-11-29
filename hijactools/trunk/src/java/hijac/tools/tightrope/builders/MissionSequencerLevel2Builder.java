@@ -34,7 +34,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 	private Trees trees;
 	private ReturnVisitor returnVisitor;
 	private MissionSequencerEnv sequencerEnv;
-	private Map<Name, Tree> varMap ;
+	private HashMap<Name, Tree> varMap ;
 	private MethodVisitor methodVisitor;
 
 	public MissionSequencerLevel2Builder(ProgramEnv programEnv,
@@ -118,6 +118,10 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 
 				Name methodName = o.getName();
 				System.out.println("MS Visitor Method Tree = " + methodName);
+				
+				List<StatementTree> methodStatements = (List<StatementTree>) o.getBody().getStatements();
+				
+				addDeferredParameters(methodStatements, varMap, (ObjectEnv)sequencerEnv);
 
 				if (methodName.contentEquals("<init>"))
 				{
@@ -176,7 +180,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 				}
 			}
 		}
-
+		
 		return missions;
 	}
 

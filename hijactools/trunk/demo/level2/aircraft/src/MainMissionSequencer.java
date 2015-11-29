@@ -43,7 +43,7 @@ public class MainMissionSequencer extends MissionSequencer<Mission>
 		if (!returnedMission)
 		{
 			returnedMission = true;
-			return new MainMission();
+			return new MainMission(5);
 		} else
 		{
 			return null;

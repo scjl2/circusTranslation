@@ -14,6 +14,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 
 public abstract class ParadigmBuilder
@@ -73,5 +74,21 @@ public abstract class ParadigmBuilder
 		System.out.println("getVariables varMap = " + varMap);
 		return varMap;
 
+	}
+
+	protected void addDeferredParameters(List<StatementTree> methodStatements, HashMap<Name, Tree> varMap, ObjectEnv env)
+	{
+		Iterator<StatementTree> methodStatementsIterator;
+		StatementTree methodStatementTree;
+		methodStatementsIterator = methodStatements.iterator();
+	
+		while (methodStatementsIterator.hasNext())
+		{
+			methodStatementTree = methodStatementsIterator.next();
+			// TODO Should only add the right trees I suppose..
+			environmentBuilder.addDeferredParam(methodStatementTree,
+					env.getName().toString(),
+					varMap);
+		}
 	}
 }

@@ -225,16 +225,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 				findSchedulables(schedulables, methodStatementTree, varMap);
 			}
 
-			methodStatementsIterator = methodStatements.iterator();
-
-			while (methodStatementsIterator.hasNext())
-			{
-				methodStatementTree = methodStatementsIterator.next();
-				// TODO Should only add the right trees I suppose..
-				environmentBuilder.addDeferredParam(methodStatementTree,
-						missionEnv.getName().toString(),
-						varMap);
-			}
+			addDeferredParameters(methodStatements, varMap, missionEnv);
 		}
 	}
 
