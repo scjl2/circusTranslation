@@ -55,10 +55,10 @@ public class CruiseMission extends ModeMission
 		/**
 		 * Handler simulating a button push to begin landing
 		 */
-		AperiodicSimulator landSim = new AperiodicSimulator(
-				new PriorityParameters(5), new PeriodicParameters(
-						new RelativeTime(0, 0), new RelativeTime(10, 0)),
-				storageParametersSchedulable, beginLandingHandler);
+		//AperiodicSimulator landSim = new AperiodicSimulator(
+		//		new PriorityParameters(5), new PeriodicParameters(
+		//				new RelativeTime(0, 0), new RelativeTime(10, 0)),
+		//		storageParametersSchedulable, beginLandingHandler);
 		//landSim.register();
 
 	}

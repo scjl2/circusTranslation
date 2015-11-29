@@ -5,9 +5,6 @@
 
 \begin{circus}
 \circprocess BeginLandingHandlerApp \circdef \\ \qquad 
-  AperiodicParameters : 
-, \\ \qquad 
-   : CruiseMissionID
 \circspot 
   \circbegin
 \end{circus}

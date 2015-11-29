@@ -15,9 +15,6 @@ ThreadIds
 
 \begin{circus}
 \circprocess LandingGearHandlerLandApp \circdef \\ \qquad 
-  AperiodicParameters : 
-, \\ \qquad 
-   : LandMissionID
 \circspot 
   \circbegin
 \end{circus}

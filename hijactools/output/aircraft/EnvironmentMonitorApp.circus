@@ -9,9 +9,6 @@ MainMissionMethChan
 
 \begin{circus}
 \circprocess EnvironmentMonitorApp \circdef \\ \qquad 
-  PeriodicParameters : 
-, \\ \qquad 
-   : MainMissionID
 \circspot 
   \circbegin
 \end{circus}

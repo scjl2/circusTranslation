@@ -5,7 +5,6 @@
 
 \begin{circus}
 \circprocess ControlHandlerApp \circdef \\ \qquad 
-  AperiodicParameters : 
 \circspot 
   \circbegin
 \end{circus}

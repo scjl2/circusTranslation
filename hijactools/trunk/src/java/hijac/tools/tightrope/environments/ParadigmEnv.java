@@ -23,6 +23,24 @@ public abstract class ParadigmEnv extends ObjectEnv
 
 	}
 	
+	//
+	//	public void setHasClass(boolean hasClass)
+	//	{
+	//		this.hasClass = hasClass;
+	//	}
+	
+		private static void initGenericParadigmTypes()
+		{
+		
+			GENERIC_PARADIGM_TYPES.add("Safelet");
+			GENERIC_PARADIGM_TYPES.add("Mission");
+			GENERIC_PARADIGM_TYPES.add("MissionSequencer");
+			GENERIC_PARADIGM_TYPES.add("AperiodicEventHandler");
+			GENERIC_PARADIGM_TYPES.add("OneShotEventHandler");
+			GENERIC_PARADIGM_TYPES.add("PeriodicEventHandler");
+			GENERIC_PARADIGM_TYPES.add("ManagedThread");
+		}
+
 	public void addClassEnv(ClassEnv classEnv)
 	{
 		this.classEnv = classEnv;
@@ -67,18 +85,6 @@ public abstract class ParadigmEnv extends ObjectEnv
 //		this.hasClass = hasClass;
 //	}
 
-	private static void initGenericParadigmTypes()
-	{
-	
-		GENERIC_PARADIGM_TYPES.add("Safelet");
-		GENERIC_PARADIGM_TYPES.add("Mission");
-		GENERIC_PARADIGM_TYPES.add("MissionSequencer");
-		GENERIC_PARADIGM_TYPES.add("AperiodicEventHandler");
-		GENERIC_PARADIGM_TYPES.add("OneShotEventHandler");
-		GENERIC_PARADIGM_TYPES.add("PeriodicEventHandler");
-		GENERIC_PARADIGM_TYPES.add("ManagedThread");
-	}
-
 	public static ArrayList<String> getGenericParadigmTypes()
 	{
 		if(GENERIC_PARADIGM_TYPES.isEmpty())
@@ -88,4 +94,6 @@ public abstract class ParadigmEnv extends ObjectEnv
 		
 		return GENERIC_PARADIGM_TYPES;
 	}
+	
+	
 }

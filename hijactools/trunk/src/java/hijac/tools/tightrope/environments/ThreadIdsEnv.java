@@ -28,7 +28,7 @@ public class ThreadIdsEnv extends IdEnv
 		{
 			String priority = threadMap.get(id); 
 			String threadID = id +THREAD_ID_STR;
-			System.out.println("Adding* " + threadID + " -> " + priority);
+//			System.out.println("Adding* " + threadID + " -> " + priority);
 			map.put(threadID, priority);
 		}
 

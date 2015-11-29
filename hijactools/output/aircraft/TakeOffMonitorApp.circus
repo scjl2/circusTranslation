@@ -9,13 +9,6 @@ TakeOffMissionMethChan
 
 \begin{circus}
 \circprocess TakeOffMonitorApp \circdef \\ \qquad 
-  PeriodicParameters : 
-, \\ \qquad 
-   : TakeOffMissionID
-, \\ \qquad 
-  TAKEOFF\_ALTITUDE : double
-, \\ \qquad 
-  landingGearHandlerID : 
 \circspot 
   \circbegin
 \end{circus}

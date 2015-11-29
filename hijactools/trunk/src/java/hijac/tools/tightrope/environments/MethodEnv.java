@@ -4,6 +4,7 @@ import hijac.tools.tightrope.utils.NewTransUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
@@ -14,11 +15,11 @@ public class MethodEnv
 {
 	public static enum AccessMod {PUBLIC,PRIVATE,PROTECTED};
 	
-	private String methodName;
-	private String returnType;
-	private Map<String, Type> parameters;
-	private ArrayList<Name> returnValues;
-	private Object body;
+	private String methodName = "";
+	private String returnType = "";
+	private Map<String, Type> parameters = new HashMap<String, Type>();
+	private ArrayList<Name> returnValues = new ArrayList<Name>();
+	private Object body = "";
 	private boolean synchronised;
 	private AccessMod accesMod = null;
 	private boolean APIMethod;
@@ -178,5 +179,12 @@ public class MethodEnv
 	public void setAPIMethod(boolean aPIMethod)
 	{
 		APIMethod = aPIMethod;
+	}
+	
+	public String toString()
+	{
+		return "Method Env: name="+methodName+", returnType="+returnType+", parmeters="+parameters.toString()+", return values="+returnValues.toString()+
+				", body="+body+", synchronised="+synchronised+", access modifier="+accesMod+", API method="+APIMethod; 
+				
 	}
 }

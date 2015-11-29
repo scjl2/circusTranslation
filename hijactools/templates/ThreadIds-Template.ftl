@@ -4,14 +4,14 @@
 \extracircusvspace
 %
 \begin{axdef}
-<#list Threads as thread>
+<#list Threads?keys as thread>
 	${thread} : ThreadID \\
 </#list>
  
 \where
   distinct \langle SafeletThreadId, 
   nullThreadId, \\ 
-  <#list Threads as thread>
+  <#list Threads?keys as thread>
 	${thread}
 	<sep>
 	<#if thread?counter % 2 == 0>

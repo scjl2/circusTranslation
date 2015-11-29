@@ -145,14 +145,14 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 <#list tier as cluster>
 
 \circblockopen
-	MissionFW(${cluster.Mission.Name})\\
+	MissionFW(${cluster.Mission.Name}ID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
 
 		<#list cluster.Schedulables.Threads as thread>			
-			ManagedThreadFW(${thread.Name})\\
+			ManagedThreadFW(${thread.Name}ID)\\
 			<#if thread_has_next>
 			<#if thread?counter % 2 == 0>
 			\circblockclosed
@@ -179,7 +179,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 </#if>
 
 <#list cluster.Schedulables.Oneshots as oneshot>			
-	OneShotEventHandlerFW(${oneshot.Name})\\
+	OneShotEventHandlerFW(${oneshot.Name}ID <#if oneshot.FWParameters?size != 0>,<#list oneshot.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>  )\\
 	<#if oneshot_has_next>
 		\t1 \lpar SchedulablesSync \rpar\\
 	</#if>
@@ -206,7 +206,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockopen 
 </#if>
 		<#list cluster.Schedulables.NestedSequencers as sequencer>			
-			SchedulableMissionSequencerFW(${sequencer.Name})\\
+			SchedulableMissionSequencerFW(${sequencer.Name}ID)\\
 			<#if sequencer_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
@@ -229,7 +229,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockopen
 </#if>
 		<#list cluster.Schedulables.Aperiodics as aperiodic>			
-			AperiodicEventHandlerFW(${aperiodic.Name})\\
+			AperiodicEventHandlerFW(${aperiodic.Name}ID <#if periodic.FWParameters?size != 0>,<#list periodic.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>)\\
 			<#if aperiodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
@@ -255,7 +255,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockopen
 </#if>
 		<#list cluster.Schedulables.Periodics as periodic>			
-			PeriodicEventHandlerFW(${periodic.Name})\\
+			PeriodicEventHandlerFW(${periodic.Name}ID <#if periodic.FWParameters?size != 0>,<#list periodic.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>)\\
 			<#if periodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
@@ -283,7 +283,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockopen
 ControlTier \\
 \t1 \lpar TierSync \rpar \\
-<#assign brakcets = false>
+<#assign brackets = false>
  \circblockopen
 <#list Tiers as tier >
 Tier${tier_index}
@@ -298,19 +298,18 @@ Tier${tier_index}
 \begin{circus}
 \circprocess  Application \circdef \\
 \circblockopen
-
-${Safelet.Name}App<#if Safelet.Parameters?size != 0> (<#list Safelet.Parameters as param>${param} <#sep>,</#sep>  </#list>) </#if>\\
+${Safelet.Name}App<#if Safelet.AppParameters?size != 0> (<#list Safelet.AppParameters as param>${param} <#sep>,</#sep>  </#list>) </#if>\\
 \interleave \\
-${TopLevelSequencer.Name}App<#if TopLevelSequencer.Parameters?size != 0> (<#list TopLevelSequencer.Parameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
+${TopLevelSequencer.Name}App<#if TopLevelSequencer.AppParameters?size != 0> (<#list TopLevelSequencer.AppParameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
 \interleave \\
 <#list Tiers as tier >
 <#list tier as cluster>
-${cluster.Mission.Name}App<#if cluster.Mission.Parameters?size != 0> (<#list cluster.Mission.Parameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
+${cluster.Mission.Name}App<#if cluster.Mission.AppParameters?size != 0> (<#list cluster.Mission.AppParameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
 \interleave \\
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
 <#list schedulables as schedulable>
-${schedulable.Name}App<#if schedulable.Parameters?size != 0> (<#list schedulable.Parameters as param> ${param} <#sep>,</#sep> </#list>) </#if>\\
+${schedulable.Name}App<#if schedulable.AppParameters?size != 0> (<#list schedulable.AppParameters as param> ${param} <#sep>,</#sep> </#list>) </#if>\\
 			<#if schedulable_has_next>
 \interleave \\
 			</#if>

@@ -258,6 +258,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				}
 			}
 
+			v.setVariableType("PeriodicParameters");
 			v.setProgramType("(" + start + "," + period + "," + deadline + ","
 					+ deadlineMissHandler + ")");
 
@@ -282,6 +283,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				deadlineMisHandler = "nullSchedulableId";
 			}
 
+			v.setVariableType("AperiodicParameters");
 			v.setProgramType("(" + deadline + "," + deadlineMisHandler + ")");
 		}
 		else
@@ -305,8 +307,9 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			System.out.println("arg = " + arg0.getName().toString());
 			if (arg0.getName().toString().equals("this"))
 			{
-				v.setVariableType(originClass + "ID");
+				v.setVariableType("ID");
 				v.setProgramType(originClass + "ID");
+//				return null;
 			}
 			else
 			{
@@ -336,6 +339,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					if (parameterObject instanceof ParadigmEnv)
 					{
 						v.setVariableName(arg0.getName().toString() + "ID");
+						
 						v.setProgramType(arg0.getName().toString() + "ID");
 					}
 					else if (originObject.getVariable(varName) != null)

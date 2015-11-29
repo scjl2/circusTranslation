@@ -5,17 +5,6 @@
 
 \begin{circus}
 \circprocess AperiodicSimulatorApp \circdef \\ \qquad 
-  PeriodicParameters : 
-, \\ \qquad 
-  controlHandlerID : 
-, \\ \qquad 
-  PeriodicParameters : 
-, \\ \qquad 
-  commsHandlerID : 
-, \\ \qquad 
-  PeriodicParameters : 
-, \\ \qquad 
-  beginLandingHandlerID : 
 \circspot 
   \circbegin
 \end{circus}

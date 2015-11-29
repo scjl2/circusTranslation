@@ -9,9 +9,6 @@ CruiseMissionMethChan
 
 \begin{circus}
 \circprocess NavigationMonitorApp \circdef \\ \qquad 
-  PeriodicParameters : 
-, \\ \qquad 
-   : CruiseMissionID
 \circspot 
   \circbegin
 \end{circus}

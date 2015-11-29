@@ -122,10 +122,10 @@ public class MainMission extends Mission
 
 		controlSim.register();
 
-		AperiodicSimulator commsSim = new AperiodicSimulator(
-				new PriorityParameters(5), new PeriodicParameters(
-						new RelativeTime(10, 0), null),
-				storageParametersSchedulable, commsHandler);
+		//APeriodicSimulator commsSim = new AperiodicSimulator(
+		//		new PriorityParameters(5), new PeriodicParameters(
+		//				new RelativeTime(10, 0), null),
+		//		storageParametersSchedulable, commsHandler);
 
 		//commsSim.register();
 	}

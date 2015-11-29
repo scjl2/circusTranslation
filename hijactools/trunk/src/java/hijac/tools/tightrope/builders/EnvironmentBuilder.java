@@ -1,14 +1,18 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.EventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
+import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
+import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.environments.SchedulableTypeE;
 import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
@@ -80,13 +84,13 @@ public class EnvironmentBuilder
 	public static SCJAnalysis analysis;
 
 	private List<DeferredParamter> deferredParamsList;
-	
+
 	public class DeferredParamter
 	{
 		Tree tree;
 		String originClass;
-		public HashMap<Name, Tree> varMap;		
-		
+		public HashMap<Name, Tree> varMap;
+
 		public String toString()
 		{
 			return "Origin: " + originClass + " Tree:" + tree;
@@ -562,23 +566,22 @@ public class EnvironmentBuilder
 		System.out.println(FINDING_PROCESS_PARAMETERS);
 		System.out.println();
 
-		
-
-//		System.out.println("Deferred Params = " + deferredParamsList.toString());
+		// System.out.println("Deferred Params = " +
+		// deferredParamsList.toString());
 		for (DeferredParamter deferred : deferredParamsList)
 		{
 			System.out.println("*** start of Loop *** ");
 			List<? extends ExpressionTree> args = new ArrayList<ExpressionTree>();
-			
+
 			ObjectEnv objectWithParams = null;
 
 			Tree tree = deferred.tree;
 			String nameOfClassBeingTranslated = "";
-			
+
 			if (tree instanceof VariableTree)
 			{
-//				System.out.println("Tree: " + tree
-//						+ " instance of VairableTree ");
+				// System.out.println("Tree: " + tree
+				// + " instance of VairableTree ");
 
 				ExpressionTree et = ((VariableTree) tree).getInitializer();
 				if (et instanceof NewClassTree)
@@ -591,28 +594,29 @@ public class EnvironmentBuilder
 				objectWithParams = programEnv
 						.getObjectEnv(((VariableTree) tree).getType()
 								.toString());
-				
-				nameOfClassBeingTranslated = ((VariableTree) tree).getType().toString();
+
+				nameOfClassBeingTranslated = ((VariableTree) tree).getType()
+						.toString();
 
 			}
 			else if (tree instanceof NewClassTree)
 			{
-//				System.out.println("Tree: " + tree
-//						+ " instance of NewClassTree ");
+				// System.out.println("Tree: " + tree
+				// + " instance of NewClassTree ");
 
 				args = ((NewClassTree) tree).getArguments();
 
 				ExpressionTree identifierTree = ((NewClassTree) tree)
 						.getIdentifier();
-//
+				//
 				System.out.println("trying to get objectEnv for "
 						+ identifierTree);
-				
-				
+
 				objectWithParams = programEnv.getObjectEnv(identifierTree
 						.toString());
-				
-				nameOfClassBeingTranslated = ((NewClassTree) tree).getIdentifier().toString();
+
+				nameOfClassBeingTranslated = ((NewClassTree) tree)
+						.getIdentifier().toString();
 
 			}
 
@@ -621,8 +625,9 @@ public class EnvironmentBuilder
 			if (!args.isEmpty())
 			{
 				ParametersVisitor paramVisitor = new ParametersVisitor(
-						programEnv, objectWithParams, null, deferred.originClass, deferred.varMap);
-				
+						programEnv, objectWithParams, null,
+						deferred.originClass, deferred.varMap);
+
 				paramVisitor.setName(nameOfClassBeingTranslated);
 
 				List<VariableEnv> params = new ArrayList<VariableEnv>();
@@ -639,8 +644,114 @@ public class EnvironmentBuilder
 								+ returns.getVariableName());
 						if (objectWithParams != null)
 						{
-							objectWithParams.addParameter(returns);
-							System.out.println("Adding "+ returns.toString() +" to " + objectWithParams.getName());
+							String type = returns.getVariableType();
+
+							if (type.equals("PriorityParameters"))
+							{
+								objectWithParams.addThreadParameter(returns);
+							}
+							else
+							{
+								if (objectWithParams instanceof SafeletEnv)
+								{
+									
+									objectWithParams.addAppParameter(returns);
+								}
+								else if (objectWithParams instanceof TopLevelMissionSequencerEnv)
+								{
+//									if (type.equals("SchedulableID"))
+//									{
+//										objectWithParams.addFWdParameter(returns);
+//									}
+//									else
+									{
+										objectWithParams
+												.addAppParameter(returns);
+									}
+									
+								}
+								else if (objectWithParams instanceof MissionEnv)
+								{
+									
+//									if (type.equals("MissionID"))
+//									{
+//										objectWithParams.addFWdParameter(returns);
+//									}
+//									else
+									{
+										objectWithParams
+												.addAppParameter(returns);
+									}
+									
+								}
+								else if (objectWithParams instanceof PeriodicEventHandlerEnv)
+								{
+									if (type.equals("PeriodicParameters") || type.equals("SchedulableID"))
+									{
+										objectWithParams.addFWdParameter(returns);
+									}
+									else
+									{
+										objectWithParams
+												.addAppParameter(returns);
+									}
+								}
+								else if (objectWithParams instanceof OneShotEventHandlerEnv)
+								{
+									if (type.equals("AperiodicParameters") || type.equals("JTime")||type.equals("SchedulableID"))
+									{
+										objectWithParams.addFWdParameter(returns);
+									}
+									else
+									{
+										objectWithParams
+												.addAppParameter(returns);
+									}
+								}
+								else if (objectWithParams instanceof AperiodicEventHandlerEnv)
+								{
+									if (type.equals("AperiodicParameters") || type.equals("AperiodicType")|type.equals("SchedulableID"))
+									{
+										objectWithParams.addFWdParameter(returns);
+									}
+									else
+									{
+										objectWithParams
+												.addAppParameter(returns);
+									}
+								}
+								else if (objectWithParams instanceof NestedMissionSequencerEnv)
+								{
+								
+//									if(type.equals("SchedulableID"))
+//									{
+//										
+//									}
+//									else
+									{
+										objectWithParams
+												.addAppParameter(returns);
+									}
+								}
+								else if (objectWithParams instanceof ManagedThreadEnv)
+								{
+//									if(type.equals("SchedulableID"))
+//									{
+//										
+//									}
+//									else
+									{
+										objectWithParams
+												.addAppParameter(returns);
+									}
+								}
+
+							}
+
+							// objectWithParams.addParameter(returns);
+
+							System.out.println("Adding " + returns.toString()
+									+ " to " + objectWithParams.getName());
 						}
 						else
 						{
@@ -656,13 +767,14 @@ public class EnvironmentBuilder
 		}
 	}
 
-	public void addDeferredParam(Tree tree, String originClass, HashMap<Name, Tree> varMap)
+	public void addDeferredParam(Tree tree, String originClass,
+			HashMap<Name, Tree> varMap)
 	{
 		DeferredParamter d = new DeferredParamter();
-		d.tree=tree;
+		d.tree = tree;
 		d.originClass = originClass;
 		d.varMap = varMap;
-		
+
 		deferredParamsList.add(d);
 	}
 }

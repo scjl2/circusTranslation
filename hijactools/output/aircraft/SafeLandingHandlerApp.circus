@@ -9,11 +9,6 @@ LandMissionMethChan
 
 \begin{circus}
 \circprocess SafeLandingHandlerApp \circdef \\ \qquad 
-  AperiodicParameters : 
-, \\ \qquad 
-   : LandMissionID
-, \\ \qquad 
-  SAFE\_LANDING\_ALTITUDE : double
 \circspot 
   \circbegin
 \end{circus}

@@ -40,9 +40,10 @@ public class ObjectEnv
 	 */
 	protected List<VariableEnv> variables;
 	/**
-	 * The parameters of this object
+	 * The parameters of this object, separated by where they will be output to.
 	 */
-	protected List<VariableEnv> parameters;
+	protected List<VariableEnv> fwParameters, appParameters, threadParameters;
+	
 	/**
 	 * The non-synchronised methods of this object
 	 */
@@ -72,7 +73,9 @@ public class ObjectEnv
 		syncMeths = new ArrayList<MethodEnv>();
 
 		variables = new ArrayList<VariableEnv>();
-		parameters = new ArrayList<VariableEnv>();
+		fwParameters = new ArrayList<VariableEnv>();
+		appParameters  = new ArrayList<VariableEnv>();
+		threadParameters = new ArrayList<VariableEnv>();		
 		newChannels = new ArrayList<ChannelEnv>();
 		parents = new ArrayList<String>();
 	}
@@ -206,6 +209,11 @@ public class ObjectEnv
 	 */
 	public VariableEnv getParameter(String name)
 	{
+		List<VariableEnv> parameters = new ArrayList<VariableEnv>();
+		parameters.addAll(fwParameters);
+		parameters.addAll(appParameters);
+		parameters.addAll(threadParameters);
+ 		
 		for (VariableEnv v : parameters)
 		{
 			if (v.getVariableName().contentEquals(name))
@@ -216,25 +224,64 @@ public class ObjectEnv
 
 		return null;
 	}
-
-	public List<VariableEnv> getParameters()
+	
+	private List<VariableEnv> getParameters()
 	{
+		List<VariableEnv> parameters = new ArrayList<VariableEnv>();
+		parameters.addAll(fwParameters);
+		parameters.addAll(appParameters);
+		parameters.addAll(threadParameters);
+		
 		return parameters;
 	}
-
-	public void addParameter(VariableEnv parameter)
+	
+	public List<VariableEnv> getAllParameters()
 	{
-		parameters.add(parameter);
-		assert (parameters.contains(parameter));
+		return getParameters();
 	}
 
-	public void addParameter(String variableName, String variableType,
+	public List<VariableEnv> getFWParameters()
+	{
+		return fwParameters;
+	}
+	
+	public List<VariableEnv> getAppParameters()
+	{
+		return appParameters;
+	}
+	
+	public List<VariableEnv> getThreadParameters()
+	{
+		return threadParameters;
+	}
+
+	
+	
+	public void addFWdParameter(VariableEnv parameter)
+	{
+		fwParameters.add(parameter);
+		
+	}
+	
+	public void addAppParameter(VariableEnv parameter)
+	{
+		appParameters.add(parameter);
+		
+	}
+	
+	public void addThreadParameter(VariableEnv parameter)
+	{
+		threadParameters.add(parameter);
+		
+	}
+
+	protected void addFWParameter(String variableName, String variableType,
 			String programType, boolean primitive, String init)
 
 	{
 		boolean isNew = true;
 
-		for (VariableEnv v : parameters)
+		for (VariableEnv v : getParameters())
 		{
 			if (v.getVariableName().equals(variableName))
 			{
@@ -253,7 +300,67 @@ public class ObjectEnv
 			VariableEnv e = new VariableEnv(variableName, variableType,
 					programType, primitive);
 			e.setVariableInit(init);
-			parameters.add(e);
+			addFWdParameter(e);
+		}
+
+	}
+	
+	protected void addAppParameter(String variableName, String variableType,
+			String programType, boolean primitive, String init)
+
+	{
+		boolean isNew = true;
+
+		for (VariableEnv v : getParameters())
+		{
+			if (v.getVariableName().equals(variableName))
+			{
+				// v.setVariableName(variableName);
+				// v.setVariableType(variableType);
+				// v.setProgramType(programType);
+				// v.setPrimitive(primitive);
+				v.setVariableInit(init);
+
+				isNew = false;
+			}
+		}
+
+		if (isNew)
+		{
+			VariableEnv e = new VariableEnv(variableName, variableType,
+					programType, primitive);
+			e.setVariableInit(init);
+			addAppParameter(e);
+		}
+
+	}
+	
+	protected void addThreadParameter(String variableName, String variableType,
+			String programType, boolean primitive, String init)
+
+	{
+		boolean isNew = true;
+
+		for (VariableEnv v : getParameters())
+		{
+			if (v.getVariableName().equals(variableName))
+			{
+				// v.setVariableName(variableName);
+				// v.setVariableType(variableType);
+				// v.setProgramType(programType);
+				// v.setPrimitive(primitive);
+				v.setVariableInit(init);
+
+				isNew = false;
+			}
+		}
+
+		if (isNew)
+		{
+			VariableEnv e = new VariableEnv(variableName, variableType,
+					programType, primitive);
+			e.setVariableInit(init);
+			addThreadParameter(e);
 		}
 
 	}
@@ -332,7 +439,7 @@ public class ObjectEnv
 	{
 		List<Map> returnList = new ArrayList<>();
 
-		for (VariableEnv v : parameters)
+		for (VariableEnv v : getParameters())
 		{
 			Map varMap = new HashMap();
 			varMap.put(VAR_NAME, v.getVariableName().toString());
@@ -380,7 +487,7 @@ public class ObjectEnv
 	protected Map methodToMap(MethodEnv me)
 	{
 		Map methodMap = new HashMap();
-
+		System.out.println(me.toString());
 		String s = me.getMethodName();
 
 		methodMap.put(METHOD_NAME, s);
@@ -436,7 +543,7 @@ public class ObjectEnv
 
 	public void addParameterInit(String paramName, String paramInit)
 	{
-		for (VariableEnv v : parameters)
+		for (VariableEnv v : getParameters())
 		{
 			if (v.getVariableName().equals(paramName))
 			{

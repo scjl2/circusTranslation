@@ -9,11 +9,6 @@ TakeOffMissionMethChan
 
 \begin{circus}
 \circprocess TakeOffFailureHandlerApp \circdef \\ \qquad 
-  AperiodicParameters : 
-, \\ \qquad 
-   : TakeOffMissionID
-, \\ \qquad 
-  SAFE\_AIRSPEED\_THRESHOLD : double
 \circspot 
   \circbegin
 \end{circus}
