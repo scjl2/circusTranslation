@@ -129,9 +129,9 @@ public class ObjectEnv
 	{
 		for (VariableEnv v : variables)
 		{
-			System.out.println("variable name = " + v.getVariableName());
+			System.out.println("variable name = " + v.getName());
 
-			String vName = v.getVariableName();
+			String vName = v.getName();
 			if (vName.contains("\\"))
 			{
 				//Matches \
@@ -168,9 +168,9 @@ public class ObjectEnv
 	{
 		for (VariableEnv varEnv : getVariables())
 		{
-			if (varEnv.getVariableName().contentEquals(varName))
+			if (varEnv.getName().contentEquals(varName))
 			{
-				varEnv.setVariableInit(init);
+				varEnv.setInit(init);
 			}
 		}
 	}
@@ -189,10 +189,10 @@ public class ObjectEnv
 	{
 		for (VariableEnv varEnv : getVariables())
 		{
-			if (varEnv.getVariableName().contentEquals(varName))
+			if (varEnv.getName().contentEquals(varName))
 			{
-				varEnv.setVariableInit(init);
-				varEnv.setVariableInput(variableInput);
+				varEnv.setInit(init);
+				varEnv.setInput(variableInput);
 			}
 		}
 
@@ -216,7 +216,7 @@ public class ObjectEnv
  		
 		for (VariableEnv v : parameters)
 		{
-			if (v.getVariableName().contentEquals(name))
+			if (v.getName().contentEquals(name))
 			{
 				return v;
 			}
@@ -283,13 +283,13 @@ public class ObjectEnv
 
 		for (VariableEnv v : getParameters())
 		{
-			if (v.getVariableName().equals(variableName))
+			if (v.getName().equals(variableName))
 			{
 				// v.setVariableName(variableName);
 				// v.setVariableType(variableType);
 				// v.setProgramType(programType);
 				// v.setPrimitive(primitive);
-				v.setVariableInit(init);
+				v.setInit(init);
 
 				isNew = false;
 			}
@@ -299,7 +299,7 @@ public class ObjectEnv
 		{
 			VariableEnv e = new VariableEnv(variableName, variableType,
 					programType, primitive);
-			e.setVariableInit(init);
+			e.setInit(init);
 			addFWdParameter(e);
 		}
 
@@ -313,13 +313,13 @@ public class ObjectEnv
 
 		for (VariableEnv v : getParameters())
 		{
-			if (v.getVariableName().equals(variableName))
+			if (v.getName().equals(variableName))
 			{
 				// v.setVariableName(variableName);
 				// v.setVariableType(variableType);
 				// v.setProgramType(programType);
 				// v.setPrimitive(primitive);
-				v.setVariableInit(init);
+				v.setInit(init);
 
 				isNew = false;
 			}
@@ -329,7 +329,7 @@ public class ObjectEnv
 		{
 			VariableEnv e = new VariableEnv(variableName, variableType,
 					programType, primitive);
-			e.setVariableInit(init);
+			e.setInit(init);
 			addAppParameter(e);
 		}
 
@@ -343,13 +343,13 @@ public class ObjectEnv
 
 		for (VariableEnv v : getParameters())
 		{
-			if (v.getVariableName().equals(variableName))
+			if (v.getName().equals(variableName))
 			{
 				// v.setVariableName(variableName);
 				// v.setVariableType(variableType);
 				// v.setProgramType(programType);
 				// v.setPrimitive(primitive);
-				v.setVariableInit(init);
+				v.setInit(init);
 
 				isNew = false;
 			}
@@ -359,7 +359,7 @@ public class ObjectEnv
 		{
 			VariableEnv e = new VariableEnv(variableName, variableType,
 					programType, primitive);
-			e.setVariableInit(init);
+			e.setInit(init);
 			addThreadParameter(e);
 		}
 
@@ -401,10 +401,10 @@ public class ObjectEnv
 		for (VariableEnv v : variables)
 		{
 			Map varMap = new HashMap();
-			varMap.put(VAR_NAME, v.getVariableName().toString());
-			varMap.put(VAR_TYPE, v.getVariableType());
-			varMap.put(VAR_INIT, v.getVariableInit().toString());
-			varMap.put(VAR_INPUT, v.getVariableInput());
+			varMap.put(VAR_NAME, v.getName().toString());
+			varMap.put(VAR_TYPE, v.getType());
+			varMap.put(VAR_INIT, v.getInit().toString());
+			varMap.put(VAR_INPUT, v.getInput());
 
 			returnList.add(varMap);
 		}
@@ -419,13 +419,13 @@ public class ObjectEnv
 
 		for (VariableEnv v : variables)
 		{
-			if (v.getVariableInit().toString() != "")
+			if (v.getInit().toString() != "")
 			{
 				Map varMap = new HashMap();
-				varMap.put(VAR_NAME, v.getVariableName().toString());
-				varMap.put(VAR_TYPE, v.getVariableType());
-				varMap.put(VAR_INIT, v.getVariableInit().toString());
-				varMap.put(VAR_INPUT, v.getVariableInput());
+				varMap.put(VAR_NAME, v.getName().toString());
+				varMap.put(VAR_TYPE, v.getType());
+				varMap.put(VAR_INIT, v.getInit().toString());
+				varMap.put(VAR_INPUT, v.getInput());
 
 				returnList.add(varMap);
 			}
@@ -435,15 +435,15 @@ public class ObjectEnv
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List<Map> paramsList()
+	private List<Map> paramsList()
 	{
 		List<Map> returnList = new ArrayList<>();
 
 		for (VariableEnv v : getParameters())
 		{
 			Map varMap = new HashMap();
-			varMap.put(VAR_NAME, v.getVariableName().toString());
-			varMap.put(VAR_TYPE, v.getVariableType());
+			varMap.put(VAR_NAME, v.getName().toString());
+			varMap.put(VAR_TYPE, v.getType());
 			// varMap.put(VAR_INIT, v.getVariableInit().toString());
 			// varMap.put(VAR_INPUT, v.getVariableInput());
 			varMap.put("ProgramType", v.getProgramType());
@@ -454,6 +454,44 @@ public class ObjectEnv
 		return returnList;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public  List<Map> fwParamsList()
+	{
+		List<Map> returnList = new ArrayList<>();
+
+		for (VariableEnv v : getFWParameters())
+		{
+			Map varMap = new HashMap();
+			varMap.put(VAR_NAME, v.getName().toString());
+			varMap.put(VAR_TYPE, v.getType());
+			// varMap.put(VAR_INIT, v.getVariableInit().toString());
+			// varMap.put(VAR_INPUT, v.getVariableInput());
+			varMap.put("ProgramType", v.getProgramType());
+
+			returnList.add(varMap);
+		}
+		return returnList;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<Map> appParamsList()
+	{
+		List<Map> returnList = new ArrayList<>();
+
+		for (VariableEnv v : getAppParameters())
+		{
+			Map varMap = new HashMap();
+			varMap.put(VAR_NAME, v.getName().toString());
+			varMap.put(VAR_TYPE, v.getType());
+			// varMap.put(VAR_INIT, v.getVariableInit().toString());
+			// varMap.put(VAR_INPUT, v.getVariableInput());
+			varMap.put("ProgramType", v.getProgramType());
+
+			returnList.add(varMap);
+		}
+
+		return returnList;
+	}
 	@SuppressWarnings({ "rawtypes" })
 	public List<Map> methsList()
 	{
@@ -545,9 +583,9 @@ public class ObjectEnv
 	{
 		for (VariableEnv v : getParameters())
 		{
-			if (v.getVariableName().equals(paramName))
+			if (v.getName().equals(paramName))
 			{
-				v.setVariableInit(paramInit);
+				v.setInit(paramInit);
 			}
 		}
 

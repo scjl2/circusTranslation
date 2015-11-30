@@ -8,9 +8,7 @@ LandMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess SafeLandingHandlerApp \circdef \\ \qquad 
-\circspot 
-  \circbegin
+\circprocess SafeLandingHandlerApp \circdef   \circbegin
 \end{circus}
 
 

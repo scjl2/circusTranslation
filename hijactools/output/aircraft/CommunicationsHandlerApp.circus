@@ -4,9 +4,7 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess CommunicationsHandlerApp \circdef \\ \qquad 
-\circspot 
-  \circbegin
+\circprocess CommunicationsHandlerApp \circdef   \circbegin
 \end{circus}
 
 

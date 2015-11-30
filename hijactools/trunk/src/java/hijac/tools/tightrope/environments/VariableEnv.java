@@ -3,10 +3,10 @@ package hijac.tools.tightrope.environments;
 public class VariableEnv
 {
 
-	private String variableName;
-	private String variableType;
-	private Object variableInit;
-	private boolean variableInput;
+	private String name;
+	private String type;
+	private Object init;
+	private boolean input;
 	private boolean primitive;
 	private String programType;
 
@@ -14,9 +14,9 @@ public class VariableEnv
 	{
 		super();
 
-		variableName = "";
-		variableType = "";
-		variableInit = "";
+		name = "";
+		type = "";
+		init = "";
 
 		programType = "";
 	}
@@ -25,27 +25,27 @@ public class VariableEnv
 			Object variableInit, boolean primitive)
 	{
 		super();
-		this.variableName = variableName;
-		this.variableType = variableType;
+		this.name = variableName;
+		this.type = variableType;
 		this.primitive = primitive;
 
 		if (variableInit == null)
 		{
-			this.variableInit = "init\\_placeholder";
+			this.init = "init\\_placeholder";
 		}
 		else
 		{
-			this.variableInit = variableInit;
+			this.init = variableInit;
 		}
 
-		this.variableInput = false;
+		this.input = false;
 	}
 
 	public VariableEnv(String variableName, String variableType,
 			String programType, boolean primitive)
 	{
-		this.variableName = variableName;
-		this.variableType = variableType;
+		this.name = variableName;
+		this.type = variableType;
 		this.programType = programType;
 		this.primitive = primitive;
 	}
@@ -55,42 +55,42 @@ public class VariableEnv
 	{
 		this(variableName, variableType, variableInit, primitive);
 
-		this.variableInput = true;
+		this.input = true;
 	}
 
-	public String getVariableName()
+	public String getName()
 	{
-		return variableName;
+		return name;
 	}
 
-	public void setVariableName(String variableName)
+	public void setName(String variableName)
 	{
-		this.variableName = variableName;
+		this.name = variableName;
 	}
 
-	public String getVariableType()
+	public String getType()
 	{
-		return variableType;
+		return type;
 	}
 
-	public void setVariableType(String variableType)
+	public void setType(String variableType)
 	{
-		this.variableType = variableType;
+		this.type = variableType;
 	}
 
-	public Object getVariableInit()
+	public Object getInit()
 	{
-		return variableInit;
+		return init;
 	}
 
-	public void setVariableInit(Object variableInit)
+	public void setInit(Object variableInit)
 	{
-		this.variableInit = variableInit;
+		this.init = variableInit;
 	}
 
-	public Boolean getVariableInput()
+	public Boolean getInput()
 	{
-		return variableInput;
+		return input;
 	}
 
 	public boolean isPrimitive()
@@ -103,9 +103,9 @@ public class VariableEnv
 		this.primitive = primitive;
 	}
 
-	public void setVariableInput(boolean variableInput)
+	public void setInput(boolean variableInput)
 	{
-		this.variableInput = variableInput;
+		this.input = variableInput;
 	}
 
 	public String getProgramType()
@@ -120,8 +120,8 @@ public class VariableEnv
 
 	public String toString()
 	{
-		return "VarEnv: name = " + variableName + " type = " + variableType
-				+ " init = " + variableInit + " input = " + variableInput
+		return "VarEnv: name = " + name + " type = " + type
+				+ " init = " + init + " input = " + input
 				+ " programType = " + programType + " primitive = " + primitive;
 	}
 }

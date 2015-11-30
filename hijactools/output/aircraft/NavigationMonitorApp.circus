@@ -8,9 +8,7 @@ CruiseMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess NavigationMonitorApp \circdef \\ \qquad 
-\circspot 
-  \circbegin
+\circprocess NavigationMonitorApp \circdef   \circbegin
 \end{circus}
 
 

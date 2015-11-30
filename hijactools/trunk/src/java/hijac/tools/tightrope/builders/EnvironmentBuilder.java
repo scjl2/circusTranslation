@@ -641,10 +641,10 @@ public class EnvironmentBuilder
 					if (returns != null)
 					{
 						System.out.println("returns = "
-								+ returns.getVariableName());
+								+ returns.getName());
 						if (objectWithParams != null)
 						{
-							String type = returns.getVariableType();
+							String type = returns.getType();
 
 							if (type.equals("PriorityParameters"))
 							{

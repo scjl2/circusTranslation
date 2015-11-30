@@ -4,9 +4,7 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess InstrumentLandingSystemMonitorApp \circdef \\ \qquad 
-\circspot 
-  \circbegin
+\circprocess InstrumentLandingSystemMonitorApp \circdef   \circbegin
 \end{circus}
 
 

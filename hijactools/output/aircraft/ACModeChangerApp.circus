@@ -13,9 +13,7 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess ACModeChangerApp \circdef \\ \qquad 
-\circspot 
- \circbegin\\ 
+\circprocess ACModeChangerApp \circdef  \circbegin\\ 
 \end{circus}
    
 

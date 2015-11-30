@@ -4,9 +4,7 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess ControlHandlerApp \circdef \\ \qquad 
-\circspot 
-  \circbegin
+\circprocess ControlHandlerApp \circdef   \circbegin
 \end{circus}
 
 

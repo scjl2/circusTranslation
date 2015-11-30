@@ -4,9 +4,7 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess AperiodicSimulatorApp \circdef \\ \qquad 
-\circspot 
-  \circbegin
+\circprocess AperiodicSimulatorApp \circdef   \circbegin
 \end{circus}
 
 

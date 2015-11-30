@@ -8,9 +8,7 @@ LandMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess GroundDistanceMonitorApp \circdef \\ \qquad 
-\circspot 
-  \circbegin
+\circprocess GroundDistanceMonitorApp \circdef   \circbegin
 \end{circus}
 
 

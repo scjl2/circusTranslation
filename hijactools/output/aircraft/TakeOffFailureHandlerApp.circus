@@ -8,9 +8,7 @@ TakeOffMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess TakeOffFailureHandlerApp \circdef \\ \qquad 
-\circspot 
-  \circbegin
+\circprocess TakeOffFailureHandlerApp \circdef   \circbegin
 \end{circus}
 
 
