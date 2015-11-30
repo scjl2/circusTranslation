@@ -4,6 +4,8 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.NewTransUtils;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.RegistersVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
@@ -23,6 +25,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
 public class MissionLevel2Builder extends ParadigmBuilder
@@ -35,6 +38,8 @@ public class MissionLevel2Builder extends ParadigmBuilder
 	private MissionEnv missionEnv;
 	private ArrayList<Name> schedulables;
 	private ProgramEnv programEnv;
+	
+	private MethodVisitor methodVisitor;
 
 	public MissionLevel2Builder(ProgramEnv programEnv, MissionEnv missionEnv,
 			SCJAnalysis analysis, EnvironmentBuilder environmentBuilder)
@@ -50,7 +55,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 		schedulables = new ArrayList<Name>();
 		registersVisitor = new RegistersVisitor(missionEnv, analysis);
-
+		methodVisitor = new MethodVisitor(analysis, missionEnv);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -186,6 +191,39 @@ public class MissionLevel2Builder extends ParadigmBuilder
 			Iterator<StatementTree> methodStatementsIterator = methodStatements
 					.iterator();
 
+			for (VariableTree vt : missionMethodTree.getParameters())
+			{
+				if (!(vt.getType().toString().contains("String")))
+				{
+					// object.addParameter(vt.getName().toString(),
+					// NewTransUtils.encodeType(vt.getType()),
+					// NewTransUtils.encodeType(vt.getType()),
+					// (vt.getType() instanceof PrimitiveTypeTree),
+					// "FromMethVis");
+					//
+				}
+				// else
+				// {
+				VariableEnv parameter = new VariableEnv();
+
+				parameter.setName(vt.getName().toString());
+				parameter.setType(NewTransUtils.encodeType(vt.getType()));
+				parameter
+						.setProgramType(NewTransUtils.encodeType(vt.getType()));
+
+				if (parameter.getType().endsWith("Parameters"))
+				{
+
+				}
+				else
+				{
+					System.out.println("Adding Proc Param "
+							+ parameter.toString());
+					missionEnv.addProcParameter(parameter);
+				}
+				// }
+			}
+			
 			VariableVisitor varVisitor = new VariableVisitor(programEnv,
 					missionEnv);
 

@@ -10,7 +10,7 @@
 %
 \begin{circus}
 \t1 \circchannel changeToCall : SchedulableID \cross ThreadID  \cross
-
+Mode
 
   \\
 \t1 \circchannel changeToRet : SchedulableID \cross  ThreadID\\
