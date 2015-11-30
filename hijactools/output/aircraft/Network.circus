@@ -173,9 +173,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			AperiodicEventHandlerFW(ControlHandlerID )\\
+			AperiodicEventHandlerFW(ControlHandlerID ,(time(10,0),null)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(CommunicationsHandlerID )\\
+			AperiodicEventHandlerFW(CommunicationsHandlerID ,(NULL,nullSchedulableId)   )\\
 \circblockclose \\
 
 
@@ -184,11 +184,11 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			PeriodicEventHandlerFW(EnvironmentMonitorID ,(10,0,NULL,nullSchedulableId)   )\\
+			PeriodicEventHandlerFW(EnvironmentMonitorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(FlightSensorsMonitorID ,(10,0,NULL,nullSchedulableId)   )\\
+			PeriodicEventHandlerFW(FlightSensorsMonitorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(AperiodicSimulatorID ,(10,0,NULL,nullSchedulableId)   )\\
+			PeriodicEventHandlerFW(AperiodicSimulatorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
 \circblockclose \\ 
 
 		\circblockclose
@@ -213,9 +213,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			AperiodicEventHandlerFW(LandingGearHandlerTakeOffID )\\
+			AperiodicEventHandlerFW(LandingGearHandlerTakeOffID ,(NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(TakeOffFailureHandlerID )\\
+			AperiodicEventHandlerFW(TakeOffFailureHandlerID ,(NULL,nullSchedulableId)   )\\
 \circblockclose \\
 
 
@@ -223,7 +223,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			PeriodicEventHandlerFW(TakeOffMonitorID ,(0,0,NULL,nullSchedulableId)   )\\
+			PeriodicEventHandlerFW(TakeOffMonitorID ,(time(0,0),time(500,0),NULL,nullSchedulableId)   )\\
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
@@ -242,13 +242,13 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			AperiodicEventHandlerFW(BeginLandingHandlerID )\\
+			AperiodicEventHandlerFW(BeginLandingHandlerID ,(NULL,nullSchedulableId)   )\\
 
 \t1 \lpar SchedulablesSync \rpar\\
 
 
 
-			PeriodicEventHandlerFW(NavigationMonitorID ,(0,0,NULL,nullSchedulableId)   )\\
+			PeriodicEventHandlerFW(NavigationMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
@@ -268,9 +268,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			AperiodicEventHandlerFW(LandingGearHandlerLandID )\\
+			AperiodicEventHandlerFW(LandingGearHandlerLandID ,(NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(SafeLandingHandlerID )\\
+			AperiodicEventHandlerFW(SafeLandingHandlerID ,(NULL,nullSchedulableId)   )\\
 \circblockclose \\
 
 
@@ -279,9 +279,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			PeriodicEventHandlerFW(GroundDistanceMonitorID ,(0,0,NULL,nullSchedulableId)   )\\
+			PeriodicEventHandlerFW(GroundDistanceMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(InstrumentLandingSystemMonitorID ,(0,0,NULL,nullSchedulableId)   )\\
+			PeriodicEventHandlerFW(InstrumentLandingSystemMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
 \circblockclose \\ 
 
 		\circblockclose
@@ -442,6 +442,6 @@ Locking \circdef Threads \interleave Objects
 \end{circus}
 % 
 \begin{circus}
-\circprocess Program \circdef Framework \lpar AppSync \rpar Application \lpar LockingSync \rpar Locking
+\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar Application \circblockclose \lpar LockingSync \rpar Locking
 \end{circus}
 

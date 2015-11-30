@@ -102,7 +102,7 @@ public class MainMission extends Mission
 		environmentMonitor.register();
 
 		ControlHandler controlHandler = new ControlHandler(
-				new PriorityParameters(5), new AperiodicParameters(),
+				new PriorityParameters(5), new AperiodicParameters(new RelativeTime(10, 0), null),
 				storageParametersSchedulable, "Control Handler");
 
 		controlHandler.register();

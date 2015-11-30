@@ -229,7 +229,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \circblockopen
 </#if>
 		<#list cluster.Schedulables.Aperiodics as aperiodic>			
-			AperiodicEventHandlerFW(${aperiodic.Name}ID <#if periodic.FWParameters?size != 0>,<#list periodic.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>)\\
+			AperiodicEventHandlerFW(${aperiodic.Name}ID <#if aperiodic.FWParameters?size != 0>,<#list aperiodic.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>)\\
 			<#if aperiodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
@@ -350,6 +350,6 @@ Locking \circdef Threads \interleave Objects
 \end{circus}
 % 
 \begin{circus}
-\circprocess Program \circdef Framework \lpar AppSync \rpar Application \lpar LockingSync \rpar Locking
+\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar Application \circblockclose \lpar LockingSync \rpar Locking
 \end{circus}
 

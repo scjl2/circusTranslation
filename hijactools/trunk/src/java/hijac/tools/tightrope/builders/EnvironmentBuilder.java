@@ -654,41 +654,43 @@ public class EnvironmentBuilder
 							{
 								if (objectWithParams instanceof SafeletEnv)
 								{
-									
+
 									objectWithParams.addAppParameter(returns);
 								}
 								else if (objectWithParams instanceof TopLevelMissionSequencerEnv)
 								{
-//									if (type.equals("SchedulableID"))
-//									{
-//										objectWithParams.addFWdParameter(returns);
-//									}
-//									else
+									// if (type.equals("SchedulableID"))
+									// {
+									// objectWithParams.addFWdParameter(returns);
+									// }
+									// else
 									{
 										objectWithParams
 												.addAppParameter(returns);
 									}
-									
+
 								}
 								else if (objectWithParams instanceof MissionEnv)
 								{
-									
-//									if (type.equals("MissionID"))
-//									{
-//										objectWithParams.addFWdParameter(returns);
-//									}
-//									else
+
+									// if (type.equals("MissionID"))
+									// {
+									// objectWithParams.addFWdParameter(returns);
+									// }
+									// else
 									{
 										objectWithParams
 												.addAppParameter(returns);
 									}
-									
+
 								}
 								else if (objectWithParams instanceof PeriodicEventHandlerEnv)
 								{
-									if (type.equals("PeriodicParameters") || type.equals("SchedulableID"))
+									if (type.equals("PeriodicParameters")
+											|| type.equals("SchedulableID"))
 									{
-										objectWithParams.addFWdParameter(returns);
+										objectWithParams
+												.addFWdParameter(returns);
 									}
 									else
 									{
@@ -698,9 +700,12 @@ public class EnvironmentBuilder
 								}
 								else if (objectWithParams instanceof OneShotEventHandlerEnv)
 								{
-									if (type.equals("AperiodicParameters") || type.equals("JTime")||type.equals("SchedulableID"))
+									if (type.equals("AperiodicParameters")
+											|| type.equals("JTime")
+											|| type.equals("SchedulableID"))
 									{
-										objectWithParams.addFWdParameter(returns);
+										objectWithParams
+												.addFWdParameter(returns);
 									}
 									else
 									{
@@ -710,9 +715,12 @@ public class EnvironmentBuilder
 								}
 								else if (objectWithParams instanceof AperiodicEventHandlerEnv)
 								{
-									if (type.equals("AperiodicParameters") || type.equals("AperiodicType")|type.equals("SchedulableID"))
+									if (type.equals("AperiodicParameters")
+											|| type.equals("AperiodicType")
+											|| type.equals("SchedulableID"))
 									{
-										objectWithParams.addFWdParameter(returns);
+										objectWithParams
+												.addFWdParameter(returns);
 									}
 									else
 									{
@@ -722,12 +730,12 @@ public class EnvironmentBuilder
 								}
 								else if (objectWithParams instanceof NestedMissionSequencerEnv)
 								{
-								
-//									if(type.equals("SchedulableID"))
-//									{
-//										
-//									}
-//									else
+
+									// if(type.equals("SchedulableID"))
+									// {
+									//
+									// }
+									// else
 									{
 										objectWithParams
 												.addAppParameter(returns);
@@ -735,11 +743,11 @@ public class EnvironmentBuilder
 								}
 								else if (objectWithParams instanceof ManagedThreadEnv)
 								{
-//									if(type.equals("SchedulableID"))
-//									{
-//										
-//									}
-//									else
+									// if(type.equals("SchedulableID"))
+									// {
+									//
+									// }
+									// else
 									{
 										objectWithParams
 												.addAppParameter(returns);
