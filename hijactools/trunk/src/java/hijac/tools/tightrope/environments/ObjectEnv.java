@@ -42,7 +42,7 @@ public class ObjectEnv
 	/**
 	 * The parameters of this object, separated by where they will be output to.
 	 */
-	protected List<VariableEnv> fwParameters, appParameters, threadParameters;
+	protected List<VariableEnv> fwParameters, appParameters, threadParameters, procParameters;
 
 	/**
 	 * The non-synchronised methods of this object
@@ -76,6 +76,7 @@ public class ObjectEnv
 		fwParameters = new ArrayList<VariableEnv>();
 		appParameters = new ArrayList<VariableEnv>();
 		threadParameters = new ArrayList<VariableEnv>();
+		procParameters = new ArrayList<VariableEnv>();
 		newChannels = new ArrayList<ChannelEnv>();
 		parents = new ArrayList<String>();
 	}
@@ -245,6 +246,11 @@ public class ObjectEnv
 	{
 		return appParameters;
 	}
+	
+	public List<VariableEnv> getProcParameters()
+	{
+		return procParameters;
+	}
 
 	public List<VariableEnv> getThreadParameters()
 	{
@@ -267,6 +273,12 @@ public class ObjectEnv
 	{
 		threadParameters.add(parameter);
 
+	}
+	
+	public void addProcParameter(VariableEnv parameter)
+	{
+		System.out.println("adding " + parameter.toString());
+		procParameters.add(parameter);
 	}
 
 	protected void addFWParameter(String variableName, String variableType,
@@ -296,6 +308,38 @@ public class ObjectEnv
 			e.setInit(init);
 			addFWdParameter(e);
 		}
+
+	}
+	
+	
+
+	protected void addProcParameter(String variableName, String variableType,
+			String programType, boolean primitive, String init)
+
+	{
+		boolean isNew = true;
+
+//		for (VariableEnv v : getParameters())
+//		{
+//			if (v.getName().equals(variableName))
+//			{
+//				// v.setVariableName(variableName);
+//				// v.setVariableType(variableType);
+//				// v.setProgramType(programType);
+//				// v.setPrimitive(primitive);
+//				v.setInit(init);
+//
+//				isNew = false;
+//			}
+//		}
+//
+//		if (isNew)
+//		{
+			VariableEnv e = new VariableEnv(variableName, variableType,
+					programType, primitive);
+			e.setInit(init);
+			addProcParameter(e);
+//		}
 
 	}
 
@@ -430,7 +474,7 @@ public class ObjectEnv
 
 	private enum ParamsType
 	{
-		FW, APP
+		FW, APP, PROC
 	};
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -447,6 +491,9 @@ public class ObjectEnv
 			case APP:
 				params = getAppParameters();
 				break;
+			case PROC:
+				params = getProcParameters();
+				break;
 			default:
 				params = new ArrayList<VariableEnv>();
 		}
@@ -459,8 +506,8 @@ public class ObjectEnv
 			// varMap.put(VAR_INIT, v.getVariableInit().toString());
 			// varMap.put(VAR_INPUT, v.getVariableInput());
 			varMap.put("ProgramType", v.getProgramType());
-
-			returnList.add(varMap);
+			
+			returnList.add(varMap);		
 		}
 
 		return returnList;
@@ -476,6 +523,16 @@ public class ObjectEnv
 	public List<Map> appParamsList()
 	{
 		return paramsList(ParamsType.APP);
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List<Map> procParamsList()
+	{
+		List<Map> procParams = paramsList(ParamsType.PROC);
+		
+		System.out.println(procParams.toString());
+		
+		return procParams;
 	}
 
 	private enum MethsType
@@ -527,7 +584,7 @@ public class ObjectEnv
 	protected Map methodToMap(MethodEnv me)
 	{
 		Map methodMap = new HashMap();
-		System.out.println(me.toString());
+//		System.out.println(me.toString());
 		String s = me.getMethodName();
 
 		methodMap.put(METHOD_NAME, s);

@@ -642,8 +642,7 @@ public class EnvironmentBuilder
 
 					if (returns != null)
 					{
-						System.out.println("returns = "
-								+ returns.getName());
+						System.out.println("returns = " + returns.getName());
 						if (objectWithParams != null)
 						{
 							String type = returns.getType();
@@ -654,21 +653,39 @@ public class EnvironmentBuilder
 							}
 							else if (type.equals("ID"))
 							{
-								MethodEnv me = objectWithParams.getConstructor();
-								Map<String, Type> m =  me.getParameters();
-								
-								for(String s : m.keySet())
+								System.out.println("Is ID");
+								MethodEnv me = objectWithParams
+										.getConstructor();
+								if (me != null)
 								{
-									Type t = m.get(s);
-									
-									if(t.toString().equals(returns.getProgramType().substring(0, returns.getProgramType().length()-2)))
+									Map<String, Type> m = me.getParameters();
+
+									for (String s : m.keySet())
 									{
-										returns.setName(s);
+										Type t = m.get(s);
+																				
+										final int length = returns.getProgramType()
+												.length();
+										System.out.println("t="+t.toString());
+										System.out.println("returns type =" +returns
+														.getProgramType()
+														.substring(
+																0,
+																length - 2));
+										
+										if (t.toString()
+												.equals(returns
+														.getProgramType()
+														.substring(
+																0,
+																length - 2)))
+										{
+											returns.setName(s);
+										}
 									}
 								}
 								objectWithParams.addAppParameter(returns);
-								
-								
+
 							}
 							else
 							{

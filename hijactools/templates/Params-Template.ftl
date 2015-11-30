@@ -1,6 +1,6 @@
-<#if AppParameters?has_content>
+<#if ProcParameters?has_content>
 \\ \qquad 
-<#list AppParameters as param>
+<#list ProcParameters as param>
   ${param.VarName} : ${param.ProgramType}
 <#sep>
 , \\ \qquad 

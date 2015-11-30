@@ -14,7 +14,15 @@
 
 \begin{circus}
 \circprocess ACModeChangerApp \circdef \\ \qquad 
-  ControllingMission : MainMissionID
+  priority : 
+, \\ \qquad 
+  storage : 
+, \\ \qquad 
+  controllingMission : 
+, \\ \qquad 
+  priority : 
+, \\ \qquad 
+  storage : 
 \circspot 
  \circbegin\\ 
 \end{circus}

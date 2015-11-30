@@ -6,6 +6,7 @@ import java.util.Map;
 
 public abstract class ParadigmEnv extends ObjectEnv
 {
+	private static final String PROC_PARAMETERS = "ProcParameters";
 	private static final String APP_PARAMETERS = "AppParameters";
 	private static final String FW_PARAMETERS = "FWParameters";
 	protected static final String HAS_CLASS = "HasClass";
@@ -60,7 +61,8 @@ public abstract class ParadigmEnv extends ObjectEnv
 		Map map = new HashMap();
 		map.put(PROCESS_ID, getName().toString());
 		map.put(FW_PARAMETERS, fwParamsList());
-		map.put(APP_PARAMETERS, appParamsList());		
+		map.put(APP_PARAMETERS, appParamsList());
+		map.put(PROC_PARAMETERS, procParamsList());
 		map.put(VARIABLES_STR, varsList());
 		map.put(PARENTS_STR, getParents());
 		map.put(METHODS, methsList());

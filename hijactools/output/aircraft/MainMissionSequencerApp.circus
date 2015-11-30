@@ -13,7 +13,12 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess MainMissionSequencerApp \circdef  \circbegin\\ 
+\circprocess MainMissionSequencerApp \circdef \\ \qquad 
+  priority : 
+, \\ \qquad 
+  storage : 
+\circspot 
+ \circbegin\\ 
 \end{circus}
    
 \begin{schema}{State}

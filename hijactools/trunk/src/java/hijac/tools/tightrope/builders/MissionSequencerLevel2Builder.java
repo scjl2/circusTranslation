@@ -100,15 +100,12 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 				System.out.println("MS VIsitor: Variable Tree Found");
 
 				 VariableTree vt = (VariableTree) tlst;
-//				//
+
 				 System.out.println("-> " + vt.toString());
 				 System.out.println("-> Name:" + vt.getName());
 				 System.out.println("-> Type: " + vt.getType());
-//				//
-				 
-				 
-				 
-//				 programEnv.addVariable(vt.getName(), vt.getType());
+
+
 			}
 
 			if (tlst instanceof MethodTree)

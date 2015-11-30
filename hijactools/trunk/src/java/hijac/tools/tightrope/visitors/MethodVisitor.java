@@ -5,6 +5,7 @@ import hijac.tools.application.TightRope;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
 
@@ -57,7 +58,7 @@ public class MethodVisitor
 				.accept(new ReturnVisitor(null), null);
 
 		Map<Object, Object> parameters = new HashMap<>();
-
+		
 		if(isConstructor)
 		{
 			for (VariableTree vt : mt.getParameters())
@@ -70,6 +71,19 @@ public class MethodVisitor
 //							(vt.getType() instanceof PrimitiveTypeTree), "FromMethVis"); 					
 //					
 				}
+//				else
+//				{
+					VariableEnv parameter = new VariableEnv();
+					
+				
+					
+					parameter.setName(vt.getName().toString());
+					parameter.setType(NewTransUtils.encodeType(vt.getType()));
+				
+					System.out.println("Adding Proc Param " + parameter.toString());
+					object.addProcParameter(parameter);
+					
+//				}
 			}
 		}
 		else

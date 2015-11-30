@@ -304,8 +304,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					if (timeParams.size() >= 2)
 					{
 						deadline = "time(" + timeParams.get(0)+","+timeParams.get(1)+")";
-					}
-					
+					}					
 				}
 				else
 				{	
@@ -316,8 +315,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					else
 					{
 						deadline = deadlineTree.toString();
-					}
-					
+					}					
 				}
 				
 				deadlineMissTree = args.get(3);

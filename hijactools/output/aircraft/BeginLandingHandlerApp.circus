@@ -4,10 +4,7 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess BeginLandingHandlerApp \circdef \\ \qquad 
-  ControllingMission : CruiseMissionID
-\circspot 
-  \circbegin
+\circprocess BeginLandingHandlerApp \circdef   \circbegin
 \end{circus}
 
 
