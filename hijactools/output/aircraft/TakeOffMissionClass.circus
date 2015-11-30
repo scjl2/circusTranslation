@@ -23,10 +23,10 @@
 \end{schema}
 
 
+%
 \begin{circusaction}
-\circpublic ~ abort ~ \circdef 
-\\ 
-
+\circpublic ~ \circsync ~ abort ~ \circdef 
+\\
 
       \circblockopen
 
@@ -39,10 +39,9 @@ this~.~abort :=true
 
 \end{circusaction}	
 \begin{circusaction}
-\circpublic ~ getControllingMission ~ \circdef 
-\circvar ret : MissionID \circspot
-\\ 
-
+\circpublic ~ \circsync ~ getControllingMission ~ \circdef 
+\circvar ret : MissionID \circspot 
+\\
 
       \circblockopen
 
@@ -55,9 +54,8 @@ this~.~abort :=true
 
 \end{circusaction}	
 \begin{circusaction}
-\circpublic ~ setControllingMission ~ \circdef 
-\\ 
-
+\circpublic ~ \circsync ~ setControllingMission ~ \circdef 
+\\
 
       \circblockopen
 
@@ -70,10 +68,9 @@ this~.~this.controllingMission :=controllingMission
 
 \end{circusaction}	
 \begin{circusaction}
-\circpublic ~ cleanUp ~ \circdef 
-\circvar ret : \boolean \circspot
-\\ 
-
+\circpublic ~ \circsync ~ cleanUp ~ \circdef 
+\circvar ret : \boolean \circspot 
+\\
 
       \circblockopen
 
@@ -92,9 +89,8 @@ this~.~this.controllingMission :=controllingMission
 
 \end{circusaction}	
 \begin{circusaction}
-\circpublic ~ stowLandingGear ~ \circdef 
-\\ 
-
+\circpublic ~ \circsync ~ stowLandingGear ~ \circdef 
+\\
 
       \circblockopen
 
@@ -107,10 +103,9 @@ this~.~landingGearDeployed :=false
 
 \end{circusaction}	
 \begin{circusaction}
-\circpublic ~ isLandingGearDeployed ~ \circdef 
-\circvar ret : \boolean \circspot
-\\ 
-
+\circpublic ~ \circsync ~ isLandingGearDeployed ~ \circdef 
+\circvar ret : \boolean \circspot 
+\\
 
       \circblockopen
 
@@ -122,7 +117,6 @@ this~.~landingGearDeployed :=false
  
 
 \end{circusaction}	
-%
 %
 
 \begin{circusaction}

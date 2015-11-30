@@ -3,16 +3,16 @@
 \end{zsection}
 %
 \begin{circus}
-\t1 \circchannel changeToCall :SchedulableID   \cross
-
-
-\\
-\t1 \circchannel changeToRet : SchedulableID \\
+\t1 \circchannel advanceModeCall :SchedulableID  \\
+\t1 \circchannel advanceModeRet : SchedulableID \\
 \end{circus}
 %
 %
 \begin{circus}
-\t1 \circchannel advanceModeCall : SchedulableID \cross ThreadID   \\
-\t1 \circchannel advanceModeRet : SchedulableID \cross  ThreadID\\
+\t1 \circchannel changeToCall : SchedulableID \cross ThreadID  \cross
+
+
+  \\
+\t1 \circchannel changeToRet : SchedulableID \cross  ThreadID\\
 \end{circus}
 % 

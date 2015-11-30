@@ -43,7 +43,7 @@ public class ObjectEnv
 	 * The parameters of this object, separated by where they will be output to.
 	 */
 	protected List<VariableEnv> fwParameters, appParameters, threadParameters;
-	
+
 	/**
 	 * The non-synchronised methods of this object
 	 */
@@ -74,8 +74,8 @@ public class ObjectEnv
 
 		variables = new ArrayList<VariableEnv>();
 		fwParameters = new ArrayList<VariableEnv>();
-		appParameters  = new ArrayList<VariableEnv>();
-		threadParameters = new ArrayList<VariableEnv>();		
+		appParameters = new ArrayList<VariableEnv>();
+		threadParameters = new ArrayList<VariableEnv>();
 		newChannels = new ArrayList<ChannelEnv>();
 		parents = new ArrayList<String>();
 	}
@@ -134,16 +134,16 @@ public class ObjectEnv
 			String vName = v.getName();
 			if (vName.contains("\\"))
 			{
-				//Matches \
+				// Matches \
 				String[] vNameSplit = vName.split("\\\\");
 
 				StringBuilder sb = new StringBuilder();
-				for(String s : vNameSplit)
+				for (String s : vNameSplit)
 				{
 					sb.append(s);
 				}
 				vName = sb.toString();
-				
+
 				System.out.println("\t Var After Split = " + vName);
 			}
 
@@ -209,12 +209,8 @@ public class ObjectEnv
 	 */
 	public VariableEnv getParameter(String name)
 	{
-		List<VariableEnv> parameters = new ArrayList<VariableEnv>();
-		parameters.addAll(fwParameters);
-		parameters.addAll(appParameters);
-		parameters.addAll(threadParameters);
- 		
-		for (VariableEnv v : parameters)
+
+		for (VariableEnv v : getParameters())
 		{
 			if (v.getName().contentEquals(name))
 			{
@@ -224,17 +220,17 @@ public class ObjectEnv
 
 		return null;
 	}
-	
+
 	private List<VariableEnv> getParameters()
 	{
 		List<VariableEnv> parameters = new ArrayList<VariableEnv>();
 		parameters.addAll(fwParameters);
 		parameters.addAll(appParameters);
 		parameters.addAll(threadParameters);
-		
+
 		return parameters;
 	}
-	
+
 	public List<VariableEnv> getAllParameters()
 	{
 		return getParameters();
@@ -244,35 +240,33 @@ public class ObjectEnv
 	{
 		return fwParameters;
 	}
-	
+
 	public List<VariableEnv> getAppParameters()
 	{
 		return appParameters;
 	}
-	
+
 	public List<VariableEnv> getThreadParameters()
 	{
 		return threadParameters;
 	}
 
-	
-	
 	public void addFWdParameter(VariableEnv parameter)
 	{
 		fwParameters.add(parameter);
-		
+
 	}
-	
+
 	public void addAppParameter(VariableEnv parameter)
 	{
 		appParameters.add(parameter);
-		
+
 	}
-	
+
 	public void addThreadParameter(VariableEnv parameter)
 	{
 		threadParameters.add(parameter);
-		
+
 	}
 
 	protected void addFWParameter(String variableName, String variableType,
@@ -304,7 +298,7 @@ public class ObjectEnv
 		}
 
 	}
-	
+
 	protected void addAppParameter(String variableName, String variableType,
 			String programType, boolean primitive, String init)
 
@@ -334,7 +328,7 @@ public class ObjectEnv
 		}
 
 	}
-	
+
 	protected void addThreadParameter(String variableName, String variableType,
 			String programType, boolean primitive, String init)
 
@@ -434,12 +428,30 @@ public class ObjectEnv
 		return returnList;
 	}
 
+	private enum ParamsType
+	{
+		FW, APP
+	};
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private List<Map> paramsList()
+	private List<Map> paramsList(ParamsType type)
 	{
 		List<Map> returnList = new ArrayList<>();
+		List<VariableEnv> params;
 
-		for (VariableEnv v : getParameters())
+		switch (type)
+		{
+			case FW:
+				params = getFWParameters();
+				break;
+			case APP:
+				params = getAppParameters();
+				break;
+			default:
+				params = new ArrayList<VariableEnv>();
+		}
+
+		for (VariableEnv v : params)
 		{
 			Map varMap = new HashMap();
 			varMap.put(VAR_NAME, v.getName().toString());
@@ -455,49 +467,41 @@ public class ObjectEnv
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public  List<Map> fwParamsList()
+	public List<Map> fwParamsList()
 	{
-		List<Map> returnList = new ArrayList<>();
-
-		for (VariableEnv v : getFWParameters())
-		{
-			Map varMap = new HashMap();
-			varMap.put(VAR_NAME, v.getName().toString());
-			varMap.put(VAR_TYPE, v.getType());
-			// varMap.put(VAR_INIT, v.getVariableInit().toString());
-			// varMap.put(VAR_INPUT, v.getVariableInput());
-			varMap.put("ProgramType", v.getProgramType());
-
-			returnList.add(varMap);
-		}
-		return returnList;
+		return paramsList(ParamsType.FW);
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Map> appParamsList()
 	{
-		List<Map> returnList = new ArrayList<>();
-
-		for (VariableEnv v : getAppParameters())
-		{
-			Map varMap = new HashMap();
-			varMap.put(VAR_NAME, v.getName().toString());
-			varMap.put(VAR_TYPE, v.getType());
-			// varMap.put(VAR_INIT, v.getVariableInit().toString());
-			// varMap.put(VAR_INPUT, v.getVariableInput());
-			varMap.put("ProgramType", v.getProgramType());
-
-			returnList.add(varMap);
-		}
-
-		return returnList;
+		return paramsList(ParamsType.APP);
 	}
+
+	private enum MethsType
+	{
+		SYNC, NOT_SYNC
+	};
+
 	@SuppressWarnings({ "rawtypes" })
-	public List<Map> methsList()
+	private List<Map> listMethods(MethsType type)
 	{
 		List<Map> returnList = new ArrayList<>();
+		List<MethodEnv> methods;
 
-		for (MethodEnv me : meths)
+		switch (type)
+		{
+			case SYNC:
+				methods = meths;
+				break;
+			case NOT_SYNC:
+				methods = syncMeths;
+				break;
+			default:
+				methods = new ArrayList<MethodEnv>();
+		}
+
+		for (MethodEnv me : methods)
 		{
 			Map methodMap = methodToMap(me);
 
@@ -505,20 +509,18 @@ public class ObjectEnv
 		}
 
 		return returnList;
+	}
+
+	@SuppressWarnings({ "rawtypes" })
+	public List<Map> methsList()
+	{
+		return listMethods(MethsType.NOT_SYNC);
 	}
 
 	@SuppressWarnings({ "rawtypes" })
 	public List<Map> syncMethsList()
 	{
-		List<Map> returnList = new ArrayList<>();
-
-		for (MethodEnv me : syncMeths)
-		{
-			Map methodMap = methodToMap(me);
-			returnList.add(methodMap);
-		}
-
-		return returnList;
+		return listMethods(MethsType.SYNC);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })

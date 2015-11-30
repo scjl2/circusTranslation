@@ -28,36 +28,11 @@ GetNextMission \circdef \circvar ret : MissionID \circspot \\
 \end{circusaction}
 
 \begin{circusaction}
-changeToMeth \circdef 
+advanceModeMeth \circdef 
 \\
 \circblockopen
-changeToCall~.~ACModeChanger 
-~?~newMode
+advanceModeCall~.~ACModeChanger 
 \then \\
-
-      \circblockopen
-
-this~.~currentMode :=newMode
- 
-
-        \circblockclose  
-
-  \circseq  \\
-
-changeToRet~.~ACModeChanger \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
-%
-\begin{circusaction}
-advanceModeSyncMeth \circdef 
-\\
-\circblockopen
-advanceModeCall~.~ACModeChanger~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~ACModeChangerObject~.~thread \then \\
-lockAcquired~.~ACModeChangerObject~.~thread \then \\
 
       \circblockopen
 
@@ -157,10 +132,35 @@ lockAcquired~.~ACModeChangerObject~.~thread \then \\
 
         \circblockclose  
 
+  \circseq  \\
+
+advanceModeRet~.~ACModeChanger \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
+%
+\begin{circusaction}
+changeToSyncMeth \circdef 
+\\
+\circblockopen
+changeToCall~.~ACModeChanger~?~thread 
+~?~newMode
+ \then \\
+\circblockopen
+startSyncMeth~.~ACModeChangerObject~.~thread \then \\
+lockAcquired~.~ACModeChangerObject~.~thread \then \\
+
+      \circblockopen
+
+this~.~currentMode :=newMode
+ 
+
+        \circblockclose  
+
  \circseq  \\
 endSyncMeth~.~ACModeChangerObject~.~thread \then  \\
 
-advanceModeRet~.~ACModeChanger~.~thread \then \\
+changeToRet~.~ACModeChanger~.~thread \then \\
 \Skip
 \circblockclose
 \circblockclose
@@ -173,10 +173,10 @@ Methods \circdef  \\
 	GetNextMission \\
 %
 \extchoice \\
-	changeToMeth \\ 
+	advanceModeMeth \\ 
 %
 	\extchoice \\
-	advanceModeSyncMeth \\	
+	changeToSyncMeth \\	
 %
 \circblockclose 
 \circseq Methods
