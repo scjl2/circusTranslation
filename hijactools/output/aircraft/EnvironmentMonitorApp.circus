@@ -8,7 +8,10 @@ MainMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess EnvironmentMonitorApp \circdef   \circbegin
+\circprocess EnvironmentMonitorApp \circdef \\ \qquad 
+  ControllingMission : MainMissionID
+\circspot 
+  \circbegin
 \end{circus}
 
 

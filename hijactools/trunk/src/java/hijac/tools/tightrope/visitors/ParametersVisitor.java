@@ -389,6 +389,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			if (arg0.getName().toString().equals("this"))
 			{
 				v.setType("ID");
+				
 				v.setProgramType(originClass + "ID");
 //				return null;
 			}

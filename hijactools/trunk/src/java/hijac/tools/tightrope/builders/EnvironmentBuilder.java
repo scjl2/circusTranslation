@@ -5,6 +5,7 @@ import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.EventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
@@ -21,10 +22,12 @@ import hijac.tools.tightrope.visitors.ParametersVisitor;
 
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
@@ -617,7 +620,6 @@ public class EnvironmentBuilder
 
 				nameOfClassBeingTranslated = ((NewClassTree) tree)
 						.getIdentifier().toString();
-
 			}
 
 			System.out.println("args = " + args.toString());
@@ -649,6 +651,24 @@ public class EnvironmentBuilder
 							if (type.equals("PriorityParameters"))
 							{
 								objectWithParams.addThreadParameter(returns);
+							}
+							else if (type.equals("ID"))
+							{
+								MethodEnv me = objectWithParams.getConstructor();
+								Map<String, Type> m =  me.getParameters();
+								
+								for(String s : m.keySet())
+								{
+									Type t = m.get(s);
+									
+									if(t.toString().equals(returns.getProgramType().substring(0, returns.getProgramType().length()-2)))
+									{
+										returns.setName(s);
+									}
+								}
+								objectWithParams.addAppParameter(returns);
+								
+								
 							}
 							else
 							{

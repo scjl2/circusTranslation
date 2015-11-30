@@ -1,7 +1,7 @@
-<#if Parameters?has_content>
+<#if AppParameters?has_content>
 \\ \qquad 
 <#list AppParameters as param>
-  ${param.VarName} : ${param.VarType}
+  ${param.VarName} : ${param.ProgramType}
 <#sep>
 , \\ \qquad 
 </#sep> 

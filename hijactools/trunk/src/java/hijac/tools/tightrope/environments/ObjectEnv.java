@@ -544,6 +544,18 @@ public class ObjectEnv
 	{
 		return meths;
 	}
+	
+	public MethodEnv getConstructor()
+	{
+		for(MethodEnv me : getMeths())
+		{
+			if(me.getMethodName().equals("<init>"))
+			{
+				return me;
+			}
+		}
+		return null;
+	}
 
 	public List<MethodEnv> getSyncMeths()
 	{

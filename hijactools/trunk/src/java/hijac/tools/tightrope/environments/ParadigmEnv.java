@@ -65,12 +65,12 @@ public abstract class ParadigmEnv extends ObjectEnv
 		map.put(PARENTS_STR, getParents());
 		map.put(METHODS, methsList());
 		map.put(SYNC_METHODS, syncMethsList());
-		map.put(HAS_CLASS, isHasClass());
+		map.put(HAS_CLASS, hasClass());
 		
 		return map;
 	}
 
-	public boolean isHasClass()
+	public boolean hasClass()
 	{
 		if (classEnv != null)
 		{
@@ -82,11 +82,6 @@ public abstract class ParadigmEnv extends ObjectEnv
 		}
 		return false;
 	}
-//
-//	public void setHasClass(boolean hasClass)
-//	{
-//		this.hasClass = hasClass;
-//	}
 
 	public static ArrayList<String> getGenericParadigmTypes()
 	{
@@ -96,7 +91,5 @@ public abstract class ParadigmEnv extends ObjectEnv
 		}
 		
 		return GENERIC_PARADIGM_TYPES;
-	}
-	
-	
+	}	
 }

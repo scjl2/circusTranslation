@@ -14,7 +14,10 @@ ThreadIds
 \end{zsection}
 
 \begin{circus}
-\circprocess LandingGearHandlerTakeOffApp \circdef   \circbegin
+\circprocess LandingGearHandlerTakeOffApp \circdef \\ \qquad 
+  ControllingMission : TakeOffMissionID
+\circspot 
+  \circbegin
 \end{circus}
 
 

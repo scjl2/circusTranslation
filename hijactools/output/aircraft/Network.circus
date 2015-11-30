@@ -289,7 +289,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 \end{circus}
 %
 %
-%+++ Framework +++ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Framework +++ 
 %
 \begin{circus}
 \circprocess Framework \circdef \\
@@ -303,7 +303,9 @@ Tier1
 \circblockclose
 \circblockclose
 \end{circus}
-% APPLICATION
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPLICATION
+%
 \begin{circus}
 \circprocess  Application \circdef \\
 \circblockopen

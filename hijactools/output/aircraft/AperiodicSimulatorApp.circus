@@ -4,7 +4,10 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess AperiodicSimulatorApp \circdef   \circbegin
+\circprocess AperiodicSimulatorApp \circdef \\ \qquad 
+  controlHandlerID : controlHandlerID
+\circspot 
+  \circbegin
 \end{circus}
 
 

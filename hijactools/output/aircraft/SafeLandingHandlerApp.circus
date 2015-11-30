@@ -8,7 +8,12 @@ LandMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess SafeLandingHandlerApp \circdef   \circbegin
+\circprocess SafeLandingHandlerApp \circdef \\ \qquad 
+  ControllingMission : LandMissionID
+, \\ \qquad 
+  SAFE\_LANDING\_ALTITUDE : 10.0
+\circspot 
+  \circbegin
 \end{circus}
 
 

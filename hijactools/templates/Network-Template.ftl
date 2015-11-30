@@ -276,7 +276,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 %
 </#list>
 %
-%+++ Framework +++ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Framework +++ 
 %
 \begin{circus}
 \circprocess Framework \circdef \\
@@ -294,7 +294,9 @@ Tier${tier_index}
 \circblockclose
 \circblockclose
 \end{circus}
-% APPLICATION
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPLICATION
+%
 \begin{circus}
 \circprocess  Application \circdef \\
 \circblockopen
