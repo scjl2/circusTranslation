@@ -3,41 +3,41 @@
 \end{zsection}
 %
 \begin{circus}
-\t1 \circchannel deployLandingGearCall :MissionID  \\
-\t1 \circchannel deployLandingGearRet : MissionID \\
+\t1 \circchannel deployLandingGearCall :SchedulableID  \\
+\t1 \circchannel deployLandingGearRet : SchedulableID \\
 \end{circus}
 %
 %
 \begin{circus}
-\t1 \circchannel abortCall : MissionID \cross ThreadID   \\
-\t1 \circchannel abortRet : MissionID \cross  ThreadID\\
+\t1 \circchannel abortCall : SchedulableID \cross ThreadID   \\
+\t1 \circchannel abortRet : SchedulableID \cross  ThreadID\\
 \end{circus}
 % 
 \begin{circus}
-\t1 \circchannel getControllingMissionCall : MissionID \cross ThreadID   \\
-\t1 \circchannel getControllingMissionRet : MissionID \cross  ThreadID \cross MissionID \\
+\t1 \circchannel getControllingMissionCall : SchedulableID \cross ThreadID   \\
+\t1 \circchannel getControllingMissionRet : SchedulableID \cross  ThreadID \cross MissionID \\
 \end{circus}
 % 
 \begin{circus}
-\t1 \circchannel setControllingMissionCall : MissionID \cross ThreadID  \cross
+\t1 \circchannel setControllingMissionCall : SchedulableID \cross ThreadID  \cross
 MissionID
 
   \\
-\t1 \circchannel setControllingMissionRet : MissionID \cross  ThreadID\\
+\t1 \circchannel setControllingMissionRet : SchedulableID \cross  ThreadID\\
 \end{circus}
 % 
 \begin{circus}
-\t1 \circchannel cleanUpCall : MissionID \cross ThreadID   \\
-\t1 \circchannel cleanUpRet : MissionID \cross  ThreadID \cross \boolean \\
+\t1 \circchannel cleanUpCall : SchedulableID \cross ThreadID   \\
+\t1 \circchannel cleanUpRet : SchedulableID \cross  ThreadID \cross \boolean \\
 \end{circus}
 % 
 \begin{circus}
-\t1 \circchannel stowLandingGearCall : MissionID \cross ThreadID   \\
-\t1 \circchannel stowLandingGearRet : MissionID \cross  ThreadID\\
+\t1 \circchannel stowLandingGearCall : SchedulableID \cross ThreadID   \\
+\t1 \circchannel stowLandingGearRet : SchedulableID \cross  ThreadID\\
 \end{circus}
 % 
 \begin{circus}
-\t1 \circchannel isLandingGearDeployedCall : MissionID \cross ThreadID   \\
-\t1 \circchannel isLandingGearDeployedRet : MissionID \cross  ThreadID \cross \boolean \\
+\t1 \circchannel isLandingGearDeployedCall : SchedulableID \cross ThreadID   \\
+\t1 \circchannel isLandingGearDeployedRet : SchedulableID \cross  ThreadID \cross \boolean \\
 \end{circus}
 % 

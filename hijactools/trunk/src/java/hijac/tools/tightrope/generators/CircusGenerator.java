@@ -9,6 +9,7 @@ import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
+import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
@@ -192,6 +193,36 @@ public class CircusGenerator
 	}
 
 	@SuppressWarnings("rawtypes")
+	private void translateClass(ClassEnv classEnv)
+	{
+		Map classMap;
+		if (classEnv != null)
+		{
+			if (!classEnv.isEmpty())
+			{
+				classMap = classEnv.toMap();
+								
+				translateCommon(classMap, CLASS_TEMPLATE_FTL, procName
+						+ CLASS_CIRCUS);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void translateCustomChannels(Map chanMap,
+			ParadigmEnv objEnv)
+	{
+		if (!objEnv.getMeths().isEmpty()
+				&& !objEnv.getSyncMeths().isEmpty())
+		{
+			objEnv.getMeths().remove("handleAsyncEvent");
+			chanMap.put("IDType", "SchedulableID");
+			translateCommon(chanMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+					+ "MethChan.circus");
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
 	private void translateIDFiles()
 	{
 		System.out.println("+++ Generating ID Files +++");
@@ -244,30 +275,23 @@ public class CircusGenerator
 		/* Create a data-model */
 		SafeletEnv safelet = programEnv.getSafelet();
 
-		Map root = safelet.toMap();
+		Map sMap = safelet.toMap();
 
-		procName = (String) root.get(PROCESS_ID);
+		procName = (String) sMap.get(PROCESS_ID);
 
-		translateCommon(root, SAFELET_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
+		translateCommon(sMap, SAFELET_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 		// Custom Channels
-		if (!safelet.getMeths().isEmpty() || !safelet.getSyncMeths().isEmpty())
-		{
-			root.put("IDType", "");
-			translateCommon(root, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
-					+ "MethChan.circus");
-		}
+//		if (!safelet.getMeths().isEmpty() || !safelet.getSyncMeths().isEmpty())
+//		{
+//			root.put("IDType", "");
+//			translateCommon(root, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+//					+ "MethChan.circus");
+//		}
+		translateCustomChannels(sMap, safelet);
 
 		ClassEnv classEnv = safelet.getClassEnv();
-		if (classEnv != null)
-		{
-			root = classEnv.toMap();
-			if (!root.isEmpty())
-			{
-				translateCommon(root, CLASS_TEMPLATE_FTL, procName
-						+ CLASS_CIRCUS);
-			}
-		}
+		translateClass(classEnv);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -275,38 +299,31 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Translating Top Level Mission Sequencers +++");
 
-		Map tlms;
+		Map tlmsMap;
 
 		for (TopLevelMissionSequencerEnv tlmsEnv : programEnv
 				.getTopLevelMissionSequencers())
 		{
 			/* Create a data-model */
-			tlms = tlmsEnv.toMap();
+			tlmsMap = tlmsEnv.toMap();
 
-			procName = (String) tlms.get(PROCESS_ID);
+			procName = (String) tlmsMap.get(PROCESS_ID);
 
-			translateCommon(tlms, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
+			translateCommon(tlmsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			if (!tlmsEnv.getMeths().isEmpty()
-					|| !tlmsEnv.getSyncMeths().isEmpty())
-			{
-				tlms.put("IDType", "SchedulableID");
-				translateCommon(tlms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
-						+ "MethChan.circus");
-			}
+//			if (!tlmsEnv.getMeths().isEmpty()
+//					|| !tlmsEnv.getSyncMeths().isEmpty())
+//			{
+//				tlms.put("IDType", "SchedulableID");
+//				translateCommon(tlms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+//						+ "MethChan.circus");
+//			}
+			translateCustomChannels(tlmsMap, tlmsEnv);
 
 			ClassEnv classEnv = tlmsEnv.getClassEnv();
-			if (classEnv != null)
-			{
-				tlms = classEnv.toMap();
-				if (!tlms.isEmpty())
-				{
-					translateCommon(tlms, CLASS_TEMPLATE_FTL, procName
-							+ CLASS_CIRCUS);
-				}
-			}
+			translateClass(classEnv);
 		}
 	}
 
@@ -332,24 +349,17 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			if (!mEnv.getMeths().isEmpty() || !mEnv.getSyncMeths().isEmpty())
-			{
-				missionMap.put("IDType", "MissionID");
-				translateCommon(missionMap, CUSTOM_CHANNELS_TEMPLATE_FTL,
-						procName + "MethChan.circus");
-			}
+//			if (!mEnv.getMeths().isEmpty() || !mEnv.getSyncMeths().isEmpty())
+//			{
+//				missionMap.put("IDType", "MissionID");
+//				translateCommon(missionMap, CUSTOM_CHANNELS_TEMPLATE_FTL,
+//						procName + "MethChan.circus");
+//			}
+			translateCustomChannels(missionMap, mEnv);
 
 			// Class
 			ClassEnv classEnv = mEnv.getClassEnv();
-			if (classEnv != null)
-			{
-				missionMap = classEnv.toMap();
-				if (!missionMap.isEmpty())
-				{
-					translateCommon(missionMap, CLASS_TEMPLATE_FTL, procName
-							+ CLASS_CIRCUS);
-				}
-			}
+			translateClass(classEnv);
 
 		}
 	}
@@ -359,38 +369,31 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Translating Nested Mission Sequencers +++");
 
-		Map sms;
+		Map smsMap;
 
 		for (NestedMissionSequencerEnv smsEnv : programEnv
 				.getNestedMissionSequencers())
 		{
 			/* Create a data-model */
-			sms = smsEnv.toMap();
+			smsMap = smsEnv.toMap();
 
-			procName = (String) sms.get(PROCESS_ID);
+			procName = (String) smsMap.get(PROCESS_ID);
 
-			translateCommon(sms, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
+			translateCommon(smsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			if (!smsEnv.getMeths().isEmpty()
-					|| !smsEnv.getSyncMeths().isEmpty())
-			{
-				sms.put("IDType", "SchedulableID");
-				translateCommon(sms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
-						+ "MethChan.circus");
-			}
-
+//			if (!smsEnv.getMeths().isEmpty()
+//					|| !smsEnv.getSyncMeths().isEmpty())
+//			{
+//				sms.put("IDType", "SchedulableID");
+//				translateCommon(sms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+//						+ "MethChan.circus");
+//			}
+			translateCustomChannels(smsMap, smsEnv);
+			
 			ClassEnv classEnv = smsEnv.getClassEnv();
-			if (classEnv != null)
-			{
-				sms = classEnv.toMap();
-				if (!sms.isEmpty())
-				{
-					translateCommon(sms, CLASS_TEMPLATE_FTL, procName
-							+ CLASS_CIRCUS);
-				}
-			}
+			translateClass(classEnv);
 		}
 	}
 
@@ -412,25 +415,27 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			if (!mtEnv.getMeths().isEmpty() || !mtEnv.getSyncMeths().isEmpty())
-			{
-				mtEnv.getMeths().remove("run");
-				mtMap.put("IDType", "SchedulableID");
-				translateCommon(mtMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
-						+ "MethChan.circus");
-			}
+//			if (!mtEnv.getMeths().isEmpty() || !mtEnv.getSyncMeths().isEmpty())
+//			{
+//				mtEnv.getMeths().remove("run");
+//				mtMap.put("IDType", "SchedulableID");
+//				translateCommon(mtMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+//						+ "MethChan.circus");
+//			}
+			translateCustomChannels(mtMap, mtEnv);
 
 			ClassEnv classEnv = mtEnv.getClassEnv();
-			if (classEnv != null)
-			{
-				if (!classEnv.getMeths().isEmpty()
-						|| !classEnv.getSyncMeths().isEmpty())
-				{
-					mtMap = classEnv.toMap();
-					translateCommon(mtMap, CLASS_TEMPLATE_FTL, procName
-							+ CLASS_CIRCUS);
-				}
-			}
+//			if (classEnv != null)
+//			{
+//				if (!classEnv.getMeths().isEmpty()
+//						|| !classEnv.getSyncMeths().isEmpty())
+//				{
+//					mtMap = classEnv.toMap();
+//					translateCommon(mtMap, CLASS_TEMPLATE_FTL, procName
+//							+ CLASS_CIRCUS);
+//				}
+//			}
+			translateClass(classEnv);
 
 		}
 	}
@@ -453,25 +458,18 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			if (!osehEnv.getMeths().isEmpty()
-					|| !osehEnv.getSyncMeths().isEmpty())
-			{
-				osehEnv.getMeths().remove("handleAsyncEvent");
-				osehMap.put("IDType", "SchedulableID");
-				translateCommon(osehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
-						+ "MethChan.circus");
-			}
-
+//			if (!osehEnv.getMeths().isEmpty()
+//					|| !osehEnv.getSyncMeths().isEmpty())
+//			{
+//				osehEnv.getMeths().remove("handleAsyncEvent");
+//				osehMap.put("IDType", "SchedulableID");
+//				translateCommon(osehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+//						+ "MethChan.circus");
+//			}
+			translateCustomChannels(osehMap, osehEnv);
+			
 			ClassEnv classEnv = osehEnv.getClassEnv();
-			if (classEnv != null)
-			{
-				osehMap = classEnv.toMap();
-				if (!osehMap.isEmpty())
-				{
-					translateCommon(osehMap, CLASS_TEMPLATE_FTL, procName
-							+ CLASS_CIRCUS);
-				}
-			}
+			translateClass(classEnv);
 		}
 	}
 
@@ -480,45 +478,38 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Translating Periodic Event Handlers +++");
 
-		Map pehhMap;
+		Map pehMap;
 
 		for (PeriodicEventHandlerEnv pehEnv : programEnv
 				.getPeriodicEventHandlers())
 		{
 			/* Create a data-model */
-			pehhMap = pehEnv.toMap();
+			pehMap = pehEnv.toMap();
 
-			procName = (String) pehhMap.get(PROCESS_ID);
-			translateCommon(pehhMap, HANDLER_APP_TEMPLATE_FTL, procName
+			procName = (String) pehMap.get(PROCESS_ID);
+			translateCommon(pehMap, HANDLER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			if (!pehEnv.getMeths().isEmpty()
-					|| !pehEnv.getSyncMeths().isEmpty())
-			{
-				pehEnv.getMeths().remove("handleAsyncEvent");
-				pehhMap.put("IDType", "SchedulableID");
-				translateCommon(pehhMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
-						+ "MethChan.circus");
-			}
+//			if (!pehEnv.getMeths().isEmpty()
+//					|| !pehEnv.getSyncMeths().isEmpty())
+//			{
+//				pehEnv.getMeths().remove("handleAsyncEvent");
+//				pehMap.put("IDType", "SchedulableID");
+//				translateCommon(pehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+//						+ "MethChan.circus");
+//			}
+			translateCustomChannels(pehMap, pehEnv);
 
 			ClassEnv classEnv = pehEnv.getClassEnv();
-			if (classEnv != null)
-			{
-				pehhMap = classEnv.toMap();
-				if (!pehhMap.isEmpty())
-				{
-					translateCommon(pehhMap, CLASS_TEMPLATE_FTL, procName
-							+ CLASS_CIRCUS);
-				}
-			}
+			translateClass(classEnv);
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes"})
 	private void translateAperiodicEventHandlers()
 	{
-		System.out.println("+++ Translating One Shot Event Handlers +++");
+		System.out.println("+++ Translating Aperiodic Event Handlers +++");
 
 		Map apehMap;
 
@@ -533,25 +524,10 @@ public class CircusGenerator
 					+ APP_CIRCUS);
 
 			// Custom Channels
-			if (!apehEnv.getMeths().isEmpty()
-					|| !apehEnv.getSyncMeths().isEmpty())
-			{
-				apehEnv.getMeths().remove("handleAsyncEvent");
-				apehMap.put("IDType", "SchedulableID");
-				translateCommon(apehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
-						+ "MethChan.circus");
-			}
+			translateCustomChannels(apehMap, apehEnv);
 
 			ClassEnv classEnv = apehEnv.getClassEnv();
-			if (classEnv != null)
-			{
-				apehMap = classEnv.toMap();
-				if (!apehMap.isEmpty())
-				{
-					translateCommon(apehMap, CLASS_TEMPLATE_FTL, procName
-							+ CLASS_CIRCUS);
-				}
-			}
+			translateClass(classEnv);
 		}
 	}
 
