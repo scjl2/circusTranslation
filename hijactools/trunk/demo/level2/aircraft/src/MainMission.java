@@ -24,11 +24,6 @@ public class MainMission extends Mission
 
 	int test = 0;
 
-	public MainMission(int test)
-	{
-		this.test = test;
-	}
-
 	// Evn Mon Variables
 	private double cabinPressure;
 	private double emergencyOxygen;

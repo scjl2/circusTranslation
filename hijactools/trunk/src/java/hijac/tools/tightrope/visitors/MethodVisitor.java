@@ -92,6 +92,10 @@ public class MethodVisitor
 				}
 				// }
 			}
+			
+			
+			VariableVisitor varVis = new VariableVisitor(TightRope.getProgramEnv(), object);
+			mt.accept(varVis, true);
 		}
 		else
 		{

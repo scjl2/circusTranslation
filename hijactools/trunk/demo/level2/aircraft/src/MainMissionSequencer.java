@@ -1,7 +1,7 @@
 /** Aircraft - Mode Change Example
- * 
+ *
  * 	The main mission sequencer for the application
- * 
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -20,7 +20,7 @@ public class MainMissionSequencer extends MissionSequencer<Mission>
 
 	/**
 	 * Class Constructor
-	 * 
+	 *
 	 * @param priority
 	 *            the PriorityParameters for the sequencer
 	 * @param storage
@@ -43,11 +43,10 @@ public class MainMissionSequencer extends MissionSequencer<Mission>
 		if (!returnedMission)
 		{
 			returnedMission = true;
-			return new MainMission(5);
+			return new MainMission();
 		} else
 		{
 			return null;
 		}
 	}
-
 }
