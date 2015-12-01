@@ -8,7 +8,12 @@ TakeOffMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess TakeOffFailureHandlerApp \circdef   \circbegin
+\circprocess TakeOffFailureHandlerApp \circdef \\ \qquad 
+  takeoffMission : MissionID
+, \\ \qquad 
+  threshold : Double
+\circspot 
+  \circbegin
 \end{circus}
 
 

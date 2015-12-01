@@ -99,7 +99,12 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 					paramMap.put(vt.getName().toString(), vt.getType());
 				}
 
-				if (mt.getName().contentEquals("initializeApplication"))
+				
+				if(mt.getName().contentEquals("<init>"))
+				{
+					extractProcessParameters(mt, safeletEnv);
+				}
+				else if (mt.getName().contentEquals("initializeApplication"))
 				{
 //					MethodEnv me = new MethodEnv(mt.getName(), typeKind, returns,
 //							paramMap);

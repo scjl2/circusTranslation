@@ -8,7 +8,12 @@ LandMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess SafeLandingHandlerApp \circdef   \circbegin
+\circprocess SafeLandingHandlerApp \circdef \\ \qquad 
+  landMission : MissionID
+, \\ \qquad 
+  threshold : Double
+\circspot 
+  \circbegin
 \end{circus}
 
 

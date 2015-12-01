@@ -392,6 +392,7 @@ public class EnvironmentBuilder
 		System.out.println(BUILDING_SCHEDULABLE + s + END_PLUSES);
 		System.out.println();
 
+		
 		ClassEnv classEnv = new ClassEnv();
 		classEnv.setName(s);
 
@@ -399,58 +400,12 @@ public class EnvironmentBuilder
 		Elements elems = analysis.ELEMENTS;
 
 		TypeElement schedulableType = elems.getTypeElement(fullName);
-
-		ClassTree ct = analysis.TREES.getTree(schedulableType);
-
-		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-
-		Iterator<StatementTree> i = members.iterator();
-
+		
 		ParadigmEnv schedulableEnv = programEnv.getSchedulable(s);
 		schedulableEnv.addClassEnv(classEnv);
-
-		getVariables(schedulableType, schedulableEnv);
-
-		while (i.hasNext())
-		{
-			Tree tlst = i.next();
-
-			if (tlst instanceof MethodTree)
-			{
-				MethodTree mt = (MethodTree) tlst;
-
-				MethodVisitor methodVisitor = new MethodVisitor(analysis,
-						schedulableEnv);
-				if (mt.getModifiers().getFlags()
-						.contains(Modifier.SYNCHRONIZED))
-				{
-
-					schedulableEnv.getClassEnv().addSyncMeth(
-							methodVisitor.visitMethod(mt, false));
-
-				}
-				else if (!(mt.getName().contentEquals("<init>")))
-				{
-					if ((mt.getName().contentEquals("run")))
-					{
-						((ManagedThreadEnv) schedulableEnv)
-								.addRunMethod(methodVisitor.visitMethod(mt,
-										false));
-					}
-					else if ((mt.getName().contentEquals("handleAsyncEvent")))
-					{
-						((EventHandlerEnv) schedulableEnv)
-								.addHandleAsyncMethod(methodVisitor
-										.visitMethod(mt, false));
-					}
-					else
-					{
-						schedulableEnv.addMeth(methodVisitor.visitMethod(mt,
-								false));
-					}
-				}
-			}
-		}
+		
+		new SchedulableObjectBuilder(analysis, programEnv, schedulableEnv, this).build(schedulableType);
+		
 	}
 
 	private void buildSchedulableMissionSequencer(
