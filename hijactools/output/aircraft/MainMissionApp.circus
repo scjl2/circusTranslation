@@ -23,7 +23,10 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess MainMissionApp \circdef  \circbegin
+\circprocess MainMissionApp \circdef \\ \qquad 
+  test : \num
+\circspot 
+ \circbegin
 \end{circus}
 
 \begin{schema}{State}

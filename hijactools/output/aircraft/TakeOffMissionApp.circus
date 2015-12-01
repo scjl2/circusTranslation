@@ -20,7 +20,10 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess TakeOffMissionApp \circdef  \circbegin
+\circprocess TakeOffMissionApp \circdef \\ \qquad 
+  controllingMission : MissionID
+\circspot 
+ \circbegin
 \end{circus}
 
 \begin{schema}{State}

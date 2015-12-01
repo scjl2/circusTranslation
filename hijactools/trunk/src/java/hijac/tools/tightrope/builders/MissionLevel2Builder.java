@@ -101,8 +101,48 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 				final boolean currentMethodIsInitialize = missionMethodTree
 						.getName().contentEquals("initialize");
+				
+				final boolean currentMethodIsConstructor = missionMethodTree
+						.getName().contentEquals("<init>");
 
-				if (currentMethodIsInitialize)
+				if(currentMethodIsConstructor)
+				{
+					System.out.println("mission method tree: " + missionMethodTree.toString());
+					System.out.println("mission method tree params: " + missionMethodTree.getParameters().toString());
+					for (VariableTree vt : missionMethodTree.getParameters())
+					{
+						if (!(vt.getType().toString().contains("String")))
+						{
+							// object.addParameter(vt.getName().toString(),
+							// NewTransUtils.encodeType(vt.getType()),
+							// NewTransUtils.encodeType(vt.getType()),
+							// (vt.getType() instanceof PrimitiveTypeTree),
+							// "FromMethVis");
+							//
+						}
+						// else
+						// {
+						VariableEnv parameter = new VariableEnv();
+
+						parameter.setName(vt.getName().toString());
+						parameter.setType(NewTransUtils.encodeType(vt.getType()));
+						parameter
+								.setProgramType(NewTransUtils.encodeType(vt.getType()));
+
+//						if (parameter.getType().endsWith("Parameters"))
+//						{
+		//
+//						}
+//						else
+						{
+							System.out.println("Mission Adding Proc Param "
+									+ parameter.toString());
+							missionEnv.addProcParameter(parameter);
+						}
+						// }
+					}
+				}
+				else if (currentMethodIsInitialize)
 				{
 					buildMissionInitialise(missionMethodTree);
 				}
@@ -191,38 +231,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 			Iterator<StatementTree> methodStatementsIterator = methodStatements
 					.iterator();
 
-			for (VariableTree vt : missionMethodTree.getParameters())
-			{
-				if (!(vt.getType().toString().contains("String")))
-				{
-					// object.addParameter(vt.getName().toString(),
-					// NewTransUtils.encodeType(vt.getType()),
-					// NewTransUtils.encodeType(vt.getType()),
-					// (vt.getType() instanceof PrimitiveTypeTree),
-					// "FromMethVis");
-					//
-				}
-				// else
-				// {
-				VariableEnv parameter = new VariableEnv();
-
-				parameter.setName(vt.getName().toString());
-				parameter.setType(NewTransUtils.encodeType(vt.getType()));
-				parameter
-						.setProgramType(NewTransUtils.encodeType(vt.getType()));
-
-				if (parameter.getType().endsWith("Parameters"))
-				{
-
-				}
-				else
-				{
-					System.out.println("Adding Proc Param "
-							+ parameter.toString());
-					missionEnv.addProcParameter(parameter);
-				}
-				// }
-			}
+			
 			
 			VariableVisitor varVisitor = new VariableVisitor(programEnv,
 					missionEnv);
