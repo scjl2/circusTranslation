@@ -360,35 +360,7 @@ InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
 \begin{circus}
 Threads \circdef  \\
 \circblockopen
-ThreadFW(SafeLandingHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(ACModeChangerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(TakeOffFailureHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(InstrumentLandingSystemMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(FlightSensorsMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(TakeOffMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(AperiodicSimulatorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(LandingGearHandlerLandThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(LandingGearHandlerTakeOffThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(GroundDistanceMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(ControlHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(CommunicationsHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(BeginLandingHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(NavigationMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(EnvironmentMonitorThreadID, 5) \\
+ThreadFW(Threads, ) \\
 
 \circblockclose
 \end{circus}

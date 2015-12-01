@@ -4,10 +4,53 @@
 \extracircusvspace
 %
 \begin{axdef}
- 
+	SafeLandingHandlerThreadID : ThreadID \\
+	ACModeChangerThreadID : ThreadID \\
+	TakeOffFailureHandlerThreadID : ThreadID \\
+	InstrumentLandingSystemMonitorThreadID : ThreadID \\
+	FlightSensorsMonitorThreadID : ThreadID \\
+	TakeOffMonitorThreadID : ThreadID \\
+	AperiodicSimulatorThreadID : ThreadID \\
+	LandingGearHandlerLandThreadID : ThreadID \\
+	LandingGearHandlerTakeOffThreadID : ThreadID \\
+	GroundDistanceMonitorThreadID : ThreadID \\
+	ControlHandlerThreadID : ThreadID \\
+	CommunicationsHandlerThreadID : ThreadID \\
+	BeginLandingHandlerThreadID : ThreadID \\
+	NavigationMonitorThreadID : ThreadID \\
+	EnvironmentMonitorThreadID : ThreadID \\
+
 \where
-  distinct \langle SafeletThreadId, 
-  nullThreadId, \\ 
+  distinct \langle SafeletThreadId,
+  nullThreadId, \\
+	SafeLandingHandlerThreadID
+	,
+	ACModeChangerThreadID
+	,\\
+	TakeOffFailureHandlerThreadID
+	,
+	InstrumentLandingSystemMonitorThreadID
+	,\\
+	FlightSensorsMonitorThreadID
+	,
+	TakeOffMonitorThreadID
+	,\\
+	AperiodicSimulatorThreadID
+	,
+	LandingGearHandlerLandThreadID
+	,\\
+	LandingGearHandlerTakeOffThreadID
+	,
+	GroundDistanceMonitorThreadID
+	,\\
+	ControlHandlerThreadID
+	,
+	CommunicationsHandlerThreadID
+	,\\
+	BeginLandingHandlerThreadID
+	,
+	NavigationMonitorThreadID
+	,\\
+	EnvironmentMonitorThreadID
   \rangle
 \end{axdef}
-

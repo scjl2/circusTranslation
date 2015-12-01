@@ -5,6 +5,7 @@ import hijac.tools.tightrope.environments.FrameworkEnv;
 
 import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -295,10 +296,13 @@ public class ProgramEnv
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map getThreadIdsMap()
 	{
-		return threadIds.toMap();
+		Map returnMap = new HashMap();
+		returnMap.put("Threads", threadIds.toMap());
+		
+		return returnMap;
 	}
 
 	@SuppressWarnings({ "rawtypes" })

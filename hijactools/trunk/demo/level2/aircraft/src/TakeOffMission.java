@@ -1,7 +1,7 @@
 /** Aircraft - Mode Change Example
- * 
+ *
  *   This mission deals with the aircraft's take off phase
- *   
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -57,9 +57,9 @@ public class TakeOffMission extends Mission //implements LandingGearUser
 				storageParametersSchedulable, "Landing Gear Handler", this);
 
 		landingGearHandler.register();
-			
-		
-			
+
+
+
 		TakeOffMonitor takeOffMonitor = new TakeOffMonitor(
 				new PriorityParameters(5), new PeriodicParameters(
 						new RelativeTime(0, 0), new RelativeTime(500, 0)),
@@ -101,7 +101,7 @@ public class TakeOffMission extends Mission //implements LandingGearUser
 		this.controllingMission = controllingMission;
 	}
 
-	
+
 	public synchronized void deployLandingGear()
 	{
 		landingGearDeployed = true;
@@ -114,13 +114,13 @@ public class TakeOffMission extends Mission //implements LandingGearUser
 		return !abort;
 	}
 
-	
+
 	public void stowLandingGear()
 	{
 		landingGearDeployed = false;
 	}
 
-	
+
 	public boolean isLandingGearDeployed()
 	{
 		return landingGearDeployed;

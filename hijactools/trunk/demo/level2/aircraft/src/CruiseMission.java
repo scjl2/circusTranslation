@@ -1,7 +1,7 @@
 /** Aircraft - Mode Change Example
- * 
- * This mission handles events when the Aircraft is cruising 
- * 
+ *
+ * This mission handles events when the Aircraft is cruising
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;

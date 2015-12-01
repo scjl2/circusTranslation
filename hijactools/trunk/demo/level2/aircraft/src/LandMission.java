@@ -1,7 +1,7 @@
 /** Aircraft - Mode Change Example
- * 
- * 	This mission handles events when the Aircraft is landing 
- * 
+ *
+ * 	This mission handles events when the Aircraft is landing
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -92,13 +92,13 @@ public class LandMission extends Mission //implements LandingGearUser
 
 	}
 
-	
+
 	public void stowLandingGear()
 	{
 		landingGearDeployed = false;
 	}
 
-	
+
 	public boolean isLandingGearDeployed()
 	{
 		return landingGearDeployed;

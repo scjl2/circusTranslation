@@ -26,7 +26,7 @@ public class MainMission extends Mission
 
 	public MainMission(int test)
 	{
-		this.test = test;	
+		this.test = test;
 	}
 
 	// Evn Mon Variables
@@ -120,11 +120,11 @@ public class MainMission extends Mission
 
 		commsHandler.register();
 
-		AperiodicSimulator controlSim 
+		AperiodicSimulator controlSim
 			= new AperiodicSimulator(
-				new PriorityParameters(5), 
+				new PriorityParameters(5),
 				new PeriodicParameters(new RelativeTime(10, 0), null),
-				storageParametersSchedulable, 
+				storageParametersSchedulable,
 				controlHandler);
 
 		controlSim.register();

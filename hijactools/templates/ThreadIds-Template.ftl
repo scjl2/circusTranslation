@@ -7,10 +7,10 @@
 <#list Threads?keys as thread>
 	${thread} : ThreadID \\
 </#list>
- 
+
 \where
-  distinct \langle SafeletThreadId, 
-  nullThreadId, \\ 
+  distinct \langle SafeletThreadId,
+  nullThreadId, \\
   <#list Threads?keys as thread>
 	${thread}
 	<sep>
@@ -23,4 +23,3 @@
 </#list>
   \rangle
 \end{axdef}
-
