@@ -19,8 +19,7 @@ public class FrameworkEnv
 
 	private TierEnv currentTier;
 	private ClusterEnv currentCluster;
-	
-	
+
 	class ControlTierEnv
 	{
 
@@ -68,15 +67,14 @@ public class FrameworkEnv
 		public String toString()
 		{
 			String output = "";
-			output +=  "\t Safelet: " + safeletEnv.getName();
+			output += "\t Safelet: " + safeletEnv.getName();
 			output += LINE_SEPARATOR;
 			output += "\t Safelet Methods:";
 			output += LINE_SEPARATOR;
 			List<MethodEnv> methods = safeletEnv.getMeths();
 			// TODO Output sync meths?
 			output = outputMethods(output, methods);
-			
-			
+
 			output += LINE_SEPARATOR;
 			output += "\t Top-Level Mission Sequencer: "
 					+ topLevelMissionSequencerEnv.getName();
@@ -90,8 +88,6 @@ public class FrameworkEnv
 			return output;
 
 		}
-
-		
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
@@ -192,17 +188,36 @@ public class FrameworkEnv
 
 				Map missionMap = new HashMap();
 				missionMap.put("Name", c.getMissionEnv().getName());
-				
+
 				List<String> params = new ArrayList<String>();
-				for(VariableEnv v : c.getMissionEnv().getParameters())
+
+				for (VariableEnv v : c.getMissionEnv().getFWParameters())
 				{
 					params.add(v.toString());
 				}
-				
-				missionMap.put("Parameters", params);
+
+				missionMap.put("FWParameters", params);
+
+				params = new ArrayList<String>();
+				for (VariableEnv v : c.getMissionEnv().getAppParameters())
+				{
+					params.add(v.toString());
+				}
+
+				missionMap.put("AppParameters", params);
+
+				params = new ArrayList<String>();
+				for (VariableEnv v : c.getMissionEnv().getThreadParameters())
+
+				{
+					params.add(v.toString());
+				}
+
+				missionMap.put("ThreadParameters", params);
 
 				clusterMap.put("Mission", missionMap);
-				clusterMap.put("Mission_HasClass", c.getMissionEnv().isHasClass());
+				clusterMap
+						.put("Mission_HasClass", c.getMissionEnv().hasClass());
 
 				Map schedulablesMap = new HashMap();
 				schedulablesMap.put("Periodics", c.getSchedulablesEnv()
@@ -268,10 +283,10 @@ public class FrameworkEnv
 			output += "\t\t Mission Methods:";
 			output += LINE_SEPARATOR;
 			List<MethodEnv> methods = new ArrayList<MethodEnv>();
-				methods.addAll(	missionEnv.getMeths());
-				methods.addAll(missionEnv.getSyncMeths());			
+			methods.addAll(missionEnv.getMeths());
+			methods.addAll(missionEnv.getSyncMeths());
 			output = outputMethods(output, methods);
-			
+
 			output += schedulablesEnv.toString();
 
 			return output;
@@ -383,25 +398,58 @@ public class FrameworkEnv
 		{
 			Map sMap = new HashMap();
 			sMap.put("Name", p.getName());
-			
+
 			ArrayList<String> params = new ArrayList<String>();
-			for(VariableEnv v : p.getParameters())
+			// <<<<<<< HEAD
+			// for(VariableEnv v : p.getParameters())
+			// {
+			// System.out.println("Variable v = " + v.toString());
+			// System.out.println("name= " + v.getVariableName());
+			// System.out.println("type = " + v.getVariableType());
+			// System.out.println("programType = " + v.getProgramType());
+			// System.out.println("varInit = " + v.getVariableInit());
+			//
+			// //This adds the type from the program E.G. FlatBufferMission not
+			// MissionID
+			// // params.add(v.getVariableName());
+			// params.add(v.getProgramType());
+			// // params.add("TEST");
+			// }
+			//
+			// sMap.put("Parameters", params);
+			// =======
+			for (VariableEnv v : p.getFWParameters())
 			{
-				System.out.println("Variable v = " + v.toString());
-				System.out.println("name= " + v.getVariableName());
-				System.out.println("type = " + v.getVariableType());
-				System.out.println("programType = " + v.getProgramType());
-				System.out.println("varInit = " + v.getVariableInit());
-				
-				//This adds the type from the program E.G. FlatBufferMission not MissionID
-//				params.add(v.getVariableName());
+				// This adds the type from the program E.G. FlatBufferMission
+				// not MissionID
+				// params.add(v.getVariableName());
 				params.add(v.getProgramType());
-//				params.add("TEST");
 			}
-			
-			sMap.put("Parameters", params);
-			
-			
+
+			sMap.put("FWParameters", params);
+
+			params = new ArrayList<String>();
+			for (VariableEnv v : p.getAppParameters())
+			{
+				// This adds the type from the program E.G. FlatBufferMission
+				// not MissionID
+				// params.add(v.getVariableName());
+				params.add(v.getProgramType());
+			}
+
+			sMap.put("AppParameters", params);
+
+			params = new ArrayList<String>();
+			for (VariableEnv v : p.getThreadParameters())
+			{
+				// This adds the type from the program E.G. FlatBufferMission
+				// not MissionID
+				// params.add(v.getVariableName());
+				params.add(v.getProgramType());
+			}
+
+			sMap.put("ThreadParameters", params);
+
 			return sMap;
 		}
 
@@ -638,11 +686,11 @@ public class FrameworkEnv
 		top += (LINE_SEPARATOR);
 		top += (controlTier.toString());
 		top += (LINE_SEPARATOR);
-		top += ("Number of Tiers = " +tiers.size());
+		top += ("Number of Tiers = " + tiers.size());
 		top += (LINE_SEPARATOR);
 		top += ("____________________________________________________________________________________");
-		top +=(LINE_SEPARATOR);
-		
+		top += (LINE_SEPARATOR);
+
 		StringBuilder output = new StringBuilder(top);
 
 		int i = 0;
@@ -819,25 +867,36 @@ public class FrameworkEnv
 
 		Map safeletMap = new HashMap();
 		safeletMap.put("Name", getControlTier().getSafeletEnv().getName());
-		
-		safeletMap.put("Parameters", getControlTier().getSafeletEnv()
-				.getParameters());
+
+		safeletMap.put("FWParameters", getControlTier().getSafeletEnv()
+				.getFWParameters());
+		safeletMap.put("AppParameters", getControlTier().getSafeletEnv()
+				.getAppParameters());
+		safeletMap.put("ThreadParameters", getControlTier().getSafeletEnv()
+				.getThreadParameters());
 
 		networkMap.put("Safelet", safeletMap);
 
 		networkMap.put("Safelet_HasClass",
-				getControlTier().getSafeletEnv().isHasClass());
+
+		getControlTier().getSafeletEnv().hasClass());
 
 		Map tlmsMap = new HashMap();
 		tlmsMap.put("Name", getControlTier().getTopLevelMissionSequencerEnv()
 				.getName());
-		tlmsMap.put("Parameters", getControlTier()
-				.getTopLevelMissionSequencerEnv().getParameters());
+
+		tlmsMap.put("FWParameters", getControlTier()
+				.getTopLevelMissionSequencerEnv().getFWParameters());
+		tlmsMap.put("AppParameters", getControlTier()
+				.getTopLevelMissionSequencerEnv().getAppParameters());
+		tlmsMap.put("ThreadParameters", getControlTier()
+				.getTopLevelMissionSequencerEnv().getThreadParameters());
 
 		networkMap.put("TopLevelSequencer", tlmsMap);
 
 		networkMap.put("TopLevelSequencer_HasClass", getControlTier()
-				.getTopLevelMissionSequencerEnv().isHasClass());
+
+		.getTopLevelMissionSequencerEnv().hasClass());
 
 		List tierList = new ArrayList();
 
@@ -846,9 +905,6 @@ public class FrameworkEnv
 			tierList.add(tier.toList());
 		}
 		networkMap.put("Tiers", tierList);
-		
-
-		
 
 		return networkMap;
 	}
@@ -903,7 +959,7 @@ public class FrameworkEnv
 		}
 		else
 		{
-	
+
 			for (MethodEnv me : methods)
 			{
 				String params = "";
@@ -912,13 +968,13 @@ public class FrameworkEnv
 				{
 					params = parameterMap.toString();
 				}
-	
-				output += "\t\t\t" + me.getReturnType() + ":" + me.getMethodName()
-						+ "(" + params + ")";
+
+				output += "\t\t\t" + me.getReturnType() + ":"
+						+ me.getMethodName() + "(" + params + ")";
 				output += LINE_SEPARATOR;
 			}
 		}
-		return  output;
+		return output;
 	}
 
 }

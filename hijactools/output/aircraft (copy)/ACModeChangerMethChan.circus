@@ -1,0 +1,23 @@
+\begin{zsection}
+  \SECTION ~ ACModeChangerMethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
+\end{zsection}
+%
+\begin{circus}
+\t1 \circchannel changeToCall :SchedulableID   \cross
+
+
+\\
+\t1 \circchannel changeToRet : SchedulableID \\
+\end{circus}
+%
+\begin{circus}
+\t1 \circchannel getNextMissionCall :SchedulableID  \\
+\t1 \circchannel getNextMissionRet : SchedulableID \cross  MissionID \\
+\end{circus}
+%
+%
+\begin{circus}
+\t1 \circchannel advanceModeCall : SchedulableID \cross ThreadID   \\
+\t1 \circchannel advanceModeRet : SchedulableID \cross  ThreadID\\
+\end{circus}
+% 

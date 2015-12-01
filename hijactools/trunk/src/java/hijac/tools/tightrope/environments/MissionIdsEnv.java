@@ -6,7 +6,7 @@ import java.util.Map;
 public class MissionIdsEnv extends IdEnv
 {
 	private static final String MISSIONS_STR = "Missions";
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
@@ -15,9 +15,9 @@ public class MissionIdsEnv extends IdEnv
 
 		return map;
 	}
-	
+
 	public void addIdNames(String idName)
 	{
-		idNames.add(idName+ID_STR);
+		idNames.add(idName + ID_STR);
 	}
 }

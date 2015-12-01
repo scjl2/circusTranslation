@@ -1,0 +1,60 @@
+\begin{zsection}
+  \SECTION ~ NestedMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+\end{zsection}
+%\begin{circus}
+%\circchannelset MissionAppSync == \\
+%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset MissionAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~NestedOneShotEventHandler~.~NestedMission 
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess NestedMissionApp \circdef \circbegin
+\end{circus}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~NestedMission \then \\
+  
+	register~!~NestedOneShotEventHandler~!~NestedMission \then   \\
+
+
+  initializeRet~.~NestedMission \then \\
+  \Skip
+\circblockclose 
+\end{circusaction}
+ 
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+ cleanupMissionCall~.~NestedMission \then \\
+ cleanupMissionRet~.~NestedMission~?~\false \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot (Methods) \circinterrupt (end\_mission\_app~.~NestedMission \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

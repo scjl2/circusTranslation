@@ -87,28 +87,6 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 
 	}
 
-	// public ReturnVisitor(ClassTree tree)
-	// {
-	// this.tree = tree;
-	//
-	// List<StatementTree> members = (List<StatementTree>) tree.getMembers();
-	// System.out.println("MS Visitor members: " + members);
-	//
-	// i = members.iterator();
-	// }
-	//
-	// public ArrayList<Name> getReturns()
-	// {
-	// while (i.hasNext())
-	// {
-	// Tree tlst = i.next();
-	//
-	// tlst.accept(this, false);
-	// }
-	//
-	// return returns;
-	// }
-
 	@Override
 	public ArrayList<Name> visitBlock(BlockTree arg0, Boolean arg1)
 	{

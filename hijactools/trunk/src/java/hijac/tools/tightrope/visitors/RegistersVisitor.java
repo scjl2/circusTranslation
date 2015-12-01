@@ -85,26 +85,6 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 		this.initVarMap = initVarMap;
 	}
 
-	// private schedulableType getSchedulableType(Name name)
-	// {
-	// TypeElement element = null;
-	//
-	// for (TypeElement t : analysis.getTypeElements())
-	// {
-	// if (t.getSimpleName() == name)
-	// {
-	// element = t;
-	// }
-	// }
-	//
-	// if (element.getSuperclass().toString().contains("ManagedThread"))
-	// {
-	// return FrameworkEnv.schedulableType.MT;
-	// }
-	//
-	// return null;
-	// }
-
 	@Override
 	public Name visitAnnotatedType(AnnotatedTypeTree arg0, Void arg1)
 	{

@@ -1,0 +1,71 @@
+\begin{zsection}
+  \SECTION ~ SPSafeletApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  
+
+  \t1 
+\end{zsection}
+%\begin{circus}
+%\circchannelset SPSafeletAppSync \circdef \\
+%   \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
+%\end{circus}    
+    
+%\begin{circus}
+%\circchannelset SPSafeletChanSet \circdef \\
+%  \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
+%\end{circus}     
+  
+\begin{circus}
+\circprocess SPSafeletApp  \circdef   storageParameters_topLevelSequencer : MissionID
+,
+  storageParameters_nestedSequencer : MissionID
+,
+  storageParameters_Schedulable : MissionID
+\circspot 
+ \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+InitializeApplication \circdef \\
+\circblockopen
+     initializeApplicationCall \then \\
+
+	 	
+
+     initializeApplicationRet \then \\
+     \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+GetSequencer \circdef \\
+\circblockopen
+	getSequencerCall \then \\
+	getSequencerRet~!~MainMissionSequencer  \then \\
+	\Skip 
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	GetSequencer \\
+	\extchoice  \\
+	InitializeApplication  \\
+%
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+ \circinterrupt (end\_safelet\_app \then \Skip) 
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

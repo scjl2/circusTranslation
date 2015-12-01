@@ -10,20 +10,19 @@ public class ManagedThreadEnv extends ParadigmEnv
 	{
 		runMethod = method;
 	}
-	
+
 	public MethodEnv getRunMethod()
 	{
 		return runMethod;
 	}
-	
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
 		Map map = super.toMap();
-		
-		Map runMethodMap =  methodToMap(runMethod);		
-		
+
+		Map runMethodMap = methodToMap(runMethod);
+
 		map.put("Run", runMethodMap);
 
 		return map;

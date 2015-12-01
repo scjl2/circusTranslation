@@ -1,0 +1,10 @@
+\begin{zsection}
+  \SECTION ~ MainMissionMethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
+\end{zsection}
+%
+\begin{circus}
+\t1 \circchannel environmentBadCall :MissionID  \\
+\t1 \circchannel environmentBadRet : MissionID \\
+\end{circus}
+%
+%

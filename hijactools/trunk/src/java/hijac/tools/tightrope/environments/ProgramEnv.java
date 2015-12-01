@@ -90,8 +90,14 @@ public class ProgramEnv
 		final String nameString = name.toString();
 
 		schedulableIds.addIdNames(nameString);
+
+		// TODO this should only happen if there is a Wait or Notify or
+		// Synchronised method
+		// if()
+
 		threadIds.addIdNames(nameString);
 		objectIds.addIdNames(nameString);
+
 	}
 
 	public boolean containsScheudlable(Name name)
@@ -146,7 +152,7 @@ public class ProgramEnv
 		Map returnMap = structureEnv.getNetworkMap();
 		returnMap.put("Objects", getObjectIdsMap());
 		returnMap.put("Threads", getThreadIdsMap());
-		
+
 		return returnMap;
 	}
 
@@ -160,7 +166,7 @@ public class ProgramEnv
 		return structureEnv.getOneShotEventHandlers();
 	}
 
-	public ArrayList<PeriodicEventHandlerEnv> getPeriodicEventHandlers() 
+	public ArrayList<PeriodicEventHandlerEnv> getPeriodicEventHandlers()
 	{
 		return structureEnv.getPeriodicEventHandlers();
 	}
@@ -191,13 +197,14 @@ public class ProgramEnv
 				return tlmsEnv;
 			}
 		}
-
+		
 		return null;
 	}
 
 	/**
-	 * Gets the <code>ParadigmEnv</code> that represents the schedulable sharing
-	 * a name with the parameter. May return <code>null</code>
+	 * Gets the <code>ParadigmEnv</code> that represents
+	 * the schedulable sharing a name with the parameter. May return
+	 * <code>null</code>
 	 * 
 	 * @param name
 	 *            The name of the schedulable that we're looking for, as a
@@ -244,10 +251,10 @@ public class ProgramEnv
 	}
 
 	/**
-	 * Gets the object environment within this program environment that shares
-	 * the same name as the parameter, if it does not exists this method will
-	 * return <code>null</code>. Internally, this method calls
-	 * <code>getObjectEnv(String objectName)</code>.
+	 * >>>>>>> deferredParameterGathering Gets the object environment within
+	 * this program environment that shares the same name as the parameter, if
+	 * it does not exists this method will return <code>null</code>. Internally,
+	 * this method calls <code>getObjectEnv(String objectName)</code>.
 	 * 
 	 * @param objectName
 	 *            The name of the object we're looking for
@@ -279,10 +286,8 @@ public class ProgramEnv
 
 		for (ObjectEnv o : objects)
 		{
-//			System.out.println("ObjectName = " + objectName + " and o.getName = " +o.getName());
 			if (o.getName().contentEquals(objectName))
 			{
-//				System.out.println("returning " + o.getName());
 				return o;
 			}
 		}
@@ -296,10 +301,15 @@ public class ProgramEnv
 		return threadIds.toMap();
 	}
 
-	@SuppressWarnings({ "rawtypes"})
+	@SuppressWarnings({ "rawtypes" })
 	public Map getObjectIdsMap()
 	{
 		return objectIds.toMap();
 	}
 
+	public void setThreadPriority(String threadID, String priority)
+	{
+		threadIds.setThreadPriority(threadID, priority);
+
+	}
 };

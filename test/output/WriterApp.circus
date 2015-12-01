@@ -1,0 +1,30 @@
+\begin{zsection}
+  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds
+\end{zsection}
+%
+\begin{circus}
+\circprocess WriterApp \circdef \circbegin
+\end{circus}
+
+\begin{circusaction}
+Methods \circdef \\
+	Run \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~Writer \then \\
+		
+	runRet~.~Writer \then \\
+	\Skip
+\circblockclose
+\end{circusaction}	
+
+\begin{circusaction}
+\circspot (Methods) \circinterrupt (end\_managedThread\_app~.~Writer \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

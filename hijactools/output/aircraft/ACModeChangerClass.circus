@@ -1,0 +1,137 @@
+
+\begin{circus}
+\circclass ACModeChangerClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  modesLeft : \num\\ 
+  \circreftype currentModeClass : ModeClass\\ 
+  \circreftype launchModeClass : ModeClass\\ 
+  \circreftype cruiseModeClass : ModeClass\\ 
+  \circreftype landModeClass : ModeClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  modesLeft' = 3\\ 
+  \circreftype currentModeClass' = \circnew ModeClass()\\ 
+  \circreftype launchModeClass' = \circnew ModeClass()\\ 
+  \circreftype cruiseModeClass' = \circnew ModeClass()\\ 
+  \circreftype landModeClass' = \circnew ModeClass()\\ 
+\end{schema}
+
+
+%
+\begin{circusaction}
+\circprotected ~ \circsync ~ getNextMission ~ \circdef 
+\circvar ret : MissionID \circspot 
+\\
+
+      \circblockopen
+
+  \circif ~ (modesLeft = 3) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+  modesLeft := modesLeft - 1
+
+ 
+
+               \circseq \\ 
+
+  ret := TakeOffMission
+ 
+
+        \circblockclose  
+
+
+  \\
+  \circelse ~ \lnot (modesLeft = 3) ~ \circthen ~
+  \\
+  \t1
+  \circif ~ (modesLeft = 2) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+  modesLeft := modesLeft - 1
+
+ 
+
+               \circseq \\ 
+
+  ret := CruiseMission
+ 
+
+        \circblockclose  
+
+
+  \\
+  \circelse ~ \lnot (modesLeft = 2) ~ \circthen ~
+  \\
+  \t1
+  \circif ~ (modesLeft = 1) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+  modesLeft := modesLeft - 1
+
+ 
+
+               \circseq \\ 
+
+  ret := LandMission
+ 
+
+        \circblockclose  
+
+
+  \\
+  \circelse ~ \lnot (modesLeft = 1) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+  ret := nullMissionId
+ 
+
+        \circblockclose  
+
+
+  \\
+  \circfi
+
+  \\
+  \circfi
+
+  \\
+  \circfi
+ 
+
+        \circblockclose  
+
+ 
+
+\end{circusaction}	
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
+
+

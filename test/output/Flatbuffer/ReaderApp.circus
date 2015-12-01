@@ -1,0 +1,64 @@
+\begin{zsection}
+  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  
+
+  \t1 , \\
+MissionMethChan
+, 
+FlatBufferMissionMethChan
+, 
+ObjectIds
+, 
+ThreadIds
+
+
+\end{zsection}
+%
+\begin{circus}
+\circprocess ReaderApp \circdef   fbMission : MissionID
+\circspot 
+ \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~Reader \then \\
+	
+      \circblockopen
+
+
+
+
+            \circblockopen \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\\ \circvar loopVar : \bool \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar) ~ \circthen ~ \\ \t1 \circblockopen \circvar result : \num \circspot result :=~999 \circseq \\ \circblockopen readCall~.~fbMission~.~ReaderThread\then \\readRet~.~fbMission~.~ReaderThread~?~read\then \\ \Skip \circblockclose \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot(loopVar) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+\Skip
+        \circblockclose  
+
+ \circseq \\
+	runRet~.~Reader \then \\
+	\Skip
+\circblockclose
+\end{circusaction}	
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Run \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

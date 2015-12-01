@@ -80,12 +80,6 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	// TODO This returns Names and Trees, it should return Names and
 	// TypeKinds....but how?
 
-	// TODO CLEAN UP
-	// private Tree save;
-	// private ArrayList<Name> returns = new ArrayList<Name>();
-	// private ClassTree tree;
-
-	// private Iterator<StatementTree> i ;
 	private final ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
 	private ClassEnv classEnv;
@@ -604,7 +598,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		return null;
 	}
 
-	@Override //return VariableEnv
+	@Override 
 	public Map<Name, Tree> visitVariable(VariableTree arg0, Boolean addToEnv)
 	{
 
@@ -618,7 +612,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		Name varName = arg0.getName();
 
 		Tree varType = arg0.getType();
-
+		
 		String init = "";
 		if (arg0.getInitializer() != null)
 		{
@@ -630,7 +624,6 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		returnMap.put(varName, varType);
 		
 		assert (varName != null);
-	//	assert (programEnv != null);
 		
 		if (classEnv != null && addToEnv == true)
 		{
@@ -645,7 +638,6 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 					.toString()))))
 			{
 				System.out.println("var Visitor var type not Objdect name");
-				// if (programEnv.getSchedulable(varName) != null)
 				{
 					System.out.println("*/*/ New Parameter for "
 							+ classEnv.getName() + " with name= "
@@ -660,15 +652,10 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 					{
 						String varTypefromName = WordUtils
 								.capitalize(encodedName) + "ID";
-						
-////						objectEnv.addParameter(encodedName, varTypeString,
-//								varTypefromName, false, init);
-
 					}
 					else
 					{
-//						objectEnv.addParameter(encodedName, varTypeString,
-//								varType.toString() + "ID", false, init);
+
 					}
 					
 					System.out.println("*/*/ Adding Parameter " + encodedName + " to ObjectEnv " +objectEnv.getName() + "of type " + objectEnv.getClass().getCanonicalName());
@@ -681,6 +668,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			else
 			{
 				System.out.println("var Visitor add var to Object Env");
+
 
 				classEnv.addVariable("\\circreftype " + varName.toString()
 						+ "Class", varType.toString() + "Class", "\\circnew "

@@ -1,0 +1,146 @@
+\begin{zsection}
+  \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+\end{zsection}
+%\begin{circus}
+%\circchannelset FlatBufferMissionAppSync == \\
+%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset FlatBufferMissionAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~Reader~.~FlatBufferMission 
+%    register~.~Writer~.~FlatBufferMission 
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess FlatBufferMissionApp \circdef \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  buffer : int\\ 
+  writer : Writer\\ 
+  reader : Reader\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~'
+\where
+  buffer' := 0\\ 
+  writer' := init\_placeholder\\ 
+  reader' := init\_placeholder\\ 
+\end{schema}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~FlatBufferMission \then \\
+  
+	register~!~Reader~!~FlatBufferMission \then   \\
+	register~!~Writer~!~FlatBufferMission \then   \\
+
+
+  initializeRet~.~FlatBufferMission \then \\
+  \Skip
+\circblockclose 
+\end{circusaction}
+ 
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+ cleanupMissionCall~.~FlatBufferMission \then \\
+ cleanupMissionRet~.~FlatBufferMission~?~\false \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+bufferEmptyMeth \circdef \\
+\circblockopen
+bufferEmptyCall~.~FlatBufferMission 
+~?~name
+\then \\
+~\\
+bufferEmptyRet~.~FlatBufferMission~.~BOOLEAN \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
+%
+\begin{circusaction}
+writeSyncMeth \circdef \\
+\circblockopen
+writeCall~.~FlatBufferMission~?~thread 
+~?~update
+\then \\
+startSyncMeth~.~FlatBufferMission~.~thread \then \\
+lockAcquired~.~FlatBufferMission~.~thread \then \\
+~\\
+endSyncMeth~.~FlatBufferMission~.~thread \then  \\
+writeRet~.~FlatBufferMission~.~thread \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+readSyncMeth \circdef \\
+\circblockopen
+readCall~.~FlatBufferMission~?~thread 
+\then \\
+startSyncMeth~.~FlatBufferMission~.~thread \then \\
+lockAcquired~.~FlatBufferMission~.~thread \then \\
+~\\
+endSyncMeth~.~FlatBufferMission~.~thread \then  \\
+readRet~.~FlatBufferMission~.~out~.~thread \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+waitOnMissionSyncMeth \circdef \\
+\circblockopen
+waitOnMissionCall~.~FlatBufferMission~?~thread 
+~?~name
+\then \\
+startSyncMeth~.~FlatBufferMission~.~thread \then \\
+lockAcquired~.~FlatBufferMission~.~thread \then \\
+~\\
+endSyncMeth~.~FlatBufferMission~.~thread \then  \\
+waitOnMissionRet~.~FlatBufferMission~.~thread \then \\
+\Skip
+\circblockclose
+\end{circusaction}	
+%
+
+\begin{circusaction}
+Methods \circdef 
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+\extchoice \\
+	bufferEmptyMeth \\ 
+%
+	\extchoice \\
+	writeSyncMeth \\	
+	\extchoice \\
+	readSyncMeth \\	
+	\extchoice \\
+	waitOnMissionSyncMeth \\	
+%
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot (Methods) \circinterrupt (end\_mission\_app~.~FlatBufferMission \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

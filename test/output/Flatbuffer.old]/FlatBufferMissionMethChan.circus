@@ -1,0 +1,23 @@
+\begin{zsection}
+  \SECTION ~ FlatBufferMissionMethChan ~ \parents ~ scj\_prelude, GlobalTypes 
+\end{zsection}
+%
+%
+\begin{circus}
+\t1 \circchannel writeCall \\
+  
+\t1 \circchannel writeRet \\
+\end{circus}
+% 
+\begin{circus}
+\t1 \circchannel readCall \\
+  
+\t1 \circchannel readRet : int \\
+\end{circus}
+% 
+\begin{circus}
+\t1 \circchannel waitOnMissionCall \\
+  
+\t1 \circchannel waitOnMissionRet \\
+\end{circus}
+% 

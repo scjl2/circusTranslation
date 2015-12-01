@@ -1,0 +1,337 @@
+\begin{zsection}
+  \SECTION ~ MainMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , MainMissionClass \\
+
+  \t1 , MainMissionMethChan
+\end{zsection}
+%\begin{circus}
+%\circchannelset MainMissionAppSync == \\
+%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset MainMissionAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~ACModeChanger~.~MainMission 
+%    register~.~EnvironmentMonitor~.~MainMission 
+%    register~.~ControlHandler~.~MainMission 
+%    register~.~FlightSensorsMonitor~.~MainMission 
+%    register~.~CommunicationsHandler~.~MainMission 
+%    register~.~AperiodicSimulator~.~MainMission 
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess MainMissionApp \circdef \\ \qquad 
+  test : \num
+\circspot 
+ \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype MainMissionClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew MainMissionClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~MainMission \then \\
+  
+	register~!~ACModeChanger~!~MainMission \then   \\
+	register~!~EnvironmentMonitor~!~MainMission \then   \\
+	register~!~ControlHandler~!~MainMission \then   \\
+	register~!~FlightSensorsMonitor~!~MainMission \then   \\
+	register~!~CommunicationsHandler~!~MainMission \then   \\
+	register~!~AperiodicSimulator~!~MainMission \then   \\
+
+
+  initializeRet~.~MainMission \then \\
+  \Skip
+\circblockclose 
+\end{circusaction}
+ 
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+ cleanupMissionCall~.~MainMission \then \\
+
+ cleanupMissionRet~.~MainMission~!~\true \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+%
+\begin{circusaction}
+getAirSpeedSyncMeth \circdef 
+\circvar ret : double \circspot
+\\
+\circblockopen
+getAirSpeedCall~.~MainMission~?~thread 
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+ret := this~.~getAirSpeed() \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+getAirSpeedRet~.~MainMission~!~thread~!~ret \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+getAltitudeSyncMeth \circdef 
+\circvar ret : double \circspot
+\\
+\circblockopen
+getAltitudeCall~.~MainMission~?~thread 
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+ret := this~.~getAltitude() \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+getAltitudeRet~.~MainMission~!~thread~!~ret \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+getCabinPressureSyncMeth \circdef 
+\circvar ret : double \circspot
+\\
+\circblockopen
+getCabinPressureCall~.~MainMission~?~thread 
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+ret := this~.~getCabinPressure() \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+getCabinPressureRet~.~MainMission~!~thread~!~ret \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+getEmergencyOxygenSyncMeth \circdef 
+\circvar ret : double \circspot
+\\
+\circblockopen
+getEmergencyOxygenCall~.~MainMission~?~thread 
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+ret := this~.~getEmergencyOxygen() \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+getEmergencyOxygenRet~.~MainMission~!~thread~!~ret \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+getFuelRemainingSyncMeth \circdef 
+\circvar ret : double \circspot
+\\
+\circblockopen
+getFuelRemainingCall~.~MainMission~?~thread 
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+ret := this~.~getFuelRemaining() \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+getFuelRemainingRet~.~MainMission~!~thread~!~ret \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+getHeadingSyncMeth \circdef 
+\circvar ret : double \circspot
+\\
+\circblockopen
+getHeadingCall~.~MainMission~?~thread 
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+ret := this~.~getHeading() \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+getHeadingRet~.~MainMission~!~thread~!~ret \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+setAirSpeedSyncMeth \circdef 
+\\
+\circblockopen
+setAirSpeedCall~.~MainMission~?~thread 
+~?~airSpeed
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+this~.~setAirSpeed(airSpeed) \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+setAirSpeedRet~.~MainMission~.~thread \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+setAltitudeSyncMeth \circdef 
+\\
+\circblockopen
+setAltitudeCall~.~MainMission~?~thread 
+~?~altitude
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+this~.~setAltitude(altitude) \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+setAltitudeRet~.~MainMission~.~thread \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+setCabinPressureSyncMeth \circdef 
+\\
+\circblockopen
+setCabinPressureCall~.~MainMission~?~thread 
+~?~cabinPressure
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+this~.~setCabinPressure(cabinPressure) \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+setCabinPressureRet~.~MainMission~.~thread \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+setEmergencyOxygenSyncMeth \circdef 
+\\
+\circblockopen
+setEmergencyOxygenCall~.~MainMission~?~thread 
+~?~emergencyOxygen
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+this~.~setEmergencyOxygen(emergencyOxygen) \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+setEmergencyOxygenRet~.~MainMission~.~thread \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+setFuelRemainingSyncMeth \circdef 
+\\
+\circblockopen
+setFuelRemainingCall~.~MainMission~?~thread 
+~?~fuelRemaining
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+this~.~setFuelRemaining(fuelRemaining) \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+setFuelRemainingRet~.~MainMission~.~thread \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+\begin{circusaction}
+setHeadingSyncMeth \circdef 
+\\
+\circblockopen
+setHeadingCall~.~MainMission~?~thread 
+~?~heading
+ \then \\
+\circblockopen
+startSyncMeth~.~MainMissionObject~.~thread \then \\
+lockAcquired~.~MainMissionObject~.~thread \then \\
+this~.~setHeading(heading) \circseq  \\
+endSyncMeth~.~MainMissionObject~.~thread \then  \\
+
+setHeadingRet~.~MainMission~.~thread \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}	
+%
+
+\begin{circusaction}
+Methods \circdef 
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+%
+	\extchoice \\
+	getAirSpeedSyncMeth \\	
+	\extchoice \\
+	getAltitudeSyncMeth \\	
+	\extchoice \\
+	getCabinPressureSyncMeth \\	
+	\extchoice \\
+	getEmergencyOxygenSyncMeth \\	
+	\extchoice \\
+	getFuelRemainingSyncMeth \\	
+	\extchoice \\
+	getHeadingSyncMeth \\	
+	\extchoice \\
+	setAirSpeedSyncMeth \\	
+	\extchoice \\
+	setAltitudeSyncMeth \\	
+	\extchoice \\
+	setCabinPressureSyncMeth \\	
+	\extchoice \\
+	setEmergencyOxygenSyncMeth \\	
+	\extchoice \\
+	setFuelRemainingSyncMeth \\	
+	\extchoice \\
+	setHeadingSyncMeth \\	
+%
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~MainMission \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
