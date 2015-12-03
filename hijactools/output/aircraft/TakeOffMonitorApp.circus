@@ -8,13 +8,14 @@ TakeOffMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess TakeOffMonitorApp \circdef \\ \qquad 
+\circprocess TakeOffMonitorApp \circdef \\ \qquad
   takeoffMission : MissionID
-, \\ \qquad 
+,\\ 
   takeOffAltitude : double
-, \\ \qquad 
+,\\ 
   landingGearHandler : SchedulableID
-\circspot 
+ 
+\circspot
   \circbegin
 \end{circus}
 

@@ -4,9 +4,10 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess AperiodicSimulatorApp \circdef \\ \qquad 
+\circprocess AperiodicSimulatorApp \circdef \\ \qquad
   aperiodicEvent : SchedulableID
-\circspot 
+ 
+\circspot
   \circbegin
 \end{circus}
 

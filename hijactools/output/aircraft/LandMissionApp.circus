@@ -21,9 +21,10 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess LandMissionApp \circdef \\ \qquad 
+\circprocess LandMissionApp \circdef \\ \qquad
   controllingMission : MissionID
-\circspot 
+ 
+\circspot
  \circbegin
 \end{circus}
 

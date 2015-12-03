@@ -23,12 +23,6 @@
 \where
   ALTITUDE\_READING\_ON\_GROUND' = 0.0\\ 
   test' = 0\\ 
-  cabinPressure' = \\ 
-  emergencyOxygen' = \\ 
-  fuelRemaining' = \\ 
-  altitude' = \\ 
-  airSpeed' = \\ 
-  heading' = \\ 
 \end{schema}
 
 

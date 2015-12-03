@@ -20,7 +20,6 @@
   SAFE\_AIRSPEED\_THRESHOLD' = 10.0\\ 
   TAKEOFF\_ALTITUDE' = 10.0\\ 
   abort' = false\\ 
-  landingGearDeployed' = \\ 
 \end{schema}
 
 

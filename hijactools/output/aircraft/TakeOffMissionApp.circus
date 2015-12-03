@@ -20,9 +20,10 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess TakeOffMissionApp \circdef \\ \qquad 
+\circprocess TakeOffMissionApp \circdef \\ \qquad
   controllingMission : MissionID
-\circspot 
+ 
+\circspot
  \circbegin
 \end{circus}
 

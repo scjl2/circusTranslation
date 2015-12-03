@@ -18,7 +18,6 @@
 \where
   SAFE\_LANDING\_ALTITUDE' = 10.0\\ 
   abort' = false\\ 
-  landingGearDeployed' = \\ 
 \end{schema}
 
 

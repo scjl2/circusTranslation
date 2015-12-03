@@ -442,8 +442,8 @@ public class ObjectEnv
 		for (VariableEnv v : variables)
 		{
 
-//			if (v.getInit().toString() != "")
-//			{
+			if (v.getInit().toString() != "")
+			{
 				Map varMap = new HashMap();
 				varMap.put(VAR_NAME, v.getName().toString());
 				varMap.put(VAR_TYPE, v.getType());
@@ -451,7 +451,7 @@ public class ObjectEnv
 				varMap.put(VAR_INPUT, v.getInput());
 
 				returnList.add(varMap);
-//			}
+			}
 		}
 
 		return returnList;
@@ -488,8 +488,7 @@ public class ObjectEnv
 			Map varMap = new HashMap();
 			varMap.put(VAR_NAME, v.getName().toString());
 			varMap.put(VAR_TYPE, v.getType());
-			// varMap.put(VAR_INIT, v.getVariableInit().toString());
-			// varMap.put(VAR_INPUT, v.getVariableInput());
+
 			varMap.put("ProgramType", v.getProgramType());
 
 			returnList.add(varMap);
@@ -514,8 +513,6 @@ public class ObjectEnv
 	public List<Map> procParamsList()
 	{
 		List<Map> procParams = paramsList(ParamsType.PROC);
-
-		System.out.println(procParams.toString());
 
 		return procParams;
 	}

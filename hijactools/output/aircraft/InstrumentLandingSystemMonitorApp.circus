@@ -4,9 +4,10 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess InstrumentLandingSystemMonitorApp \circdef \\ \qquad 
+\circprocess InstrumentLandingSystemMonitorApp \circdef \\ \qquad
   mission : MissionID
-\circspot 
+ 
+\circspot
   \circbegin
 \end{circus}
 

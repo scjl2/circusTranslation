@@ -8,9 +8,10 @@ LandMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess GroundDistanceMonitorApp \circdef \\ \qquad 
+\circprocess GroundDistanceMonitorApp \circdef \\ \qquad
   landMission : MissionID
-\circspot 
+ 
+\circspot
   \circbegin
 \end{circus}
 

@@ -1,10 +1,8 @@
 <#if ProcParameters?has_content>
-\\ \qquad 
+\\ \qquad
 <#list ProcParameters as param>
   ${param.VarName} : ${param.ProgramType}
-<#sep>
-, \\ \qquad 
-</#sep> 
+<#sep>,\\</#sep> 
 </#list>
-\circspot 
+\circspot
 </#if>

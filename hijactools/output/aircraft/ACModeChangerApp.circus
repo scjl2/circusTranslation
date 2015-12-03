@@ -13,9 +13,10 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess ACModeChangerApp \circdef \\ \qquad 
+\circprocess ACModeChangerApp \circdef \\ \qquad
   controllingMission : MissionID
-\circspot 
+ 
+\circspot
  \circbegin\\ 
 \end{circus}
    

@@ -12,33 +12,33 @@
 \circchannelset ~ TerminateSync == \\ \t1 \lchanset schedulables\_terminated, schedulables\_stopped, get\_activeSchedulables \rchanset
 \end{circus}
 %
-\begin{circus}	
+\begin{circus}
 \circchannelset ~ ControlTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
 % IDs wont type check again   Start Mission and Done Mission wont parse?
 <#list Tiers[0] as cluster>
 \begin{circus}
-\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~${cluster.Mission}, done\_mission~.~${cluster.Mission},\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
+\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~${cluster.Mission}, done\_mission~.~${cluster.Mission},\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset
 \end{circus}
 </#list>
 %
 \begin{circus}
 \circchannelset ~ MissionSync == \\ \t1 \lchanset done\_safeletFW, done\_toplevel\_sequencer, register, \\
                  signalTerminationCall, signalTerminationRet, activate\_schedulables, done\_schedulable, \\
-                 cleanupSchedulableCall, cleanupSchedulableRet  \rchanset  
+                 cleanupSchedulableCall, cleanupSchedulableRet  \rchanset
 \end{circus}
 %
 \begin{circus}
-\circchannelset ~ SchedulablesSync == \\ \t1 \lchanset activate\_schedulables, done\_safeletFW, done\_toplevel\_sequencer \rchanset 
+\circchannelset ~ SchedulablesSync == \\ \t1 \lchanset activate\_schedulables, done\_safeletFW, done\_toplevel\_sequencer \rchanset
 \end{circus}
 %
 \begin{circus}
-\circchannelset ~ ClusterSync == \\ \t1 \lchanset done\_toplevel\_sequencer, done\_safeletFW \rchanset 
+\circchannelset ~ ClusterSync == \\ \t1 \lchanset done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
 %
 \begin{circus}
 \circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
-	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
+	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}
 \end{circus}
 %
 \begin{circus}
@@ -57,14 +57,14 @@
 <#list Tiers as tier >
 <#if tier_has_next>
 \begin{circus}
-\circchannelset ~ Tier${tier_index}Sync == \\ 
-\t1 \lchanset 	
+\circchannelset ~ Tier${tier_index}Sync == \\
+\t1 \lchanset
 done\_toplevel\_sequencer, done\_safeletFW, \\
 <#assign next=tier_index+1>
 <#list Tiers[next] as cluster>
-start\_mission~.~${cluster.Mission}, done\_mission~.~${cluster.Mission},\\ 
-\t1 initializeRet~.~${cluster.Mission}, 
-<#if tier_index == 0> 
+start\_mission~.~${cluster.Mission}, done\_mission~.~${cluster.Mission},\\
+\t1 initializeRet~.~${cluster.Mission},
+<#if tier_index == 0>
 requestTermination~.~${cluster.Mission}~.~${TopLevelSequencer}
 <#else>
 requestTermination~.~${cluster.Mission}~.~${cluster.Sequencer}
@@ -92,30 +92,28 @@ requestTermination~.~${cluster.Mission}~.~${cluster.Sequencer}
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
-  \t1 AperiodicEventHandlerFW, ${Safelet.Name}App, ${TopLevelSequencer.Name}App, \\
-  \t1 ObjectFW, ThreadFW,
-  \t1 
+  \t1 AperiodicEventHandlerFW, ObjectFW, ThreadFW, \\
+  \t1 ${Safelet.Name}App, ${TopLevelSequencer.Name}App,
 <#list Tiers as tier >
+<#assign count=1>
 <#list tier as cluster>
-
-
-${cluster.Mission.Name}App, 
+${cluster.Mission.Name}App,
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
 <#list schedulables as schedulable>
-${schedulable.Name}App 
-	<#if schedulable_has_next>
-,
-	</#if>
+${schedulable.Name}App
+	<#sep>,</#sep>
+<#if count==2>
+<#assign count=0>
+\\ \t1
+<#else>
+<#assign count++>
+</#if>
 </#list>
-	<#if cluster_has_next>
-,
-	</#if>
+	<#sep>,</#sep>
 </#list>
-	<#if tier_has_next>
-,
-	</#if>
+	<#sep>,</#sep>
 </#list>
 \end{zsection}
 %
@@ -151,7 +149,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 
 
 
-		<#list cluster.Schedulables.Threads as thread>			
+		<#list cluster.Schedulables.Threads as thread>
 			ManagedThreadFW(${thread.Name}ID)\\
 			<#if thread_has_next>
 			<#if thread?counter % 2 == 0>
@@ -160,7 +158,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 			</#if>
 			\t1 \lpar SchedulablesSync \rpar\\
 			</#if>
-		</#list>	
+		</#list>
 
 <#assign syncNeeded=false>
 
@@ -175,10 +173,10 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 
 
 <#if cluster.Schedulables.Oneshots?size gte 2>
-\circblockopen 
+\circblockopen
 </#if>
 
-<#list cluster.Schedulables.Oneshots as oneshot>			
+<#list cluster.Schedulables.Oneshots as oneshot>
 	OneShotEventHandlerFW(${oneshot.Name}ID <#if oneshot.FWParameters?size != 0>,<#list oneshot.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>  )\\
 	<#if oneshot_has_next>
 		\t1 \lpar SchedulablesSync \rpar\\
@@ -203,9 +201,9 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 \t1 \lpar SchedulablesSync \rpar\\
 </#if>
 <#if cluster.Schedulables.NestedSequencers?size gte 2>
-\circblockopen 
+\circblockopen
 </#if>
-		<#list cluster.Schedulables.NestedSequencers as sequencer>			
+		<#list cluster.Schedulables.NestedSequencers as sequencer>
 			SchedulableMissionSequencerFW(${sequencer.Name}ID)\\
 			<#if sequencer_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
@@ -228,7 +226,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 <#if cluster.Schedulables.Aperiodics?size gte 2>
 \circblockopen
 </#if>
-		<#list cluster.Schedulables.Aperiodics as aperiodic>			
+		<#list cluster.Schedulables.Aperiodics as aperiodic>
 			AperiodicEventHandlerFW(${aperiodic.Name}ID <#if aperiodic.FWParameters?size != 0>,<#list aperiodic.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>)\\
 			<#if aperiodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
@@ -254,7 +252,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 <#if cluster.Schedulables.Periodics?size gte 2>
 \circblockopen
 </#if>
-		<#list cluster.Schedulables.Periodics as periodic>			
+		<#list cluster.Schedulables.Periodics as periodic>
 			PeriodicEventHandlerFW(${periodic.Name}ID <#if periodic.FWParameters?size != 0>,<#list periodic.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>)\\
 			<#if periodic_has_next>
 			\t1 \lpar SchedulablesSync \rpar\\
@@ -262,7 +260,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 		</#list>
 <#assign syncNeeded=false>
 <#if cluster.Schedulables.Periodics?size gte 2>
-\circblockclose \\ 
+\circblockclose \\
 
 </#if>
 </#if>
@@ -276,7 +274,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 %
 </#list>
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Framework +++ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Framework +++
 %
 \begin{circus}
 \circprocess Framework \circdef \\
@@ -327,11 +325,13 @@ ${schedulable.Name}App<#if schedulable.AppParameters?size != 0> (<#list schedula
 \circblockclose
 \end{circus}
 %
+%%%%%%%%%%%%%%%%THREADS
+%
 \begin{circus}
 Threads \circdef  \\
 \circblockopen
 <#list Threads?keys as thread>
-ThreadFW(${thread}, ${Threads[thread]}) \\
+ThreadFW(${thread}, ${Threads[thread]}) \\	
 <#sep>\t1 \lpar ThreadSync \rpar\\</#sep>
 </#list>
 \circblockclose
@@ -350,8 +350,7 @@ ObjectFW(${object}) \\
 \begin{circus}
 Locking \circdef Threads \interleave Objects
 \end{circus}
-% 
+%
 \begin{circus}
 \circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar Application \circblockclose \lpar LockingSync \rpar Locking
 \end{circus}
-
