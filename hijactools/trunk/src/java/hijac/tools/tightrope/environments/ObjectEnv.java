@@ -173,10 +173,13 @@ public class ObjectEnv
 
 	public void addVariableInit(String varName, Tree init)
 	{
+		System.out.println("addVariableInit("+varName+","+init);
 		for (VariableEnv varEnv : getVariables())
 		{
+			System.out.println("\tvarEnv.getName="+varEnv.getName());
 			if (varEnv.getName().contentEquals(varName))
 			{
+				System.out.println("Setting Var Init: name="+varName+" init="+init);
 				varEnv.setInit(init);
 			}
 		}
@@ -439,8 +442,8 @@ public class ObjectEnv
 		for (VariableEnv v : variables)
 		{
 
-			if (v.getInit().toString() != "")
-			{
+//			if (v.getInit().toString() != "")
+//			{
 				Map varMap = new HashMap();
 				varMap.put(VAR_NAME, v.getName().toString());
 				varMap.put(VAR_TYPE, v.getType());
@@ -448,7 +451,7 @@ public class ObjectEnv
 				varMap.put(VAR_INPUT, v.getInput());
 
 				returnList.add(varMap);
-			}
+//			}
 		}
 
 		return returnList;

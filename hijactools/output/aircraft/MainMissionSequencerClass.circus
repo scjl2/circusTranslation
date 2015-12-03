@@ -14,13 +14,14 @@
 \begin{schema}{\circinitial Init}
   State~'
 \where
+  returnedMission' = false\\ 
 \end{schema}
 
 
 %
 \begin{circusaction}
-\circprotected ~ \circsync ~ getNextMission ~ \circdef 
-\circvar ret : MissionID \circspot 
+\circprotected ~ \circsync ~ getNextMission ~ \circdef
+\circvar ret : MissionID \circspot
 \\
 
       \circblockopen
@@ -61,9 +62,9 @@ this~.~returnedMission :=true
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
+
+\end{circusaction}
 %
 
 \begin{circusaction}

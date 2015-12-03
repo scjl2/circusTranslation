@@ -28,8 +28,8 @@
 
 %
 \begin{circusaction}
-\circprotected ~ \circsync ~ getNextMission ~ \circdef 
-\circvar ret : MissionID \circspot 
+\circprotected ~ \circsync ~ getNextMission ~ \circdef
+\circvar ret : MissionID \circspot
 \\
 
       \circblockopen
@@ -121,9 +121,9 @@
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
+
+\end{circusaction}
 %
 
 \begin{circusaction}

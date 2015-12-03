@@ -60,42 +60,18 @@ public class MethodVisitor
 
 		if (isConstructor)
 		{
-			for (VariableTree vt : mt.getParameters())
-			{
-				if (!(vt.getType().toString().contains("String")))
-				{
-					// object.addParameter(vt.getName().toString(),
-					// NewTransUtils.encodeType(vt.getType()),
-					// NewTransUtils.encodeType(vt.getType()),
-					// (vt.getType() instanceof PrimitiveTypeTree),
-					// "FromMethVis");
-					//
-				}
-				// else
-				// {
-				VariableEnv parameter = new VariableEnv();
-
-				parameter.setName(vt.getName().toString());
-				parameter.setType(NewTransUtils.encodeType(vt.getType()));
-				parameter
-						.setProgramType(NewTransUtils.encodeType(vt.getType()));
-
-				if (parameter.getType().endsWith("Parameters"))
-				{
-
-				}
-				else
-				{
-//					System.out.println("Adding Proc Param "
-//							+ parameter.toString());
-					object.addProcParameter(parameter);
-				}
-				// }
-			}
+			getConstructorParameters(mt);
 			
 			
-			VariableVisitor varVis = new VariableVisitor(TightRope.getProgramEnv(), object);
-			mt.accept(varVis, true);
+//			VariableVisitor varVis = new VariableVisitor(TightRope.getProgramEnv(), object);
+//			Map<Name, Tree> newVarMap = mt.accept(varVis, false);
+//			
+//			for(Name name : newVarMap.keySet())
+//			{			
+//				object.addVariableInit(name.toString(), newVarMap.get(name));
+//			}
+			
+//			System.out.println("New Var Map = " + newVarMap.toString());
 		}
 		else
 		{
@@ -133,5 +109,41 @@ public class MethodVisitor
 		}
 
 		return m;
+	}
+
+	private void getConstructorParameters(MethodTree mt)
+	{
+		for (VariableTree vt : mt.getParameters())
+		{
+			if (!(vt.getType().toString().contains("String")))
+			{
+				// object.addParameter(vt.getName().toString(),
+				// NewTransUtils.encodeType(vt.getType()),
+				// NewTransUtils.encodeType(vt.getType()),
+				// (vt.getType() instanceof PrimitiveTypeTree),
+				// "FromMethVis");
+				//
+			}
+			// else
+			// {
+			VariableEnv parameter = new VariableEnv();
+
+			parameter.setName(vt.getName().toString());
+			parameter.setType(NewTransUtils.encodeType(vt.getType()));
+			parameter
+					.setProgramType(NewTransUtils.encodeType(vt.getType()));
+
+			if (parameter.getType().endsWith("Parameters"))
+			{
+
+			}
+			else
+			{
+//					System.out.println("Adding Proc Param "
+//							+ parameter.toString());
+				object.addProcParameter(parameter);
+			}
+			// }
+		}
 	}
 }

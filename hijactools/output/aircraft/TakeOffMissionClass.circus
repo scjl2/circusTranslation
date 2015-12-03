@@ -20,12 +20,13 @@
   SAFE\_AIRSPEED\_THRESHOLD' = 10.0\\ 
   TAKEOFF\_ALTITUDE' = 10.0\\ 
   abort' = false\\ 
+  landingGearDeployed' = \\ 
 \end{schema}
 
 
 %
 \begin{circusaction}
-\circpublic ~ \circsync ~ abort ~ \circdef 
+\circpublic ~ \circsync ~ abort ~ \circdef
 \\
 
       \circblockopen
@@ -35,12 +36,12 @@ this~.~abort :=true
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
+
+\end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ getControllingMission ~ \circdef 
-\circvar ret : MissionID \circspot 
+\circpublic ~ \circsync ~ getControllingMission ~ \circdef
+\circvar ret : MissionID \circspot
 \\
 
       \circblockopen
@@ -50,11 +51,11 @@ this~.~abort :=true
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
+
+\end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ setControllingMission ~ \circdef 
+\circpublic ~ \circsync ~ setControllingMission ~ \circdef
 \\
 
       \circblockopen
@@ -64,12 +65,12 @@ this~.~this.controllingMission :=controllingMission
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
+
+\end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ cleanUp ~ \circdef 
-\circvar ret : \boolean \circspot 
+\circpublic ~ \circsync ~ cleanUp ~ \circdef
+\circvar ret : \boolean \circspot
 \\
 
       \circblockopen
@@ -85,11 +86,11 @@ this~.~this.controllingMission :=controllingMission
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
+
+\end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ stowLandingGear ~ \circdef 
+\circpublic ~ \circsync ~ stowLandingGear ~ \circdef
 \\
 
       \circblockopen
@@ -99,12 +100,12 @@ this~.~landingGearDeployed :=false
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
+
+\end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ isLandingGearDeployed ~ \circdef 
-\circvar ret : \boolean \circspot 
+\circpublic ~ \circsync ~ isLandingGearDeployed ~ \circdef
+\circvar ret : \boolean \circspot
 \\
 
       \circblockopen
@@ -114,9 +115,9 @@ this~.~landingGearDeployed :=false
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
+
+\end{circusaction}
 %
 
 \begin{circusaction}

@@ -139,9 +139,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitAssignment(AssignmentTree arg0, Boolean addToEnv)
 	{
-
-		// System.out.println("Var Visitor: Assignment");
-		// System.out.println("-> " + arg0);
+		 System.out.println("+++ Var Visitor: Assignment-> " + arg0);
 
 		Map<Name, Tree> returnMap = null;
 
@@ -189,7 +187,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 					// variableInitAndInput,
 					// variableInitAndInput);
 
-					objectEnv.addVariableInit(varName.toString(),
+					classEnv.addVariableInit(varName.toString(),
 							variableInitAndInput, true);
 
 				}
@@ -208,8 +206,13 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			returnMap.put(varName, expressionTree);
 			if (objectEnv != null && addToEnv == true)
 			{
-				objectEnv.addVariableInit(NewTransUtils.encodeName(varName),
-						expressionTree);
+				System.out.println("Adding Var Init: name="+varName+" init="+expressionTree.toString() );
+//				classEnv.addVariable(NewTransUtils.encodeName(varName),"type",
+//						expressionTree, false);
+				
+				classEnv.addVariableInit(varName.toString(),
+						expressionTree.toString(), true);
+
 				// objectEnv.addVariableInit(varName.toString(),
 				// "?"+varName.toString()+"In");
 
@@ -451,7 +454,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitMethod(MethodTree arg0, Boolean addToEnv)
 	{
-
+		
 		if (arg0.getName().contentEquals("<init>"))
 		{
 			// System.out
