@@ -71,7 +71,7 @@ CleanupPhase \circdef  \\
 %
 \begin{circusaction}
 getAirSpeedSyncMeth \circdef 
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 \circblockopen
 getAirSpeedCall~.~MainMission~?~thread 
@@ -89,7 +89,7 @@ getAirSpeedRet~.~MainMission~!~thread~!~ret \then \\
 \end{circusaction}	
 \begin{circusaction}
 getAltitudeSyncMeth \circdef 
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 \circblockopen
 getAltitudeCall~.~MainMission~?~thread 
@@ -107,7 +107,7 @@ getAltitudeRet~.~MainMission~!~thread~!~ret \then \\
 \end{circusaction}	
 \begin{circusaction}
 getCabinPressureSyncMeth \circdef 
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 \circblockopen
 getCabinPressureCall~.~MainMission~?~thread 
@@ -125,7 +125,7 @@ getCabinPressureRet~.~MainMission~!~thread~!~ret \then \\
 \end{circusaction}	
 \begin{circusaction}
 getEmergencyOxygenSyncMeth \circdef 
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 \circblockopen
 getEmergencyOxygenCall~.~MainMission~?~thread 
@@ -143,7 +143,7 @@ getEmergencyOxygenRet~.~MainMission~!~thread~!~ret \then \\
 \end{circusaction}	
 \begin{circusaction}
 getFuelRemainingSyncMeth \circdef 
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 \circblockopen
 getFuelRemainingCall~.~MainMission~?~thread 
@@ -161,7 +161,7 @@ getFuelRemainingRet~.~MainMission~!~thread~!~ret \then \\
 \end{circusaction}	
 \begin{circusaction}
 getHeadingSyncMeth \circdef 
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 \circblockopen
 getHeadingCall~.~MainMission~?~thread 

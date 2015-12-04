@@ -4,7 +4,7 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  SAFE\_LANDING\_ALTITUDE : double\\ 
+  SAFE\_LANDING\_ALTITUDE : \mathbb{R}\\ 
   abort : \boolean\\ 
   landingGearDeployed : \boolean\\ 
 \end{schema}

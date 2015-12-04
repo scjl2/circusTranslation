@@ -64,7 +64,7 @@ public class NewTransUtils extends TransUtils
 						returnString = "float";
 						break;
 					case DOUBLE:
-						returnString = "double";
+						returnString = "\\mathbb{R}";
 						break;
 					case CHAR:
 						returnString = "char";

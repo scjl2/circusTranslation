@@ -23,13 +23,13 @@ handlerAsyncEvent \circdef \\
 	
       \circblockopen
 
-            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar heading : double \circspot heading :=~getHeading\\
+            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar heading : \mathbb{R} \circspot heading :=~getHeading\\
 
 
-            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar airSpeed : double \circspot airSpeed :=~getAirSpeed\\
+            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar airSpeed : \mathbb{R} \circspot airSpeed :=~getAirSpeed\\
 
 
-            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : double \circspot altitude :=~getAltitude\\
+            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
 \Skip
         \circblockclose  
 

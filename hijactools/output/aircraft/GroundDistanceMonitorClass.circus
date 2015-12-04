@@ -4,7 +4,7 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  readingOnGround : double\\ 
+  readingOnGround : \mathbb{R}\\ 
 \end{schema}
 % 
 \begin{circusaction}

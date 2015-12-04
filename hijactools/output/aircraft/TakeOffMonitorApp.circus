@@ -11,7 +11,7 @@ TakeOffMissionMethChan
 \circprocess TakeOffMonitorApp \circdef \\ \qquad
   takeoffMission : MissionID
 ,\\ 
-  takeOffAltitude : double
+  takeOffAltitude : \mathbb{R}
 ,\\ 
   landingGearHandler : SchedulableID
  
@@ -32,7 +32,7 @@ handlerAsyncEvent \circdef \\
 
                \circseq \\ 
 
-            getControllingMissionCall~.~takeoffMission.getControllingMission()\then \\getControllingMissionRet~.~takeoffMission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : double \circspot altitude :=~getAltitude\\
+            getControllingMissionCall~.~takeoffMission.getControllingMission()\then \\getControllingMissionRet~.~takeoffMission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
 
 
               \circif ~ (altitude > takeOffAltitude) ~ \circthen ~

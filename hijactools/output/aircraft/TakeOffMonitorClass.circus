@@ -4,7 +4,7 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  takeOffAltitude : double\\ 
+  takeOffAltitude : \mathbb{R}\\ 
 \end{schema}
 % 
 \begin{circusaction}

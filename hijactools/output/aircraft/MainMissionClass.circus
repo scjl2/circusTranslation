@@ -4,14 +4,14 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  ALTITUDE\_READING\_ON\_GROUND : double\\ 
+  ALTITUDE\_READING\_ON\_GROUND : \mathbb{R}\\ 
   test : \num\\ 
-  cabinPressure : double\\ 
-  emergencyOxygen : double\\ 
-  fuelRemaining : double\\ 
-  altitude : double\\ 
-  airSpeed : double\\ 
-  heading : double\\ 
+  cabinPressure : \mathbb{R}\\ 
+  emergencyOxygen : \mathbb{R}\\ 
+  fuelRemaining : \mathbb{R}\\ 
+  altitude : \mathbb{R}\\ 
+  airSpeed : \mathbb{R}\\ 
+  heading : \mathbb{R}\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -29,7 +29,7 @@
 %
 \begin{circusaction}
 \circpublic ~ \circsync ~ getAirSpeed ~ \circdef
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 
       \circblockopen
@@ -44,7 +44,7 @@
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ \circsync ~ getAltitude ~ \circdef
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 
       \circblockopen
@@ -59,7 +59,7 @@
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ \circsync ~ getCabinPressure ~ \circdef
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 
       \circblockopen
@@ -74,7 +74,7 @@
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ \circsync ~ getEmergencyOxygen ~ \circdef
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 
       \circblockopen
@@ -89,7 +89,7 @@
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ \circsync ~ getFuelRemaining ~ \circdef
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 
       \circblockopen
@@ -104,7 +104,7 @@
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ \circsync ~ getHeading ~ \circdef
-\circvar ret : double \circspot
+\circvar ret : \mathbb{R} \circspot
 \\
 
       \circblockopen

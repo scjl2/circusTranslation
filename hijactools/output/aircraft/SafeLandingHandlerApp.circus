@@ -25,7 +25,7 @@ handlerAsyncEvent \circdef \\
 	
       \circblockopen
 
-            getControllingMissionCall~.~landMission.getControllingMission()\then \\getControllingMissionRet~.~landMission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : double \circspot altitude :=~getAltitude\\
+            getControllingMissionCall~.~landMission.getControllingMission()\then \\getControllingMissionRet~.~landMission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
 
 
   \circif ~ (altitude < threshold) ~ \circthen ~

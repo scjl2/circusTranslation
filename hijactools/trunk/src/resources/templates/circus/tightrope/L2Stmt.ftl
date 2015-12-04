@@ -126,20 +126,17 @@
 <#if elsestatement?has_content>
   \circif ~ ${TRANS(condition, CTXT.enterExpression())} ~ \circthen ~
   \\
-  \t1
-  ${TRANS(thenstatement, CTXT)}<#lt/>
+  \t1 ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
   \circelse ~ \lnot ${TRANS(condition, CTXT.enterExpression())} ~ \circthen ~
   \\
-  \t1
-  ${TRANS(elsestatement, CTXT)}<#lt/>
+  \t1 ${TRANS(elsestatement, CTXT)}<#lt/>
   \\
   \circfi
 <#else>
   \circif ~ ${TRANS(condition, CTXT.enterExpression())} ~ \circthen ~
   \\
-  \t1
-  ${TRANS(thenstatement, CTXT)}<#lt/>
+  \t1 ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
   \circelse ~ \lnot ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
   \\
@@ -230,12 +227,12 @@
 <#----------------->
 
 <#macro Switch expression cases>
-  \circif ~ 
+  \circif ~
 <#list cases as case>
   ${TRANS(case, CTXT.enterExpression().setSwitch(NODE))}<#lt/>
   \\
 <#if case_has_next>
-  \circelse ~ ~ 
+  \circelse ~ ~
 </#if>
 </#list>
   \circfi

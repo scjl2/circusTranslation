@@ -28,7 +28,7 @@ handlerAsyncEvent \circdef \\
 
                \circseq \\ 
 
-            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar distance : double \circspot distance :=~getAltitude\\
+            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar distance : \mathbb{R} \circspot distance :=~getAltitude\\
 
 
               \circif ~ (distance = readingOnGround) ~ \circthen ~

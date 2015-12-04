@@ -1,6 +1,9 @@
 \begin{zsection}
   \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
+MainMissionMethChan
+, 
+
 TakeOffMissionMethChan
 
 
@@ -25,7 +28,7 @@ handlerAsyncEvent \circdef \\
 	
       \circblockopen
 
-            getControllingMissionCall~.~takeoffMission.getControllingMission()\then \\getControllingMissionRet~.~takeoffMission.getControllingMission()~?~getControllingMission\then \\\\ \circvar currentSpeed : double \circspot currentSpeed :=~getAirSpeed\\
+            getAirSpeedCall~.~mission\then \\getAirSpeedRet~.~mission~?~getAirSpeed\then \\\\ \circvar currentSpeed : \mathbb{R} \circspot currentSpeed :=~getAirSpeed\\
 
 
               \circif ~ (currentSpeed < threshold) ~ \circthen ~

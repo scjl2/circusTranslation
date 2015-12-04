@@ -4,8 +4,8 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  SAFE\_AIRSPEED\_THRESHOLD : double\\ 
-  TAKEOFF\_ALTITUDE : double\\ 
+  SAFE\_AIRSPEED\_THRESHOLD : \mathbb{R}\\ 
+  TAKEOFF\_ALTITUDE : \mathbb{R}\\ 
   abort : \boolean\\ 
   landingGearDeployed : \boolean\\ 
 \end{schema}
