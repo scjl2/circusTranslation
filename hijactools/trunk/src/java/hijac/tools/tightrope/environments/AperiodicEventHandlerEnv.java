@@ -11,7 +11,7 @@ public class AperiodicEventHandlerEnv extends EventHandlerEnv
 	private static final String APERIODIC_HANDLER_TYPE = "aperiodic";
 	private static final String APERIODIC_LONG_HANDLER_TYPE = "aperiodicLong";
 
-	private enum HandlerType
+	public enum HandlerType
 	{
 		aperiodic, aperiodicLong
 	};
@@ -26,6 +26,11 @@ public class AperiodicEventHandlerEnv extends EventHandlerEnv
 		EVENT_HANDLER_API_METHODS.add(new MethodEnv("release", "void", true));
 	}
 
+	public void setHandlerType(HandlerType handlerType)
+	{
+		this.handlerType = handlerType;
+	}
+	
 	@Override
 	public String getHandlerType()
 	{

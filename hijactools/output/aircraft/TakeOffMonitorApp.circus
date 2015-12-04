@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 TakeOffMissionMethChan
 
@@ -69,7 +69,7 @@ handlerAsyncEvent \circdef \\
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -80,7 +80,7 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 

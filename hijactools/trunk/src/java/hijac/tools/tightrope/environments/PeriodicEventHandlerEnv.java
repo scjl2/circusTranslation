@@ -8,15 +8,12 @@ public class PeriodicEventHandlerEnv extends EventHandlerEnv
 	@Override
 	public String getHandlerType()
 	{
-
 		return HANDLER_TYPE;
 	}
 
 	@Override
 	public String getImportName()
 	{
-
 		return IMPORT_NAME;
 	}
-
 }

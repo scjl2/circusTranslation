@@ -13,6 +13,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.EventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
@@ -39,6 +40,22 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 	{
 
 		ClassTree ct = analysis.TREES.getTree(paradigmTypeElement);
+
+		String extendsClause = ct.getExtendsClause().toString();
+		if (schedulableEnv instanceof AperiodicEventHandlerEnv)
+		{
+			if (extendsClause.equals("AperiodicEventHandler"))
+			{
+				((AperiodicEventHandlerEnv) schedulableEnv)
+						.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodic);
+
+			}
+			else if (extendsClause.equals("AperiodicLongEventHandler"))
+			{
+				((AperiodicEventHandlerEnv) schedulableEnv)
+						.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodicLong);
+			}
+		}
 
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 

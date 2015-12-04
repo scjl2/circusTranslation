@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ GroundDistanceMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ GroundDistanceMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 LandMissionMethChan
 
@@ -61,7 +61,7 @@ handlerAsyncEvent \circdef \\
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -72,7 +72,7 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 

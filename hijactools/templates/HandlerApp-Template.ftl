@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ ${ImportName}EventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ ${ProcessID}App ~ \parents ~ ${ImportName}EventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  <#include "Parent-Template.ftl">
 \end{zsection}
 
@@ -18,7 +18,7 @@ handlerAsyncEvent \circdef \\
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 <#include "Methods-Template.ftl">
 
 \begin{circusaction}
@@ -26,7 +26,7 @@ Methods \circdef \\
 \circblockopen
 	handlerAsyncEvent \\
 <#include "MethodsAction-Template.ftl">
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 

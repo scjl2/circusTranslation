@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 LandMissionMethChan
 
@@ -64,7 +64,7 @@ handlerAsyncEvent \circdef \\
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -75,13 +75,13 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_\_app~.~SafeLandingHandler \then \Skip)
+  \circinterrupt (end\_aperiodic\_app~.~SafeLandingHandler \then \Skip)
 \end{circusaction}
 
 \begin{circus}

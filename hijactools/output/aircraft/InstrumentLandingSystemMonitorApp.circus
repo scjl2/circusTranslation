@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ InstrumentLandingSystemMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ InstrumentLandingSystemMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  
 \end{zsection}
 
@@ -29,7 +29,7 @@ handlerAsyncEvent \circdef \\
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -40,7 +40,7 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 

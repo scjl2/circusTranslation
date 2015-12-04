@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ FlightSensorsMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ FlightSensorsMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 MainMissionMethChan
 
@@ -48,7 +48,7 @@ setHeadingCall~.~controllingMission~!~0\then \\setHeadingRet~.~controllingMissio
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -59,7 +59,7 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 

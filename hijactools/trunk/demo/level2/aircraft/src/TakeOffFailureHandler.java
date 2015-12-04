@@ -1,10 +1,10 @@
 /** Aircraft - Mode Change Example
- * 
- * 	When fired, the TakeOffFailureHandler reads the current aircraft speed and 
- * 	either aborts the take off (if the current speed is below a given threshold) 
+ *
+ * 	When fired, the TakeOffFailureHandler reads the current aircraft speed and
+ * 	either aborts the take off (if the current speed is below a given threshold)
  * 	or warns the pilots that the failure has occurred and that they should continue
  * 	the take off and then land (if the current speed is below a given threshold).
- * 
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -25,7 +25,7 @@ public class TakeOffFailureHandler extends AperiodicEventHandler
 
 	/**
 	 * Class Constructor
-	 * 
+	 *
 	 * @param priorityParameters
 	 *            the priority parameters for this handler
 	 * @param periodicParameters

@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ EnvironmentMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ EnvironmentMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 MainMissionMethChan
 
@@ -48,7 +48,7 @@ setFuelRemainingCall~.~controllingMission~!~0\then \\setFuelRemainingRet~.~contr
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -59,7 +59,7 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 
