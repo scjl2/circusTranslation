@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -196,23 +197,24 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Generating ID Files +++");
 		//Ian Duncan Smith? 
-		Map Ids = programEnv.getMissionIdsMap();
+		Map iDs = programEnv.getMissionIdsMap();
 
-		translateCommon(Ids, MISSION_IDS_TEMPLATE_FTL, MISSION_IDS_CIRCUS);
+		translateCommon(iDs, MISSION_IDS_TEMPLATE_FTL, MISSION_IDS_CIRCUS);
 
-		Ids = programEnv.getSchedulableIdsMap();
+		iDs = programEnv.getSchedulableIdsMap();
 
-		translateCommon(Ids, SCHEDULABLE_IDS_TEMPLATE_FTL,
+		translateCommon(iDs, SCHEDULABLE_IDS_TEMPLATE_FTL,
 				SCHEDULABLE_IDS_CIRCUS);
 		
-		Ids = programEnv.getThreadIdsMap();
-		
-		translateCommon(Ids, THREAD_IDS_TEMPLATE_FTL,
+		iDs = new HashMap();
+			iDs.put("Threads", programEnv.getThreadIdsMap());
+				
+		translateCommon(iDs, THREAD_IDS_TEMPLATE_FTL,
 				THREAD_IDS_CIRCUS);
 		
-		Ids = programEnv.getObjectIdsMap();
+		iDs = programEnv.getObjectIdsMap();
 		
-		translateCommon(Ids, OBJECT_IDS_TEMPLATE_FTL,
+		translateCommon(iDs, OBJECT_IDS_TEMPLATE_FTL,
 				OBJECT_IDS_CIRCUS);
 	}
 

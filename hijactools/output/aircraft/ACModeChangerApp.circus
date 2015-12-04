@@ -30,144 +30,7 @@ GetNextMission \circdef \circvar ret : MissionID \circspot \\
 \circblockclose	
 \end{circusaction}
 
-\begin{circusaction}
-advanceModeMeth \circdef 
-\\
-\circblockopen
-advanceModeCall~.~ACModeChanger 
-\then \\
-
-      \circblockopen
-
-\Skip
- 
-
-               \circseq \\ 
-
-  \circif ~ (modesLeft = 3) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  changeTo(launchMode)  
-
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 3) ~ \circthen ~
-  \\
-  \t1
-  \circif ~ (modesLeft = 2) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  changeTo(cruiseMode)  
-
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 2) ~ \circthen ~
-  \\
-  \t1
-  \circif ~ (modesLeft = 1) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  changeTo(landMode)  
-
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 1) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  changeTo(\circnull)  
-
- 
-
-        \circblockclose  
-
-
-  \\
-  \circfi
-
-  \\
-  \circfi
-
-  \\
-  \circfi
- 
-
-        \circblockclose  
-
-  \circseq  \\
-
-advanceModeRet~.~ACModeChanger \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
 %
-\begin{circusaction}
-changeToSyncMeth \circdef 
-\\
-\circblockopen
-changeToCall~.~ACModeChanger~?~thread 
-~?~newMode
- \then \\
-\circblockopen
-startSyncMeth~.~ACModeChangerObject~.~thread \then \\
-lockAcquired~.~ACModeChangerObject~.~thread \then \\
-
-      \circblockopen
-
-this~.~currentMode :=newMode
- 
-
-        \circblockclose  
-
- \circseq  \\
-endSyncMeth~.~ACModeChangerObject~.~thread \then  \\
-
-changeToRet~.~ACModeChanger~.~thread \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
 %
 
 \begin{circusaction}
@@ -175,11 +38,7 @@ Methods \circdef  \\
 \circblockopen
 	GetNextMission \\
 %
-\extchoice \\
-	advanceModeMeth \\ 
 %
-	\extchoice \\
-	changeToSyncMeth \\	
 %
 \circblockclose 
 \circseq Methods

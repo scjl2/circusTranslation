@@ -299,10 +299,7 @@ public class ProgramEnv
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map getThreadIdsMap()
 	{
-		Map returnMap = new HashMap();
-		returnMap.put("Threads", threadIds.toMap());
-		
-		return returnMap;
+		return threadIds.toMap();
 	}
 
 	@SuppressWarnings({ "rawtypes" })
