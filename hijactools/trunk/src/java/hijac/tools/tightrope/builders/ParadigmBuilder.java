@@ -37,22 +37,21 @@ public abstract class ParadigmBuilder
 
 	public abstract ArrayList<Name> build(TypeElement paradigmTypeElement);
 
-	protected HashMap<Name, Tree> getVariables(TypeElement arg0,
-			ObjectEnv objectEnv)
+	protected HashMap<Name, Tree> getVariables(TypeElement arg0, ObjectEnv objectEnv)
 	{
 		HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 
 		VariableVisitor varVisitor;
 
 		assert (objectEnv != null);
-//		if (objectEnv != null)
-//		{
-			varVisitor = new VariableVisitor(programEnv, objectEnv);
-//		}
-//		else
-//		{
-//			varVisitor = new VariableVisitor(programEnv);
-//		}
+		// if (objectEnv != null)
+		// {
+		varVisitor = new VariableVisitor(programEnv, objectEnv);
+		// }
+		// else
+		// {
+		// varVisitor = new VariableVisitor(programEnv);
+		// }
 
 		ClassTree ct = analysis.TREES.getTree(arg0);
 		List<? extends Tree> members = ct.getMembers();
@@ -63,20 +62,19 @@ public abstract class ParadigmBuilder
 			Tree s = i.next();
 			// TODO if this is only ever going to return one value at a time
 			// then it shouldn't be a map
-			System.out.println("s="+s+"s.kind="+s.getKind());
-			HashMap<Name, Tree> m = 
-					(HashMap<Name, Tree>) s.accept(varVisitor,true);
-			
+			System.out.println("s=" + s + "s.kind=" + s.getKind());
+			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, true);
+
 			assert (m != null);
 			System.out.println("getVariables m = " + m);
 			// TODO this is a bit of a hack...
 
 			for (Name n : m.keySet())
 			{
-				 System.out.println("\t*** Name = " + n + " Type = "
-				 + m.get(n) + " Kind = " + m.get(n).getKind());
+				System.out.println("\t*** Name = " + n + " Type = " + m.get(n)
+						+ " Kind = " + m.get(n).getKind());
 				varMap.putIfAbsent(n, m.get(n));
-//				varMap.put(n,m.get(n));
+				// varMap.put(n,m.get(n));
 			}
 		}
 		System.out.println("getVariables varMap = " + varMap);
@@ -95,13 +93,12 @@ public abstract class ParadigmBuilder
 		{
 			methodStatementTree = methodStatementsIterator.next();
 			// TODO Should only add the right trees I suppose..
-			environmentBuilder.addDeferredParam(methodStatementTree, env
-					.getName().toString(), varMap);
+			environmentBuilder.addDeferredParam(methodStatementTree, env.getName()
+					.toString(), varMap);
 		}
 	}
 
-	protected void extractProcessParameters(MethodTree methodTree,
-			ObjectEnv object)
+	protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
 	{
 		for (VariableTree vt : methodTree.getParameters())
 		{

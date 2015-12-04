@@ -5,7 +5,6 @@ import hijac.tools.tightrope.environments.FrameworkEnv;
 
 import java.util.ArrayList;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -126,8 +125,7 @@ public class ProgramEnv
 	{
 		ArrayList<TopLevelMissionSequencerEnv> returnList = new ArrayList<TopLevelMissionSequencerEnv>();
 
-		returnList.add(structureEnv.getControlTier()
-				.getTopLevelMissionSequencerEnv());
+		returnList.add(structureEnv.getControlTier().getTopLevelMissionSequencerEnv());
 
 		return returnList;
 	}
@@ -198,14 +196,13 @@ public class ProgramEnv
 				return tlmsEnv;
 			}
 		}
-		
+
 		return null;
 	}
 
 	/**
-	 * Gets the <code>ParadigmEnv</code> that represents
-	 * the schedulable sharing a name with the parameter. May return
-	 * <code>null</code>
+	 * Gets the <code>ParadigmEnv</code> that represents the schedulable sharing
+	 * a name with the parameter. May return <code>null</code>
 	 * 
 	 * @param name
 	 *            The name of the schedulable that we're looking for, as a

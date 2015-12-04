@@ -78,8 +78,7 @@ public abstract class ParadigmEnv extends ObjectEnv
 	{
 		if (classEnv != null)
 		{
-			if (!classEnv.getMeths().isEmpty()
-					|| !classEnv.getSyncMeths().isEmpty())
+			if (!classEnv.getMeths().isEmpty() || !classEnv.getSyncMeths().isEmpty())
 			{
 				return true;
 			}

@@ -92,17 +92,29 @@ requestTermination~.~${cluster.Mission}~.~${cluster.Sequencer}
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
+<<<<<<< HEAD
   \t1 AperiodicEventHandlerFW, ObjectFW, ThreadFW, \\
   \t1 ${Safelet.Name}App, ${TopLevelSequencer.Name}App,
+=======
+  \t1 AperiodicEventHandlerFW, ${Safelet.Name}App, ${TopLevelSequencer.Name}App, \\
+  \t1 ObjectFW, ThreadFW,
+  \t1
+>>>>>>> fixThreadIds
 <#list Tiers as tier >
 <#assign count=1>
 <#list tier as cluster>
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> fixThreadIds
 ${cluster.Mission.Name}App,
 
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
 <#list schedulables as schedulable>
 ${schedulable.Name}App
+<<<<<<< HEAD
 	<#sep>,</#sep>
 <#if count==2>
 <#assign count=0>
@@ -110,6 +122,11 @@ ${schedulable.Name}App
 <#else>
 <#assign count++>
 </#if>
+=======
+	<#if schedulable_has_next>
+,
+	</#if>
+>>>>>>> fixThreadIds
 </#list>
 	<#sep>,</#sep>
 </#list>
@@ -325,7 +342,11 @@ ${schedulable.Name}App<#if schedulable.AppParameters?size != 0> (<#list schedula
 \circblockclose
 \end{circus}
 %
+<<<<<<< HEAD
 %%%%%%%%%%%%%%%%THREADS
+=======
+%%%%%%%%%%%%%%%%%%THREADS
+>>>>>>> fixThreadIds
 %
 \begin{circus}
 Threads \circdef  \\

@@ -40,8 +40,7 @@ public class MethodVisitor
 		// this.analysis = analysis;
 		this.object = object;
 		MethodVisitor.application = TightRope.getSCJApplication();
-		MethodVisitor.franksMethodVisitor = new MethodBodyVisitor(application,
-				object);
+		MethodVisitor.franksMethodVisitor = new MethodBodyVisitor(application, object);
 	}
 
 	public MethodEnv visitMethod(MethodTree mt, Boolean isConstructor)
@@ -53,25 +52,24 @@ public class MethodVisitor
 		MethodEnv m;
 
 		// return values
-		ArrayList<Name> returnsValues = mt
-				.accept(new ReturnVisitor(null), null);
+		ArrayList<Name> returnsValues = mt.accept(new ReturnVisitor(null), null);
 
 		Map<Object, Object> parameters = new HashMap<>();
 
 		if (isConstructor)
 		{
 			getConstructorParameters(mt);
-			
-			
-//			VariableVisitor varVis = new VariableVisitor(TightRope.getProgramEnv(), object);
-//			Map<Name, Tree> newVarMap = mt.accept(varVis, false);
-//			
-//			for(Name name : newVarMap.keySet())
-//			{			
-//				object.addVariableInit(name.toString(), newVarMap.get(name));
-//			}
-			
-//			System.out.println("New Var Map = " + newVarMap.toString());
+
+			// VariableVisitor varVis = new
+			// VariableVisitor(TightRope.getProgramEnv(), object);
+			// Map<Name, Tree> newVarMap = mt.accept(varVis, false);
+			//
+			// for(Name name : newVarMap.keySet())
+			// {
+			// object.addVariableInit(name.toString(), newVarMap.get(name));
+			// }
+
+			// System.out.println("New Var Map = " + newVarMap.toString());
 		}
 		else
 		{
@@ -130,8 +128,7 @@ public class MethodVisitor
 
 			parameter.setName(vt.getName().toString());
 			parameter.setType(NewTransUtils.encodeType(vt.getType()));
-			parameter
-					.setProgramType(NewTransUtils.encodeType(vt.getType()));
+			parameter.setProgramType(NewTransUtils.encodeType(vt.getType()));
 
 			if (parameter.getType().endsWith("Parameters"))
 			{
@@ -139,8 +136,8 @@ public class MethodVisitor
 			}
 			else
 			{
-//					System.out.println("Adding Proc Param "
-//							+ parameter.toString());
+				// System.out.println("Adding Proc Param "
+				// + parameter.toString());
 				object.addProcParameter(parameter);
 			}
 			// }

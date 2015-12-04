@@ -26,8 +26,6 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 
 		return map;
 	}
-	
-	
 
 	public MethodEnv getHandleAsync()
 	{
@@ -38,5 +36,4 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 	{
 		handleAsync = method;
 	}
-
 }

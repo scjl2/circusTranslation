@@ -17,8 +17,8 @@ import scjlevel2examples.modechange.ModeChanger;
 
 import devices.Console;
 
-public class ACModeChanger extends MissionSequencer<Mission> implements
-		ModeChanger
+public class ACModeChanger extends MissionSequencer<Mission>
+	//implements ModeChanger
 {
 	private MainMission controllingMission;
 
@@ -37,7 +37,7 @@ public class ACModeChanger extends MissionSequencer<Mission> implements
 	/**
 	 * A reference to a mode
 	 */
-	private Mode currentMode, launchMode, cruiseMode, landMode;
+//	private Mode currentMode, launchMode, cruiseMode, landMode;
 
 	/**
 	 * Class constructor
@@ -50,25 +50,25 @@ public class ACModeChanger extends MissionSequencer<Mission> implements
 	public ACModeChanger(PriorityParameters priority, StorageParameters storage)
 	{
 		super(priority, storage);
-		launchMode = (Mode) new TakeOffMission(controllingMission);
-		cruiseMode = (Mode) new CruiseMission(controllingMission);
-		landMode = (Mode) new LandMission(controllingMission);
+	//	launchMode = (Mode) new TakeOffMission(controllingMission);
+	//	cruiseMode = (Mode) new CruiseMission(controllingMission);
+	//	landMode = (Mode) new LandMission(controllingMission);
 
 	}
 
 	/**
 	 * Change the mode to given mode
 	 */
-	@Override
+/*	@Override
 	public void changeTo(Mode newMode)
 	{
 		currentMode = newMode;
 	}
-
+*/
 	/**
 	 * Advance the mode to the next mode
 	 */
-	public synchronized void advanceMode()
+/*	public synchronized void advanceMode()
 	{
 		System.out.println("Advance To Next Mode");
 		// check the value of the modes variable and changeTo the associated
@@ -92,6 +92,7 @@ public class ACModeChanger extends MissionSequencer<Mission> implements
 			changeTo(null);
 		}
 	}
+	*/
 
 	/**
 	 * return the <code>currentMode</code> which has been set by either
@@ -104,8 +105,8 @@ public class ACModeChanger extends MissionSequencer<Mission> implements
 
 		if (modesLeft == 3)
 		{
-			modesLeft--;  
-		
+			modesLeft--;
+
 			return new TakeOffMission(controllingMission);
 		} else if (modesLeft == 2)
 		{

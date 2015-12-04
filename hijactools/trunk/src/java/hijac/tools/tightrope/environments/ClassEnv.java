@@ -24,10 +24,10 @@ public class ClassEnv extends ParadigmEnv
 
 		return map;
 	}
-	
+
 	public boolean isEmpty()
 	{
-		if(meths.isEmpty() && syncMeths.isEmpty() && variables.isEmpty())
+		if (meths.isEmpty() && syncMeths.isEmpty() && variables.isEmpty())
 		{
 			return true;
 		}
@@ -39,8 +39,8 @@ public class ClassEnv extends ParadigmEnv
 
 	public String toString()
 	{
-		return "ClassEnv: " + "Name=" + getName() + " methods="
-				+ meths.toString() + " synch methods=" + syncMeths.toString()
-				+ " variables=" + variables.toString();
+		return "ClassEnv: " + "Name=" + getName() + " methods=" + meths.toString()
+				+ " synch methods=" + syncMeths.toString() + " variables="
+				+ variables.toString();
 	}
 }

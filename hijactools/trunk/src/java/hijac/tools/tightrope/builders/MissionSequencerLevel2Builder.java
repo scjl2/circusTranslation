@@ -112,11 +112,10 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 				Name methodName = o.getName();
 				System.out.println("MS Visitor Method Tree = " + methodName);
 
-				List<StatementTree> methodStatements = (List<StatementTree>) o
-						.getBody().getStatements();
+				List<StatementTree> methodStatements = (List<StatementTree>) o.getBody()
+						.getStatements();
 
-				addDeferredParameters(methodStatements, varMap,
-						(ObjectEnv) sequencerEnv);
+				addDeferredParameters(methodStatements, varMap, (ObjectEnv) sequencerEnv);
 
 				if (methodName.contentEquals("<init>"))
 				{
@@ -133,8 +132,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 					final boolean isGetNextMissionMethod = methodName
 							.contentEquals("getNextMission");
 
-					final boolean notIgnoredMethod = !(methodName
-							.contentEquals("<init>"));
+					final boolean notIgnoredMethod = !(methodName.contentEquals("<init>"));
 
 					if (isGetNextMissionMethod)
 					{
@@ -158,8 +156,8 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 						m = methodVisitor.visitMethod(o, false);
 						setMethodAccess(m, o);
 
-						final boolean isSyncMethod = o.getModifiers()
-								.getFlags().contains(Modifier.SYNCHRONIZED);
+						final boolean isSyncMethod = o.getModifiers().getFlags()
+								.contains(Modifier.SYNCHRONIZED);
 						if (isSyncMethod)
 						{
 							sequencerEnv.addSyncMeth(m);
