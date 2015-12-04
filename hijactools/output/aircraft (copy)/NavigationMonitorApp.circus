@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ NavigationMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ NavigationMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 CruiseMissionMethChan
 
@@ -8,9 +8,10 @@ CruiseMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess NavigationMonitorApp \circdef \\ \qquad 
-  mission : CruiseMission
-\circspot 
+\circprocess NavigationMonitorApp \circdef \\ \qquad
+  mission : MissionID
+ 
+\circspot
   \circbegin
 \end{circus}
 
@@ -37,7 +38,7 @@ handlerAsyncEvent \circdef \\
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -48,7 +49,7 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 

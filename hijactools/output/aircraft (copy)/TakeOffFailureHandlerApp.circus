@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 TakeOffMissionMethChan
 
@@ -8,25 +8,15 @@ TakeOffMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess TakeOffFailureHandlerApp \circdef \\ \qquad 
-  takeoffMission : TakeOffMission
-\circspot 
+\circprocess TakeOffFailureHandlerApp \circdef \\ \qquad
+  takeoffMission : MissionID
+,\\ 
+  threshold : Double
+ 
+\circspot
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  threshold : double\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  threshold' = threshold\\ 
-\end{schema}
 
 \begin{circusaction}
 handlerAsyncEvent \circdef \\
@@ -84,7 +74,7 @@ abortCall~.~takeoffMission\then \\abortRet~.~takeoffMission\then \\\Skip
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -95,12 +85,12 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_aperiodic\_app~.~TakeOffFailureHandler \then \Skip)
 \end{circusaction}
 

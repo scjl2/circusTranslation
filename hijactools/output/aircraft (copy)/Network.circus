@@ -12,31 +12,31 @@
 \circchannelset ~ TerminateSync == \\ \t1 \lchanset schedulables\_terminated, schedulables\_stopped, get\_activeSchedulables \rchanset
 \end{circus}
 %
-\begin{circus}	
+\begin{circus}
 \circchannelset ~ ControlTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
 % IDs wont type check again   Start Mission and Done Mission wont parse?
 \begin{circus}
-\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~, done\_mission~.~,\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
+\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~, done\_mission~.~,\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset
 \end{circus}
 %
 \begin{circus}
 \circchannelset ~ MissionSync == \\ \t1 \lchanset done\_safeletFW, done\_toplevel\_sequencer, register, \\
                  signalTerminationCall, signalTerminationRet, activate\_schedulables, done\_schedulable, \\
-                 cleanupSchedulableCall, cleanupSchedulableRet  \rchanset  
+                 cleanupSchedulableCall, cleanupSchedulableRet  \rchanset
 \end{circus}
 %
 \begin{circus}
-\circchannelset ~ SchedulablesSync == \\ \t1 \lchanset activate\_schedulables, done\_safeletFW, done\_toplevel\_sequencer \rchanset 
+\circchannelset ~ SchedulablesSync == \\ \t1 \lchanset activate\_schedulables, done\_safeletFW, done\_toplevel\_sequencer \rchanset
 \end{circus}
 %
 \begin{circus}
-\circchannelset ~ ClusterSync == \\ \t1 \lchanset done\_toplevel\_sequencer, done\_safeletFW \rchanset 
+\circchannelset ~ ClusterSync == \\ \t1 \lchanset done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
 %
 \begin{circus}
 \circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
-	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
+	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}
 \end{circus}
 %
 \begin{circus}
@@ -53,21 +53,21 @@
 
 %IDs wont type check
 \begin{circus}
-\circchannelset ~ Tier0Sync == \\ 
-\t1 \lchanset 	
+\circchannelset ~ Tier0Sync == \\
+\t1 \lchanset
 done\_toplevel\_sequencer, done\_safeletFW, \\
-start\_mission~.~, done\_mission~.~,\\ 
-\t1 initializeRet~.~, 
+start\_mission~.~, done\_mission~.~,\\
+\t1 initializeRet~.~,
 requestTermination~.~~.~
 
 , \\
-start\_mission~.~, done\_mission~.~,\\ 
-\t1 initializeRet~.~, 
+start\_mission~.~, done\_mission~.~,\\
+\t1 initializeRet~.~,
 requestTermination~.~~.~
 
 , \\
-start\_mission~.~, done\_mission~.~,\\ 
-\t1 initializeRet~.~, 
+start\_mission~.~, done\_mission~.~,\\
+\t1 initializeRet~.~,
 requestTermination~.~~.~
 
 
@@ -87,58 +87,143 @@ requestTermination~.~~.~
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
+<<<<<<< HEAD
+  \t1 AperiodicEventHandlerFW, ObjectFW, ThreadFW, \\
+  \t1 ACSafeletApp, MainMissionSequencerApp,
+=======
   \t1 AperiodicEventHandlerFW, ACSafeletApp, MainMissionSequencerApp, \\
   \t1 ObjectFW, ThreadFW,
-  \t1 
+  \t1
+>>>>>>> fixThreadIds
+<<<<<<< HEAD
+=======
 
 
-MainMissionApp, 
+>>>>>>> fixThreadIds
+MainMissionApp,
 
 
-ACModeChangerApp 
+ACModeChangerApp
+<<<<<<< HEAD
+	,
+=======
 ,
-ControlHandlerApp 
+>>>>>>> fixThreadIds
+ControlHandlerApp
+<<<<<<< HEAD
+	,
+\\ \t1
+=======
 ,
-CommunicationsHandlerApp 
+>>>>>>> fixThreadIds
+CommunicationsHandlerApp
+<<<<<<< HEAD
+	,
+=======
 ,
-EnvironmentMonitorApp 
+>>>>>>> fixThreadIds
+EnvironmentMonitorApp
+<<<<<<< HEAD
+	,
+=======
 ,
-FlightSensorsMonitorApp 
+>>>>>>> fixThreadIds
+FlightSensorsMonitorApp
+<<<<<<< HEAD
+	,
+\\ \t1
+=======
 ,
-AperiodicSimulatorApp 
-,
+>>>>>>> fixThreadIds
+AperiodicSimulatorApp
+<<<<<<< HEAD
+	
+=======
+>>>>>>> fixThreadIds
+	
+	,
+<<<<<<< HEAD
+=======
 
 
-TakeOffMissionApp, 
+>>>>>>> fixThreadIds
+TakeOffMissionApp,
 
 
-LandingGearHandlerTakeOffApp 
+LandingGearHandlerTakeOffApp
+<<<<<<< HEAD
+	,
+=======
 ,
-TakeOffFailureHandlerApp 
+>>>>>>> fixThreadIds
+TakeOffFailureHandlerApp
+<<<<<<< HEAD
+	,
+\\ \t1
+=======
 ,
-TakeOffMonitorApp 
+>>>>>>> fixThreadIds
+TakeOffMonitorApp
+<<<<<<< HEAD
+	
+=======
+>>>>>>> fixThreadIds
+	,
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> fixThreadIds
+CruiseMissionApp,
+
+
+BeginLandingHandlerApp
+<<<<<<< HEAD
+	,
+=======
 ,
+>>>>>>> fixThreadIds
+NavigationMonitorApp
+<<<<<<< HEAD
+	
+\\ \t1
+=======
+>>>>>>> fixThreadIds
+	,
+<<<<<<< HEAD
+=======
 
 
-CruiseMissionApp, 
+>>>>>>> fixThreadIds
+LandMissionApp,
 
 
-BeginLandingHandlerApp 
+LandingGearHandlerLandApp
+<<<<<<< HEAD
+	,
+=======
 ,
-NavigationMonitorApp 
+>>>>>>> fixThreadIds
+SafeLandingHandlerApp
+<<<<<<< HEAD
+	,
+=======
 ,
-
-
-LandMissionApp, 
-
-
-LandingGearHandlerLandApp 
+>>>>>>> fixThreadIds
+GroundDistanceMonitorApp
+<<<<<<< HEAD
+	,
+\\ \t1
+=======
 ,
-SafeLandingHandlerApp 
-,
-GroundDistanceMonitorApp 
-,
-InstrumentLandingSystemMonitorApp 
+>>>>>>> fixThreadIds
+InstrumentLandingSystemMonitorApp
+<<<<<<< HEAD
+	
+=======
+>>>>>>> fixThreadIds
+	
+	
 \end{zsection}
 %
 \begin{circus}
@@ -156,7 +241,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 \circprocess Tier0 \circdef \\
 
 \circblockopen
-	MissionFW(MainMission)\\
+	MissionFW(MainMissionID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
@@ -168,14 +253,14 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			SchedulableMissionSequencerFW()\\
+			SchedulableMissionSequencerFW(ACModeChangerID)\\
 \t1 \lpar SchedulablesSync \rpar\\
 
 
 \circblockopen
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(ControlHandlerID ,(time(10,0),null)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(CommunicationsHandlerID ,(NULL,nullSchedulableId)   )\\
 \circblockclose \\
 
 
@@ -184,12 +269,12 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(EnvironmentMonitorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(FlightSensorsMonitorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW()\\
-\circblockclose \\ 
+			PeriodicEventHandlerFW(AperiodicSimulatorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
+\circblockclose \\
 
 		\circblockclose
 \circblockclose
@@ -199,7 +284,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 \circprocess Tier1 \circdef \\
 
 \circblockopen
-	MissionFW(TakeOffMission)\\
+	MissionFW(TakeOffMissionID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
@@ -213,9 +298,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(LandingGearHandlerTakeOffID ,(NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(TakeOffFailureHandlerID ,(NULL,nullSchedulableId)   )\\
 \circblockclose \\
 
 
@@ -223,13 +308,13 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(TakeOffMonitorID ,(time(0,0),time(500,0),NULL,nullSchedulableId)   )\\
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
 
 \circblockopen
-	MissionFW(CruiseMission)\\
+	MissionFW(CruiseMissionID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
@@ -242,19 +327,19 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(BeginLandingHandlerID ,(NULL,nullSchedulableId)   )\\
 
 \t1 \lpar SchedulablesSync \rpar\\
 
 
 
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(NavigationMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
 
 \circblockopen
-	MissionFW(LandMission)\\
+	MissionFW(LandMissionID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
@@ -268,9 +353,9 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(LandingGearHandlerLandID ,(NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW()\\
+			AperiodicEventHandlerFW(SafeLandingHandlerID ,(NULL,nullSchedulableId)   )\\
 \circblockclose \\
 
 
@@ -279,17 +364,17 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 
 \circblockopen
-			PeriodicEventHandlerFW()\\
+			PeriodicEventHandlerFW(GroundDistanceMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW()\\
-\circblockclose \\ 
+			PeriodicEventHandlerFW(InstrumentLandingSystemMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
+\circblockclose \\
 
 		\circblockclose
 \circblockclose
 \end{circus}
 %
 %
-%+++ Framework +++ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Framework +++
 %
 \begin{circus}
 \circprocess Framework \circdef \\
@@ -304,10 +389,11 @@ Tier1
 \circblockclose
 \end{circus}
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPLICATION
+%
 \begin{circus}
 \circprocess  Application \circdef \\
 \circblockopen
-
 ACSafeletApp\\
 \interleave \\
 MainMissionSequencerApp\\
@@ -315,53 +401,91 @@ MainMissionSequencerApp\\
 MainMissionApp\\
 \interleave \\
 
-ACModeChangerApp ( MainMission  ) \\
+ACModeChangerApp ( MainMissionID  ) \\
 \interleave \\
 ControlHandlerApp\\
 \interleave \\
 CommunicationsHandlerApp\\
 \interleave \\
-EnvironmentMonitorApp ( MainMission  ) \\
+EnvironmentMonitorApp ( MainMissionID  ) \\
 \interleave \\
-FlightSensorsMonitorApp ( MainMission  ) \\
+FlightSensorsMonitorApp ( MainMissionID  ) \\
 \interleave \\
-AperiodicSimulatorApp ( AperiodicEventHandler  ) \\
+AperiodicSimulatorApp ( controlHandlerID  ) \\
 \interleave \\
 TakeOffMissionApp\\
 \interleave \\
 
-LandingGearHandlerTakeOffApp ( TakeOffMission  ) \\
+LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
 \interleave \\
-TakeOffFailureHandlerApp ( TakeOffMission  ) \\
+TakeOffFailureHandlerApp ( TakeOffMissionID ,  10.0  ) \\
 \interleave \\
-TakeOffMonitorApp ( TakeOffMission ,  AperiodicEventHandler  ) \\
+TakeOffMonitorApp ( TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
-BeginLandingHandlerApp ( Mission  ) \\
+BeginLandingHandlerApp ( CruiseMissionID  ) \\
 \interleave \\
-NavigationMonitorApp ( CruiseMission  ) \\
+NavigationMonitorApp ( CruiseMissionID  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
 
-LandingGearHandlerLandApp ( LandMission  ) \\
+LandingGearHandlerLandApp ( LandMissionID  ) \\
 \interleave \\
-SafeLandingHandlerApp ( LandMission  ) \\
+SafeLandingHandlerApp ( LandMissionID ,  10.0  ) \\
 \interleave \\
-GroundDistanceMonitorApp ( LandMission  ) \\
+GroundDistanceMonitorApp ( LandMissionID  ) \\
 \interleave \\
-InstrumentLandingSystemMonitorApp ( LandMission  ) \\
+InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
+\circblockclose
+\end{circus}
+%
+<<<<<<< HEAD
+%%%%%%%%%%%%%%%%THREADS
+=======
+%%%%%%%%%%%%%%%%%%THREADS
+>>>>>>> fixThreadIds
+%
+\begin{circus}
+Threads \circdef  \\
+\circblockopen
+ThreadFW(SafeLandingHandlerThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(ACModeChangerThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(TakeOffFailureHandlerThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(InstrumentLandingSystemMonitorThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(FlightSensorsMonitorThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(TakeOffMonitorThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(AperiodicSimulatorThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(LandingGearHandlerLandThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(LandingGearHandlerTakeOffThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(GroundDistanceMonitorThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(ControlHandlerThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(CommunicationsHandlerThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(BeginLandingHandlerThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(NavigationMonitorThreadID, 5) \\	
+\t1 \lpar ThreadSync \rpar\\
+ThreadFW(EnvironmentMonitorThreadID, 5) \\	
+
 \circblockclose
 \end{circus}
 %
 \begin{circus}
-Locking \circdef \\
-\circblockopen
-\circblockopen
-\circblockclose \\
-\interleave \\
+Objects \circdef \\
 \circblockopen
 ObjectFW(ACSafeletObjectID) \\
 \t1 \lpar ObjectSync \rpar\\
@@ -404,10 +528,12 @@ ObjectFW(InstrumentLandingSystemMonitorObjectID) \\
 ObjectFW(SafeLandingHandlerObjectID) \\
 
 \circblockclose
-\circblockclose
 \end{circus}
-% 
+%
 \begin{circus}
-\circprocess Program \circdef Framework \lpar AppSync \rpar Application \lpar LockingSync \rpar Locking
+Locking \circdef Threads \interleave Objects
 \end{circus}
-
+%
+\begin{circus}
+\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar Application \circblockclose \lpar LockingSync \rpar Locking
+\end{circus}

@@ -1,12 +1,13 @@
 \begin{zsection}
-  \SECTION ~ AperiodicSimulatorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ AperiodicSimulatorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  
 \end{zsection}
 
 \begin{circus}
-\circprocess AperiodicSimulatorApp \circdef \\ \qquad 
-  event : AperiodicEventHandler
-\circspot 
+\circprocess AperiodicSimulatorApp \circdef \\ \qquad
+  aperiodicEvent : SchedulableID
+ 
+\circspot
   \circbegin
 \end{circus}
 
@@ -33,7 +34,7 @@ handlerAsyncEvent \circdef \\
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -44,7 +45,7 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 

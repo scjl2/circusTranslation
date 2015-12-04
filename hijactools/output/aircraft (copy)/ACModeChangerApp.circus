@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ ACModeChangerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId   \\
+  \t1 MissionId, MissionIds, SchedulableId  , ACModeChangerClass \\
 
   \t1 
 \end{zsection}
@@ -13,33 +13,13 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess ACModeChangerApp \circdef \\ \qquad 
-  controllingMission : MainMission
-\circspot 
+\circprocess ACModeChangerApp \circdef \\ \qquad
+  controllingMission : MissionID
+ 
+\circspot
  \circbegin\\ 
 \end{circus}
    
-\begin{schema}{State}
-  modesLeft : \num\\ 
-  \circreftype currentModeClass : ModeClass\\ 
-  \circreftype launchModeClass : ModeClass\\ 
-  \circreftype cruiseModeClass : ModeClass\\ 
-  \circreftype landModeClass : ModeClass\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  modesLeft' = 3\\ 
-  \circreftype currentModeClass' = \circnew ModeClass()\\ 
-  \circreftype launchModeClass' = \circnew ModeClass()\\ 
-  \circreftype cruiseModeClass' = \circnew ModeClass()\\ 
-  \circreftype landModeClass' = \circnew ModeClass()\\ 
-\end{schema}
 
 \begin{circusaction}
 GetNextMission \circdef \circvar ret : MissionID \circspot \\
@@ -51,247 +31,7 @@ GetNextMission \circdef \circvar ret : MissionID \circspot \\
 \circblockclose	
 \end{circusaction}
 
-\begin{circusaction}
-changeToMeth \circdef 
-\\
-\circblockopen
-changeToCall~.~ACModeChanger 
-~?~newMode
-\then \\
-
-      \circblockopen
-
-this~.~currentMode :=newMode
- 
-
-        \circblockclose  
-
-  \circseq  \\
-
-changeToRet~.~ACModeChanger \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-getNextMissionMeth \circdef 
-\circvar ret : MissionID \circspot
-\\
-\circblockopen
-getNextMissionCall~.~ACModeChanger 
-\then \\
-
-      \circblockopen
-
-  \circif ~ (modesLeft = 3) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  ret := TakeOffMission
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 3) ~ \circthen ~
-  \\
-  \t1
-  \circif ~ (modesLeft = 2) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  ret := CruiseMission
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 2) ~ \circthen ~
-  \\
-  \t1
-  \circif ~ (modesLeft = 1) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  ret := LandMission
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 1) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  ret := nullMissionId
- 
-
-        \circblockclose  
-
-
-  \\
-  \circfi
-
-  \\
-  \circfi
-
-  \\
-  \circfi
- 
-
-        \circblockclose  
-
-  \circseq  \\
-
-getNextMissionRet~.~ACModeChanger~!~ret \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
 %
-\begin{circusaction}
-advanceModeSyncMeth \circdef 
-\\
-\circblockopen
-advanceModeCall~.~ACModeChanger~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~ACModeChangerObject~.~thread \then \\
-lockAcquired~.~ACModeChangerObject~.~thread \then \\
-
-      \circblockopen
-
-\Skip
- 
-
-               \circseq \\ 
-
-  \circif ~ (modesLeft = 3) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  changeTo(launchMode)  
-
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 3) ~ \circthen ~
-  \\
-  \t1
-  \circif ~ (modesLeft = 2) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  changeTo(cruiseMode)  
-
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 2) ~ \circthen ~
-  \\
-  \t1
-  \circif ~ (modesLeft = 1) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  modesLeft := modesLeft - 1
-
- 
-
-               \circseq \\ 
-
-  changeTo(landMode)  
-
- 
-
-        \circblockclose  
-
-
-  \\
-  \circelse ~ \lnot (modesLeft = 1) ~ \circthen ~
-  \\
-  \t1
-
-      \circblockopen
-
-  changeTo(\circnull)  
-
- 
-
-        \circblockclose  
-
-
-  \\
-  \circfi
-
-  \\
-  \circfi
-
-  \\
-  \circfi
- 
-
-        \circblockclose  
-
- \circseq  \\
-endSyncMeth~.~ACModeChangerObject~.~thread \then  \\
-
-advanceModeRet~.~ACModeChanger~.~thread \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
 %
 
 \begin{circusaction}
@@ -299,20 +39,14 @@ Methods \circdef  \\
 \circblockopen
 	GetNextMission \\
 %
-\extchoice \\
-	changeToMeth \\ 
-\extchoice \\
-	getNextMissionMeth \\ 
 %
-	\extchoice \\
-	advanceModeSyncMeth \\	
 %
 \circblockclose 
 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~ACModeChanger \then \Skip)
 \end{circusaction}

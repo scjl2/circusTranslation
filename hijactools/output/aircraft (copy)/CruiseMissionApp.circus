@@ -19,7 +19,11 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess CruiseMissionApp \circdef  \circbegin
+\circprocess CruiseMissionApp \circdef \\ \qquad
+  controllingMission : MissionID
+ 
+\circspot
+ \circbegin
 \end{circus}
 
 \begin{schema}{State}
@@ -60,20 +64,25 @@ CleanupPhase \circdef  \\
 \circblockclose
 \end{circusaction}
 
+%
 \begin{circusaction}
-getControllingMissionMeth \circdef 
+getControllingMissionSyncMeth \circdef 
 \circvar ret : MissionID \circspot
 \\
 \circblockopen
-getControllingMissionCall~.~CruiseMission 
-\then \\
-ret := this~.~getControllingMission()  \circseq  \\
+getControllingMissionCall~.~CruiseMission~?~thread 
+ \then \\
+\circblockopen
+startSyncMeth~.~CruiseMissionObject~.~thread \then \\
+lockAcquired~.~CruiseMissionObject~.~thread \then \\
+ret := this~.~getControllingMission() \circseq  \\
+endSyncMeth~.~CruiseMissionObject~.~thread \then  \\
 
-getControllingMissionRet~.~CruiseMission~!~ret \then \\
+getControllingMissionRet~.~CruiseMission~!~thread~!~ret \then \\
 \Skip
 \circblockclose
+\circblockclose
 \end{circusaction}	
-%
 %
 
 \begin{circusaction}
@@ -83,9 +92,9 @@ Methods \circdef
 	\extchoice \\
 	CleanupPhase \\
 %
-\extchoice \\
-	getControllingMissionMeth \\ 
 %
+	\extchoice \\
+	getControllingMissionSyncMeth \\	
 %
 \circblockclose 
 \circseq Methods

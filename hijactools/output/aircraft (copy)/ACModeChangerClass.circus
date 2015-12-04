@@ -3,20 +3,28 @@
 \circclass ACModeChangerClass \circdef \circbegin
 \end{circus}
 
+\begin{schema}{\circstateignore State}
+  modesLeft : \num\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  modesLeft' = 3\\ 
+\end{schema}
 
 
 %
 \begin{circusaction}
-\circ ~ \circsync ~ advanceMode ~ \circdef 
+\circprotected ~ \circsync ~ getNextMission ~ \circdef
+\circvar ret : MissionID \circspot
 \\
 
       \circblockopen
-
-
-
- 
-
-               \circseq \\ 
 
   \circif ~ (modesLeft = 3) ~ \circthen ~
   \\
@@ -30,8 +38,7 @@
 
                \circseq \\ 
 
-  changeTo(launchMode)  
-
+  ret := TakeOffMission
  
 
         \circblockclose  
@@ -53,8 +60,7 @@
 
                \circseq \\ 
 
-  changeTo(cruiseMode)  
-
+  ret := CruiseMission
  
 
         \circblockclose  
@@ -76,8 +82,7 @@
 
                \circseq \\ 
 
-  changeTo(landMode)  
-
+  ret := LandMission
  
 
         \circblockclose  
@@ -90,8 +95,7 @@
 
       \circblockopen
 
-  changeTo(\circnull)  
-
+  ret := nullMissionId
  
 
         \circblockclose  
@@ -109,9 +113,9 @@
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
+
+\end{circusaction}
 %
 
 \begin{circusaction}

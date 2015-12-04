@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ LandingGearHandlerLandApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ LandingGearHandlerLandApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 LandMissionMethChan
 , 
@@ -14,9 +14,10 @@ ThreadIds
 \end{zsection}
 
 \begin{circus}
-\circprocess LandingGearHandlerLandApp \circdef \\ \qquad 
-  mission : LandMission
-\circspot 
+\circprocess LandingGearHandlerLandApp \circdef \\ \qquad
+  mission : MissionID
+ 
+\circspot
   \circbegin
 \end{circus}
 
@@ -72,7 +73,7 @@ deployLandingGearCall~.~mission~.~LandingGearHandlerLandThread\then \\deployLand
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -83,7 +84,7 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 

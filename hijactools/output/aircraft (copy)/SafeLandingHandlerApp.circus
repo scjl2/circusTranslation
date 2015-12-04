@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 LandMissionMethChan
 
@@ -8,25 +8,15 @@ LandMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess SafeLandingHandlerApp \circdef \\ \qquad 
-  landMission : LandMission
-\circspot 
+\circprocess SafeLandingHandlerApp \circdef \\ \qquad
+  landMission : MissionID
+,\\ 
+  threshold : Double
+ 
+\circspot
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  threshold : double\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  threshold' = threshold\\ 
-\end{schema}
 
 \begin{circusaction}
 handlerAsyncEvent \circdef \\
@@ -74,7 +64,7 @@ handlerAsyncEvent \circdef \\
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -85,12 +75,12 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_aperiodic\_app~.~SafeLandingHandler \then \Skip)
 \end{circusaction}
 

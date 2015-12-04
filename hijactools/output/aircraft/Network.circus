@@ -87,21 +87,12 @@ requestTermination~.~~.~
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
-<<<<<<< HEAD
   \t1 AperiodicEventHandlerFW, ObjectFW, ThreadFW, \\
   \t1 ACSafeletApp, MainMissionSequencerApp,
-=======
-  \t1 AperiodicEventHandlerFW, ACSafeletApp, MainMissionSequencerApp, \\
-  \t1 ObjectFW, ThreadFW,
-  \t1
 
-
->>>>>>> fixThreadIds
 MainMissionApp,
 
-
 ACModeChangerApp
-<<<<<<< HEAD
 	,
 ControlHandlerApp
 	,
@@ -117,26 +108,9 @@ AperiodicSimulatorApp
 	
 	
 	,
-=======
-,
-ControlHandlerApp
-,
-CommunicationsHandlerApp
-,
-EnvironmentMonitorApp
-,
-FlightSensorsMonitorApp
-,
-AperiodicSimulatorApp
-,
-
-
->>>>>>> fixThreadIds
 TakeOffMissionApp,
 
-
 LandingGearHandlerTakeOffApp
-<<<<<<< HEAD
 	,
 TakeOffFailureHandlerApp
 	,
@@ -144,37 +118,17 @@ TakeOffFailureHandlerApp
 TakeOffMonitorApp
 	
 	,
-=======
-,
-TakeOffFailureHandlerApp
-,
-TakeOffMonitorApp
-,
-
-
->>>>>>> fixThreadIds
 CruiseMissionApp,
 
-
 BeginLandingHandlerApp
-<<<<<<< HEAD
 	,
 NavigationMonitorApp
 	
 \\ \t1
 	,
-=======
-,
-NavigationMonitorApp
-,
-
-
->>>>>>> fixThreadIds
 LandMissionApp,
 
-
 LandingGearHandlerLandApp
-<<<<<<< HEAD
 	,
 SafeLandingHandlerApp
 	,
@@ -185,14 +139,6 @@ InstrumentLandingSystemMonitorApp
 	
 	
 	
-=======
-,
-SafeLandingHandlerApp
-,
-GroundDistanceMonitorApp
-,
-InstrumentLandingSystemMonitorApp
->>>>>>> fixThreadIds
 \end{zsection}
 %
 \begin{circus}
@@ -411,46 +357,11 @@ InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
 \circblockclose
 \end{circus}
 %
-<<<<<<< HEAD
-%%%%%%%%%%%%%%%%THREADS
-=======
 %%%%%%%%%%%%%%%%%%THREADS
->>>>>>> fixThreadIds
 %
 \begin{circus}
 Threads \circdef  \\
 \circblockopen
-<<<<<<< HEAD
-ThreadFW(SafeLandingHandlerThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(ACModeChangerThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(TakeOffFailureHandlerThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(InstrumentLandingSystemMonitorThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(FlightSensorsMonitorThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(TakeOffMonitorThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(AperiodicSimulatorThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(LandingGearHandlerLandThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(LandingGearHandlerTakeOffThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(GroundDistanceMonitorThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(ControlHandlerThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(CommunicationsHandlerThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(BeginLandingHandlerThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(NavigationMonitorThreadID, 5) \\	
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(EnvironmentMonitorThreadID, 5) \\	
-=======
 ThreadFW(SafeLandingHandlerThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
 ThreadFW(ACModeChangerThreadID, 5) \\
@@ -480,7 +391,6 @@ ThreadFW(BeginLandingHandlerThreadID, 5) \\
 ThreadFW(NavigationMonitorThreadID, 5) \\
 \t1 \lpar ThreadSync \rpar\\
 ThreadFW(EnvironmentMonitorThreadID, 5) \\
->>>>>>> fixThreadIds
 
 \circblockclose
 \end{circus}

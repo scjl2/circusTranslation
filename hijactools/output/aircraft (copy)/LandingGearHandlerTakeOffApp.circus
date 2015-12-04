@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ LandingGearHandlerTakeOffApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds
+  \SECTION ~ LandingGearHandlerTakeOffApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
 TakeOffMissionMethChan
 , 
@@ -14,9 +14,10 @@ ThreadIds
 \end{zsection}
 
 \begin{circus}
-\circprocess LandingGearHandlerTakeOffApp \circdef \\ \qquad 
-  mission : TakeOffMission
-\circspot 
+\circprocess LandingGearHandlerTakeOffApp \circdef \\ \qquad
+  mission : MissionID
+ 
+\circspot
   \circbegin
 \end{circus}
 
@@ -72,7 +73,7 @@ deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOffThread\then \\deployL
     \Skip
 \circblockclose
 \end{circusaction}
-    
+
 %
 %
 
@@ -83,7 +84,7 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 

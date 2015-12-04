@@ -5,11 +5,11 @@
 
 
 
+%
 \begin{circusaction}
-\circpublic ~ getControllingMission ~ \circdef 
+\circpublic ~ \circsync ~ getControllingMission ~ \circdef
 \circvar ret : MissionID \circspot
-\\ 
-
+\\
 
       \circblockopen
 
@@ -18,10 +18,9 @@
 
         \circblockclose  
 
- 
 
-\end{circusaction}	
-%
+
+\end{circusaction}
 %
 
 \begin{circusaction}
