@@ -63,14 +63,14 @@ public class TakeOffMission extends Mission //implements LandingGearUser
 		TakeOffMonitor takeOffMonitor = new TakeOffMonitor(
 				new PriorityParameters(5), new PeriodicParameters(
 						new RelativeTime(0, 0), new RelativeTime(500, 0)),
-				storageParametersSchedulable, this, TAKEOFF_ALTITUDE,
+				storageParametersSchedulable, controllingMission, this, TAKEOFF_ALTITUDE,
 				landingGearHandler);
 
 		takeOffMonitor.register();
 
 		TakeOffFailureHandler takeOffFailureHandler = new TakeOffFailureHandler(
 				new PriorityParameters(5), new AperiodicParameters(),
-				storageParametersSchedulable, "Take Off Handler", this,
+				storageParametersSchedulable, "Take Off Handler", controllingMission, this,
 				SAFE_AIRSPEED_THRESHOLD);
 
 		takeOffFailureHandler.register();

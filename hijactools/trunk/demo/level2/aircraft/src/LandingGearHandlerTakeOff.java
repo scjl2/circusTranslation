@@ -1,9 +1,9 @@
 /** Aircraft - Mode Change Example
- * 
+ *
  *   Handler for dealing with the craft's landing gear.
  *   This version simply toggles the landingGearDeployed variable
  *   in its controlling mission
- * 
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -19,11 +19,11 @@ public class LandingGearHandlerTakeOff extends AperiodicEventHandler
 	/**
 	 * The controlling mission of this handler
 	 */
-	private final TakeOffMission mission;
+		private final TakeOffMission mission;
 
 	/**
 	 * Class Constructor
-	 * 
+	 *
 	 * @param priority
 	 *            the priority parameters for this handler
 	 * @param release

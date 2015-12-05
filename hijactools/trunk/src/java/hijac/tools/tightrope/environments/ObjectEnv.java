@@ -134,6 +134,7 @@ public class ObjectEnv
 	 */
 	public VariableEnv getVariable(String name)
 	{
+		System.out.println(this.name+".getVariable:"+name);
 		for (VariableEnv v : variables)
 		{
 			System.out.println("variable name = " + v.getName());

@@ -310,4 +310,9 @@ public class ProgramEnv
 		threadIds.setThreadPriority(threadID, priority);
 
 	}
-};
+	
+	public MissionIdsEnv getMissionIdsEnv()
+	{
+		return missionIds;
+	}
+}

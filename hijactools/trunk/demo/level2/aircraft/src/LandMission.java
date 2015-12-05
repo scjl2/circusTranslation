@@ -50,7 +50,7 @@ public class LandMission extends Mission //implements LandingGearUser
 		GroundDistanceMonitor groundDistanceMonitor = new GroundDistanceMonitor(
 				new PriorityParameters(5), new PeriodicParameters(
 						new RelativeTime(0, 0), new RelativeTime(10, 0)),
-				storageParametersSchedulable, this);
+				storageParametersSchedulable, controllingMission);
 		groundDistanceMonitor.register();
 
 		LandingGearHandlerLand landingHandler = new LandingGearHandlerLand(
@@ -67,7 +67,7 @@ public class LandMission extends Mission //implements LandingGearUser
 
 		SafeLandingHandler safeLandingHandler = new SafeLandingHandler(
 				new PriorityParameters(5), new AperiodicParameters(),
-				storageParametersSchedulable, "Safe Landing Handler", this,
+				storageParametersSchedulable, "Safe Landing Handler", controllingMission,
 				SAFE_LANDING_ALTITUDE);
 
 		safeLandingHandler.register();

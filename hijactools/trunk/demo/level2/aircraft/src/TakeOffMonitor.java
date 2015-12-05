@@ -1,9 +1,9 @@
 /** Aircraft - Mode Change Example
- * 
- * 	The TakeOffMonitor reads the current height from the ground, from the main mission, 
- * 	and when the aircraft has actually taken off it retracts the landing gear and terminates 
+ *
+ * 	The TakeOffMonitor reads the current height from the ground, from the main mission,
+ * 	and when the aircraft has actually taken off it retracts the landing gear and terminates
  * 	the TakeOff mission.
- * 
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -19,6 +19,7 @@ public class TakeOffMonitor extends PeriodicEventHandler
 	/**
 	 * Controlling mission
 	 */
+	private final MainMission mainMission ;
 	private final TakeOffMission takeoffMission;
 
 	private double takeOffAltitude;
@@ -26,7 +27,7 @@ public class TakeOffMonitor extends PeriodicEventHandler
 
 	/**
 	 * Class Constructor
-	 * 
+	 *
 	 * @param priorityParameters
 	 *            the priority parameters for this handler
 	 * @param periodicParameters
@@ -40,13 +41,15 @@ public class TakeOffMonitor extends PeriodicEventHandler
 	 */
 	public TakeOffMonitor(PriorityParameters priority,
 			PeriodicParameters periodic, StorageParameters storage,
-			TakeOffMission takeoffMission, double takeOffAltitude,
+			MainMission mainMission, TakeOffMission takeOffMission, double takeOffAltitude,
 			AperiodicEventHandler landingGearHandler)
 	{
 		super(priority, periodic, storage);
-		this.takeoffMission = takeoffMission;
+		this.mainMission = mainMission;
+		this.takeoffMission = takeOffMission;
 		this.takeOffAltitude = takeOffAltitude;
 		this.landingGearHandler = landingGearHandler;
+
 	}
 
 	/**
@@ -57,7 +60,10 @@ public class TakeOffMonitor extends PeriodicEventHandler
 	{
 		System.out.println("Reading Altitude");
 
-		double altitude = takeoffMission.getControllingMission().getAltitude();
+	//	double altitude = takeoffMission.getControllingMission().getAltitude();
+	//REFACTORING
+
+double altitude = mainMission.getAltitude();
 
 		if (altitude > takeOffAltitude)
 		{

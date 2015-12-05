@@ -366,13 +366,14 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	@Override
 	public VariableEnv visitIdentifier(IdentifierTree arg0, VariableEnv arg1)
 	{
-		System.out.println("Param Visitor: Identifier");
+		System.out.println("Param Visitor: Identifier->"+arg0.toString());
+		
 
 		{
 			VariableEnv v = new VariableEnv();
-
-			System.out.println("arg = " + arg0.getName().toString());
-			if (arg0.getName().toString().equals("this"))
+			String idString = arg0.getName().toString();
+	
+			if (idString.equals("this"))
 			{
 				v.setType("ID");
 				
@@ -427,11 +428,15 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				else
 				{
 					System.out.println("VAR TREE NULL");
+					System.out.println("originObject = "
+							+ originObject.getName());
 
+					
 					VariableEnv theVar = originObject.getVariable(varName);
 
 					if (theVar == null)
 					{
+						System.out.println("Getting ClassEnv");
 						theVar = ((ParadigmEnv) originObject).getClassEnv()
 								.getVariable(varName);
 					}

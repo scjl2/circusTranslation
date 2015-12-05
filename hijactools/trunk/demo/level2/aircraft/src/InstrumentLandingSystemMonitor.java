@@ -1,7 +1,7 @@
 /** Aircraft - Mode Change Example
- * 
+ *
  * 	Handler for monitoring the Instrument Landing System
- * 
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -13,11 +13,11 @@ import javax.safetycritical.StorageParameters;
 
 public class InstrumentLandingSystemMonitor extends PeriodicEventHandler
 {
-	LandMission mission;
+	private final LandMission mission;
 
 	/**
 	 * Class Constructor
-	 * 
+	 *
 	 * @param priority
 	 *            the priority parameters of this handler
 	 * @param periodic

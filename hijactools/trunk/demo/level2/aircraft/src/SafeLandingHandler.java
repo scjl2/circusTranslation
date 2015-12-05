@@ -1,11 +1,11 @@
 /** Aircraft - Mode Change Example
- * 
- * 	SafeLandingMonitor which checks the distance from the ground and 
- * 	if there is a problem during landing will ensure that the aircraft pulls up 
- * 	(if the aircraft is still far enough from the ground that it can pull up) 
- * 	or alerts the pilot and deploys any crash mitigation systems 
+ *
+ * 	SafeLandingMonitor which checks the distance from the ground and
+ * 	if there is a problem during landing will ensure that the aircraft pulls up
+ * 	(if the aircraft is still far enough from the ground that it can pull up)
+ * 	or alerts the pilot and deploys any crash mitigation systems
  *   (if the aircraft is too close to the ground to safely pull up).
- *   
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -20,13 +20,13 @@ public class SafeLandingHandler extends AperiodicEventHandler
 	/**
 	 * The controlling mission
 	 */
-	private final LandMission landMission;
+	private final MainMission mainMission;
 
 	private double threshold;
 
 	/**
 	 * Class Constructor
-	 * 
+	 *
 	 * @param priorityParameters
 	 *            the priority parameters for this handler
 	 * @param periodicParameters
@@ -40,10 +40,10 @@ public class SafeLandingHandler extends AperiodicEventHandler
 	 */
 	public SafeLandingHandler(PriorityParameters priority,
 			AperiodicParameters release, StorageParameters storage,
-			String name, LandMission landMission, Double threshold)
+			String name, MainMission mainMission, Double threshold)
 	{
 		super(priority, release, storage, name);
-		this.landMission = landMission;
+		this.mainMission = mainMission;
 		this.threshold = threshold;
 	}
 
@@ -54,7 +54,7 @@ public class SafeLandingHandler extends AperiodicEventHandler
 	public void handleAsyncEvent()
 	{
 
-		double altitude = landMission.getControllingMission().getAltitude();
+		double altitude = mainMission.getAltitude();
 
 		// in both cases this failure should be flagged somewhere
 		if (altitude < threshold)

@@ -19,11 +19,10 @@ public class TakeOffFailureHandler extends AperiodicEventHandler
 	/**
 	 * The controlling mission
 	 */
+	private final MainMission mainMission;
 	private final TakeOffMission takeoffMission;
 
 	private double threshold;
-
-	private MainMission mission ;
 
 	/**
 	 * Class Constructor
@@ -41,13 +40,14 @@ public class TakeOffFailureHandler extends AperiodicEventHandler
 	 */
 	public TakeOffFailureHandler(PriorityParameters priority,
 			AperiodicParameters release, StorageParameters storage,
-			String name, TakeOffMission takeoffMission, Double threshold)
+			String name, MainMission mainMission, TakeOffMission takeoffMission, Double threshold)
 	{
 		super(priority, release, storage, name);
 		this.takeoffMission = takeoffMission;
+		this.mainMission = mainMission;
 		this.threshold = threshold;
 
-		mission = takeoffMission.getControllingMission();
+
 	}
 
 	/**
@@ -57,11 +57,13 @@ public class TakeOffFailureHandler extends AperiodicEventHandler
 	public void handleAsyncEvent()
 	{
 
+//REFACTORING
+
 		//double currentSpeed = takeoffMission.getControllingMission().getAirSpeed();
 
 //		MainMission mission = takeoffMission.getControllingMission();
 
-	double currentSpeed = mission.getAirSpeed();
+	double currentSpeed = mainMission.getAirSpeed();
 
 		// in both cases this failure should be flagged somewhere
 		if (currentSpeed < threshold)

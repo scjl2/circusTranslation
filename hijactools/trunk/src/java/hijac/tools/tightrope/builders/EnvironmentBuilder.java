@@ -519,11 +519,11 @@ public class EnvironmentBuilder
 		System.out.println(FINDING_PROCESS_PARAMETERS);
 		System.out.println();
 
-		// System.out.println("Deferred Params = " +
-		// deferredParamsList.toString());
+		 System.out.println("Deferred Params = " +
+		 deferredParamsList.toString());
 		for (DeferredParamter deferred : deferredParamsList)
 		{
-			System.out.println("*** start of Loop *** ");
+			System.out.println("*** start of Loop for "+deferred.toString()+"*** ");
 			List<? extends ExpressionTree> args = new ArrayList<ExpressionTree>();
 
 			ObjectEnv objectWithParams = null;
@@ -533,8 +533,8 @@ public class EnvironmentBuilder
 
 			if (tree instanceof VariableTree)
 			{
-				// System.out.println("Tree: " + tree
-				// + " instance of VairableTree ");
+				 System.out.println("Tree: " + tree
+				 + " instance of VairableTree ");
 
 				ExpressionTree et = ((VariableTree) tree).getInitializer();
 				if (et instanceof NewClassTree)
@@ -554,8 +554,8 @@ public class EnvironmentBuilder
 			}
 			else if (tree instanceof NewClassTree)
 			{
-				// System.out.println("Tree: " + tree
-				// + " instance of NewClassTree ");
+				 System.out.println("Tree: " + tree
+				 + " instance of NewClassTree ");
 
 				args = ((NewClassTree) tree).getArguments();
 

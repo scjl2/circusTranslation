@@ -1,9 +1,9 @@
 /** Aircraft - Mode Change Example
- * 
+ *
  *   Handler for dealing with the craft's landing gear.
  *   This version simply toggles the landingGearDeployed variable
  *   in its controlling mission
- * 
+ *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
 package scjlevel2examples.aircraft;
@@ -23,7 +23,7 @@ public class LandingGearHandlerLand extends AperiodicEventHandler
 
 	/**
 	 * Class Constructor
-	 * 
+	 *
 	 * @param priority
 	 *            the priority parameters for this handler
 	 * @param release
@@ -35,14 +35,14 @@ public class LandingGearHandlerLand extends AperiodicEventHandler
 	 * @param landMission
 	 *            the controlling mission of this handler
 	 */
-	public LandingGearHandlerLand(PriorityParameters priority,
-			AperiodicParameters release, StorageParameters storage,
-			String name, LandMission mission)
-	{
-		super(priority, release, storage, name);
+	 public LandingGearHandlerLand(PriorityParameters priority,
+ 			AperiodicParameters release, StorageParameters storage,
+ 			String name, LandMission mission)
+ 	{
+ 		super(priority, release, storage, name);
 
-		this.mission = mission;
-	}
+ 		this.mission = mission;
+ 	}
 
 	/**
 	 * Called when the handler is fired, deploys the landing gear

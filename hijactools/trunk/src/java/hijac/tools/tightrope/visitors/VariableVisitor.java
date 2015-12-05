@@ -625,7 +625,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			}
 			else if ((!(objectEnv.getName().toString().contains(varType.toString()))))
 			{
-				System.out.println("var Visitor var type not Objdect name");
+				System.out.println("var Visitor var type not this Object'ss name");
 				{
 					System.out.println("*/*/ New Parameter for " + classEnv.getName()
 							+ " with name= " + NewTransUtils.encodeName(varName)

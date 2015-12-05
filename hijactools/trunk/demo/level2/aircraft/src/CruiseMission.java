@@ -37,7 +37,7 @@ public class CruiseMission extends ModeMission
 
 		BeginLandingHandler beginLandingHandler = new BeginLandingHandler(
 				new PriorityParameters(5), new AperiodicParameters(),
-				storageParametersSchedulable, "Begin Landing Handler", this);
+				storageParametersSchedulable, "Begin Landing Handler", controllingMission);
 		beginLandingHandler.register();
 
 		int maxP = PriorityScheduler.instance().getMaxPriority();
@@ -49,7 +49,7 @@ public class CruiseMission extends ModeMission
 		NavigationMonitor navigationMonitor = new NavigationMonitor(
 				new PriorityParameters(5), new PeriodicParameters(
 						new RelativeTime(0, 0), new RelativeTime(10, 0)),
-				storageParametersSchedulable, "Cruise Controller", this);
+				storageParametersSchedulable, "Cruise Controller", controllingMission);
 		navigationMonitor.register();
 
 		/**
