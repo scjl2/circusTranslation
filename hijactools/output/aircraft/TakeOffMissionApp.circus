@@ -67,11 +67,91 @@ CleanupPhase \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-deployLandingGearMeth \circdef 
+abortMeth \circdef
 \\
 \circblockopen
-deployLandingGearCall~.~TakeOffMission 
+abortCall~.~TakeOffMission
 \then \\
+this~.~abort()  \circseq  \\
+
+abortRet~.~TakeOffMission \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+getControllingMissionMeth \circdef
+\circvar ret : MissionID \circspot
+\\
+\circblockopen
+getControllingMissionCall~.~TakeOffMission
+\then \\
+ret := this~.~getControllingMission()  \circseq  \\
+
+getControllingMissionRet~.~TakeOffMission~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+setControllingMissionMeth \circdef
+\\
+\circblockopen
+setControllingMissionCall~.~TakeOffMission
+~?~controllingMission
+\then \\
+this~.~setControllingMission(controllingMission)  \circseq  \\
+
+setControllingMissionRet~.~TakeOffMission \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+cleanUpMeth \circdef
+\circvar ret : \boolean \circspot
+\\
+\circblockopen
+cleanUpCall~.~TakeOffMission
+\then \\
+ret := this~.~cleanUp()  \circseq  \\
+
+cleanUpRet~.~TakeOffMission~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+stowLandingGearMeth \circdef
+\\
+\circblockopen
+stowLandingGearCall~.~TakeOffMission
+\then \\
+this~.~stowLandingGear()  \circseq  \\
+
+stowLandingGearRet~.~TakeOffMission \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+isLandingGearDeployedMeth \circdef
+\circvar ret : \boolean \circspot
+\\
+\circblockopen
+isLandingGearDeployedCall~.~TakeOffMission
+\then \\
+ret := this~.~isLandingGearDeployed()  \circseq  \\
+
+isLandingGearDeployedRet~.~TakeOffMission~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+deployLandingGearSyncMeth \circdef
+\\
+\circblockopen
+deployLandingGearCall~.~TakeOffMission~?~thread
+ \then \\
+\circblockopen
+startSyncMeth~.~TakeOffMissionObject~.~thread \then \\
+lockAcquired~.~TakeOffMissionObject~.~thread \then \\
 
       \circblockopen
 
@@ -80,119 +160,14 @@ this~.~landingGearDeployed :=true
 
         \circblockclose  
 
-  \circseq  \\
-
-deployLandingGearRet~.~TakeOffMission \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
-%
-\begin{circusaction}
-abortSyncMeth \circdef 
-\\
-\circblockopen
-abortCall~.~TakeOffMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~TakeOffMissionObject~.~thread \then \\
-lockAcquired~.~TakeOffMissionObject~.~thread \then \\
-this~.~abort() \circseq  \\
+ \circseq  \\
 endSyncMeth~.~TakeOffMissionObject~.~thread \then  \\
 
-abortRet~.~TakeOffMission~.~thread \then \\
+deployLandingGearRet~.~TakeOffMission~.~thread \then \\
 \Skip
 \circblockclose
 \circblockclose
-\end{circusaction}	
-\begin{circusaction}
-getControllingMissionSyncMeth \circdef 
-\circvar ret : MissionID \circspot
-\\
-\circblockopen
-getControllingMissionCall~.~TakeOffMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~TakeOffMissionObject~.~thread \then \\
-lockAcquired~.~TakeOffMissionObject~.~thread \then \\
-ret := this~.~getControllingMission() \circseq  \\
-endSyncMeth~.~TakeOffMissionObject~.~thread \then  \\
-
-getControllingMissionRet~.~TakeOffMission~!~thread~!~ret \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-setControllingMissionSyncMeth \circdef 
-\\
-\circblockopen
-setControllingMissionCall~.~TakeOffMission~?~thread 
-~?~controllingMission
- \then \\
-\circblockopen
-startSyncMeth~.~TakeOffMissionObject~.~thread \then \\
-lockAcquired~.~TakeOffMissionObject~.~thread \then \\
-this~.~setControllingMission(controllingMission) \circseq  \\
-endSyncMeth~.~TakeOffMissionObject~.~thread \then  \\
-
-setControllingMissionRet~.~TakeOffMission~.~thread \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-cleanUpSyncMeth \circdef 
-\circvar ret : \boolean \circspot
-\\
-\circblockopen
-cleanUpCall~.~TakeOffMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~TakeOffMissionObject~.~thread \then \\
-lockAcquired~.~TakeOffMissionObject~.~thread \then \\
-ret := this~.~cleanUp() \circseq  \\
-endSyncMeth~.~TakeOffMissionObject~.~thread \then  \\
-
-cleanUpRet~.~TakeOffMission~!~thread~!~ret \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-stowLandingGearSyncMeth \circdef 
-\\
-\circblockopen
-stowLandingGearCall~.~TakeOffMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~TakeOffMissionObject~.~thread \then \\
-lockAcquired~.~TakeOffMissionObject~.~thread \then \\
-this~.~stowLandingGear() \circseq  \\
-endSyncMeth~.~TakeOffMissionObject~.~thread \then  \\
-
-stowLandingGearRet~.~TakeOffMission~.~thread \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-isLandingGearDeployedSyncMeth \circdef 
-\circvar ret : \boolean \circspot
-\\
-\circblockopen
-isLandingGearDeployedCall~.~TakeOffMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~TakeOffMissionObject~.~thread \then \\
-lockAcquired~.~TakeOffMissionObject~.~thread \then \\
-ret := this~.~isLandingGearDeployed() \circseq  \\
-endSyncMeth~.~TakeOffMissionObject~.~thread \then  \\
-
-isLandingGearDeployedRet~.~TakeOffMission~!~thread~!~ret \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
+\end{circusaction}
 %
 
 \begin{circusaction}
@@ -203,20 +178,20 @@ Methods \circdef
 	CleanupPhase \\
 %
 \extchoice \\
-	deployLandingGearMeth \\ 
+	abortMeth \\ 
+\extchoice \\
+	getControllingMissionMeth \\ 
+\extchoice \\
+	setControllingMissionMeth \\ 
+\extchoice \\
+	cleanUpMeth \\ 
+\extchoice \\
+	stowLandingGearMeth \\ 
+\extchoice \\
+	isLandingGearDeployedMeth \\ 
 %
 	\extchoice \\
-	abortSyncMeth \\	
-	\extchoice \\
-	getControllingMissionSyncMeth \\	
-	\extchoice \\
-	setControllingMissionSyncMeth \\	
-	\extchoice \\
-	cleanUpSyncMeth \\	
-	\extchoice \\
-	stowLandingGearSyncMeth \\	
-	\extchoice \\
-	isLandingGearDeployedSyncMeth \\	
+	deployLandingGearSyncMeth \\	
 %
 \circblockclose 
 \circseq Methods

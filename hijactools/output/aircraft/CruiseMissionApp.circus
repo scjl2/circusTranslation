@@ -64,25 +64,20 @@ CleanupPhase \circdef  \\
 \circblockclose
 \end{circusaction}
 
-%
 \begin{circusaction}
-getControllingMissionSyncMeth \circdef 
+getControllingMissionMeth \circdef
 \circvar ret : MissionID \circspot
 \\
 \circblockopen
-getControllingMissionCall~.~CruiseMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~CruiseMissionObject~.~thread \then \\
-lockAcquired~.~CruiseMissionObject~.~thread \then \\
-ret := this~.~getControllingMission() \circseq  \\
-endSyncMeth~.~CruiseMissionObject~.~thread \then  \\
+getControllingMissionCall~.~CruiseMission
+\then \\
+ret := this~.~getControllingMission()  \circseq  \\
 
-getControllingMissionRet~.~CruiseMission~!~thread~!~ret \then \\
+getControllingMissionRet~.~CruiseMission~!~ret \then \\
 \Skip
 \circblockclose
-\circblockclose
-\end{circusaction}	
+\end{circusaction}
+%
 %
 
 \begin{circusaction}
@@ -92,9 +87,9 @@ Methods \circdef
 	\extchoice \\
 	CleanupPhase \\
 %
+\extchoice \\
+	getControllingMissionMeth \\ 
 %
-	\extchoice \\
-	getControllingMissionSyncMeth \\	
 %
 \circblockclose 
 \circseq Methods

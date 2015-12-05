@@ -69,11 +69,78 @@ CleanupPhase \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-deployLandingGearMeth \circdef 
+stowLandingGearMeth \circdef
 \\
 \circblockopen
-deployLandingGearCall~.~LandMission 
+stowLandingGearCall~.~LandMission
 \then \\
+this~.~stowLandingGear()  \circseq  \\
+
+stowLandingGearRet~.~LandMission \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+isLandingGearDeployedMeth \circdef
+\circvar ret : \boolean \circspot
+\\
+\circblockopen
+isLandingGearDeployedCall~.~LandMission
+\then \\
+ret := this~.~isLandingGearDeployed()  \circseq  \\
+
+isLandingGearDeployedRet~.~LandMission~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+getControllingMissionMeth \circdef
+\circvar ret : MissionID \circspot
+\\
+\circblockopen
+getControllingMissionCall~.~LandMission
+\then \\
+ret := this~.~getControllingMission()  \circseq  \\
+
+getControllingMissionRet~.~LandMission~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+abortMeth \circdef
+\\
+\circblockopen
+abortCall~.~LandMission
+\then \\
+this~.~abort()  \circseq  \\
+
+abortRet~.~LandMission \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+cleanUpMeth \circdef
+\circvar ret : \boolean \circspot
+\\
+\circblockopen
+cleanUpCall~.~LandMission
+\then \\
+ret := this~.~cleanUp()  \circseq  \\
+
+cleanUpRet~.~LandMission~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+deployLandingGearSyncMeth \circdef
+\\
+\circblockopen
+deployLandingGearCall~.~LandMission~?~thread
+ \then \\
+\circblockopen
+startSyncMeth~.~LandMissionObject~.~thread \then \\
+lockAcquired~.~LandMissionObject~.~thread \then \\
 
       \circblockopen
 
@@ -82,101 +149,14 @@ this~.~landingGearDeployed :=true
 
         \circblockclose  
 
-  \circseq  \\
-
-deployLandingGearRet~.~LandMission \then \\
-\Skip
-\circblockclose
-\end{circusaction}	
-%
-\begin{circusaction}
-stowLandingGearSyncMeth \circdef 
-\\
-\circblockopen
-stowLandingGearCall~.~LandMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~LandMissionObject~.~thread \then \\
-lockAcquired~.~LandMissionObject~.~thread \then \\
-this~.~stowLandingGear() \circseq  \\
+ \circseq  \\
 endSyncMeth~.~LandMissionObject~.~thread \then  \\
 
-stowLandingGearRet~.~LandMission~.~thread \then \\
+deployLandingGearRet~.~LandMission~.~thread \then \\
 \Skip
 \circblockclose
 \circblockclose
-\end{circusaction}	
-\begin{circusaction}
-isLandingGearDeployedSyncMeth \circdef 
-\circvar ret : \boolean \circspot
-\\
-\circblockopen
-isLandingGearDeployedCall~.~LandMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~LandMissionObject~.~thread \then \\
-lockAcquired~.~LandMissionObject~.~thread \then \\
-ret := this~.~isLandingGearDeployed() \circseq  \\
-endSyncMeth~.~LandMissionObject~.~thread \then  \\
-
-isLandingGearDeployedRet~.~LandMission~!~thread~!~ret \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-getControllingMissionSyncMeth \circdef 
-\circvar ret : MissionID \circspot
-\\
-\circblockopen
-getControllingMissionCall~.~LandMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~LandMissionObject~.~thread \then \\
-lockAcquired~.~LandMissionObject~.~thread \then \\
-ret := this~.~getControllingMission() \circseq  \\
-endSyncMeth~.~LandMissionObject~.~thread \then  \\
-
-getControllingMissionRet~.~LandMission~!~thread~!~ret \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-abortSyncMeth \circdef 
-\\
-\circblockopen
-abortCall~.~LandMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~LandMissionObject~.~thread \then \\
-lockAcquired~.~LandMissionObject~.~thread \then \\
-this~.~abort() \circseq  \\
-endSyncMeth~.~LandMissionObject~.~thread \then  \\
-
-abortRet~.~LandMission~.~thread \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
-\begin{circusaction}
-cleanUpSyncMeth \circdef 
-\circvar ret : \boolean \circspot
-\\
-\circblockopen
-cleanUpCall~.~LandMission~?~thread 
- \then \\
-\circblockopen
-startSyncMeth~.~LandMissionObject~.~thread \then \\
-lockAcquired~.~LandMissionObject~.~thread \then \\
-ret := this~.~cleanUp() \circseq  \\
-endSyncMeth~.~LandMissionObject~.~thread \then  \\
-
-cleanUpRet~.~LandMission~!~thread~!~ret \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}	
+\end{circusaction}
 %
 
 \begin{circusaction}
@@ -187,18 +167,18 @@ Methods \circdef
 	CleanupPhase \\
 %
 \extchoice \\
-	deployLandingGearMeth \\ 
+	stowLandingGearMeth \\ 
+\extchoice \\
+	isLandingGearDeployedMeth \\ 
+\extchoice \\
+	getControllingMissionMeth \\ 
+\extchoice \\
+	abortMeth \\ 
+\extchoice \\
+	cleanUpMeth \\ 
 %
 	\extchoice \\
-	stowLandingGearSyncMeth \\	
-	\extchoice \\
-	isLandingGearDeployedSyncMeth \\	
-	\extchoice \\
-	getControllingMissionSyncMeth \\	
-	\extchoice \\
-	abortSyncMeth \\	
-	\extchoice \\
-	cleanUpSyncMeth \\	
+	deployLandingGearSyncMeth \\	
 %
 \circblockclose 
 \circseq Methods

@@ -92,14 +92,14 @@ public class MissionLevel2Builder extends ParadigmBuilder
 				final boolean notIgnoredMethod = !(missionMethodTree.getName()
 						.contentEquals("<init>") || missionMethodTree.getName()
 						.contentEquals("missionMemorySize"));
-				final boolean syncMethod = missionMethodTree.getModifiers()
-						.getFlags().contains(Modifier.SYNCHRONIZED);
+				final boolean syncMethod = missionMethodTree.getModifiers().getFlags()
+						.contains(Modifier.SYNCHRONIZED);
 
-				final boolean currentMethodIsInitialize = missionMethodTree
-						.getName().contentEquals("initialize");
+				final boolean currentMethodIsInitialize = missionMethodTree.getName()
+						.contentEquals("initialize");
 
-				final boolean currentMethodIsConstructor = missionMethodTree
-						.getName().contentEquals("<init>");
+				final boolean currentMethodIsConstructor = missionMethodTree.getName()
+						.contentEquals("<init>");
 
 				if (currentMethodIsConstructor)
 				{
@@ -116,8 +116,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 				else
 				{
 					// ADD METHOD TO MISSION ENV
-					MethodVisitor methodVisitor = new MethodVisitor(analysis,
-							missionEnv);
+					MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv);
 
 					if (syncMethod)
 					{
@@ -125,29 +124,28 @@ public class MissionLevel2Builder extends ParadigmBuilder
 						// missionEnv.addSyncMeth(mt.getName(), typeKind,
 						// returns,
 						// paramMap);
-						MethodEnv m = methodVisitor.visitMethod(
-								missionMethodTree, false);
+						MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false);
 						setMethodAccess(missionMethodTree, m);
 						missionEnv.addSyncMeth(m);
 
-						System.out.println("/// method params ="
-								+ m.getParameters());
+						System.out.println("/// method params =" + m.getParameters());
 					}
 					else
 					{
 						if (notIgnoredMethod)
 						{
-							MethodEnv m = methodVisitor.visitMethod(
-									missionMethodTree, false);
+							MethodEnv m = methodVisitor.visitMethod(missionMethodTree,
+									false);
 
 							setMethodAccess(missionMethodTree, m);
 							missionEnv.getClassEnv().addMeth(m);
 
-							MethodEnv m2 = methodVisitor.visitMethod(
-									missionMethodTree, false);
+							MethodEnv m2 = methodVisitor.visitMethod(missionMethodTree,
+									false);
 
 							System.out.println("/// method params 2 ="
 									+ m2.getParameters());
+							System.out.println("/// m2 sync? = " + m2.isSynchronised());
 							StringBuilder body;
 
 							if (m2.getReturnType() == "null")
@@ -198,8 +196,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 			Iterator<StatementTree> methodStatementsIterator = methodStatements
 					.iterator();
 
-			VariableVisitor varVisitor = new VariableVisitor(programEnv,
-					missionEnv);
+			VariableVisitor varVisitor = new VariableVisitor(programEnv, missionEnv);
 
 			HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 			StatementTree methodStatementTree;
@@ -210,8 +207,8 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 				// getParameters(methodStatementTree);
 
-				HashMap<Name, Tree> m = (HashMap<Name, Tree>) methodStatementTree
-						.accept(varVisitor, false);
+				HashMap<Name, Tree> m = (HashMap<Name, Tree>) methodStatementTree.accept(
+						varVisitor, false);
 				// assert (m != null);
 				if (m != null)
 				{

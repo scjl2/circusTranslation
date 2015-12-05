@@ -1,12 +1,12 @@
 <#list Methods as meth>
 \begin{circusaction}
-${meth.MethodName}Meth \circdef 
+${meth.MethodName}Meth \circdef
 <#if meth.ReturnType != 'null'>
 \circvar ret : ${meth.ReturnType} \circspot
 </#if>
 \\
 \circblockopen
-${meth.MethodName}Call~.~${ProcessID} 
+${meth.MethodName}Call~.~${ProcessID}
 <#list meth.Parameters?keys as param>
 ~?~${param}
 </#list>
@@ -20,18 +20,18 @@ ${meth.MethodName}Ret~.~${ProcessID} \then \\
 </#if>
 \Skip
 \circblockclose
-\end{circusaction}	
+\end{circusaction}
 </#list>
 %
 <#list SyncMethods as meth >
 \begin{circusaction}
-${meth.MethodName}SyncMeth \circdef 
+${meth.MethodName}SyncMeth \circdef
 <#if meth.ReturnType != 'null'>
 \circvar ret : ${meth.ReturnType} \circspot
 </#if>
 \\
 \circblockopen
-${meth.MethodName}Call~.~${ProcessID}~?~thread 
+${meth.MethodName}Call~.~${ProcessID}~?~thread
 <#list meth.Parameters?keys as param>
 ~?~${param}
 </#list> \then \\
@@ -49,6 +49,6 @@ ${meth.MethodName}Ret~.~${ProcessID}~.~thread \then \\
 \Skip
 \circblockclose
 \circblockclose
-\end{circusaction}	
+\end{circusaction}
 </#list>
 %

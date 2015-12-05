@@ -403,12 +403,14 @@ public class ObjectEnv
 
 	public void addMeth(MethodEnv me)
 	{
+		System.out.println("Adding Meth " + me.getMethodName());
 		me.setSynchronised(false);
 		meths.add(me);
 	}
 
 	public void addSyncMeth(MethodEnv me)
 	{
+		System.out.println("Adding Sync Meth " + me.getMethodName());
 		me.setSynchronised(true);
 		syncMeths.add(me);
 
@@ -530,10 +532,10 @@ public class ObjectEnv
 
 		switch (type)
 		{
-			case SYNC:
+			case NOT_SYNC:
 				methods = meths;
 				break;
-			case NOT_SYNC:
+			case SYNC:
 				methods = syncMeths;
 				break;
 			default:
@@ -541,7 +543,6 @@ public class ObjectEnv
 		}
 
 		for (MethodEnv me : methods)
-
 		{
 			Map methodMap = methodToMap(me);
 

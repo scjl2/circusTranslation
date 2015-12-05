@@ -26,11 +26,11 @@
 \end{schema}
 
 
-%
 \begin{circusaction}
-\circpublic ~ \circsync ~ getAirSpeed ~ \circdef
+\circpublic ~ getAirSpeed ~ \circdef
 \circvar ret : \mathbb{R} \circspot
 \\
+
 
       \circblockopen
 
@@ -39,13 +39,14 @@
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ getAltitude ~ \circdef
+\circpublic ~ getAltitude ~ \circdef
 \circvar ret : \mathbb{R} \circspot
 \\
+
 
       \circblockopen
 
@@ -54,13 +55,14 @@
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ getCabinPressure ~ \circdef
+\circpublic ~ getCabinPressure ~ \circdef
 \circvar ret : \mathbb{R} \circspot
 \\
+
 
       \circblockopen
 
@@ -69,13 +71,14 @@
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ getEmergencyOxygen ~ \circdef
+\circpublic ~ getEmergencyOxygen ~ \circdef
 \circvar ret : \mathbb{R} \circspot
 \\
+
 
       \circblockopen
 
@@ -84,13 +87,14 @@
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ getFuelRemaining ~ \circdef
+\circpublic ~ getFuelRemaining ~ \circdef
 \circvar ret : \mathbb{R} \circspot
 \\
+
 
       \circblockopen
 
@@ -99,13 +103,14 @@
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ getHeading ~ \circdef
+\circpublic ~ getHeading ~ \circdef
 \circvar ret : \mathbb{R} \circspot
 \\
+
 
       \circblockopen
 
@@ -114,12 +119,13 @@
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ setAirSpeed ~ \circdef
+\circpublic ~ setAirSpeed ~ \circdef
 \\
+
 
       \circblockopen
 
@@ -128,12 +134,13 @@ this~.~this.airSpeed :=airSpeed
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ setAltitude ~ \circdef
+\circpublic ~ setAltitude ~ \circdef
 \\
+
 
       \circblockopen
 
@@ -142,12 +149,13 @@ this~.~this.altitude :=altitude
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ setCabinPressure ~ \circdef
+\circpublic ~ setCabinPressure ~ \circdef
 \\
+
 
       \circblockopen
 
@@ -156,12 +164,13 @@ this~.~this.cabinPressure :=cabinPressure
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ setEmergencyOxygen ~ \circdef
+\circpublic ~ setEmergencyOxygen ~ \circdef
 \\
+
 
       \circblockopen
 
@@ -170,12 +179,13 @@ this~.~this.emergencyOxygen :=emergencyOxygen
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ setFuelRemaining ~ \circdef
+\circpublic ~ setFuelRemaining ~ \circdef
 \\
+
 
       \circblockopen
 
@@ -184,12 +194,13 @@ this~.~this.fuelRemaining :=fuelRemaining
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ \circsync ~ setHeading ~ \circdef
+\circpublic ~ setHeading ~ \circdef
 \\
+
 
       \circblockopen
 
@@ -198,9 +209,10 @@ this~.~this.heading :=heading
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
+%
 %
 
 \begin{circusaction}

@@ -18,11 +18,11 @@
 \end{schema}
 
 
-%
 \begin{circusaction}
-\circprotected ~ \circsync ~ getNextMission ~ \circdef
+\circprotected ~ getNextMission ~ \circdef
 \circvar ret : MissionID \circspot
 \\
+
 
       \circblockopen
 
@@ -62,9 +62,10 @@ this~.~returnedMission :=true
 
         \circblockclose  
 
-
+ 
 
 \end{circusaction}
+%
 %
 
 \begin{circusaction}

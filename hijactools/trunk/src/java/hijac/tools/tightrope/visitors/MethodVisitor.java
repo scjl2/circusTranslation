@@ -12,10 +12,13 @@ import hijac.tools.tightrope.utils.NewTransUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -106,7 +109,24 @@ public class MethodVisitor
 			m.setBody(body);
 		}
 
+		getModifiers(mt, m);
+
 		return m;
+	}
+
+	private void getModifiers(MethodTree mt, MethodEnv m)
+	{
+		ModifiersTree modifiers = mt.getModifiers();
+		Set<Modifier> modifierFlags = modifiers.getFlags();
+
+		if (modifierFlags.contains(Modifier.SYNCHRONIZED))
+		{
+			m.setSynchronised(true);
+		}
+		else
+		{
+			m.setSynchronised(false);
+		}
 	}
 
 	private void getConstructorParameters(MethodTree mt)
