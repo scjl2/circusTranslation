@@ -41,16 +41,17 @@
 	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}
 \end{circus}
 %
+%\begin{circus}
+%\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
+%\end{circus}
+
 \begin{circus}
-\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
+\circchannelset ~ ThreadSync == \\ \t1  \lchanset raise\_thread\_priority, lower\_thread\_priority, isInterruptedCall, isInterruptedRet, get\_priorityLevel 	\rchanset
 \end{circus}
 
 \begin{circus}
-\circchannelset ~ ThreadSync == \\ \t1  \lchanset 	\rchanset
-\end{circus}
-
-\begin{circus}
-\circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify  \rchanset
+\circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify, isInterruptedCall, isInterruptedRet, \\
+\t1 interruptedCall, interruptedRet, done\_toplevel\_sequencer, get\_priorityLevel  \rchanset
 \end{circus}
 
 %IDs wont type check
@@ -332,23 +333,27 @@ Threads \circdef  \\
 \circblockopen
 <#list Threads?keys as thread>
 ThreadFW(${thread}, ${Threads[thread]}) \\
-<#sep>\t1 \lpar ThreadSync \rpar\\</#sep>
+<#sep>\t1 \interleave \\</#sep>
 </#list>
 \circblockclose
 \end{circus}
+%
+%%%%%%%%%%%%%%OBJECTS
 %
 \begin{circus}
 Objects \circdef \\
 \circblockopen
 <#list Objects.Objects as object>
 ObjectFW(${object}) \\
-<#sep>\t1 \lpar ObjectSync \rpar\\</#sep>
+<#sep>\t1 \interleave \\</#sep>
 </#list>
 \circblockclose
 \end{circus}
 %
+%%%%%%%%%%%%%LOCKING
+%
 \begin{circus}
-Locking \circdef Threads \interleave Objects
+Locking \circdef Threads \lpar ThreadSync \rpar Objects
 \end{circus}
 %
 \begin{circus}
