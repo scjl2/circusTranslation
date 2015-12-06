@@ -1,7 +1,6 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.application.TightRope;
-import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -83,7 +82,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	private String nameOfClass;
 
 	public ParametersVisitor(ProgramEnv programEnv,
-			ObjectEnv whereTheVariableNameIs, ClassEnv classEnv,
+			ObjectEnv whereTheVariableNameIs, ObjectEnv classEnv,
 			String originClass, HashMap<Name, Tree> varMap)
 	{
 		super();
@@ -431,12 +430,12 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					System.out.println("originObject = "
 							+ originObject.getName());
 
-					
+					System.out.println("Getting var "+varName+" from origin object");
 					VariableEnv theVar = originObject.getVariable(varName);
 
 					if (theVar == null)
 					{
-						System.out.println("Getting ClassEnv");
+						System.out.println("Getting from classEnv");
 						theVar = ((ParadigmEnv) originObject).getClassEnv()
 								.getVariable(varName);
 					}
@@ -445,7 +444,8 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 							+ originObject.getName());
 
 					System.out.println(theVar);
-					theVar.setProgramType(theVar.getInit().toString());
+//					System.out.println(theVar.getInit().toString());
+//					theVar.setProgramType(theVar.getInit().toString());
 
 					v = theVar;
 				}

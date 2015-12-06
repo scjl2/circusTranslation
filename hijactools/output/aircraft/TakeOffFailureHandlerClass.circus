@@ -4,6 +4,8 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
+  mainMission : MainMission\\ 
+  takeoffMission : TakeOffMission\\ 
   threshold : \mathbb{R}\\ 
 \end{schema}
 % 

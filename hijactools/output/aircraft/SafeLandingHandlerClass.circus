@@ -4,6 +4,7 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
+  mainMission : MainMission\\ 
   threshold : \mathbb{R}\\ 
 \end{schema}
 % 

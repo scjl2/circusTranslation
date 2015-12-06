@@ -127,38 +127,33 @@ public class EnvironmentBuilder
 		System.out.println("+++ getSchedulableType: Name = " + s + " +++");
 		for (TypeElement elem : type_elements)
 		{
-			System.out.println("+++  simpleName = " + elem.getSimpleName()
-					+ " +++");
+			System.out.println("+++  simpleName = " + elem.getSimpleName() + " +++");
 			if (elem.getSimpleName().contentEquals(s))
 			{
 				TypeMirror superclass = elem.getSuperclass();
 
-				if (superclass.toString().contains(
-						MANAGED_THREAD_QUALIFIED_NAME))
+				if (superclass.toString().contains(MANAGED_THREAD_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.MT;
 				}
 
-				if (superclass.toString().contains(
-						MISSION_SEQUENCER_QUALIFIED_NAME))
+				if (superclass.toString().contains(MISSION_SEQUENCER_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.SMS;
 				}
 
-				if (superclass.toString().contains(
-						PERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
+				if (superclass.toString().contains(PERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.PEH;
 				}
 
-				if (superclass.toString().contains(
-						APERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
+				if (superclass.toString()
+						.contains(APERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.APEH;
 				}
 
-				if (superclass.toString().contains(
-						ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME))
+				if (superclass.toString().contains(ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME))
 				{
 					return SchedulableTypeE.OSEH;
 				}
@@ -213,8 +208,7 @@ public class EnvironmentBuilder
 			{
 				final Name safeletName = elem.getSimpleName();
 
-				System.out.println("+++ Found Safelet " + safeletName
-						+ END_PLUSES);
+				System.out.println("+++ Found Safelet " + safeletName + END_PLUSES);
 
 				packagePrefix = findPackagePrefix(elem);
 
@@ -238,8 +232,8 @@ public class EnvironmentBuilder
 		ArrayList<Name> topLevelMissionSequencers = null;
 
 		// init Safelet visitor
-		SafeletLevel2Builder safeletLevel2Visitor = new SafeletLevel2Builder(
-				programEnv, analysis, this);
+		SafeletLevel2Builder safeletLevel2Visitor = new SafeletLevel2Builder(programEnv,
+				analysis, this);
 
 		// get TLMS list from visitor
 		topLevelMissionSequencers = safeletLevel2Visitor.build(safelet);
@@ -259,8 +253,7 @@ public class EnvironmentBuilder
 		System.out.println(BUILDING_TOP_LEVEL_SEQUENCER);
 		System.out.println();
 
-		TypeElement tlmsElement = analysis.ELEMENTS
-				.getTypeElement(packagePrefix + tlms);
+		TypeElement tlmsElement = analysis.ELEMENTS.getTypeElement(packagePrefix + tlms);
 
 		TopLevelMissionSequencerEnv topLevelMissionSequencer = programEnv
 				.getTopLevelMissionSequencer(tlms);
@@ -275,8 +268,7 @@ public class EnvironmentBuilder
 
 		ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
 
-		topLevelMissionSequencer.addVariable(THIS,
-				CIRCREFTYPE + tlms.toString() + CLASS,
+		topLevelMissionSequencer.addVariable(THIS, CIRCREFTYPE + tlms.toString() + CLASS,
 				CIRCNEW + tlms.toString() + CLASS_BRACKETS, false);
 
 		assert (missions != null);
@@ -328,8 +320,8 @@ public class EnvironmentBuilder
 		missionEnv.addVariable(THIS, CIRCREFTYPE + n.toString() + CLASS,
 				CIRCNEW + n.toString() + CLASS_BRACKETS, true);
 
-		ArrayList<Name> schedulables = new MissionLevel2Builder(programEnv,
-				missionEnv, analysis, this).build(missionTypeElem);
+		ArrayList<Name> schedulables = new MissionLevel2Builder(programEnv, missionEnv,
+				analysis, this).build(missionTypeElem);
 
 		assert (schedulables != null);
 		if (schedulables.isEmpty())
@@ -345,8 +337,7 @@ public class EnvironmentBuilder
 
 	}
 
-	private void buildSchedulables(MissionEnv missionEnv,
-			ArrayList<Name> schedulables)
+	private void buildSchedulables(MissionEnv missionEnv, ArrayList<Name> schedulables)
 	{
 
 		ArrayList<Name> nestedSequencers = new ArrayList<Name>();
@@ -356,8 +347,7 @@ public class EnvironmentBuilder
 
 			// TODO need to get rid of this stupid method call. I add to the
 			// Cluster and to the Mission envs
-			System.out.println("*** Scheudlable name = " + s + " type = "
-					+ type);
+			System.out.println("*** Scheudlable name = " + s + " type = " + type);
 
 			programEnv.addSchedulable(type, s);
 
@@ -387,7 +377,6 @@ public class EnvironmentBuilder
 		System.out.println(BUILDING_SCHEDULABLE + s + END_PLUSES);
 		System.out.println();
 
-		
 		ClassEnv classEnv = new ClassEnv();
 		classEnv.setName(s);
 
@@ -395,16 +384,16 @@ public class EnvironmentBuilder
 		Elements elems = analysis.ELEMENTS;
 
 		TypeElement schedulableType = elems.getTypeElement(fullName);
-		
+
 		ParadigmEnv schedulableEnv = programEnv.getSchedulable(s);
 		schedulableEnv.addClassEnv(classEnv);
-		
-		new SchedulableObjectBuilder(analysis, programEnv, schedulableEnv, this).build(schedulableType);
-		
+
+		new SchedulableObjectBuilder(analysis, programEnv, schedulableEnv, this)
+				.build(schedulableType);
+
 	}
 
-	private void buildSchedulableMissionSequencer(
-			ArrayList<Name> nestedSequencers)
+	private void buildSchedulableMissionSequencer(ArrayList<Name> nestedSequencers)
 	{
 		System.out.println();
 		System.out.println(BUILDING_SCHEDULABLE_MISSION_SEQUENCERS);
@@ -416,18 +405,15 @@ public class EnvironmentBuilder
 
 		for (Name sequencer : nestedSequencers)
 		{
-			tlmsElement = analysis.ELEMENTS.getTypeElement(packagePrefix
-					+ sequencer);
+			tlmsElement = analysis.ELEMENTS.getTypeElement(packagePrefix + sequencer);
 
-			nestedMissionSequencer = programEnv
-					.getNestedMissionSequencer(sequencer);
+			nestedMissionSequencer = programEnv.getNestedMissionSequencer(sequencer);
 
 			ClassEnv smsClassEnv = new ClassEnv();
 			smsClassEnv.setName(sequencer);
 			nestedMissionSequencer.addClassEnv(smsClassEnv);
 
-			System.out.println("nestedMissionSequencer = "
-					+ nestedMissionSequencer);
+			System.out.println("nestedMissionSequencer = " + nestedMissionSequencer);
 
 			MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(
 					programEnv, nestedMissionSequencer, analysis, this);
@@ -470,8 +456,7 @@ public class EnvironmentBuilder
 		return packagePrefix;
 	}
 
-	private HashMap<Name, Tree> getVariables(TypeElement arg0,
-			ObjectEnv objectEnv)
+	private HashMap<Name, Tree> getVariables(TypeElement arg0, ObjectEnv objectEnv)
 	{
 		HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 
@@ -495,8 +480,7 @@ public class EnvironmentBuilder
 			Tree s = i.next();
 			// TODO if this is only ever going to return one value at a time
 			// then it shouldn't be a map
-			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor,
-					true);
+			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, true);
 			assert (m != null);
 			System.out.println("getVariables m = " + m);
 			// TODO this is a bit of a hack...
@@ -519,11 +503,10 @@ public class EnvironmentBuilder
 		System.out.println(FINDING_PROCESS_PARAMETERS);
 		System.out.println();
 
-		 System.out.println("Deferred Params = " +
-		 deferredParamsList.toString());
+		System.out.println("Deferred Params = " + deferredParamsList.toString());
 		for (DeferredParamter deferred : deferredParamsList)
 		{
-			System.out.println("*** start of Loop for "+deferred.toString()+"*** ");
+			System.out.println("*** start of Loop for " + deferred.toString() + "*** ");
 			List<? extends ExpressionTree> args = new ArrayList<ExpressionTree>();
 
 			ObjectEnv objectWithParams = null;
@@ -533,8 +516,7 @@ public class EnvironmentBuilder
 
 			if (tree instanceof VariableTree)
 			{
-				 System.out.println("Tree: " + tree
-				 + " instance of VairableTree ");
+				System.out.println("Tree: " + tree + " instance of VairableTree ");
 
 				ExpressionTree et = ((VariableTree) tree).getInitializer();
 				if (et instanceof NewClassTree)
@@ -544,41 +526,34 @@ public class EnvironmentBuilder
 
 				System.out.println("trying to get objectEnv for "
 						+ ((VariableTree) tree).getType().toString());
-				objectWithParams = programEnv
-						.getObjectEnv(((VariableTree) tree).getType()
-								.toString());
+				objectWithParams = programEnv.getObjectEnv(((VariableTree) tree)
+						.getType().toString());
 
-				nameOfClassBeingTranslated = ((VariableTree) tree).getType()
-						.toString();
+				nameOfClassBeingTranslated = ((VariableTree) tree).getType().toString();
 
 			}
 			else if (tree instanceof NewClassTree)
 			{
-				 System.out.println("Tree: " + tree
-				 + " instance of NewClassTree ");
+				System.out.println("Tree: " + tree + " instance of NewClassTree ");
 
 				args = ((NewClassTree) tree).getArguments();
 
-				ExpressionTree identifierTree = ((NewClassTree) tree)
-						.getIdentifier();
+				ExpressionTree identifierTree = ((NewClassTree) tree).getIdentifier();
 				//
-				System.out.println("trying to get objectEnv for "
-						+ identifierTree);
+				System.out.println("trying to get objectEnv for " + identifierTree);
 
-				objectWithParams = programEnv.getObjectEnv(identifierTree
-						.toString());
+				objectWithParams = programEnv.getObjectEnv(identifierTree.toString());
 
-				nameOfClassBeingTranslated = ((NewClassTree) tree)
-						.getIdentifier().toString();
+				nameOfClassBeingTranslated = ((NewClassTree) tree).getIdentifier()
+						.toString();
 			}
 
 			System.out.println("args = " + args.toString());
 
 			if (!args.isEmpty())
 			{
-				ParametersVisitor paramVisitor = new ParametersVisitor(
-						programEnv, objectWithParams, null,
-						deferred.originClass, deferred.varMap);
+				ParametersVisitor paramVisitor = new ParametersVisitor(programEnv,
+						objectWithParams, null, deferred.originClass, deferred.varMap);
 
 				paramVisitor.setName(nameOfClassBeingTranslated);
 
@@ -604,8 +579,7 @@ public class EnvironmentBuilder
 							else if (type.equals("ID"))
 							{
 								System.out.println("Is ID");
-								MethodEnv me = objectWithParams
-										.getConstructor();
+								MethodEnv me = objectWithParams.getConstructor();
 								if (me != null)
 								{
 									Map<String, Type> m = me.getParameters();
@@ -613,22 +587,17 @@ public class EnvironmentBuilder
 									for (String s : m.keySet())
 									{
 										Type t = m.get(s);
-																				
+
 										final int length = returns.getProgramType()
 												.length();
-										System.out.println("t="+t.toString());
-										System.out.println("returns type =" +returns
-														.getProgramType()
-														.substring(
-																0,
-																length - 2));
-										
-										if (t.toString()
-												.equals(returns
-														.getProgramType()
-														.substring(
-																0,
-																length - 2)))
+										System.out.println("t=" + t.toString());
+										System.out.println("returns type ="
+												+ returns.getProgramType().substring(0,
+														length - 2));
+
+										if (t.toString().equals(
+												returns.getProgramType().substring(0,
+														length - 2)))
 										{
 											returns.setName(s);
 										}
@@ -652,8 +621,7 @@ public class EnvironmentBuilder
 									// }
 									// else
 									{
-										objectWithParams
-												.addAppParameter(returns);
+										objectWithParams.addAppParameter(returns);
 									}
 
 								}
@@ -666,8 +634,7 @@ public class EnvironmentBuilder
 									// }
 									// else
 									{
-										objectWithParams
-												.addAppParameter(returns);
+										objectWithParams.addAppParameter(returns);
 									}
 
 								}
@@ -676,13 +643,11 @@ public class EnvironmentBuilder
 									if (type.equals("PeriodicParameters")
 											|| type.equals("SchedulableID"))
 									{
-										objectWithParams
-												.addFWdParameter(returns);
+										objectWithParams.addFWdParameter(returns);
 									}
 									else
 									{
-										objectWithParams
-												.addAppParameter(returns);
+										objectWithParams.addAppParameter(returns);
 									}
 								}
 								else if (objectWithParams instanceof OneShotEventHandlerEnv)
@@ -691,13 +656,11 @@ public class EnvironmentBuilder
 											|| type.equals("JTime")
 											|| type.equals("SchedulableID"))
 									{
-										objectWithParams
-												.addFWdParameter(returns);
+										objectWithParams.addFWdParameter(returns);
 									}
 									else
 									{
-										objectWithParams
-												.addAppParameter(returns);
+										objectWithParams.addAppParameter(returns);
 									}
 								}
 								else if (objectWithParams instanceof AperiodicEventHandlerEnv)
@@ -706,13 +669,11 @@ public class EnvironmentBuilder
 											|| type.equals("AperiodicType")
 											|| type.equals("SchedulableID"))
 									{
-										objectWithParams
-												.addFWdParameter(returns);
+										objectWithParams.addFWdParameter(returns);
 									}
 									else
 									{
-										objectWithParams
-												.addAppParameter(returns);
+										objectWithParams.addAppParameter(returns);
 									}
 								}
 								else if (objectWithParams instanceof NestedMissionSequencerEnv)
@@ -724,8 +685,7 @@ public class EnvironmentBuilder
 									// }
 									// else
 									{
-										objectWithParams
-												.addAppParameter(returns);
+										objectWithParams.addAppParameter(returns);
 									}
 								}
 								else if (objectWithParams instanceof ManagedThreadEnv)
@@ -736,8 +696,7 @@ public class EnvironmentBuilder
 									// }
 									// else
 									{
-										objectWithParams
-												.addAppParameter(returns);
+										objectWithParams.addAppParameter(returns);
 									}
 								}
 
@@ -745,8 +704,8 @@ public class EnvironmentBuilder
 
 							// objectWithParams.addParameter(returns);
 
-							System.out.println("Adding " + returns.toString()
-									+ " to " + objectWithParams.getName());
+							System.out.println("Adding " + returns.toString() + " to "
+									+ objectWithParams.getName());
 						}
 						else
 						{
@@ -762,8 +721,7 @@ public class EnvironmentBuilder
 		}
 	}
 
-	public void addDeferredParam(Tree tree, String originClass,
-			HashMap<Name, Tree> varMap)
+	public void addDeferredParam(Tree tree, String originClass, HashMap<Name, Tree> varMap)
 	{
 		DeferredParamter d = new DeferredParamter();
 		d.tree = tree;

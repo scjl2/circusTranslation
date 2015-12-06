@@ -3,6 +3,18 @@
 \circclass CruiseMissionClass \circdef \circbegin
 \end{circus}
 
+\begin{schema}{\circstateignore State}
+  controllingMission : MainMission\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+\end{schema}
 
 
 \begin{circusaction}

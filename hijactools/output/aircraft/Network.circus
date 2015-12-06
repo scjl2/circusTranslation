@@ -333,25 +333,25 @@ TakeOffMissionApp\\
 
 LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
 \interleave \\
-TakeOffFailureHandlerApp ( TakeOffMissionID ,  10.0  ) \\
+TakeOffFailureHandlerApp ( MainMission ,  TakeOffMissionID ,    ) \\
 \interleave \\
-TakeOffMonitorApp ( TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
+TakeOffMonitorApp ( MainMission ,  TakeOffMissionID ,   ,  landingGearHandlerID  ) \\
 \interleave \\
 CruiseMissionApp\\
 \interleave \\
 
-BeginLandingHandlerApp ( CruiseMissionID  ) \\
+BeginLandingHandlerApp ( MainMission  ) \\
 \interleave \\
-NavigationMonitorApp ( CruiseMissionID  ) \\
+NavigationMonitorApp ( MainMission  ) \\
 \interleave \\
 LandMissionApp\\
 \interleave \\
 
 LandingGearHandlerLandApp ( LandMissionID  ) \\
 \interleave \\
-SafeLandingHandlerApp ( LandMissionID ,  10.0  ) \\
+SafeLandingHandlerApp ( MainMission ,    ) \\
 \interleave \\
-GroundDistanceMonitorApp ( LandMissionID  ) \\
+GroundDistanceMonitorApp ( MainMission  ) \\
 \interleave \\
 InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
 \circblockclose

@@ -1,7 +1,7 @@
 \begin{zsection}
   \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
-LandMissionMethChan
+MainMissionMethChan
 
 
 
@@ -9,7 +9,7 @@ LandMissionMethChan
 
 \begin{circus}
 \circprocess SafeLandingHandlerApp \circdef \\ \qquad
-  landMission : MissionID
+  mainMission : MissionID
 ,\\ 
   threshold : Double
  
@@ -25,7 +25,7 @@ handlerAsyncEvent \circdef \\
 	
       \circblockopen
 
-            getControllingMissionCall~.~landMission.getControllingMission()\then \\getControllingMissionRet~.~landMission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
+            getAltitudeCall~.~mainMission\then \\getAltitudeRet~.~mainMission~?~getAltitude\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
 
 
   \circif ~ (altitude < threshold) ~ \circthen ~

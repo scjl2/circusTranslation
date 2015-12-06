@@ -1,7 +1,7 @@
 \begin{zsection}
   \SECTION ~ NavigationMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
-CruiseMissionMethChan
+MainMissionMethChan
 
 
 
@@ -9,7 +9,7 @@ CruiseMissionMethChan
 
 \begin{circus}
 \circprocess NavigationMonitorApp \circdef \\ \qquad
-  mission : MissionID
+  mainMission : MissionID
  
 \circspot
   \circbegin
@@ -23,13 +23,13 @@ handlerAsyncEvent \circdef \\
 	
       \circblockopen
 
-            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar heading : \mathbb{R} \circspot heading :=~getHeading\\
+            getHeadingCall~.~mainMission\then \\getHeadingRet~.~mainMission~?~getHeading\then \\\\ \circvar heading : \mathbb{R} \circspot heading :=~getHeading\\
 
 
-            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar airSpeed : \mathbb{R} \circspot airSpeed :=~getAirSpeed\\
+            getAirSpeedCall~.~mainMission\then \\getAirSpeedRet~.~mainMission~?~getAirSpeed\then \\\\ \circvar airSpeed : \mathbb{R} \circspot airSpeed :=~getAirSpeed\\
 
 
-            getControllingMissionCall~.~mission.getControllingMission()\then \\getControllingMissionRet~.~mission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
+            getAltitudeCall~.~mainMission\then \\getAltitudeRet~.~mainMission~?~getAltitude\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
 \Skip
         \circblockclose  
 

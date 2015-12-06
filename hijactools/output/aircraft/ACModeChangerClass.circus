@@ -4,6 +4,7 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
+  controllingMission : MainMission\\ 
   modesLeft : \num\\ 
 \end{schema}
 % 

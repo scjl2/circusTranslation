@@ -12,6 +12,8 @@ TakeOffMissionMethChan
 
 \begin{circus}
 \circprocess TakeOffFailureHandlerApp \circdef \\ \qquad
+  mainMission : MissionID
+,\\ 
   takeoffMission : MissionID
 ,\\ 
   threshold : Double
@@ -28,7 +30,7 @@ handlerAsyncEvent \circdef \\
 	
       \circblockopen
 
-            getAirSpeedCall~.~mission\then \\getAirSpeedRet~.~mission~?~getAirSpeed\then \\\\ \circvar currentSpeed : \mathbb{R} \circspot currentSpeed :=~getAirSpeed\\
+            getAirSpeedCall~.~mainMission\then \\getAirSpeedRet~.~mainMission~?~getAirSpeed\then \\\\ \circvar currentSpeed : \mathbb{R} \circspot currentSpeed :=~getAirSpeed\\
 
 
               \circif ~ (currentSpeed < threshold) ~ \circthen ~

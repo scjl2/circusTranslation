@@ -100,8 +100,8 @@ public class ObjectEnv
 	public void addVariable(String variableName, String variableType,
 			Object variableInit, boolean primitive)
 	{
-		variables.add(new VariableEnv(variableName, variableType, variableInit,
-				primitive));
+		variables
+				.add(new VariableEnv(variableName, variableType, variableInit, primitive));
 	}
 
 	/**
@@ -134,7 +134,8 @@ public class ObjectEnv
 	 */
 	public VariableEnv getVariable(String name)
 	{
-		System.out.println(this.name+".getVariable:"+name);
+		System.out.println(this.name + ".getVariable:" + name);
+		System.out.println("All the Variables = " + variables.toString());
 		for (VariableEnv v : variables)
 		{
 			System.out.println("variable name = " + v.getName());
@@ -174,29 +175,35 @@ public class ObjectEnv
 
 	public void addVariableInit(String varName, Tree init)
 	{
-		System.out.println("addVariableInit("+varName+","+init);
+		System.out.println("addVariableInit(" + varName + "," + init);
 		for (VariableEnv varEnv : getVariables())
 		{
-			System.out.println("\tvarEnv.getName="+varEnv.getName());
+			System.out.println("\tvarEnv.getName=" + varEnv.getName());
 			if (varEnv.getName().contentEquals(varName))
 			{
-				System.out.println("Setting Var Init: name="+varName+" init="+init);
+				System.out.println("Setting Var Init: name=" + varName + " init=" + init);
 				varEnv.setInit(init);
 			}
 		}
+	}
+
+	public void addVariable(VariableEnv v)
+	{
+		variables.add(v);
+
 	}
 
 	public void addVariable(String variableName, String variableType,
 			Object variableInit, String variableInput, boolean primitive)
 
 	{
-		variables.add(new VariableEnv(variableName, variableType, variableInit,
+
+		addVariable(new VariableEnv(variableName, variableType, variableInit,
 				variableInput, primitive));
 
 	}
 
-	public void addVariableInit(String varName, String init,
-			boolean variableInput)
+	public void addVariableInit(String varName, String init, boolean variableInput)
 	{
 		for (VariableEnv varEnv : getVariables())
 		{
@@ -313,8 +320,8 @@ public class ObjectEnv
 
 		if (isNew)
 		{
-			VariableEnv e = new VariableEnv(variableName, variableType,
-					programType, primitive);
+			VariableEnv e = new VariableEnv(variableName, variableType, programType,
+					primitive);
 			e.setInit(init);
 			addFWdParameter(e);
 		}
@@ -325,12 +332,11 @@ public class ObjectEnv
 			String programType, boolean primitive, String init)
 
 	{
-	
-		VariableEnv e = new VariableEnv(variableName, variableType,
-				programType, primitive);
+
+		VariableEnv e = new VariableEnv(variableName, variableType, programType,
+				primitive);
 		e.setInit(init);
 		addProcParameter(e);
-		
 
 	}
 
@@ -356,8 +362,8 @@ public class ObjectEnv
 
 		if (isNew)
 		{
-			VariableEnv e = new VariableEnv(variableName, variableType,
-					programType, primitive);
+			VariableEnv e = new VariableEnv(variableName, variableType, programType,
+					primitive);
 			e.setInit(init);
 			addAppParameter(e);
 		}
@@ -386,8 +392,8 @@ public class ObjectEnv
 
 		if (isNew)
 		{
-			VariableEnv e = new VariableEnv(variableName, variableType,
-					programType, primitive);
+			VariableEnv e = new VariableEnv(variableName, variableType, programType,
+					primitive);
 			e.setInit(init);
 			addThreadParameter(e);
 		}
@@ -398,8 +404,7 @@ public class ObjectEnv
 	public void addSyncMeth(Name methName, TypeKind returnType,
 			ArrayList<Name> returnValues, Map params)
 	{
-		syncMeths
-				.add(new MethodEnv(methName, returnType, returnValues, params));
+		syncMeths.add(new MethodEnv(methName, returnType, returnValues, params));
 	}
 
 	public void addMeth(MethodEnv me)
@@ -428,7 +433,10 @@ public class ObjectEnv
 
 			varMap.put(VAR_NAME, v.getName().toString());
 			varMap.put(VAR_TYPE, v.getType());
-			varMap.put(VAR_INIT, v.getInit().toString());
+			if (v.getInit() != null)
+			{
+				 varMap.put(VAR_INIT, v.getInit().toString());
+			}
 			varMap.put(VAR_INPUT, v.getInput());
 
 			returnList.add(varMap);
@@ -444,16 +452,18 @@ public class ObjectEnv
 
 		for (VariableEnv v : variables)
 		{
-
-			if (v.getInit().toString() != "")
+			if (v.getInit() != null)
 			{
-				Map varMap = new HashMap();
-				varMap.put(VAR_NAME, v.getName().toString());
-				varMap.put(VAR_TYPE, v.getType());
-				varMap.put(VAR_INIT, v.getInit().toString());
-				varMap.put(VAR_INPUT, v.getInput());
+				if (v.getInit().toString() != "")
+				{
+					Map varMap = new HashMap();
+					varMap.put(VAR_NAME, v.getName().toString());
+					varMap.put(VAR_TYPE, v.getType());
+					 varMap.put(VAR_INIT, v.getInit().toString());
+					varMap.put(VAR_INPUT, v.getInput());
 
-				returnList.add(varMap);
+					returnList.add(varMap);
+				}
 			}
 		}
 

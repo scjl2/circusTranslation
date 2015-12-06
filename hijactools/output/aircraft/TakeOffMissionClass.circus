@@ -6,6 +6,7 @@
 \begin{schema}{\circstateignore State}
   SAFE\_AIRSPEED\_THRESHOLD : \mathbb{R}\\ 
   TAKEOFF\_ALTITUDE : \mathbb{R}\\ 
+  controllingMission : MainMission\\ 
   abort : \boolean\\ 
   landingGearDeployed : \boolean\\ 
 \end{schema}

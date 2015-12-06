@@ -1,7 +1,7 @@
 \begin{zsection}
   \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  , \\
-TakeOffMissionMethChan
+MainMissionMethChan
 
 
 
@@ -9,7 +9,9 @@ TakeOffMissionMethChan
 
 \begin{circus}
 \circprocess TakeOffMonitorApp \circdef \\ \qquad
-  takeoffMission : MissionID
+  mainMission : MissionID
+,\\ 
+  takeOffMission : MissionID
 ,\\ 
   takeOffAltitude : \mathbb{R}
 ,\\ 
@@ -32,7 +34,7 @@ handlerAsyncEvent \circdef \\
 
                \circseq \\ 
 
-            getControllingMissionCall~.~takeoffMission.getControllingMission()\then \\getControllingMissionRet~.~takeoffMission.getControllingMission()~?~getControllingMission\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
+            getAltitudeCall~.~mainMission\then \\getAltitudeRet~.~mainMission~?~getAltitude\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
 
 
               \circif ~ (altitude > takeOffAltitude) ~ \circthen ~

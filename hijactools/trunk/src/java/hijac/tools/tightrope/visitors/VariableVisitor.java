@@ -1,6 +1,5 @@
 package hijac.tools.tightrope.visitors;
 
-import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -82,7 +81,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 	private final ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
-	private ClassEnv classEnv;
+	private ObjectEnv classEnv;
 
 	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = ParadigmEnv
 			.getGenericParadigmTypes();
@@ -644,9 +643,20 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 					}
 
-					System.out.println("*/*/ Adding Parameter " + encodedName
-							+ " to ObjectEnv " + objectEnv.getName() + "of type "
-							+ objectEnv.getClass().getCanonicalName());
+					if (addToEnv)
+					{
+						System.out.println("*/*/ Adding Parameter " + encodedName
+								+ " to ObjectEnv " + objectEnv.getName() + " of type "
+								+ objectEnv.getClass().getCanonicalName());
+						
+						VariableEnv v = new VariableEnv(encodedName, varTypeString, init ,false );
+						v.setProgramType(varTypeString);
+						
+						classEnv.addVariable(v);
+						
+						
+					}
+
 				}
 			}
 			else if (programEnv.getSchedulable(varName) != null)

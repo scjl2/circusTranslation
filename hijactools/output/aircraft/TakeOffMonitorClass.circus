@@ -4,7 +4,10 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
+  mainMission : MainMission\\ 
+  takeoffMission : TakeOffMission\\ 
   takeOffAltitude : \mathbb{R}\\ 
+  landingGearHandler : AperiodicEventHandler\\ 
 \end{schema}
 % 
 \begin{circusaction}
