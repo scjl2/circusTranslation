@@ -1,0 +1,12 @@
+\begin{zsection}
+  \SECTION ~ MissionIds ~ \parents ~ scj\_prelude, MissionId
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+  EchoMissionId : MissionID\\
+  InputMissionId: MissionID\\
+  OutputMissionId: MissionID\\
+\where
+  distinct \langle nullMissionId, EchoMissionId, InputMissionId, OutputMissionId  \rangle
+\end{axdef}

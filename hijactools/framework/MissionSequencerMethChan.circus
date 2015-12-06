@@ -1,0 +1,17 @@
+\begin{zsection}
+  \SECTION ~ MissionSequencerMethChan \parents scj\_prelude, MissionId, SchedulableId
+\end{zsection}
+%
+\begin{circus}
+  \circchannel ~ getNextMissionCall : SchedulableID\\
+  \circchannel ~ getNextMissionRet : (SchedulableID \cross MissionID) \\
+\end{circus} 
+%
+\begin{circus}
+  \circchannel ~ requestSequenceTermination : (SchedulableID \cross \boolean) \\
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ sequenceTerminationPendingCall : SchedulableID \\	
+  \circchannel ~ sequenceTerminationPendingRet : (SchedulableID \cross \boolean) \\
+\end{circus}

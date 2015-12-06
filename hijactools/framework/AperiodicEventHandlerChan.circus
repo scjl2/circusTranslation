@@ -1,0 +1,15 @@
+\begin{zsection}
+  \SECTION ~ AperiodicEventHandlerChan ~ \parents ~  HandlerChan, HandlerMethChan, AperiodicLongEventHandlerMethChan, SchedulableId
+\end{zsection}
+%
+\begin{circus}
+    \circchannel end\_aperiodic\_app : SchedulableID
+\end{circus}
+%
+\begin{circus}
+	\circchannelset APEHSync == \lchanset handleAsyncEventCall, handleAsyncEventRet, end\_aperiodicEventHandler\_app \rchanset \\
+\end{circus}
+%
+\begin{circus}
+  \circchannelset DeadlineClockSync ==  \lchanset end\_releases, deschedule\_handler, release\_complete \rchanset \\
+\end{circus}

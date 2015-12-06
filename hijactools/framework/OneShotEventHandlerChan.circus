@@ -1,0 +1,11 @@
+\begin{zsection}
+  \SECTION ~ OneShotEventHandlerChan ~ \parents ~  HandlerChan, HandlerMethChan, OneShotEventHandlerFWChan, OneShotEventHandlerMethChan
+\end{zsection}
+%
+\begin{circus}
+\circchannelset STCSync == \lchanset get\_startTime, set\_startTime \rchanset \\
+\circchannelset MethodsSync == \lchanset end\_releases, reschedule\_handler, deschedule\_handler \rchanset \\
+\circchannelset ReleaseSync == \lchanset handleAsyncEventCall, reschedule\_handler, end\_releases, stop\_release, release \rchanset\\
+\circchannelset DeadlineSync == \lchanset handleAsyncEventCall, end\_releases, deschedule\_handler, release\_complete \rchanset \\
+\circchannelset OSEHSync == \lchanset deschedulCall, deschedulRet, scheduleNextRelease, getNextReleaseTimeCall, getNextReleaseTimeRet, end\_aperiodicEventHandler\_app \rchanset \\
+\end{circus}

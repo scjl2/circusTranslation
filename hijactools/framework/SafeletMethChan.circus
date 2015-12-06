@@ -1,0 +1,21 @@
+\begin{zsection}
+  \SECTION ~ SafeletMethChan ~ \parents ~ scj\_prelude, SchedulableId, MissionId
+\end{zsection}
+%
+\begin{circus}
+ \circchannel initializeApplicationCall \\
+ \circchannel initializeApplicationRet \\
+\end{circus}
+%
+\begin{circus}
+ \circchannel getSequencerCall \\  
+ \circchannel getSequencerRet: SchedulableID \\
+\end{circus}
+%
+\begin{circus}
+ \circchannel checkSchedulable : MissionID \cross \boolean 
+\end{circus}
+%
+\begin{circus}
+ \circchannel  deregister : \finset SchedulableID
+\end{circus}

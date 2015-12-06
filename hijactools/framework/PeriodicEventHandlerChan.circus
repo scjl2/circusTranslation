@@ -1,0 +1,3 @@
+\begin{zsection}
+  \SECTION ~ PeriodicEventHandlerChan ~ \parents ~  HandlerChan, HandlerMethChan, PeriodicEventHandlerFWChan 
+\end{zsection}

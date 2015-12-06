@@ -1,0 +1,32 @@
+\begin{zsection}
+  \SECTION ~ MissionMethChan ~ \parents ~ scj\_prelude, MissionId, SchedulableId
+\end{zsection}
+%
+\begin{circus}
+  \circchannel ~ initializeCall : MissionID\\
+  \circchannel ~ initializeRet : MissionID
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ cleanupMissionCall : MissionID\\
+  \circchannel ~ cleanupMissionRet : MissionID \cross \boolean
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ requestTermination : MissionID \cross SchedulableID
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ terminationPendingCall : MissionID  \\	
+  \circchannel ~ terminationPendingRet : MissionID \cross \boolean \\
+\end{circus}
+%
+\begin{circus}
+  \circchannel ~ missionactive : MissionID \cross \boolean \\
+\end{circus}
+%
+\begin{circus}
+  \circchannelset ~ MissionMethChan ~ ==\\
+  \t1 \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,\\  
+  \t1 requestTermination, terminationPendingCall, terminationPendingRet \rchanset
+\end{circus}

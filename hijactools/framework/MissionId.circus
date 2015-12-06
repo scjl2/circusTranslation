@@ -1,0 +1,12 @@
+\begin{zsection}
+  \SECTION ~ MissionId
+\end{zsection}
+\extracircusvspace
+%
+\begin{zed}
+  [MissionID]
+\end{zed}
+
+\begin{axdef}
+  nullMissionId : MissionID
+\end{axdef}

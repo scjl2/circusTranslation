@@ -435,7 +435,7 @@ public class ObjectEnv
 			varMap.put(VAR_TYPE, v.getType());
 			if (v.getInit() != null)
 			{
-				 varMap.put(VAR_INIT, v.getInit().toString());
+				varMap.put(VAR_INIT, v.getInit().toString());
 			}
 			varMap.put(VAR_INPUT, v.getInput());
 
@@ -459,7 +459,7 @@ public class ObjectEnv
 					Map varMap = new HashMap();
 					varMap.put(VAR_NAME, v.getName().toString());
 					varMap.put(VAR_TYPE, v.getType());
-					 varMap.put(VAR_INIT, v.getInit().toString());
+					varMap.put(VAR_INIT, v.getInit().toString());
 					varMap.put(VAR_INPUT, v.getInput());
 
 					returnList.add(varMap);
