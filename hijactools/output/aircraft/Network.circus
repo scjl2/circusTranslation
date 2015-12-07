@@ -39,16 +39,17 @@
 	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}
 \end{circus}
 %
+%\begin{circus}
+%\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
+%\end{circus}
+
 \begin{circus}
-\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
+\circchannelset ~ ThreadSync == \\ \t1  \lchanset raise\_thread\_priority, lower\_thread\_priority, isInterruptedCall, isInterruptedRet, get\_priorityLevel 	\rchanset
 \end{circus}
 
 \begin{circus}
-\circchannelset ~ ThreadSync == \\ \t1  \lchanset 	\rchanset
-\end{circus}
-
-\begin{circus}
-\circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify  \rchanset
+\circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify, isInterruptedCall, isInterruptedRet, \\
+\t1 interruptedCall, interruptedRet, done\_toplevel\_sequencer, get\_priorityLevel  \rchanset
 \end{circus}
 
 %IDs wont type check
@@ -363,86 +364,90 @@ InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
 Threads \circdef  \\
 \circblockopen
 ThreadFW(SafeLandingHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(ACModeChangerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(TakeOffFailureHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(InstrumentLandingSystemMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(FlightSensorsMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(TakeOffMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(AperiodicSimulatorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(LandingGearHandlerLandThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(LandingGearHandlerTakeOffThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(GroundDistanceMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(ControlHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(CommunicationsHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(BeginLandingHandlerThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(NavigationMonitorThreadID, 5) \\
-\t1 \lpar ThreadSync \rpar\\
+\t1 \interleave \\
 ThreadFW(EnvironmentMonitorThreadID, 5) \\
 
 \circblockclose
 \end{circus}
 %
+%%%%%%%%%%%%%%OBJECTS
+%
 \begin{circus}
 Objects \circdef \\
 \circblockopen
 ObjectFW(ACSafeletObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(MainMissionObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(ACModeChangerObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(EnvironmentMonitorObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(ControlHandlerObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(FlightSensorsMonitorObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(CommunicationsHandlerObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(AperiodicSimulatorObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(TakeOffMissionObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(LandingGearHandlerTakeOffObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(TakeOffMonitorObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(TakeOffFailureHandlerObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(CruiseMissionObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(BeginLandingHandlerObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(NavigationMonitorObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(LandMissionObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(GroundDistanceMonitorObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(LandingGearHandlerLandObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(InstrumentLandingSystemMonitorObjectID) \\
-\t1 \lpar ObjectSync \rpar\\
+\t1 \interleave \\
 ObjectFW(SafeLandingHandlerObjectID) \\
 
 \circblockclose
 \end{circus}
 %
+%%%%%%%%%%%%%LOCKING
+%
 \begin{circus}
-Locking \circdef Threads \interleave Objects
+Locking \circdef Threads \lpar ThreadSync \rpar Objects
 \end{circus}
 %
 \begin{circus}

@@ -2,7 +2,8 @@ package hijac.tools.tightrope.environments;
 
 import java.util.HashMap;
 import java.util.Map;
-
+ 
+//TODO this is terrible. Need to refactor so that this is not extending ParadigmEnv
 public class ClassEnv extends ParadigmEnv
 {
 

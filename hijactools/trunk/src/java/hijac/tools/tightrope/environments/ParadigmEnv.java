@@ -25,15 +25,8 @@ public abstract class ParadigmEnv extends ObjectEnv
 
 	}
 
-	//
-	// public void setHasClass(boolean hasClass)
-	// {
-	// this.hasClass = hasClass;
-	// }
-
 	private static void initGenericParadigmTypes()
 	{
-
 		GENERIC_PARADIGM_TYPES.add("Safelet");
 		GENERIC_PARADIGM_TYPES.add("Mission");
 		GENERIC_PARADIGM_TYPES.add("MissionSequencer");
@@ -94,6 +87,5 @@ public abstract class ParadigmEnv extends ObjectEnv
 		}
 
 		return GENERIC_PARADIGM_TYPES;
-
 	}
 }
