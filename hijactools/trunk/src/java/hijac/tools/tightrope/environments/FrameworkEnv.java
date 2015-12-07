@@ -3,8 +3,11 @@ package hijac.tools.tightrope.environments;
 import java.util.ArrayList;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Name;
 
@@ -20,16 +23,47 @@ public class FrameworkEnv
 	private TierEnv currentTier;
 	private ClusterEnv currentCluster;
 
+	private String toChannelSet(Set<String> set)
+	{
+		String safeletSyncString = "";
+		if(set.isEmpty())
+		{
+			safeletSyncString = "\\interleave";
+		}
+		else
+		{
+			safeletSyncString = "\\lpar \\lchanset ";
+			Iterator<String> safeletSyncIter = set.iterator();
+			
+		while(safeletSyncIter.hasNext())
+		{
+			String s = safeletSyncIter.next();
+			safeletSyncString += s;
+			if(safeletSyncIter.hasNext())
+			{
+				safeletSyncString += ", ";
+			}
+			safeletSyncString += " \\rchanset \\rpar";
+		}
+		}
+		return safeletSyncString;
+	}
+
 	class ControlTierEnv
 	{
 
 		private SafeletEnv safeletEnv;
+		private Set<String> safeletSync;
 		private TopLevelMissionSequencerEnv topLevelMissionSequencerEnv;
+		private Set<String> controlTierSync;
 
 		public ControlTierEnv()
 		{
 			safeletEnv = new SafeletEnv();
+			safeletSync =  new HashSet<String>();
 			topLevelMissionSequencerEnv = new TopLevelMissionSequencerEnv();
+			controlTierSync = new HashSet<String>();
+			
 		}
 
 		public SafeletEnv getSafeletEnv()
@@ -64,6 +98,16 @@ public class FrameworkEnv
 			safeletEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 		}
 
+		public Set<String> getSafeletSync()
+		{
+			return safeletSync;
+		}
+
+		public void setSafeletSync(Set<String> safeletSync)
+		{
+			this.safeletSync = safeletSync;
+		}
+
 		public String toString()
 		{
 			String output = "";
@@ -74,47 +118,76 @@ public class FrameworkEnv
 			List<MethodEnv> methods = safeletEnv.getMeths();
 			// TODO Output sync meths?
 			output = outputMethods(output, methods);
-
+		
 			output += LINE_SEPARATOR;
 			output += "\t Top-Level Mission Sequencer: "
 					+ topLevelMissionSequencerEnv.getName();
 			output += LINE_SEPARATOR;
 			output += "\t Top Level Sequencer Methods:";
 			output += LINE_SEPARATOR;
-
+		
 			methods = topLevelMissionSequencerEnv.getMeths();
 			output = outputMethods(output, methods);
-
+		
 			return output;
-
+		
 		}
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
 		{
-
+		
 			Map clusterMap = new HashMap();
 			clusterMap.put("safelet", safeletEnv.getName());
-
+		
 			List topLevelSequencersList = new ArrayList();
-
+		
 			// for(TopLevelMissionSequencerEnv t : )
 			topLevelSequencersList.add(topLevelMissionSequencerEnv.getName());
-
+		
 			clusterMap.put("topLevelSequencers", topLevelSequencersList);
-
+		
 			return clusterMap;
+		}
+
+		public String getSafeletSyncString()
+		{			
+			return toChannelSet(safeletSync);
+		}
+
+		public String getControlTierSync()
+		{			
+			return toChannelSet(controlTierSync);
 		}
 	}
 
 	private class TierEnv
-	{
+	{		
 		private List<ClusterEnv> clusters;
+
+		private Set<String> interfaceSync;
 
 		public TierEnv()
 		{
 			clusters = new ArrayList<ClusterEnv>();
 			currentCluster = null;
+			interfaceSync = new HashSet<String>();
+		}
+		
+		public TierEnv(boolean makeTier0)
+		{
+			if(makeTier0)
+			{
+				clusters = new ArrayList<ClusterEnv>();
+				currentCluster = null;
+				interfaceSync = null;
+			}
+			else
+			{
+				clusters = new ArrayList<ClusterEnv>();
+				currentCluster = null;
+				interfaceSync = new HashSet<String>();
+			}
 		}
 
 		public void addCluster(ClusterEnv cluster)
@@ -175,6 +248,19 @@ public class FrameworkEnv
 			}
 
 		}
+		
+		public String getInterfaceSyncString()
+		{
+			if(interfaceSync == null)
+			{
+				return "";
+			}
+			else
+			{
+				return toChannelSet(interfaceSync);
+			}
+			
+		}
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public List toList()
@@ -184,6 +270,8 @@ public class FrameworkEnv
 			for (ClusterEnv c : clusters)
 			{
 				Map clusterMap = new HashMap();
+				
+				clusterMap.put("InterfaceSync", getInterfaceSyncString());
 				clusterMap.put("Sequencer", c.getSequencer());
 
 				Map missionMap = new HashMap();
@@ -232,6 +320,8 @@ public class FrameworkEnv
 						.getThreadsList());
 
 				clusterMap.put("Schedulables", schedulablesMap);
+				
+				clusterMap.put("MissionSync", c.getMissionSyncString());
 
 				clusterList.add(clusterMap);
 			}
@@ -245,13 +335,23 @@ public class FrameworkEnv
 	{
 		private Name sequencer;
 		private MissionEnv missionEnv;
+		private Set<String> missionSync;
 		private SchedulablesEnv schedulablesEnv;
-
+		
 		public ClusterEnv(Name sequencer)
 		{
 			missionEnv = new MissionEnv();
 			schedulablesEnv = new SchedulablesEnv();
 			this.sequencer = sequencer;
+			
+			missionSync= new HashSet<String>();
+		}
+
+		
+
+		public String getMissionSyncString()
+		{
+			return toChannelSet(missionSync);
 		}
 
 		public Name getSequencer()
@@ -272,6 +372,18 @@ public class FrameworkEnv
 		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
 			schedulablesEnv.addSchedulable(type, name);
+		}
+
+		
+
+		public Set<String> getMissionSync()
+		{
+			return missionSync;
+		}
+
+		public void setMissionSync(Set<String> missionSync)
+		{
+			this.missionSync = missionSync;
 		}
 
 		public String toString()
@@ -674,7 +786,15 @@ public class FrameworkEnv
 
 	public void newTier()
 	{
-		currentTier = new TierEnv();
+		if(tiers.isEmpty())
+		{
+			currentTier = new TierEnv(true);
+		}
+		else
+		{
+			currentTier = new TierEnv();
+		}
+		
 
 		tiers.add(currentTier);
 	}
@@ -877,6 +997,9 @@ public class FrameworkEnv
 
 		networkMap.put("Safelet", safeletMap);
 
+				
+		networkMap.put("SafeletSync", getControlTier().getSafeletSyncString());
+		
 		networkMap.put("Safelet_HasClass",
 
 		getControlTier().getSafeletEnv().hasClass());
@@ -894,6 +1017,8 @@ public class FrameworkEnv
 
 		networkMap.put("TopLevelSequencer", tlmsMap);
 
+		networkMap.put("ControlTierSync", getControlTier().getControlTierSync());
+		
 		networkMap.put("TopLevelSequencer_HasClass", getControlTier()
 
 		.getTopLevelMissionSequencerEnv().hasClass());

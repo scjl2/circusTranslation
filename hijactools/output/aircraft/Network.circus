@@ -311,11 +311,15 @@ Tier1
 \circprocess  Application \circdef \\
 \circblockopen
 ACSafeletApp\\
-\interleave \\
+\interleave\\
 MainMissionSequencerApp\\
 \interleave \\
-MainMissionApp\\
+\circblockopen
+\circblockopen
 \interleave \\
+MainMissionApp\\
+\ \\
+\circblockopen
 
 ACModeChangerApp ( MainMissionID  ) \\
 \interleave \\
@@ -328,9 +332,14 @@ EnvironmentMonitorApp ( MainMissionID  ) \\
 FlightSensorsMonitorApp ( MainMissionID  ) \\
 \interleave \\
 AperiodicSimulatorApp ( controlHandlerID  ) \\
+\circblockclose \\
+\circblockclose \\
+
+\circblockopen
 \interleave \\
 TakeOffMissionApp\\
-\interleave \\
+\ \\
+\circblockopen
 
 LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
 \interleave \\
@@ -338,15 +347,25 @@ TakeOffFailureHandlerApp ( MainMission ,  TakeOffMissionID ,    ) \\
 \interleave \\
 TakeOffMonitorApp ( MainMission ,  TakeOffMissionID ,   ,  landingGearHandlerID  ) \\
 \interleave \\
-CruiseMissionApp\\
+\circblockclose \\
+\circblockclose \\
+\circblockopen
 \interleave \\
+CruiseMissionApp\\
+\ \\
+\circblockopen
 
 BeginLandingHandlerApp ( MainMission  ) \\
 \interleave \\
 NavigationMonitorApp ( MainMission  ) \\
 \interleave \\
-LandMissionApp\\
+\circblockclose \\
+\circblockclose \\
+\circblockopen
 \interleave \\
+LandMissionApp\\
+\ \\
+\circblockopen
 
 LandingGearHandlerLandApp ( LandMissionID  ) \\
 \interleave \\
@@ -355,6 +374,10 @@ SafeLandingHandlerApp ( MainMission ,    ) \\
 GroundDistanceMonitorApp ( MainMission  ) \\
 \interleave \\
 InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
+\circblockclose \\
+\circblockclose \\
+
+\circblockclose \\
 \circblockclose
 \end{circus}
 %

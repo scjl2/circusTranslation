@@ -300,13 +300,19 @@ Tier${tier_index}
 \circprocess  Application \circdef \\
 \circblockopen
 ${Safelet.Name}App<#if Safelet.AppParameters?size != 0> (<#list Safelet.AppParameters as param>${param} <#sep>,</#sep>  </#list>) </#if>\\
-\interleave \\
+${SafeletSync}\\
 ${TopLevelSequencer.Name}App<#if TopLevelSequencer.AppParameters?size != 0> (<#list TopLevelSequencer.AppParameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
-\interleave \\
+${ControlTierSync} \\
+\circblockopen
 <#list Tiers as tier >
 <#list tier as cluster>
+<#if cluster.MissionSync?length gt 0>
+\circblockopen
+${cluster.MissionSync} \\
+</#if>
 ${cluster.Mission.Name}App<#if cluster.Mission.AppParameters?size != 0> (<#list cluster.Mission.AppParameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
-\interleave \\
+\${MissionSync} \\
+\circblockopen
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
 <#list schedulables as schedulable>
@@ -318,11 +324,12 @@ ${schedulable.Name}App<#if schedulable.AppParameters?size != 0> (<#list schedula
 <#if cluster_has_next>
 \interleave \\
 			</#if>
+\circblockclose \\
+\circblockclose \\
 </#list>
-<#if tier_has_next>
-\interleave \\
-			</#if>
+
 </#list>
+\circblockclose \\
 \circblockclose
 \end{circus}
 %
