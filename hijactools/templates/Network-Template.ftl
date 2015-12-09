@@ -63,12 +63,12 @@
 done\_toplevel\_sequencer, done\_safeletFW, \\
 <#assign next=tier_index+1>
 <#list Tiers[next] as cluster>
-start\_mission~.~${cluster.Mission}, done\_mission~.~${cluster.Mission},\\
-\t1 initializeRet~.~${cluster.Mission},
+start\_mission~.~${cluster.Mission.Name}, done\_mission~.~${cluster.Mission.Name},\\
+\t1 initializeRet~.~${cluster.Mission.Name},
 <#if tier_index == 0>
-requestTermination~.~${cluster.Mission}~.~${TopLevelSequencer}
+requestTermination~.~${cluster.Mission.Name}~.~${TopLevelSequencer.Name}
 <#else>
-requestTermination~.~${cluster.Mission}~.~${cluster.Sequencer}
+requestTermination~.~${cluster.Mission.Name}~.~${cluster.Sequencer.Name}
 </#if>
 
 <#if cluster_has_next>
@@ -305,13 +305,16 @@ ${TopLevelSequencer.Name}App<#if TopLevelSequencer.AppParameters?size != 0> (<#l
 ${ControlTierSync} \\
 \circblockopen
 <#list Tiers as tier >
-<#list tier as cluster>
-<#if cluster.MissionSync?length gt 0>
-\circblockopen
-${cluster.MissionSync} \\
+
+<#if tier?counter gt 1>
+InterfaceSync ${tier.InterfaceSync} \\
 </#if>
+\circblockopen
+<#list tier as cluster>
+
+\circblockopen
 ${cluster.Mission.Name}App<#if cluster.Mission.AppParameters?size != 0> (<#list cluster.Mission.AppParameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
-\${MissionSync} \\
+MissionSync ${MissionSync} \\
 \circblockopen
 <#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
 
@@ -321,13 +324,15 @@ ${schedulable.Name}App<#if schedulable.AppParameters?size != 0> (<#list schedula
 \interleave \\
 			</#if>
 		</#list>
+
+\circblockclose \\
+
+\circblockclose \\
 <#if cluster_has_next>
 \interleave \\
 			</#if>
-\circblockclose \\
-\circblockclose \\
 </#list>
-
+\circblockclose \\
 </#list>
 \circblockclose \\
 \circblockclose

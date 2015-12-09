@@ -272,6 +272,7 @@ public class FrameworkEnv
 				Map clusterMap = new HashMap();
 				
 				clusterMap.put("InterfaceSync", getInterfaceSyncString());
+				
 				clusterMap.put("Sequencer", c.getSequencer());
 
 				Map missionMap = new HashMap();

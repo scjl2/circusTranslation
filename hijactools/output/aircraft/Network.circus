@@ -57,19 +57,19 @@
 \circchannelset ~ Tier0Sync == \\
 \t1 \lchanset
 done\_toplevel\_sequencer, done\_safeletFW, \\
-start\_mission~.~, done\_mission~.~,\\
-\t1 initializeRet~.~,
-requestTermination~.~~.~
+start\_mission~.~TakeOffMission, done\_mission~.~TakeOffMission,\\
+\t1 initializeRet~.~TakeOffMission,
+requestTermination~.~TakeOffMission~.~MainMissionSequencer
 
 , \\
-start\_mission~.~, done\_mission~.~,\\
-\t1 initializeRet~.~,
-requestTermination~.~~.~
+start\_mission~.~CruiseMission, done\_mission~.~CruiseMission,\\
+\t1 initializeRet~.~CruiseMission,
+requestTermination~.~CruiseMission~.~MainMissionSequencer
 
 , \\
-start\_mission~.~, done\_mission~.~,\\
-\t1 initializeRet~.~,
-requestTermination~.~~.~
+start\_mission~.~LandMission, done\_mission~.~LandMission,\\
+\t1 initializeRet~.~LandMission,
+requestTermination~.~LandMission~.~MainMissionSequencer
 
 
 \rchanset
@@ -315,10 +315,12 @@ ACSafeletApp\\
 MainMissionSequencerApp\\
 \interleave \\
 \circblockopen
+
 \circblockopen
-\interleave \\
+
+\circblockopen
 MainMissionApp\\
-\ \\
+MissionSync  \\
 \circblockopen
 
 ACModeChangerApp ( MainMissionID  ) \\
@@ -332,13 +334,18 @@ EnvironmentMonitorApp ( MainMissionID  ) \\
 FlightSensorsMonitorApp ( MainMissionID  ) \\
 \interleave \\
 AperiodicSimulatorApp ( controlHandlerID  ) \\
+
+\circblockclose \\
+
 \circblockclose \\
 \circblockclose \\
 
+InterfaceSync  \\
 \circblockopen
-\interleave \\
+
+\circblockopen
 TakeOffMissionApp\\
-\ \\
+MissionSync  \\
 \circblockopen
 
 LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
@@ -346,25 +353,29 @@ LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
 TakeOffFailureHandlerApp ( MainMission ,  TakeOffMissionID ,    ) \\
 \interleave \\
 TakeOffMonitorApp ( MainMission ,  TakeOffMissionID ,   ,  landingGearHandlerID  ) \\
+
+\circblockclose \\
+
+\circblockclose \\
 \interleave \\
-\circblockclose \\
-\circblockclose \\
+
 \circblockopen
-\interleave \\
 CruiseMissionApp\\
-\ \\
+MissionSync  \\
 \circblockopen
 
 BeginLandingHandlerApp ( MainMission  ) \\
 \interleave \\
 NavigationMonitorApp ( MainMission  ) \\
+
+\circblockclose \\
+
+\circblockclose \\
 \interleave \\
-\circblockclose \\
-\circblockclose \\
+
 \circblockopen
-\interleave \\
 LandMissionApp\\
-\ \\
+MissionSync  \\
 \circblockopen
 
 LandingGearHandlerLandApp ( LandMissionID  ) \\
@@ -374,9 +385,11 @@ SafeLandingHandlerApp ( MainMission ,    ) \\
 GroundDistanceMonitorApp ( MainMission  ) \\
 \interleave \\
 InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
-\circblockclose \\
+
 \circblockclose \\
 
+\circblockclose \\
+\circblockclose \\
 \circblockclose \\
 \circblockclose
 \end{circus}

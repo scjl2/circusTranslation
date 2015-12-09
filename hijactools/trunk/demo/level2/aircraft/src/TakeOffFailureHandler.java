@@ -61,7 +61,7 @@ public class TakeOffFailureHandler extends AperiodicEventHandler
 
 		//double currentSpeed = takeoffMission.getControllingMission().getAirSpeed();
 
-//		MainMission mission = takeoffMission.getControllingMission();
+   //MainMission mission = takeoffMission.getControllingMission();
 
 	double currentSpeed = mainMission.getAirSpeed();
 
