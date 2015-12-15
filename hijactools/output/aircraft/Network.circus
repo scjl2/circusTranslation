@@ -360,6 +360,49 @@ MainMissionSequencerApp\\
 \circblockclose
 \end{circus}
 %
+%%%%%%%%%%%%%%%%%%%%MethodCallBinder
+%
+\begin{circus}
+MethodCallBinder \circdef \\
+	test_MethodBinder
+	\interleave \\
+	test_MethodBinder
+	
+\end{circus}
+%
+\begin{circus}
+\circchannelset ~ testLocs == \lchanset testLoc \rchanset  \\
+\circchannelset ~ testCallers == \lchanset testCaller \rchanset  \\
+\end{circus}
+%
+\begin{circus}
+test_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder_testCall~?~loc\prefixcolon(testLocs)~?~caller\prefixcolon(testCallers) \then \\
+	testCall~.~loc~.~caller \then \\
+	testRet~.~loc~.~caller~?~ret \then \\
+	binder_testRet~.~loc~.~caller~!~ret  \then \\
+	\Skip
+	\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circchannelset ~ testLocs == \lchanset testLoc \rchanset  \\
+\circchannelset ~ testCallers == \lchanset testCaller \rchanset  \\
+\end{circus}
+%
+\begin{circus}
+test_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder_testCall~?~loc\prefixcolon(testLocs)~?~caller\prefixcolon(testCallers) \then \\
+	testCall~.~loc~.~caller \then \\
+	testRet~.~loc~.~caller~?~ret \then \\
+	binder_testRet~.~loc~.~caller~!~ret  \then \\
+	\Skip
+	\circblockclose
+\end{circus}
+%
+%
 %%%%%%%%%%%%%%%%%%THREADS
 %
 \begin{circus}

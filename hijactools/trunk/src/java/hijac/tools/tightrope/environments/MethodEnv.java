@@ -24,6 +24,11 @@ public class MethodEnv
 	private AccessMod accesMod = null;
 	private boolean APIMethod;
 
+	public MethodEnv(String name)
+	{
+		this.methodName = name;
+	}
+	
 	public MethodEnv(Name name)
 	{
 		this.methodName = name.toString();

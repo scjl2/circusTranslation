@@ -321,6 +321,35 @@ ${ControlTierSync} \\
 \circblockclose
 \end{circus}
 %
+%%%%%%%%%%%%%%%%%%%%MethodCallBinder
+%
+\begin{circus}
+MethodCallBinder \circdef \\
+<#list MethodCallBindings as mcb>
+	${mcb.Name}_MethodBinder
+	<#sep>\interleave \\</#sep>
+</#list>
+\end{circus}
+%
+<#list MethodCallBindings as mcb>
+\begin{circus}
+\circchannelset ~ ${mcb.Name}Locs == \lchanset <#list mcb.Locations as loc>${loc}<#sep>,</#sep></#list> \rchanset  \\
+\circchannelset ~ ${mcb.Name}Callers == \lchanset <#list mcb.Callers as caller>${caller}<#sep>,</#sep></#list> \rchanset  \\
+\end{circus}
+%
+\begin{circus}
+${mcb.Name}_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder_${mcb.Name}Call~?~loc\prefixcolon(${mcb.Name}Locs)~?~caller\prefixcolon(${mcb.Name}Callers) \then \\
+	${mcb.Name}Call~.~loc~.~caller \then \\
+	${mcb.Name}Ret~.~loc~.~caller<#if mcb.Return = true>~?~ret</#if> \then \\
+	binder_${mcb.Name}Ret~.~loc~.~caller<#if mcb.Return = true>~!~ret</#if>  \then \\
+	\Skip
+	\circblockclose
+\end{circus}
+%
+</#list>
+%
 %%%%%%%%%%%%%%%%%%THREADS
 %
 \begin{circus}

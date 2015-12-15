@@ -5,6 +5,7 @@ import hijac.tools.tightrope.environments.FrameworkEnv;
 
 import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ public class ProgramEnv
 {
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
+	private List<BinderMethodEnv> binderMethodEnvs;
 
 	private MissionIdsEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
@@ -24,6 +26,7 @@ public class ProgramEnv
 	{
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
+		this.binderMethodEnvs = new ArrayList<BinderMethodEnv>();
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
@@ -151,8 +154,33 @@ public class ProgramEnv
 		Map returnMap = structureEnv.getNetworkMap();
 		returnMap.put("Objects", getObjectIdsMap());
 		returnMap.put("Threads", getThreadIdsMap());
+		returnMap.put("MethodCallBindings", getBinderMethodEnvsMapList());
 
 		return returnMap;
+	}
+
+	private List getBinderMethodEnvsMapList()
+	{
+		List binderMethodEnvsMap = new ArrayList();
+		
+		BinderMethodEnv e = new BinderMethodEnv("test");
+		e.addLocation("testLoc");
+		e.addCaller("testCaller");
+		
+		binderMethodEnvs.add(e);
+		
+		for(BinderMethodEnv b : binderMethodEnvs)
+		{
+			Map binderMethodMap = new HashMap();
+			
+			binderMethodMap.put("Name", b.getMethodName());
+			binderMethodMap.put("Locations", b.getLocations());
+			binderMethodMap.put("Callers", b.getCallers());
+			binderMethodMap.put("Return", b.hasReturn());
+			
+			binderMethodEnvsMap.add(binderMethodMap);
+		}
+		return binderMethodEnvsMap;
 	}
 
 	public ArrayList<NestedMissionSequencerEnv> getNestedMissionSequencers()
