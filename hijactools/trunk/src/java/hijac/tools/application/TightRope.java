@@ -18,6 +18,11 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import hijac.tools.tightrope.builders.EnvironmentBuilder;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.generators.CircusGenerator;
@@ -30,11 +35,14 @@ public class TightRope
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
 	private static final boolean USE_ANNOTATIONS = false;
-
+	
+	private static Map<String, String> arguments = new HashMap<String, String>();
+	private static boolean hasArgs = false;
 	public static SCJAnalysis ANALYSIS;
 	private static EnvironmentBuilder environmentBuilder = null;
 	private static ProgramEnv programEnv;
 	private static NewSCJApplication scjApplication;
+	
 
 	private static String customName = "";
 
@@ -47,6 +55,17 @@ public class TightRope
 	{
 
 		final long startTime = System.nanoTime();
+		
+		//GET ARGUMENTS
+		String name, value;
+		for(String s : args)
+		{
+			hasArgs = true;
+			String[] line = s.split("=");
+			name = line[0];
+			value=line[1];
+			arguments.put(name, value);
+		}
 
 		System.out.println();
 		System.out.println("+++ Tight Rope - SCJ to Circus translator +++");
@@ -58,8 +77,26 @@ public class TightRope
 
 		setCustomName();
 
-		SCJCompilationConfig config = SCJCompilationConfig.getDefault();
-
+		SCJCompilationConfig config;
+		
+		// ARGUMENT USAGE		
+		if(hasArgs)
+		{
+			List<File> classpath, sourcepath;
+			
+			classpath = new ArrayList<File>();
+			classpath.add(new File(arguments.get("classpath")));
+			
+			sourcepath = new ArrayList<File>();
+			sourcepath.add(new File(arguments.get("sourcepath")));
+			
+			config = new SCJCompilationConfig(classpath, sourcepath);
+		}
+		else
+		{
+			config = SCJCompilationConfig.getDefault();
+		}
+				
 		SCJCompilationTask compiler = new SCJCompilationTask(config);
 
 		System.out.println("Compiling SCJ sources...");

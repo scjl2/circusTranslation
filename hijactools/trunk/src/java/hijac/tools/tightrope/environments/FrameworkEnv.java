@@ -103,9 +103,9 @@ public class FrameworkEnv
 			return safeletSync;
 		}
 
-		public void setSafeletSync(Set<String> safeletSync)
+		public void addChannelToSafeletSync(String channel)
 		{
-			this.safeletSync = safeletSync;
+			safeletSync.add(channel);
 		}
 
 		public String toString()
@@ -158,6 +158,11 @@ public class FrameworkEnv
 		public String getControlTierSync()
 		{			
 			return toChannelSet(controlTierSync);
+		}
+		
+		public void addToControlTierSync(String channel)
+		{
+			controlTierSync.add(channel);
 		}
 	}
 
@@ -247,6 +252,11 @@ public class FrameworkEnv
 				return output;
 			}
 
+		}
+		
+		public void addChannelToInterfaceSync(String channel)
+		{
+			interfaceSync.add(channel);
 		}
 		
 		public String getInterfaceSyncString()
@@ -382,9 +392,9 @@ public class FrameworkEnv
 			return missionSync;
 		}
 
-		public void setMissionSync(Set<String> missionSync)
+		public void addChannelToMissionSync(String channel)
 		{
-			this.missionSync = missionSync;
+			missionSync.add(channel);
 		}
 
 		public String toString()
