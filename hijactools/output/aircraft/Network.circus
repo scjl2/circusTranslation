@@ -314,83 +314,49 @@ ACSafeletApp\\
 \interleave\\
 MainMissionSequencerApp\\
 \interleave \\
-\circblockopen
-
-\circblockopen
-
-\circblockopen
-MainMissionApp\\
-MissionSync  \\
-\circblockopen
-
-ACModeChangerApp ( MainMissionID  ) \\
-\interleave \\
-ControlHandlerApp\\
-\interleave \\
-CommunicationsHandlerApp\\
-\interleave \\
-EnvironmentMonitorApp ( MainMissionID  ) \\
-\interleave \\
-FlightSensorsMonitorApp ( MainMissionID  ) \\
-\interleave \\
-AperiodicSimulatorApp ( controlHandlerID  ) \\
-
-\circblockclose \\
-
-\circblockclose \\
-\circblockclose \\
-
-InterfaceSync  \\
-\circblockopen
-
-\circblockopen
-TakeOffMissionApp\\
-MissionSync  \\
-\circblockopen
-
-LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
-\interleave \\
-TakeOffFailureHandlerApp ( MainMission ,  TakeOffMissionID ,    ) \\
-\interleave \\
-TakeOffMonitorApp ( MainMission ,  TakeOffMissionID ,   ,  landingGearHandlerID  ) \\
-
-\circblockclose \\
-
-\circblockclose \\
-\interleave \\
-
-\circblockopen
-CruiseMissionApp\\
-MissionSync  \\
-\circblockopen
-
-BeginLandingHandlerApp ( MainMission  ) \\
-\interleave \\
-NavigationMonitorApp ( MainMission  ) \\
-
-\circblockclose \\
-
-\circblockclose \\
-\interleave \\
-
-\circblockopen
-LandMissionApp\\
-MissionSync  \\
-\circblockopen
-
-LandingGearHandlerLandApp ( LandMissionID  ) \\
-\interleave \\
-SafeLandingHandlerApp ( MainMission ,    ) \\
-\interleave \\
-GroundDistanceMonitorApp ( MainMission  ) \\
-\interleave \\
-InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
-
-\circblockclose \\
-
-\circblockclose \\
-\circblockclose \\
-\circblockclose \\
+		MainMissionApp\\
+		\interleave \\
+			ACModeChangerApp ( MainMissionID  ) \\
+			\interleave \\
+			ControlHandlerApp\\
+			\interleave \\
+			CommunicationsHandlerApp\\
+			\interleave \\
+			EnvironmentMonitorApp ( MainMissionID  ) \\
+			\interleave \\
+			FlightSensorsMonitorApp ( MainMissionID  ) \\
+			\interleave \\
+			AperiodicSimulatorApp ( controlHandlerID  ) \\
+			
+		
+		\interleave \\
+		TakeOffMissionApp\\
+		\interleave \\
+			LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
+			\interleave \\
+			TakeOffFailureHandlerApp ( MainMission ,  TakeOffMissionID ,    ) \\
+			\interleave \\
+			TakeOffMonitorApp ( MainMission ,  TakeOffMissionID ,   ,  landingGearHandlerID  ) \\
+			
+		\interleave \\
+		CruiseMissionApp\\
+		\interleave \\
+			BeginLandingHandlerApp ( MainMission  ) \\
+			\interleave \\
+			NavigationMonitorApp ( MainMission  ) \\
+			
+		\interleave \\
+		LandMissionApp\\
+		\interleave \\
+			LandingGearHandlerLandApp ( LandMissionID  ) \\
+			\interleave \\
+			SafeLandingHandlerApp ( MainMission ,    ) \\
+			\interleave \\
+			GroundDistanceMonitorApp ( MainMission  ) \\
+			\interleave \\
+			InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
+			
+		
 \circblockclose
 \end{circus}
 %
@@ -400,33 +366,33 @@ InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
 Threads \circdef  \\
 \circblockopen
 ThreadFW(SafeLandingHandlerThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(ACModeChangerThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(TakeOffFailureHandlerThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(InstrumentLandingSystemMonitorThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(FlightSensorsMonitorThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(TakeOffMonitorThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(AperiodicSimulatorThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(LandingGearHandlerLandThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(LandingGearHandlerTakeOffThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(GroundDistanceMonitorThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(ControlHandlerThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(CommunicationsHandlerThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(BeginLandingHandlerThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(NavigationMonitorThreadID, 5) \\
-\t1 \interleave \\
+\interleave \\
 ThreadFW(EnvironmentMonitorThreadID, 5) \\
 
 \circblockclose
@@ -438,43 +404,43 @@ ThreadFW(EnvironmentMonitorThreadID, 5) \\
 Objects \circdef \\
 \circblockopen
 ObjectFW(ACSafeletObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(MainMissionObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(ACModeChangerObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(EnvironmentMonitorObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(ControlHandlerObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(FlightSensorsMonitorObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(CommunicationsHandlerObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(AperiodicSimulatorObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(TakeOffMissionObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(LandingGearHandlerTakeOffObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(TakeOffMonitorObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(TakeOffFailureHandlerObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(CruiseMissionObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(BeginLandingHandlerObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(NavigationMonitorObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(LandMissionObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(GroundDistanceMonitorObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(LandingGearHandlerLandObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(InstrumentLandingSystemMonitorObjectID) \\
-\t1 \interleave \\
+\interleave \\
 ObjectFW(SafeLandingHandlerObjectID) \\
 
 \circblockclose

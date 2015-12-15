@@ -303,38 +303,21 @@ ${Safelet.Name}App<#if Safelet.AppParameters?size != 0> (<#list Safelet.AppParam
 ${SafeletSync}\\
 ${TopLevelSequencer.Name}App<#if TopLevelSequencer.AppParameters?size != 0> (<#list TopLevelSequencer.AppParameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
 ${ControlTierSync} \\
-\circblockopen
 <#list Tiers as tier >
-
-<#if tier?counter gt 1>
-InterfaceSync ${tier.InterfaceSync} \\
-</#if>
-\circblockopen
-<#list tier as cluster>
-
-\circblockopen
-${cluster.Mission.Name}App<#if cluster.Mission.AppParameters?size != 0> (<#list cluster.Mission.AppParameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
-MissionSync ${MissionSync} \\
-\circblockopen
-<#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
-
-<#list schedulables as schedulable>
-${schedulable.Name}App<#if schedulable.AppParameters?size != 0> (<#list schedulable.AppParameters as param> ${param} <#sep>,</#sep> </#list>) </#if>\\
-			<#if schedulable_has_next>
-\interleave \\
-			</#if>
+	<#if tier?counter gt 1>
+		\interleave \\
+	</#if>
+	<#list tier as cluster>
+		${cluster.Mission.Name}App<#if cluster.Mission.AppParameters?size != 0> (<#list cluster.Mission.AppParameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
+		\interleave \\
+		<#assign schedulables = cluster.Schedulables.Threads + cluster.Schedulables.Oneshots + cluster.Schedulables.NestedSequencers + cluster.Schedulables.Aperiodics + cluster.Schedulables.Periodics>
+		<#list schedulables as schedulable>
+			${schedulable.Name}App<#if schedulable.AppParameters?size != 0> (<#list schedulable.AppParameters as param> ${param} <#sep>,</#sep> </#list>) </#if>\\
+			<#sep>\interleave \\</#sep>
 		</#list>
-
-\circblockclose \\
-
-\circblockclose \\
-<#if cluster_has_next>
-\interleave \\
-			</#if>
+		<#sep>\interleave \\</#sep>
+	</#list>
 </#list>
-\circblockclose \\
-</#list>
-\circblockclose \\
 \circblockclose
 \end{circus}
 %
@@ -345,7 +328,7 @@ Threads \circdef  \\
 \circblockopen
 <#list Threads?keys as thread>
 ThreadFW(${thread}, ${Threads[thread]}) \\
-<#sep>\t1 \interleave \\</#sep>
+<#sep>\interleave \\</#sep>
 </#list>
 \circblockclose
 \end{circus}
@@ -357,7 +340,7 @@ Objects \circdef \\
 \circblockopen
 <#list Objects.Objects as object>
 ObjectFW(${object}) \\
-<#sep>\t1 \interleave \\</#sep>
+<#sep>\interleave \\</#sep>
 </#list>
 \circblockclose
 \end{circus}
