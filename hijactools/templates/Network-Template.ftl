@@ -18,7 +18,8 @@
 % IDs wont type check again   Start Mission and Done Mission wont parse?
 <#list Tiers[0] as cluster>
 \begin{circus}
-\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~${cluster.Mission}, done\_mission~.~${cluster.Mission},\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset
+\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~${cluster.Mission.Name}, done\_mission~.~${cluster.Mission.Name},\\
+	\t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset
 \end{circus}
 </#list>
 %
@@ -63,7 +64,7 @@
 done\_toplevel\_sequencer, done\_safeletFW, \\
 <#assign next=tier_index+1>
 <#list Tiers[next] as cluster>
-start\_mission~.~${cluster.Mission.Name}, done\_mission~.~${cluster.Mission.Name},\\
+\t1 start\_mission~.~${cluster.Mission.Name}, done\_mission~.~${cluster.Mission.Name},\\
 \t1 initializeRet~.~${cluster.Mission.Name},
 <#if tier_index == 0>
 requestTermination~.~${cluster.Mission.Name}~.~${TopLevelSequencer.Name}
@@ -320,35 +321,48 @@ ${ControlTierSync} \\
 </#list>
 \circblockclose
 \end{circus}
+
+\newpage
 %
 %%%%%%%%%%%%%%%%%%%%MethodCallBinder
 %
 \begin{circus}
 MethodCallBinder \circdef \\
+\t1 \circblockopen
 <#list MethodCallBindings as mcb>
-	${mcb.Name}_MethodBinder
-	<#sep>\interleave \\</#sep>
+	${mcb.Name}\_MethodBinder
+	<#sep>\\ \interleave \\</#sep>
 </#list>
+\circblockclose
 \end{circus}
 %
 <#list MethodCallBindings as mcb>
 \begin{circus}
-\circchannelset ~ ${mcb.Name}Locs == \lchanset <#list mcb.Locations as loc>${loc}<#sep>,</#sep></#list> \rchanset  \\
-\circchannelset ~ ${mcb.Name}Callers == \lchanset <#list mcb.Callers as caller>${caller}<#sep>,</#sep></#list> \rchanset  \\
+\circchannel binder\_${mcb.Name}Call : ${mcb.LocType} \cross ${mcb.CallerType} \\
+\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} <#if mcb.Return = true> \cross  ${mcb.ReturnType} </#if>  \\ \\
+
+${mcb.Name}Locs == \{ <#list mcb.Locations as loc>${loc}<#sep>,</#sep></#list> \}  \\
+${mcb.Name}Callers == \{ <#list mcb.Callers as caller>${caller}<#sep>,</#sep></#list> \}  \\
 \end{circus}
 %
 \begin{circus}
-${mcb.Name}_MethodBinder \circdef \\
+${mcb.Name}\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder_${mcb.Name}Call~?~loc\prefixcolon(${mcb.Name}Locs)~?~caller\prefixcolon(${mcb.Name}Callers) \then \\
+	binder\_${mcb.Name}Call~?~loc\prefixcolon(loc \in ${mcb.Name}Locs)~?~caller\prefixcolon(caller \in ${mcb.Name}Callers) \then \\
 	${mcb.Name}Call~.~loc~.~caller \then \\
 	${mcb.Name}Ret~.~loc~.~caller<#if mcb.Return = true>~?~ret</#if> \then \\
-	binder_${mcb.Name}Ret~.~loc~.~caller<#if mcb.Return = true>~!~ret</#if>  \then \\
+	binder\_${mcb.Name}Ret~.~loc~.~caller<#if mcb.Return = true>~!~ret</#if>  \then \\
 	\Skip
 	\circblockclose
 \end{circus}
 %
 </#list>
+
+\begin{circus}
+	ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
+\end{circus}
+
+\newpage
 %
 %%%%%%%%%%%%%%%%%%THREADS
 %
@@ -381,5 +395,5 @@ Locking \circdef Threads \lpar ThreadSync \rpar Objects
 \end{circus}
 %
 \begin{circus}
-\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar Application \circblockclose \lpar LockingSync \rpar Locking
+\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar ApplicationB \circblockclose \lpar LockingSync \rpar Locking
 \end{circus}

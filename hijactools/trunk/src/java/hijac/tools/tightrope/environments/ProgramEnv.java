@@ -159,6 +159,7 @@ public class ProgramEnv
 		return returnMap;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private List getBinderMethodEnvsMapList()
 	{
 		List binderMethodEnvsMap = new ArrayList();
@@ -177,6 +178,10 @@ public class ProgramEnv
 			binderMethodMap.put("Locations", b.getLocations());
 			binderMethodMap.put("Callers", b.getCallers());
 			binderMethodMap.put("Return", b.hasReturn());
+			binderMethodMap.put("ReturnType", b.getReturnType());
+			//TODO need to calculate these!
+			binderMethodMap.put("LocType","MissionID");
+			binderMethodMap.put("CallerType","SchedulableID");
 			
 			binderMethodEnvsMap.add(binderMethodMap);
 		}
@@ -321,7 +326,7 @@ public class ProgramEnv
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes"})
 	public Map getThreadIdsMap()
 	{
 		return threadIds.toMap();

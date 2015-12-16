@@ -2,9 +2,6 @@ package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import javax.lang.model.element.Name;
 
 public class BinderMethodEnv extends MethodEnv
 {
@@ -16,7 +13,6 @@ public class BinderMethodEnv extends MethodEnv
 		super(name);
 		locations = new ArrayList<String>();
 		callers = new ArrayList<String>();
-		
 	}
 
 	public List<String> getLocations()
@@ -41,7 +37,7 @@ public class BinderMethodEnv extends MethodEnv
 
 	public boolean hasReturn()
 	{
-		if(getReturnValue().equals("null"))
+		if (getReturnValue().equals("null"))
 		{
 			return false;
 		}
@@ -49,9 +45,7 @@ public class BinderMethodEnv extends MethodEnv
 		{
 			return true;
 		}
-		
+
 	}
-	
-	
 
 }

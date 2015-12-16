@@ -17,7 +17,8 @@
 \end{circus}
 % IDs wont type check again   Start Mission and Done Mission wont parse?
 \begin{circus}
-\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~, done\_mission~.~,\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset
+\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~MainMission, done\_mission~.~MainMission,\\
+	\t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset
 \end{circus}
 %
 \begin{circus}
@@ -57,17 +58,17 @@
 \circchannelset ~ Tier0Sync == \\
 \t1 \lchanset
 done\_toplevel\_sequencer, done\_safeletFW, \\
-start\_mission~.~TakeOffMission, done\_mission~.~TakeOffMission,\\
+\t1 start\_mission~.~TakeOffMission, done\_mission~.~TakeOffMission,\\
 \t1 initializeRet~.~TakeOffMission,
 requestTermination~.~TakeOffMission~.~MainMissionSequencer
 
 , \\
-start\_mission~.~CruiseMission, done\_mission~.~CruiseMission,\\
+\t1 start\_mission~.~CruiseMission, done\_mission~.~CruiseMission,\\
 \t1 initializeRet~.~CruiseMission,
 requestTermination~.~CruiseMission~.~MainMissionSequencer
 
 , \\
-start\_mission~.~LandMission, done\_mission~.~LandMission,\\
+\t1 start\_mission~.~LandMission, done\_mission~.~LandMission,\\
 \t1 initializeRet~.~LandMission,
 requestTermination~.~LandMission~.~MainMissionSequencer
 
@@ -359,49 +360,65 @@ MainMissionSequencerApp\\
 		
 \circblockclose
 \end{circus}
+
+\newpage
 %
 %%%%%%%%%%%%%%%%%%%%MethodCallBinder
 %
 \begin{circus}
 MethodCallBinder \circdef \\
-	test_MethodBinder
-	\interleave \\
-	test_MethodBinder
+\t1 \circblockopen
+	test\_MethodBinder
+	\\ \interleave \\
+	test\_MethodBinder
 	
+\circblockclose
 \end{circus}
 %
 \begin{circus}
-\circchannelset ~ testLocs == \lchanset testLoc \rchanset  \\
-\circchannelset ~ testCallers == \lchanset testCaller \rchanset  \\
+\circchannel binder\_testCall : MissionID \cross SchedulableID \\
+\circchannel binder\_testRet : MissionID \cross SchedulableID  \cross     \\ \\
+
+testLocs == \{ testLoc \}  \\
+testCallers == \{ testCaller \}  \\
 \end{circus}
 %
 \begin{circus}
-test_MethodBinder \circdef \\
+test\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder_testCall~?~loc\prefixcolon(testLocs)~?~caller\prefixcolon(testCallers) \then \\
+	binder\_testCall~?~loc\prefixcolon(loc \in testLocs)~?~caller\prefixcolon(caller \in testCallers) \then \\
 	testCall~.~loc~.~caller \then \\
 	testRet~.~loc~.~caller~?~ret \then \\
-	binder_testRet~.~loc~.~caller~!~ret  \then \\
+	binder\_testRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
 \end{circus}
 %
 \begin{circus}
-\circchannelset ~ testLocs == \lchanset testLoc \rchanset  \\
-\circchannelset ~ testCallers == \lchanset testCaller \rchanset  \\
+\circchannel binder\_testCall : MissionID \cross SchedulableID \\
+\circchannel binder\_testRet : MissionID \cross SchedulableID  \cross     \\ \\
+
+testLocs == \{ testLoc \}  \\
+testCallers == \{ testCaller \}  \\
 \end{circus}
 %
 \begin{circus}
-test_MethodBinder \circdef \\
+test\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder_testCall~?~loc\prefixcolon(testLocs)~?~caller\prefixcolon(testCallers) \then \\
+	binder\_testCall~?~loc\prefixcolon(loc \in testLocs)~?~caller\prefixcolon(caller \in testCallers) \then \\
 	testCall~.~loc~.~caller \then \\
 	testRet~.~loc~.~caller~?~ret \then \\
-	binder_testRet~.~loc~.~caller~!~ret  \then \\
+	binder\_testRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
 \end{circus}
 %
+
+\begin{circus}
+	ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
+\end{circus}
+
+\newpage
 %
 %%%%%%%%%%%%%%%%%%THREADS
 %
@@ -496,5 +513,5 @@ Locking \circdef Threads \lpar ThreadSync \rpar Objects
 \end{circus}
 %
 \begin{circus}
-\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar Application \circblockclose \lpar LockingSync \rpar Locking
+\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar ApplicationB \circblockclose \lpar LockingSync \rpar Locking
 \end{circus}
