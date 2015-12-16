@@ -16,7 +16,7 @@ public class ProgramEnv
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private List<BinderMethodEnv> binderMethodEnvs;
-
+	
 	private MissionIdsEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
 	private ThreadIdsEnv threadIds;
@@ -344,6 +344,25 @@ public class ProgramEnv
 
 	}
 	
+	public List<BinderMethodEnv> getBinderMethodEnvs()
+	{
+		return binderMethodEnvs;
+	}
+
+	public void addBinderMethodEnv(String name, String location, String caller)
+	{
+		for(BinderMethodEnv bme: binderMethodEnvs)
+		{
+			if(bme.getMethodName().equals(name))
+			{
+				bme.addLocation(location);
+				bme.addCaller(caller);
+			}
+		}
+		//If the method isn't already there
+		binderMethodEnvs.add(new BinderMethodEnv(name, location, caller));
+	}
+
 	public MissionIdsEnv getMissionIdsEnv()
 	{
 		return missionIds;

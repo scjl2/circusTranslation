@@ -15,6 +15,14 @@ public class BinderMethodEnv extends MethodEnv
 		callers = new ArrayList<String>();
 	}
 
+	public BinderMethodEnv(String name, String location, String caller)
+	{
+		this(name);
+
+		locations.add(location);
+		callers.add(caller);
+	}
+
 	public List<String> getLocations()
 	{
 		return locations;

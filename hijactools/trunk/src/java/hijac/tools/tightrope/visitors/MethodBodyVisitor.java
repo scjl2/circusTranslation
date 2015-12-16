@@ -610,6 +610,11 @@ public class MethodBodyVisitor extends
 			else if (isNotMyMethod( methodSelect))
 			{
 				MethodEnv method = getMethodEnvBeingCalled(methodSelect);
+				
+				TightRope.getProgramEnv().
+					addBinderMethodEnv(((MemberSelectTree) node.getMethodSelect()).getIdentifier().toString(),
+										((MemberSelectTree) node.getMethodSelect()).getExpression().toString(), 
+										object.getName().toString()+"ID");
 
 				if (method.isAPIMethod())
 				{
