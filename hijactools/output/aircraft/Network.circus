@@ -380,8 +380,6 @@ MethodCallBinder \circdef \\
 	\\ \interleave \\
 	setHeading\_MethodBinder
 	\\ \interleave \\
-	release\_MethodBinder
-	\\ \interleave \\
 	isLandingGearDeployed\_MethodBinder
 	\\ \interleave \\
 	stowLandingGear\_MethodBinder
@@ -390,17 +388,9 @@ MethodCallBinder \circdef \\
 	\\ \interleave \\
 	getAltitude\_MethodBinder
 	\\ \interleave \\
-	release\_MethodBinder
-	\\ \interleave \\
-	requestTermination\_MethodBinder
-	\\ \interleave \\
 	getAirSpeed\_MethodBinder
 	\\ \interleave \\
 	abort\_MethodBinder
-	\\ \interleave \\
-	requestTermination\_MethodBinder
-	\\ \interleave \\
-	requestTermination\_MethodBinder
 	\\ \interleave \\
 	getHeading\_MethodBinder
 	\\ \interleave \\
@@ -410,8 +400,6 @@ MethodCallBinder \circdef \\
 	\\ \interleave \\
 	getAltitude\_MethodBinder
 	\\ \interleave \\
-	requestTermination\_MethodBinder
-	\\ \interleave \\
 	isLandingGearDeployed\_MethodBinder
 	\\ \interleave \\
 	stowLandingGear\_MethodBinder
@@ -419,19 +407,15 @@ MethodCallBinder \circdef \\
 	deployLandingGear\_MethodBinder
 	\\ \interleave \\
 	getAltitude\_MethodBinder
-	\\ \interleave \\
-	test\_MethodBinder
-	\\ \interleave \\
-	test\_MethodBinder
 	
 \circblockclose
 \end{circus}
 %
 \begin{circus}
 \circchannel binder\_setCabinPressureCall : MissionID \cross SchedulableID \\
-\circchannel binder\_setCabinPressureRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_setCabinPressureRet : MissionID \cross SchedulableID    \\ \\
 
-setCabinPressureLocs == \{ controllingMission \}  \\
+setCabinPressureLocs == \{ MainMissionID \}  \\
 setCabinPressureCallers == \{ EnvironmentMonitorID \}  \\
 \end{circus}
 %
@@ -448,9 +432,9 @@ setCabinPressure\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_setEmergencyOxygenCall : MissionID \cross SchedulableID \\
-\circchannel binder\_setEmergencyOxygenRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_setEmergencyOxygenRet : MissionID \cross SchedulableID    \\ \\
 
-setEmergencyOxygenLocs == \{ controllingMission \}  \\
+setEmergencyOxygenLocs == \{ MainMissionID \}  \\
 setEmergencyOxygenCallers == \{ EnvironmentMonitorID \}  \\
 \end{circus}
 %
@@ -467,9 +451,9 @@ setEmergencyOxygen\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_setFuelRemainingCall : MissionID \cross SchedulableID \\
-\circchannel binder\_setFuelRemainingRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_setFuelRemainingRet : MissionID \cross SchedulableID    \\ \\
 
-setFuelRemainingLocs == \{ controllingMission \}  \\
+setFuelRemainingLocs == \{ MainMissionID \}  \\
 setFuelRemainingCallers == \{ EnvironmentMonitorID \}  \\
 \end{circus}
 %
@@ -486,9 +470,9 @@ setFuelRemaining\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_setAirSpeedCall : MissionID \cross SchedulableID \\
-\circchannel binder\_setAirSpeedRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_setAirSpeedRet : MissionID \cross SchedulableID    \\ \\
 
-setAirSpeedLocs == \{ controllingMission \}  \\
+setAirSpeedLocs == \{ MainMissionID \}  \\
 setAirSpeedCallers == \{ FlightSensorsMonitorID \}  \\
 \end{circus}
 %
@@ -505,9 +489,9 @@ setAirSpeed\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_setAltitudeCall : MissionID \cross SchedulableID \\
-\circchannel binder\_setAltitudeRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_setAltitudeRet : MissionID \cross SchedulableID    \\ \\
 
-setAltitudeLocs == \{ controllingMission \}  \\
+setAltitudeLocs == \{ MainMissionID \}  \\
 setAltitudeCallers == \{ FlightSensorsMonitorID \}  \\
 \end{circus}
 %
@@ -524,9 +508,9 @@ setAltitude\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_setHeadingCall : MissionID \cross SchedulableID \\
-\circchannel binder\_setHeadingRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_setHeadingRet : MissionID \cross SchedulableID    \\ \\
 
-setHeadingLocs == \{ controllingMission \}  \\
+setHeadingLocs == \{ MainMissionID \}  \\
 setHeadingCallers == \{ FlightSensorsMonitorID \}  \\
 \end{circus}
 %
@@ -542,29 +526,10 @@ setHeading\_MethodBinder \circdef \\
 \end{circus}
 %
 \begin{circus}
-\circchannel binder\_releaseCall : MissionID \cross SchedulableID \\
-\circchannel binder\_releaseRet : MissionID \cross SchedulableID  \cross     \\ \\
-
-releaseLocs == \{ event,landingGearHandler \}  \\
-releaseCallers == \{ AperiodicSimulatorID,TakeOffMonitorID \}  \\
-\end{circus}
-%
-\begin{circus}
-release\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_releaseCall~?~loc\prefixcolon(loc \in releaseLocs)~?~caller\prefixcolon(caller \in releaseCallers) \then \\
-	releaseCall~.~loc~.~caller \then \\
-	releaseRet~.~loc~.~caller~?~ret \then \\
-	binder\_releaseRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circus}
-%
-\begin{circus}
 \circchannel binder\_isLandingGearDeployedCall : MissionID \cross SchedulableID \\
-\circchannel binder\_isLandingGearDeployedRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_isLandingGearDeployedRet : MissionID \cross SchedulableID \cross \boolean   \\ \\
 
-isLandingGearDeployedLocs == \{ mission,mission \}  \\
+isLandingGearDeployedLocs == \{ TakeOffMissionID,LandMissionID \}  \\
 isLandingGearDeployedCallers == \{ LandingGearHandlerTakeOffID,LandingGearHandlerLandID \}  \\
 \end{circus}
 %
@@ -581,9 +546,9 @@ isLandingGearDeployed\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_stowLandingGearCall : MissionID \cross SchedulableID \\
-\circchannel binder\_stowLandingGearRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_stowLandingGearRet : MissionID \cross SchedulableID    \\ \\
 
-stowLandingGearLocs == \{ mission,mission \}  \\
+stowLandingGearLocs == \{ TakeOffMissionID,LandMissionID \}  \\
 stowLandingGearCallers == \{ LandingGearHandlerTakeOffID,LandingGearHandlerLandID \}  \\
 \end{circus}
 %
@@ -600,9 +565,9 @@ stowLandingGear\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_deployLandingGearCall : MissionID \cross SchedulableID \\
-\circchannel binder\_deployLandingGearRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_deployLandingGearRet : MissionID \cross SchedulableID    \\ \\
 
-deployLandingGearLocs == \{ mission,mission \}  \\
+deployLandingGearLocs == \{ TakeOffMissionID,LandMissionID \}  \\
 deployLandingGearCallers == \{ LandingGearHandlerTakeOffID,LandingGearHandlerLandID \}  \\
 \end{circus}
 %
@@ -619,10 +584,10 @@ deployLandingGear\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_getAltitudeCall : MissionID \cross SchedulableID \\
-\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID \cross \mathbb{R}   \\ \\
 
-getAltitudeLocs == \{ mainMission,mainMission,mainMission,mainMission \}  \\
-getAltitudeCallers == \{ TakeOffMonitorID,NavigationMonitorID,GroundDistanceMonitorID,SafeLandingHandlerID \}  \\
+getAltitudeLocs == \{ MainMissionID \}  \\
+getAltitudeCallers == \{ SafeLandingHandlerID,GroundDistanceMonitorID,TakeOffMonitorID,NavigationMonitorID \}  \\
 \end{circus}
 %
 \begin{circus}
@@ -637,48 +602,10 @@ getAltitude\_MethodBinder \circdef \\
 \end{circus}
 %
 \begin{circus}
-\circchannel binder\_releaseCall : MissionID \cross SchedulableID \\
-\circchannel binder\_releaseRet : MissionID \cross SchedulableID  \cross     \\ \\
-
-releaseLocs == \{ landingGearHandler \}  \\
-releaseCallers == \{ TakeOffMonitorID \}  \\
-\end{circus}
-%
-\begin{circus}
-release\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_releaseCall~?~loc\prefixcolon(loc \in releaseLocs)~?~caller\prefixcolon(caller \in releaseCallers) \then \\
-	releaseCall~.~loc~.~caller \then \\
-	releaseRet~.~loc~.~caller~?~ret \then \\
-	binder\_releaseRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circus}
-%
-\begin{circus}
-\circchannel binder\_requestTerminationCall : MissionID \cross SchedulableID \\
-\circchannel binder\_requestTerminationRet : MissionID \cross SchedulableID  \cross     \\ \\
-
-requestTerminationLocs == \{ takeoffMission,takeoffMission,controllingMission,mainMission \}  \\
-requestTerminationCallers == \{ TakeOffMonitorID,TakeOffFailureHandlerID,BeginLandingHandlerID,GroundDistanceMonitorID \}  \\
-\end{circus}
-%
-\begin{circus}
-requestTermination\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_requestTerminationCall~?~loc\prefixcolon(loc \in requestTerminationLocs)~?~caller\prefixcolon(caller \in requestTerminationCallers) \then \\
-	requestTerminationCall~.~loc~.~caller \then \\
-	requestTerminationRet~.~loc~.~caller~?~ret \then \\
-	binder\_requestTerminationRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circus}
-%
-\begin{circus}
 \circchannel binder\_getAirSpeedCall : MissionID \cross SchedulableID \\
-\circchannel binder\_getAirSpeedRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_getAirSpeedRet : MissionID \cross SchedulableID \cross \mathbb{R}   \\ \\
 
-getAirSpeedLocs == \{ mainMission,mainMission \}  \\
+getAirSpeedLocs == \{ MainMissionID \}  \\
 getAirSpeedCallers == \{ TakeOffFailureHandlerID,NavigationMonitorID \}  \\
 \end{circus}
 %
@@ -695,9 +622,9 @@ getAirSpeed\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_abortCall : MissionID \cross SchedulableID \\
-\circchannel binder\_abortRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_abortRet : MissionID \cross SchedulableID    \\ \\
 
-abortLocs == \{ takeoffMission \}  \\
+abortLocs == \{ TakeOffMissionID \}  \\
 abortCallers == \{ TakeOffFailureHandlerID \}  \\
 \end{circus}
 %
@@ -713,48 +640,10 @@ abort\_MethodBinder \circdef \\
 \end{circus}
 %
 \begin{circus}
-\circchannel binder\_requestTerminationCall : MissionID \cross SchedulableID \\
-\circchannel binder\_requestTerminationRet : MissionID \cross SchedulableID  \cross     \\ \\
-
-requestTerminationLocs == \{ takeoffMission,controllingMission,mainMission \}  \\
-requestTerminationCallers == \{ TakeOffFailureHandlerID,BeginLandingHandlerID,GroundDistanceMonitorID \}  \\
-\end{circus}
-%
-\begin{circus}
-requestTermination\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_requestTerminationCall~?~loc\prefixcolon(loc \in requestTerminationLocs)~?~caller\prefixcolon(caller \in requestTerminationCallers) \then \\
-	requestTerminationCall~.~loc~.~caller \then \\
-	requestTerminationRet~.~loc~.~caller~?~ret \then \\
-	binder\_requestTerminationRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circus}
-%
-\begin{circus}
-\circchannel binder\_requestTerminationCall : MissionID \cross SchedulableID \\
-\circchannel binder\_requestTerminationRet : MissionID \cross SchedulableID  \cross     \\ \\
-
-requestTerminationLocs == \{ controllingMission,mainMission \}  \\
-requestTerminationCallers == \{ BeginLandingHandlerID,GroundDistanceMonitorID \}  \\
-\end{circus}
-%
-\begin{circus}
-requestTermination\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_requestTerminationCall~?~loc\prefixcolon(loc \in requestTerminationLocs)~?~caller\prefixcolon(caller \in requestTerminationCallers) \then \\
-	requestTerminationCall~.~loc~.~caller \then \\
-	requestTerminationRet~.~loc~.~caller~?~ret \then \\
-	binder\_requestTerminationRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circus}
-%
-\begin{circus}
 \circchannel binder\_getHeadingCall : MissionID \cross SchedulableID \\
-\circchannel binder\_getHeadingRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_getHeadingRet : MissionID \cross SchedulableID \cross \mathbb{R}   \\ \\
 
-getHeadingLocs == \{ mainMission \}  \\
+getHeadingLocs == \{ MainMissionID \}  \\
 getHeadingCallers == \{ NavigationMonitorID \}  \\
 \end{circus}
 %
@@ -771,9 +660,9 @@ getHeading\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_getAirSpeedCall : MissionID \cross SchedulableID \\
-\circchannel binder\_getAirSpeedRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_getAirSpeedRet : MissionID \cross SchedulableID \cross \mathbb{R}   \\ \\
 
-getAirSpeedLocs == \{ mainMission \}  \\
+getAirSpeedLocs == \{ MainMissionID \}  \\
 getAirSpeedCallers == \{ NavigationMonitorID \}  \\
 \end{circus}
 %
@@ -790,10 +679,10 @@ getAirSpeed\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_getAltitudeCall : MissionID \cross SchedulableID \\
-\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID \cross \mathbb{R}   \\ \\
 
-getAltitudeLocs == \{ mainMission,mainMission,mainMission \}  \\
-getAltitudeCallers == \{ NavigationMonitorID,GroundDistanceMonitorID,SafeLandingHandlerID \}  \\
+getAltitudeLocs == \{ MainMissionID \}  \\
+getAltitudeCallers == \{ SafeLandingHandlerID,GroundDistanceMonitorID,NavigationMonitorID \}  \\
 \end{circus}
 %
 \begin{circus}
@@ -809,10 +698,10 @@ getAltitude\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_getAltitudeCall : MissionID \cross SchedulableID \\
-\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID \cross \mathbb{R}   \\ \\
 
-getAltitudeLocs == \{ mainMission,mainMission \}  \\
-getAltitudeCallers == \{ GroundDistanceMonitorID,SafeLandingHandlerID \}  \\
+getAltitudeLocs == \{ MainMissionID \}  \\
+getAltitudeCallers == \{ SafeLandingHandlerID,GroundDistanceMonitorID \}  \\
 \end{circus}
 %
 \begin{circus}
@@ -827,29 +716,10 @@ getAltitude\_MethodBinder \circdef \\
 \end{circus}
 %
 \begin{circus}
-\circchannel binder\_requestTerminationCall : MissionID \cross SchedulableID \\
-\circchannel binder\_requestTerminationRet : MissionID \cross SchedulableID  \cross     \\ \\
-
-requestTerminationLocs == \{ mainMission \}  \\
-requestTerminationCallers == \{ GroundDistanceMonitorID \}  \\
-\end{circus}
-%
-\begin{circus}
-requestTermination\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_requestTerminationCall~?~loc\prefixcolon(loc \in requestTerminationLocs)~?~caller\prefixcolon(caller \in requestTerminationCallers) \then \\
-	requestTerminationCall~.~loc~.~caller \then \\
-	requestTerminationRet~.~loc~.~caller~?~ret \then \\
-	binder\_requestTerminationRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circus}
-%
-\begin{circus}
 \circchannel binder\_isLandingGearDeployedCall : MissionID \cross SchedulableID \\
-\circchannel binder\_isLandingGearDeployedRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_isLandingGearDeployedRet : MissionID \cross SchedulableID \cross \boolean   \\ \\
 
-isLandingGearDeployedLocs == \{ mission \}  \\
+isLandingGearDeployedLocs == \{ LandMissionID \}  \\
 isLandingGearDeployedCallers == \{ LandingGearHandlerLandID \}  \\
 \end{circus}
 %
@@ -866,9 +736,9 @@ isLandingGearDeployed\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_stowLandingGearCall : MissionID \cross SchedulableID \\
-\circchannel binder\_stowLandingGearRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_stowLandingGearRet : MissionID \cross SchedulableID    \\ \\
 
-stowLandingGearLocs == \{ mission \}  \\
+stowLandingGearLocs == \{ LandMissionID \}  \\
 stowLandingGearCallers == \{ LandingGearHandlerLandID \}  \\
 \end{circus}
 %
@@ -885,9 +755,9 @@ stowLandingGear\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_deployLandingGearCall : MissionID \cross SchedulableID \\
-\circchannel binder\_deployLandingGearRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_deployLandingGearRet : MissionID \cross SchedulableID    \\ \\
 
-deployLandingGearLocs == \{ mission \}  \\
+deployLandingGearLocs == \{ LandMissionID \}  \\
 deployLandingGearCallers == \{ LandingGearHandlerLandID \}  \\
 \end{circus}
 %
@@ -904,9 +774,9 @@ deployLandingGear\_MethodBinder \circdef \\
 %
 \begin{circus}
 \circchannel binder\_getAltitudeCall : MissionID \cross SchedulableID \\
-\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID  \cross     \\ \\
+\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID \cross \mathbb{R}   \\ \\
 
-getAltitudeLocs == \{ mainMission \}  \\
+getAltitudeLocs == \{ MainMissionID \}  \\
 getAltitudeCallers == \{ SafeLandingHandlerID \}  \\
 \end{circus}
 %
@@ -917,44 +787,6 @@ getAltitude\_MethodBinder \circdef \\
 	getAltitudeCall~.~loc~.~caller \then \\
 	getAltitudeRet~.~loc~.~caller~?~ret \then \\
 	binder\_getAltitudeRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circus}
-%
-\begin{circus}
-\circchannel binder\_testCall : MissionID \cross SchedulableID \\
-\circchannel binder\_testRet : MissionID \cross SchedulableID  \cross     \\ \\
-
-testLocs == \{ testLoc \}  \\
-testCallers == \{ testCaller \}  \\
-\end{circus}
-%
-\begin{circus}
-test\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_testCall~?~loc\prefixcolon(loc \in testLocs)~?~caller\prefixcolon(caller \in testCallers) \then \\
-	testCall~.~loc~.~caller \then \\
-	testRet~.~loc~.~caller~?~ret \then \\
-	binder\_testRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circus}
-%
-\begin{circus}
-\circchannel binder\_testCall : MissionID \cross SchedulableID \\
-\circchannel binder\_testRet : MissionID \cross SchedulableID  \cross     \\ \\
-
-testLocs == \{ testLoc \}  \\
-testCallers == \{ testCaller \}  \\
-\end{circus}
-%
-\begin{circus}
-test\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_testCall~?~loc\prefixcolon(loc \in testLocs)~?~caller\prefixcolon(caller \in testCallers) \then \\
-	testCall~.~loc~.~caller \then \\
-	testRet~.~loc~.~caller~?~ret \then \\
-	binder\_testRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
 \end{circus}

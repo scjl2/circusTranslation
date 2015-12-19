@@ -339,7 +339,7 @@ MethodCallBinder \circdef \\
 <#list MethodCallBindings as mcb>
 \begin{circus}
 \circchannel binder\_${mcb.Name}Call : ${mcb.LocType} \cross ${mcb.CallerType} \\
-\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} <#if mcb.Return = true> \cross  ${mcb.ReturnType} </#if>  \\ \\
+\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} ${mcb.ReturnType}   \\ \\
 
 ${mcb.Name}Locs == \{ <#list mcb.Locations as loc>${loc}<#sep>,</#sep></#list> \}  \\
 ${mcb.Name}Callers == \{ <#list mcb.Callers as caller>${caller}<#sep>,</#sep></#list> \}  \\

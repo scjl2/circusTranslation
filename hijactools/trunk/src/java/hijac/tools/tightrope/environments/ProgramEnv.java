@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Name;
 
@@ -164,24 +165,44 @@ public class ProgramEnv
 	{
 		List binderMethodEnvsMap = new ArrayList();
 		
-		BinderMethodEnv e = new BinderMethodEnv("test");
-		e.addLocation("testLoc");
-		e.addCaller("testCaller");
-		
-		binderMethodEnvs.add(e);
+//		BinderMethodEnv e = new BinderMethodEnv("test");
+//		e.addLocation("testLoc");
+//		e.addCaller("testCaller");
+//		
+//		binderMethodEnvs.add(e);
 		
 		for(BinderMethodEnv b : binderMethodEnvs)
 		{
 			Map binderMethodMap = new HashMap();
+			Set<String>locs = b.getLocations();
+			Set<String> callers = b.getCallers();
+			
 			
 			binderMethodMap.put("Name", b.getMethodName());
-			binderMethodMap.put("Locations", b.getLocations());
-			binderMethodMap.put("Callers", b.getCallers());
+			binderMethodMap.put("Locations", locs);
+			binderMethodMap.put("Callers", callers);
 			binderMethodMap.put("Return", b.hasReturn());
 			binderMethodMap.put("ReturnType", b.getReturnType());
 			//TODO need to calculate these!
-			binderMethodMap.put("LocType","MissionID");
-			binderMethodMap.put("CallerType","SchedulableID");
+			for(String s : locs)
+			{
+			if(missionIds.contains(s))
+			{
+				b.setLocationType("MissionID");
+				binderMethodMap.put("LocType",b.getLocationType());
+			}
+			}
+			
+			for(String s : callers)
+			{
+			if (schedulableIds.contains(s))
+			{
+				b.setCallerType("SchedulableID");
+				binderMethodMap.put("CallerType",b.getCallerType());
+			}
+			}
+			
+			
 			
 			binderMethodEnvsMap.add(binderMethodMap);
 		}
@@ -351,20 +372,48 @@ public class ProgramEnv
 
 	public void addBinderMethodEnv(String name, String location, String caller)
 	{
-		for(BinderMethodEnv bme: binderMethodEnvs)
-		{
-			if(bme.getMethodName().equals(name))
-			{
-				bme.addLocation(location);
-				bme.addCaller(caller);
-			}
-		}
-		//If the method isn't already there
-		binderMethodEnvs.add(new BinderMethodEnv(name, location, caller));
+		 addBinderMethodEnv( name,  location,  caller,
+					null);
 	}
 
 	public MissionIdsEnv getMissionIdsEnv()
 	{
 		return missionIds;
+	}
+
+	public void addBinderMethodEnv(String name, String location, String caller,
+			String returnType)
+	{
+		String id = "ID";
+		for(BinderMethodEnv bme: binderMethodEnvs)
+		{
+			if(bme.getMethodName().equals(name))
+			{
+				bme.addLocation(location+id);
+				bme.addCaller(caller+id);
+//				bme.setLocationType(location);
+				
+				
+				
+			}
+		}
+		//If the method isn't already there
+		BinderMethodEnv bme = new BinderMethodEnv(name, location+id, caller+id);
+//		if(missionIds.contains(location))
+//		{
+//			bme.setLocationType("MissionID");
+//		}
+//		
+//		if (schedulableIds.contains(caller))
+//		{
+//			bme.setCallerType("SchedulableID");
+//		}
+		
+		if(returnType != null && !returnType.equals("null"))
+		{
+			bme.setReturnType("\\cross " + returnType);
+		}
+		binderMethodEnvs.add(bme);
+		
 	}
 }

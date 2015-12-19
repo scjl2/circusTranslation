@@ -19,7 +19,5 @@ public class MissionIdsEnv extends IdEnv
 	public void addIdNames(String idName)
 	{
 		idNames.add(idName + ID_STR);
-	}
-	
-	
+	}	
 }

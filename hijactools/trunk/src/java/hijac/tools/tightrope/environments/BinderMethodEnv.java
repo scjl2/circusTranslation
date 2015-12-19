@@ -1,18 +1,24 @@
 package hijac.tools.tightrope.environments;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BinderMethodEnv extends MethodEnv
 {
-	private List<String> locations;
-	private List<String> callers;
+	private Set<String> locations;
+	private Set<String> callers;
+	private String locatioNType = "";
+	private String callerType = "";
 
 	public BinderMethodEnv(String name)
 	{
 		super(name);
-		locations = new ArrayList<String>();
-		callers = new ArrayList<String>();
+		locations = new HashSet<String>();
+		callers = new HashSet<String>();
+		
+		setReturnType("");
 	}
 
 	public BinderMethodEnv(String name, String location, String caller)
@@ -23,12 +29,12 @@ public class BinderMethodEnv extends MethodEnv
 		callers.add(caller);
 	}
 
-	public List<String> getLocations()
+	public Set<String> getLocations()
 	{
 		return locations;
 	}
 
-	public List<String> getCallers()
+	public Set<String> getCallers()
 	{
 		return callers;
 	}
@@ -45,7 +51,7 @@ public class BinderMethodEnv extends MethodEnv
 
 	public boolean hasReturn()
 	{
-		if (getReturnValue().equals("null"))
+		if (getReturnValue().equals("null") )//|| getReturnValue() != null)
 		{
 			return false;
 		}
@@ -56,4 +62,23 @@ public class BinderMethodEnv extends MethodEnv
 
 	}
 
+	public String getLocationType()
+	{		
+		return locatioNType;
+	}
+	
+	public void setLocationType(String locType)
+	{
+		locatioNType = locType;
+	}
+
+	public String getCallerType()
+	{		
+		return callerType;
+	}
+
+	public void setCallerType(String callerType)
+	{
+		this.callerType = callerType;
+	}
 }

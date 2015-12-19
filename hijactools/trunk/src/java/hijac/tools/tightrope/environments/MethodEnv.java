@@ -28,15 +28,15 @@ public class MethodEnv
 	{
 		this.methodName = name;
 	}
-	
+
 	public MethodEnv(Name name)
 	{
 		this.methodName = name.toString();
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MethodEnv(Name name, TypeKind returnType,
-			ArrayList<Name> returnValues, Map params)
+	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues,
+			Map params)
 	{
 		this.methodName = name.toString();
 		this.returnType = returnType.toString();
@@ -45,8 +45,8 @@ public class MethodEnv
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MethodEnv(Name name, TypeKind returnType,
-			ArrayList<Name> returnValues, Map params, Object body)
+	public MethodEnv(Name name, TypeKind returnType, ArrayList<Name> returnValues,
+			Map params, Object body)
 	{
 		this.methodName = name.toString();
 		this.returnType = returnType.toString();
@@ -56,8 +56,8 @@ public class MethodEnv
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MethodEnv(Name name, String returnType,
-			ArrayList<Name> returnValues, Map params, Object body)
+	public MethodEnv(Name name, String returnType, ArrayList<Name> returnValues,
+			Map params, Object body)
 	{
 		this.methodName = name.toString();
 
@@ -102,8 +102,12 @@ public class MethodEnv
 
 	public void setReturnType(TypeKind returnType)
 	{
-		System.out.println("/// returnType.toString()" + returnType.toString());
 		this.returnType = returnType.toString();
+	}
+
+	public void setReturnType(String returnType)
+	{
+		this.returnType = returnType;
 	}
 
 	public Map<String, Type> getParameters()
@@ -192,9 +196,9 @@ public class MethodEnv
 	{
 		return "Method Env: name=" + methodName + ", returnType=" + returnType
 				+ ", parmeters=" + parameters.toString() + ", return values="
-				+ returnValues.toString() + ", body=" + body
-				+ ", synchronised=" + synchronised + ", access modifier="
-				+ accesMod + ", API method=" + APIMethod;
+				+ returnValues.toString() + ", body=" + body + ", synchronised="
+				+ synchronised + ", access modifier=" + accesMod + ", API method="
+				+ APIMethod;
 
 	}
 }
