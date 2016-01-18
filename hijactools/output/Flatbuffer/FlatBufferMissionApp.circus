@@ -1,13 +1,16 @@
 \begin{zsection}
   \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , FlatBufferMissionClass
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , FlatBufferMissionClass \\
 
   \t1 , \\
 ObjectChan
 , 
+
 ObjectIds
 , 
+
 ThreadIds
+
 
 , FlatBufferMissionMethChan
 \end{zsection}
@@ -26,9 +29,7 @@ ThreadIds
 %\end{circus}
 
 \begin{circus}
-\circprocess FlatBufferMissionApp \circdef   storageParameters : MissionID
-\circspot 
- \circbegin
+\circprocess FlatBufferMissionApp \circdef  \circbegin
 \end{circus}
 
 \begin{schema}{State}
@@ -64,43 +65,43 @@ CleanupPhase \circdef  \\
 \circblockopen
  cleanupMissionCall~.~FlatBufferMission \then \\
 
- cleanupMissionRet~.~FlatBufferMission~!~\false \then \\
+ cleanupMissionRet~.~FlatBufferMission~!~\true \then \\
  \Skip
 \circblockclose
 \end{circusaction}
 
 \begin{circusaction}
-bufferEmptyMeth \circdef 
+bufferEmptyMeth \circdef
 \circvar ret : \boolean \circspot
 \\
 \circblockopen
-bufferEmptyCall~.~FlatBufferMission 
+bufferEmptyCall~.~FlatBufferMission
 \then \\
 ret := this~.~bufferEmpty()  \circseq  \\
 
 bufferEmptyRet~.~FlatBufferMission~!~ret \then \\
 \Skip
 \circblockclose
-\end{circusaction}	
+\end{circusaction}
 \begin{circusaction}
-cleanUpMeth \circdef 
+cleanUpMeth \circdef
 \circvar ret : \boolean \circspot
 \\
 \circblockopen
-cleanUpCall~.~FlatBufferMission 
+cleanUpCall~.~FlatBufferMission
 \then \\
 ret := this~.~cleanUp()  \circseq  \\
 
 cleanUpRet~.~FlatBufferMission~!~ret \then \\
 \Skip
 \circblockclose
-\end{circusaction}	
+\end{circusaction}
 %
 \begin{circusaction}
-writeSyncMeth \circdef 
+writeSyncMeth \circdef
 \\
 \circblockopen
-writeCall~.~FlatBufferMission~?~thread 
+writeCall~.~FlatBufferMission~?~thread
 ~?~update
  \then \\
 \circblockopen
@@ -133,13 +134,13 @@ writeRet~.~FlatBufferMission~.~thread \then \\
 \Skip
 \circblockclose
 \circblockclose
-\end{circusaction}	
+\end{circusaction}
 \begin{circusaction}
-readSyncMeth \circdef 
+readSyncMeth \circdef
 \circvar ret : \num \circspot
 \\
 \circblockopen
-readCall~.~FlatBufferMission~?~thread 
+readCall~.~FlatBufferMission~?~thread
  \then \\
 \circblockopen
 startSyncMeth~.~FlatBufferMissionObject~.~thread \then \\
@@ -181,7 +182,7 @@ readRet~.~FlatBufferMission~!~thread~!~ret \then \\
 \Skip
 \circblockclose
 \circblockclose
-\end{circusaction}	
+\end{circusaction}
 %
 
 \begin{circusaction}

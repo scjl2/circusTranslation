@@ -19,9 +19,9 @@
 
 
 \begin{circusaction}
-\circprotected ~ getNextMission ~ \circdef 
+\circprotected ~ getNextMission ~ \circdef
 \circvar ret : MissionID \circspot
-\\ 
+\\
 
 
       \circblockopen
@@ -70,7 +70,7 @@ this~.~returnedMission :=true
 
  
 
-\end{circusaction}	
+\end{circusaction}
 %
 %
 

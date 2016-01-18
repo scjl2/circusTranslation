@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ FlatBufferMissionSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId  , FlatBufferMissionSequencerClass
+  \t1 MissionId, MissionIds, SchedulableId  , FlatBufferMissionSequencerClass \\
 
   \t1 
 \end{zsection}

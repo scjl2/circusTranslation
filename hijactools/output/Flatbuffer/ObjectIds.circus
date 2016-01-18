@@ -4,20 +4,20 @@
 \extracircusvspace
 %
 \begin{axdef}
-	FlatBufferObject : ObjectID \\
-	FlatBufferMissionObject : ObjectID \\
-	ReaderObject : ObjectID \\
-	WriterObject : ObjectID \\
+	FlatBufferObjectID : ObjectID \\
+	FlatBufferMissionObjectID : ObjectID \\
+	ReaderObjectID : ObjectID \\
+	WriterObjectID : ObjectID \\
  
 \where
   distinct \langle 
-	FlatBufferObject
+	FlatBufferObjectID
+	,
+	FlatBufferMissionObjectID
 	,\\
-	FlatBufferMissionObject
-	,\\
-	ReaderObject
-	,\\
-	WriterObject
+	ReaderObjectID
+	,
+	WriterObjectID
   \rangle
 \end{axdef}
 

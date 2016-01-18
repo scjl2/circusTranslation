@@ -12,43 +12,45 @@
 \circchannelset ~ TerminateSync == \\ \t1 \lchanset schedulables\_terminated, schedulables\_stopped, get\_activeSchedulables \rchanset
 \end{circus}
 %
-\begin{circus}	
+\begin{circus}
 \circchannelset ~ ControlTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
 % IDs wont type check again   Start Mission and Done Mission wont parse?
 \begin{circus}
-\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~, done\_mission~.~,\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
+\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~FlatBufferMission, done\_mission~.~FlatBufferMission,\\
+	\t1 done\_safeletFW, done\_toplevel\_sequencer \rchanset
 \end{circus}
 %
 \begin{circus}
 \circchannelset ~ MissionSync == \\ \t1 \lchanset done\_safeletFW, done\_toplevel\_sequencer, register, \\
                  signalTerminationCall, signalTerminationRet, activate\_schedulables, done\_schedulable, \\
-                 cleanupSchedulableCall, cleanupSchedulableRet  \rchanset  
+                 cleanupSchedulableCall, cleanupSchedulableRet  \rchanset
 \end{circus}
 %
 \begin{circus}
-\circchannelset ~ SchedulablesSync == \\ \t1 \lchanset activate\_schedulables, done\_safeletFW, done\_toplevel\_sequencer \rchanset 
+\circchannelset ~ SchedulablesSync == \\ \t1 \lchanset activate\_schedulables, done\_safeletFW, done\_toplevel\_sequencer \rchanset
 \end{circus}
 %
 \begin{circus}
-\circchannelset ~ ClusterSync == \\ \t1 \lchanset done\_toplevel\_sequencer, done\_safeletFW \rchanset 
+\circchannelset ~ ClusterSync == \\ \t1 \lchanset done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
 %
 \begin{circus}
 \circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
-	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}    
+	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet \rchanset  \}
 \end{circus}
 %
+%\begin{circus}
+%\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
+%\end{circus}
+
 \begin{circus}
-\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
+\circchannelset ~ ThreadSync == \\ \t1  \lchanset raise\_thread\_priority, lower\_thread\_priority, isInterruptedCall, isInterruptedRet, get\_priorityLevel \rchanset
 \end{circus}
 
 \begin{circus}
-\circchannelset ~ ThreadSync == \\ \t1  \lchanset 	\rchanset
-\end{circus}
-
-\begin{circus}
-\circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify  \rchanset
+\circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify, isInterruptedCall, isInterruptedRet, \\
+\t1 interruptedCall, interruptedRet, done\_toplevel\_sequencer, get\_priorityLevel  \rchanset
 \end{circus}
 
 %IDs wont type check
@@ -65,17 +67,18 @@
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
-  \t1 AperiodicEventHandlerFW, FlatBufferApp, FlatBufferMissionSequencerApp, \\
-  \t1 ObjectFW, ThreadFW,
-  \t1 
+  \t1 AperiodicEventHandlerFW, ObjectFW, ThreadFW, \\
+  \t1 FlatBufferApp, FlatBufferMissionSequencerApp,
 
+FlatBufferMissionApp,
 
-FlatBufferMissionApp, 
-
-
-ReaderApp 
-,
-WriterApp 
+ReaderApp
+	,
+WriterApp
+	
+\\ \t1
+	
+	
 \end{zsection}
 %
 \begin{circus}
@@ -93,15 +96,15 @@ TopLevelMissionSequencerFW(FlatBufferMissionSequencer)
 \circprocess Tier0 \circdef \\
 
 \circblockopen
-	MissionFW(FlatBufferMission)\\
+	MissionFW(FlatBufferMissionID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
 
-			ManagedThreadFW(Reader)\\
+			ManagedThreadFW(ReaderID)\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			ManagedThreadFW(Writer)\\
+			ManagedThreadFW(WriterID)\\
 
 
 
@@ -115,7 +118,7 @@ TopLevelMissionSequencerFW(FlatBufferMissionSequencer)
 \end{circus}
 %
 %
-%+++ Framework +++ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Framework +++
 %
 \begin{circus}
 \circprocess Framework \circdef \\
@@ -128,47 +131,168 @@ Tier0
 \circblockclose
 \end{circus}
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPLICATION
+%
 \begin{circus}
 \circprocess  Application \circdef \\
 \circblockopen
-
 FlatBufferApp\\
-\interleave \\
+\interleave\\
 FlatBufferMissionSequencerApp\\
 \interleave \\
-FlatBufferMissionApp ( hijac.tools.tightrope.environments.VariableEnv@45ca843   ) \\
-\interleave \\
+		FlatBufferMissionApp\\
+		\interleave \\
+			ReaderApp\\
+			\interleave \\
+			WriterApp\\
+			
+		
+\circblockclose
+\end{circus}
 
-ReaderApp ( FlatBufferMission  ) \\
-\interleave \\
-WriterApp ( FlatBufferMission  ) \\
+\newpage
+%
+%%%%%%%%%%%%%%%%%%%%MethodCallBinder
+%
+\begin{circus}
+\circprocess  MethodCallBinder \circdef \\
+\t1 \circblockopen
+	terminationPending\_MethodBinder
+	\\ \interleave \\
+	read\_MethodBinder
+	\\ \interleave \\
+	terminationPending\_MethodBinder
+	\\ \interleave \\
+	write\_MethodBinder
+	
 \circblockclose
 \end{circus}
 %
 \begin{circus}
-Locking \circdef \\
-\circblockopen
-\circblockopen
-ThreadFW(ReaderThread, MinPriority) \\
-\t1 \lpar ThreadSync \rpar\\
-ThreadFW(WriterThread, MinPriority) \\
-
-\circblockclose \\
-\interleave \\
-\circblockopen
-ObjectFW(FlatBufferObject) \\
-\t1 \lpar ObjectSync \rpar\\
-ObjectFW(FlatBufferMissionObject) \\
-\t1 \lpar ObjectSync \rpar\\
-ObjectFW(ReaderObject) \\
-\t1 \lpar ObjectSync \rpar\\
-ObjectFW(WriterObject) \\
-
-\circblockclose
-\circblockclose
+\circchannel binder\_terminationPendingCall : MissionID \cross SchedulableID \\
+\circchannel binder\_terminationPendingRet : MissionID \cross SchedulableID \cross boolean   \\ \\
 \end{circus}
-% 
+%
+\begin{zed}
+terminationPendingLocs == \{ FlatBufferMissionID \}  \\
+terminationPendingCallers == \{ ReaderID,WriterID \}  \\
+\end{zed}
+%
+\begin{circusaction}
+terminationPending\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_terminationPendingCall\\ \t1 ~?~loc\prefixcolon(loc \in terminationPendingLocs)\\ \t1 ~?~caller\prefixcolon(caller \in terminationPendingCallers) \then \\
+	terminationPendingCall~.~loc~.~caller \then \\
+	terminationPendingRet~.~loc~.~caller~?~ret \then \\
+	binder\_terminationPendingRet~.~loc~.~caller~!~ret  \then \\
+	\Skip
+	\circblockclose
+\end{circusaction}
+%
 \begin{circus}
-\circprocess Program \circdef Framework \lpar AppSync \rpar Application \lpar LockingSync \rpar Locking
+\circchannel binder\_readCall : MissionID \cross SchedulableID \\
+\circchannel binder\_readRet : MissionID \cross SchedulableID \cross \num   \\ \\
+\end{circus}
+%
+\begin{zed}
+readLocs == \{ FlatBufferMissionID \}  \\
+readCallers == \{ ReaderID \}  \\
+\end{zed}
+%
+\begin{circusaction}
+read\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_readCall\\ \t1 ~?~loc\prefixcolon(loc \in readLocs)\\ \t1 ~?~caller\prefixcolon(caller \in readCallers) \then \\
+	readCall~.~loc~.~caller \then \\
+	readRet~.~loc~.~caller~?~ret \then \\
+	binder\_readRet~.~loc~.~caller~!~ret  \then \\
+	\Skip
+	\circblockclose
+\end{circusaction}
+%
+\begin{circus}
+\circchannel binder\_terminationPendingCall : MissionID \cross SchedulableID \\
+\circchannel binder\_terminationPendingRet : MissionID \cross SchedulableID \cross boolean   \\ \\
+\end{circus}
+%
+\begin{zed}
+terminationPendingLocs == \{ FlatBufferMissionID \}  \\
+terminationPendingCallers == \{ WriterID \}  \\
+\end{zed}
+%
+\begin{circusaction}
+terminationPending\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_terminationPendingCall\\ \t1 ~?~loc\prefixcolon(loc \in terminationPendingLocs)\\ \t1 ~?~caller\prefixcolon(caller \in terminationPendingCallers) \then \\
+	terminationPendingCall~.~loc~.~caller \then \\
+	terminationPendingRet~.~loc~.~caller~?~ret \then \\
+	binder\_terminationPendingRet~.~loc~.~caller~!~ret  \then \\
+	\Skip
+	\circblockclose
+\end{circusaction}
+%
+\begin{circus}
+\circchannel binder\_writeCall : MissionID \cross SchedulableID \\
+\circchannel binder\_writeRet : MissionID \cross SchedulableID    \\ \\
+\end{circus}
+%
+\begin{zed}
+writeLocs == \{ FlatBufferMissionID \}  \\
+writeCallers == \{ WriterID \}  \\
+\end{zed}
+%
+\begin{circusaction}
+write\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_writeCall\\ \t1 ~?~loc\prefixcolon(loc \in writeLocs)\\ \t1 ~?~caller\prefixcolon(caller \in writeCallers) \then \\
+	writeCall~.~loc~.~caller \then \\
+	writeRet~.~loc~.~caller~?~ret \then \\
+	binder\_writeRet~.~loc~.~caller~!~ret  \then \\
+	\Skip
+	\circblockclose
+\end{circusaction}
+%
+
+\begin{circus}
+\circprocess ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
 \end{circus}
 
+\newpage
+%
+%%%%%%%%%%%%%%%%%%THREADS
+%
+\begin{circus}
+\circprocess Threads \circdef  \\
+\circblockopen
+ThreadFW(ReaderThreadID, ) \\
+\interleave \\
+ThreadFW(WriterThreadID, ) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%OBJECTS
+%
+\begin{circus}
+\circprocess Objects \circdef \\
+\circblockopen
+ObjectFW(FlatBufferObjectID) \\
+\interleave \\
+ObjectFW(FlatBufferMissionObjectID) \\
+\interleave \\
+ObjectFW(ReaderObjectID) \\
+\interleave \\
+ObjectFW(WriterObjectID) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%LOCKING
+%
+\begin{circus}
+\circprocess Locking \circdef Threads \lpar ThreadSync \rpar Objects
+\end{circus}
+%
+\begin{circus}
+\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar ApplicationB \circblockclose \lpar LockingSync \rpar Locking
+\end{circus}

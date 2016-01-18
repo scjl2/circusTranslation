@@ -5,6 +5,7 @@
 
 \begin{schema}{\circstateignore State}
   buffer : \num\\ 
+  t : testClass\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -15,13 +16,14 @@
   State~'
 \where
   buffer' = 0\\ 
+  t' = testClass\\ 
 \end{schema}
 
 
 \begin{circusaction}
-\circpublic ~ bufferEmpty ~ \circdef 
+\circpublic ~ bufferEmpty ~ \circdef
 \circvar ret : \boolean \circspot
-\\ 
+\\
 
 
       \circblockopen
@@ -46,11 +48,11 @@ ret := \false
 
  
 
-\end{circusaction}	
+\end{circusaction}
 \begin{circusaction}
-\circpublic ~ cleanUp ~ \circdef 
+\circpublic ~ cleanUp ~ \circdef
 \circvar ret : \boolean \circspot
-\\ 
+\\
 
 
       \circblockopen
@@ -65,7 +67,7 @@ ret := \false
 
  
 
-\end{circusaction}	
+\end{circusaction}
 %
 %
 

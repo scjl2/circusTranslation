@@ -391,10 +391,7 @@ public class ProgramEnv
 			{
 				bme.addLocation(location+id);
 				bme.addCaller(caller+id);
-//				bme.setLocationType(location);
-				
-				
-				
+//				bme.setLocationType(location);				
 			}
 		}
 		//If the method isn't already there

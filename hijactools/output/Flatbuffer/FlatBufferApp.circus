@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ FlatBufferApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  
+  \SECTION ~ FlatBufferApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan   \\
 
   \t1 
 \end{zsection}

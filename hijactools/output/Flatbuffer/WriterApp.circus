@@ -1,37 +1,30 @@
 \begin{zsection}
-  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  
+  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
 
   \t1 , \\
 MissionMethChan
 , 
+
 FlatBufferMissionMethChan
 , 
+
 ObjectIds
 , 
+
 ThreadIds
+
 
 
 \end{zsection}
 %
 \begin{circus}
-\circprocess WriterApp \circdef   fbMission : MissionID
-\circspot 
+\circprocess WriterApp \circdef \\ \qquad
+  fbMission : MissionID
+ 
+\circspot
  \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  i : \num\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  i' = 1\\ 
-\end{schema}
 
 \begin{circusaction}
 Run \circdef \\
@@ -68,7 +61,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_managedThread\_app~.~Writer \then \Skip)
 \end{circusaction}
 

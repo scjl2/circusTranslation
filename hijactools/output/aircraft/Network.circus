@@ -419,16 +419,16 @@ setCabinPressureLocs == \{ MainMissionID \}  \\
 setCabinPressureCallers == \{ EnvironmentMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 setCabinPressure\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_setCabinPressureCall~?~loc\prefixcolon(loc \in setCabinPressureLocs)~?~caller\prefixcolon(caller \in setCabinPressureCallers) \then \\
+	binder\_setCabinPressureCall\\ \quad ~?~loc\prefixcolon(loc \in setCabinPressureLocs)\\ \quad ~?~caller\prefixcolon(caller \in setCabinPressureCallers) \then \\
 	setCabinPressureCall~.~loc~.~caller \then \\
 	setCabinPressureRet~.~loc~.~caller~?~ret \then \\
 	binder\_setCabinPressureRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_setEmergencyOxygenCall : MissionID \cross SchedulableID \\
@@ -438,16 +438,16 @@ setEmergencyOxygenLocs == \{ MainMissionID \}  \\
 setEmergencyOxygenCallers == \{ EnvironmentMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 setEmergencyOxygen\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_setEmergencyOxygenCall~?~loc\prefixcolon(loc \in setEmergencyOxygenLocs)~?~caller\prefixcolon(caller \in setEmergencyOxygenCallers) \then \\
+	binder\_setEmergencyOxygenCall\\ \quad ~?~loc\prefixcolon(loc \in setEmergencyOxygenLocs)\\ \quad ~?~caller\prefixcolon(caller \in setEmergencyOxygenCallers) \then \\
 	setEmergencyOxygenCall~.~loc~.~caller \then \\
 	setEmergencyOxygenRet~.~loc~.~caller~?~ret \then \\
 	binder\_setEmergencyOxygenRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_setFuelRemainingCall : MissionID \cross SchedulableID \\
@@ -457,16 +457,16 @@ setFuelRemainingLocs == \{ MainMissionID \}  \\
 setFuelRemainingCallers == \{ EnvironmentMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 setFuelRemaining\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_setFuelRemainingCall~?~loc\prefixcolon(loc \in setFuelRemainingLocs)~?~caller\prefixcolon(caller \in setFuelRemainingCallers) \then \\
+	binder\_setFuelRemainingCall\\ \quad ~?~loc\prefixcolon(loc \in setFuelRemainingLocs)\\ \quad ~?~caller\prefixcolon(caller \in setFuelRemainingCallers) \then \\
 	setFuelRemainingCall~.~loc~.~caller \then \\
 	setFuelRemainingRet~.~loc~.~caller~?~ret \then \\
 	binder\_setFuelRemainingRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_setAirSpeedCall : MissionID \cross SchedulableID \\
@@ -476,16 +476,16 @@ setAirSpeedLocs == \{ MainMissionID \}  \\
 setAirSpeedCallers == \{ FlightSensorsMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 setAirSpeed\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_setAirSpeedCall~?~loc\prefixcolon(loc \in setAirSpeedLocs)~?~caller\prefixcolon(caller \in setAirSpeedCallers) \then \\
+	binder\_setAirSpeedCall\\ \quad ~?~loc\prefixcolon(loc \in setAirSpeedLocs)\\ \quad ~?~caller\prefixcolon(caller \in setAirSpeedCallers) \then \\
 	setAirSpeedCall~.~loc~.~caller \then \\
 	setAirSpeedRet~.~loc~.~caller~?~ret \then \\
 	binder\_setAirSpeedRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_setAltitudeCall : MissionID \cross SchedulableID \\
@@ -495,16 +495,16 @@ setAltitudeLocs == \{ MainMissionID \}  \\
 setAltitudeCallers == \{ FlightSensorsMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 setAltitude\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_setAltitudeCall~?~loc\prefixcolon(loc \in setAltitudeLocs)~?~caller\prefixcolon(caller \in setAltitudeCallers) \then \\
+	binder\_setAltitudeCall\\ \quad ~?~loc\prefixcolon(loc \in setAltitudeLocs)\\ \quad ~?~caller\prefixcolon(caller \in setAltitudeCallers) \then \\
 	setAltitudeCall~.~loc~.~caller \then \\
 	setAltitudeRet~.~loc~.~caller~?~ret \then \\
 	binder\_setAltitudeRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_setHeadingCall : MissionID \cross SchedulableID \\
@@ -514,16 +514,16 @@ setHeadingLocs == \{ MainMissionID \}  \\
 setHeadingCallers == \{ FlightSensorsMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 setHeading\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_setHeadingCall~?~loc\prefixcolon(loc \in setHeadingLocs)~?~caller\prefixcolon(caller \in setHeadingCallers) \then \\
+	binder\_setHeadingCall\\ \quad ~?~loc\prefixcolon(loc \in setHeadingLocs)\\ \quad ~?~caller\prefixcolon(caller \in setHeadingCallers) \then \\
 	setHeadingCall~.~loc~.~caller \then \\
 	setHeadingRet~.~loc~.~caller~?~ret \then \\
 	binder\_setHeadingRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_isLandingGearDeployedCall : MissionID \cross SchedulableID \\
@@ -533,16 +533,16 @@ isLandingGearDeployedLocs == \{ TakeOffMissionID,LandMissionID \}  \\
 isLandingGearDeployedCallers == \{ LandingGearHandlerTakeOffID,LandingGearHandlerLandID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 isLandingGearDeployed\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_isLandingGearDeployedCall~?~loc\prefixcolon(loc \in isLandingGearDeployedLocs)~?~caller\prefixcolon(caller \in isLandingGearDeployedCallers) \then \\
+	binder\_isLandingGearDeployedCall\\ \quad ~?~loc\prefixcolon(loc \in isLandingGearDeployedLocs)\\ \quad ~?~caller\prefixcolon(caller \in isLandingGearDeployedCallers) \then \\
 	isLandingGearDeployedCall~.~loc~.~caller \then \\
 	isLandingGearDeployedRet~.~loc~.~caller~?~ret \then \\
 	binder\_isLandingGearDeployedRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_stowLandingGearCall : MissionID \cross SchedulableID \\
@@ -552,16 +552,16 @@ stowLandingGearLocs == \{ TakeOffMissionID,LandMissionID \}  \\
 stowLandingGearCallers == \{ LandingGearHandlerTakeOffID,LandingGearHandlerLandID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 stowLandingGear\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_stowLandingGearCall~?~loc\prefixcolon(loc \in stowLandingGearLocs)~?~caller\prefixcolon(caller \in stowLandingGearCallers) \then \\
+	binder\_stowLandingGearCall\\ \quad ~?~loc\prefixcolon(loc \in stowLandingGearLocs)\\ \quad ~?~caller\prefixcolon(caller \in stowLandingGearCallers) \then \\
 	stowLandingGearCall~.~loc~.~caller \then \\
 	stowLandingGearRet~.~loc~.~caller~?~ret \then \\
 	binder\_stowLandingGearRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_deployLandingGearCall : MissionID \cross SchedulableID \\
@@ -571,16 +571,16 @@ deployLandingGearLocs == \{ TakeOffMissionID,LandMissionID \}  \\
 deployLandingGearCallers == \{ LandingGearHandlerTakeOffID,LandingGearHandlerLandID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 deployLandingGear\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_deployLandingGearCall~?~loc\prefixcolon(loc \in deployLandingGearLocs)~?~caller\prefixcolon(caller \in deployLandingGearCallers) \then \\
+	binder\_deployLandingGearCall\\ \quad ~?~loc\prefixcolon(loc \in deployLandingGearLocs)\\ \quad ~?~caller\prefixcolon(caller \in deployLandingGearCallers) \then \\
 	deployLandingGearCall~.~loc~.~caller \then \\
 	deployLandingGearRet~.~loc~.~caller~?~ret \then \\
 	binder\_deployLandingGearRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_getAltitudeCall : MissionID \cross SchedulableID \\
@@ -590,16 +590,16 @@ getAltitudeLocs == \{ MainMissionID \}  \\
 getAltitudeCallers == \{ SafeLandingHandlerID,GroundDistanceMonitorID,TakeOffMonitorID,NavigationMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 getAltitude\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_getAltitudeCall~?~loc\prefixcolon(loc \in getAltitudeLocs)~?~caller\prefixcolon(caller \in getAltitudeCallers) \then \\
+	binder\_getAltitudeCall\\ \quad ~?~loc\prefixcolon(loc \in getAltitudeLocs)\\ \quad ~?~caller\prefixcolon(caller \in getAltitudeCallers) \then \\
 	getAltitudeCall~.~loc~.~caller \then \\
 	getAltitudeRet~.~loc~.~caller~?~ret \then \\
 	binder\_getAltitudeRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_getAirSpeedCall : MissionID \cross SchedulableID \\
@@ -609,16 +609,16 @@ getAirSpeedLocs == \{ MainMissionID \}  \\
 getAirSpeedCallers == \{ TakeOffFailureHandlerID,NavigationMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 getAirSpeed\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_getAirSpeedCall~?~loc\prefixcolon(loc \in getAirSpeedLocs)~?~caller\prefixcolon(caller \in getAirSpeedCallers) \then \\
+	binder\_getAirSpeedCall\\ \quad ~?~loc\prefixcolon(loc \in getAirSpeedLocs)\\ \quad ~?~caller\prefixcolon(caller \in getAirSpeedCallers) \then \\
 	getAirSpeedCall~.~loc~.~caller \then \\
 	getAirSpeedRet~.~loc~.~caller~?~ret \then \\
 	binder\_getAirSpeedRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_abortCall : MissionID \cross SchedulableID \\
@@ -628,16 +628,16 @@ abortLocs == \{ TakeOffMissionID \}  \\
 abortCallers == \{ TakeOffFailureHandlerID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 abort\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_abortCall~?~loc\prefixcolon(loc \in abortLocs)~?~caller\prefixcolon(caller \in abortCallers) \then \\
+	binder\_abortCall\\ \quad ~?~loc\prefixcolon(loc \in abortLocs)\\ \quad ~?~caller\prefixcolon(caller \in abortCallers) \then \\
 	abortCall~.~loc~.~caller \then \\
 	abortRet~.~loc~.~caller~?~ret \then \\
 	binder\_abortRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_getHeadingCall : MissionID \cross SchedulableID \\
@@ -647,16 +647,16 @@ getHeadingLocs == \{ MainMissionID \}  \\
 getHeadingCallers == \{ NavigationMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 getHeading\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_getHeadingCall~?~loc\prefixcolon(loc \in getHeadingLocs)~?~caller\prefixcolon(caller \in getHeadingCallers) \then \\
+	binder\_getHeadingCall\\ \quad ~?~loc\prefixcolon(loc \in getHeadingLocs)\\ \quad ~?~caller\prefixcolon(caller \in getHeadingCallers) \then \\
 	getHeadingCall~.~loc~.~caller \then \\
 	getHeadingRet~.~loc~.~caller~?~ret \then \\
 	binder\_getHeadingRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_getAirSpeedCall : MissionID \cross SchedulableID \\
@@ -666,16 +666,16 @@ getAirSpeedLocs == \{ MainMissionID \}  \\
 getAirSpeedCallers == \{ NavigationMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 getAirSpeed\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_getAirSpeedCall~?~loc\prefixcolon(loc \in getAirSpeedLocs)~?~caller\prefixcolon(caller \in getAirSpeedCallers) \then \\
+	binder\_getAirSpeedCall\\ \quad ~?~loc\prefixcolon(loc \in getAirSpeedLocs)\\ \quad ~?~caller\prefixcolon(caller \in getAirSpeedCallers) \then \\
 	getAirSpeedCall~.~loc~.~caller \then \\
 	getAirSpeedRet~.~loc~.~caller~?~ret \then \\
 	binder\_getAirSpeedRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_getAltitudeCall : MissionID \cross SchedulableID \\
@@ -685,16 +685,16 @@ getAltitudeLocs == \{ MainMissionID \}  \\
 getAltitudeCallers == \{ SafeLandingHandlerID,GroundDistanceMonitorID,NavigationMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 getAltitude\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_getAltitudeCall~?~loc\prefixcolon(loc \in getAltitudeLocs)~?~caller\prefixcolon(caller \in getAltitudeCallers) \then \\
+	binder\_getAltitudeCall\\ \quad ~?~loc\prefixcolon(loc \in getAltitudeLocs)\\ \quad ~?~caller\prefixcolon(caller \in getAltitudeCallers) \then \\
 	getAltitudeCall~.~loc~.~caller \then \\
 	getAltitudeRet~.~loc~.~caller~?~ret \then \\
 	binder\_getAltitudeRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_getAltitudeCall : MissionID \cross SchedulableID \\
@@ -704,16 +704,16 @@ getAltitudeLocs == \{ MainMissionID \}  \\
 getAltitudeCallers == \{ SafeLandingHandlerID,GroundDistanceMonitorID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 getAltitude\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_getAltitudeCall~?~loc\prefixcolon(loc \in getAltitudeLocs)~?~caller\prefixcolon(caller \in getAltitudeCallers) \then \\
+	binder\_getAltitudeCall\\ \quad ~?~loc\prefixcolon(loc \in getAltitudeLocs)\\ \quad ~?~caller\prefixcolon(caller \in getAltitudeCallers) \then \\
 	getAltitudeCall~.~loc~.~caller \then \\
 	getAltitudeRet~.~loc~.~caller~?~ret \then \\
 	binder\_getAltitudeRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_isLandingGearDeployedCall : MissionID \cross SchedulableID \\
@@ -723,16 +723,16 @@ isLandingGearDeployedLocs == \{ LandMissionID \}  \\
 isLandingGearDeployedCallers == \{ LandingGearHandlerLandID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 isLandingGearDeployed\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_isLandingGearDeployedCall~?~loc\prefixcolon(loc \in isLandingGearDeployedLocs)~?~caller\prefixcolon(caller \in isLandingGearDeployedCallers) \then \\
+	binder\_isLandingGearDeployedCall\\ \quad ~?~loc\prefixcolon(loc \in isLandingGearDeployedLocs)\\ \quad ~?~caller\prefixcolon(caller \in isLandingGearDeployedCallers) \then \\
 	isLandingGearDeployedCall~.~loc~.~caller \then \\
 	isLandingGearDeployedRet~.~loc~.~caller~?~ret \then \\
 	binder\_isLandingGearDeployedRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_stowLandingGearCall : MissionID \cross SchedulableID \\
@@ -742,16 +742,16 @@ stowLandingGearLocs == \{ LandMissionID \}  \\
 stowLandingGearCallers == \{ LandingGearHandlerLandID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 stowLandingGear\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_stowLandingGearCall~?~loc\prefixcolon(loc \in stowLandingGearLocs)~?~caller\prefixcolon(caller \in stowLandingGearCallers) \then \\
+	binder\_stowLandingGearCall\\ \quad ~?~loc\prefixcolon(loc \in stowLandingGearLocs)\\ \quad ~?~caller\prefixcolon(caller \in stowLandingGearCallers) \then \\
 	stowLandingGearCall~.~loc~.~caller \then \\
 	stowLandingGearRet~.~loc~.~caller~?~ret \then \\
 	binder\_stowLandingGearRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_deployLandingGearCall : MissionID \cross SchedulableID \\
@@ -761,16 +761,16 @@ deployLandingGearLocs == \{ LandMissionID \}  \\
 deployLandingGearCallers == \{ LandingGearHandlerLandID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 deployLandingGear\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_deployLandingGearCall~?~loc\prefixcolon(loc \in deployLandingGearLocs)~?~caller\prefixcolon(caller \in deployLandingGearCallers) \then \\
+	binder\_deployLandingGearCall\\ \quad ~?~loc\prefixcolon(loc \in deployLandingGearLocs)\\ \quad ~?~caller\prefixcolon(caller \in deployLandingGearCallers) \then \\
 	deployLandingGearCall~.~loc~.~caller \then \\
 	deployLandingGearRet~.~loc~.~caller~?~ret \then \\
 	binder\_deployLandingGearRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_getAltitudeCall : MissionID \cross SchedulableID \\
@@ -780,20 +780,20 @@ getAltitudeLocs == \{ MainMissionID \}  \\
 getAltitudeCallers == \{ SafeLandingHandlerID \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{circusaction}
 getAltitude\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_getAltitudeCall~?~loc\prefixcolon(loc \in getAltitudeLocs)~?~caller\prefixcolon(caller \in getAltitudeCallers) \then \\
+	binder\_getAltitudeCall\\ \quad ~?~loc\prefixcolon(loc \in getAltitudeLocs)\\ \quad ~?~caller\prefixcolon(caller \in getAltitudeCallers) \then \\
 	getAltitudeCall~.~loc~.~caller \then \\
 	getAltitudeRet~.~loc~.~caller~?~ret \then \\
 	binder\_getAltitudeRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 
 \begin{circus}
-	ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
+\circprocess ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
 \end{circus}
 
 \newpage
@@ -801,7 +801,7 @@ getAltitude\_MethodBinder \circdef \\
 %%%%%%%%%%%%%%%%%%THREADS
 %
 \begin{circus}
-Threads \circdef  \\
+\circprocess Threads \circdef  \\
 \circblockopen
 ThreadFW(SafeLandingHandlerThreadID, 5) \\
 \interleave \\
@@ -839,7 +839,7 @@ ThreadFW(EnvironmentMonitorThreadID, 5) \\
 %%%%%%%%%%%%%%OBJECTS
 %
 \begin{circus}
-Objects \circdef \\
+\circprocess Objects \circdef \\
 \circblockopen
 ObjectFW(ACSafeletObjectID) \\
 \interleave \\
@@ -887,7 +887,7 @@ ObjectFW(SafeLandingHandlerObjectID) \\
 %%%%%%%%%%%%%LOCKING
 %
 \begin{circus}
-Locking \circdef Threads \lpar ThreadSync \rpar Objects
+\circprocess Locking \circdef Threads \lpar ThreadSync \rpar Objects
 \end{circus}
 %
 \begin{circus}

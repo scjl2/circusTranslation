@@ -19,7 +19,7 @@
 <#list Tiers[0] as cluster>
 \begin{circus}
 \circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~${cluster.Mission.Name}, done\_mission~.~${cluster.Mission.Name},\\
-	\t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset
+	\t1 done\_safeletFW, done\_toplevel\_sequencer \rchanset
 \end{circus}
 </#list>
 %
@@ -39,7 +39,7 @@
 %
 \begin{circus}
 \circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
-	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet\rchanset  \}
+	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet \rchanset  \}
 \end{circus}
 %
 %\begin{circus}
@@ -47,7 +47,7 @@
 %\end{circus}
 
 \begin{circus}
-\circchannelset ~ ThreadSync == \\ \t1  \lchanset raise\_thread\_priority, lower\_thread\_priority, isInterruptedCall, isInterruptedRet, get\_priorityLevel 	\rchanset
+\circchannelset ~ ThreadSync == \\ \t1  \lchanset raise\_thread\_priority, lower\_thread\_priority, isInterruptedCall, isInterruptedRet, get\_priorityLevel \rchanset
 \end{circus}
 
 \begin{circus}
@@ -327,7 +327,7 @@ ${ControlTierSync} \\
 %%%%%%%%%%%%%%%%%%%%MethodCallBinder
 %
 \begin{circus}
-MethodCallBinder \circdef \\
+\circprocess  MethodCallBinder \circdef \\
 \t1 \circblockopen
 <#list MethodCallBindings as mcb>
 	${mcb.Name}\_MethodBinder
@@ -340,26 +340,28 @@ MethodCallBinder \circdef \\
 \begin{circus}
 \circchannel binder\_${mcb.Name}Call : ${mcb.LocType} \cross ${mcb.CallerType} \\
 \circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} ${mcb.ReturnType}   \\ \\
-
-${mcb.Name}Locs == \{ <#list mcb.Locations as loc>${loc}<#sep>,</#sep></#list> \}  \\
-${mcb.Name}Callers == \{ <#list mcb.Callers as caller>${caller}<#sep>,</#sep></#list> \}  \\
 \end{circus}
 %
-\begin{circus}
+\begin{zed}
+${mcb.Name}Locs == \{ <#list mcb.Locations as loc>${loc}<#sep>,</#sep></#list> \}  \\
+${mcb.Name}Callers == \{ <#list mcb.Callers as caller>${caller}<#sep>,</#sep></#list> \}  \\
+\end{zed}
+%
+\begin{circusaction}
 ${mcb.Name}\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_${mcb.Name}Call~?~loc\prefixcolon(loc \in ${mcb.Name}Locs)~?~caller\prefixcolon(caller \in ${mcb.Name}Callers) \then \\
+	binder\_${mcb.Name}Call\\ \t1 ~?~loc\prefixcolon(loc \in ${mcb.Name}Locs)\\ \t1 ~?~caller\prefixcolon(caller \in ${mcb.Name}Callers) \then \\
 	${mcb.Name}Call~.~loc~.~caller \then \\
 	${mcb.Name}Ret~.~loc~.~caller<#if mcb.Return = true>~?~ret</#if> \then \\
 	binder\_${mcb.Name}Ret~.~loc~.~caller<#if mcb.Return = true>~!~ret</#if>  \then \\
 	\Skip
 	\circblockclose
-\end{circus}
+\end{circusaction}
 %
 </#list>
 
 \begin{circus}
-	ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
+\circprocess ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
 \end{circus}
 
 \newpage
@@ -367,7 +369,7 @@ ${mcb.Name}\_MethodBinder \circdef \\
 %%%%%%%%%%%%%%%%%%THREADS
 %
 \begin{circus}
-Threads \circdef  \\
+\circprocess Threads \circdef  \\
 \circblockopen
 <#list Threads?keys as thread>
 ThreadFW(${thread}, ${Threads[thread]}) \\
@@ -379,7 +381,7 @@ ThreadFW(${thread}, ${Threads[thread]}) \\
 %%%%%%%%%%%%%%OBJECTS
 %
 \begin{circus}
-Objects \circdef \\
+\circprocess Objects \circdef \\
 \circblockopen
 <#list Objects.Objects as object>
 ObjectFW(${object}) \\
@@ -391,7 +393,7 @@ ObjectFW(${object}) \\
 %%%%%%%%%%%%%LOCKING
 %
 \begin{circus}
-Locking \circdef Threads \lpar ThreadSync \rpar Objects
+\circprocess Locking \circdef Threads \lpar ThreadSync \rpar Objects
 \end{circus}
 %
 \begin{circus}

@@ -1,21 +1,27 @@
 \begin{zsection}
-  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  
+  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
 
   \t1 , \\
 MissionMethChan
 , 
+
 FlatBufferMissionMethChan
 , 
+
 ObjectIds
 , 
+
 ThreadIds
+
 
 
 \end{zsection}
 %
 \begin{circus}
-\circprocess ReaderApp \circdef   fbMission : MissionID
-\circspot 
+\circprocess ReaderApp \circdef \\ \qquad
+  fbMission : MissionID
+ 
+\circspot
  \circbegin
 \end{circus}
 

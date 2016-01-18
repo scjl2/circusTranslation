@@ -4,15 +4,14 @@
 \extracircusvspace
 %
 \begin{axdef}
-	ReaderThread : ThreadID \\
-	WriterThread : ThreadID \\
- 
+	ReaderThreadID : ThreadID \\
+	WriterThreadID : ThreadID \\
+
 \where
-  distinct \langle SafeletThreadId, 
-  nullThreadId, \\ 
-	ReaderThread
-	,\\
-	WriterThread
+  distinct \langle SafeletThreadId,
+  nullThreadId, \\
+	ReaderThreadID
+	,
+	WriterThreadID
   \rangle
 \end{axdef}
-
