@@ -157,37 +157,12 @@ FlatBufferMissionSequencerApp\\
 \begin{circus}
 \circprocess  MethodCallBinder \circdef \\
 \t1 \circblockopen
-	terminationPending\_MethodBinder
-	\\ \interleave \\
 	read\_MethodBinder
-	\\ \interleave \\
-	terminationPending\_MethodBinder
 	\\ \interleave \\
 	write\_MethodBinder
 	
 \circblockclose
 \end{circus}
-%
-\begin{circus}
-\circchannel binder\_terminationPendingCall : MissionID \cross SchedulableID \\
-\circchannel binder\_terminationPendingRet : MissionID \cross SchedulableID \cross boolean   \\ \\
-\end{circus}
-%
-\begin{zed}
-terminationPendingLocs == \{ FlatBufferMissionID \}  \\
-terminationPendingCallers == \{ ReaderID,WriterID \}  \\
-\end{zed}
-%
-\begin{circusaction}
-terminationPending\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_terminationPendingCall\\ \t1 ~?~loc\prefixcolon(loc \in terminationPendingLocs)\\ \t1 ~?~caller\prefixcolon(caller \in terminationPendingCallers) \then \\
-	terminationPendingCall~.~loc~.~caller \then \\
-	terminationPendingRet~.~loc~.~caller~?~ret \then \\
-	binder\_terminationPendingRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circusaction}
 %
 \begin{circus}
 \circchannel binder\_readCall : MissionID \cross SchedulableID \\
@@ -206,27 +181,6 @@ read\_MethodBinder \circdef \\
 	readCall~.~loc~.~caller \then \\
 	readRet~.~loc~.~caller~?~ret \then \\
 	binder\_readRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
-	\circblockclose
-\end{circusaction}
-%
-\begin{circus}
-\circchannel binder\_terminationPendingCall : MissionID \cross SchedulableID \\
-\circchannel binder\_terminationPendingRet : MissionID \cross SchedulableID \cross boolean   \\ \\
-\end{circus}
-%
-\begin{zed}
-terminationPendingLocs == \{ FlatBufferMissionID \}  \\
-terminationPendingCallers == \{ WriterID \}  \\
-\end{zed}
-%
-\begin{circusaction}
-terminationPending\_MethodBinder \circdef \\
-	\t1 \circblockopen
-	binder\_terminationPendingCall\\ \t1 ~?~loc\prefixcolon(loc \in terminationPendingLocs)\\ \t1 ~?~caller\prefixcolon(caller \in terminationPendingCallers) \then \\
-	terminationPendingCall~.~loc~.~caller \then \\
-	terminationPendingRet~.~loc~.~caller~?~ret \then \\
-	binder\_terminationPendingRet~.~loc~.~caller~!~ret  \then \\
 	\Skip
 	\circblockclose
 \end{circusaction}

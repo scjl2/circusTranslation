@@ -601,7 +601,10 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				// ((MemberSelectTree)
 				// node.getMethodSelect()).getExpression().toString();
 				boolean notIgnoredMethod = ( (!identifier.contentEquals("release")) &&
-												(!identifier.contentEquals("requestTermination")) );
+											 (!identifier.contentEquals("requestTermination")) &&
+											 (!identifier.contentEquals("terminationPending")) 
+												
+											);
 
 				if (notIgnoredMethod)
 				{
