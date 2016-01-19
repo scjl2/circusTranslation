@@ -155,8 +155,8 @@ FlatBufferMissionSequencerApp\\
 %%%%%%%%%%%%%%%%%%%%MethodCallBinder
 %
 \begin{circus}
-\circchannel binder\_readCall : MissionID \cross SchedulableID \\
-\circchannel binder\_readRet : MissionID \cross SchedulableID \cross \num   
+\circchannel binder\_readCall : MissionID \cross SchedulableID  \\ % put in the params
+\circchannel binder\_readRet : MissionID \cross SchedulableID \cross \num   % put in the params
 \end{circus}
 %
 \begin{zed}
@@ -165,8 +165,8 @@ readCallers == \{ ReaderID \}
 \end{zed}
 %
 \begin{circus}
-\circchannel binder\_writeCall : MissionID \cross SchedulableID \\
-\circchannel binder\_writeRet : MissionID \cross SchedulableID    
+\circchannel binder\_writeCall : MissionID \cross SchedulableID  \cross \num  \\ % put in the params
+\circchannel binder\_writeRet : MissionID \cross SchedulableID    % put in the params
 \end{circus}
 %
 \begin{zed}
@@ -192,8 +192,8 @@ binder\_writeCall, binder\_writeRet
 \begin{circusaction}
 read\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_readCall\\ \t1 ~?~loc\prefixcolon(loc \in readLocs)\\ \t1 ~?~caller\prefixcolon(caller \in readCallers) \then \\
-	readCall~.~loc~.~caller \then \\
+	binder\_readCall\\ \t1 ~?~loc\prefixcolon(loc \in readLocs)\\ \t1 ~?~caller\prefixcolon(caller \in readCallers)  \then \\
+	readCall~.~loc~.~caller  \then \\
 	readRet~.~loc~.~caller~?~ret \then \\
 	binder\_readRet~.~loc~.~caller~!~ret  \then \\
 	read\_MethodBinder
@@ -204,8 +204,8 @@ read\_MethodBinder \circdef \\
 \begin{circusaction}
 write\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_writeCall\\ \t1 ~?~loc\prefixcolon(loc \in writeLocs)\\ \t1 ~?~caller\prefixcolon(caller \in writeCallers) \then \\
-	writeCall~.~loc~.~caller \then \\
+	binder\_writeCall\\ \t1 ~?~loc\prefixcolon(loc \in writeLocs)\\ \t1 ~?~caller\prefixcolon(caller \in writeCallers)  \cross \num  \then \\
+	writeCall~.~loc~.~caller  \cross \num  \then \\
 	writeRet~.~loc~.~caller~?~ret \then \\
 	binder\_writeRet~.~loc~.~caller~!~ret  \then \\
 	write\_MethodBinder

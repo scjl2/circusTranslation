@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
+import java.lang.reflect.Type;
 import hijac.tools.tightrope.environments.FrameworkEnv;
 
 import java.util.ArrayList;
@@ -164,13 +165,7 @@ public class ProgramEnv
 	private List getBinderMethodEnvsMapList()
 	{
 		List binderMethodEnvsMap = new ArrayList();
-
-		// BinderMethodEnv e = new BinderMethodEnv("test");
-		// e.addLocation("testLoc");
-		// e.addCaller("testCaller");
-		//
-		// binderMethodEnvs.add(e);
-
+	
 		for (BinderMethodEnv b : binderMethodEnvs)
 		{
 			Map binderMethodMap = new HashMap();
@@ -182,6 +177,9 @@ public class ProgramEnv
 			binderMethodMap.put("Callers", callers);
 			binderMethodMap.put("Return", b.hasReturn());
 			binderMethodMap.put("ReturnType", b.getReturnType());
+			binderMethodMap.put("Parameters", b.getParameters());
+			binderMethodMap.put("ReturnValue", b.getReturnValue());
+			
 			// TODO need to calculate these!
 			for (String s : locs)
 			{
@@ -369,7 +367,7 @@ public class ProgramEnv
 
 	public void addBinderMethodEnv(String name, String location, String caller)
 	{
-		addBinderMethodEnv(name, location, caller, null);
+		addBinderMethodEnv(name, location, caller, null, null);
 	}
 
 	public MissionIdsEnv getMissionIdsEnv()
@@ -377,8 +375,9 @@ public class ProgramEnv
 		return missionIds;
 	}
 
+	
 	public void addBinderMethodEnv(String name, String location, String caller,
-			String returnType)
+			String returnType, Map<String, Type> parameters)
 	{
 		String id = "ID";
 		boolean existingBME = false;
@@ -388,6 +387,7 @@ public class ProgramEnv
 			{
 				bme.addLocation(location + id);
 				bme.addCaller(caller + id);
+				bme.setParameters(parameters);
 				// bme.setLocationType(location);
 				existingBME = true;
 			}
@@ -397,7 +397,7 @@ public class ProgramEnv
 		{
 			// If the method isn't already there
 			BinderMethodEnv bme = new BinderMethodEnv(name, location + id, caller + id);
-			
+			bme.setParameters(parameters);
 
 			if (returnType != null && !returnType.equals("null"))
 			{

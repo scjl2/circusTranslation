@@ -328,8 +328,8 @@ ${ControlTierSync} \\
 %
 <#list MethodCallBindings as mcb>
 \begin{circus}
-\circchannel binder\_${mcb.Name}Call : ${mcb.LocType} \cross ${mcb.CallerType} \\
-\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} ${mcb.ReturnType}   
+\circchannel binder\_${mcb.Name}Call : ${mcb.LocType} \cross ${mcb.CallerType} <#list mcb.Parameters?keys as paramName> \cross ${mcb.Parameters[paramName]} </#list> \\ % put in the params
+\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} ${mcb.ReturnType}   % put in the params
 \end{circus}
 %
 \begin{zed}
@@ -357,8 +357,8 @@ binder\_${mcb.Name}Call, binder\_${mcb.Name}Ret
 \begin{circusaction}
 ${mcb.Name}\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_${mcb.Name}Call\\ \t1 ~?~loc\prefixcolon(loc \in ${mcb.Name}Locs)\\ \t1 ~?~caller\prefixcolon(caller \in ${mcb.Name}Callers) \then \\
-	${mcb.Name}Call~.~loc~.~caller \then \\
+	binder\_${mcb.Name}Call\\ \t1 ~?~loc\prefixcolon(loc \in ${mcb.Name}Locs)\\ \t1 ~?~caller\prefixcolon(caller \in ${mcb.Name}Callers) <#list mcb.Parameters?keys as paramName> \cross ${mcb.Parameters[paramName]} </#list> \then \\
+	${mcb.Name}Call~.~loc~.~caller <#list mcb.Parameters?keys as paramName> \cross ${mcb.Parameters[paramName]} </#list> \then \\
 	${mcb.Name}Ret~.~loc~.~caller<#if mcb.Return = true>~?~ret</#if> \then \\
 	binder\_${mcb.Name}Ret~.~loc~.~caller<#if mcb.Return = true>~!~ret</#if>  \then \\
 	${mcb.Name}\_MethodBinder

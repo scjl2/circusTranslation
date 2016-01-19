@@ -488,8 +488,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 		/* Are MemberSelect nodes also used for selecting methods too? */
 		return callExprMacro(node, ctxt, "MemberSelect", node.getExpression(),
-				node.getIdentifier());
-		// }
+				node.getIdentifier());	
 	}
 
 	@Override
@@ -611,7 +610,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 //					String location = "";
 					TightRope.getProgramEnv().addBinderMethodEnv(identifier.toString(),
 							varType.toString(),
-							object.getName().toString() , method.getReturnType());
+							object.getName().toString() , method.getReturnType(), method.getParameters());
 				}
 
 				if (method.isAPIMethod())
