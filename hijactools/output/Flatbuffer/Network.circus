@@ -155,24 +155,39 @@ FlatBufferMissionSequencerApp\\
 %%%%%%%%%%%%%%%%%%%%MethodCallBinder
 %
 \begin{circus}
-\circprocess  MethodCallBinder \circdef \\
-\t1 \circblockopen
-	read\_MethodBinder
-	\\ \interleave \\
-	write\_MethodBinder
-	
-\circblockclose
-\end{circus}
-%
-\begin{circus}
 \circchannel binder\_readCall : MissionID \cross SchedulableID \\
-\circchannel binder\_readRet : MissionID \cross SchedulableID \cross \num   \\ \\
+\circchannel binder\_readRet : MissionID \cross SchedulableID \cross \num   
 \end{circus}
 %
 \begin{zed}
 readLocs == \{ FlatBufferMissionID \}  \\
-readCallers == \{ ReaderID \}  \\
+readCallers == \{ ReaderID \}  
 \end{zed}
+%
+\begin{circus}
+\circchannel binder\_writeCall : MissionID \cross SchedulableID \\
+\circchannel binder\_writeRet : MissionID \cross SchedulableID    
+\end{circus}
+%
+\begin{zed}
+writeLocs == \{ FlatBufferMissionID \}  \\
+writeCallers == \{ WriterID \}  
+\end{zed}
+%
+
+\begin{circus}
+\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, 
+binder\_readCall, binder\_readRet
+,\\
+binder\_writeCall, binder\_writeRet
+
+\rchanset
+\end{circus}
+
+\begin{circus}
+\circprocess  MethodCallBinder \circdef \circbegin \\
+\end{circus}
+%
 %
 \begin{circusaction}
 read\_MethodBinder \circdef \\
@@ -181,19 +196,10 @@ read\_MethodBinder \circdef \\
 	readCall~.~loc~.~caller \then \\
 	readRet~.~loc~.~caller~?~ret \then \\
 	binder\_readRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
+	read\_MethodBinder
 	\circblockclose
 \end{circusaction}
 %
-\begin{circus}
-\circchannel binder\_writeCall : MissionID \cross SchedulableID \\
-\circchannel binder\_writeRet : MissionID \cross SchedulableID    \\ \\
-\end{circus}
-%
-\begin{zed}
-writeLocs == \{ FlatBufferMissionID \}  \\
-writeCallers == \{ WriterID \}  \\
-\end{zed}
 %
 \begin{circusaction}
 write\_MethodBinder \circdef \\
@@ -202,11 +208,30 @@ write\_MethodBinder \circdef \\
 	writeCall~.~loc~.~caller \then \\
 	writeRet~.~loc~.~caller~?~ret \then \\
 	binder\_writeRet~.~loc~.~caller~!~ret  \then \\
-	\Skip
+	write\_MethodBinder
 	\circblockclose
 \end{circusaction}
 %
+%
+\begin{circus}
+BinderActions \circdef \\
+\circblockopen 
+	read\_MethodBinder
+	\\ \interleave \\
 
+	write\_MethodBinder
+	
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circspot BinderActions \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\end{circus}
+%
+\begin{circus}
+\circend
+\end{circus}
+%
 \begin{circus}
 \circprocess ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
 \end{circus}
