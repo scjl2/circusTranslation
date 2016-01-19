@@ -659,6 +659,10 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				String returnString = method.getReturnType();
 				List<? extends ExpressionTree> parameters = node.getArguments();
 
+				if (notIgnoredMethod)
+				{
+					sb.append("binder\\_");
+				}
 				sb.append(identifier);
 				sb.append("Call");
 				sb.append("~.~");
@@ -696,6 +700,10 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				}
 				sb.append("\\then \\\\");
 
+				if (notIgnoredMethod)
+				{
+					sb.append("binder\\_");
+				}
 				sb.append(identifier);
 				sb.append("Ret");
 				sb.append("~.~");
