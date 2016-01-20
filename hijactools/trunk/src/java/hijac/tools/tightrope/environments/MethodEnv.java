@@ -18,7 +18,7 @@ public class MethodEnv
 	private String methodName = "";
 	private String returnType = "";
 	private Map<String, Type> parameters = new HashMap<String, Type>();
-	private ArrayList<Name> returnValues = new ArrayList<Name>();
+	protected ArrayList<Name> returnValues = new ArrayList<Name>();
 	private Object body = "";
 	private boolean synchronised = false;
 	private AccessMod accesMod = null;

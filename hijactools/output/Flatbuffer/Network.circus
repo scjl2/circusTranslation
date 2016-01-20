@@ -206,8 +206,8 @@ write\_MethodBinder \circdef \\
 	\t1 \circblockopen
 	binder\_writeCall\\ \t1 ~?~loc\prefixcolon(loc \in writeLocs)\\ \t1 ~?~caller\prefixcolon(caller \in writeCallers)  \cross \num  \then \\
 	writeCall~.~loc~.~caller  \cross \num  \then \\
-	writeRet~.~loc~.~caller~?~ret \then \\
-	binder\_writeRet~.~loc~.~caller~!~ret  \then \\
+	writeRet~.~loc~.~caller \then \\
+	binder\_writeRet~.~loc~.~caller  \then \\
 	write\_MethodBinder
 	\circblockclose
 \end{circusaction}

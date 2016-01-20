@@ -47,16 +47,19 @@ public class BinderMethodEnv extends MethodEnv
 		callers.add(caller);
 	}
 
+	@Deprecated
 	public boolean hasReturn()
 	{
-		if (getReturnValue().equals("null") )//|| getReturnValue() != null)
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
+		return returnValues.isEmpty();
+		
+//		if (getReturnValue().equals("null") )//|| getReturnValue() != null)
+//		{
+//			return false;
+//		}
+//		else
+//		{
+//			return true;
+//		}
 
 	}
 
