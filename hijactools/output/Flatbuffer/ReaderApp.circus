@@ -36,7 +36,7 @@ Run \circdef \\
 
 
 
-            \circblockopen \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\\ \circvar loopVar : \bool \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar) ~ \circthen ~ \\ \t1 \circblockopen \circvar result : \num \circspot result :=~999 \circseq \\ \circblockopen binder\_readCall~.~fbMission~.~ReaderThread\then \\binder\_readRet~.~fbMission~.~ReaderThread~?~read\then \\ \Skip \circblockclose \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot(loopVar) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+            \circblockopen \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission~.~Reader\then \\terminationPendingRet~.~fbMission~.~Reader~?~terminationPending\then \\\ \circvar loopVar : \bool \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar) ~ \circthen ~ \\ \t1 \circblockopen \circvar result : \num \circspot result :=~999 \circseq \\ \circblockopen binder\_readCall~.~fbMission~.~Reader~.~ReaderThread\then \\binder\_readRet~.~fbMission~.~Reader~.~ReaderThread~?~read\then \\ \Skip \circblockclose \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot(loopVar) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 \Skip
         \circblockclose  
 

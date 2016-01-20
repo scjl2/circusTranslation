@@ -667,6 +667,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append("~.~");
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
+				sb.append("~.~");
+				sb.append(objectEnvName.toString());
 				if (method.isSynchronised())
 				{
 					sb.append("~.~");
@@ -708,6 +710,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append("~.~");
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
+				sb.append("~.~");
+				sb.append(objectEnvName.toString());
 				if (method.isSynchronised())
 				{
 					sb.append("~.~");
