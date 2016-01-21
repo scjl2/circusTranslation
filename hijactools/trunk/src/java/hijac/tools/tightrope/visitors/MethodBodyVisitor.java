@@ -595,6 +595,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			else if (isNotMyMethod(methodSelect))
 			{
 				MethodEnv method = getMethodEnvBeingCalled(methodSelect);
+				method.setExternalAppMethod(true);
 
 				// assert(false);
 				// ((MemberSelectTree)

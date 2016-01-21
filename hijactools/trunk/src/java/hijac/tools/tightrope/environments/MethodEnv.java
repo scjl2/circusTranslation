@@ -10,11 +10,21 @@ import javax.lang.model.type.TypeKind;
 
 public class MethodEnv
 {
+	
+
 	public static enum AccessMod
 	{
 		PUBLIC, PRIVATE, PROTECTED
 	};
 
+	private static final String METHOD_NAME = "MethodName";
+	private static final String RETURN_TYPE = "ReturnType";
+	private static final String RETURN_VALUE = "ReturnValue";
+	private static final String ACCESS = "Access";
+	private static final String BODY = "Body";
+	private static final String PARAMETERS_STR = "Parameters";
+	private static final String EXTERNAL_APPMETH = "ExternalAppmeth";
+	
 	private String methodName = "";
 	private String returnType = "";
 	private Map<String, Type> parameters = new HashMap<String, Type>();
@@ -23,6 +33,7 @@ public class MethodEnv
 	private boolean synchronised = false;
 	private AccessMod accesMod = null;
 	private boolean APIMethod;
+	private boolean externalAppMethod = false;
 
 	public MethodEnv(String name)
 	{
@@ -200,5 +211,33 @@ public class MethodEnv
 				+ synchronised + ", access modifier=" + accesMod + ", API method="
 				+ APIMethod;
 
+	}
+
+	public boolean isExternalAppMethod()
+	{
+		return externalAppMethod;
+	}
+
+	public void setExternalAppMethod(boolean externalAppMethod)
+	{
+		this.externalAppMethod = externalAppMethod;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Map toMap()
+	{
+		Map methodMap = new HashMap();
+
+		String s = getMethodName();
+
+		methodMap.put(METHOD_NAME, s);
+		methodMap.put(RETURN_TYPE, getReturnType());
+		methodMap.put(RETURN_VALUE, getReturnValue());
+		methodMap.put(PARAMETERS_STR, getParameters());
+		methodMap.put(ACCESS, getAccessString());
+		methodMap.put(BODY, getBody());
+		methodMap.put(EXTERNAL_APPMETH, isExternalAppMethod());
+
+		return methodMap;
 	}
 }

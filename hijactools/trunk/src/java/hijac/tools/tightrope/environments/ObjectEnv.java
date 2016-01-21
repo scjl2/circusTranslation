@@ -12,11 +12,6 @@ import com.sun.source.tree.Tree;
 
 public class ObjectEnv
 {
-	private static final String RETURN_VALUE = "ReturnValue";
-	protected static final String ACCESS = "Access";
-	protected static final String BODY = "Body";
-	protected static final String RETURN_TYPE = "ReturnType";
-	protected static final String METHOD_NAME = "MethodName";
 	private static final String VAR_INPUT = "VarInput";
 	private static final String VAR_INIT = "VarInit";
 	private static final String VAR_TYPE = "VarType";
@@ -28,7 +23,7 @@ public class ObjectEnv
 	protected static final String PROCESS_ID = "ProcessID";
 	protected static final String IMPORT_NAME = "ImportName";
 	protected static final String HANDLER_TYPE = "HandlerType";
-	protected static final String PARAMETERS_STR = "Parameters";
+
 	protected static final String PARENTS_STR = "Parents";
 	// ClassTree classTree;
 	/**
@@ -576,21 +571,10 @@ public class ObjectEnv
 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	protected Map methodToMap(MethodEnv me)
 	{
-		Map methodMap = new HashMap();
-
-		String s = me.getMethodName();
-
-		methodMap.put(METHOD_NAME, s);
-		methodMap.put(RETURN_TYPE, me.getReturnType());
-		methodMap.put(RETURN_VALUE, me.getReturnValue());
-		methodMap.put(PARAMETERS_STR, me.getParameters());
-		methodMap.put(ACCESS, me.getAccessString());
-		methodMap.put(BODY, me.getBody());
-
-		return methodMap;
+		return me.toMap();
 	}
 
 	public List<MethodEnv> getMeths()

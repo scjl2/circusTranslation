@@ -34,6 +34,7 @@ import java.util.Map;
  */
 public class CircusGenerator
 {
+	private static final String ID_TYPE = "IDType";
 	private static final String CLASS_CIRCUS = "Class.circus";
 	private static final String CLASS_TEMPLATE_FTL = "Class-Template.ftl";
 	private static final String FILE_DELIMITER = "/";
@@ -213,7 +214,8 @@ public class CircusGenerator
 		if (!objEnv.getMeths().isEmpty() && !objEnv.getSyncMeths().isEmpty())
 		{
 			objEnv.getMeths().remove("handleAsyncEvent");
-			chanMap.put("IDType", "SchedulableID");
+			//TODO Calculate ID TYPE
+			chanMap.put(ID_TYPE, "SchedulableID");
 			translateCommon(chanMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
 		}
