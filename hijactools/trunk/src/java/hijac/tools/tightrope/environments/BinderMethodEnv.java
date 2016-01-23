@@ -1,22 +1,24 @@
 package hijac.tools.tightrope.environments;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-public class BinderMethodEnv extends MethodEnv
+public class BinderMethodEnv //extends MethodEnv
 {
 	private Set<String> locations;
 	private Set<String> callers;
-	private String locatioNType = "";
+	private String locationType = "";
 	private String callerType = "";
 
 	public BinderMethodEnv(String name)
 	{
-		super(name);
+		//super(name);
 		locations = new HashSet<String>();
 		callers = new HashSet<String>();
 		
-		setReturnType("");
+		//setReturnType("");
 	}
 
 	public BinderMethodEnv(String name, String location, String caller)
@@ -47,30 +49,33 @@ public class BinderMethodEnv extends MethodEnv
 		callers.add(caller);
 	}
 
-	@Deprecated
-	public boolean hasReturn()
-	{
-		return returnValues.isEmpty();
-		
-//		if (getReturnValue().equals("null") )//|| getReturnValue() != null)
-//		{
-//			return false;
-//		}
-//		else
-//		{
-//			return true;
-//		}
-
-	}
+//	@Deprecated
+//	public boolean hasReturn()
+//	{
+//		return returnValues.isEmpty();
+//		
+////		if (getReturnValue().equals("null") )//|| getReturnValue() != null)
+////		{
+////			return false;
+////		}
+////		else
+////		{
+////			return true;
+////		}
+//
+//	}
 
 	public String getLocationType()
 	{		
-		return locatioNType;
+		assert(this.locationType!= null );
+		return this.locationType;
 	}
 	
 	public void setLocationType(String locType)
 	{
-		locatioNType = locType;
+		assert(locType != null);
+		this.locationType = locType;
+		assert(this.locationType.equals(locType));
 	}
 
 	public String getCallerType()
@@ -81,5 +86,17 @@ public class BinderMethodEnv extends MethodEnv
 	public void setCallerType(String callerType)
 	{
 		this.callerType = callerType;
+	}
+	
+	public Map toMap()
+	{
+		Map returnMap = new HashMap();
+		
+		returnMap.put("Locs", locations);
+		returnMap.put("Callers", callers);
+		returnMap.put("CallerType", callerType);
+		returnMap.put("LocationType", locationType);
+		
+		return returnMap;
 	}
 }

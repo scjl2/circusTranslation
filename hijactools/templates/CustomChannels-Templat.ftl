@@ -2,9 +2,10 @@
   \SECTION ~ ${ProcessID}MethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
 \end{zsection}
 %
+
 <#list Methods as meth>
 \begin{circus}
-\t1 \circchannel ${meth.MethodName}Call : <#if IDType!="">${IDType} </#if> ${meth.ExternalAppmeth?then('\cross ', '')}  <#if meth.Parameters?has_content> \cross
+\t1 \circchannel ${meth.MethodName}Call : ${meth.LocType} <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> <#if meth.Parameters?has_content> \cross
 <#list meth.Parameters?values as param>
 ${param}
 <#sep>\cross </#sep>
@@ -12,9 +13,9 @@ ${param}
 </#if>
 \\
 <#if meth.ReturnType != 'null'>
-\t1 \circchannel ${meth.MethodName}Ret : <#if IDType!="">${IDType} \cross </#if> ${meth.ExternalAppmeth?then('Y', '')}  ${meth.ReturnType} \\
+\t1 \circchannel ${meth.MethodName}Ret : ${meth.LocType} <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> \cross ${meth.ReturnType} \\
 <#else>
-\t1 \circchannel ${meth.MethodName}Ret <#if IDType!="">: ${IDType} </#if> ${meth.ExternalAppmeth?then('Y', '')} \\
+\t1 \circchannel ${meth.MethodName}Ret : ${meth.LocType} <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> \\
 </#if>    
 \end{circus}	
 %
@@ -22,7 +23,7 @@ ${param}
 %
 <#list SyncMethods as meth>
 \begin{circus}
-\t1 \circchannel ${meth.MethodName}Call : <#if IDType!="">${IDType} \cross</#if> ThreadID ${meth.ExternalAppmeth?then('Y', '')}  <#if meth.Parameters?has_content> \cross
+\t1 \circchannel ${meth.MethodName}Call : ${meth.LocType}  <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> \cross ThreadID <#if meth.Parameters?has_content> \cross
 <#list meth.Parameters?values as param>
 ${param}
 <#sep>\cross </#sep>
@@ -30,9 +31,9 @@ ${param}
 </#if>
   \\
 <#if meth.ReturnType != 'null'>
-\t1 \circchannel ${meth.MethodName}Ret : <#if IDType!="">${IDType} \cross </#if> ThreadID ${meth.ExternalAppmeth?then('Y', '')} \cross ${meth.ReturnType} \\
+\t1 \circchannel ${meth.MethodName}Ret : ${meth.LocType}  <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> \cross ThreadID \cross ${meth.ReturnType} \\
 <#else>
-\t1 \circchannel ${meth.MethodName}Ret <#if IDType!="">: ${IDType} \cross </#if> ThreadID ${meth.ExternalAppmeth?then('Y', '')} \\
+\t1 \circchannel ${meth.MethodName}Ret : ${meth.LocType}  <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> \cross ThreadID \\
 </#if>  
 \end{circus}
 % 

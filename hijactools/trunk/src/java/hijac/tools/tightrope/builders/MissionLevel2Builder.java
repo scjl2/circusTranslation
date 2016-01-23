@@ -51,7 +51,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 		schedulables = new ArrayList<Name>();
 		registersVisitor = new RegistersVisitor(missionEnv, analysis);
-		methodVisitor = new MethodVisitor(analysis, missionEnv);
+		methodVisitor = new MethodVisitor(analysis, missionEnv, IDType.MissionID);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -63,6 +63,8 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 		List<Tree> missionMembers = (List<Tree>) missionClassTree.getMembers();
 		Iterator<Tree> missionMembersIterator = missionMembers.iterator();
+		
+		MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv, IDType.MissionID);
 
 		while (missionMembersIterator.hasNext())
 		{
@@ -116,7 +118,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 				else
 				{
 					// ADD METHOD TO MISSION ENV
-					MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv);
+					
 
 					if (syncMethod)
 					{
@@ -125,6 +127,9 @@ public class MissionLevel2Builder extends ParadigmBuilder
 						// returns,
 						// paramMap);
 						MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false);
+						
+						
+						
 						setMethodAccess(missionMethodTree, m);
 						missionEnv.addSyncMeth(m);
 
@@ -137,15 +142,16 @@ public class MissionLevel2Builder extends ParadigmBuilder
 							MethodEnv m = methodVisitor.visitMethod(missionMethodTree,
 									false);
 
+							
+							
 							setMethodAccess(missionMethodTree, m);
 							missionEnv.getClassEnv().addMeth(m);
 
-							MethodEnv m2 = methodVisitor.visitMethod(missionMethodTree,
-									false);
+							MethodEnv m2 = methodVisitor.visitMethod(missionMethodTree,	false);
 
-							System.out.println("/// method params 2 ="
-									+ m2.getParameters());
-							System.out.println("/// m2 sync? = " + m2.isSynchronised());
+//							System.out.println("/// method params 2 ="
+//									+ m2.getParameters());
+//							System.out.println("/// m2 sync? = " + m2.isSynchronised());
 							StringBuilder body;
 
 							if (m2.getReturnType() == "null")

@@ -2,27 +2,28 @@
   \SECTION ~ FlatBufferMissionMethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
 \end{zsection}
 %
+
 \begin{circus}
-\t1 \circchannel bufferEmptyCall :SchedulableID  N  \\
-\t1 \circchannel bufferEmptyRet : SchedulableID \cross  N  \boolean \\
+\t1 \circchannel bufferEmptyCall : MissionID  \\
+\t1 \circchannel bufferEmptyRet : MissionID  \cross \boolean \\
 \end{circus}	
 %
 \begin{circus}
-\t1 \circchannel cleanUpCall :SchedulableID  N  \\
-\t1 \circchannel cleanUpRet : SchedulableID \cross  N  \boolean \\
+\t1 \circchannel cleanUpCall : MissionID  \\
+\t1 \circchannel cleanUpRet : MissionID  \cross \boolean \\
 \end{circus}	
 %
 %
 \begin{circus}
-\t1 \circchannel writeCall : SchedulableID \cross ThreadID Y   \cross
+\t1 \circchannel writeCall : MissionID   \cross CallerTest  \cross ThreadID  \cross
 \num
 
   \\
-\t1 \circchannel writeRet : SchedulableID \cross  ThreadID Y \\
+\t1 \circchannel writeRet : MissionID   \cross CallerTest  \cross ThreadID \\
 \end{circus}
 % 
 \begin{circus}
-\t1 \circchannel readCall : SchedulableID \cross ThreadID Y    \\
-\t1 \circchannel readRet : SchedulableID \cross  ThreadID Y \cross \num \\
+\t1 \circchannel readCall : MissionID   \cross CallerTest  \cross ThreadID   \\
+\t1 \circchannel readRet : MissionID   \cross CallerTest  \cross ThreadID \cross \num \\
 \end{circus}
 % 

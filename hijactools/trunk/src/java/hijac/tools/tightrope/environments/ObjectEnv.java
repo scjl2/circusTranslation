@@ -411,7 +411,7 @@ public class ObjectEnv
 
 	public void addSyncMeth(MethodEnv me)
 	{
-		System.out.println("Adding Sync Meth " + me.getMethodName());
+		System.out.println("Adding Sync Meth " + me.toString());
 		me.setSynchronised(true);
 		syncMeths.add(me);
 

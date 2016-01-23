@@ -17,7 +17,7 @@ public class ProgramEnv
 {
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
-	private List<BinderMethodEnv> binderMethodEnvs;
+	private List<MethodEnv> binderMethodEnvs;
 
 	private MissionIdsEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
@@ -28,7 +28,7 @@ public class ProgramEnv
 	{
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
-		this.binderMethodEnvs = new ArrayList<BinderMethodEnv>();
+		this.binderMethodEnvs = new ArrayList<MethodEnv>();
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
@@ -166,7 +166,7 @@ public class ProgramEnv
 	{
 		List binderMethodEnvsMap = new ArrayList();
 	
-		for (BinderMethodEnv b : binderMethodEnvs)
+		for (MethodEnv b : binderMethodEnvs)
 		{
 			Map binderMethodMap = new HashMap();
 			Set<String> locs = b.getLocations();
@@ -185,7 +185,7 @@ public class ProgramEnv
 			{
 				if (missionIds.contains(s))
 				{
-					b.setLocationType("MissionID");
+//					b.setLocationType("MissionID");
 					binderMethodMap.put("LocType", b.getLocationType());
 				}
 			}
@@ -360,7 +360,7 @@ public class ProgramEnv
 
 	}
 
-	public List<BinderMethodEnv> getBinderMethodEnvs()
+	public List<MethodEnv> getBinderMethodEnvs()
 	{
 		return binderMethodEnvs;
 	}
@@ -381,30 +381,32 @@ public class ProgramEnv
 	{
 		String id = "ID";
 		boolean existingBME = false;
-		for (BinderMethodEnv bme : binderMethodEnvs)
-		{
-			if (bme.getMethodName().equals(name))
+		for (MethodEnv me : binderMethodEnvs)
+		{								
+			if (me.getMethodName().equals(name))
 			{
-				bme.addLocation(location + id);
-				bme.addCaller(caller + id);
-				bme.setParameters(parameters);
-				// bme.setLocationType(location);
+				me.addLocation(location + id);
+				me.addCaller(caller + id);
+				me.setParameters(parameters);
+//				me.setLocationType(location);
+				
 				existingBME = true;
 			}
+			
 		}
 
-		if (!existingBME)
-		{
-			// If the method isn't already there
-			BinderMethodEnv bme = new BinderMethodEnv(name, location + id, caller + id);
-			bme.setParameters(parameters);
-
-			if (returnType != null && !returnType.equals("null"))
-			{
-				bme.setReturnType("\\cross " + returnType);
-			}
-			binderMethodEnvs.add(bme);
-		}
+//		if (!existingBME)
+//		{
+//			// If the method isn't already there
+//			BinderMethodEnv bme = new BinderMethodEnv(name, location + id, caller + id);
+//			bme.setParameters(parameters);
+//
+//			if (returnType != null && !returnType.equals("null"))
+//			{
+//				bme.setReturnType("\\cross " + returnType);
+//			}
+//			binderMethodEnvs.add(bme);
+//		}
 
 	}
 }

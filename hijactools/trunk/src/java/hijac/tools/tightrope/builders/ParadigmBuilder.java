@@ -26,6 +26,7 @@ public abstract class ParadigmBuilder
 	protected ProgramEnv programEnv;
 	protected static SCJAnalysis analysis;
 	protected EnvironmentBuilder environmentBuilder;
+	public enum IDType {MissionID,SchedulableID};
 
 	public ParadigmBuilder(SCJAnalysis analysis, ProgramEnv programEnv,
 			EnvironmentBuilder environmentBuilder)

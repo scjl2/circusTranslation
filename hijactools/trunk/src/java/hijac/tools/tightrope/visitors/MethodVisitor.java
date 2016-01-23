@@ -3,7 +3,9 @@ package hijac.tools.tightrope.visitors;
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.application.TightRope;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
+import hijac.tools.tightrope.builders.ParadigmBuilder.IDType;
 import hijac.tools.tightrope.environments.MethodEnv;
+import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.generators.NewSCJApplication;
@@ -35,8 +37,9 @@ public class MethodVisitor
 {
 	private static NewSCJApplication application;
 	private static MethodBodyVisitor franksMethodVisitor;
-
+	
 	private ObjectEnv object;
+	private String idType;
 
 	public MethodVisitor(SCJAnalysis analysis, ObjectEnv object)
 	{
@@ -44,6 +47,14 @@ public class MethodVisitor
 		this.object = object;
 		MethodVisitor.application = TightRope.getSCJApplication();
 		MethodVisitor.franksMethodVisitor = new MethodBodyVisitor(application, object);
+		idType = "blankID";
+		
+	}
+	
+	public MethodVisitor(SCJAnalysis analysis, MissionEnv missionEnv, IDType idType)
+	{
+		this(analysis, missionEnv);
+		this.idType = idType.toString();
 	}
 
 	public MethodEnv visitMethod(MethodTree mt, Boolean isConstructor)
@@ -110,6 +121,11 @@ public class MethodVisitor
 		}
 
 		getModifiers(mt, m);
+		assert(idType != null && (!idType.equals("")));
+		m.setLocationType("MissionID");
+		
+		assert(m.getLocationType() != null);
+//		assert(m.getLocationType().equals(idType));
 
 		return m;
 	}
