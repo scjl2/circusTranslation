@@ -370,8 +370,8 @@ ${mcb.Name}\_MethodBinder \circdef \\
 	\t1 \circblockopen
 	binder\_${mcb.Name}Call\\ \t1 ~?~loc\prefixcolon(loc \in ${mcb.Name}Locs)\\ \t1 ~?~caller\prefixcolon(caller \in ${mcb.Name}Callers) <#list mcb.Parameters?keys as paramName> \cross ${mcb.Parameters[paramName]} </#list> \then \\
 	${mcb.Name}Call~.~loc~.~caller <#list mcb.Parameters?keys as paramName> \cross ${mcb.Parameters[paramName]} </#list> \then \\
-	${mcb.Name}Ret~.~loc~.~caller<#if mcb.ReturnType != "">~?~ret</#if> \then \\
-	binder\_${mcb.Name}Ret~.~loc~.~caller<#if mcb.ReturnType != "">~!~ret</#if>  \then \\
+	${mcb.Name}Ret~.~loc~.~caller<#if mcb.ReturnType != 'null'>~?~ret</#if> \then \\
+	binder\_${mcb.Name}Ret~.~loc~.~caller<#if mcb.ReturnType != 'null'>~!~ret</#if>  \then \\
 	${mcb.Name}\_MethodBinder
 	\circblockclose
 \end{circusaction}
