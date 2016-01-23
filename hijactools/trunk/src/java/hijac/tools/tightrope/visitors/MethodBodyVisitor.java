@@ -609,9 +609,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				if (notIgnoredMethod)
 				{
 //					String location = "";
-					TightRope.getProgramEnv().addBinderMethodEnv(identifier.toString(),
+					TightRope.getProgramEnv().addBinderMethodEnv(method,
 							varType.toString(),
-							object.getName().toString() , method.getReturnType(), method.getParameters());
+							object.getName().toString() );
 				}
 
 				if (method.isAPIMethod())

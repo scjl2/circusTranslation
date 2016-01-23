@@ -154,9 +154,33 @@ FlatBufferMissionSequencerApp\\
 %
 %%%%%%%%%%%%%%%%%%%%MethodCallBinder
 %
+\begin{circus}
+\circchannel binder\_readCall :  \cross   \\ % put in the params
+\circchannel binder\_readRet :  \cross  \num   % put in the params
+\end{circus}
+%
+\begin{zed}
+readLocs == \{ FlatBufferMission \}  \\
+readCallers == \{ Reader \}  
+\end{zed}
+%
+\begin{circus}
+\circchannel binder\_writeCall :  \cross   \cross \num  \\ % put in the params
+\circchannel binder\_writeRet :  \cross  null   % put in the params
+\end{circus}
+%
+\begin{zed}
+writeLocs == \{ FlatBufferMission \}  \\
+writeCallers == \{ Writer \}  
+\end{zed}
+%
 
 \begin{circus}
 \circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, 
+binder\_readCall, binder\_readRet
+,\\
+binder\_writeCall, binder\_writeRet
+
 \rchanset
 \end{circus}
 
@@ -165,9 +189,39 @@ FlatBufferMissionSequencerApp\\
 \end{circus}
 %
 %
+\begin{circusaction}
+read\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_readCall\\ \t1 ~?~loc\prefixcolon(loc \in readLocs)\\ \t1 ~?~caller\prefixcolon(caller \in readCallers)  \then \\
+	readCall~.~loc~.~caller  \then \\
+	readRet~.~loc~.~caller~?~ret \then \\
+	binder\_readRet~.~loc~.~caller~!~ret  \then \\
+	read\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+write\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_writeCall\\ \t1 ~?~loc\prefixcolon(loc \in writeLocs)\\ \t1 ~?~caller\prefixcolon(caller \in writeCallers)  \cross \num  \then \\
+	writeCall~.~loc~.~caller  \cross \num  \then \\
+	writeRet~.~loc~.~caller~?~ret \then \\
+	binder\_writeRet~.~loc~.~caller~!~ret  \then \\
+	write\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
 \begin{circus}
 BinderActions \circdef \\
-\circblockopen \circblockclose
+\circblockopen 
+	read\_MethodBinder
+	\\ \interleave \\
+
+	write\_MethodBinder
+	
+\circblockclose
 \end{circus}
 %
 \begin{circus}

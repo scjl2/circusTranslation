@@ -157,6 +157,7 @@ public class ProgramEnv
 		returnMap.put("Objects", getObjectIdsMap());
 		returnMap.put("Threads", getThreadIdsMap());
 		returnMap.put("MethodCallBindings", getBinderMethodEnvsMapList());
+		
 
 		return returnMap;
 	}
@@ -165,7 +166,7 @@ public class ProgramEnv
 	private List getBinderMethodEnvsMapList()
 	{
 		List binderMethodEnvsMap = new ArrayList();
-	
+		
 		for (MethodEnv b : binderMethodEnvs)
 		{
 			Map binderMethodMap = new HashMap();
@@ -375,7 +376,8 @@ public class ProgramEnv
 		return missionIds;
 	}
 
-	
+	//not adding anything to the list
+	@Deprecated
 	public void addBinderMethodEnv(String name, String location, String caller,
 			String returnType, Map<String, Type> parameters)
 	{
@@ -408,5 +410,14 @@ public class ProgramEnv
 //			binderMethodEnvs.add(bme);
 //		}
 
+	}
+
+	public void addBinderMethodEnv(MethodEnv method, String location, String caller)
+	{
+		method.addLocation(location);
+		method.addCaller(caller);
+		
+		binderMethodEnvs.add(method);
+		
 	}
 }
