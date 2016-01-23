@@ -122,7 +122,8 @@ public class MethodVisitor
 
 		getModifiers(mt, m);
 		assert(idType != null && (!idType.equals("")));
-		m.setLocationType("MissionID");
+		m.setLocationType(idType);
+		
 		
 		assert(m.getLocationType() != null);
 //		assert(m.getLocationType().equals(idType));

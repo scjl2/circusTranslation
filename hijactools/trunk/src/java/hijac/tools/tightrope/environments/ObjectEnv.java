@@ -80,6 +80,11 @@ public class ObjectEnv
 		newChannels = new ArrayList<ChannelEnv>();
 		parents = new ArrayList<String>();
 	}
+	
+	public String getIdType()
+	{
+		return "";
+	}
 
 	public Name getName()
 	{

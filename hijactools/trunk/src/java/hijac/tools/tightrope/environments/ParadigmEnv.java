@@ -7,6 +7,8 @@ import java.util.Map;
 public abstract class ParadigmEnv extends ObjectEnv
 {
 
+	private static final String MISSION_ID = "MissionID";
+	private static final String SCHEDULABLE_ID = "SchedulableID";
 	private static final String PROC_PARAMETERS = "ProcParameters";
 	private static final String APP_PARAMETERS = "AppParameters";
 	private static final String FW_PARAMETERS = "FWParameters";
@@ -87,5 +89,22 @@ public abstract class ParadigmEnv extends ObjectEnv
 		}
 
 		return GENERIC_PARADIGM_TYPES;
+	}
+
+	public String getIdType()
+	{
+		if ((this instanceof EventHandlerEnv) || this instanceof ManagedThreadEnv
+				|| this instanceof NestedMissionSequencerEnv)
+		{
+			return SCHEDULABLE_ID;
+		}
+		else if (this instanceof MissionEnv)
+		{
+			return MISSION_ID;
+		}
+		else
+		{
+			return "";
+		}
 	}
 }

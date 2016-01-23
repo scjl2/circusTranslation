@@ -170,35 +170,35 @@ public class ProgramEnv
 		for (MethodEnv b : binderMethodEnvs)
 		{
 			Map binderMethodMap = new HashMap();
-			Set<String> locs = b.getLocations();
-			Set<String> callers = b.getCallers();
 
 			binderMethodMap.put("Name", b.getMethodName());
-			binderMethodMap.put("Locations", locs);
-			binderMethodMap.put("Callers", callers);
+			binderMethodMap.put("Locations", b.getLocations());
+			binderMethodMap.put("Callers", b.getCallers());
 			binderMethodMap.put("Return", b.hasReturn());
 			binderMethodMap.put("ReturnType", b.getReturnType());
 			binderMethodMap.put("Parameters", b.getParameters());
 			binderMethodMap.put("ReturnValue", b.getReturnValue());
+			binderMethodMap.put("LocType", b.getLocationType());
+			binderMethodMap.put("CallerType", b.getCallerType());
 			
-			// TODO need to calculate these!
-			for (String s : locs)
-			{
-				if (missionIds.contains(s))
-				{
-//					b.setLocationType("MissionID");
-					binderMethodMap.put("LocType", b.getLocationType());
-				}
-			}
-
-			for (String s : callers)
-			{
-				if (schedulableIds.contains(s))
-				{
-					b.setCallerType("SchedulableID");
-					binderMethodMap.put("CallerType", b.getCallerType());
-				}
-			}
+//			// TODO need to calculate these!
+//			for (String s : locs)
+//			{
+//				if (missionIds.contains(s))
+//				{
+////					b.setLocationType("MissionID");
+//					binderMethodMap.put("LocType", b.getLocationType());
+//				}
+//			}
+//
+//			for (String s : callers)
+//			{
+//				if (schedulableIds.contains(s))
+//				{
+//					b.setCallerType("SchedulableID");
+//					binderMethodMap.put("CallerType", b.getCallerType());
+//				}
+//			}
 
 			binderMethodEnvsMap.add(binderMethodMap);
 		}
@@ -412,10 +412,11 @@ public class ProgramEnv
 
 	}
 
-	public void addBinderMethodEnv(MethodEnv method, String location, String caller)
+	public void addBinderMethodEnv(MethodEnv method, String location, String caller, String callerType)
 	{
 		method.addLocation(location);
 		method.addCaller(caller);
+		method.setCallerType(callerType);
 		
 		binderMethodEnvs.add(method);
 		

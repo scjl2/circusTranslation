@@ -326,7 +326,7 @@ public class MethodEnv
 	public void setCallerType(String callerType)
 	{
 //		methodCallBinding.setCallerType(callerType);
-		callerType = callerType;
+		this.callerType = callerType;
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -347,8 +347,8 @@ public class MethodEnv
 //		methodMap.put("LocType", "LocTest");
 		methodMap.put("Locs", getLocations());
 		methodMap.put("Callers", getCallers());
-//		methodMap.put("CallerType", getCallerType());
-		methodMap.put("CallerType", "CallerTest");
+		methodMap.put("CallerType", getCallerType());
+//		methodMap.put("CallerType", "CallerTest");
 		
 		
 		

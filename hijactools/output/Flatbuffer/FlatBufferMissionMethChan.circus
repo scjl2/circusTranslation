@@ -15,15 +15,15 @@
 %
 %
 \begin{circus}
-\t1 \circchannel writeCall : MissionID   \cross CallerTest  \cross ThreadID  \cross
+\t1 \circchannel writeCall : MissionID   \cross SchedulableID  \cross ThreadID  \cross
 \num
 
   \\
-\t1 \circchannel writeRet : MissionID   \cross CallerTest  \cross ThreadID \\
+\t1 \circchannel writeRet : MissionID   \cross SchedulableID  \cross ThreadID \\
 \end{circus}
 % 
 \begin{circus}
-\t1 \circchannel readCall : MissionID   \cross CallerTest  \cross ThreadID   \\
-\t1 \circchannel readRet : MissionID   \cross CallerTest  \cross ThreadID \cross \num \\
+\t1 \circchannel readCall : MissionID   \cross SchedulableID  \cross ThreadID   \\
+\t1 \circchannel readRet : MissionID   \cross SchedulableID  \cross ThreadID \cross \num \\
 \end{circus}
 % 

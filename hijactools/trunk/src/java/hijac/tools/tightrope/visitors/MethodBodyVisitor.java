@@ -9,6 +9,7 @@ import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.MissionSequencerEnv;
+import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
@@ -602,16 +603,22 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				// node.getMethodSelect()).getExpression().toString();
 				boolean notIgnoredMethod = ( (!identifier.contentEquals("release")) &&
 											 (!identifier.contentEquals("requestTermination")) &&
-											 (!identifier.contentEquals("terminationPending")) 
-												
+											 (!identifier.contentEquals("terminationPending")) 												
 											);
 
 				if (notIgnoredMethod)
 				{
-//					String location = "";
+					
 					TightRope.getProgramEnv().addBinderMethodEnv(method,
 							varType.toString(),
-							object.getName().toString() );
+							object.getName().toString(),  object.getIdType());
+					
+					
+					
+//					System.out.println("Add Binder Method: " + "location="+varType.toString() + " caller="+
+//							object.getName().toString());
+					
+					
 				}
 
 				if (method.isAPIMethod())

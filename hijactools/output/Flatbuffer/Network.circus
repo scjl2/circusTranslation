@@ -155,8 +155,9 @@ FlatBufferMissionSequencerApp\\
 %%%%%%%%%%%%%%%%%%%%MethodCallBinder
 %
 \begin{circus}
-\circchannel binder\_readCall :  \cross   \\ % put in the params
-\circchannel binder\_readRet :  \cross  \num   % put in the params
+ 
+\circchannel binder\_readCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_readRet : MissionID \cross SchedulableID \cross \num \\
 \end{circus}
 %
 \begin{zed}
@@ -165,8 +166,12 @@ readCallers == \{ Reader \}
 \end{zed}
 %
 \begin{circus}
-\circchannel binder\_writeCall :  \cross   \cross \num  \\ % put in the params
-\circchannel binder\_writeRet :  \cross  null   % put in the params
+ 
+\circchannel binder\_writeCall :  MissionID  \cross SchedulableID   \cross
+\num
+
+\\
+\circchannel binder\_writeRet : MissionID  \cross SchedulableID  \\
 \end{circus}
 %
 \begin{zed}

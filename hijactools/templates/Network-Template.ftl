@@ -328,8 +328,19 @@ ${ControlTierSync} \\
 %
 <#list MethodCallBindings as mcb>
 \begin{circus}
-\circchannel binder\_${mcb.Name}Call : ${mcb.LocType} \cross ${mcb.CallerType} <#list mcb.Parameters?keys as paramName> \cross ${mcb.Parameters[paramName]} </#list> \\ % put in the params
-\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} ${mcb.ReturnType}   % put in the params
+ 
+\circchannel binder\_${mcb.Name}Call :  ${mcb.LocType}  \cross ${mcb.CallerType}  <#if mcb.Parameters?has_content> \cross
+<#list mcb.Parameters?values as param>
+${param}
+<#sep>\cross </#sep>
+</#list>
+</#if>
+\\
+<#if mcb.ReturnType != 'null'>
+\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} \cross ${mcb.ReturnType} \\
+<#else>
+\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType}  \cross ${mcb.CallerType}  \\
+</#if>  
 \end{circus}
 %
 \begin{zed}
