@@ -142,9 +142,9 @@ FlatBufferMissionSequencerApp\\
 \interleave \\
 		FlatBufferMissionApp\\
 		\interleave \\
-			ReaderApp\\
+			ReaderApp ( FlatBufferMissionID  ) \\
 			\interleave \\
-			WriterApp\\
+			WriterApp ( FlatBufferMissionID  ) \\
 			
 		
 \circblockclose
@@ -248,9 +248,9 @@ BinderActions \circdef \\
 \begin{circus}
 \circprocess Threads \circdef  \\
 \circblockopen
-ThreadFW(ReaderThreadID, ) \\
+ThreadFW(ReaderThreadID, 10) \\
 \interleave \\
-ThreadFW(WriterThreadID, ) \\
+ThreadFW(WriterThreadID, 10) \\
 
 \circblockclose
 \end{circus}

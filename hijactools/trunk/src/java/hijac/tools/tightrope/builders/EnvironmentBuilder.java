@@ -34,6 +34,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -513,7 +514,7 @@ public class EnvironmentBuilder
 
 			Tree tree = deferred.tree;
 			String nameOfClassBeingTranslated = "";
-
+			System.out.println("Tree kind = "+ tree.getKind());
 			if (tree instanceof VariableTree)
 			{
 				System.out.println("Tree: " + tree + " instance of VairableTree ");
@@ -546,6 +547,31 @@ public class EnvironmentBuilder
 
 				nameOfClassBeingTranslated = ((NewClassTree) tree).getIdentifier()
 						.toString();
+			}
+			else if (tree instanceof ExpressionStatementTree)
+			{
+				System.out.println("Tree: " + tree + " instance of ExpressionStatement ");
+
+				ExpressionTree et = ((ExpressionStatementTree) tree).getExpression();
+				
+				System.out.println("et kind = " + et.getKind());
+				
+				if (et instanceof NewClassTree)
+				{
+					System.out.println("Tree: " + tree + " instance of ExpressionStatement->Expression->NewClassTree ");
+
+					args = ((NewClassTree) tree).getArguments();
+
+					ExpressionTree identifierTree = ((NewClassTree) tree).getIdentifier();
+					//
+					System.out.println("trying to get objectEnv for " + identifierTree);
+
+					objectWithParams = programEnv.getObjectEnv(identifierTree.toString());
+
+					nameOfClassBeingTranslated = ((NewClassTree) tree).getIdentifier()
+							.toString();
+				}
+				
 			}
 
 			System.out.println("args = " + args.toString());
