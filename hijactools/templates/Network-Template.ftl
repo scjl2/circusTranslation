@@ -3,7 +3,7 @@
 
 \newpage
 
-\subsectionMethodCallBinder}
+\subsection{MethodCallBinder}
 \input{NetworkMethodCallBinder.tex}
 
 \newpage

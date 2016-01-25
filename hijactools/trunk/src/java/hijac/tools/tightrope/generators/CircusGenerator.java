@@ -34,6 +34,14 @@ import java.util.Map;
  */
 public class CircusGenerator
 {
+	private static final String NETWORK_PROGRAM_TEX = "NetworkProgram.tex";
+	private static final String NETWORK_PROGRAM_TEMPLATE_FTL = "NetworkProgram-Template.ftl";
+	private static final String NETWORK_LOCKING_TEX = "NetworkLocking.tex";
+	private static final String NETWORK_LOCKING_TEMPLATE_FTL = "NetworkLocking-Template.ftl";
+	private static final String NETWORK_METHOD_CALL_BINDER_TEX = "NetworkMethodCallBinder.tex";
+	private static final String NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL = "NetworkMethodCallBinder-Template.ftl";
+	private static final String NETWORK_CHAN_TEX = "NetworkChan.tex";
+	private static final String NETWORK_CHAN_TEMPLATE_FTL = "NetworkChan-Template.ftl";
 	private static final String ID_TYPE = "IDType";
 	private static final String CLASS_CIRCUS = "Class.circus";
 	private static final String CLASS_TEMPLATE_FTL = "Class-Template.ftl";
@@ -261,11 +269,26 @@ public class CircusGenerator
 		System.out.println("+++ Translating Network +++ ");
 		/* Create a data-model */
 		Map root = programEnv.geNetworkMap();
+		
+		System.out.println("+++ Translating Network Channels +++");
+		translateCommon(root, NETWORK_CHAN_TEMPLATE_FTL, NETWORK_CHAN_TEX);
+		
+		System.out.println("+++ Translating Method Call Binder +++");	
+		translateCommon(root, NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL, NETWORK_METHOD_CALL_BINDER_TEX);
+		
+		translateCommon(root, "MethodCallBindingChannels.ftl", "MethodCallBindingChannels.tex");
+		
+		System.out.println("+++ Translating Locking +++");	
+		translateCommon(root, NETWORK_LOCKING_TEMPLATE_FTL, NETWORK_LOCKING_TEX);
+		
+		System.out.println("+++ Translating Program +++");	
+		translateCommon(root, NETWORK_PROGRAM_TEMPLATE_FTL, NETWORK_PROGRAM_TEX);
+		
 
 		translateCommon(root, NETWORK_TEMPLATE_FTL, NETWORK_CIRCUS);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateSafelet()
 	{
 		System.out.println("+++ Translating Safelet +++ ");
@@ -292,7 +315,7 @@ public class CircusGenerator
 		translateClass(classEnv);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateTopLevelMissionSequencers()
 	{
 		System.out.println("+++ Translating Top Level Mission Sequencers +++");
@@ -325,7 +348,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateMissions()
 	{
 		System.out.println("+++ Translating Missions +++");
@@ -359,7 +382,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateNestedMissionSequencers()
 	{
 		System.out.println("+++ Translating Nested Mission Sequencers +++");
@@ -391,7 +414,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateManagedThreads()
 	{
 		System.out.println("+++ Translating Managed Threads +++ ");
@@ -435,7 +458,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateOneShotEventHandlers()
 	{
 		System.out.println("+++ Translating One Shot Event Handlers +++");
@@ -466,7 +489,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translatePeriodicEventHandlers()
 	{
 		System.out.println("+++ Translating Periodic Event Handlers +++");
