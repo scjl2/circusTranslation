@@ -6,13 +6,13 @@
 %\begin{circus}
 %\circchannelset FlatBufferAppSync \circdef \\
 %   \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
-%\end{circus}    
-    
+%\end{circus}
+
 %\begin{circus}
 %\circchannelset FlatBufferChanSet \circdef \\
 %  \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
-%\end{circus}     
-  
+%\end{circus}
+
 \begin{circus}
 \circprocess FlatBufferApp  \circdef  \circbegin
 \end{circus}
@@ -23,7 +23,7 @@ InitializeApplication \circdef \\
 \circblockopen
      initializeApplicationCall \then \\
 
-	 	
+	   	
 
      initializeApplicationRet \then \\
      \Skip
@@ -34,11 +34,32 @@ InitializeApplication \circdef \\
 GetSequencer \circdef \\
 \circblockopen
 	getSequencerCall \then \\
-	getSequencerRet~!~FlatBufferMissionSequencer  \then \\
-	\Skip 
+	getSequencerRet~!~FlatBufferMissionSequencerID  \then \\
+	\Skip
 \circblockclose
 \end{circusaction}
 
+\begin{circusaction}
+immortalMemorySizeMeth \circdef
+\circvar ret : \num \circspot
+\\
+\circblockopen
+immortalMemorySizeCall~.~FlatBuffer
+\then \\
+
+      \circblockopen
+
+  ret := 1000000
+ 
+
+        \circblockclose  
+
+  \circseq  \\
+
+immortalMemorySizeRet~.~FlatBuffer~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
 %
 %
 
@@ -49,6 +70,8 @@ Methods \circdef \\
 	\extchoice  \\
 	InitializeApplication  \\
 %
+\extchoice \\
+	immortalMemorySizeMeth \\ 
 %
 %
 \circblockclose
@@ -57,7 +80,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
- \circinterrupt (end\_safelet\_app \then \Skip) 
+ \circinterrupt (end\_safelet\_app \then \Skip)
 \end{circusaction}
 
 \begin{circus}

@@ -7,15 +7,11 @@
 FlatBufferMissionSequencerID : SchedulableID\\
 	ReaderID : SchedulableID\\
 	WriterID : SchedulableID\\
- %eg MainMissionSequencer : SchedulableID\\
- % NestedMissionSequencer : SchedulableID\\
- % NestedOneShotEventHandler : SchedulableID\\   
-  
+%
 \where
-  distinct \langle nullSequencerId, nullSchedulableId, FlatBufferMissionSequencerID, \\
+  distinct \langle nullSequencerId, nullSchedulableId, FlatBufferMissionSequencerIDID, \\
 	ReaderID
 	,
 	WriterID
   \rangle
 \end{axdef}
-

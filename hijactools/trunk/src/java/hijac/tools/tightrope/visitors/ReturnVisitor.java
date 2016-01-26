@@ -208,7 +208,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 
 			if (st instanceof ReturnTree)
 			{
-				System.out.println("Founs Return Tree");
+				System.out.println("Founds Return Tree");
 				tempReturns = st.accept(this, false);
 
 			}

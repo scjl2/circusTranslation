@@ -61,6 +61,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 		Iterator<StatementTree> i = members.iterator();
+		MethodTree getSequencer = null;
 		while (i.hasNext())
 		{
 			Object obj = i.next();
@@ -70,8 +71,8 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 				MethodTree mt = (MethodTree) obj;
 
 				Tree returnType = mt.getReturnType();
-				final boolean isGetSequencerMethod = mt.getName()
-						.contentEquals("getSequencer");
+				final boolean isGetSequencerMethod = mt.getName().contentEquals(
+						"getSequencer");
 				final boolean isSyncMethod = mt.getModifiers().getFlags()
 						.contains(Modifier.SYNCHRONIZED);
 				final boolean notIgnoredMethod = !(isGetSequencerMethod
@@ -80,8 +81,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 
 				if (returnType instanceof PrimitiveTypeTree)
 				{
-					((PrimitiveTypeTree) mt.getReturnType())
-							.getPrimitiveTypeKind();
+					((PrimitiveTypeTree) mt.getReturnType()).getPrimitiveTypeKind();
 
 				}
 				// ArrayList<Name> returns =
@@ -100,55 +100,46 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 				}
 				else if (mt.getName().contentEquals("initializeApplication"))
 				{
-					safeletEnv.addInitMethod(methodVisitor.visitMethod(mt,
-							false));
+					safeletEnv.addInitMethod(methodVisitor.visitMethod(mt, false));
 				}
-				else
+				else if (isSyncMethod)
 				{
-					{
-
-						if (isSyncMethod)
-						{
-							MethodEnv m = methodVisitor.visitMethod(mt, false);
-							setMethodAccess(m, mt);
-							safeletEnv.getClassEnv().addSyncMeth(m);
-						}
-						else
-						{
-							if (notIgnoredMethod)
-							{
-								MethodEnv m = methodVisitor.visitMethod(mt,
-										false);
-								setMethodAccess(m, mt);
-								safeletEnv.addMeth(m);
-							}
-						}
-					}
+					MethodEnv m = methodVisitor.visitMethod(mt, false);
+					setMethodAccess(m, mt);
+					safeletEnv.getClassEnv().addSyncMeth(m);
 				}
+				else if (notIgnoredMethod)
+				{
+					MethodEnv m = methodVisitor.visitMethod(mt, false);
+					setMethodAccess(m, mt);
+					safeletEnv.addMeth(m);
+				}
+
 				if (isGetSequencerMethod)
 				{
+					getSequencer = mt;
 
-					List<StatementTree> s = (List<StatementTree>) mt.getBody()
-							.getStatements();
-
-					@SuppressWarnings("rawtypes")
-					Iterator j = s.iterator();
-
-					while (j.hasNext())
-					{
-						StatementTree st = (StatementTree) j.next();
-
-						if (st instanceof ReturnTree)
-						{
-
-							return st.accept(returnVisitor, null);
-
-						}
-					}
 				}
-
 			}
+		}
+		// /////////////////////////////////////////////////////
+		if (getSequencer != null)
+		{
+			List<StatementTree> s = (List<StatementTree>) getSequencer.getBody()
+					.getStatements();
 
+			@SuppressWarnings("rawtypes")
+			Iterator j = s.iterator();
+
+			while (j.hasNext())
+			{
+				StatementTree st = (StatementTree) j.next();
+
+				if (st instanceof ReturnTree)
+				{
+					return st.accept(returnVisitor, null);
+				}
+			}
 		}
 
 		return null;

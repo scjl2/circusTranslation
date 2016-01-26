@@ -38,7 +38,7 @@
 
 <#macro BooleanAssignment variable expression>
 <@compact>
-  ${TRANS(variable, CTXT)} := 
+  ${TRANS(variable, CTXT)} :=
 <@LogicToBoolean>
   ${TRANS(expression, CTXT.enterExpression())}
 </@LogicToBoolean>
@@ -77,16 +77,16 @@
 
             <#else>
                  \Skip<#lt/>
-            </#if> 
+            </#if>
         <#else>
-            ${stmtTrans}<#lt/> 
+            ${stmtTrans}<#lt/>
 
             <#if statement_has_next>
-               \circseq \\ 
+               \circseq \\
             </#if>
         </#if>
     </#list>
-        \circblockclose  
+        \circblockclose
 <#else>
    <@EmptyStatement/>
 </#if>
@@ -145,24 +145,24 @@
 
 <#macro If condition thenstatement elsestatement="">
 <#if elsestatement?has_content>
-  \circif ~ ${TRANS(condition, CTXT.enterExpression())} ~ \circthen ~
+  \circif ~ ${TRANS(condition, CTXT.enterExpression()) = \true} ~ \circthen ~
   \\
   \t1
   ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
-  \circelse ~ \lnot ${TRANS(condition, CTXT.enterExpression())} ~ \circthen ~
+  \circelse ~ ${TRANS(condition, CTXT.enterExpression()) = \false} ~ \circthen ~
   \\
   \t1
   ${TRANS(elsestatement, CTXT)}<#lt/>
   \\
   \circfi
 <#else>
-  \circif ~ ${TRANS(condition, CTXT.enterExpression())} ~ \circthen ~
+  \circif ~ ${TRANS(condition, CTXT.enterExpression()) = \true} ~ \circthen ~
   \\
   \t1
   ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
-  \circelse ~ \lnot ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
+  \circelse ~ ${TRANS(condition, CTXT.enterExpression()) = \false} \circthen \Skip
   \\
   \circfi \circseq \\
 </#if>
@@ -181,7 +181,7 @@
   \circmu X \circspot
   \\
   \circblockopen
-  \circif ~ ${TRANS(condition, CTXT.enterExpression())} ~ \circthen ~
+  \circif ~ ${TRANS(condition, CTXT.enterExpression()) = \true} ~ \circthen ~
   \\
   \t1
   \circblockopen
@@ -192,7 +192,7 @@
   \circblockclose
   \circseq X
   \\
-  \circelse ~ ~ \lnot ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
+  \circelse ~  ${TRANS(condition, CTXT.enterExpression()) = \false} \circthen \Skip
   \\
   \circfi
   \circblockclose
@@ -251,12 +251,12 @@
 <#----------------->
 
 <#macro Switch expression cases>
-  \circif ~ 
+  \circif ~
 <#list cases as case>
   ${TRANS(case, CTXT.enterExpression().setSwitch(NODE))}<#lt/>
   \\
 <#if case_has_next>
-  \circelse ~ ~ 
+  \circelse ~
 </#if>
 </#list>
   \circfi
@@ -352,7 +352,7 @@
   \circif ~ ${TRANS(condition, CTXT.enterExpression())} ~ \circthen ~
   \\
   \t1
-  
+
   ${TRANS(statement, CTXT)}
 
   \circseq X
@@ -377,16 +377,16 @@
 
   \circblockopen
   \circmu X \circspot
-  \\ 
+  \\
   \circblockopen
-  ${condition} 
-  \circif ~ (loopVar) ~ \circthen ~
+  ${condition}
+  \circif ~ (loopVar = \true) ~ \circthen ~
   \\
   \t1
-  
+
   ${TRANS(statement, CTXT)} \circseq X
   \\
-  \circelse ~ ~ \lnot(loopVar) \circthen \Skip
+  \circelse ~ (loopVar = \false) \circthen \Skip
   \\
   \circfi
   \circblockclose

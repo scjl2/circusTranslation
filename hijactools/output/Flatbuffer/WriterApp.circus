@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
+  \SECTION ~ WriterIDApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
 
   \t1 , \\
 MissionMethChan
@@ -18,7 +18,7 @@ ThreadIds
 \end{zsection}
 %
 \begin{circus}
-\circprocess WriterApp \circdef \\ \qquad
+\circprocess WriterIDApp \circdef \\ \qquad
   fbMission : MissionID
  
 \circspot
@@ -29,7 +29,7 @@ ThreadIds
 \begin{circusaction}
 Run \circdef \\
 \circblockopen
-	runCall~.~Writer \then \\
+	runCall~.~WriterID \then \\
 	
       \circblockopen
 
@@ -41,7 +41,7 @@ Run \circdef \\
         \circblockclose  
 
  \circseq \\
-	runRet~.~Writer \then \\
+	runRet~.~WriterID \then \\
 	\Skip
 \circblockclose
 \end{circusaction}	
@@ -62,7 +62,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_managedThread\_app~.~Writer \then \Skip)
+  \circinterrupt (end\_managedThread\_app~.~WriterID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

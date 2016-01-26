@@ -454,7 +454,6 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				if (returnType.contains("MissionID"))
 				{
-
 					return "nullMissionId";
 				}
 				else if (returnType.contains("SchedulableId"))
@@ -521,7 +520,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				// This is for is the method call is: o.meth1().meth2();
 				output = visitMethodInvocation((MethodInvocationTree) expresison, ctxt);
-				output += "\\\\";
+				output += "\\ \\ ";
 
 				System.out.println("Output = " + output);
 
@@ -564,7 +563,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 				sb.append("notify~.~");
 				sb.append(objectEnvName.toString());
-				sb.append("Object");
+				sb.append("ObjectID");
 				sb.append("~!~thread \\then ");
 				sb.append(" \\\\ ");
 				sb.append("\\Skip");
@@ -580,12 +579,12 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 				sb.append("waitCall~.~");
 				sb.append(objectEnvName.toString());
-				sb.append("Object");
+				sb.append("ObjectID");
 				sb.append("~!~thread \\then");
 				sb.append(" \\\\ ");
 				sb.append("waitRet~.~");
 				sb.append(objectEnvName.toString());
-				sb.append("Object");
+				sb.append("ObjectID");
 				sb.append("~!~thread \\then");
 				sb.append(" \\\\ ");
 				sb.append("\\Skip");
@@ -681,7 +680,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				{
 					sb.append("~.~");
 					sb.append(objectEnvName.toString());
-					sb.append("Thread");
+					sb.append("ThreadID");
 				}
 
 				if (!parameters.isEmpty())
@@ -707,7 +706,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 						}
 					}
 				}
-				sb.append("\\then \\\\");
+				sb.append("\\then \\ \\ ");
 
 				if (notIgnoredMethod)
 				{
@@ -724,7 +723,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				{
 					sb.append("~.~");
 					sb.append(objectEnvName.toString());
-					sb.append("Thread");
+					sb.append("ThreadID");
 				}
 
 				System.out.println("!// !returnString.contains('null') =  "
@@ -741,12 +740,12 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 					sb.append(identifier.toString());
 					timeMachine.put("variableIdentifier", identifier);
-					sb.append("\\then \\\\");
+					sb.append("\\then \\ \\");
 
 				}
 				else
 				{
-					sb.append("\\then \\\\");
+					sb.append("\\then \\ \\ ");
 					sb.append("\\Skip");
 				}
 
@@ -1250,11 +1249,11 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				timeMachine.putIfAbsent(memberSelectTree.getIdentifier().toString(), node
 						.getName().toString());
 
-				return visitMethodInvocation(mit, ctxt) + "\\\\ \\circvar "
+				return visitMethodInvocation(mit, ctxt) + "\\ \\ \\circvar "
 						+ node.getName() + " : "
 						+ NewTransUtils.encodeType(node.getType()) + " \\circspot "
 						+ node.getName() + " :=~"
-						+ memberSelectTree.getIdentifier().toString() + "\\\\";
+						+ memberSelectTree.getIdentifier().toString() + "\\ \\";
 			}
 			else
 			{
@@ -1309,7 +1308,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			if (isStillMethodCall)
 			{
 
-				conditionString = "\\circvar loopVar : \\bool \\circspot loopVar :=~"
+				conditionString = "\\circvar loopVar : \\boolean \\circspot loopVar :=~"
 						+ conditionTrans + "\\circseq \\\\";
 
 				// return callStmtMacro(node, ctxt, "WhileLoopMethCond",
@@ -1328,14 +1327,14 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 					conditionTrans = conditionTrans.substring(5);
 
 					conditionString = conditionTrans + "\\"
-							+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
+							+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
 							+ " (\\lnot " + timeMachine.get("variableIdentifier")
 							+ ") \\circseq \\\\";
 				}
 				else
 				{
 					conditionString = conditionTrans + "\\"
-							+ " \\circvar loopVar : \\bool \\circspot loopVar :=~"
+							+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
 							+ timeMachine.get("variableIdentifier") + "\\circseq \\\\";
 				}
 

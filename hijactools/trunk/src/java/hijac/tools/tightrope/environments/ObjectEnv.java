@@ -25,6 +25,7 @@ public class ObjectEnv
 	protected static final String HANDLER_TYPE = "HandlerType";
 
 	protected static final String PARENTS_STR = "Parents";
+	protected static final String ID = "ID";
 	// ClassTree classTree;
 	/**
 	 * The name of the entity this environment represents

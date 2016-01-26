@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
+  \SECTION ~ ReaderIDApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
 
   \t1 , \\
 MissionMethChan
@@ -18,7 +18,7 @@ ThreadIds
 \end{zsection}
 %
 \begin{circus}
-\circprocess ReaderApp \circdef \\ \qquad
+\circprocess ReaderIDApp \circdef \\ \qquad
   fbMission : MissionID
  
 \circspot
@@ -29,7 +29,7 @@ ThreadIds
 \begin{circusaction}
 Run \circdef \\
 \circblockopen
-	runCall~.~Reader \then \\
+	runCall~.~ReaderID \then \\
 	
       \circblockopen
 
@@ -41,7 +41,7 @@ Run \circdef \\
         \circblockclose  
 
  \circseq \\
-	runRet~.~Reader \then \\
+	runRet~.~ReaderID \then \\
 	\Skip
 \circblockclose
 \end{circusaction}	
@@ -62,7 +62,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)
+  \circinterrupt (end\_managedThread\_app~.~ReaderID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

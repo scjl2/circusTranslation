@@ -34,7 +34,8 @@ public class FlatBuffer implements Safelet<Mission>
 	@Override
 	public long immortalMemorySize()
 	{
-		return Const.IMMORTAL_MEM_DEFAULT;
+		// Must be literal
+		return 1000000;
 	}
 
 	@Override
