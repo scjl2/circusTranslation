@@ -1,0 +1,9 @@
+====
+TODO
+====
+
+(1) The is some problem with using ${...} in the include and exclude elements of the distro target. Try and get to the bottom of this.
+
+(2) UniversalComparator cannot handle null yet. Assign an id 0 here.
+
+(3) There are still issues with regards to loading property files. Namely, there need to be a more sophisticated loading procedure to work in the context of a binary distribution.

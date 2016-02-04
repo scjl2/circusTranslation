@@ -1,0 +1,315 @@
+
+\begin{circus}
+  \circclass ~ ControllerClass ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ State}
+  \circprivate ~ throttle : ThrottleControllerClass\\
+  \circprivate ~ speedo : SpeedMonitorClass\\
+  \circprivate ~ engineActive : boolean\\
+  \circprivate ~ topGear : boolean\\
+  \circprivate ~ braking : boolean\\
+  \circprivate ~ accelerating : boolean\\
+  \circprivate ~ cruising : boolean\\
+  \circprivate ~ throttleStarted : boolean
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ State
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ engineOn ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  engineActive := jtrue ~
+  \circseq
+  \\
+  braking := jfalse ~
+  \circseq
+  \\
+  topGear := jfalse ~
+  \circseq
+  \\
+  cruising := jfalse ~
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ engineOff ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  engineActive := jfalse ~
+  \circseq
+  \\
+  braking := jfalse ~
+  \circseq
+  \\
+  topGear := jfalse ~
+  \circseq
+  \\
+  \circif ~ cruising = jtrue ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  cruising := jfalse ~
+  \circseq
+  \\
+  throttle.deschedulePeriodic()
+  \circblockclose
+  \\
+  \circelse ~ \lnot cruising = jtrue \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ brakePressed ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ engineActive = jtrue ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ cruising = jtrue ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  cruising := jfalse ~
+  \circseq
+  \\
+  throttle.deschedulePeriodic()
+  \circblockclose
+  \\
+  \circelse ~ \lnot cruising = jtrue \circthen \Skip
+  \\
+  \circfi
+  \circseq
+  \\
+  braking := jtrue ~
+  \circblockclose
+  \\
+  \circelse ~ \lnot engineActive = jtrue \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ brakeReleased ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ engineActive = jtrue ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  braking := jfalse ~
+  \circblockclose
+  \\
+  \circelse ~ \lnot engineActive = jtrue \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ topGearEngaged ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ engineActive = jtrue ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  topGear := jtrue ~
+  \circblockclose
+  \\
+  \circelse ~ \lnot engineActive = jtrue \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ topGearDisengaged ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ engineActive = jtrue ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  topGear := jfalse ~
+  \circseq
+  \\
+  \circif ~ cruising = jtrue ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  cruising := jfalse ~
+  \circseq
+  \\
+  throttle.deschedulePeriodic()
+  \circblockclose
+  \\
+  \circelse ~ \lnot cruising = jtrue \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+  \\
+  \circelse ~ \lnot engineActive = jtrue \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ activate ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ ((engineActive = jtrue \land topGear = jtrue) \land (\lnot braking = jtrue)) ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  cruising := jtrue ~
+  \circseq
+  \\
+  \circvar cruise\_speed : int \circspot \Skip ~
+  \circseq
+  \\
+  cruise\_speed := speedo.getCurrentSpeed() ~
+  \circseq
+  \\
+  throttle.setCruiseSpeed(cruise\_speed)
+  \circseq
+  \\
+  throttle.schedulePeriodic()
+  \circseq
+  \\
+  throttleStarted := jtrue ~
+  \circblockclose
+  \\
+  \circelse ~ \lnot ((engineActive = jtrue \land topGear = jtrue) \land (\lnot braking = jtrue)) \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ deactivate ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ (((engineActive = jtrue \land topGear = jtrue) \land (\lnot braking = jtrue)) \land cruising = jtrue) ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  cruising := jfalse ~
+  \circseq
+  \\
+  throttle.deschedulePeriodic()
+  \circblockclose
+  \\
+  \circelse ~ \lnot (((engineActive = jtrue \land topGear = jtrue) \land (\lnot braking = jtrue)) \land cruising = jtrue) \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ startAccelerating ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ ((engineActive = jtrue \land topGear = jtrue) \land (\lnot braking = jtrue)) ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  accelerating := jtrue ~
+  \circseq
+  \\
+  \circif ~ throttleStarted = jtrue ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  throttle.schedulePeriodic()
+  \circblockclose
+  \\
+  \circelse ~ \lnot throttleStarted = jtrue ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  throttleStarted := jtrue ~
+  \circseq
+  \\
+  throttle.schedulePeriodic()
+  \circblockclose
+  \\
+  \circfi
+  \circseq
+  \\
+  throttle.accelerate()
+  \circblockclose
+  \\
+  \circelse ~ \lnot ((engineActive = jtrue \land topGear = jtrue) \land (\lnot braking = jtrue)) \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ stopAccelerating ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ (((engineActive = jtrue \land topGear = jtrue) \land (\lnot braking = jtrue)) \land accelerating = jtrue) ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  accelerating := jfalse ~
+  \circseq
+  \\
+  cruising := jtrue ~
+  \circseq
+  \\
+  throttle.setCruiseSpeed(speedo.getCurrentSpeed())
+  \circblockclose
+  \\
+  \circelse ~ \lnot (((engineActive = jtrue \land topGear = jtrue) \land (\lnot braking = jtrue)) \land accelerating = jtrue) \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ resume ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+  \circif ~ ((topGear = jtrue \land (\lnot braking = jtrue)) \land throttleStarted = jtrue) ~ \circthen ~
+  \\
+  \t1
+  \circblockopen
+  cruising := jtrue ~
+  \circseq
+  \\
+  throttle.schedulePeriodic()
+  \circblockclose
+  \\
+  \circelse ~ \lnot ((topGear = jtrue \land (\lnot braking = jtrue)) \land throttleStarted = jtrue) \circthen \Skip
+  \\
+  \circfi
+  \circblockclose
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

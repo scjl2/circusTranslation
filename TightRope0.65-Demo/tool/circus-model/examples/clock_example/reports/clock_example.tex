@@ -1,0 +1,203 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{sverb}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[colour]{circus}
+\usepackage{hijac}
+
+\title{{\Circus} Model for Clocks, Timers and Time}
+
+\author{Frank Zeyda}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+\section{Framework Models}
+
+\subsection{HighResolutionTime}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{HighResolutionTime.circus}
+\end{circusbox}
+
+\subsection{AbsoluteTime}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{AbsoluteTime.circus}
+\end{circusbox}
+
+\subsection{RelativeTime}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{RelativeTime.circus}
+\end{circusbox}
+
+\subsection{Faulty Clock}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{ClockMethChan.circus}
+\end{circusbox}
+
+\begin{circusbox}
+\input{FaultyClock.circus}
+\end{circusbox}
+
+\subsection{Clock}
+
+\subsubsection*{Framework Channels}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{ClockFWChan.circus}
+\end{circusbox}
+
+\subsubsection*{Method Channels}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{ClockMethChan.circus}
+\end{circusbox}
+
+\subsubsection*{Framework Process}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{ClockFW.circus}
+\end{circusbox}
+
+\subsubsection*{Application Process}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{ClockApp.circus}
+\end{circusbox}
+\vspace{0.5em}
+
+\red{Currently we do not worry about instantiation of multiple clocks but assume there is only one (static) instance of the \code{Clock} class.}
+
+\subsubsection*{Composite Process}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{Clock.circus}
+\end{circusbox}
+
+\subsection{Runnable}
+
+In this section we specify the $Runnable$ interface. It is used in the SCJ framework to execute code within particular memory areas. Namely, the \code{void executeInArea(Runnable logic)} method of the \code{MemoryArea} class expects a runnable object, and execute its \code{void run()} method within this memory area.
+
+\subsubsection{{\OhCircus} Class}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{RunnableClass.circus}
+\end{circusbox}
+
+\subsubsection{Method Channels}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{RunnableMethChan.circus}
+\end{circusbox}
+\vspace{0.5em}
+
+\nid \red{In fact we do not have a framework process for $Runnable$. The purpose of this class is in essence to be extended; particular process models of runnable objects should synchronise on the $Runnable\_runCall$ and $Runnable\_runRet$ methods.}
+
+\subsection{MemoryArea}
+
+\subsubsection{{\OhCircus} Class}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MemoryAreaClass.circus}
+\end{circusbox}
+
+\subsubsection{Method Channels}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MemoryAreaMethChan.circus}
+\end{circusbox}
+
+\subsubsection{Application Process}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MemoryAreaApp.circus}
+\end{circusbox}
+
+\subsubsection{Composite Process}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MemoryArea.circus}
+\end{circusbox}
+
+\section{Application Model}
+
+\subsection{Java Code}
+
+\verbinput{MainHandler.java}
+
+\subsection{Refactored Code}
+
+\verbinput{MainHandler.java}
+
+\verbinput{MainHandler_ImmortalEntry.java}
+
+\subsection{Handler Process}
+
+\subsubsection{Channels}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MainHandlerMethChan.circus}
+\end{circusbox}
+
+\subsubsection{Class}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MainHandlerClass.circus}
+\end{circusbox}
+
+\subsubsection{Process}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MainHandlerApp.circus}
+\end{circusbox}
+
+\section{Inner Class}
+
+\subsubsection{Class}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MainHandler_ImmortalEntryClass.circus}
+\end{circusbox}
+
+\subsubsection{Channels}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MainHandler_ImmortalEntryMethChan.circus}
+\end{circusbox}
+
+\subsubsection{Process}
+\vspace{-1em}
+
+\begin{circusbox}
+\input{MainHandler_ImmortalEntryApp.circus}
+\end{circusbox}
+
+\end{document}

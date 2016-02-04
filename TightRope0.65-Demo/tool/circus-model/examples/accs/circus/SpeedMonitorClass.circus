@@ -1,0 +1,81 @@
+\begin{zsection}
+  \SECTION ~ SpeedMonitorClass ~ \parents ~ scj\_toolkit, scj\_library, WheelShaftClass, SpeedMonitorConst
+\end{zsection}
+
+\subsubsection*{Class Definition}
+
+\begin{circusbox}
+\begin{circus}
+  \circclass ~ SpeedMonitorClassDef ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore SpeedMonitorState}
+  \circprivate shaft : WheelShaftClass\\
+  \circprivate numberRotations, lastNumberRotations : long\\
+  \circprivate calibration : int\\
+  \circprivate currentSpeed : int\\
+  \circprivate iterationsInOneHour : int\\
+  \circprivate cmInKilometer : int\\
+  \circprivate period : PERIOD
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ SpeedMonitorState
+\end{circusaction}
+\end{comment}
+%
+\begin{schema*}{\circinitial SpeedMonitorInit}
+  SpeedMonitorState~'\\
+  shaft? : WheelShaftClass
+\where
+  shaft' = shaft\\
+  lastNumberRotations' = (shaft?).getCount()\\
+  calibration = (shaft?).getCallibration()\\
+  currentSpeed' = 0\\
+  iterationsInOneOur = ((1000 \div \blue{period}.getPeriod().getMilliseconds()) * 3600)\\
+  cmInKilometer' = 100000\\
+  period' = SpeedMonitorPeriod
+\end{schema*}
+%
+\begin{circusaction}
+  \circpublic getCurrentSpeed ~ \circdef ~ \circres result : int \circspot result := currentSpeed
+\end{circusaction}
+%
+\begin{circusaction*}
+  \circpublic \circsync handleAsyncEvent ~ \circdef\\
+  \t1 ~ numberRotations := shaft.getCount() \circseq\\
+  \t1 \circvar difference : long \circspot difference := numberRotations - lastNumberRotations \circseq\\
+  \t1 currentSpeed := (difference * calibration * iterationsInOneHour) ~ \div cmInKilometer \circseq\\
+  \t1 lastNumberRotations := numberRotations
+\end{circusaction*}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusbox}
+
+\subsubsection*{Reference Type}
+
+\begin{comment}
+\begin{schema}{SpeedMonitorState}
+  \circprivate shaft : WheelShaftClass\\
+  \circprivate numberRotations, lastNumberRotations : long\\
+  \circprivate calibration : int\\
+  \circprivate currentSpeed : int\\
+  \circprivate iterationsInOneHour : int\\
+  \circprivate cmInKilometer : int
+\end{schema}
+\end{comment}
+
+\begin{circusbox}
+\begin{zed}
+  SpeedMonitorClass ~ == ~ \circreftype SpeedMonitorState
+\end{zed}
+\end{circusbox}

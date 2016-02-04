@@ -1,0 +1,31 @@
+\begin{zsection}
+  \SECTION ~ SCJEventFW ~ \parents ~ SCJEventConst, SCJEventChan, MissionChan
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circprocess ~ SCJEventFW ~ \circdef ~ evt : SCJEventId \circspot \circbegin
+  \also
+  \circstate ~ State ~ == ~ [handlers : \finset HandlerId; fire\_count : \nat]
+  \also
+  Init ~ == ~ [State~' | handlers' = \emptyset \land fire\_count' = 0]
+  \also
+  Bind ~ \circdef ~ bind\_handlers~.~evt~?~hdls \then handlers := hdls
+  \also
+  Activate ~ \circdef ~ activate\_handlers \then (Execute ~ \circinterrupt ~ stop\_handlers \then \Skip)
+  \also
+  Execute ~ \circdef ~ (Release \lpar \emptyset | \lchanset release\_handlers \rchanset | \{fire\_count\} \rpar Methods) ~ \circhide \lchanset release\_handlers \rchanset
+  \also
+  Release ~ \circdef ~ \circmu X \circspot release\_handlers \then (\Interleave h : handlers \circspot release\_handler~.~h \then \Skip) \circseq X
+  \also
+  fireMeth ~ \circdef\\
+  \t1 fireCall~.~evt \then fire\_count := fire\_count + 1 \circseq \circwait 0..FireDeadline(\# handlers) \circseq\\
+  \t1 fireRet~.~evt \then \Skip
+  \also
+  Methods ~ \circdef ~ \circmu X \circspot (fireMeth ~ \extchoice ~ \lcircguard fire\_count > 0 \rcircguard ~ \circguard release\_handlers \then \Skip) \circseq X
+  \also
+  \circspot (\circmu X \circspot \lschexpract Init \rschexpract \circseq Bind \circseq Activate \circseq X) ~ \circinterrupt ~ end\_mission\_fw \then \Skip
+  \also
+  \circend
+\end{circus}
+

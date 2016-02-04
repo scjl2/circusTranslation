@@ -1,0 +1,64 @@
+\begin{zsection}
+  \SECTION ~ EngineClass ~ \parents ~ scj\_toolkit, scj\_library, EventIds, CruiseControlClass
+\end{zsection}
+
+\subsubsection*{Class Definition}
+
+\begin{circusbox}
+\begin{circus}
+  \circclass ~ EngineClassDef ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore EngineState}
+  \circprivate cruise : CruiseControlClass
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ EngineState
+\end{circusaction}
+\end{comment}
+%
+\begin{schema}{\circinitial EngineInit}
+  EngineState~'\\
+  cruise? : CruiseControlClass
+\where
+  cruise' = cruise?
+\end{schema}
+%
+\begin{circusnote}
+\red{Since we pass a parameter below we rather use $handleAsyncLongEvent$.}
+\end{circusnote}
+%
+\begin{circusaction*}
+  \circpublic \circsync handleAsyncLongEvent ~ \circdef ~\\
+  \t1 \circval event : EventId \circspot\\
+  \t2 \circif event = EngineOnEvtId \circthen cruise.engineOn()\\
+  \t2 \circelse event = EngineOffEvtId \circthen cruise.engineOff()\\
+  \t2 \circfi
+\end{circusaction*}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusbox}
+
+\subsubsection*{Reference Type}
+
+\begin{comment}
+\begin{schema}{EngineState}
+  \circprivate cruise : CruiseControlClass
+\end{schema}
+\end{comment}
+
+\begin{circusbox}
+\begin{zed}
+  EngineClass ~ == ~ \circreftype EngineState
+\end{zed}
+\end{circusbox}

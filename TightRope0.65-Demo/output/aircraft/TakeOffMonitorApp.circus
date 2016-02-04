@@ -1,0 +1,96 @@
+\begin{zsection}
+  \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
+ \t1  , \\
+MainMissionMethChan
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess TakeOffMonitorApp \circdef \\ \qquad
+  mainMission : MissionID
+,\\ 
+  takeOffMission : MissionID
+,\\ 
+  takeOffAltitude : \mathbb{R}
+,\\ 
+  landingGearHandler : SchedulableID
+ 
+\circspot
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~TakeOffMonitor \then \\
+	
+      \circblockopen
+
+\Skip
+
+
+               \circseq \\
+
+            binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitor\then \ \ binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitor~?~getAltitude\then \ \\ \ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\ \
+
+
+              \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+\Skip
+
+
+               \circseq \\
+
+            releaseCall~.~landingGearHandler~.~TakeOffMonitor\then \ \ releaseRet~.~landingGearHandler~.~TakeOffMonitor~?~release\then \ \
+
+
+
+            requestTerminationCall~.~takeoffMission~.~TakeOffMonitor\then \ \ requestTerminationRet~.~takeoffMission~.~TakeOffMonitor~?~requestTermination\then \ \
+
+\Skip
+        \circblockclose
+
+
+  \\
+  \circelse ~ (altitude > takeOffAltitude) \circthen \Skip
+  \\
+  \circfi \circseq \\
+
+\Skip
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~TakeOffMonitor \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handlerAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_periodic\_app~.~TakeOffMonitor \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

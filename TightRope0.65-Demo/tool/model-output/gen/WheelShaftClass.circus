@@ -1,0 +1,28 @@
+
+\begin{circus}
+  \circclass ~ WheelShaftClass ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ State}
+  \circprivate ~ count : long
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ State
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+  \circpublic ~ \circsync ~ getCount ~ \circdef ~
+  \circres ~ ret : long \circspot
+  \\
+  \t1
+  \circblockopen
+  ret := count
+  \circblockclose
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

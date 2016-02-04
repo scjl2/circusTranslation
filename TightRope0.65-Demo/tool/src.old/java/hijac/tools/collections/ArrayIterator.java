@@ -1,0 +1,33 @@
+package hijac.tools.collections;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+/**
+ * @author Frank Zeyda
+ * @version $Revision: 198 $
+ */
+public class ArrayIterator<T> implements Iterator<T> {
+   protected final T[] array;
+   protected int index;
+
+   public ArrayIterator(T[] array) {
+      this.array = array;
+      this.index = 0;
+   }
+
+   public boolean hasNext() {
+      return index != array.length;
+   }
+
+   public T next() {
+      if (index == array.length) {
+         throw new NoSuchElementException();
+      }
+      return array[index++];
+   }
+
+   public void remove() {
+      throw new UnsupportedOperationException();
+   }
+}

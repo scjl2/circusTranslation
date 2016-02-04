@@ -1,0 +1,11 @@
+\begin{zsection}
+  \SECTION ~ ImmortalMemory ~ \parents ~ MemoryAreaClass
+\end{zsection}
+
+\begin{zed}
+  ImmortalMemoryClass ~ == ~ MemoryAreaClass
+\end{zed}
+
+\begin{zed}
+  ImmortalMemory ~ == ~ \circreftype ImmortalMemoryClass
+\end{zed}

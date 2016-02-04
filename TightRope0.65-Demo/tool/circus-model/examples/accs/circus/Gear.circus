@@ -1,0 +1,13 @@
+\begin{zsection}
+  \SECTION ~ Gear ~ \parents ~ GearFW, GearApp
+\end{zsection}
+\extracircusvspace
+%
+\begin{circus}
+  \circprocess ~ Gear ~ \circdef\\
+  \t1 (GearFW \lpar HandlerAppSyncChan \rpar GearApp) \circhide HandlerAppHideChan 
+\end{circus}
+\begin{circus*}
+  \circexposes ~ \lchanset top\_gear\_engaged, top\_gear\_disengaged,\\
+  \t1 start\_handler, stop\_handler, done\_handler, activate\_handlers, end\_mission\_fw \rchanset
+\end{circus*}

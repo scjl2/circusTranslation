@@ -1,0 +1,290 @@
+%%%%%%%%%%%%%%%%%%%%
+% Names & Acronyms %
+%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\OhCircus}{Oh{\Circus}}
+\newcommand{\CircusTime}{{\Circus} Time}
+\newcommand{\SCJCircus}{\textsf{SCJ}{\Circus}}
+
+%%%%%%%%%%%%%%%
+% Typesetting %
+%%%%%%%%%%%%%%%
+
+\newcommand{\nid}{\noindent}
+\newcommand{\strong}[1]{\textbf{#1}}
+\newcommand{\name}[1]{\textsf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\newcommand{\mathbi}[1]{\textbf{\em #1}}
+
+%%%%%%%%%%%%%%%
+% Math Layout %
+%%%%%%%%%%%%%%%
+
+\newcommand{\biglcurly}{\left\{\!\!\begin{array}{l}}
+\newcommand{\bigrcurly}{\end{array}\!\!\right\}}
+
+%%%%%%%%%%%%%%%%
+% Z Extensions %
+%%%%%%%%%%%%%%%%
+
+\newcommand{\bool}{\mathbb{B}}
+\newcommand{\btrue}{\mathbf{true}}
+\newcommand{\bfalse}{\mathbf{false}}
+
+%\newcommand{\band}{\zbinop{and}}
+%\newcommand{\bor}{\zbinop{or}}
+%\newcommand{\bxor}{\zbinop{xor}}
+
+%%%%%%%%%%%%%%%%%
+% Circus Layout %
+%%%%%%%%%%%%%%%%%
+
+% Definition in circus.sty fails if the AMS setup is used (?)
+\renewcommand{\circinterrupt}{\zbinop{\bigtriangleup}}
+
+\newcommand{\hidemath}[1]{}
+
+\newcommand{\circstateignore}{\circstate}
+
+\renewcommand{\lschexpract}{}
+\renewcommand{\rschexpract}{}
+\renewcommand{\lcircguard}{}
+\renewcommand{\rcircguard}{}
+
+\renewcommand{\circblockbegin}{\hspace{-1ex}\begin{array}{l}}
+\renewcommand{\circblockend}{\end{array}\hspace{-1ex}}
+
+\newcommand{\circblockopen}{\left(\circblockbegin}
+\newcommand{\circblockclose}{\circblockend\right)}
+
+%%%%%%%%%%
+% Circus %
+%%%%%%%%%%
+
+\newcommand{\Div}{\circuskeyword{Div}}
+
+%%%%%%%%%%%%%%%
+% Circus Time %
+%%%%%%%%%%%%%%%
+
+\newcommand{\circdeadlinesync}{\zbinop{\,\LHD\,}}
+\newcommand{\circdeadlineterm}{\zbinop{\,\RHD\,}}
+\renewcommand{\circdeadline}{\circdeadlinesync}
+\newcommand{\circat}{\texttt{@}}
+\newcommand{\circwaitblock}{\circwait}
+
+%%%%%%%%%%%%
+% OhCircus %
+%%%%%%%%%%%%
+
+\newcommand{\circclass}{\zpreop{\circuskeyword{class}}}
+\newcommand{\circinitial}{\zpreop{\circuskeyword{initial}}}
+\newcommand{\circpublic}{\zpreop{\circuskeyword{public}}}
+\newcommand{\circprotected}{\zpreop{\circuskeyword{protected}}}
+\newcommand{\circprivate}{\zpreop{\circuskeyword{private}}}
+\newcommand{\circlogical}{\zpreop{\circuskeyword{logical}}}
+\newcommand{\circsync}{\zpreop{\circuskeyword{sync}}}
+\newcommand{\circfunction}{\zpreop{\circuskeyword{function}}}
+
+\newcommand{\circnew}{\zpreop{\circuskeyword{new}}}
+\newcommand{\circnewI}{\zpreop{\circuskeyword{newI}}}
+\newcommand{\circnewM}{\zpreop{\circuskeyword{newM}}}
+\newcommand{\circnewR}{\zpreop{\circuskeyword{newR}}}
+\newcommand{\circnewP}{\zpreop{\circuskeyword{newP}}}
+
+\newcommand{\circnull}{\zpreop{\circuskeyword{null}}}
+\newcommand{\circthis}{\zpreop{\circuskeyword{this}}}
+\newcommand{\circsuper}{\zpreop{\circuskeyword{super}}}
+\newcommand{\circarray}{\zpreop{\circuskeyword{array}}}
+
+%%%%%%%%%%%%%%
+% References %
+%%%%%%%%%%%%%%
+
+% Frank's Symbols
+\newcommand{\circreftype}{\zpreop{\mathbf{ref}}}
+\newcommand{\circref}{\zpreop{\mathrm{ref}}}
+\newcommand{\circderef}{\zpreop{\mathrm{deref}}}
+\newcommand{\circrefassign}{\zbinop{:=}}
+
+% Ana's Symbols
+%\newcommand{\circref}{}
+%\newcommand{\circreftype}{}
+%\newcommand{\circderef}{}
+%\newcommand{\circrefassign}{\mathrel{\hbox{$:\mkern-6mu-$}}}
+
+%%%%%%%%%%%%%%
+% SCJ Circus %
+%%%%%%%%%%%%%%
+
+\newcommand{\circexposes}{\zpreop{\circuskeyword{exposes}\;}}
+\newcommand{\circenter}{\zpreop{\circuskeyword{enter}}}
+
+%%%%%%%%%%%%%%%
+% HiJaC Tools %
+%%%%%%%%%%%%%%%
+
+%\newcommand{\real}{\mathbb{R}}
+\newcommand{\substnl}{}
+\newcommand{\invalid}{\textbf{\red{?}}}
+\newcommand{\invalidpara}[1]{\invalid\{#1\}}
+
+% Bitwise Operators
+%\newcommand{\bitwiseand}{\mathbin{\mathbf{and}}}
+%\newcommand{\bitwiseor}{\mathbin{\mathbf{or}}}
+%\newcommand{\bitwisexor}{\mathbin{\mathbf{xor}}}
+
+%%%%%%%%%%%
+% Colours %
+%%%%%%%%%%%
+
+\newcommand{\red}[1]{{\color{Red}#1}}
+\newcommand{\blue}[1]{{\color{Blue}#1}}
+\newcommand{\green}[1]{{\color{Green}#1}}
+\newcommand{\grey}[1]{{\color{Gray}#1}}
+\newcommand{\purple}[1]{{\color{Purple}#1}}
+
+%\renewcommand{\red}[1]{#1}
+%\renewcommand{\blue}[1]{#1}
+%\renewcommand{\green}[1]{#1}
+%\renewcommand{\grey}[1]{#1}
+%\renewcommand{\purple}[1]{#1}
+
+\newenvironment{alert}{\nid\color{Red}}{}
+\newenvironment{note}{\nid\color{Green}}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Colours of Formal Text %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\definecolor{ZedColor}{rgb}{0, 0, 0}
+\definecolor{ZedBoxColor}{rgb}{0.5,0.5,0.5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Spacing of Formal Text %
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setlength{\zedindent}{\parindent}
+\setlength{\zedtab}{1.2\parindent}
+\setlength{\zedskip}{0.4\baselineskip}
+
+%%%%%%%%%%%%%%%%
+% Environments %
+%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Unparsed Formal Text %
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\setunparsedcolour}{\definecolor{ZedColor}{rgb}{0.5, 0, 0}}
+
+\newcommand{\nounparsedcolour}{%
+\renewcommand{\setunparsedcolour}{\definecolor{ZedColor}{rgb}{0, 0, 0}}}
+
+% Environments that highlight unparsed formal text.
+
+\renewenvironment{zed*}
+{\setunparsedcolour\begin{zed}}
+{\end{zed}\ignorespacesafterend}
+
+\renewenvironment{axdef*}
+{\setunparsedcolour\begin{axdef}}
+{\end{axdef}\ignorespacesafterend}
+
+\renewenvironment{schema*}
+{\setunparsedcolour\begin{schema}}
+{\end{schema}\ignorespacesafterend}
+
+\newenvironment{circus*}
+{\setunparsedcolour\begin{circus}}
+{\end{circus}\ignorespacesafterend}
+
+\newenvironment{circusaction*}
+{\setunparsedcolour\begin{circusaction}}
+{\end{circusaction}\ignorespacesafterend}
+
+% Environments that do not highlight unparsed formal text.
+
+% TODO: Review all reports that used the environments below.
+
+%\newenvironment{zed**}
+%{\begin{zed}}
+%{\end{zed}\ignorespacesafterend}
+
+%\newenvironment{schema**}
+%{\begin{schema}}
+%{\end{schema}\ignorespacesafterend}
+
+%\newenvironment{axdef**}
+%{\begin{axdef}}
+%{\end{axdef}\ignorespacesafterend}
+
+%\newenvironment{circus**}
+%{\begin{circus}}
+%{\end{circus}\ignorespacesafterend}
+
+%\newenvironment{circusaction**}
+%{\begin{circusaction}}
+%{\end{circusaction}\ignorespacesafterend}
+
+%%%%%%%%%%%%
+% OhCircus %
+%%%%%%%%%%%%
+
+\newenvironment{circusmethod}
+{\setunparsedcolour\begin{circusaction}}
+{\end{circusaction}\ignorespacesafterend}
+
+\newenvironment{circusfunction}
+{\setunparsedcolour\begin{circusaction}}
+{\end{circusaction}\ignorespacesafterend}
+
+%%%%%%%%%%%%%%%%%
+% Miscellaneous %
+%%%%%%%%%%%%%%%%%
+
+% Legacy command, try and remove it!
+\newcommand{\vspaceafterzpara}{}
+
+\newcommand{\extracircusvspace}{\vspace{-0.5em}}
+
+\newenvironment{circusflow}{%
+\setlength{\abovedisplayskip}{4pt}%
+\setlength{\belowdisplayskip}{4pt}%
+\vspace{0.5em}%
+\ignorespaces}%
+{\par\vspace{0.5em}\noindent\ignorespacesafterend}
+
+\newenvironment{circusbox}[1][\textwidth]{%
+\par\noindent%
+\begin{minipage}{#1}%
+\vspace{-0.29em}%
+\begin{circusflow}}%
+{\end{circusflow}\end{minipage}}
+
+\newenvironment{circusfbox}[1][0.95\textwidth]{%
+\setlength{\zedindent}{10pt}%
+\begin{Sbox}%
+\begin{minipage}{#1}%
+\vspace{-8pt}%
+\begin{circusflow}}{%
+\vspace{-13pt}%
+\end{circusflow}%
+\end{minipage}%
+\end{Sbox}%
+\fbox{\TheSbox}}
+
+\newenvironment{circusnote}%
+{\par\vspace{0.5em}\noindent\ignorespaces}{\vspace{0.4em}}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% Document Management %
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\todo}[1]{\noindent\strong{TODO:} \red{\emph{#1}}\typeout{[TODO] Section \arabic{section}: #1}\par\medskip}
+
+\newcommand{\revieweduntilhere}{\par\medskip\noindent\fbox{\red{\strong{Reviewed until here}}}\par\medskip\noindent}
+
+%\newcommand{\comment}[1]{}
+\newcommand{\commentout}[1]{}

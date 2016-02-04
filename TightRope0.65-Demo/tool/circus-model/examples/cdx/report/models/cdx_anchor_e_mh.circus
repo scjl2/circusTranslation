@@ -1,0 +1,3144 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ cdx\_anchor\_e\_mh ~ \parents ~ cdx\_anchor\_e\_cp
+\end{zsection}
+\end{comment}
+
+\subsection{Phase \name{MH}}
+
+In this section, we give a full and meticulous account of the refinement steps carried out during the \name{MH} phase. The detailed work on the parallel {\CDx} models revealed a finer subdivision of refinements during this phase, namely into six stages. The journal paper~\cite{CWWWZ12} explains the purpose of each stage in more detail.
+
+\subsubsection*{Stages of the \name{MH} phase}
+
+\begin{enumerate}
+  \item Definition of cycle timings.
+
+  \item Decomposition of data operations that are implemented across different missions and handlers.
+
+  \item Distribution of time budgets.
+
+  \item Transformation of sequential data operations into parallel handler actions.
+
+  \item Transformation of parallel data operations into parallel handler actions.
+
+  \item Extraction of the missions and handlers.
+\end{enumerate}
+%
+In the remainder of the section, we discuss the elementary refinement steps for each stage.
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Stage 1}
+
+In Stage 1 we introduce a cyclic design that embeds the overall timing requirements. Part of this is to introduce an interleaving with a $\circwait$ statement and distribute deadlines in order to localise them to their corresponding prefixes \emph{as much as this is possible}. In our case study, we specifically introduce an interleaving with $\circwait FRAME\_PERIOD$ and distribute deadlines on the communications on $next\_frame$ and $output\_collisions$. This stage involves a sequence of low-level refinements using distribution laws for deadlines and extraction laws for interleaving with a wait; we identify them as we go along. For readability, we occasionally \highlight{highlight} mathematical text in colour to emphasise which part of an action or process has been affected by a transformation.
+
+\begin{note}
+After discussion with Ana, we agreed that it is not possible to distribute all deadlines in Stage 1. A somewhat open question is whether we should tighten the time budget in Stage 1 or leave this to a later stage. Both approaches are feasible, and for now we decided to tighten the time budget in this stage.
+\end{note}
+
+\subsubsection*{Flatten Local Actions}
+
+We first flatten the three local actions $StartCycle$, $CalcStep$, $OutputStep$ into a single local actions which corresponds to the behaviour of the system and hence will be called $System$. The flattening facilitates the application of subsequent refinement laws; it is justified by the copy rule.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circus*}
+  \circsystem ~ CDxE\_MH1 ~ \circdef ~ \circbegin
+\end{circus*}
+%
+\begin{circusaction*}
+  \dots
+\end{circusaction*}
+%
+\begin{circusaction*}
+  System ~ \circdef\\
+  \t1
+  \circblockopen
+    next\_frame~?~frame~\circat~\tone ~ \then
+    \\
+    \t1
+    \circblockopen
+      \lschexpract RecordFrame \rschexpract \circseq
+      \\
+      \circwaitblock w : 0 \upto (FRAME\_PERIOD - OUT\_DL - \tone) \circspot
+      \\
+      \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+      \t1
+      \circblockopen
+        output\_collisions~!~colls~\circat~\ttwo ~ \then
+        \\
+        \circwait FRAME\_PERIOD - (\tone + w + \ttwo)
+      \circblockclose
+      \circdeadlinesync OUT\_DL \circseq
+      \\
+      \t1 System
+    \circblockclose
+  \circblockclose
+  \circdeadlinesync INP\_DL
+\end{circusaction*}
+\extracircusvspace
+%
+\begin{circusaction*}
+  \circspot \lschexpract Init \rschexpract \circseq System
+\end{circusaction*}
+%
+\begin{circus*}
+  \circend
+\end{circus*}
+\end{circusflow}
+%
+We note that the state and data operations of the process are omitted as they are similar to the ones of $ECPCDx$, the result of the \name{CP} phase. In what follows, we merely focus on the refinement of the $System$ action and ignore the rest of the process. Process refinement is established by monotonicity laws, as usual.
+
+\subsubsection*{Narrow Time Budgets}
+
+An objective of the refinement in this stage is to remove reference to the locally bound variables $\tone$ and $w$ in order to remove the $\circwait$ block and time prefix, and subsequently distribute the deadline on $next\_frame$. The respective subsequent refinement is facilitated by narrowing the time budget for the computation in each cycle. Here, in particular, we narrow the time budget determined by the
+%
+\[ \circwaitblock w : 0 \upto (FRAME\_PERIOD - OUT\_DL - \tone) \circspot A(\tone, w) \]
+%
+statement. The following two laws enable the respective action refinement.
+
+\input{narrow-time-budget-1.tex}
+\input{narrow-time-budget-2.tex}
+%
+The first law applies to simple nondeterministic waits whereas the second applies to wait blocks.
+
+\pagebreak
+
+\nid We thus perform the following refinement.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  System
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \dd \refby \; \mbox{``application of the law \thname{narrow-time-budget-2} using $\tone \leq INP\_DL$''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    next\_frame~?~frame~\circat~\tone ~ \then
+    \\
+    \t1
+    \circblockopen
+      \lschexpract RecordFrame \rschexpract \circseq
+      \\
+      \circwaitblock w : 0 \upto (FRAME\_PERIOD - OUT\_DL - \highlight{INP\_DL}) \circspot
+      \\
+      \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+      \t1
+      \circblockopen
+        output\_collisions~!~colls~\circat~\ttwo ~ \then
+        \\
+        \circwait FRAME\_PERIOD - (\tone + w + \ttwo)
+      \circblockclose
+      \circdeadlinesync OUT\_DL \circseq
+      \\
+      \t1 System
+    \circblockclose
+  \circblockclose
+  \circdeadlinesync INP\_DL
+\end{circusaction*}
+\end{circusflow}
+%
+To apply the law, we require a local (contextual) assumption $\tone \leq INP\_DL$. Suitable opening and closing rules for the window inference mechanism that realises action refinement introduce assumptions like the above. To give an example, constructs of the form $(c~\circat~t \then A(t)) \circdeadlinesync d$ are expected to have special opening rules that introduce the contextual assumption $t \leq d$ when shifting the focus to $A(t)$. We see that the introduction of contextual assumptions during refinement is mostly a technical issue; we will not further discuss it here but point to the literature on window inference~\cite{} and mechanised {\Circus} refinement~\cite{ZC12}.
+
+\subsubsection*{Introduce Interleaving for Cycle Time}
+
+In this step, the aim is to replace the inner $\circwait FRAME\_PERIOD - (\tone + w + \ttwo)$ with an outer interleaving with $\circwait FRAME\_PERIOD$. This interleaving was already present in the abstract $ATReqsCDx$ process, however, has been removed during the \name{CP} phase. To achieve this we require the following law.
+
+\input{time-prefix-elim.tex}
+
+\nid It yields the refinement given next.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of the law \thname{time-prefix-elim} using $OUT\_DL \leq FRAME\_PERIOD - \tone - w$''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    next\_frame~?~frame~\circat~\tone ~ \then
+    \\
+    \t1
+    \circblockopen
+      \lschexpract RecordFrame \rschexpract \circseq
+      \\
+      \circwaitblock w : 0 \upto (FRAME\_PERIOD -  INP\_DL - OUT\_DL) \circspot
+      \\
+      \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+      \t1
+      \circblockopen
+        (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+        \\
+        \highlight{\interleave \circwait FRAME\_PERIOD - (\tone + w)}
+      \circblockclose
+      \circseq
+      \\
+      \t1 System
+    \circblockclose
+  \circblockclose
+  \circdeadlinesync INP\_DL
+\end{circusaction*}
+\end{circusflow}
+%
+The proviso $OUT\_DL \leq FRAME\_PERIOD - \tone - w$ is discharged by the contextual assumptions
+%
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\arabic{enumi})}
+  \item $\tone \leq INP\_DL$ and
+
+  \item $w \leq FRAME\_PERIOD -  INP\_DL - OUT\_DL$
+\end{enumerate}
+%
+using elementary laws of linear arithmetics. This relies on another opening rule for window inference that applies to actions of the form $\circwaitblock w : t_0 \upto t_1 \circspot A(w)$ and introduces the local assumption $t_0 \leq w \leq t_1$.
+
+\subsubsection*{Extract Interleaving for Cycle Time}
+
+We next extract the interleaving with $\circwait FRAME\_PERIOD - (\tone + w)$ to the outer level. This requires a number of extraction laws for interleaving with a basic $\circwait t$ statement. Below we present them.
+
+\input{extract-inter-wait-seq.tex}
+\input{extract-inter-wait-var.tex}
+\input{extract-inter-wait-waitblock.tex}
+\input{extract-inter-wait-prefix.tex}
+
+\nid The laws allow us to proceed with the refinement as follows.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of extraction laws for interleaving''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      next\_frame~?~frame~\circat~\tone ~ \then
+      \\
+      \t1
+      \circblockopen
+        \lschexpract RecordFrame \rschexpract \circseq
+        \\
+        \circwaitblock w : 0 \upto (FRAME\_PERIOD -  INP\_DL - OUT\_DL) \circspot
+        \\
+        \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+        \t1 (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL \circseq
+        \\
+        \t1 System
+      \circblockclose
+    \circblockclose
+    \circdeadlinesync INP\_DL
+    \\
+    \highlight{\interleave \circwait FRAME\_PERIOD}
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+We omitted the detailed refinement steps for this transformation; they are straight-forward.
+
+\subsubsection*{Remove Unused Time Variables}
+
+We observe that the local constants $\tone$ and $w$, introduced by the time prefix and $\circwait$ block, are not referenced anymore. The two laws below justify their removal.
+
+\input{remove-unused-time-prefix.tex}
+\input{remove-unused-wait-block.tex}
+
+\nid Application of the above laws yields the following simplified action.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of the laws \thname{remove-unused-time-prefix} and \thname{remove-unused-wait-block}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      next\_frame~?~frame ~ \then
+      \\
+      \t1
+      \circblockopen
+        \lschexpract RecordFrame \rschexpract \circseq
+        \\
+        \circwait 0 \upto (FRAME\_PERIOD -  INP\_DL - OUT\_DL) \circspot
+        \\
+        \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+        \t1 (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL \circseq
+        \\
+        \t1 System
+      \circblockclose
+    \circblockclose
+    \circdeadlinesync INP\_DL
+    \\
+    \interleave \circwait FRAME\_PERIOD
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+The removal of the locally bound $\tone$ and $w$ was essential in order to distribute the outer synchronisation deadline on $next\_frame$. This is done in the last sub-step of Stage 1.
+
+\pagebreak
+
+\subsubsection*{Distribute Deadlines}
+
+The primary law we use in this sub-step is
+%
+\input{distr-sync-deadline-seq.tex}
+
+\nid We also require a basic law that distributes a prefix over a sequence.
+%
+\input{distr-prefix-seq.tex}
+
+\nid The application of the two laws in sequence yields
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of the law \thname{distr-prefix-seq}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      (next\_frame~?~frame \then \highlight{RecordFrame}) \circseq
+      \\
+      \circwait 0 \upto (FRAME\_PERIOD -  INP\_DL - OUT\_DL) \circseq
+      \\
+      \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+      \t1 (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL \circseq
+      \\
+      \t1 System
+    \circblockclose
+    \circdeadlinesync INP\_DL
+    \\
+    \interleave \circwait FRAME\_PERIOD
+  \circblockclose
+\end{circusaction*}
+%
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of the law \thname{distr-sync-deadline-seq}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      (next\_frame~?~frame \then RecordFrame) \highlight{\circdeadlinesync INP\_DL} \circseq
+      \\
+      \circwait 0 \upto (FRAME\_PERIOD -  INP\_DL - OUT\_DL) \circseq
+      \\
+      \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+      \t1 (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL \circseq
+      \\
+      \t1 System
+    \circblockclose
+    \\
+    \interleave \circwait FRAME\_PERIOD
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+In a final sub-step, we extract the sequence with $System$ from the inner block. This uses associativity of sequential composition as well as a basic law to extract the sequence with $System$ from the variable declaration. These laws shall not be presented here but can be found in Appendix~\ref{app:circuslaws}.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \refby \; \mbox{``application of associativity and distribution laws to extract sequence with $System$''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        (next\_frame~?~frame \then RecordFrame) \circdeadlinesync INP\_DL \circseq
+        \\
+        \circwait 0 \upto (FRAME\_PERIOD -  INP\_DL - OUT\_DL) \circseq
+        \\
+        \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+        \t1 (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    \highlight{System}
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+The above action concludes Stage 1 of the \name{MH} phase. All deadlines have been localised to the corresponding synchronisations. Besides, we have narrowed the time budget and introduced the cycle time. We notice, however, that the time budget is still captures by a single $\circwait$; it is decomposed later on in Stage 3.
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Stage 2}
+
+In this stage we decompose the data operations to match them to the design of missions and handlers. Here, this is, in particular, the $RecordFrame$ data operation. The decomposition is performed in two separate refinements which we present in the sequel.
+
+\subsubsection*{Refinement 1}
+
+The first refinement decomposes the $RecordFrame$ into three sequential data operations. Specifically, they are $StoreFrame$, $ReduceAndPartitionWork$ and $DetectCollisions$.
+%
+\begin{circusflow}
+\begin{circus}
+  \circsystem ~ CDxE\_MH2A ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{comment}
+\begin{schema}{\circstateignore ~ ECPStateCDx}
+  currentFrame : RawFrame\\
+  state : StateTable\\
+  voxel\_map : HashMap[Vector2d,List[Motion]]\\
+  work : Partition\\
+  collisions : int
+\end{schema}
+\end{comment}
+%
+\begin{circusaction}
+  \circstate ~ CDxMH2AState ~ == ~ ECPStateCDx
+\end{circusaction}
+%
+\begin{schema}{Init}
+  CDxMH2AState~'
+\where
+  currentFrame' = \circnew RawFrame
+  \\
+  state' = \circnew StateTable
+  \\
+  voxel\_map' = \circnew HashMap[Vector2d,List[Motion]]
+  \\
+  work' = \circnew Partition \argfour
+  \\
+  collisions' = 0
+\end{schema}
+%
+\begin{schema}{StoreFrame}
+  \Delta CDxMH2AState\\
+  frame? : Frame
+\where
+  \exists posns, posns' : Frame; motions, motions' : Frame |\\
+  \t1 \dom posns = \dom motions \land \dom posns' = \dom motions' @\\
+  \circblockopen
+  posns' = frame? \land
+  \\
+  motions' =\\
+  \t1 \{a : \dom posns' @ a \mapsto \IF a \in \dom posns \THEN (posns' ~ a) \vminus (posns ~ a) \ELSE ZeroV\} \land
+  \\
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \\
+  posns' = F(currentFrame') \land motions' = G(currentFrame', state')
+  \circblockclose
+\end{schema}
+%
+\begin{schema}{ReduceAndPartitionWork}
+  \Delta CDxMH2AState\\
+\where
+  currentFrame' = currentFrame \land state' = state
+  \\
+  \exists posns : Frame; motions : Frame | \dom posns = \dom motions @\\
+  \circblockopen
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \also
+  \circblockopen
+    \forall a_1, a_2 : Aircraft | \{a_1, a_2\} \subseteq \dom posns @
+    \\
+    \t1 (a_1, a_2) \in CalcCollisionSet(posns, motions) \implies
+    \\
+    \t2
+    \circblockopen
+      \exists l : List[Motion] |
+      l \in \hidemath{(}voxel\_map'~.~values~\emptytuple\hidemath{)}~.~elems~\emptytuple @\\
+      \t1 MkMotion(a_1, posns~a_1 \vminus motions~a_1, posns~a_1) \in l~.~elems~\emptytuple \land\\
+      \t1 MkMotion(a_2, posns~a_2 \vminus motions~a_2, posns~a_2) \in l~.~elems~\emptytuple
+    \circblockclose
+  \circblockclose
+  \circblockclose
+\end{schema}
+%
+\begin{schema}{DetectCollisions}
+  \Delta CDxMH2AState\\
+\where
+  currentFrame' = currentFrame \land state' = state \land voxel\_map' = voxel\_map \land work' = work
+  \\
+  \exists posns : Frame; motions : Frame | \dom posns = \dom motions @\\
+  \circblockopen
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \also
+  \exists collset : \finset ~ (Aircraft \cross Aircraft) | collset = CalcCollisionSet(posns, motions) @\\
+  \t1 (\# collset = 0 \land collisions' = 0) \lor (\# collset > 0 \land collisions' \geq (\# collset) \div 2)
+  \circblockclose
+\end{schema}
+%
+\begin{schema}{CalcCollisions}
+  \Xi CDxMH2AState\\
+  colls! : \nat
+\where
+  \exists posns : Frame; motions : Frame | \dom posns = \dom motions @\\
+  \circblockopen
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \also
+  \exists collset : \finset ~ (Aircraft \cross Aircraft) | collset = CalcCollisionSet(posns, motions) @
+  \\
+  \t1 (\# collset = 0 \land colls! = 0) \lor (\# collset > 0 \land colls! \geq (\# collset) \div 2)
+  \circblockclose
+\end{schema}
+%
+\begin{circusaction}
+  System ~ \circdef\\
+  \t1
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        (next\_frame~?~frame \then StoreFrame) \circdeadlinesync INP\_DL \circseq
+        \\
+        \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+        \\
+        \lschexpract DetectCollisions \rschexpract \circseq
+        \\
+        \circwait 0 \upto (FRAME\_PERIOD -  INP\_DL - OUT\_DL) \circseq
+        \\
+        \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+        \t1 (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot \lschexpract Init \rschexpract \circseq System
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}
+%
+We observe that the $RecordFrame$ data operation has been removed from the model:~its behaviour is now realised by the sequence of $\lschexpract StoreFrame \rschexpract$, $\lschexpract ReduceAndPartitionWork \rschexpract$ and $\lschexpract DetectCollisions \rschexpract$ in $StartCycle$. The decomposition of $RecordFrame$ is necessary for the subsequent design that splits its behaviour between the handlers of the mission. Table~\ref{tab:DataOperationsMH1} summarises which handler(s) of the application caters for which data operation in the model. We note that $DetectCollisions$ is implemented by four handler instances.
+
+{\renewcommand{\arraystretch}{1.2}\input{HandlerDataOpsMH1.tex}}
+
+In addition to refining data operations, we also carry out a minor action refinement of the $System$ action in the above process. After decomposition, the following fragment emerges in the $System$ action.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \circblockopen
+    next\_frame~?~frame ~ \then\\
+    \t1
+    \circblockopen
+      \lschexpract StoreFrame \rschexpract \circseq
+      \\
+      \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+      \\
+      \lschexpract DetectCollisions \rschexpract
+    \circblockclose
+  \circblockclose
+  \circdeadlinesync INP\_DL
+\end{circusaction*}
+\end{circusflow}
+%
+The action refinement binds the prefix to the $StoreFrame$ data operation and distributes the deadline through the sequence. This is similar to the refinement in the last sub-step of Stage 1, using exactly the same laws.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of the laws \thname{distr-prefix-seq} and \thname{distr-sync-deadline-seq}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    (next\_frame~?~frame \then StoreFrame) \circdeadlinesync INP\_DL \circseq
+    \\
+    \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+    \\
+    \lschexpract DetectCollisions \rschexpract
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+In general, the decomposition of $RecordFrame$ essentially extracts conjuncts of the schema predicate that modify the value of specific variables. In principle, this can be automated, subject to guidance by the user.
+
+\newpage
+
+\subsubsection*{Refinement 2}
+
+The second refinement further decomposes the $DetectCollisions$ data operation into a conjunction. This is desirable because the behaviour of this operation will later be implemented by parallel handlers.
+%
+\begin{circusflow}
+\begin{circus}
+  \circsystem ~ CDxE\_MH2B ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{comment}
+\begin{schema}{\circstateignore ~ ECPStateCDx}
+  currentFrame : RawFrame\\
+  state : StateTable\\
+  voxel\_map : HashMap[Vector2d,List[Motion]]\\
+  work : Partition\\
+  collisions : int
+\end{schema}
+\end{comment}
+%
+\begin{circusaction}
+  \circstate ~ CDxMH2BState ~ == ~ ECPStateCDx
+\end{circusaction}
+%
+\begin{schema}{Init}
+  CDxMH2BState~'
+\where
+  currentFrame' = \circnew RawFrame
+  \\
+  state' = \circnew StateTable
+  \\
+  voxel\_map' = \circnew HashMap[Vector2d,List[Motion]]
+  \\
+  work' = \circnew Partition \argfour
+  \\
+  collisions' = 0
+\end{schema}
+%
+\begin{schema}{StoreFrame}
+  \Delta CDxMH2BState\\
+  frame? : Frame
+\where
+  \exists posns, posns' : Frame; motions, motions' : Frame |\\
+  \t1 \dom posns = \dom motions \land \dom posns' = \dom motions' @\\
+  \circblockopen
+  posns' = frame? \land
+  \\
+  motions' =\\
+  \t1 \{a : \dom posns' @ a \mapsto \IF a \in \dom posns \THEN (posns' ~ a) \vminus (posns ~ a) \ELSE ZeroV\} \land
+  \\
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \\
+  posns' = F(currentFrame') \land motions' = G(currentFrame', state')
+  \circblockclose
+\end{schema}
+%
+\begin{schema}{ReduceAndPartitionWork}
+  \Delta CDxMH2BState\\
+\where
+  currentFrame' = currentFrame \land state' = state
+  \\
+  \exists posns : Frame; motions : Frame | \dom posns = \dom motions @\\
+  \circblockopen
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \also
+  \circblockopen
+    \forall a_1, a_2 : Aircraft | \{a_1, a_2\} \subseteq \dom posns @
+    \\
+    \t1 (a_1, a_2) \in CalcCollisionSet(posns, motions) \implies
+    \\
+    \t2
+    \circblockopen
+      \exists l : List[Motion] |
+      l \in \hidemath{(}voxel\_map'~.~values~\emptytuple\hidemath{)}~.~elems~\emptytuple @\\
+      \t1 MkMotion(a_1, posns~a_1 \vminus motions~a_1, posns~a_1) \in l~.~elems~\emptytuple \land\\
+      \t1 MkMotion(a_2, posns~a_2 \vminus motions~a_2, posns~a_2) \in l~.~elems~\emptytuple
+    \circblockclose
+  \circblockclose
+  \circblockclose
+\end{schema}
+%
+\begin{schema}{CalcPartCollisions}
+  \Xi CDxMH2BState\\
+  pcolls! : int\\
+  i? : 1 \upto 4
+\where
+  pcolls! ~ =\\
+  \t1 \#
+  \biglcurly
+    a_1 : Aircraft; a_2 : Aircraft |\\
+    \t1
+    \circblockopen
+      \exists l : List[Motion] | l \in \hidemath{(}work~.~getDetectorWork(i?)\hidemath{)}.~elems~\emptytuple @\\
+      \exists v_1, v_2 : Vector; w_1, w_2 : Vector @\\
+      \t1 MkMotion(a_1, v_1, w_1) \in l~.~elems~\emptytuple \land\\
+      \t1 MkMotion(a_2, v_2, w_2) \in l~.~elems~\emptytuple \land\\
+      \t1 collide((v_1, w_1 \vminus v_1), (v_2, w_2 \vminus v_2))
+    \circblockclose
+  \bigrcurly
+  \div 2
+\end{schema}
+%
+\begin{schema}{SetCollisionsFromParts}
+  \Delta CDxMH2BState\\
+  collsbag? : \bag int
+\where
+  currentFrame' = currentFrame \land state' = state\\
+  voxel\_map' = voxel\_map \land work' = work\\
+  \exists s : \seq int | s = items ~ collsbag? @ collisions' = \Sigma ~ s
+\end{schema}
+%
+\begin{circusaction*}
+  DetectCollisions ~ \circdef ~\\
+  \t1
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+    \t1
+    \circblockopen
+      \lschexpract
+        (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4)
+      \rschexpract
+    \circblockclose
+    \circseq
+    \\
+    \t1 SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+  \circblockclose
+\end{circusaction*}
+%
+\begin{comment}
+\begin{circusaction}
+  DetectCollisions ~ \circdef ~ \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{schema}{CalcCollisions}
+  \Xi CDxMH2BState\\
+  colls! : \nat
+\where
+  \exists posns : Frame; motions : Frame | \dom posns = \dom motions @\\
+  \circblockopen
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \also
+  \exists collset : \finset ~ (Aircraft \cross Aircraft) | collset = CalcCollisionSet(posns, motions) @
+  \\
+  \t1 (\# collset = 0 \land colls! = 0) \lor (\# collset > 0 \land colls! \geq (\# collset) \div 2)
+  \circblockclose
+\end{schema}
+%
+\begin{circusaction}
+  System ~ \circdef\\
+  \t1
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        (next\_frame~?~frame \then StoreFrame) \circdeadlinesync INP\_DL \circseq
+        \\
+        \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+        \\
+        DetectCollisions \circseq
+        \\
+        \circwait 0 \upto (FRAME\_PERIOD -  INP\_DL - OUT\_DL) \circseq
+        \\
+        \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+        \t1 (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot \lschexpract Init \rschexpract \circseq System
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}
+%
+Two data operations $CalcPartCollisions$ and $SetCollisionsFromParts$ have been introduced in this refinement. The first one calculates the collisions result for a particular partition of the subdivided work. The second one merges all partial results~(this is just adding them together). The merge operation is specified in terms of a bag to emphasise that the order in which the results are computed and merged is immaterial. This will later on be exploited when parallelising $DetectCollisions$ at the level of actions.
+
+We note, however, that the behaviour of the detector handlers is not fully parallelised yet in this model. In particular, the effect of $SetCollisionsFromParts$ has to be distributed into the handlers. This cannot be done at the level of data operations though due to the absence of sharing.
+
+This model concludes Stage 2 of the \name{MH} phase. All refinement at the level of data operations is completed here and subsequent stages focus on the refinement of actions. In general, decomposition of data operations is a non-trivial design task; automation through tools may be envisaged for particular patterns.
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Stage 3}
+
+In this stage we distribute time budgets between data operations. This involves two sub-steps.
+%
+\begin{enumerate}
+  \item Decompose nondeterministic $\circwait$ statements for time budgets where appropriate.
+
+  \item Move decomposed time budgets to the respective data operation.
+\end{enumerate}
+%
+The decomposition in sub-step (1) is effectively achieved by the following two laws.
+%
+\input{split-time-budget-1.tex}
+\input{split-time-budget-2.tex}
+
+\nid In our example, we use multiple applications of the second law.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \refby \; \mbox{``multiple applications of law \thname{split-time-budget-2}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        (next\_frame~?~frame \then StoreFrame) \circdeadlinesync INP\_DL \circseq
+        \\
+        \lschexpract ReduceAndPartitionWork \rschexpract \circseq\\
+        DetectCollisions \circseq
+        \\
+        \highlight{\circwait 0 \upto SF_{TB}} \circseq
+        \\
+        \highlight{\circwait 0 \upto RPW_{TB}} \circseq
+        \\
+        \highlight{\circwait 0 \upto DC_{TB}} \circseq
+        \\
+        \highlight{\circwait 0 \upto CC_{TB}} \circseq
+        \\
+        \circvar colls : int \circspot \lschexpract CalcCollisions \rschexpract \circseq\\
+        \t1 (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+Above, the axiomatic constants $SF_{TB}$, $RPW_{TB}$, $DC_{TB}$ and $CC_{TB}$ have been introduced to determine the time budgets for individual data operations. Table~\ref{tab:TimeBudgets} summarises the relationship between these constants and the corresponding data operation of the {\Circus} process.
+
+{\renewcommand{\arraystretch}{1.2}\input{TimeBudgets.tex}}
+
+\nid At this point, it is in fact not necessary to precisely specify the values of the time budgets. However, to discharge the proviso of the above refinement, we require at least the following property.
+%
+\[ SF_{TB} + RPW_{TB} + DC_{TB} + CC_{TB} \leq FRAME\_PERIOD -  INP\_DL - OUT\_DL \]
+%
+We therefore introduce the time budgets axiomatically as follows. This assumes $TIME : \power ~ (\arithmos)$.
+%
+\begin{axdef}
+  SF_{TB} : TIME
+  \\
+  RPW_{TB} : TIME
+  \\
+  DC_{TB} : TIME
+  \\
+  CC_{TB} : TIME
+\where
+  SF_{TB} + RPW_{TB} + DC_{TB} + CC_{TB} \leq FRAME\_PERIOD -  INP\_DL - OUT\_DL
+\end{axdef}
+%
+In sub-step (2), we move the operation-specific time budgets to the data operations they apply to.\pagebreak This uses associativity of sequential composition $(A_1 \circseq A_2) \circseq A_3 \equiv A_1 \circseq (A_2 \circseq A_3)$, elementary distribution theorems for sequencing, and the following commutativity law for a time budget and data operation.
+%
+\input{time-budget-op-comm.tex}
+
+\nid Using multiple and symmetric applications of the previous law, we proceed to obtain
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \refby \; \mbox{``multiple applications of law \thname{time-budget-op-comm} and elementary laws''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        (next\_frame~?~frame \then \highlight{\circwait 0 \upto SF_{TB}} \circseq StoreFrame) \circdeadlinesync INP\_DL  \circseq
+        \\
+        \highlight{\circwait 0 \upto RPW_{TB}} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+        \\
+        \highlight{\circwait 0 \upto DC_{TB}} \circseq DetectCollisions \circseq
+        \\
+        \circvar colls : int \circspot \highlight{\circwait 0 \upto CC_{TB}} \circseq \lschexpract CalcCollisions \rschexpract \circseq\\
+        \t1 (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+Once again, we omit the details of the elementary refinement steps~(the laws used are in Appendix~\ref{app:circuslaws}). This concludes Stage 3 since all data operations are now equipped with an operation-specific time budget.
+
+\begin{note}
+There is a choice here whether to put the respective time budget before or after the data operation. Overall, this should not matter as we are never able to observe the time of a state change.
+\end{note}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Stage 4}
+
+This stage addresses the parallelisation of sequential data operations into parallel handler actions. Generally, this takes advantage of the following two laws.
+%
+\input{seq-to-par-1.tex}
+\input{seq-to-par-2.tex}
+%
+The first law is applicable when no shared data is calculated and passed between the sequential actions, or in other words, the first action $A_1$ does not write data that the second action $A_2$ reads. If there is such data, the second law has to be applied. We note that in \thname{seq-to-par-1}, the new channel $c$ is typeless and we can think of it purely in terms of establishing control of execution. In \thname{seq-to-par-2}, the new channel $c$ is typed according to the shared data that is passed between the sequential actions. It thus fulfils the dual purpose of exercising control and providing a means for communicating shared data through the parallelism.
+
+In our example, we apply \thname{seq-to-par-2} three times to fully parallelise the sequence of data operations. The law \thname{seq-to-par-1} is not used, although we do require it later on in the refinement for the \name{SH} phase. The three applications of \thname{seq-to-par-2} are interleaved with auxiliary refinement steps that distribute input prefixes and extract the hiding of the new channels. Below, we highlight the focus of the action refinement in this stage.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  System ~ \circdef\\
+  \t1
+  \circblockopen
+    \circblockopen
+      {\color{Red}
+      \circblockopen
+        (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL  \circseq
+        \\
+        \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+        \\
+        \circwait 0 \upto DC_{TB} \circseq DetectCollisions \circseq
+        \\
+        \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+        \\
+        (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose}
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+We proceed by refining the highlighted action as follows.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \circblockopen
+    (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL  \circseq
+    \\
+    \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+    \\
+    \circwait 0 \upto DC_{TB} \circseq DetectCollisions \circseq
+    \\
+    \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+    \\
+    (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+  \circblockclose
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \dd \equiv \; \mbox{``application of the law \thname{seq-to-par-2} introducing a channel $reduce$ of type $RawFrame \times StateTable$''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+      \\
+      \highlight{reduce~!~currentFrame~!~state \then \Skip}
+    \circblockclose
+    \\
+    \t1 \lpar \{currentFrame, state\} | \lchanset \highlight{reduce} \rchanset | \{voxel\_map, work, collisions\} \rpar
+    \\
+    \circblockopen
+      \highlight{reduce~?~currentFrame~?~state ~ \then}
+      \\
+      \circblockopen
+        \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+        \\
+        \circwait 0 \upto DC_{TB} \circseq DetectCollisions \circseq
+        \\
+        \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+        \\
+        (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose
+    \circblockclose
+  \circblockclose
+  \circhide \lchanset \highlight{reduce} \rchanset
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \dd \equiv \; \mbox{``distribution of input prefix $reduce~?~currentFrame~?~state \then \dots \;$ using elementary laws''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+      \\
+      reduce~!~currentFrame~!~state \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+    \also
+    \circblockopen
+      \circblockopen
+        \highlight{reduce~?~currentFrame~?~state ~ \then}
+        \\
+        \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract
+      \circblockclose
+      \circseq
+      \also
+      \circblockopen
+        \circwait 0 \upto DC_{TB} \circseq DetectCollisions \circseq
+        \\
+        \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+        \\
+        (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose
+    \circblockclose
+  \circblockclose
+  \circhide \lchanset reduce \rchanset
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \dd \equiv \; \mbox{``application of the law \thname{seq-to-par-2} introducing a channel $detect$ of type $Partition$''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+      \\
+      reduce~!~currentFrame~!~state \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+    \also
+    \circblockopen
+      \circblockopen
+        reduce~?~currentFrame~?~state ~ \then
+        \\
+        \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+        \\
+        \highlight{detect~!~work \then \Skip}
+      \circblockclose
+      \\
+      \t1 \lpar \{voxel\_map, work\} | \lchanset \highlight{detect} \rchanset | \{collisions\} \rpar
+      \\
+      \circblockopen
+        \highlight{detect~?~work ~ \then}
+        \\
+        \circblockopen
+          \circwait 0 \upto DC_{TB} \circseq DetectCollisions \circseq
+          \\
+          \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+          \\
+          (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+        \circblockclose
+      \circblockclose
+    \circblockclose
+    \circhide \lchanset \highlight{detect} \rchanset
+  \circblockclose
+  \circhide \lchanset reduce \rchanset
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \dd \equiv \; \mbox{``distribution of input prefix $detect~?~work \then \dots \;$ using elementary laws''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+      \\
+      reduce~!~currentFrame~!~state \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+    \also
+    \circblockopen
+      \circblockopen
+        reduce~?~currentFrame~?~state ~ \then
+        \\
+        \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+        \\
+        detect~!~work \then \Skip
+      \circblockclose
+      \\
+      \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \{collisions\} \rpar
+      \also
+      \circblockopen
+        \circblockopen
+          \highlight{detect~?~work ~ \then}
+          \\
+          \circwait 0 \upto DC_{TB} \circseq DetectCollisions
+        \circblockclose
+        \circseq
+        \also
+        \circblockopen
+          \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+          \\
+          (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+        \circblockclose
+      \circblockclose
+    \circblockclose
+    \circhide \lchanset detect \rchanset
+  \circblockclose
+  \circhide \lchanset reduce \rchanset
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \dd \equiv \; \mbox{``extraction of hiding of the channel $detect$ using elementary laws''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+      \\
+      reduce~!~currentFrame~!~state \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+    \\
+    \circblockopen
+      reduce~?~currentFrame~?~state ~ \then
+      \\
+      \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+      \\
+      detect~!~work \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \{collisions\} \rpar
+    \also
+    \circblockopen
+      \circblockopen
+        detect~?~work ~ \then
+        \\
+        \circwait 0 \upto DC_{TB} \circseq DetectCollisions
+      \circblockclose
+      \circseq
+      \also
+      \circblockopen
+        \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+        \\
+        (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose
+    \circblockclose
+  \circblockclose
+  \circhide \lchanset reduce, \highlight{detect} \rchanset
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \dd \equiv \; \mbox{``application of the law \thname{seq-to-par-2} introducing a channel $output$ of type $int$''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+      \\
+      reduce~!~currentFrame~!~state \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+    \\
+    \circblockopen
+      reduce~?~currentFrame~?~state ~ \then
+      \\
+      \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+      \\
+      detect~!~work \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \{collisions\} \rpar
+    \also
+    \circblockopen
+      \circblockopen
+        detect~?~work ~ \then
+        \\
+        \circwait 0 \upto DC_{TB} \circseq DetectCollisions \circseq
+        \\
+        \highlight{output~!~collisions \then \Skip}
+      \circblockclose
+      \\
+      \t1 \lpar \{collisions\} | \lchanset \highlight{output} \rchanset | \emptyset \rpar
+      \\
+      \circblockopen
+        \highlight{output~?~collisions ~ \then}
+        \\
+        \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+        \\
+        (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+      \circblockclose
+    \circblockclose
+    \circhide \lchanset \highlight{output} \rchanset
+  \circblockclose
+  \circhide \lchanset reduce, detect \rchanset
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \dd \equiv \; \mbox{``extraction of hiding of the channel $output$ using elementary laws''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+      \\
+      reduce~!~currentFrame~!~state \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+    \\
+    \circblockopen
+      reduce~?~currentFrame~?~state ~ \then
+      \\
+      \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+      \\
+      detect~!~work \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \{collisions\} \rpar
+    \\
+    \circblockopen
+      detect~?~work ~ \then
+      \\
+      \circwait 0 \upto DC_{TB} \circseq DetectCollisions \circseq
+      \\
+      output~!~collisions \then \Skip
+    \circblockclose
+    \\
+    \t1 \lpar \{collisions\} | \lchanset output \rchanset | \emptyset \rpar
+    \\
+    \circblockopen
+      output~?~collisions ~ \then
+      \\
+      \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+      \\
+      (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+    \circblockclose
+  \circblockclose
+  \circhide
+  \also
+  \t1 \lchanset reduce, detect, \highlight{output} \rchanset
+\end{circusaction*}
+\end{circusflow}
+%
+After inserting the refined action into the overall $System$ we obtain the following result.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  System ~ \circdef\\
+  \t1
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+          \\
+          reduce~!~currentFrame~!~state \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+        \\
+        \circblockopen
+          reduce~?~currentFrame~?~state ~ \then
+          \\
+          \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+          \\
+          detect~!~work \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \{collisions\} \rpar
+        \\
+        \circblockopen
+          detect~?~work ~ \then
+          \\
+          \circwait 0 \upto DC_{TB} \circseq DetectCollisions \circseq
+          \\
+          output~!~collisions \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{collisions\} | \lchanset output \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          output~?~collisions ~ \then
+          \\
+          \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+          \\
+          (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+        \circblockclose
+      \circblockclose
+      \circhide
+      \also
+      \t1 \lchanset reduce, detect, output \rchanset
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+We further extract the hiding of the new channels to the outer level.
+%
+\begin{circusflow}
+\nounparsedcolour
+%
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``extraction of hiding of $\lchanset reduce, detect, output \rchanset$ using elementary laws''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+          \\
+          reduce~!~currentFrame~!~state \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+        \\
+        \circblockopen
+          reduce~?~currentFrame~?~state ~ \then
+          \\
+          \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+          \\
+          detect~!~work \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \{collisions\} \rpar
+        \\
+        \circblockopen
+          detect~?~work ~ \then
+          \\
+          \circwait 0 \upto DC_{TB} \circseq DetectCollisions \circseq
+          \\
+          output~!~collisions \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{collisions\} | \lchanset output \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          output~?~collisions ~ \then
+          \\
+          \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+          \\
+          (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+        \circblockclose
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+  \circhide
+  \also
+  \t1 \lchanset reduce, detect, output \rchanset
+\end{circusaction*}
+\end{circusflow}
+%
+This concludes Stage 4 of the refinement for the \name{MH} phase. We observe that all sequential data operations have been transformed into parallel actions. Execution control and the passing of data is achieved by the new channels $reduce$, $detect$ and $output$. Parallelisation is, however, not completed yet. In particular, the parallelism of detection handlers has not emerged in this stage. The application of laws follows a uniform pattern and hence automation guided by the developer should be possible in this stage.
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Stage 5}
+
+Stage 5 deals with the transformation of parallel data operations~(schema conjunctions) into parallel handler actions. In our example, this is the refinement of $DetectCollisions$, including its time budget. Below we use the copy rule to expand the definition of $DetectCollisions$ in the $System$ action.
+
+The focus of the subsequent refinement steps is highlighted.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``copy rule expanding $DetectCollisions$''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  System ~ \circdef\\
+  \t1
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+          \\
+          reduce~!~currentFrame~!~state \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+        \\
+        \circblockopen
+          reduce~?~currentFrame~?~state ~ \then
+          \\
+          \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+          \\
+          detect~!~work \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \{collisions\} \rpar
+        \\
+        \circblockopen
+          detect~?~work \then \red{\circwait 0 \upto DC_{TB} \circseq}
+          \\
+          {\color{Red}
+          \circblockopen
+            \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+            \t1
+            \circblockopen
+              \lschexpract
+                (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \land\\
+                (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \land\\
+                (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \land\\
+                (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4)
+              \rschexpract
+            \circblockclose
+            \circseq
+            \\
+            \t1 SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+          \circblockclose} \circseq
+          \\
+          output~!~collisions \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{collisions\} | \lchanset output \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          output~?~collisions ~ \then
+          \\
+          \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+          \\
+          (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+        \circblockclose
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+  \circhide
+  \also
+  \t2 \lchanset reduce, detect, output \rchanset
+\end{circusaction*}
+\end{circusflow}
+%
+We start by decomposing the time budget for $DetectCollisions$ as already illustrated in Stage 3.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \circwait 0 \upto DC_{TB} \circseq\\
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+    \t1
+    \circblockopen
+      \lschexpract
+        (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4)
+      \rschexpract
+    \circblockclose
+    \circseq
+    \\
+    \t1 SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+  \circblockclose
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \dd \; \refby \; \mbox{``application of the law \thname{split-time-budget-2}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \highlight{\circwait 0 \upto CPC_{TB}} \circseq \highlight{\circwait 0 \upto SC_{TB}} \circseq\\
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+    \t1
+    \circblockopen
+      \lschexpract
+        (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4)
+      \rschexpract
+    \circblockclose
+    \circseq
+    \\
+    \t1 SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+This assume the presence of two further constants $CPC_{TB}$ and $SC_{TB}$ with $CPC_{TB} + SC_{TB} \leq DC_{TB}$.
+
+\begin{comment}
+\begin{axdef}
+  CPC_{TB} : TIME\\
+  SC_{TB} : TIME
+\where
+  CPC_{TB} + SC_{TB} \leq DC_{TB}
+\end{axdef}
+\end{comment}
+
+\begin{note}
+Should the above decomposition of time budgets already have been done in Stage 3?
+\end{note}
+
+\nid We next distribute the time budgets in order to attach them to the respective data operations. This, again, is similar in principle to what we has already been illustrated in Stage 3. The following supplementary law facilitates distribution of time budgets into local variable declarations.
+%
+\input{distr-wait-seq-var.tex}
+%
+The resulting transformation is given below.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \; \equiv \; \mbox{``application of the laws \thname{distr-wait-seq-var} and \thname{time-budget-op-comm}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot \highlight{\circwait 0 \upto CPC_{TB}} \circseq\\
+    \t1
+    \circblockopen
+      \lschexpract
+        (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \land\\
+        (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4)
+      \rschexpract
+    \circblockclose
+    \circseq
+    \\
+    \t1 \highlight{\circwait 0 \upto SC_{TB}} \circseq
+    \\
+    \t1 SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+The next law is used to turn the schema conjunction into a parallelism of actions.
+%
+\input{conj-to-par.tex}
+%
+It is applicable since all schemas in the above conjunction write to a different variable $colls\mathtt{i}$.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``multiple applications of law \thname{conj-to-par}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot \circwait 0 \upto CPC_{TB} \circseq\\
+    \t1
+    \circblockopen
+      \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract
+      \\
+      \t1 \highlight{\lpar \{colls1\} | \emptyset | \{colls2, colls3, colls4\} \rpar}
+      \\
+      \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract
+      \\
+      \t1 \highlight{\lpar \{colls2\} | \emptyset | \{colls3, colls4\} \rpar}
+      \\
+      \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract
+      \\
+      \t1 \highlight{\lpar \{colls3\} | \emptyset | \{colls4\} \rpar}
+      \\
+      \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract
+    \circblockclose
+    \circseq
+    \\
+    \t1 \circwait 0 \upto SC_{TB} \circseq
+    \\
+    \t1 SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+Another distribution law enables us to move $\circwait 0 \upto CPC_{TB}$ into the parallelism.
+%
+\input{distr-wait-seq-par}
+%
+Intuitively, since the two data operations execute in parallel, each of them has a time budget $\circwait t_1 \upto t_2$.
+
+\pagebreak
+
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``multiple applications of law \thname{distr-wait-seq-par}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+    \t1
+    \circblockopen
+      (\highlight{\circwait 0 \upto CPC_{TB}} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract)
+      \\
+      \t1 \lpar \{colls1\} | \emptyset | \{colls2, colls3, colls4\} \rpar
+      \\
+      (\highlight{\circwait 0 \upto CPC_{TB}} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract)
+      \\
+      \t1 \lpar \{colls2\} | \emptyset | \{colls3, colls4\} \rpar
+      \\
+      (\highlight{\circwait 0 \upto CPC_{TB}} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract)
+      \\
+      \t1 \lpar \{colls3\} | \emptyset | \{colls4\} \rpar
+      \\
+      (\highlight{\circwait 0 \upto CPC_{TB}} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract)
+    \circblockclose
+    \circseq
+    \\
+    \t1 \circwait 0 \upto SC_{TB} \circseq SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+Above we still have the sequence with the $SetCollisionsFromParts$ data operation; it also has to be parallelised. To achieve this, we use \thname{seq-to-par-2} from Stage 4 again, this time introducing a channel $setColls$ of type $int \cross int \cross int \cross int$ to communicate all partial results computed by the four detector handlers.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of the law \thname{seq-to-par-2}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+    \t1
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          (\circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract)
+          \\
+          \t1 \lpar \{colls1\} | \emptyset | \{colls2, colls3, colls4\} \rpar
+          \\
+          (\circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract)
+          \\
+          \t1 \lpar \{colls2\} | \emptyset | \{colls3, colls4\} \rpar
+          \\
+          (\circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract)
+          \\
+          \t1 \lpar \{colls3\} | \emptyset | \{colls4\} \rpar
+          \\
+          (\circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract)
+        \circblockclose
+        \circseq
+        \\
+        \highlight{setColls~!~colls1~!~colls2~!~colls3~!~colls4 \then \Skip}
+      \circblockclose
+      \also
+      \t1 \lpar \{colls1, colls2, colls3, colls4 \} | \lchanset \highlight{setColls} \rchanset | \{collisions\} \rpar
+      \also
+      \circblockopen
+        \highlight{setColls~?~colls1~?~colls2~?~colls3~?~colls4 ~ \then}
+        \\
+        \circwait 0 \upto SC_{TB} \circseq SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+      \circblockclose
+    \circblockclose
+    \circhide
+    \also
+    \t2 \lchanset setColls \rchanset
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+To eliminate the prefix that was introduced in the left branch of the parallelism, we require a specialised channel decomposition law that replaces the channel $setColls$ of type $int \cross int \cross int \cross int$ by a channel $recColls$ of type $int$. The intention of the refinement is to decompose a single communication on $setColls$ into an interleaving of four communications on $recColls$. We note that $setColls$ is assumed to be concealed in the context where this law is applicable. A detailed investigation of the law is future work for now.
+\vspace{1em}
+
+\todo{Maybe present the law in more detail before proceeding with the refinement.}
+
+\pagebreak
+
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of a specialised high-level channel decomposition law''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+    \t1
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          (\circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract)
+          \\
+          \t1 \lpar \{colls1\} | \emptyset | \{colls2, colls3, colls4\} \rpar
+          \\
+          (\circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract)
+          \\
+          \t1 \lpar \{colls2\} | \emptyset | \{colls3, colls4\} \rpar
+          \\
+          (\circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract)
+          \\
+          \t1 \lpar \{colls3\} | \emptyset | \{colls4\} \rpar
+          \\
+          (\circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract)
+        \circblockclose
+        \circseq
+        \also
+        \color{Red}
+        \circblockopen
+          (recColls~!~colls1 \then \Skip) ~ \interleave
+          \\
+          (recColls~!~colls2 \then \Skip) ~ \interleave
+          \\
+          (recColls~!~colls3 \then \Skip) ~ \interleave
+          \\
+          (recColls~!~colls4 \then \Skip)
+        \circblockclose
+      \circblockclose
+      \also
+      \t1 \lpar \{colls1, colls2, colls3, colls4 \} | \lchanset \highlight{recColls} \rchanset | \{collisions\} \rpar
+      \also
+      \circblockopen
+        \red{\circvar colls1, colls2, colls3, colls4 : int \circspot}
+        \\
+        \color{Red}
+        \circblockopen
+          (recColls~?~x \then colls1 := x) ~ \interleave
+          \\
+          (recColls~?~x \then colls2 := x) ~ \interleave
+          \\
+          (recColls~?~x \then colls3 := x) ~ \interleave
+          \\
+          (recColls~?~x \then colls4 := x)
+        \circblockclose
+        \circseq
+        \also
+        \circwait 0 \upto SC_{TB} \circseq SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+      \circblockclose
+    \circblockclose
+    \circhide
+    \also
+    \t2 \lchanset \highlight{recColls} \rchanset
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+Likewise, another specialised law is subsequently used to distribute the interleaving in the left hand of the outer parallelism into the inner parallelism that computes that partial collision results.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of a specialised high-level law for distribution of an interleaving of prefixes''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+    \t1
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract \circseq
+          \\
+          \highlight{recColls~!~colls1 \then \Skip}
+        \circblockclose
+        \\
+        \t1 \lpar \{colls1\} | \emptyset | \{colls2, colls3, colls4\} \rpar
+        \\
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract \circseq
+          \\
+          \highlight{recColls~!~colls2 \then \Skip}
+        \circblockclose
+        \\
+        \t1 \lpar \{colls2\} | \emptyset | \{colls3, colls4\} \rpar
+        \\
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract \circseq
+          \\
+          \highlight{recColls~!~colls3 \then \Skip}
+        \circblockclose
+        \\
+        \t1 \lpar \{colls3\} | \emptyset | \{colls4\} \rpar
+        \\
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract \circseq
+          \\
+          \highlight{recColls~!~colls4 \then \Skip}
+        \circblockclose
+      \circblockclose
+      \also
+      \t1 \lpar \{colls1, colls2, colls3, colls4 \} | \lchanset recColls \rchanset | \{collisions\} \rpar
+      \also
+      \circblockopen
+        \circvar colls1, colls2, colls3, colls4 : int \circspot
+        \\
+        \circblockopen
+          (recColls~?~x \then colls1 := x) ~ \interleave
+          \\
+          (recColls~?~x \then colls2 := x) ~ \interleave
+          \\
+          (recColls~?~x \then colls3 := x) ~ \interleave
+          \\
+          (recColls~?~x \then colls4 := x)
+        \circblockclose
+        \circseq
+        \also
+        \circwait 0 \upto SC_{TB} \circseq SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+      \circblockclose
+    \circblockclose
+    \circhide
+    \also
+    \t2 \lchanset recColls \rchanset
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+A final high-level law sequentialises the interleaving in the right-hand branch of the outer parallelism.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of a specialised high-level law for sequentialising prefix interleaving''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+    \t1
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract \circseq
+          \\
+          recColls~!~colls1 \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{colls1\} | \emptyset | \{colls2, colls3, colls4\} \rpar
+        \\
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract \circseq
+          \\
+          recColls~!~colls2 \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{colls2\} | \emptyset | \{colls3, colls4\} \rpar
+        \\
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract \circseq
+          \\
+          recColls~!~colls3 \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{colls3\} | \emptyset | \{colls4\} \rpar
+        \\
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract \circseq
+          \\
+          recColls~!~colls4 \then \Skip
+        \circblockclose
+      \circblockclose
+      \also
+      \t1 \lpar \{colls1, colls2, colls3, colls4 \} | \lchanset recColls \rchanset | \{collisions\} \rpar
+      \also
+      \circblockopen
+        \circvar colls1, colls2, colls3, colls4 : int \circspot
+        \\
+        \color{Red}
+        \circblockopen
+          (recColls~?~x \then colls1 := x) ~ \circseq
+          \\
+          (recColls~?~x \then colls2 := x) ~ \circseq
+          \\
+          (recColls~?~x \then colls3 := x) ~ \circseq
+          \\
+          (recColls~?~x \then colls4 := x)
+        \circblockclose
+        \circseq
+        \\
+        \circwait 0 \upto SC_{TB} \circseq SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+      \circblockclose
+    \circblockclose
+    \circhide
+    \also
+    \t2 \lchanset recColls \rchanset
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+This refinement is valid because the $SetCollisionsFromParts$ operation is parametrised in terms of a bag and therefore is agnostic to the order in which results are communicated through the $recColls$ channel. The sequentialising of the interleaving is important in order to decompose and distribute the time budget $SC_{TB}$ between the elements of the sequence. Hence, in the next step we decompose and distribute the time budget $SC_{TB}$ into two time budgets, $RC_{TB}$ and $SCFP_{TB}$ where $4*RC_{TB} + SCFP_{TB} \leq SC_{TB}$.
+%
+\begin{comment}
+\begin{axdef}
+  RC_{TB} : TIME\\
+  SCFP_{TB} : TIME
+\where
+  4*RC_{TB} + SCFP_{TB} \leq SC_{TB}
+\end{axdef}
+\end{comment}
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``decomposition and distribution of $\circwait 0 \upto SC_{TB}$ using laws from Stage 3''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circvar colls1, colls2, colls3, colls4 : int \circspot\\
+    \t1
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract \circseq
+          \\
+          recColls~!~colls1 \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{colls1\} | \emptyset | \{colls2, colls3, colls4\} \rpar
+        \\
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract \circseq
+          \\
+          recColls~!~colls2 \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{colls2\} | \emptyset | \{colls3, colls4\} \rpar
+        \\
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract \circseq
+          \\
+          recColls~!~colls3 \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{colls3\} | \emptyset | \{colls4\} \rpar
+        \\
+        \circblockopen
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract \circseq
+          \\
+          recColls~!~colls4 \then \Skip
+        \circblockclose
+      \circblockclose
+      \also
+      \t1 \lpar \{colls1, colls2, colls3, colls4 \} | \lchanset recColls \rchanset | \{collisions\} \rpar
+      \also
+      \circblockopen
+        \circvar colls1, colls2, colls3, colls4 : int \circspot
+        \\
+        \circblockopen
+          (recColls~?~x \then (\highlight{\circwait 0 \upto RC_{TB}} \circseq colls1 := x)) ~ \circseq
+          \\
+          (recColls~?~x \then (\highlight{\circwait 0 \upto RC_{TB}} \circseq colls2 := x)) ~ \circseq
+          \\
+          (recColls~?~x \then (\highlight{\circwait 0 \upto RC_{TB}} \circseq colls3 := x)) ~ \circseq
+          \\
+          (recColls~?~x \then (\highlight{\circwait 0 \upto RC_{TB}} \circseq colls4 := x))
+        \circblockclose
+        \circseq
+        \\
+        \highlight{\circwait 0 \upto SCFP_{TB}} \circseq SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+      \circblockclose
+    \circblockclose
+    \circhide
+    \also
+    \t2 \lchanset recColls \rchanset
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+The above refinement is justified by the assumption $4*RC_{TB} + SCFP_{TB} \leq SC_{TB}$ about the new constants, and also the fact that the communication on $recColls$ is concealed. A detailed formulation of the law including its proof are future work. For one, it seems that it is not compositional. Comparing, for instance,
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \circblockopen
+    (recColls~?~x \then colls1 := x) ~ \circseq
+    \\
+    (recColls~?~x \then colls2 := x) ~ \circseq
+    \\
+    (recColls~?~x \then colls3 := x) ~ \circseq
+    \\
+    (recColls~?~x \then colls4 := x)
+  \circblockclose
+  \quad \mbox{and}
+\end{circusaction*}
+\end{circusflow}
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \circblockopen
+    (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls1 := x)) ~ \circseq
+    \\
+    (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls2 := x)) ~ \circseq
+    \\
+    (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls3 := x)) ~ \circseq
+    \\
+    (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls4 := x))
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+we observe that the second action refuses more than the first action in terms of its time-wise behaviour. Namely, the first action permits multiple $recColls$ events to occur in the same instant whereas in the second action there can be a delay of up to $RC_{TB}$ time units between them, so this is not a failures refinement. Therefore, we have to refine the above fragment in context rather than in isolation; this is future work.
+
+We next distribute the local variable declarations into the respective parallel branches that write to the variable. A few basic laws, namely  \thname{distr-var-hide}, \thname{distr-var-par}, \thname{remove-var} and \thname{compact-write-sets-par} are useful here; they are given in Appendix~\ref{app:circuslaws}. We shall not discuss the refinement in detail.
+%
+\begin{comment}
+\input{distr-var-hide.tex}
+\input{distr-var-par.tex}
+\input{remove-var.tex}
+\input{compact-write-sets-par.tex}
+\end{comment}
+\addtocounter{circuslawthm}{4}
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of the laws \thname{distr-var-hide}, \thname{distr-var-par}, \thname{remove-var} and \thname{compact-write-sets-par}''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          \circvar colls1 : int \circspot
+          \\
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract \circseq
+          \\
+          recColls~!~colls1 \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \emptyset | \emptyset | \emptyset \rpar
+        \\
+        \circblockopen
+          \circvar colls2 : int \circspot
+          \\
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract \circseq
+          \\
+          recColls~!~colls2 \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \emptyset | \emptyset | \emptyset \rpar
+        \\
+        \circblockopen
+          \circvar colls3 : int \circspot
+          \\
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract \circseq
+          \\
+          recColls~!~colls3 \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \emptyset | \emptyset | \emptyset \rpar
+        \\
+        \circblockopen
+          \circvar colls4 : int \circspot
+          \\
+          \circwait 0 \upto CPC_{TB} \circseq \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract \circseq
+          \\
+          recColls~!~colls4 \then \Skip
+        \circblockclose
+      \circblockclose
+      \also
+        \t1 \lpar \emptyset | \lchanset recColls \rchanset | \{collisions\} \rpar
+      \also
+      \circblockopen
+        \circvar colls1, colls2, colls3, colls4 : int \circspot
+        \\
+        \circblockopen
+          (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls1 := x)) ~ \circseq
+          \\
+          (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls2 := x)) ~ \circseq
+          \\
+          (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls3 := x)) ~ \circseq
+          \\
+          (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls4 := x))
+        \circblockclose
+        \circseq
+        \\
+        \circwait 0 \upto SCFP_{TB} \circseq SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+      \circblockclose
+    \circblockclose
+    \circhide \lchanset recColls \rchanset
+\end{circusaction*}
+\end{circusflow}
+%
+With the last refinement we have localised the declaration of the $colls\mathtt{i}$ into the parallel detector handlers. This transformation concludes the refinement of the action fragment of $System$ that corresponds to the four detector handlers, whose parallelism has fully emerged now. The right-hand action of the top-level parallelism is a residual control fragment that later on in the \name{SH} phase is going to be refined into shared data access to the $collisions$ variable by suitable atomic operations.
+
+\pagebreak
+
+We now inject the refinement of the parallel detector handlers back into the $System$ action.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  System ~ \circdef\\
+  \t1\!\!
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+          \\
+          reduce~!~currentFrame~!~state \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+        \\
+        \circblockopen
+          reduce~?~currentFrame~?~state ~ \then
+          \\
+          \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+          \\
+          detect~!~work \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \{collisions\} \rpar
+        \\
+        \circblockopen
+          detect~?~work ~ \then
+          \\
+          \color{Red}
+          \circblockopen
+            \circblockopen
+              \circvar colls1 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+              \\
+              \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract \circseq
+              \\
+              recColls~!~colls1 \then \Skip
+            \circblockclose
+            \\
+            \t1 \lpar \emptyset | \emptyset | \emptyset \rpar
+            \\
+            \circblockopen
+              \circvar colls2 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+              \\
+              \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract \circseq
+              \\
+              recColls~!~colls2 \then \Skip
+            \circblockclose
+            \\
+            \t1 \lpar \emptyset | \emptyset | \emptyset \rpar
+            \\
+            \circblockopen
+              \circvar colls3 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+              \\
+              \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract \circseq
+              \\
+              recColls~!~colls3 \then \Skip
+            \circblockclose
+            \\
+            \t1 \lpar \emptyset | \emptyset | \emptyset \rpar
+            \\
+            \circblockopen
+              \circvar colls4 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+              \\
+              \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract \circseq
+              \\
+              recColls~!~colls4 \then \Skip
+            \circblockclose
+            \\
+            \t1 \lpar \emptyset | \lchanset recColls \rchanset | \{collisions\} \rpar
+            \\
+            \circblockopen
+              \circvar colls1, colls2, colls3, colls4 : int \circspot
+              \\
+              \circblockopen
+                (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls1 := x)) ~ \circseq
+                \\
+                (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls2 := x)) ~ \circseq
+                \\
+                (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls3 := x)) ~ \circseq
+                \\
+                (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls4 := x))
+              \circblockclose
+              \circseq
+              \\
+              \circwait 0 \upto SCFP_{TB} \circseq
+              \\
+              SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)
+            \circblockclose
+          \circblockclose
+          \circhide \lchanset recColls \rchanset \circseq
+          \\
+          output~!~collisions \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{collisions\} | \lchanset output \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          output~?~collisions ~ \then
+          \\
+          \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+          \\
+          (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+        \circblockclose
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+  \circhide
+  \also
+  \t2 \lchanset reduce, detect, output \rchanset
+\end{circusaction*}
+\end{circusflow}
+%
+We observe that the resulting action does not have the desired shape yet:~this is a parallelism of handlers plus possible parallel control actions. The refinement that concludes Stage 5 thus has to carry out elementary transformations to put the action (back) into this form.
+
+\subsubsection*{Consolidation of Mission Actions}
+
+The consolidation steps here, in particular, involve extracting the hiding of $recColls$ and distributing the prefixes $detect~?~work \then \dots\,$ and $output\_collisions~!~collisions \then \Skip$ into the parallel actions which they surround. The required laws for distributing the prefixes are presented below.
+%
+\input{distr-prefix-par-1.tex}
+\input{distr-prefix-par-2.tex}
+%
+Their application yields the following action.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``application of the laws \thname{distr-prefix-par-1} and \thname{distr-prefix-par-2} and extraction of hiding''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+          \\
+          reduce~!~currentFrame~!~state \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work, collisions\} \rpar
+        \\
+        \circblockopen
+          reduce~?~currentFrame~?~state ~ \then
+          \\
+          \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+          \\
+          detect~!~work \then \Skip
+        \circblockclose
+        \\
+        \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \{collisions\} \rpar
+        \\
+        \circblockopen
+          \circblockopen
+            \highlight{detect~?~work} \then \circvar colls1 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+            \\
+            \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract \circseq
+            \\
+            recColls~!~colls1 \then \Skip \circseq \highlight{output~?~\anyvar} \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \emptyset | \lchanset \highlight{detect}, \highlight{output} \rchanset | \emptyset \rpar
+          \\
+          \circblockopen
+            \highlight{detect~?~work} \then \circvar colls2 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+            \\
+            \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract \circseq
+            \\
+            recColls~!~colls2 \then \Skip \circseq \highlight{output~?~\anyvar} \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \emptyset | \lchanset \highlight{detect}, \highlight{output} \rchanset | \emptyset \rpar
+          \\
+          \circblockopen
+            \highlight{detect~?~work} \then \circvar colls3 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+            \\
+            \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract \circseq
+            \\
+            recColls~!~colls3 \then \Skip \circseq \highlight{output~?~\anyvar} \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \emptyset | \lchanset \highlight{detect}, \highlight{output} \rchanset | \emptyset \rpar
+          \\
+          \circblockopen
+            \highlight{detect~?~work} \then \circvar colls4 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+            \\
+            \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract \circseq
+            \\
+            recColls~!~colls4 \then \Skip \circseq \highlight{output~?~\anyvar} \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \emptyset | \lchanset \highlight{detect}, \highlight{output}, recColls \rchanset | \{collisions\} \rpar
+          \\
+          \circblockopen
+            \highlight{detect~?~work} \then \circvar colls1, colls2, colls3, colls4 : int \circspot
+            \\
+            \circblockopen
+              (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls1 := x)) ~ \circseq
+              \\
+              (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls2 := x)) ~ \circseq
+              \\
+              (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls3 := x)) ~ \circseq
+              \\
+              (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls4 := x))
+            \circblockclose
+            \circseq
+            \\
+            \circwait 0 \upto SCFP_{TB} \circseq
+            \\
+            SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag) \circseq
+            \\
+            \highlight{output~!~collisions} \then \Skip
+          \circblockclose
+        \circblockclose
+        \\
+        \t1 \lpar \{collisions\} | \lchanset output \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          output~?~collisions ~ \then
+          \\
+          \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+          \\
+          (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+        \circblockclose
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+  \circhide
+  \also
+  \t1 \lchanset reduce, detect, output, \highlight{recColls} \rchanset
+\end{circusaction*}
+\end{circusflow}
+%
+We lastly reorder the parallelism and adjust write sets in order to isolated the handler actions and the control fragment into separate parallel branches.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``reordering parallel actions and adjusting write sets''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          \circblockopen
+            (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+            \\
+            reduce~!~currentFrame~!~state \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \{currentFrame, state\} | \lchanset reduce \rchanset | \{voxel\_map, work\} \rpar
+          \\
+          \circblockopen
+            reduce~?~currentFrame~?~state ~ \then
+            \\
+            \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+            \\
+            detect~!~work \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \{voxel\_map, work\} | \lchanset detect \rchanset | \emptyset \rpar
+          \\
+          \circblockopen
+            detect~?~work \then \circvar colls1 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+            \\
+            \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract \circseq
+            \\
+            recColls~!~colls1 \then \Skip \circseq output~?~\anyvar \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \emptyset | \lchanset detect, output \rchanset | \emptyset \rpar
+          \\
+          \circblockopen
+            detect~?~work \then \circvar colls2 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+            \\
+            \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract \circseq
+            \\
+            recColls~!~colls2 \then \Skip \circseq output~?~\anyvar \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \emptyset | \lchanset detect, output \rchanset | \emptyset \rpar
+          \\
+          \circblockopen
+            detect~?~work \then \circvar colls3 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+            \\
+            \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract \circseq
+            \\
+            recColls~!~colls3 \then \Skip \circseq output~?~\anyvar \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \emptyset | \lchanset detect, output \rchanset | \emptyset \rpar
+          \\
+          \circblockopen
+            detect~?~work \then \circvar colls4 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+            \\
+            \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract \circseq
+            \\
+            recColls~!~colls4 \then \Skip \circseq output~?~\anyvar \then \Skip
+          \circblockclose
+          \\
+          \t1 \lpar \emptyset | \lchanset output \rchanset | \emptyset \rpar
+          \\
+          \circblockopen
+            output~?~collisions ~ \then
+            \\
+            \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+            \\
+            (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL
+          \circblockclose
+        \circblockclose
+        \also
+        \t1 \lpar \{currentFrame, state, voxel\_map, work\} |
+        \\
+        \t2 \lchanset detect, output, recColls \rchanset | \{collisions\} \rpar
+        \also
+        \circblockopen
+          detect~?~work \then \circvar colls1, colls2, colls3, colls4 : int \circspot
+          \\
+          \circblockopen
+            (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls1 := x)) ~ \circseq
+            \\
+            (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls2 := x)) ~ \circseq
+            \\
+            (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls3 := x)) ~ \circseq
+            \\
+            (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls4 := x))
+          \circblockclose
+          \circseq
+          \\
+          \circwait 0 \upto SCFP_{TB} \circseq
+          \\
+          SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag) \circseq
+          \\
+          output~!~collisions \then \Skip
+        \circblockclose
+      \circblockclose
+      \\
+      \interleave \circwait FRAME\_PERIOD
+    \circblockclose
+    \circseq
+    \\
+    System
+  \circblockclose
+  \circhide
+  \also
+  \t1 \lchanset reduce, detect, output, recColls \rchanset
+\end{circusaction*}
+\end{circusflow}
+%
+The above refinement of $System$ concludes Stage 5 of the \name{MH} phase. The parallelism of handler actions has fully emerged now. Whereas Stage 4 seems to provide good opportunities for automation, Stage 5, in comparison, appears to be more challenging in that respect. Automation may be envisage through the application of high-level refinement patterns that encapsulate particular structures, such as the shape of $DetectCollisions$. Subsequent elementary refinements could possibly be tackled by refinement tactics~\cite{OZC11}.
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Stage 6}
+
+In Stage 6 we extract the mission and handler actions. The only remaining transformation required for this is to distribute the top-level recursion in the $System$ action into the parallel branches that correspond to handler actions and control fragments. Lock-step progress per cycle is ensured by a new channel $sync$.
+
+\subsubsection*{Distribute Recursion into Parallel Actions}
+
+The result of distributing the top-level recursion in $System$ is given below.
+%
+\begin{circusflow}
+\nounparsedcolour
+\nounparsedcolour
+\begin{circusaction*}
+  \dd \dots \; \equiv \; \mbox{``distribution law for recursion into parallel actions''}
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        \circblockopen
+          \highlight{\circmu X} \circspot (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+          \\
+          reduce~!~currentFrame~!~state \then \Skip \circseq \highlight{sync} \then X
+        \circblockclose
+        \\
+        \t1 \lpar \{currentFrame, state\} | \lchanset reduce, \highlight{sync} \rchanset | \{voxel\_map, work\} \rpar
+        \\
+        \circblockopen
+          \highlight{\circmu X} \circspot reduce~?~currentFrame~?~state ~ \then
+          \\
+          \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+          \\
+          detect~!~work \then \Skip \circseq \highlight{sync} \then X
+        \circblockclose
+        \\
+        \t1 \lpar \{voxel\_map, work\} | \lchanset detect, \highlight{sync} \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          \highlight{\circmu X} \circspot detect~?~work \then \circvar colls1 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+          \\
+          \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract \circseq
+          \\
+          recColls~!~colls1 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq \highlight{sync} \then X
+        \circblockclose
+        \\
+        \t1 \lpar \emptyset | \lchanset detect, output, \highlight{sync} \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          \highlight{\circmu X} \circspot detect~?~work \then \circvar colls2 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+          \\
+          \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract \circseq
+          \\
+          recColls~!~colls2 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq \highlight{sync} \then X
+        \circblockclose
+        \\
+        \t1 \lpar \emptyset | \lchanset detect, output, \highlight{sync} \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          \highlight{\circmu X} \circspot detect~?~work \then \circvar colls3 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+          \\
+          \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract \circseq
+          \\
+          recColls~!~colls3 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq \highlight{sync} \then X
+        \circblockclose
+        \\
+        \t1 \lpar \emptyset | \lchanset detect, output, \highlight{sync} \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          \highlight{\circmu X} \circspot detect~?~work \then \circvar colls4 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+          \\
+          \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract \circseq
+          \\
+          recColls~!~colls4 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq \highlight{sync} \then X
+        \circblockclose
+        \\
+        \t1 \lpar \emptyset | \lchanset output, \highlight{sync} \rchanset | \emptyset \rpar
+        \\
+        \circblockopen
+          \highlight{\circmu X} \circspot output~?~collisions ~ \then
+          \\
+          \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+          \\
+          (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL \circseq \highlight{sync} \then X
+        \circblockclose
+      \circblockclose
+      \also
+      \t1 \lpar \{currentFrame, state, voxel\_map, work\} |
+      \\
+      \t2 \lchanset detect, output, recColls, \highlight{sync} \rchanset | \{collisions\} \rpar
+      \also
+      \circblockopen
+        \highlight{\circmu X} \circspot detect~?~work \then \circvar colls1, colls2, colls3, colls4 : int \circspot
+        \\
+        \circblockopen
+          (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls1 := x)) ~ \circseq
+          \\
+          (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls2 := x)) ~ \circseq
+          \\
+          (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls3 := x)) ~ \circseq
+          \\
+          (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls4 := x))
+        \circblockclose
+        \circseq
+        \\
+        \circwait 0 \upto SCFP_{TB} \circseq
+        \\
+        SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag) \circseq
+        \\
+        output~!~collisions \then \Skip \circseq \highlight{sync} \then X
+      \circblockclose
+    \circblockclose
+    \also
+    \t1 \lpar \{currentFrame, state, voxel\_map, work, collisions\} | \lchanset \highlight{sync} \rchanset | \emptyset \rpar
+    \also
+    \circblockopen
+      \highlight{\circmu X} \circspot \circwait FRAME\_PERIOD \circseq \highlight{sync} \then X
+    \circblockclose
+  \circblockclose
+  \circhide
+  \also
+  \t1 \lchanset reduce, detect, output, recColls, \highlight{sync} \rchanset
+\end{circusaction*}
+\end{circusflow}
+%
+A binary version of the distribution law required above is given in the sequel; it was already presented as \name{rec-sync} in~\cite{CCO11}. We note that we use a generalised version of this law that deals with $n$ parallel branches.
+%
+\input{lockstep-intro.tex}
+%
+We omit the presentation of the generalised law, but it is straight forward.
+
+\subsubsection*{Introduce Handler Actions}
+
+Local actions are now introduced for the seven handlers that have emerged.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  InputFrameHandler ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+    \\
+    reduce~!~currentFrame~!~state \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+\extracircusvspace
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  ReducerHandler ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot reduce~?~currentFrame~?~state ~ \then
+    \\
+    \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+    \\
+    detect~!~work \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+\extracircusvspace
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  DetectorHandler1 ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls1 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+    \\
+    \lschexpract (\exists i? : \num @ CalcPartCollisions[colls1 / pcolls!] \land i? = 1) \rschexpract \circseq
+    \\
+    recColls~!~colls1 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+\extracircusvspace
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  DetectorHandler2 ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls2 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+    \\
+    \lschexpract (\exists i? : \num @ CalcPartCollisions[colls2 / pcolls!] \land i? = 2) \rschexpract \circseq
+    \\
+    recColls~!~colls2 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+\extracircusvspace
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  DetectorHandler3 ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls3 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+    \\
+    \lschexpract (\exists i? : \num @ CalcPartCollisions[colls3 / pcolls!] \land i? = 3) \rschexpract \circseq
+    \\
+    recColls~!~colls3 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+\extracircusvspace
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  DetectorHandler4 ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls4 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+    \\
+    \lschexpract (\exists i? : \num @ CalcPartCollisions[colls4 / pcolls!] \land i? = 4) \rschexpract \circseq
+    \\
+    recColls~!~colls4 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+\extracircusvspace
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  OutputCollisionsHandler ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot output~?~collisions ~ \then
+    \\
+    \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+    \\
+    (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL \circseq sync \then X
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+
+\pagebreak
+
+\nid We also introduce a local action for the parallel fragment that controls handler execution.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  InteractionHandlers ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls1, colls2, colls3, colls4 : int \circspot
+    \\
+    \circblockopen
+      (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls1 := x)) ~ \circseq
+      \\
+      (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls2 := x)) ~ \circseq
+      \\
+      (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls3 := x)) ~ \circseq
+      \\
+      (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls4 := x))
+    \circblockclose
+    \circseq
+    \\
+    \circwait 0 \upto SCFP_{TB} \circseq
+    \\
+    SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag) \circseq
+    \\
+    output~!~collisions \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+%
+Lastly, the cycle time is captured by a further local action.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  Cycle ~ \circdef ~
+  \circblockopen
+    \circmu X \circspot \circwait FRAME\_PERIOD \circseq sync \then X
+  \circblockclose
+\end{circusaction*}
+\end{circusflow}
+
+\nid With this, the $System$ action is written in the following manner to bring out the mission structure.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circusaction*}
+  System ~ \circdef\\
+  \t1
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        InputFrameHandler
+        \\
+        \t1 \lpar \{currentFrame, state\} | \lchanset reduce, sync \rchanset | \{voxel\_map, work\} \rpar
+        \\
+        ReducerHandler
+        \\
+        \t1 \lpar \{voxel\_map, work\} | \lchanset detect, sync \rchanset | \emptyset \rpar
+        \\
+        DetectorHandler1
+        \\
+        \t1 \lpar \emptyset | \lchanset detect, output, sync \rchanset | \emptyset \rpar
+        \\
+        DetectorHandler2
+        \\
+        \t1 \lpar \emptyset | \lchanset detect, output, sync \rchanset | \emptyset \rpar
+        \\
+        DetectorHandler3
+        \\
+        \t1 \lpar \emptyset | \lchanset detect, output, sync \rchanset | \emptyset \rpar
+        \\
+        DetectorHandler4
+        \\
+        \t1 \lpar \emptyset | \lchanset output, sync \rchanset | \emptyset \rpar
+        \\
+        OutputCollisionsHandler
+      \circblockclose
+      \also
+      \t1 \lpar \{currentFrame, state, voxel\_map, work\} |
+      \\
+      \t2 \lchanset detect, output, recColls, sync \rchanset | \{collisions\} \rpar
+      \also
+      InteractionHandlers
+    \circblockclose
+    \\
+    \t1 \lpar \{currentFrame, state, voxel\_map, work, collisions\} | \lchanset sync \rchanset | \emptyset \rpar
+    \\
+    Cycle
+  \circblockclose
+  \circhide
+  \also
+  \t2 \lchanset reduce, detect, output, recColls, sync \rchanset
+\end{circusaction*}
+\end{circusflow}
+%
+It exhibits the desired shape of a parallelism of handler actions, including two auxiliary actions:~one that controls handler execution and another one for the cycle time. Auxiliary control actions are expected at this point, and their elimination is an issue for \name{SH} rather than \name{MH}. The $Cycle$ action is logically attributed to $InputFrameHandler$ and will eventually be collapsed with it; for the time being, however, we keep it as a separate parallel branch in order to facilitate the subsequent refinement in the \name{SH} phase.
+
+To conclude the account on the \name{MH} models, we present the complete process that results from this phase. For this, we have to declare several channels that have been introduced during the course of refinement.
+%
+\begin{circusflow}
+\begin{circus}
+  \circchannel ~ reduce : RawFrame \cross StateTable
+  \also
+  \circchannel ~ detect : Partition
+  \also
+  \circchannel ~ output, recColls : int
+  \also
+  \circchannel ~ sync
+\end{circus}
+\end{circusflow}
+%
+Whereas $reduce$, $detect$, $output$ and $sync$ are specification channels, $recColls$ later becomes a method channel.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Process}
+
+% The following commands are workarounds to parse as much of the process as possible.
+
+%%Zword \CPCONE {\Skip}
+%%Zword \CPCTWO {\Skip}
+%%Zword \CPCTHREE {\Skip}
+%%Zword \CPCFOUR {\Skip}
+
+\newcommand{\CPC}[1]{\unparsed{%
+\lschexpract (\exists i? : \num @ CalcPartCollisions[colls#1 / pcolls!] \land i? = #1) \rschexpract}}
+
+\newcommand{\CPCONE}{\CPC{1}}
+\newcommand{\CPCTWO}{\CPC{2}}
+\newcommand{\CPCTHREE}{\CPC{3}}
+\newcommand{\CPCFOUR}{\CPC{4}}
+
+%%Zword \SCFP {\Skip}
+
+\newcommand{\SCFP}{\unparsed{%
+SetCollisionsFromParts(\lbag colls1, colls2, colls3, colls4 \rbag)}}
+
+\nid The complete process for the \name{MH} phase is presented below. Its state and data operations are in fact the same as those of $CDxE\_MH2B$, the result of Stage 2.
+%
+\begin{circusflow}
+\begin{circus}
+  \circsystem ~ CDxE\_MH ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{comment}
+\begin{schema}{\circstateignore ~ ECPStateCDx}
+  currentFrame : RawFrame\\
+  state : StateTable\\
+  voxel\_map : HashMap[Vector2d,List[Motion]]\\
+  work : Partition\\
+  collisions : int
+\end{schema}
+\end{comment}
+%
+\begin{circusaction}
+  \circstate ~ CDxMHState ~ == ~ ECPStateCDx
+\end{circusaction}
+%
+\begin{schema}{Init}
+  CDxMHState~'
+\where
+  currentFrame' = \circnew RawFrame
+  \\
+  state' = \circnew StateTable
+  \\
+  voxel\_map' = \circnew HashMap[Vector2d,List[Motion]]
+  \\
+  work' = \circnew Partition \argfour
+  \\
+  collisions' = 0
+\end{schema}
+%
+\begin{schema}{StoreFrame}
+  \Delta CDxMHState\\
+  frame? : Frame
+\where
+  \exists posns, posns' : Frame; motions, motions' : Frame |\\
+  \t1 \dom posns = \dom motions \land \dom posns' = \dom motions' @\\
+  \circblockopen
+  posns' = frame? \land
+  \\
+  motions' =\\
+  \t1 \{a : \dom posns' @ a \mapsto \IF a \in \dom posns \THEN (posns' ~ a) \vminus (posns ~ a) \ELSE ZeroV\} \land
+  \\
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \\
+  posns' = F(currentFrame') \land motions' = G(currentFrame', state')
+  \circblockclose
+\end{schema}
+%
+\begin{schema}{ReduceAndPartitionWork}
+  \Delta CDxMHState\\
+\where
+  currentFrame' = currentFrame \land state' = state
+  \\
+  \exists posns : Frame; motions : Frame | \dom posns = \dom motions @\\
+  \circblockopen
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \also
+  \circblockopen
+    \forall a_1, a_2 : Aircraft | \{a_1, a_2\} \subseteq \dom posns @
+    \\
+    \t1 (a_1, a_2) \in CalcCollisionSet(posns, motions) \implies
+    \\
+    \t2
+    \circblockopen
+      \exists l : List[Motion] |
+      l \in \hidemath{(}voxel\_map'~.~values~\emptytuple\hidemath{)}~.~elems~\emptytuple @\\
+      \t1 MkMotion(a_1, posns~a_1 \vminus motions~a_1, posns~a_1) \in l~.~elems~\emptytuple \land\\
+      \t1 MkMotion(a_2, posns~a_2 \vminus motions~a_2, posns~a_2) \in l~.~elems~\emptytuple
+    \circblockclose
+  \circblockclose
+  \circblockclose
+\end{schema}
+%
+\begin{schema}{CalcPartCollisions}
+  \Xi CDxMHState\\
+  pcolls! : int\\
+  i? : 1 \upto 4
+\where
+  pcolls! ~ =\\
+  \t1 \#
+  \biglcurly
+    a_1 : Aircraft; a_2 : Aircraft |\\
+    \t1
+    \circblockopen
+      \exists l : List[Motion] | l \in \hidemath{(}work~.~getDetectorWork(i?)\hidemath{)}.~elems~\emptytuple @\\
+      \exists v_1, v_2 : Vector; w_1, w_2 : Vector @\\
+      \t1 MkMotion(a_1, v_1, w_1) \in l~.~elems~\emptytuple \land\\
+      \t1 MkMotion(a_2, v_2, w_2) \in l~.~elems~\emptytuple \land\\
+      \t1 collide((v_1, w_1 \vminus v_1), (v_2, w_2 \vminus v_2))
+    \circblockclose
+  \bigrcurly
+  \div 2
+\end{schema}
+%
+\begin{schema}{SetCollisionsFromParts}
+  \Delta CDxMHState\\
+  collsbag? : \bag int
+\where
+  currentFrame' = currentFrame \land state' = state\\
+  voxel\_map' = voxel\_map \land work' = work\\
+  \exists s : \seq int | s = items ~ collsbag? @ collisions' = \Sigma ~ s
+\end{schema}
+%
+\begin{schema}{CalcCollisions}
+  \Xi CDxMHState\\
+  colls! : \nat
+\where
+  \exists posns : Frame; motions : Frame | \dom posns = \dom motions @\\
+  \circblockopen
+  posns = F(currentFrame) \land motions = G(currentFrame, state) \land
+  \also
+  \exists collset : \finset ~ (Aircraft \cross Aircraft) | collset = CalcCollisionSet(posns, motions) @
+  \\
+  \t1 (\# collset = 0 \land colls! = 0) \lor (\# collset > 0 \land colls! \geq (\# collset) \div 2)
+  \circblockclose
+\end{schema}
+%
+\begin{circusaction}
+  InputFrameHandler ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot (next\_frame~?~frame \then (\circwait 0 \upto SF_{TB} \circseq StoreFrame)) \circdeadlinesync INP\_DL \circseq
+    \\
+    reduce~!~currentFrame~!~state \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction}
+\extracircusvspace
+%
+\begin{circusaction}
+  ReducerHandler ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot reduce~?~currentFrame~?~state ~ \then
+    \\
+    \circwait 0 \upto RPW_{TB} \circseq \lschexpract ReduceAndPartitionWork \rschexpract \circseq
+    \\
+    detect~!~work \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  DetectorHandler1 ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls1 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+    \\
+    \CPCONE \circseq
+    \\
+    recColls~!~colls1 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  DetectorHandler2 ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls2 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+    \\
+    \CPCTWO \circseq
+    \\
+    recColls~!~colls2 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  DetectorHandler3 ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls3 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+    \\
+    \CPCTHREE \circseq
+    \\
+    recColls~!~colls3 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  DetectorHandler4 ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls4 : int \circspot \circwait 0 \upto CPC_{TB} \circseq
+    \\
+    \CPCFOUR \circseq
+    \\
+    recColls~!~colls4 \then \Skip \circseq output~?~\anyvar \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  OutputCollisionsHandler ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot output~?~collisions ~ \then
+    \\
+    \circvar colls : int \circspot \circwait 0 \upto CC_{TB} \circseq \lschexpract CalcCollisions \rschexpract \circseq
+    \\
+    (output\_collisions~!~colls \then \Skip) \circdeadlinesync OUT\_DL \circseq sync \then X
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  InteractionHandlers ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot detect~?~work \then \circvar colls1, colls2, colls3, colls4 : int \circspot
+    \\
+    \circblockopen
+      (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls1 := x)) ~ \circseq
+      \\
+      (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls2 := x)) ~ \circseq
+      \\
+      (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls3 := x)) ~ \circseq
+      \\
+      (recColls~?~x \then (\circwait 0 \upto RC_{TB} \circseq colls4 := x))
+    \circblockclose
+    \circseq
+    \\
+    \circwait 0 \upto SCFP_{TB} \circseq
+    \\
+    \SCFP \circseq
+    \\
+    output~!~collisions \then \Skip \circseq sync \then X
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  Cycle ~ \circdef ~
+  \circblockopen
+    \circmu X \circspot \circwait FRAME\_PERIOD \circseq sync \then X
+  \circblockclose
+\end{circusaction}
+%
+% FIX: Had to add parenthesis to the handler parallelism to enable correct parsing.
+%
+\begin{circusaction}
+  System ~ \circdef\\
+  \t1
+  \circblockopen
+    \circblockopen
+      \circblockopen
+        InputFrameHandler
+        \\
+        \t1 \lpar \{currentFrame, state\} | \lchanset reduce, sync \rchanset | \{voxel\_map, work\} \rpar
+        \\
+        (ReducerHandler
+        \\
+        \t1 \lpar \{voxel\_map, work\} | \lchanset detect, sync \rchanset | \emptyset \rpar
+        \\
+        (DetectorHandler1
+        \\
+        \t1 \lpar \emptyset | \lchanset detect, output, sync \rchanset | \emptyset \rpar
+        \\
+        (DetectorHandler2
+        \\
+        \t1 \lpar \emptyset | \lchanset detect, output, sync \rchanset | \emptyset \rpar
+        \\
+        (DetectorHandler3
+        \\
+        \t1 \lpar \emptyset | \lchanset detect, output, sync \rchanset | \emptyset \rpar
+        \\
+        (DetectorHandler4
+        \\
+        \t1 \lpar \emptyset | \lchanset output, sync \rchanset | \emptyset \rpar
+        \\
+        OutputCollisionsHandler)))))
+      \circblockclose
+      \also
+      \t1 \lpar \{currentFrame, state, voxel\_map, work\} |
+      \\
+      \t2 \lchanset detect, output, recColls, sync \rchanset | \{collisions\} \rpar
+      \also
+      InteractionHandlers
+    \circblockclose
+    \\
+    \t1 \lpar \{currentFrame, state, voxel\_map, work, collisions\} | \lchanset sync \rchanset | \emptyset \rpar
+    \\
+    Cycle
+  \circblockclose
+  \circhide
+  \also
+  \t2 \lchanset reduce, detect, output, recColls, sync \rchanset
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot \lschexpract Init \rschexpract \circseq System
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}
+%
+Parts of the process that could not be parsed due to limitations of the {\Circus} parser in CZT are highlighted.

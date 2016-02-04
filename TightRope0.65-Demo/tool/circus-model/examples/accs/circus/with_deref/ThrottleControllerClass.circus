@@ -1,0 +1,125 @@
+\begin{zsection}
+  \SECTION ~ ThrottleControllerClass ~ \parents ~ scj\_toolkit, scj\_library, SpeedMonitorClass
+\end{zsection}
+
+\paragraph{Class Definition}~
+
+\begin{circusbox}
+\begin{circus}
+  \circclass ~ ThrottleControllerClassDef ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore ThrottleControllerState}
+  \circprivate speed : SpeedMonitorClass\\
+  \circprivate accelerating : boolean\\
+  \circprivate maintainSpeed : boolean\\
+  \circprivate cruiseSpeed : \nat\\
+  \circprivate voltage : int\\
+  \circprivate schedule : boolean
+\end{schema}
+
+\comment{
+\begin{circusaction}
+  \circstate ~ ThrottleControllerState
+\end{circusaction}
+}
+
+\begin{schema}{\circinitial ThrottleControllerInit}
+  ThrottleControllerState~'\\
+  speed? : SpeedMonitorClass
+\where
+  speed' = speed?\\
+  accelerating' = jfalse\\
+  maintainSpeed' = jfalse\\
+  cruiseSpeed' = 0\\
+  voltage' = 0\\
+  schedule' = jtrue
+\end{schema}
+
+\begin{circusaction}
+  \circpublic \circatomic setCruiseSpeed ~ \circdef\\
+  \t1 (\circval kph : \nat \circspot\\
+  \t2 cruiseSpeed := kph \circseq\\
+  \t2 maintainSpeed := jtrue \circseq\\
+  \t2 accelerating := jfalse)
+\end{circusaction}
+
+\begin{circusaction}
+  \circpublic accelerate ~ \circdef ~ accelerating := jtrue
+\end{circusaction}
+\vspaceafterzpara
+
+\red{In the implementation the following two methods write out the voltage.}
+%
+\begin{circusaction}
+  \circpublic \circatomic increaseVoltage ~ \circdef\\
+  \t1 \circif voltage < 80 \circthen voltage := voltage + 1\\
+  \t1 \circelse \lnot voltage < 80 \circthen Skip \circfi
+\end{circusaction}
+
+\begin{circusaction}
+  \circpublic \circatomic decreaseVoltage ~ \circdef\\
+  \t1 \circif voltage > 0 \circthen voltage := voltage - 1\\
+  \t1 \circelse \lnot voltage > 0 \circthen Skip \circfi
+\end{circusaction}
+
+\begin{circusaction}
+  \circpublic schedulePeriodic ~ \circdef ~ schedule := jtrue
+\end{circusaction}
+
+\begin{circusaction}
+  \circpublic deschedulePeriodic ~ \circdef ~ schedule := jfalse
+\end{circusaction}
+\end{circusbox}
+
+\begin{circusbox}
+\begin{circusaction*}
+  \circpublic \circatomic handleAsyncEvent ~ \circdef\\
+  \t1 \circif schedule = jtrue \circthen\\
+  \t2 \circif accelerating = jtrue \circthen increaseVoltage()\\
+  \t2 \circelse ~ \lnot (accelerating = jtrue) \circthen\\
+  \t3 \circif maintainSpeed = jtrue \circthen\\
+  \t4 \circif cruiseSpeed - (\circderef speed).getCurrentSpeed() > 2 \circthen increaseVoltage()\\
+  \t4 \circelse ~ (\circderef speed).getCurrentSpeed() - cruiseSpeed < 2 \circthen decreaseVoltage()\\
+  \t4 \circelse ~ \lnot (cruiseSpeed - (\circderef speed).getCurrentSpeed() > 2 \lor\\
+  \t5 (\circderef speed).getCurrentSpeed() - cruiseSpeed < 2) \circthen\\
+  \t5 \circvar volts : VOLTAGE\_RANGE \circspot\\
+  \t6 volts := 2 * (cruiseSpeed - (\circderef speed).getCurrentSpeed()) + 2 \circseq\\
+  \t6 \circif volts > voltage \circthen increaseVoltage()\\
+  \t6 \circelse ~ \lnot (volts > voltage) \circthen decreaseVoltage()\\
+  \t6 \circfi\\
+  \t4 \circfi\\
+  \t3 \circelse ~ (maintainSpeed = jtrue) \circthen Skip\\
+  \t3 \circfi\\
+  \t2 \circfi\\
+  \t1 \circelse ~ \lnot (schedule = jtrue) \circthen Skip\\
+  \t1 \circfi
+\end{circusaction*}
+
+\comment{
+\begin{circusaction}
+  \circspot Skip
+\end{circusaction}
+}
+
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusbox}
+
+\paragraph{Reference Type}
+
+\comment{
+\begin{schema}{ThrottleControllerState}
+  \circprivate speed : SpeedMonitorClass\\
+  \circprivate accelerating : boolean\\
+  \circprivate maintainSpeed : boolean\\
+  \circprivate cruiseSpeed : \nat\\
+  \circprivate voltage : int\\
+  \circprivate schedule : boolean
+\end{schema}
+}
+
+\begin{zed}
+  ThrottleControllerClass ~ == ~ \circreftype ThrottleControllerState
+\end{zed}

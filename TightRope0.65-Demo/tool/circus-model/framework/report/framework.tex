@@ -1,0 +1,601 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{wasysym}
+\usepackage{verbatim}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[colour]{circus}
+\usepackage{hijac}
+
+\newcommand{\reducevspaceaftersection}{\vspace{-1em}}
+
+\title{{\Circus} Model for the SCJ Mission Framework}
+
+\author{Frank Zeyda}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Notation                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{section/Notation.tex}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Prelude                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{scj_prelude.tex}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Safelet                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Safelet}
+
+\subsection{Channels}
+
+\begin{circusbox}
+\input{SafeletChan.circus}
+\end{circusbox}
+
+\subsubsection*{Framework channels}
+
+\begin{circusbox}
+\input{SafeletFWChan.circus}
+\end{circusbox}
+
+\subsubsection*{Method channels}
+
+\begin{circusbox}
+\input{SafeletMethChan.circus}
+\end{circusbox}
+
+\subsection{Framework Process}
+
+\begin{circusbox}
+\input{SafeletFW.circus}
+\end{circusbox}
+
+\subsection{Application Process}
+
+\begin{circusbox}
+\input{MainSafeletApp.circus}
+\end{circusbox}
+
+\subsection{Composite Process}
+
+\begin{circusbox}
+\input{MainSafelet.circus}
+\end{circusbox}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                              Mission Sequencer                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Mission Sequencer}
+
+\subsection{Channels}
+
+\begin{circusbox}
+\input{MissionSequencerChan.circus}
+\end{circusbox}
+
+\subsubsection*{Framework channels}
+
+\begin{circusbox}
+\input{MissionSequencerFWChan.circus}
+\end{circusbox}
+
+\subsubsection*{Method channels}
+
+\begin{circusbox}
+\input{MissionSequencerMethChan.circus}
+\end{circusbox}
+
+\subsection{Framework Process}
+
+\begin{circusbox}
+\input{MissionSequencerFW.circus}
+\end{circusbox}
+
+\subsection{Application Process}
+
+\begin{circusbox}
+\input{MainMissionSequencerApp.circus}
+\end{circusbox}
+
+\subsection{Composite Process}
+
+\begin{circusbox}
+\input{MainMissionSequencer.circus}
+\end{circusbox}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Mission                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Mission}
+
+The life-cycle of a mission consists of first executing its \code{initialize()} method. This creates the event handlers and other data objects that are shared by the mission's handlers. The mission then enters its execution phase in which the event handlers become active, and are released either periodically or in response to external or software events being fired that are associated with the handlers. The dispatch loop continues until one of the handlers requests termination by calling \code{requestTermination()} on the current \code{Mission} object. The handlers are then stopped and the mission subsequently enters a cleanup phase and terminates.
+
+\subsection{Channels}
+
+\input{MissionChan.circus}
+
+\subsubsection*{Framework channels}
+\reducevspaceaftersection
+
+\input{MissionFWChan.circus}
+
+\subsubsection*{Method channels}
+\reducevspaceaftersection
+
+\input{MissionMethChan.circus}
+
+\newpage
+
+\subsection{Framework Process}
+
+The framework process for mission execution is given below.
+%
+\begin{circusbox}
+\input{MissionFW.circus}
+\end{circusbox}
+
+\newpage
+
+\subsection{Application Process}
+
+The application process for the \code{MainMission} class of the cruise controller is given below.
+%
+\begin{circusflow}
+\input{MainMissionApp.circus}
+\end{circusflow}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% REVIEWED UNTIL HERE %
+%%%%%%%%%%%%%%%%%%%%%%%
+
+%\todo{Verify the synchronisation channel set below. Not entirely sure about it.}
+
+\subsection{Composite Process}
+
+The composite model for the \code{MainMission} class of the cruise controller is given below.
+%
+\begin{circusbox}
+\input{MainMission.circus}
+\end{circusbox}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 Event Handler                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Event Handlers}
+
+In this section we present the framework model for both aperiodic and periodic event handlers.
+
+\subsection{Channels}
+
+We separately discuss the framework and method channels for handlers.
+
+\subsubsection*{Framework channels}
+\reducevspaceaftersection
+
+\input{HandlerFWChan.circus}
+
+\subsubsection*{Method channels}
+\reducevspaceaftersection
+
+\input{HandlerMethChan.circus}
+
+\subsubsection*{Handler channels}
+
+The channel sets below are introduced to facilitate the definition of composite processes for handlers.
+%
+\begin{circusbox}
+\input{HandlerChan.circus}
+\end{circusbox}
+
+\subsection{Framework Process}
+
+\begin{circusbox}
+\input{EventHandlerFW.circus}
+\end{circusbox}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                            Aperiodic Event Handler                           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Aperiodic Event Handlers}
+
+In this section we present the framework and application models for aperiodic event handlers of the cruise controller application.
+
+%\subsection{Framework Process}
+
+%\begin{circusbox}
+%\input{AperiodicEventHandlerFW.circus}
+%\end{circusbox}
+
+\subsection{Framework Processes}
+
+In this section we illustrates the instantiation of the framework process for the aperiodic event handlers of the cruise controller in order to obtain the models for particular aperiodic handlers.
+
+\subsubsection{WheelShaft}
+
+\begin{circusbox}
+\input{WheelShaftFW.circus}
+\end{circusbox}
+
+\subsubsection{Engine}
+
+\begin{circusbox}
+\input{EngineFW.circus}
+\end{circusbox}
+
+\subsubsection{Brake}
+
+\begin{circusbox}
+\input{BrakeFW.circus}
+\end{circusbox}
+
+\subsubsection{Gear}
+
+\begin{circusbox}
+\input{GearFW.circus}
+\end{circusbox}
+
+\subsubsection{Lever}
+
+\begin{circusbox}
+\input{LeverFW.circus}
+\end{circusbox}
+
+\newpage
+
+\subsection{Application Processes}
+
+In this section we illustrate the application model for aperiodic event handlers by defining a process for each aperiodic handler of the cruise controller. They all have very similar shapes.
+
+\subsubsection{WheelShaft}
+
+\begin{circusbox}
+\input{WheelShaftApp.circus}
+\end{circusbox}
+
+\paragraph{Note}
+
+\red{The channels for methods calls to \code{void handleAsyncEvent()} and \code{void handleAsyncLongEvent(int value)} seem redundant with the most recent revision of the model. Furthermore, I have not encoded the $handlerAsyncLongEvent$ method as an action here but data operations. What policy we adopt here is still subject to discussion. Clearly, however, since there no outputs a data operations is sufficient here.}
+
+\subsubsection{Engine}
+
+\begin{circusbox}
+\input{EngineApp.circus}
+\end{circusbox}
+
+\subsubsection{Brake}
+
+\begin{circusbox}
+\input{BrakeApp.circus}
+\end{circusbox}
+
+\subsubsection{Gear}
+
+\begin{circusbox}
+\input{GearApp.circus}
+\end{circusbox}
+
+\subsubsection{Lever}
+
+\begin{circusbox}
+\input{LeverApp.circus}
+\end{circusbox}
+
+\newpage
+
+\subsection{Composite Processes}
+
+\subsubsection{WheelShaft}
+
+\begin{circusbox}
+\input{WheelShaft.circus}
+\end{circusbox}
+
+\subsubsection{Engine}
+
+\begin{circusbox}
+\input{Engine.circus}
+\end{circusbox}
+
+\subsubsection{Brake}
+
+\begin{circusbox}
+\input{Brake.circus}
+\end{circusbox}
+
+\subsubsection{Gear}
+
+\begin{circusbox}
+\input{Gear.circus}
+\end{circusbox}
+
+\subsubsection{Lever}
+
+\begin{circusbox}
+\input{Lever.circus}
+\end{circusbox}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                            Periodic Event Handler                            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Periodic Event Handlers}
+
+In this section we present the framework and application model for periodic event handlers.
+
+%\subsection{Framework Process}
+
+%\begin{circusbox}
+%\input{PeriodicEventHandlerFW.circus}
+%\end{circusbox}
+
+\subsection{Framework Processes}
+
+\subsubsection{SpeedMonitor}
+
+\begin{circusbox}
+\input{SpeedMonitorFW.circus}
+\end{circusbox}
+
+\subsubsection{ThrottleController}
+
+\begin{circusbox}
+\input{ThrottleControllerFW.circus}
+\end{circusbox}
+
+\subsection{Application Processes}
+
+The application processes for handlers basically all have the same shape. They result from a lifting of the underlying data object. The latter is modelled by an {\OhCircus} class.
+
+\subsubsection{SpeedMonitor}
+
+\begin{circusbox}
+\input{SpeedMonitorApp.circus}
+\end{circusbox}
+
+\subsubsection{ThrottleController}
+
+\begin{circusbox}
+\input{ThrottleControllerApp.circus}
+\end{circusbox}
+
+\subsubsection{ThrottleController -- Alternative 1}
+
+\begin{circusbox}
+\input{ThrottleControllerApp1.circus}
+\end{circusbox}
+
+\subsubsection{ThrottleController -- Alternative 2}
+
+\begin{circusbox}
+\input{ThrottleControllerApp2.circus}
+\end{circusbox}
+
+\subsection{Composite Processes}
+
+\subsubsection{SpeedMonitor}
+
+\begin{circusbox}
+\input{SpeedMonitor.circus}
+\end{circusbox}
+
+\subsubsection{ThrottleController}
+
+\begin{circusbox}
+\input{ThrottleController.circus}
+\end{circusbox}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                  SCJ Events                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{SCJ Events}
+
+SCJ events model \emph{software events}. In the program they are instances of the \code{AperiodicEvent} class.
+
+\subsection{Constants}
+
+\begin{circusbox}
+\input{SCJEventId.circus}
+\end{circusbox}
+%
+\begin{circusbox}
+\input{SCJEventConst.circus}
+\end{circusbox}
+
+\subsection{Channels}
+
+\begin{circusbox}
+\input{SCJEventFWChan.circus}
+\end{circusbox}
+%
+\begin{circusbox}
+\input{SCJEventMethChan.circus}
+\end{circusbox}
+
+\subsection{Framework Processes}
+
+\begin{circusbox}
+\input{SCJEventFW.circus}
+\end{circusbox}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                  Framework                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\input{scj_framework.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Toolkit                                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\input{scj_toolkit.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                              Cruise Controller                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Cruise Controller}
+
+This section contains definitions of constants and channels specific to the cruise controller example.
+
+\subsection{Constants}
+\reducevspaceaftersection
+
+\input{Constants.circus}
+
+\subsection{Events}
+
+Below we declare a channel for each sensor and actuator event of the cruise controller.
+%
+%\begin{circusbox}
+\input{Events.circus}
+%\end{circusbox}
+
+\subsection{Mission Identifiers}
+
+Mission identifiers for the cruise controller application (we only have one mission).
+%
+\begin{circusbox}
+\input{MissionIds.circus}
+\end{circusbox}
+
+\subsection{Handler Identifiers}
+
+Handler identifiers for the cruise controller application.
+%
+\begin{circusbox}
+\input{HandlerIds.circus}
+\end{circusbox}
+
+\pagebreak
+
+\subsection{Event Identifiers}
+
+Event identifiers for the cruise controller application.
+%
+\begin{circusbox}
+\input{EventIds.circus}
+\end{circusbox}
+
+\newpage
+
+\subsection{Top-level Model}
+
+In this section we specify the top-level model of the entire cruise controller application. It is the composition of the safelet, mission sequencer, mission, as well as all handler components.
+%
+%\begin{circusflow}
+\input{accs.circus}
+%\end{circusflow}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 Data Objects                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Data Objects}
+
+In this section we give the {\OhCircus} class definitions for all data objects of the Cruise Controller case study. It also illustrates how the respective Java classes are translated into formal models.
+
+Not all of the specification can be parsed at the moment due to limitations of CZT to understand {\OhCircus}. The parts that are not subjected to the parser are highlighted in dark red.
+
+\subsection{WheelShaft}
+\reducevspaceaftersection
+
+\input{WheelShaftClass.circus}
+
+\newpage
+
+\subsection{Engine}
+\reducevspaceaftersection
+
+\input{EngineClass.circus}
+
+\newpage
+
+\subsection{Brake}
+\reducevspaceaftersection
+
+\input{BrakeClass.circus}
+
+\newpage
+
+\subsection{Gear}
+\reducevspaceaftersection
+
+\input{GearClass.circus}
+
+\newpage
+
+\subsection{Lever}
+\reducevspaceaftersection
+
+\input{LeverClass.circus}
+
+\newpage
+
+\subsection{SpeedMonitor}
+\reducevspaceaftersection
+
+\input{SpeedMonitorClass.circus}
+
+\newpage
+
+\subsection{ThrottleController}
+\reducevspaceaftersection
+
+\input{ThrottleControllerClass.circus}
+
+\newpage
+
+\subsection{CruiseControl}
+\reducevspaceaftersection
+
+\input{CruiseControlClass.circus}
+
+\newpage
+
+\nid The methods called by this class are:
+%
+\begin{itemize}
+  \item \code{ThrottleController: void setCruiseSpeed(int speed)}
+  \item \code{ThrottleController: void accelerate()}
+  \item \code{ThrottleController: void schedulePeriodic()}
+  \item \code{ThrottleController: void deschedulePeriodic()}
+  \item \code{SpeedMonitor: int getCurrentSpeed()}
+\end{itemize}
+\end{document}

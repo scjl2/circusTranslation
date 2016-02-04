@@ -1,0 +1,10 @@
+\begin{zsection}
+  \SECTION ~ SpeedMonitorConst ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+  SpeedMonitorPeriod : PERIOD\\
+  SpeedMonitorJitter : PERIOD\\
+  SpeedMonitorDeadline : PERIOD
+\end{axdef}

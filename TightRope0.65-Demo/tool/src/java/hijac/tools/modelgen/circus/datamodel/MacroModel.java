@@ -1,0 +1,132 @@
+package hijac.tools.modelgen.circus.datamodel;
+
+import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
+
+import hijac.tools.collections.Copyable;
+import hijac.tools.modelgen.circus.SCJApplication;
+import hijac.tools.modelgen.circus.templates.CircusObjectWrapper;
+
+import java.util.Map;
+import java.util.HashMap;
+
+/* It would be nice if we could use freemarker.template.SimpleHash here
+ * but the problem with this is that that class does not support cloning. */
+
+/**
+ * A data model for the execution of template macros.
+ *
+ * @author Frank Zeyda
+ * @version $Revision: 213 $
+ */
+public class MacroModel /*extends DataModel*/ implements TemplateHashModel,
+      Copyable<MacroModel> {
+   /**
+    * Used to implement a {@link TemplateHashModel} to provide useful
+    * methods to macros. In particular, to interface with visitors.
+    */
+   public /*final*/ Map<String, /*TemplateModel*/ Object> HASH_MODEL;
+
+   /**
+    * Object wrapper that is used when elements are inserted into the
+    * hash map.
+    */
+   protected final CircusObjectWrapper WRAPPER;
+
+   /**
+    * Constructs a macro data model for a given SCJ appliaction.
+    *
+    * @param context SCJ application context of the data model.
+    */
+   public MacroModel(/*SCJApplication context*/) {
+      /*super(context);*/
+      HASH_MODEL = new HashMap<String, Object>();
+      WRAPPER = new CircusObjectWrapper();
+   }
+
+   /**
+    * <p>Implements a method of the {@link TemplateHashModel} interface.</p>
+    *
+    * <p>This method is used to retrieve the {@link TemplateModel} stored
+    * under a given key.</p>
+    *
+    * @param key Key for which to retrieve the template model.
+    * @return Template model stored under the given key.
+    */
+   @Override
+   public TemplateModel get(String key) {
+      return (TemplateModel) HASH_MODEL.get(key);
+   }
+
+   /**
+    * <p>Implements a method of the {@link TemplateHashModel} interface.</p>
+    *
+    * <p>This method determines if there are entries in the
+    * {@link TemplateHashModel} implemented by this data model.</p>
+    *
+    * @return True if there are entries in the {@link TemplateHashModel}
+    & implemented by this data model.
+    */
+   @Override
+   public boolean isEmpty() {
+      return HASH_MODEL.isEmpty();
+   }
+
+   /**
+    * Supplementary method to add new entries to the underlying
+    * {@link TemplateHashModel}.
+    *
+    * @param key Key of the {@code TemplateHashModel} entry to be added.
+    * @param value Value to be inserted under the given key.
+    */
+   public void put(String key, Object value) {
+      TemplateModel wrapped_value;
+      if (value instanceof TemplateModel) {
+         wrapped_value = (TemplateModel) value;
+      }
+      else {
+         /* Not an optimal solution. Review how to propagate an error here. */
+         try {
+            wrapped_value = WRAPPER.wrap(value);
+         }
+         catch (TemplateModelException e) {
+            throw new AssertionError(e);
+         }
+      }
+      HASH_MODEL.put(key, wrapped_value);
+   }
+
+   /**
+    * Supplementary method to add clear all entries of the underlying
+    * {@link TemplateHashModel}.
+    */
+   public void clear(String key, Object value) {
+      HASH_MODEL.clear();
+   }
+
+   /**
+    * Utility method that returns a copy of this object. The clone is
+    * shallow apart from the map itself being duplicated.
+    *
+    * @return Shallow copy of this object that however duplicates the map
+    * that is used to implement the {@link TemplateHashModel}.
+    */
+   public MacroModel copy() {
+      return (MacroModel) clone();
+   }
+
+   @SuppressWarnings("unchecked")
+   public Object clone() {
+      MacroModel clone;
+      try {
+         clone = (MacroModel) super.clone();
+      }
+      catch (CloneNotSupportedException e) {
+         throw new AssertionError();
+      }
+      clone.HASH_MODEL = (Map<String, Object>)
+         ((HashMap<String, Object>) HASH_MODEL).clone();
+      return clone;
+   }
+}

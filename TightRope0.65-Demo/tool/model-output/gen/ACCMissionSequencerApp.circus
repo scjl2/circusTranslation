@@ -1,0 +1,42 @@
+
+\begin{circus}
+  \circprocess ~ ACCMissionSequencerApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+  \circstate State ~ == ~ [this : \circreftype ACCMissionSequencerClass]
+\end{circusaction}
+%
+\begin{circusaction}
+  Init ~ == ~ [State~' | this' = \circnew ACCMissionSequencerClass]
+\end{circusaction}
+%
+\begin{circusaction}
+  getNextMissionMeth ~ \circdef ~ \\
+  \t1 getNextMissionCall ~ \circthen ~ \\
+  \t1
+  \circblockopen
+  \circvar ret : MissionId \circspot\\
+  this~.~getNextMission(ret) \circseq
+  \\
+  getNextMissionRet~!~ret ~ \circthen ~ \Skip
+  \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+  Methods ~ \circdef ~ \\
+  \t1
+  \circmu X \circspot
+  \circblockopen
+  getNextMissionMeth
+  \circblockclose
+  \circseq X
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot Init \circseq (Methods \circinterrupt end\_sequencer\_app \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

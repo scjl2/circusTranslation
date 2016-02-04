@@ -1,0 +1,717 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ cdx\_anchor\_s ~ \parents ~ cdx\_anchor\_e
+\end{zsection}
+\end{comment}
+
+\newcommand{\newfourarg}{(4)}
+
+%%Zword \newfourarg {}
+
+\section{Anchor \name{S}}
+
+In this section, we sketch the \name{S} Anchor model for our case study. Since the {\CDx} is more complex than our previous example in~\cite{CWWWZ12}, we shall not attempt to specify the model in full detail here. Its exact shape moreover depends on the precise definition of {\SCJCircus}, which is still work in progress. Each type of {\SCJCircus} paragraph is discussed in a separate subsection in the remainder of this section.
+
+\subsection{{\CDx} Safelet}
+\label{sec:CDxSafelet}
+
+In the original {\CDx} program, the \verb"setUp()" method is defined as follows.
+%
+\begin{verbatim}
+    public void setup() {
+        Constants.PRESIMULATE = true;
+        new ImmortalEntry().run();
+        new Simulator().generate();
+    }
+\end{verbatim}
+%
+The first and third statements configure and instantiate a simulator and thus can be ignored. The \verb"run()" method of the \verb"ImmortalEntry" class, called in the second line, merely initialises a static field \verb"frameBuffer" of this class. This is also part of the simulation, hence the actual content of \verb"setup()" is void terms of our model. The implementation of \verb"tearDown()" in the original program calls a static method \verb"dumpResults()" but this merely reports results of the benchmark and thus is not relevant for the model either.
+
+\medskip
+
+\nid Because of the above the safelet {\SCJCircus} paragraph takes the same trivial shape as in~\cite{CWWWZ12}.
+
+\begin{circusbox}
+\begin{circus}
+  \circsafelet ~ CDxSafelet ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+  \circsetup ~ \circdef ~ \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circteardown ~ \circdef ~ \Skip
+\end{circusaction}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+
+\end{circusbox}
+
+\subsection{Mission Sequencer}
+\label{sec:CDxMissionSequencer}
+
+We first have to introduce a mission identifier for the single mission of the parallel {\CDx}.
+%
+\begin{axdef}
+  CDxMissionId : MissionId
+\end{axdef}
+%
+The model of the mission sequencer is likewise identical to the one for the serial line.
+%
+\begin{circusbox}
+\begin{circus}
+  \circmsequencer ~ CDxMissionSequencer ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{circusaction}
+    \circstate ~ CDxMissionSequencerState ~ == ~ [ ~ mission\_done : boolean ~ ]
+\end{circusaction}
+%
+\begin{circusaction}
+    \circinitialscj ~ \circdef ~ mission\_done := jfalse
+\end{circusaction}
+%
+\begin{circusaction}
+    \circgetnextmission ~ \circdef ~ \circres ~ \circret : MissionId \circspot\\
+    \t1
+    \circblockopen
+      \circif ~ mission\_done = jfalse ~ \circthen
+      \\
+      \t1
+      \circblockopen
+        mission\_done := jtrue \circseq
+        \\
+        \circret := CDxMissionId
+      \circblockclose
+      \\
+      \circelse ~ \lnot mission\_done = jfalse \circthen \circret := nullMId
+      \\
+      \circfi
+    \circblockclose
+\end{circusaction}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusbox}
+%
+The only difference in comparison to~\cite{CWWWZ12} is the use of the name $CDxMissionId$ rather than $ProtocolMission$. Strictly, we could even make our job easier here since \verb"getNextMission()" is only called once in our program, as the mission does not terminate. Because of this we have no obligation to return $\circnull$ with the second call.
+
+%\begin{note}
+%Instead of writing $\circret := \name{Expr}$ we could support a more Java-like syntax such as `$\circreturn \name{Expr}$'. The fundamental problem with this is a compositional translation and possible complications to the {\SCJCircus} semantics. Another issue is weather to make (syntactically) explicit the declaration of the return value.
+%\end{note}
+
+\newpage
+
+\subsection{{\CDx} Mission}
+\label{sec:CDxMission}
+
+The {\SCJCircus} paragraph for the \verb"CDxMission" class is more interesting as it takes care of the construction the various handlers and software events as well as encapsulates shared data via its $MArea$ action.
+%
+\begin{comment}
+\begin{circus}
+  \circchannel setFrame : \circref RawFrame
+  \also
+  \circchannel getFrame : \circref RawFrame
+  \also
+  \circchannel setState : \circref StateTable
+  \also
+  \circchannel getState : \circref StateTable
+  \also
+  \circchannel setWork : \circref Partition
+  \also
+  \circchannel getWork : \circref Partition
+  \also
+  \circchannel initCollsC, initCollsR
+  \also
+  \circchannel recCollsC : int
+  \also
+  \circchannel recCollsR
+  \also
+  \circchannel getColls : int
+\end{circus}
+\begin{axdef}
+  RC_{TB} : TIME
+\end{axdef}
+\end{comment}
+%
+\begin{circusflow}
+\begin{circus}
+  \circmission ~ CDxMission ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ CDxMissionState}
+  currentFrame : \circref RawFrame\\
+  state : \circref StateTable\\
+  work : \circref Partition\\
+  collisions : int\\
+  control : \circref DetectorControl
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+    \circstate ~ CDxMissionState
+\end{circusaction}
+\end{comment}
+%
+\begin{circusaction}
+    Init ~ \circdef\\
+    \t1
+    \circblockopen
+      currentFrame := \circnewM RawFrame \circseq\\
+      state := \circnewM StateTable \circseq\\
+      work := \circnewM Partition \newfourarg \circseq\\
+      collisions := 0
+    \circblockclose
+\end{circusaction}
+%
+\begin{circusaction*}
+    \circinitialize ~ \circdef
+    \\
+    \t1
+    \circblockopen
+      \circvar reduce : AperiodicEvent \circspot reduce := \circnewE AperiodicEvent() \circseq
+      \\
+      \circvar detect : AperiodicEvent \circspot detect := \circnewE AperiodicEvent() \circseq
+      \\
+      \circvar output : AperiodicEvent \circspot output := \circnewE AperiodicEvent() \circseq
+      \\
+      control := \circnewM DetectorControl(output, 4) \circseq
+%      \\
+      DetectorControlInit~!~control \then \Skip
+      \\
+      \circvar h_1 : InputFrameHandler \circspot h_1 := \circnewH InputFrameHandler(\circself, reduce) \circseq
+      \\
+      \circvar h_2 : ReducerHandler \circspot h_2 := \circnewH(reduce) ~ ReducerHandler(\circself, detect, control) \circseq
+      \\
+      \circvar h_3 : DetectorHandler \circspot h_3 := \circnewH(detect) ~ DetectorHandler(\circself, control, 1)) \circseq
+      \\
+      \circvar h_4 : DetectorHandler \circspot h_4 := \circnewH(detect) ~ DetectorHandler(\circself, control, 2)) \circseq
+      \\
+      \circvar h_5 : DetectorHandler \circspot h_5 := \circnewH(detect) ~ DetectorHandler(\circself, control, 3)) \circseq
+      \\
+      \circvar h_6 : DetectorHandler \circspot h_6 := \circnewH(detect) ~ DetectorHandler(\circself, control, 4)) \circseq
+      \\
+      \circvar h_7 : OutputCollisionsHandler \circspot h_7 := \circnewH(output) ~ OutputCollisionsHandler(\circself) \circseq
+      \\
+      \circregister h_1 \circseq \circregister h_2 \circseq \circregister h_3 \circseq \circregister h_4 \circseq \circregister h_5 \circseq \circregister h_6 \circseq \circregister h_7
+    \circblockclose
+\end{circusaction*}
+%
+\begin{circusaction}
+    \circcleanup ~ \circdef ~ \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  MArea ~ \circdef\\
+  \t1
+  \circblockopen
+    \circblockopen
+      \circvar currentFrame : \circref RawFrame \circspot
+      \\
+      \circvar state : \circref StateTable \circspot
+      \\
+      \circvar work : \circref Partition \circspot
+      \\
+      \circvar collisions : int \circspot
+      \\
+      \circmu X \circspot
+      \circblockopen
+        (setFrame~?~value \then currentFrame := value) ~ ~ \extchoice
+        \\
+        (getFrame~!~currentFrame \then \Skip) ~ ~ \extchoice
+        \\
+        (setState~?~value \then state := value) ~ ~ \extchoice
+        \\
+        (getState~!~state \then \Skip) ~ ~ \extchoice
+        \\
+        (setWork~?~value \then work := value) ~ ~ \extchoice
+        \\
+        (getWork~!~work \then \Skip) ~ ~ \extchoice
+        \\
+        (initCollsC \then collisions := 0 \circseq initCollsR \then \Skip) ~ ~ \extchoice
+        \\
+        (recCollsC~?~x \then
+        \circblockopen
+          \circwait 0 \upto RC_{TB} \circseq collisions := collisions + x) \circseq
+          \\
+          recCollsR \then \Skip
+       \circblockclose ~ ~ \extchoice
+        \\
+        (getColls~!~collisions \then \Skip)
+      \circblockclose
+      \circseq X
+    \circblockclose
+  \circblockclose
+\end{circusaction}
+%
+\begin{comment}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}
+\end{comment}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}
+%
+Due to limitations of the tools for {\Circus} it is at present not possible to parse the $\circinitialize$ action, \pagebreak indicated by the highlight above. The model corresponds directly to the SCJ code of this class recaptured below.
+%
+\begin{Verbatim}[frame=single]
+public class CDxMission extends Mission {
+  /* Shared objects in mission memory. */
+
+  public RawFrame currentFrame;
+  public StateTable state;
+  public Partition work;
+  public int collisions;
+  public DetectorControl control;
+
+  /* Constructor of the class. */
+
+  public CDxMission() {
+    currentFrame = new RawFrame();
+    state = new StateTable();
+    work = new Partition(4);
+    collisions = 0;
+  }
+
+  /* Initialisation method call by the SCJ infrastructure. */
+
+  public void initialize() {
+    AperiodicEvent reduce = new AperiodicEvent();
+    AperiodicEvent detect = new AperiodicEvent();
+    AperiodicEvent output = new AperiodicEvent();
+    control = new DetectorControl(output, 4);
+    InputFrameHandler h1 = new InputFrameHandler(this, reduce);
+    ReducerHandler h2 = new ReducerHandler(this, detect, control, reduce);
+    DetectorHandler h3 = new DetectorHandler(this, control, 1, detect);
+    DetectorHandler h4 = new DetectorHandler(this, control, 2, detect);
+    DetectorHandler h5 = new DetectorHandler(this, control, 3, detect);
+    DetectorHandler h6 = new DetectorHandler(this, control, 4, detect);
+    OutputCollisionsHandler h7 = new OutputCollisionsHandler(this, output);
+    h1.register()
+    h2.register();
+    h3.register();
+    h4.register();
+    h5.register();
+    h6.register();
+    h7.register();
+  }
+
+  /* Clean-up method call by the SCJ infrastructure. */
+
+  public void cleanup() { }
+
+  /* Specifies the memory requirements of the mission (not modelled). */
+
+  public long missionMemorySize() {
+    return Constants.MISSION_MEMORY_SIZE;
+  }
+
+  /* Methods to access shared data, modelled by the MArea action. */
+
+  public RawFrame getFrame() {
+    return currentFrame;
+  }
+
+  public void setFrame(RawFrame frame) {
+    currentFrame = frame;
+  }
+
+  public StateTable getState() {
+    return state;
+  }
+
+  public void setState(StateTable state) {
+    this.state = state;
+  }
+
+  public Partition getWork() {
+    return work;
+  }
+
+  public void setWork(Partition work) {
+    this.work = work;
+  }
+
+  public synchronized void initColls() {
+    collisions = 0;
+  }
+
+  public synchronized void recColls(int n) {
+    collisions += n;
+  }
+
+  public synchronized int getColls() {
+    return collisions;
+  }
+}
+\end{Verbatim}
+%
+\nid The only deviation is the additional method \verb"missionMemorySize()" which we do not model as we are not concerned with resource issues. The \verb"synchronized" identifiers are implicit in the specification of $MArea$. We note that the above code is from the `clean' version of the program which, unlike the runnable version, exclude any simulation code and is compliant with Version 0.78 of the SCJ Technology Specification.
+
+\newpage
+
+\subsection{{\CDx} Handlers}
+\label{sec:CDxHandlers}
+
+The SCJ program of the parallel {\CDx} consists of seven handlers.
+%
+\begin{itemize}
+  \item 1 x \verb"InputFrameHandler" (periodic, running at maximal priority)
+
+  \item 1 x \verb"ReducerHandler" (aperiodic, running at normal priority)
+
+  \item 4 x \verb"DetectorHandler" (aperiodic, running at normal priority)
+
+  \item 1 x \verb"OutputCollisionsHandler" (aperiodic, running at maximal priority)
+\end{itemize}
+%
+In terms of control, \verb"InputFrameHandler" is released periodically by a timer and releases \verb"ReducerHandler" by virtue of a software event. \verb"ReducerHandler" releases all \verb"DetectorHandler" instances, and the last active \verb"DetectorHandler" releases \verb"OutputCollisionsHandler" indirectly by calling \verb"notify(int)" when finishing its work. We now discuss the {\SCJCircus} models for the four types of handlers in more detail.
+
+\subsubsection{InputFrameHandler}
+
+This is the only periodic handler of the application. It reads the next frame and deposits it in the global variable $currentFrame$. Before doing so it copies the content of the current frame into the $state$ data structure. In fundamental terms $InputFrameHandler$ is similar to $Handler1$ of the serial line example in \cite{CWWWZ11}.
+%
+\begin{circusbox}
+\nounparsedcolour
+\begin{circus*}
+  \circperiodic(FRAME\_PERIOD) ~ \circhandler ~ InputFrameHandler ~ \circdef ~ \circbegin
+\end{circus*}
+%
+\begin{schema*}{\circstateignore InputFrameHandlerState}
+  mission : MissionId\\
+  reduce : AperiodicEvent
+\end{schema*}
+%
+\begin{circusaction*}
+  \circinitialscj InputFrameHandlerInit(m : MissionId, evt : AperiodicEvent) ~ \circdef\\
+  \t1 mission := m \circseq reduce := evt
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circhandleasyncevent ~ \circdef\\
+  \t1
+  \circblockopen
+    (next\_frame~?~frame \then (\circwait 0 \upto ST_{TB} \circseq StoreFrame(frame))) \circdeadlinesync INP\_DL \circseq
+    \\
+    \circfire reduce
+  \circblockclose
+\end{circusaction*}
+\extracircusvspace
+%
+\begin{circusaction*}
+  StoreFrame(frame : RawFrame) ~ \circdef ~
+  \\
+  \t1
+  \circblockopen
+    \circvar currentFrame : \circref RawFrame \circspot
+    \\
+    getFrame~?~f \then currentFrame := f \circseq
+    \\
+    \circvar state : \circref StateTable \circspot
+    \\
+    getState~?~s \then state := s \circseq
+    \\
+    \dots
+    \\
+    \mbox{\texttt{\{* Update $currentFrame$ and $state$ according to $frame$.~*\}}}
+  \circblockclose
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circdispatch ~ \circhandleasyncevent
+\end{circusaction*}
+%
+\begin{circus*}
+  \circend
+\end{circus*}
+\end{circusbox}
+%
+Since the handler is release periodically by a timer, the dispatch actions takes a simple form of just calling $handleAsyncEvent$. The behaviour of the handler action is to wait for communication on $next\_frame$ and then invoke $StoreFrame$ while passing the frame object read from the hardware. The communication must occur within $INP\_DL$ time units from the start of each cycle. The $\circfire$ construct is an extension of {\SCJCircus} used to fire a software event. It corresponds to a respective call to the \verb"fire()" method of \verb"AperiodicEvent". The computation carried out by $StoreFrame$ is mostly omitted; it emerges during the \name{AR} phase.
+
+\newpage
+
+\subsubsection{ReducerHandler}
+
+We now sketch the \name{S} model for $ReducerHandler$.
+%
+\begin{circusbox}
+\nounparsedcolour
+\begin{circus*}
+  \circaperiodic ~ \circhandler ~ ReducerHandler ~ \circdef ~ \circbegin
+\end{circus*}
+%
+\begin{schema*}{\circstateignore ReducerHandlerState}
+  mission : MissionId\\
+  detect : AperiodicEvent\\
+  control : \circref DetectorControl
+\end{schema*}
+%
+\begin{circusaction*}
+  \circinitialscj ~ ReducerHandlerInit(m : MisisonId, evt : AperiodicEvent, c : \circref DetectorControl) ~ \circdef
+  \\
+  \t1 mission := m \circseq detect := evt \circseq control := c
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circhandleasyncevent ~ \circdef\\
+  \t1
+  \circblockopen
+    \circvar currentFrame : \circref RawFrame \circspot getFrame~?~f \then currentFrame := f \circseq
+    \\
+    \circvar state : \circref StateTable \circspot getState~?~s \then state := s \circseq
+    \\
+    \circvar work : \circref Partition \circspot getWork~?~w \then work := w \circseq
+    \\
+    \circvar voxel\_map : HashMap[Vector2d,List[Motion]] \circspot
+    \\
+    \circwait 0 \upto RPW_{TB} \circseq
+    \\
+    voxel\_map := \circnewP HashMap() \circseq
+    \\
+    \mbox{\texttt{\{* Execute algorithm for voxel hashing and populate $voxel\_map$.~*\}}}
+    \\
+    voxel\_map~.~put(\dots) \circseq
+    \\
+    work~.~clear() \circseq
+    \\
+    \circblockopen
+      \circfor i = 0 \circto voxel\_map~.~values()~.size() - 1 \circspot
+      \\
+      work~.~recordVoxelMotions(voxel\_map~.~values()~.~get(i))
+    \circblockclose
+    \circseq
+    \\
+    initCollsC \then \Skip \circseq initCollsR \then \Skip \circseq
+    \\
+    startC \then \Skip \circseq startR \then \Skip \circseq
+    \\
+    \circfire detect
+  \circblockclose
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circdispatch ~ release\_handler~.~ReducerHandlerId \then \circhandleasyncevent
+\end{circusaction*}
+%
+\begin{circus*}
+  \circend
+\end{circus*}
+\end{circusbox}
+%
+The difference to, for instance, $Handler2$ of the serial line example in~\cite{CWWWZ12} is that this handler is released by a software event rather than an external event. The synchronisation on $release\_handler~.~ReducerHandlerId$ highlights this. In the \name{P} model of software events, the $release\_handler$ channel is used to cause the periodic release of a handler. The channel is parametrised by the id of the handler to be released. Details of the voxel hashing algorithm are again omitted; they are a concern for \name{AR}.
+
+%\begin{note}
+%Something that made me think a little is where to put the $\circwait$ statement above. I think it should be tied to the data operation that carries out the computation. Due to the fact that we have to use synchronisations to access shared variables, additional local variables had to be introduced above.
+%\end{note}
+
+\newpage
+
+\subsubsection{DetectorHandler}
+
+The aperiodic detection handler is specified below. Since we have four instances of this handler in the program, the process is parametrised by an identifier of type $int$.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circus*}
+  \circaperiodic ~ \circhandler ~ DetectorHandler ~ \circdef ~ hdl : HandlerId \circspot \circbegin
+\end{circus*}
+%
+\begin{schema*}{\circstateignore DetectorHandlerState}
+  mission : MissionId\\
+  control : \circref DetectorControl\\
+  id : int
+\end{schema*}
+%
+\begin{circusaction*}
+  \circinitialscj ~ DetectorHandlerInit(m : MissionId, c : \circref DetectorControl, n : int) ~ \circdef
+  \\
+  \t1 mission := m \circseq control := c \circseq id := n
+\end{circusaction*}
+%
+\begin{circusaction*}
+  CalcPartCollisions ~ \circdef ~ \circres pcolls : int \circspot
+  \\
+  \t1
+  \circblockopen
+    pcolls := 0 \circseq
+    \\
+    \circvar work : Partition \circspot getWork~?~w \then work := w \circseq
+    \\
+    \circfor i = 0 \circto work~.~getDetectorWork(id)~.~size() - 1 \circspot
+    \\
+    \t1
+    \circblockopen
+      \circvar motions : List[Motion] \circspot
+      \\
+      motions := work~.~getDetectorWork(i)~.~get(i) \circseq
+      \\
+      pcolls := pcolls + \circself~.~determineCollisions(motions) \circseq
+    \circblockclose
+  \circblockclose
+\end{circusaction*}
+%
+\begin{circusaction*}
+  determineCollisions ~ \circdef ~ \circval motions : List[Motion]; \circres ~ \circret : int \circspot
+  \\
+  \t1 \mbox{\texttt{\{* Algorithm for counting collisions.~*\}}}
+  \\
+  \t1 \circret := \dots
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circhandleasyncevent ~ \circdef
+  \\
+  \t1
+  \circblockopen
+    \circvar colls : int \circspot
+    \\
+    \t1
+    \circblockopen
+      \circwait 0 \upto CPC_{TB} \circseq CalcPartCollisions(colls) \circseq
+      \\
+      recCollsC~!~colls \then recCollsR \then \Skip \circseq
+      \\
+      notifyC~!~id \then notifyR \then \Skip
+    \circblockclose
+  \circblockclose
+\end{circusaction*}
+%
+% There is a mistake in Ana's paper with the dispatch action below.
+%
+\begin{circusaction*}
+  \circdispatch ~ release~.~DetectorHandlerId \then \circhandleasyncevent()
+\end{circusaction*}
+%
+\begin{circus*}
+  \circend
+\end{circus*}
+\end{circusflow}
+%
+Details have been omitted concerning the algorithm that counts collisions in a voxel motion list~(this is done inside the method $determineCollisions$). We have four instances of this process in the \name{S} anchor:
+%
+\[
+  DetectorHandler(1) \parallel DetectorHandler(2) \parallel DetectorHandler(3) \parallel DetectorHandler(4)
+\]
+
+\subsubsection{OutputCollisionsHandler}
+
+This is a simple aperiodic handler that outputs the collisions.
+%
+\begin{circusflow}
+\nounparsedcolour
+\begin{circus*}
+  \circaperiodic ~ \circhandler ~ OutputCollisionsHandler ~ \circdef ~ \circbegin
+\end{circus*}
+%
+\begin{schema*}{\circstateignore OutputCollisionsHandlerState}
+  mission : MissionId
+\end{schema*}
+%
+\begin{circusaction*}
+  \circinitialscj ~ OutputCollisionsHandlerInit(m : MissionId) ~ \circdef ~ mission := m
+\end{circusaction*}
+%
+\begin{circusaction*}
+  \circhandleasyncevent ~ \circdef \circvar colls : int \circspot\\
+  \t1
+  \circblockopen
+    getColls~?~c \then colls := c \circseq
+    \\
+    (output\_collisions~!~colls \then \Skip \circdeadlinesync OUT\_DL)
+  \circblockclose
+\end{circusaction*}
+\extracircusvspace
+%
+\begin{circusaction*}
+  \circdispatch ~ release\_handler~.~OutputCollisionsHandlerId \then \circhandleasyncevent
+\end{circusaction*}
+%
+\begin{circus*}
+  \circend
+\end{circus*}
+\end{circusflow}
+%
+The handler method first obtains the detected collisions using the $getColls$ method provided by the mission class to access the shared $collisions$ variable. It then outputs the collisions on the $output\_collisions$ channel, imposing a deadline on the communication to ensure that the hardware accepts the output within the required time interval.
+
+\begin{note}
+An open topic is the parametrisation of the channel $release\_handler$. Here, this is done by way of a value of type $SCJEventId$. However, it may be possible to directly parametrised it by an object of a class type that corresponds to the event instance, if we decide to regard such events as data objects.
+\end{note}
+
+\subsubsection{Active Objects}
+
+We note that the {\OhCircus} class model of $DetectorControl$ does not contain a $\circfire$ statement. This, however, is needed to give a faithful model of this class. Below we capture the active behaviour of the $DetectorControl$ instance used by the program by way of a an {\SCJCircus} paragraph $\circactive$. It is also part of the \name{S} anchor.
+%
+\begin{circusbox}
+\nounparsedcolour
+\begin{circus*}
+  \circactive ~ DetectorControl ~ \circdef ~ \circbegin
+\end{circus*}
+%
+\begin{schema*}{\circstateignore DetectorHandlerState}
+  control : \circref DetectorControl
+\end{schema*}
+%
+%
+\begin{circusaction*}
+  Init ~ \circdef ~ DetectorControlInit~?~c \then control := c
+\end{circusaction*}
+%
+\begin{circusaction*}
+  MArea ~ \circdef\\
+  \t1
+  \circblockopen
+    \circmu X \circspot
+    \circblockopen
+      (startC \then control~.~start() \circseq startR \then \Skip)
+      \\
+      \t1 \extchoice
+      \\
+      \circblockopen
+        notifyC~?~i \then
+        \\
+        \t1
+        \circblockopen
+          control~.~notify(i) \circseq
+          \\
+          \circblockopen
+            (\lcircguard control~.~done() \rcircguard \circguard \circfire control~.~event \then \Skip)
+            \\
+            \t1 \extchoice
+            \\
+            (\lcircguard \lnot control~.~done() \rcircguard \circguard \Skip)
+          \circblockclose
+          \circseq
+          \\
+          notifyR \then \Skip
+        \circblockclose
+      \circblockclose
+    \circblockclose
+    \circseq X
+  \circblockclose
+\end{circusaction*}
+%
+\begin{circus*}
+  \circend
+\end{circus*}
+\end{circusbox}
+%
+The state includes a reference to the detector control class object whose active behaviour is wrapped by the process. The $Init$ action connects the process to this object via an input prefix on the $DetectorControlInit$ channel. The communication is raised inside the $CDxMission$ paragraph when the $control$ object is created.

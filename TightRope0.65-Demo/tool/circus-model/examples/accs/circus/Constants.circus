@@ -1,0 +1,11 @@
+\begin{zsection}
+  \SECTION ~ Constants ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+%
+The following constant defines the integer range for voltage outputs on the throttle.
+%
+\begin{zed}
+  VOLTAGE\_RANGE ~ == ~ 0..80
+\end{zed}
+%
+It corresponds to the physical range from $0$ volts to $8$ volts, hence one unit is $0.1$ volts.

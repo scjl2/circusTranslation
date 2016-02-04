@@ -1,0 +1,335 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{wasysym}
+%\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage[thref,hyperref]{ntheorem}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+\usepackage{fancybox}
+\usepackage{url}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[colour]{circus}
+\usepackage{hijac}
+\usepackage{custom}
+
+%\renewcommand{\arraystretch}{1.2}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{Refinement of the Parallel {\CDx}\\---\\Technical Report}
+
+\author{F.~Zeyda, A.~Cavalcanti, A.~Wellings, J.~Woodcock and K.~Wei}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Contents                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 Introduction                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{Introduction.tex}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 Preliminaries                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{cdx_preliminaries.circus}
+
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Anchor A                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{cdx_anchor_a.circus}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Anchor O                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{cdx_anchor_o.circus}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Anchor E                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{cdx_anchor_e.circus}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                   Anchor S                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{cdx_anchor_s.circus}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                  Appendices                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+% Disable all colouring in the appendix, in particular in the laws.
+
+\renewcommand{\red}[1]{#1}
+\renewcommand{\blue}[1]{#1}
+\renewcommand{\green}[1]{#1}
+\renewcommand{\grey}[1]{#1}
+\renewcommand{\purple}[1]{#1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                    Classes                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Class Definitions}
+\label{app:classes}
+
+In this section we present the specification of {\OhCircus} classes of the program relevant to the models.
+
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{$RawFrame$ class}
+\label{app:RawFrame}\vspace{-1em}
+
+\input{RawFrame.circus}
+
+%{\nounparsedcolour\input{paper/RawFrame.circus}}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{$StateTable$ class}
+\label{app:StateTable}%\vspace{-1em}
+
+\input{StateTable.circus}
+
+%{\nounparsedcolour\input{paper/StateTable.circus}}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{$CallSign$ class}
+\label{app:CallSign}
+
+\input{CallSign.circus}
+
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{$Vector2d$ class}
+\label{app:Vector2d}
+
+\input{Vector2d.circus}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\subsection{$Motion$ class}
+%\label{app:Motion}
+
+%\todo{Class $Motion$ has not been specified yet. Should we include it at all?}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\subsection{$HashMap$ class}
+%\label{app:HashMap}
+
+%\todo{Class $HashMap$ has not been specified yet. Should we include it at all?}
+
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\subsection{$List$ class}
+%\label{app:List}
+
+%\todo{Class $List$ has not been specified yet. Should we include it at all?}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{$Partition$ class}
+\label{app:Partition}\vspace{-1em}
+
+\input{Partition.circus}
+
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{$DetectorControl$ class}
+\label{app:DetectorControl}\vspace{-1em}
+
+\input{DetectorControl.circus}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                Refinement Laws                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Refinement Laws}
+\label{app:laws}
+
+\setcounter{circuslawthm}{0}
+\setcounter{circustimelawthm}{0}
+\setcounter{ohcircuslawthm}{0}
+\setcounter{patternthm}{0}
+
+This appendix summarises all significant refinement laws that are used throughout the refinement strategy.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{{\Circus} Laws}
+\label{app:circuslaws}
+
+\input{distr-prefix-seq.tex}
+\input{seq-to-par-1.tex}
+\input{seq-to-par-2.tex}
+\input{conj-to-par.tex}
+\input{distr-var-hide.tex}
+\input{distr-var-par.tex}
+\input{remove-var.tex}
+\input{compact-write-sets-par.tex}
+\input{distr-prefix-par-1.tex}
+\input{distr-prefix-par-2.tex}
+\input{lockstep-intro.tex}
+\input{replace-sync-chan-seq.tex}
+\input{var-intro.tex}
+\input{extract-var-prefix.tex}
+\input{extract-var-seq.tex}
+\input{extract-var-rec.tex}
+\input{distr-prefix-par-3.tex}
+\input{distr-prefix-par-4.tex}
+\input{distr-prefix-par-5.tex}
+\input{extchoice-par-intro.tex}
+\input{seq-skip-left-intro.tex}
+\input{par-skip-intro.tex}
+\input{extend-sync-par.tex}
+\input{extchoice-comm.tex}
+\input{distr-rec-par-1.tex}
+\input{distr-rec-par-2.tex}
+\input{elim-repeated-seq-rec.tex}
+\input{var-elim.tex}
+\input{hidden-sync-intro.tex}
+\input{extract-hide-prefix.tex}
+\input{extract-hide-rec.tex}
+\input{extract-hide-par-left.tex}
+\input{extract-hide-par-right.tex}
+\input{idem-par.tex}
+\input{seq-op-comm.tex}
+
+\todo{Add laws needed in the elementary refinements not further discussed.}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{{\Circus} Time Laws}
+\label{app:circustimelaws}
+
+\input{narrow-time-budget-1.tex}
+\input{narrow-time-budget-2.tex}
+\input{time-prefix-elim.tex}
+\input{extract-inter-wait-seq}
+\input{extract-inter-wait-var.tex}
+\input{extract-inter-wait-waitblock.tex}
+\input{extract-inter-wait-prefix.tex}
+\input{remove-unused-time-prefix.tex}
+\input{remove-unused-wait-block.tex}
+\input{distr-sync-deadline-seq.tex}
+\input{split-time-budget-1.tex}
+\input{split-time-budget-2.tex}
+\input{time-budget-op-comm.tex}
+\input{distr-wait-seq-var}
+\input{distr-wait-seq-par}
+\input{zero-wait-intro}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\subsection{{\OhCircus} Laws}
+%\label{app:ohcircuslaws}
+
+%\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{High-level Patterns}
+
+\input{seq-share-1.tex}
+%\newpage
+\input{seq-share-2.tex}
+\newpage
+\input{par-share.tex}
+\newpage
+\input{par-share-control.tex}
+\newpage
+\input{sync-barrier-elim.tex}
+\newpage
+\input{sync-barrier-control.tex}
+\newpage
+\input{sync-barrier-design.tex}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 Mock Objects                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Mock Objects}
+
+\input{cdx_mock_objects.circus}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                  References                                  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{plain}
+
+\bibliography{cdx_report}
+
+\end{document}

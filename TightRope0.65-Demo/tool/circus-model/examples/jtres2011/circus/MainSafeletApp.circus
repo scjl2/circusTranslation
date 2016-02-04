@@ -1,0 +1,27 @@
+\begin{zsection}
+  \SECTION ~ MainSafeletApp ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{circus}
+  \circprocess ~ MainSafeletApp ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{circusaction}
+  setUpMeth ~ \circdef ~ setUpCall \then \Skip \circseq setUpRet \then \Skip
+\end{circusaction}
+
+\begin{circusaction}
+  tearDownMeth ~ \circdef ~ tearDownCall \then \Skip \circseq tearDownRet \then \Skip
+\end{circusaction}
+
+\begin{circusaction}
+  Methods ~ \circdef ~ \circmu X \circspot (setUpMeth ~ \extchoice ~ tearDownMeth) \circseq X
+\end{circusaction}
+
+\begin{circusaction}
+  \circspot Methods ~ \circinterrupt ~ end\_safelet\_app \then \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

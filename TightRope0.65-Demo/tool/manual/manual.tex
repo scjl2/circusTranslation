@@ -1,0 +1,227 @@
+\documentclass{report}
+\usepackage{fullpage}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{circus}
+\usepackage{zeyda}
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true,linkcolor=OliveGreen,citecolor=Red,urlcolor=Blue}
+
+\title{The {\hiJAC} Tools\\---\\System Manual}
+
+\author{Frank Zeyda and Chris Marriott}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 Introduction                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Introduction}
+\label{chap:Introduction}
+
+This document explains compilation and use of the {\hiJAC} tool suite. The {\hiJAC} tools are a deliverable of the \textbf{h}igh-\textbf{i}ntegrity \textbf{J}ava \textbf{A}pplications using {\textsf{\textbf{C}{\slshape ircus}}} EPSRC project \href{http://gow.epsrc.ac.uk/NGBOViewGrant.aspx?GrantRef=EP/H017461/1}{EP/H017461/1}. The aim of the project is to develop novel verification techniques for Safety-Critical Java~\cite{JSR302}~(SCJ) that are based on formal analysis and rigorous mathematical proof. Currently, the tools support the following activities.
+%
+\begin{enumerate}
+  \item Control flow analysis of an SCJ application. This prints out information about dependencies between the program and SCJ API, and can be useful for profiling code to be used with the tools below.
+
+  \item Translation of SCJ applications into formal models written in the {\Circus}~\cite{ZLCW13} refinement language.
+
+  \item Analysis of SCJ applications for memory safety using the {\mSafe}~\cite{MC14} rule-based calculus.
+\end{enumerate}
+%
+The tools are written in \href{http://www.oracle.com/technetwork/java/index.html}{Java} and share common core components. Indeed, part of {\hiJAC} tools is a library of reusable components that facilitates the development of tools for SCJ in general, as discussed in the article~\cite{ZLCW13}. The tools are invoked from the Linux/Windows command line via shell scripts, and a configuration file is used to determine (a)~the location of the SCJ program to be translated or analysed, (b)~the location of an SCJ/RTSJ reference library that is used, and (c)~additional tool-specific options. The basic structure and layout of the configuration file is similar for both tools and detailed later on in Section~\ref{chap:Configuration}.
+
+We note that the tools are effectively research prototypes and therefore are accompanied by some restrictions and come with no warranty of any kind. We tested compilation and execution under Ubuntu Linux~14 and Windows~7 on a number of examples. If any problems arise using the tools, please do not hesitate to email Frank Zeyda~(\email{f.zeyda@tees.ac.uk}) or Chris Marriott~(\email{cam505@york.ac.uk}) for help.
+
+\todo{Chris, is the above email address still valid?}
+
+\section{Prerequisites}
+
+The following applications need to be installed in order to compile and run the {\hiJAC} tools.
+%
+\begin{enumerate}
+  \item The \href{https://subversion.apache.org/}{subversion} repository management software.
+
+  \item A recent version of the \textbf{J}ava \textbf{D}evelopment \textbf{K}it~(JDK):~that is, \href{http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html}{JDK~7} or \href{http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html}{JDK~8}.
+
+  (Earlier version might work but have not been tested!)
+
+  \item The \href{http://ant.apache.org/}{Apache Ant} build system.
+
+  \item {\LaTeX}~(\href{https://www.tug.org/texlive/}{texlive}) if PDF documents ought to be generated for {\Circus} models produced by tool (1).
+\end{enumerate}
+%
+When installing the prerequesits, please ensure that the \verb"JAVA_HOME" and \verb"ANT_HOME" environment variables are suitably set. Under Ubuntu 14, this can either be done in \verb"~/.bash_rc" on a per-user basis, or system-wide in \verb"/etc/environment". Under Windows 7, simply follow the instructions at:~{\footnotesize\url{https://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/sysdm_advancd_environmnt_addchange_variable.mspx?mfr=true}}.
+
+\pagebreak
+
+\section{Obtaining the Source Code}
+
+The source code of the {\hiJAC} tools is openly available via the public subversion repository at\vspace{0.5em}
+%
+\par\url{https://cssvn.york.ac.uk/repos/hijactools}\\[+0.5em]
+%
+The following subversion command creates a local copy of the above repository in a subfolder \verb"hijactools" of the current directory. Note that this requires \href{https://subversion.apache.org/}{subversion} to be installed.\vspace{0.5em}
+%
+\par\indent \verb"svn co https://cssvn.york.ac.uk/repos/hijactools"\\[+0.5em]
+%
+All relevant files are in the subfolder \verb"trunk" of \verb"hijactools". \figname\ref{} briefly explains the content of each folder within \verb"trunk". Currently, there is no release version of the tool:~the files in \verb"trunk" reflect the latest~(current) state of development. Also, there is no binary distribution, and hence the user needs to compile the tool applications from source before use. This is, however, simplified by virtue of an Apache Ant build script~(\verb"build.xml" file)  which is included in the \verb"trunk" folder.
+
+\section{Compilation}
+
+Compilation is done using \href{http://ant.apache.org/}{Apache Ant}, which must be installed as a prerequisite. Possible commands are:
+%
+\begin{itemize}
+  \item \verb"ant compile" (or just \verb"ant") to compile the {\hiJAC} tools. This automatically downloads additional third-party libraries via \verb"ant"'s maven plug-in into the \verb"lib" folder, and then creates a new directory \verb"target" in \verb"trunk" with a subfolder \verb"classes" that contains all compiled Java classes for all tools.
+
+  \item \verb"ant doc" to generate a \href{http://www.oracle.com/technetwork/articles/java/index-jsp-135444.html}{Javadoc} documentation. The respective HTML files are output in a new subdirectory \verb"javadoc" of the \verb"target" folder.
+
+  \item \verb"ant install" to create a jar file of the {\hiJAC} tool classes, as they are located in \verb"output/classes" after compilation. The jar file is output in the \verb"lib" subfolder.
+
+  \item \verb"ant clean" to clean up compiled classes and javadoc files. This deletes the \verb"target" folder.
+
+  \item \verb"ant distclean" to additionally remove third-party libraries that are automatically downloaded during the compilation process, as well as the {\hiJAC} tool library created by \verb"ant install".
+
+  \note{I also implemented a command \code{ant distro} to create a binary distribution. However, this needs to be reviewed and upgraded.}
+\end{itemize}
+%
+In order to run the tool applications, compilation with ``\verb"ant compile"'' is sufficient.
+
+\section{Execution}
+
+The tool {\hiJAC} tool applications are executed using the scripts in the \verb"bin" folder. These are
+%
+\begin{enumerate}
+  \item ``\verb"transcircus"'' for tool application (1), generating a {\Circus} model for a give SCJ program; and
+
+  \item ``\verb"transmafe"'' for tool application (2), generating an {\mSafe} model for a give SCJ program.
+
+  There is also a third script,
+
+  \item ``\verb"analyser"'' that analyses an SCJ program and prints out some useful information, such as method dependencies on the SCJ library / reference implementation used by the program.
+\end{enumerate}
+%
+All of the above scripts under Linux (\href{http://www.gnu.org/software/bash/}{bash}), and indirectly invoke the \verb"run" script in the \verb"trunk" folder. For Windows 7, there is an analogous \verb"run.bat" script provided in trunk. This, however, has to be called directly from a command prompt to run the tools under Windows. The argument determines the tool:~thus, we have ``\verb"run.bat Analyser"'', ``\verb"run.bat TransCircus"'' and ``\verb"run.bat TransMSafe"''.
+
+%\todo{Perhaps provide individual tool invocation scripts for Windows too.}
+
+The analyser~(1) outputs its result directly into the shell windows. The \verb"misc" directory of \verb"trunk" moreover contains a syntax-highlighting scheme for \href{https://wiki.gnome.org/Apps/Gedit}{gedit} that displays the report in colour. The {\Circus} model generator~(2) outputs the generated {\LaTeX} mark-up files into the subfolder \verb"gen" of the \verb"model-gen" folder. And the {\mSafe} tool~(3) outputs its result into the ? folder. Both latter tools generate debugging messages that detail failures if compilation or translation of the SCJ program does not succeed.
+
+\todo{Chris, can you let me know where your tool outputs the files to?}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 Configuration                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Configuration}
+\label{chap:Configuration}
+
+Configuration of the tools is done by modifying the \verb"hijac.properties" file in the \verb"trunk" folder. A general introduction to Java properties files can be found at \url{http://en.wikipedia.org/wiki/.properties}. In essence, they are text files containing key/value pairs of the form \verb"key=value". If an option~(key) is not defined in \verb"hijac.properties", it is automatically inherited from \verb"default.properties" which can be found in \verb"trunk/src/resources/". We distinguish between general options that apply to all tools, and specific options that apply to individual tools.
+
+\section{General Options}
+
+The general configuration options are listed below.
+%
+\begin{itemize}
+  \item \verb"SCJ_PACKAGE_PREFIX="$\langle$Java package$\rangle$
+
+  This option defines the package prefix used for the SCJ infrastructure~(framework) classes. The default value is \verb"javax.safetycritical".
+
+  \item \verb"RTSJ_PACKAGE_PREFIX="$\langle$Java package$\rangle$
+
+  This option defines the package prefix used for the RTSJ infrastructure~(framework) classes. The default value is \verb"javax.realtime".
+
+  \item \verb"SCJ_LIB="$\langle$path to SCJ reference implementation$\rangle$
+
+  This option provides the path to an SCJ reference implementation that is used by the SCJ program to be analysed or translated. For the various tools, it is, however, not essential that the reference implementation be executable --- a collection of stub classes is typically sufficient. Crucial is only that the SCJ program to be analysed or translated can be compiled without error with the classes in \verb"SCJ_LIB", and the the SCJ library is correctly annotated. By default, this option is unspecified, which implicitly makes use of the stub classes in \verb"src/java/javax/safetycritical/" --- a stub implementation of Version 0.78 of the SCJ API~(as of October 2010).
+  
+  The importance of this option is that it potentially allows arbitrary (versions of) SCJ reference implementations to be used by the analysed or translated SCJ program, though the current model generators assume Version 0.78 of the SCJ API.
+  
+  \todo{Chris, is that also so for your tool?}
+
+  \item \verb"RTSJ_LIB="$\langle$path to RTSJ reference implementation$\rangle$
+
+  Similar to \verb"SCJ_LIB=", this option provides the path to an RTSJ reference implementation. It is typically defined in conjunction with \verb"SCJ_LIB", since SCJ technology implementations are usually defined in terms of an RTSJ reference implementation.
+
+  \item \verb"SCJ_SRC="$\langle$path of SCJ source files$\rangle$
+
+  This option determines the location of the Java source files (\verb".java" files) of the SCJ application to be analysed or translated. As mentioned above, the source files have to be compilable with the specified reference implementation via \verb"SCJ_LIB" and \verb"RTSJ_LIB". This should be checked before the tool is used to process the code.
+
+  \item \verb"VALIDATE_OBJECTS=" $\langle$\verb"true" $|$ \verb"false"$\rangle$
+
+  Option that determines whether internal validation of Java objects should take place. Enabling validation is useful for debugging the {\hiJAC} tools but might slow down execution. The default is \verb"false".
+
+  \item  \verb"USE_ANSI_COLOURS=" $\langle$\verb"true" $|$ \verb"false"$\rangle$
+
+  Option that permits ANSI escape sequences to be used to colourise shell output.
+\end{itemize}
+
+\section{Analyser Options}
+
+Below we describe the specific options for the analyser tool.
+%
+\begin{itemize}
+  \item \verb"Analyser.TYPES_REPORT="$\langle$\verb"true" $|$ \verb"false"$\rangle$
+
+  Option that determines whether a report for the used SCJ classes should be generated.
+
+  \item \verb"Analyser.METHODS_REPORT="$\langle$\verb"true" $|$ \verb"false"$\rangle$
+
+  Option that determines whether a report for the used SCJ methods should be generated.
+
+  \item \verb"Analyser.METHOD_DEP_REPORT="$\langle$\verb"true" $|$ \verb"false"$\rangle$
+
+  Option that determines whether a method dependency report should be generated. The dependency analysis report summarises transitive call dependency of application method.
+\end{itemize}
+
+\section{{\Circus} Translator Options}
+
+Below we describe the specific options for the analyser tool.
+%
+%
+\begin{itemize}
+  \item \verb"ModelGen.MODEL_OUTPUT_DIR"
+
+  This option specifies the directory where generated {\LaTeX} {\Circus} models are placed.
+
+  \item \verb"ModelGen.PREFIX_WITH_PACKAGE"
+
+  This option determines whether names of {\Circus} processes and classes in the generated models should be prefixed with the package of the SCJ application to be translated.
+\end{itemize}
+
+\section{{\mSafe} Translator Options}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                             The Circus Translator                            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{The {\Circus} Translator}
+\label{chap:CircusTranslator}
+
+\todo{This section still needs to be written?}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                             The mSafe Translator                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{The {\mSafe} Translator}
+\label{chap:mSafeTranslator}
+
+\todo{Ask Chris to write this section if possible?}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                 Bibliography                                 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{alpha}
+
+\bibliography{manual.bib}
+
+\end{document}

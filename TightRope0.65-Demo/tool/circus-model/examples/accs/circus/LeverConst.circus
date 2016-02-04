@@ -1,0 +1,8 @@
+\begin{zsection}
+  \SECTION ~ LeverConst ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+  LeverDeadline : \nat_1
+\end{axdef}

@@ -1,0 +1,17 @@
+\begin{zsection}
+  \SECTION ~ Handler1\_MemoryEntryMethChan ~ \parents\\ \t1 Handler1\_MemoryEntryClass, Handler1Class, scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{schema}{Handler1\_MemoryEntryInitArgs}
+  outer : Handler1
+\end{schema}
+
+\begin{circus}
+  \circchannel ~ Handler1\_MemoryEntryInitCall : Handler1\_MemoryEntry
+  \also
+  \circchannel ~ Handler1\_MemoryEntryInitRet : Handler1\_MemoryEntry
+\end{circus}
+
+\begin{circus}
+  \circchannel ~ Handler1\_MemoryEntryDispose : Handler1\_MemoryEntry
+\end{circus}

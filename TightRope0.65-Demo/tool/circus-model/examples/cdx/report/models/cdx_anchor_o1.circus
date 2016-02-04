@@ -1,0 +1,293 @@
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ cdx\_anchor\_o1 ~ \parents ~ cdx\_anchor\_a, cdx\_mock\_objects
+\end{zsection}
+\end{comment}
+
+%%Zword \aposns posns
+%%Zword \amotions motions
+
+%%Zword \cposns posns1
+%%Zword \cmotions motions1
+%%Zword \ccurrentFrame currentFrame1
+%%Zword \cstate state1
+
+\newcommand{\aposns}{posns}
+\newcommand{\amotions}{motions}
+
+\newcommand{\cposns}{posns_1}
+\newcommand{\cmotions}{motions_1}
+\newcommand{\ccurrentFrame}{currentFrame_1}
+\newcommand{\cstate}{state_1}
+
+\subsection{Phase \name{CS}}
+
+In the first phase of the \name{O} anchor, we data-refine the abstract model variables $posns$ and $motions$ into their concrete representations in the program. This is via the shared objects $currentFrame$ and $state$ of class type $RawFrame$ and $StateTable$. They are used to record the current and previous positions of aircrafts.
+
+\subsubsection*{Refining State}
+
+The state of the refining process is given by the following state schema.
+%
+\begin{schema}{OCSStateCDx}
+  \cposns : Frame\\
+  \cmotions : Frame\\
+  \ccurrentFrame : RawFrame\\
+  \cstate : StateTable
+\end{schema}
+%
+The class types $RawFrame$ and $StateTable$ are specified in Appendix \ref{app:RawFrame} and \ref{app:StateTable}. We note that we retain the abstract state components as auxiliary variables following Morgan's approach~\cite{Mor88}.
+
+\subsubsection*{Retrieve Relation}
+
+The retrieve relation is given by the following schema that associates abstract and concrete states.
+%
+\begin{comment}
+\begin{schema}{AStateCDx}
+  \aposns : Frame\\
+  \amotions : Frame
+\end{schema}
+\end{comment}
+%
+\begin{schema}{OCSRetrCDx}
+  AStateCDx\\
+  OCSStateCDx
+\where
+  \cposns = \aposns \land \cmotions = \amotions
+  \\
+  \ccurrentFrame \neq \circnull \land \cstate \neq \circnull
+  \\
+  \aposns =
+  \circblockopen
+    \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+      \t1
+      \circblockopen
+        \LET i == \ccurrentFrame~.~find(a) @\\
+        \t1 MkVector
+        \circblockopen
+          \ccurrentFrame~.~positions~.~getA(3 * i),\\
+          \ccurrentFrame~.~positions~.~getA(3 * i + 1),\\
+          \ccurrentFrame~.~positions~.~getA(3 * i + 2)
+        \circblockclose
+     \circblockclose
+  \circblockclose
+  \also
+  \amotions =
+  \circblockopen
+    \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+    \t1
+    \circblockopen
+      \LET prev == \cstate~.~position\_map~.~get(MkCallSign(a)) @\\
+      \t1 \IF prev \neq \circnull\\
+      \t1 \THEN ~ \aposns(a) \vminus MkVector(prev~.~x, prev~.~y, prev~.~z)\\
+      \t1 \ELSE ~ ZeroV
+    \circblockclose
+  \circblockclose
+\end{schema}
+%
+For reasons of definedness, we require $\ccurrentFrame$ and $\cstate$ not to be $\circnull$. We observe that the abstract state is expressed as a function of the concrete state. This enables a calculations approach to derive the refining data operations. Here, we do not fully simplify the calculated refining operations though.
+
+\begin{note}
+Is the retrieve relation a surjective function too? This may still need to be examined.
+\end{note}
+
+\newcommand{\posnsretr}[2][]{
+  \circblockopen
+    \lambda a : Aircraft | currentFrame{#2}#1~.~find(a) \neq \negate 1 @\\
+      \t1
+      \circblockopen
+        \LET i == currentFrame{#2}#1~.~find(a) @\\
+        \t1 MkVector
+        \circblockopen
+          currentFrame{#2}#1~.~positions~.~getA(3 * i),\\
+          currentFrame{#2}#1~.~positions~.~getA(3 * i + 1),\\
+          currentFrame{#2}#1~.~positions~.~getA(3 * i + 2)
+        \circblockclose
+     \circblockclose
+  \circblockclose
+}
+
+\newcommand{\motionsretr}[3][]{
+  \circblockopen
+    \lambda a : Aircraft | currentFrame_{#2}#1~.~find(a) \neq \negate 1 @\\
+    \t1
+    \circblockopen
+      \LET prev == state_{#2}#1~.~position\_map~.~get(MkCallSign(a)) @\\
+      \t1 \IF prev \neq \circnull\\
+      \t1 \THEN ~ posns#1_{#3}(a) \vminus MkVector(prev~.~x, prev~.~y, prev~.~z)\\
+      \t1 \ELSE ~ ZeroV
+    \circblockclose
+  \circblockclose
+}
+
+\newpage
+
+\subsubsection*{Refining Process}
+
+The process for the first data refinement of the Anchor \name{O} is given below. We target the refinement of $ABReqsCDx$, that is the abstract behavioural requirements. The new state invariant and refined data operations have been calculated; as mentioned before, they are not fully simplified yet.
+%
+\begin{circusflow}
+\begin{circus}
+  \circprocess ~ OCSBReqsCDx ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ OCSStateCDx}
+  \cposns : Frame\\
+  \cmotions : Frame\\
+  \ccurrentFrame : RawFrame\\
+  \cstate : StateTable
+\where
+  \dom \cposns = \dom \cmotions
+  \\
+  \ccurrentFrame \neq \circnull \land \cstate \neq \circnull
+  \\
+  \cposns =
+  \circblockopen
+    \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+      \t1
+      \circblockopen
+        \LET i == \ccurrentFrame~.~find(a) @\\
+        \t1 MkVector
+        \circblockopen
+          \ccurrentFrame~.~positions~.~getA(3 * i),\\
+          \ccurrentFrame~.~positions~.~getA(3 * i + 1),\\
+          \ccurrentFrame~.~positions~.~getA(3 * i + 2)
+        \circblockclose
+     \circblockclose
+  \circblockclose
+  \also
+  \cmotions =
+  \circblockopen
+    \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+    \t1
+    \circblockopen
+      \LET prev == \cstate~.~position\_map~.~get(MkCallSign(a)) @\\
+      \t1 \IF prev \neq \circnull\\
+      \t1 \THEN ~ \cposns(a) \vminus MkVector(prev~.~x, prev~.~y, prev~.~z)\\
+      \t1 \ELSE ~ ZeroV
+    \circblockclose
+  \circblockclose
+\end{schema}
+%
+\begin{comment}
+\begin{circusaction}
+  \circstate ~ OCSStateCDx
+\end{circusaction}
+\end{comment}
+%
+\begin{schema}{Init}
+  OCSStateCDx~'
+\where
+  \cposns' = \emptyset \land \cmotions' = \emptyset
+  \\
+  \ccurrentFrame' = \circnew RawFrame \land \cstate' = \circnew StateTable
+\end{schema}
+%
+\begin{schema}{RecordFrame}
+  \Delta OCSStateCDx\\
+  frame? : Frame
+\where
+  \cposns' = frame?
+  \\
+  \cmotions' = \{a : \dom \cposns' @ a \mapsto \IF a \in \dom \cposns \THEN (\cposns' ~ a) \vminus (\cposns ~ a) \ELSE ZeroV\}
+  \\
+  \cposns =
+  \circblockopen
+    \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+      \t1
+      \circblockopen
+        \LET i == \ccurrentFrame~.~find(a) @\\
+        \t1 MkVector
+        \circblockopen
+          \ccurrentFrame~.~positions~.~getA(3 * i),\\
+          \ccurrentFrame~.~positions~.~getA(3 * i + 1),\\
+          \ccurrentFrame~.~positions~.~getA(3 * i + 2)
+        \circblockclose
+     \circblockclose
+  \circblockclose
+  \also
+  \cposns' =
+  \circblockopen
+    \lambda a : Aircraft | \ccurrentFrame'~.~find(a) \neq \negate 1 @\\
+      \t1
+      \circblockopen
+        \LET i == \ccurrentFrame'~.~find(a) @\\
+        \t1 MkVector
+        \circblockopen
+          \ccurrentFrame'~.~positions~.~getA(3 * i),\\
+          \ccurrentFrame'~.~positions~.~getA(3 * i + 1),\\
+          \ccurrentFrame'~.~positions~.~getA(3 * i + 2)
+        \circblockclose
+     \circblockclose
+  \circblockclose
+  \also
+  \cmotions' =
+  \circblockopen
+    \lambda a : Aircraft | \ccurrentFrame'~.~find(a) \neq \negate 1 @\\
+    \t1
+    \circblockopen
+      \LET prev == \cstate'~.~position\_map~.~get(MkCallSign(a)) @\\
+      \t1 \IF prev \neq \circnull\\
+      \t1 \THEN ~ \cposns'(a) \vminus MkVector(prev~.~x, prev~.~y, prev~.~z)\\
+      \t1 \ELSE ~ ZeroV
+    \circblockclose
+  \circblockclose
+\end{schema}
+%
+\begin{schema}{CalcCollisions}
+  \Xi OCSStateCDx\\
+  colls! : \nat
+\where
+  \exists collset : \finset ~ (Aircraft \cross Aircraft) | collset = CalcCollisionSet(\cposns, \cmotions) @
+  \\
+  \t1 (\# collset = 0 \land colls! = 0) \lor (\# collset > 0 \land colls! \geq (\# collset) \div 2)
+  \\
+  \cposns =
+  \circblockopen
+    \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+      \t1
+      \circblockopen
+        \LET i == \ccurrentFrame~.~find(a) @\\
+        \t1 MkVector
+        \circblockopen
+          \ccurrentFrame~.~positions~.~getA(3 * i),\\
+          \ccurrentFrame~.~positions~.~getA(3 * i + 1),\\
+          \ccurrentFrame~.~positions~.~getA(3 * i + 2)
+        \circblockclose
+     \circblockclose
+  \circblockclose
+  \also
+  \cmotions =
+  \circblockopen
+    \lambda a : Aircraft | \ccurrentFrame~.~find(a) \neq \negate 1 @\\
+    \t1
+    \circblockopen
+      \LET prev == \cstate~.~position\_map~.~get(MkCallSign(a)) @\\
+      \t1 \IF prev \neq \circnull\\
+      \t1 \THEN ~ \cposns(a) \vminus MkVector(prev~.~x, prev~.~y, prev~.~z)\\
+      \t1 \ELSE ~ ZeroV
+    \circblockclose
+  \circblockclose
+\end{schema}
+%
+\begin{circusaction}
+  BReq1 ~ \circdef ~ next\_frame~?~frame ~ \then
+  \\
+  \t1
+  \circblockopen
+    RecordFrame \circseq
+    \\
+    \circvar colls : \nat \circspot CalcCollisions \circseq output\_collisions~!~colls \then BReq1
+  \circblockclose
+\end{circusaction}
+\extracircusvspace
+%
+\begin{circusaction}
+  \circspot \lschexpract Init \rschexpract \circseq BReq1
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}
+\end{circusflow}
+%
+The local action $BReq1$ and the main action remain exactly as in $ABReqsCDx$. Simulation laws in {\Circus}~\cite{CSW03} establish that this yields a valid process refinement of $ABReqsCDx$. A detailed proof of this is omitted but not difficult. Regarding the data operations, we expect that further refinement later on in the \name{AR} phase of the \name{E} anchor transforms them into executable code, so simplification of the refined data operations can (an probably should) be postponed in this anchor. Automatic tools can in principle assist the simplification and enable the developer to take full advantage of the calculational approach. This single refinement concludes the \name{CS} phase. We next turn to the \name{SD} phase where shared data is introduced.

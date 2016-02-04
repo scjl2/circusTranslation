@@ -1,0 +1,20 @@
+\begin{zsection}
+  \SECTION ~ ClockFW ~ \parents ~ scj\_toolkit, scj\_library,\\
+  \t1 ClockFWChan, ClockConst, MissionFWChan
+\end{zsection}
+
+\begin{circus}
+  \circprocess ~ ClockFW ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{circusaction}
+  Clockwork ~ \circdef ~ \circmu X \circspot (\circwait Clock\_resolution.milliseconds) \circseq ((ClockTick \then Skip) \circdeadline 0) \circseq   X
+\end{circusaction}
+
+\begin{circusaction}
+  \circspot Clockwork \circinterrupt end\_mission\_fw \then Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,307 @@
+\section{Preliminaries}
+\label{sec:preliminaries}
+
+\begin{comment}
+\begin{zsection}
+  \SECTION ~ cdx\_preliminaries ~ \parents ~ scj\_toolkit, bag\_toolkit\_spivey
+\end{zsection}
+\end{comment}
+
+In this section, we present preliminary definitions of types, operators and functions that are used later on in the models.
+
+\subsection{Extensions}
+
+%%Zword \circwaitblock {\circvar~}
+
+We have already introduced a nondeterministic $\circwait$ statement with the following semantics.
+%
+\[ \circwait S ~ \deq ~ \Intchoice ~ t : S \circspot \circwait t \]
+%
+It turns out to be useful to have an alternative construct that allows us to refer to the actual time waited via a bound identifier.
+%
+\[ \circwaitblock t : S \circspot A(t) ~ \deq ~ \Intchoice ~ t : S \circspot \circwait t \circseq A(t) \]
+%
+With this, $A$ can obtain information regarding the delay resulting from the $\circwait$; this is used in a few places in specifying the models, in particular for the \name{E} anchor.
+
+\medskip
+
+\nid In addition to the above, we introduce several further extensions to the {\SCJCircus} language.
+%
+\begin{enumerate}
+  \item A generic $Array$ class to model one-dimensional Java arrays of a given type.
+
+  \item Methods to get and set the elements of an array as well as obtain its size:
+  \begin{itemize}
+    \item $getA(index : int) : T$
+    \item $setA(index : int, value : T)$
+    \item $length() : int$
+  \end{itemize}
+
+  \item Support for simple \verb"for" loops. This is via the action construct $\circfor i = n_0 \circto n_1 \circspot A(i)$.
+
+  \item Support for the creation of software events. For this we have the  $\circnewE$ construct.
+
+  \item Software events are fired using the $\circfire$ construct.
+\end{enumerate}
+
+\subsection{Reals}
+\label{sec:reals}
+
+%%Zword \real real
+
+We postulate the existence of a type $\real$ for real numbers.
+%
+\begin{axdef}
+  \real : \power \arithmos
+\where
+  \num \subset \real
+\end{axdef}
+%
+By introducing $\real$ as a subset of $\arithmos$~(arithmos), we can immediately reuse all arithmetic and relational operators on numbers. Formally, we have to elaborate the semantics of those operators for elements of $\real$. Here, however, we content ourselves that this can be done in principle, rather than providing an axiomatisation of the reals. Such an axiomatisation has been developed in Z, for instance, in~\cite{OB97} and is illustrated by the ProofPower-Z theorem prover~\cite{Jon92}. Real numbers are require in the sequel to define the vector schema type used to characterise positions and motions of aircrafts in 3-dimensional space.
+
+\subsection{Vectors}
+\label{sec:vectors}
+
+Vectors are used to represent the positions and motions of an aircraft.
+%
+\begin{schema}{Vector}
+  x : \real\\
+  y : \real\\
+  z : \real
+\end{schema}
+%
+We characterise vectors by a schema binding (record) with three real components, $x$, $y$ and $z$.
+
+\paragraph{Construction}
+
+The following function constructs a vector from scratch.
+%
+\begin{axdef}
+  MkVector : \real \cross \real \cross \real \fun Vector
+\where
+  \forall x, y, z : \real @ MkVector(x, y, z) = \lblot x == x, y == y, z == z \rblot
+\end{axdef}
+
+\paragraph{Zero and unit vector}
+
+These are defined by explicitly giving the underlying coordinates.
+%
+\begin{zed}
+  ZeroV ~ == ~ MkVector(0, 0, 0)
+  \also
+  UnitV ~ == ~ MkVector(1, 1, 1)
+\end{zed}
+
+\paragraph{Addition and subtraction}
+
+%%Zinword \vplus AddV
+%%Zinword \vminus SubV
+
+Addition and subtraction are defined component-wise.
+%
+\begin{circusbox}
+\begin{zed}
+  \function 30 \leftassoc (\_ \vplus \_)
+\end{zed}
+%
+\begin{axdef}
+  \_ \vplus \_ : Vector \cross Vector \fun Vector
+\where
+  \forall v_1, v_2 : Vector @ v_1 \vplus v_2 = \lblot x == v_1.x + v_2.x, y == v_1.y + v_2.y, z == v_1.z + v_2.z \rblot
+\end{axdef}
+\end{circusbox}
+%
+\begin{circusbox}
+\begin{zed}
+  \function 30 \leftassoc (\_ \vminus \_)
+\end{zed}
+%
+\begin{axdef}
+  \_ \vminus \_ : Vector \cross Vector \fun Vector
+\where
+  \forall v_1, v_2 : Vector @ v_1 \vminus v_2 = \lblot x == v_1.x - v_2.x, y == v_1.y - v_2.y, z == v_1.z - v_2.z \rblot
+\end{axdef}
+\end{circusbox}
+
+\paragraph{Scalar product}
+
+%%Zinword \vtimes MultV
+
+The scalar product multiplies a vector with a real number.
+%
+\begin{circusbox}
+\begin{zed}
+  \function 40 \leftassoc (\_ \vtimes \_)
+\end{zed}
+%
+\begin{axdef}
+  \_ \vtimes \_ : \real \cross Vector \fun Vector
+\where
+  \forall r : \real; v : Vector @ r \vtimes v = \lblot x == r * v.x, y == r * v.y, z == r * v.z \rblot
+\end{axdef}
+\end{circusbox}
+
+\paragraph{Dot product}
+
+%%Zinword \vdot DotV
+
+The dot (or inner) product multiplies two vectors.
+%
+\begin{circusbox}
+\begin{zed}
+  \function 50 \leftassoc (\_ \vdot \_)
+\end{zed}
+%
+\begin{axdef}
+  \_ \vdot \_ : Vector \cross Vector \fun \real
+\where
+  \forall v_1, v_2 : Vector @ v_1 \vdot v_2 = (v_1.x * v_2.x) + (v_1.y * v_2.y) + (v_1.z * v_2.z)
+\end{axdef}
+\end{circusbox}
+%
+We subsequently use the dot product to introduce the length of a vector.
+
+\paragraph{Square of a vector}
+
+%%Zpostword \vsquare ^2
+
+The square multiplies a vector with itself.
+%
+\begin{circusbox}
+\begin{zed}
+  \function ~ (\_ \vsquare)
+\end{zed}
+%
+\begin{axdef}
+  \_ \vsquare : Vector \fun \real
+\where
+   \forall v : Vector @ v \vsquare = v \vdot v
+\end{axdef}
+\end{circusbox}
+
+\paragraph{Length of a vector}
+
+%%Zword \lvlen lvlen
+%%Zword \rvlen rvlen
+
+We use the common definition $\lvlen ~ v ~ \rvlen = \sqrt{v^2}$.
+%
+\begin{circusbox}
+\begin{zed}
+  \function ~ (\lvlen ~ \_ ~ \rvlen)
+\end{zed}
+%
+\begin{axdef}
+  \lvlen ~ \_ ~ \rvlen : Vector \fun \real
+\where
+  \forall v : Vector @ \lvlen ~ v ~ \rvlen * \lvlen ~ v ~ \rvlen = v \vsquare
+\end{axdef}
+\end{circusbox}
+
+\subsection{Trajectories}
+\label{sec:trajectories}
+
+Trajectories are modelled by a pair consisting of a position and a motion vector.
+%
+\begin{zed}
+%  Trajectory ~ == ~ Vector \cross Motion
+  Trajectory ~ == ~ Vector \cross Vector
+\end{zed}
+%
+The points on a trajectory $t$ are given by the formula $t.1 \vplus x \vtimes t.2$ where $x$ ranges over the interval $[0;\!1]$.
+
+\paragraph{Distance of Trajectories}
+
+The notion of distance between trajectories is introduced below.
+%
+\begin{axdef}
+  distance : Trajectory \cross Trajectory \fun \real
+\where
+  \forall t_1, t_2 : Trajectory @ distance(t_1, t_2) =\\
+  \t1
+  \circblockopen
+    \mu d : \real |\\
+    \t1 \exists x : \real | 0 \leq x \leq 1 @ d = \lvlen (t_2.1 \vplus x \vtimes t_2.2) \vminus (t_1.1 \vplus x \vtimes t_1.2) \rvlen \land\\
+    \t1 \forall x : \real | 0 \leq x \leq 1 @ d \leq \lvlen (t_2.1 \vplus x \vtimes t_2.2) \vminus (t_1.1 \vplus x \vtimes t_1.2) \rvlen
+  \circblockclose
+\end{axdef}
+%
+We note that this is not the minimal distance between `any' two points on each trajectory. The {\CDx} makes the simplifying assumption that aircrafts move at constant speed, so the result is an approximation of the actual minimal distance. In terms of the computation, we calculate the smallest distance between two points that simultaneously traverse each trajectory.
+
+\paragraph{Collisions}
+
+The threshold distance between two trajectories to flag a collision is given by the constant below. We leave its precise value implicit.
+%
+\begin{axdef}
+  THRESHOLD : \real
+\where
+  0 \leq THRESHOLD
+\end{axdef}
+%
+The relation below determines whether two trajectories collide.
+%
+\begin{circusbox}
+\begin{zed}
+  \relation ~ (collide ~ \_)
+\end{zed}
+%
+\begin{axdef}
+  collide ~ \_ : \power ~ (Trajectory \cross Trajectory)
+\where
+  \forall t_1, t_2 : Trajectory @ collide(t_1, t_2) \iff distance(t_1, t_2) \leq THRESHOLD
+\end{axdef}
+\end{circusbox}
+
+\subsection{Miscellaneous}
+
+The following operation calculates the sum of all elements in a sequence.
+%
+\begin{axdef}
+  \Sigma : (\seq \real) \fun \real
+\where
+  \forall s : \seq \real @ \Sigma ~ s ~ = ~ \IF ~ s = \langle \rangle ~ \THEN ~ 0 ~ \ELSE ~ head(s) + \Sigma ~ (tail(s))
+\end{axdef}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Syntax for SCJCircus %
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+% SCJ Paragraphs
+
+%%Zword \circsystem {\circprocess}
+%%Zword \circsafelet {\circprocess}
+%%Zword \circmsequencer {\circprocess}
+%%Zword \circmission {\circprocess}
+
+% SCJ Methods
+
+%%Zword \circsetup {setUp}
+%%Zword \circteardown {tearDown}
+%%Zword \circgetnextmission {getNextMission}
+%%Zword \circinitialize {initialize}
+%%Zword \circmissionmemorysize {missionMemorySize}
+%%Zword \circcleanup {cleanup}
+
+% Statics
+
+%%Zword \circstatics {}
+%%Zword \circsinit {}
+
+% SCJ Language
+
+%%Zword \circinitialscj {init}
+%%Zword \circnewHdlr {new}
+%%Zword \circnewEvent {new}
+%%Zword \circret ret
+%%Zword \circself self
+
+% Miscellaneous
+
+%%Zword \! {}
+%%Zword \anyvar {y}
+
+\begin{comment}
+\begin{gendef}[X]
+  \circself : X
+\end{gendef}
+\end{comment}

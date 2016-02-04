@@ -1,0 +1,11 @@
+\begin{zsection}
+  \SECTION ~ HandlerIds ~ \parents ~ scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{axdef}
+  Handler1Id : HandlerId\\
+  Handler2Id : HandlerId\\
+  Handler3Id : HandlerId
+\where
+  distinct \langle Handler1Id, Handler2Id, Handler3Id \rangle
+\end{axdef}

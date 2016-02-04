@@ -1,0 +1,43 @@
+\begin{zsection}
+  \SECTION ~ MainMissionSequencerApp ~ \parents ~ scj\_toolkit, scj\_library, MissionIds
+\end{zsection}
+
+\begin{circus}
+  \circprocess ~ MainMissionSequencerApp ~ \circdef ~ \circbegin
+\end{circus}
+
+\begin{schema}{MainMissionSequencerState}
+  mission\_count : int
+\end{schema}
+
+\begin{circusaction}
+  \circstate ~ MainMissionSequencerState
+\end{circusaction}
+
+\begin{circusaction}
+  Init ~ \circdef ~ mission\_count := 1
+\end{circusaction}
+
+\begin{circusaction}
+  getNextMissionMeth ~ \circdef\ ~ getNextMissionCall \then\\
+  \t1 \circvar count : int \circspot\\
+  \t2 count := mission\_count \circseq\\
+  \t2 mission\_count := mission\_count + 1 \circseq\\
+  \t2 \circif count = 1 \circthen getNextMissionRet~!~Mission1Id \then Skip\\
+  \t2 \circelse ~ count = 2 \circthen getNextMissionRet~!~Mission2Id \then Skip\\
+  \t2 \circelse ~ count = 3 \circthen getNextMissionRet~!~Mission3Id \then Skip\\
+  \t2 \circelse ~ \lnot (count = 1 \lor count = 2 \lor count = 3) \circthen getNextMissionRet~!~nullMId \then Skip\\
+  \t2 \circfi
+\end{circusaction}
+
+\begin{circusaction}
+  Methods ~ \circdef ~ \circmu X \circspot getNextMissionMeth \circseq X
+\end{circusaction}
+
+\begin{circusaction}
+  \circspot Init \circseq (Methods ~ \circinterrupt ~ end\_sequencer\_app \then Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

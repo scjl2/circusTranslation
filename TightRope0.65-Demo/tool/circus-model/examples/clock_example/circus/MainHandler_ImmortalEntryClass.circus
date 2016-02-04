@@ -1,0 +1,27 @@
+\begin{zsection}
+  \SECTION ~ MainHandler\_ImmortalEntryClass ~ \parents ~ MainHandlerClass, scj\_toolkit, scj\_library
+\end{zsection}
+
+\begin{ohcircus}
+  \circclass ~ MainHandler\_ImmortalEntryClass ~ \circdef ~ \circbegin
+\end{ohcircus}
+
+\begin{schema}{\circstateignore MainHandler\_ImmortalEntry\_State}
+  outer : MainHandler
+\end{schema}
+
+\begin{schema}{\circinitial MainHandler\_ImmortalEntry\_Init}
+  MainHandler\_ImmortalEntry\_State~'
+\end{schema}
+
+\begin{ohcircus}
+  \circend
+\end{ohcircus}
+
+\begin{zed}
+  MainHandler\_ImmortalEntryClass ~ == ~ MainHandler\_ImmortalEntry\_State
+\end{zed}
+
+\begin{zed}
+  MainHandler\_ImmortalEntry ~ == ~ \circreftype MainHandler\_ImmortalEntryClass
+\end{zed}

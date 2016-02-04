@@ -1,0 +1,11 @@
+\begin{circuslaw}{distr-prefix-par-4}
+\begin{circusaction*}
+  c~!~x \then \Skip \circseq (A_1 \lpar ns_1 | cs | ns_2 \rpar A_2)
+%  \also
+  ~ \equiv ~
+%  \also
+  (c~!~x \then \Skip \circseq A_1) \lpar ns_1 | cs | ns_2 \rpar (c~?~\anyvar \then A_2)
+  \also
+  \provided ~ c \in cs \, \provand \, \mbox{$y$ is not free in $A_2$}
+\end{circusaction*}
+\end{circuslaw}
