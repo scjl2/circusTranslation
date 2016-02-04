@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ SpeedMonitorFW ~ \parents ~ EventHandler, HandlerIds
-\end{zsection}
-\extracircusvspace
-%
-\begin{circus}
-  \circprocess SpeedMonitorFW ~ \circdef ~ PeriodicEventHandlerFW(SpeedMonitorId)
-\end{circus}

@@ -43,7 +43,17 @@ public class Writer extends ManagedThread
 				
 				i++;
 				
-				boolean keepWriting = i >= 5 ;
+				boolean keepWriting = false ;
+				if(i >= 5)
+				{
+					keepWriting = true ;
+				}
+				else
+				{
+					keepWriting = false;
+				}
+
+				
 				if(!keepWriting)
 				{
 					fbMission.requestTermination();

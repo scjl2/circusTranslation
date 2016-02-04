@@ -1,9 +1,0 @@
-\begin{zsection}
-  \SECTION ~ MainHandlerMethChan ~ \parents ~ scj\_toolkit, scj\_library, MainHandlerClass
-\end{zsection}
-
-\begin{circus}
-  \circchannel ~ MainHandlerInitCall : \circreftype MainHandlerClass
-  \also
-  \circchannel ~ MainHandlerInitRet : HandlerId
-\end{circus}

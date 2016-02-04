@@ -1,7 +1,0 @@
-\begin{circustimelaw}{distr-wait-seq-par}
-\begin{circusaction*}
-  \circwait t_1 \upto t_2 \circseq (Op_1 \lpar \dots \rpar Op_2) ~ \equiv ~ (\circwait t_1 \upto t_2 \circseq Op_1) \lpar \dots \rpar (\circwait t_1 \upto t_2 \circseq Op_2)
-  \also
-  \provided \; \mbox{$Op_1$ and $Op_2$ are data operations}
-\end{circusaction*}
-\end{circustimelaw}

@@ -36,15 +36,15 @@
   \t1
 ret := \true
   \\
-  \circelse ~ \lnot (buffer = 0) ~ \circthen ~
+  \circelse ~ (buffer = 0) ~ \circthen ~
   \\
   \t1
 ret := \false
   \\
   \circfi
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -61,9 +61,9 @@ ret := \false
 
 
   ret := \false
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 

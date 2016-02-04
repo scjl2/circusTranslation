@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ SCJEventConst ~ \parents ~ SCJEventId
-\end{zsection}
-\extracircusvspace
-%
-\begin{axdef}
-  FireDeadline : \nat \fun TIME
-\end{axdef}

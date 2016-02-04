@@ -50,9 +50,9 @@ immortalMemorySizeCall~.~FlatBuffer
       \circblockopen
 
   ret := 1000000
- 
 
-        \circblockclose  
+
+        \circblockclose
 
   \circseq  \\
 

@@ -25,7 +25,7 @@ import hijac.tools.tightrope.generators.NewSCJApplication;
 
 public class TightRope
 {
-	private static final String VERSION = "v0.6";
+	private static final String VERSION = "v0.65";
 	private static final boolean QUIET_LATEX_OUTPUT = true;
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
@@ -49,20 +49,26 @@ public class TightRope
 		final long startTime = System.nanoTime();
 
 		System.out.println();
+		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
 		System.out.println("+++ Tight Rope - SCJ to Circus translator +++");
-		System.out.println("+++ " + VERSION + " +++");
-		System.out.println("+++ Matt Luckcuck +++");
+		System.out.println("++++++++++++++ " + VERSION + " ++++++++++++++");
+		System.out.println("+++++++++++++++ Matt Luckcuck +++++++++++++++");
+		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
 		System.out.println();
 
 		setUncaughtExceptionHandler();
 
 		setCustomName();
+		
+		System.out.println("+++++++++++++++++++++");
+		System.out.println("+++ Compile Phase +++");
+		System.out.println("+++++++++++++++++++++");
 
 		SCJCompilationConfig config = SCJCompilationConfig.getDefault();
 
 		SCJCompilationTask compiler = new SCJCompilationTask(config);
 
-		System.out.println("Compiling SCJ sources...");
+		
 
 		try
 		{
@@ -75,6 +81,10 @@ public class TightRope
 			System.exit(-1);
 		}
 
+		System.out.println("+++++++++++++++++++");
+		System.out.println("+++ Build Phase +++");
+		System.out.println("+++++++++++++++++++");
+		
 		scjApplication = new NewSCJApplication(ANALYSIS);
 		environmentBuilder = new EnvironmentBuilder(ANALYSIS);
 
@@ -88,6 +98,9 @@ public class TightRope
 
 		if (RUN_FREEMARKER)
 		{
+			System.out.println("++++++++++++++++++++++");
+			System.out.println("+++ Generate Phase +++");
+			System.out.println("++++++++++++++++++++++");
 			runFreemarker();
 		}
 

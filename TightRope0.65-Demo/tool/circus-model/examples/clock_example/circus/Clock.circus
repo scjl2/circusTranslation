@@ -1,7 +1,0 @@
-\begin{zsection}
-  \SECTION ~ Clock ~ \parents ~ ClockFW, ClockApp
-\end{zsection}
-
-\begin{circus}
-  \circprocess Clock ~ \circdef ~ (ClockFW \lpar \lchanset ClockTick \rchanset \rpar ClockApp) \circhide \lchanset ClockTick \rchanset
-\end{circus}

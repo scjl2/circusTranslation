@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ReaderIDApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
+  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
 
   \t1 , \\
 MissionMethChan
@@ -18,7 +18,7 @@ ThreadIds
 \end{zsection}
 %
 \begin{circus}
-\circprocess ReaderIDApp \circdef \\ \qquad
+\circprocess ReaderApp \circdef \\ \qquad
   fbMission : MissionID
  
 \circspot
@@ -29,19 +29,19 @@ ThreadIds
 \begin{circusaction}
 Run \circdef \\
 \circblockopen
-	runCall~.~ReaderID \then \\
+	runCall~.~Reader \then \\
 	
       \circblockopen
 
 
 
 
-            \circblockopen \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission~.~Reader\then \\terminationPendingRet~.~fbMission~.~Reader~?~terminationPending\then \\\ \circvar loopVar : \bool \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar) ~ \circthen ~ \\ \t1 \circblockopen \circvar result : \num \circspot result :=~999 \circseq \\ \circblockopen binder\_readCall~.~fbMission~.~Reader~.~ReaderThread\then \\binder\_readRet~.~fbMission~.~Reader~.~ReaderThread~?~read\then \\ \Skip \circblockclose \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot(loopVar) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+            \circblockopen \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission~.~Reader\then \ \ terminationPendingRet~.~fbMission~.~Reader~?~terminationPending\then \ \\ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen \circvar result : \num \circspot result :=~999 \circseq \\ \circblockopen binder\_readCall~.~fbMission~.~Reader~.~ReaderThreadID\then \ \ binder\_readRet~.~fbMission~.~Reader~.~ReaderThreadID~?~read\then \ \ \Skip \circblockclose \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 \Skip
-        \circblockclose  
+        \circblockclose
 
  \circseq \\
-	runRet~.~ReaderID \then \\
+	runRet~.~Reader \then \\
 	\Skip
 \circblockclose
 \end{circusaction}	
@@ -62,7 +62,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_managedThread\_app~.~ReaderID \then \Skip)
+  \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)
 \end{circusaction}
 
 \begin{circus}

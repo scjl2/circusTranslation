@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ ThrottleControllerFW ~ \parents ~ EventHandler, HandlerIds
-\end{zsection}
-\extracircusvspace
-%
-\begin{circus}
-  \circprocess ThrottleControllerFW ~ \circdef ~ PeriodicEventHandlerFW(ThrottleControllerId)
-\end{circus}

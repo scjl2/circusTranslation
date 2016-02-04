@@ -1,7 +1,0 @@
-\begin{zsection}
-  \SECTION ~ Handler1Chan ~ \parents ~ Handler1Class
-\end{zsection}
-
-\begin{circus}
-  \circchannel ~ Handler1Init : \circreftype Handler1Class
-\end{circus}

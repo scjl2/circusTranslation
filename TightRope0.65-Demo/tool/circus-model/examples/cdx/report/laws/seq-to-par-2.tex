@@ -1,9 +1,0 @@
-\begin{circuslaw}{seq-to-par-2}
-\begin{circusaction*}
-  A_1 \circseq A_2 ~ \equiv ~ ((A_1 \circseq c~!~x \then \Skip) \lpar \wrt(A_1) | \lchanset c \rchanset | \wrt(A_2) \rpar (c~?~x \then A_2)) \circhide \lchanset c \rchanset
-  \also
-  \provided \; \wrt(A_1) \cap \wrt(A_2) = \emptyset ~ \provand ~ \wrt(A_1) \cap \used(A_2) = \{x\} ~ \provand 
-  \also
-  c \notin \usedC(A_1) \cup \usedC(A_2)
-\end{circusaction*}
-\end{circuslaw}

@@ -1,7 +1,0 @@
-\begin{circustimelaw}{extract-inter-wait-seq}
-\begin{circusaction*}
-  Op \circseq (A \interleave \circwait t) ~ \equiv ~ (Op \circseq A) \interleave \circwait t
-  \also
-  \provided \; \mbox{$Op$ is a data operation and $\wrt(Op) \cap \FV(t) = \emptyset$}
-\end{circusaction*}
-\end{circustimelaw}

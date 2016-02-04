@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ Handler2 ~ \parents ~ Handler2FW, Handler2App
-\end{zsection}
-
-\begin{circus}
-  \circprocess ~ Handler2 ~ \circdef\\
-  \t1 (Handler2FW \lpar HandlerAppSyncChan \rpar Handler2App) \circhide HandlerAppHideChan
-\end{circus}

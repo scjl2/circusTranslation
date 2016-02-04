@@ -145,24 +145,24 @@
 
 <#macro If condition thenstatement elsestatement="">
 <#if elsestatement?has_content>
-  \circif ~ ${TRANS(condition, CTXT.enterExpression()) = \true} ~ \circthen ~
+  \circif ~ ${TRANS(condition, CTXT.enterExpression()) } ~ \circthen ~
   \\
   \t1
   ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
-  \circelse ~ ${TRANS(condition, CTXT.enterExpression()) = \false} ~ \circthen ~
+  \circelse ~ ${TRANS(condition, CTXT.enterExpression()) } ~ \circthen ~
   \\
   \t1
   ${TRANS(elsestatement, CTXT)}<#lt/>
   \\
   \circfi
 <#else>
-  \circif ~ ${TRANS(condition, CTXT.enterExpression()) = \true} ~ \circthen ~
+  \circif ~ ${TRANS(condition, CTXT.enterExpression()) } ~ \circthen ~
   \\
   \t1
   ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
-  \circelse ~ ${TRANS(condition, CTXT.enterExpression()) = \false} \circthen \Skip
+  \circelse ~ ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
   \\
   \circfi \circseq \\
 </#if>
@@ -181,7 +181,7 @@
   \circmu X \circspot
   \\
   \circblockopen
-  \circif ~ ${TRANS(condition, CTXT.enterExpression()) = \true} ~ \circthen ~
+  \circif ~ ${TRANS(condition, CTXT.enterExpression()) } ~ \circthen ~
   \\
   \t1
   \circblockopen
@@ -192,7 +192,7 @@
   \circblockclose
   \circseq X
   \\
-  \circelse ~  ${TRANS(condition, CTXT.enterExpression()) = \false} \circthen \Skip
+  \circelse ~  ${TRANS(condition, CTXT.enterExpression()) } \circthen \Skip
   \\
   \circfi
   \circblockclose

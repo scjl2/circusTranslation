@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ BrakeMethChan ~ \parents ~ scj\_toolkit, scj\_library, BrakeClass
-\end{zsection}
-\extracircusvspace
-%
-\begin{circus}
-  \circchannel ~ BrakeInit : BrakeClass
-\end{circus}

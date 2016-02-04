@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ EngineMethChan ~ \parents ~ scj\_toolkit, scj\_library, EngineClass
-\end{zsection}
-\extracircusvspace
-%
-\begin{circus}
-  \circchannel ~ EngineInit : EngineClass
-\end{circus}

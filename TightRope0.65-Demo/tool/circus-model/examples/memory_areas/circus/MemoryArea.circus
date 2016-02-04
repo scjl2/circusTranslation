@@ -1,7 +1,0 @@
-\begin{zsection}
-  \SECTION ~ MemoryArea ~ \parents ~ MemoryAreaApp
-\end{zsection}
-
-\begin{circus}
-  \circprocess ~ MemoryAreaProc ~ \circdef ~ MemoryAreaApp
-\end{circus}

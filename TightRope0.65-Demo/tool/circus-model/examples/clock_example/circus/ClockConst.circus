@@ -1,7 +1,0 @@
-\begin{zsection}
-  \SECTION ~ ClockConst ~ \parents ~ scj\_toolkit, scj\_library, RelativeTime
-\end{zsection}
-
-\begin{axdef}
-  Clock\_resolution : RelativeTimeClass
-\end{axdef}

@@ -9,7 +9,6 @@ import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.MissionSequencerEnv;
-import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
@@ -71,7 +70,7 @@ import com.sun.source.util.SimpleTreeVisitor;
  * This class visits a method and returns a String representing its body.
  * 
  * Adapted from <code>hijac.tools.modelgen.circus.visitors.AMethodVisitor</code>
- * .
+ * 
  * 
  * @author Matt Luckcuck
  */
@@ -604,6 +603,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 											 (!identifier.contentEquals("requestTermination")) &&
 											 (!identifier.contentEquals("terminationPending")) 												
 											);
+				
+				System.out.println("/*/*NotIg Id="+identifier + "  notIg="+notIgnoredMethod);
 
 				if (notIgnoredMethod)
 				{
@@ -776,7 +777,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				}
 
 				timeMachine.put("methodCall", true);
-				/*
+				/*(FRANK)
 				 * Infer the method here that is called and pass to it the
 				 * macro.
 				 */

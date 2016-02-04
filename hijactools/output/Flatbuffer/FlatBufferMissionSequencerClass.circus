@@ -39,34 +39,34 @@
 
 
 this~.~returnedMission :=true
- 
 
-               \circseq \\ 
+
+               \circseq \\
 
   ret := FlatBufferMission
- 
 
-        \circblockclose  
+
+        \circblockclose
 
 
   \\
-  \circelse ~ \lnot (\lnot returnedMission = \true) ~ \circthen ~
+  \circelse ~ (\lnot returnedMission = \true) ~ \circthen ~
   \\
   \t1
 
       \circblockopen
 
   ret := nullMissionId
- 
 
-        \circblockclose  
+
+        \circblockclose
 
 
   \\
   \circfi
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 

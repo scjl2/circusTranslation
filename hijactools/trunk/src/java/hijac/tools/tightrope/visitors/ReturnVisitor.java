@@ -115,8 +115,9 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	{
 
 		System.out.println("Return Visitor: visiting Identifier Tree: "
-				+ arg0.getName());
+				+ arg0.getName() + " arg kind= "+arg0.getKind());
 
+		
 		// This adds a mission to returns
 
 		ArrayList<Name> idReturn = new ArrayList<Name>();
@@ -131,7 +132,11 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		else
 		{
 			// ArrayList<Name> ids = new ArrayList<Name>();
-			idReturn.add(arg0.getName());
+			
+					idReturn.add(arg0.getName());
+				
+			
+			
 			return idReturn;
 		}
 	}
@@ -262,7 +267,6 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitReturn(ReturnTree arg0, Boolean arg1)
 	{
-
 		System.out.println("Return Visitor: visiting return tree " + arg0);
 		System.out.println("-> " + arg0.getExpression().getKind());
 		return arg0.getExpression().accept(this, true);
@@ -307,7 +311,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitAssignment(AssignmentTree arg0, Boolean arg1)
 	{
-		// TODO Auto-generated method stub
+		System.out.println("Return Visitor: Assignment " + arg0);
 		return null;
 	}
 

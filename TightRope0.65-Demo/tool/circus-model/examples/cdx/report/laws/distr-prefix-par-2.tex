@@ -1,9 +1,0 @@
-\begin{circuslaw}{distr-prefix-par-2}
-\begin{circusaction*}
-  (A_1 \lpar ns_1 | cs | ns_2 \rpar A_2) \circseq c~!~x \then \Skip ~ \equiv ~
-  \also
-  (A_1 \circseq c~?~\anyvar \then \Skip) \lpar ns_1 | cs \cup \lchanset c \rchanset | ns_2 \rpar (A_2 \circseq c~!~x \then \Skip)
-   \also
-   \provided \; c \notin \usedC(A_1) \; \provand \; c \notin \usedC(A_2) \; \provand \; x \notin ns_1
-\end{circusaction*}
-\end{circuslaw}

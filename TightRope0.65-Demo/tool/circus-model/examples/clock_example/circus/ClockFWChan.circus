@@ -1,7 +1,0 @@
-\begin{zsection}
-  \SECTION ~ ClockFWChan ~ \parents ~ scj\_toolkit, scj\_library
-\end{zsection}
-
-\begin{circus}
-  \circchannel ~ ClockTick
-\end{circus}

@@ -1,5 +1,0 @@
-\begin{circustimelaw}{time-prefix-elim}
-\begin{circusaction*}
-  (c~\circat~t \then \circwait t_1 - t) \circdeadlinesync d ~ \equiv ~ ((c \then \Skip) \circdeadline d) \interleave \circwait t_1 \; \provided \; d \leq t_1
-\end{circusaction*}
-\end{circustimelaw}

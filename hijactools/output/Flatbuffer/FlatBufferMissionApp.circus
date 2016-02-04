@@ -110,22 +110,22 @@ lockAcquired~.~FlatBufferMissionObject~.~thread \then \\
 
       \circblockopen
 
-\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \bool \circspot loopVar :=~(\lnot bufferEmpty() )\circseq \\ \circif ~ (loopVar) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~FlatBufferMissionObject~!~thread \then \\ waitRet~.~FlatBufferMissionObject~!~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot(loopVar) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\ 
+\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~FlatBufferMissionObjectID~!~thread \then \\ waitRet~.~FlatBufferMissionObjectID~!~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 
-               \circseq \\ 
+               \circseq \\
 
 
 
 
 this~.~buffer :=update
- 
 
-               \circseq \\ 
 
-notify~.~FlatBufferMissionObject~!~thread \then  \\ \Skip
- 
+               \circseq \\
 
-        \circblockclose  
+notify~.~FlatBufferMissionObjectID~!~thread \then  \\ \Skip
+
+
+        \circblockclose
 
  \circseq  \\
 endSyncMeth~.~FlatBufferMissionObject~.~thread \then  \\
@@ -148,32 +148,32 @@ lockAcquired~.~FlatBufferMissionObject~.~thread \then \\
 
       \circblockopen
 
-\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \bool \circspot loopVar :=~bufferEmpty()\circseq \\ \circif ~ (loopVar) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~FlatBufferMissionObject~!~thread \then \\ waitRet~.~FlatBufferMissionObject~!~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot(loopVar) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\ 
+\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~bufferEmpty()\circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~FlatBufferMissionObjectID~!~thread \then \\ waitRet~.~FlatBufferMissionObjectID~!~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 
-               \circseq \\ 
+               \circseq \\
 
   \circvar out : \num \circspot out := buffer ~
- 
 
-               \circseq \\ 
+
+               \circseq \\
 
 
 
 
 this~.~buffer :=0
- 
 
-               \circseq \\ 
 
-notify~.~FlatBufferMissionObject~!~thread \then  \\ \Skip
- 
+               \circseq \\
 
-               \circseq \\ 
+notify~.~FlatBufferMissionObjectID~!~thread \then  \\ \Skip
+
+
+               \circseq \\
 
   ret := out
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  \circseq  \\
 endSyncMeth~.~FlatBufferMissionObject~.~thread \then  \\

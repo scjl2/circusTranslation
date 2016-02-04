@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ GearFW ~ \parents ~ EventHandler, HandlerIds
-\end{zsection}
-\extracircusvspace
-%
-\begin{circus}
-  \circprocess GearFW ~ \circdef ~ EventHandlerFW(GearId)
-\end{circus}

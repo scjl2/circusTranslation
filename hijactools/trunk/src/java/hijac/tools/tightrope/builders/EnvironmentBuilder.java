@@ -253,8 +253,24 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println(BUILDING_TOP_LEVEL_SEQUENCER);
 		System.out.println();
-
-		TypeElement tlmsElement = analysis.ELEMENTS.getTypeElement(packagePrefix + tlms);
+		
+String tlmsStr = ""+ Character.toUpperCase(tlms.charAt(0)) + tlms.subSequence(1, tlms.length());
+		
+		System.out.println("packagePrefix="+packagePrefix + " and tlms="+tlmsStr);
+		
+		TypeElement tlmsElement = null;// = analysis.getTypeElement(packagePrefix + tlms);
+		
+		for(TypeElement te : type_elements)
+		{
+			System.out.println(te.toString());
+			if(te.toString().contains(tlmsStr))
+			{
+				System.out.println("found");
+				tlmsElement = te;
+			}
+		}
+		
+		
 
 		TopLevelMissionSequencerEnv topLevelMissionSequencer = programEnv
 				.getTopLevelMissionSequencer(tlms);
@@ -267,6 +283,7 @@ public class EnvironmentBuilder
 
 		// msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
 
+		System.out.println("tlmselement="+tlmsElement);
 		ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
 
 		topLevelMissionSequencer.addVariable(THIS, CIRCREFTYPE + tlms.toString() + CLASS,

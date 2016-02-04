@@ -1,7 +1,0 @@
-\begin{circustimelaw}{extract-inter-wait-waitblock}
-\begin{circusaction*}
-  \circwaitblock w : t_1 \upto t_2 \circspot (A(w) \interleave \circwait t - w) ~ \equiv ~ (\circwaitblock w : t_1 \upto t_2 \circspot A(w)) \interleave \circwait
-  \also
-  \provided \; t_2 \leq t
-\end{circusaction*}
-\end{circustimelaw}

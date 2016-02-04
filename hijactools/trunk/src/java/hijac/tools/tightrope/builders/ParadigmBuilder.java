@@ -54,6 +54,7 @@ public abstract class ParadigmBuilder
 		// varVisitor = new VariableVisitor(programEnv);
 		// }
 
+		System.out.println("arg="+arg0);
 		ClassTree ct = analysis.TREES.getTree(arg0);
 		List<? extends Tree> members = ct.getMembers();
 		Iterator<? extends Tree> i = members.iterator();

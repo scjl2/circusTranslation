@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ WheelShaftMethChan ~ \parents ~ scj\_toolkit, scj\_library, WheelShaftClass
-\end{zsection}
-\extracircusvspace
-%
-\begin{circus}
-  \circchannel ~ WheelShaftInit : WheelShaftClass
-\end{circus}

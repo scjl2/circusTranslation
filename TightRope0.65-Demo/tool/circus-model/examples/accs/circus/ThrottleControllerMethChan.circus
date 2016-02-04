@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ ThrottleControllerMethChan ~ \parents ~ scj\_toolkit, scj\_library, ThrottleControllerClass
-\end{zsection}
-\extracircusvspace
-%
-\begin{circus}
-  \circchannel ~ ThrottleControllerInit : ThrottleControllerClass
-\end{circus}

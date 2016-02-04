@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ SCJEventId ~ \parents ~ scj\_prelude
-\end{zsection}
-\extracircusvspace
-%
-\begin{zed}
-  [SCJEventId]
-\end{zed}
