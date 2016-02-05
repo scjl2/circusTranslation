@@ -15,14 +15,14 @@ public class SchedulableIdsEnv extends IdEnv
 
 	private static final String SCHEDULABLES_STR = "Schedulables";
 	private static final String TOPLEVEL_SEQUENCER = "toplevelSequencer";
-		
+	
 	//TODO This needs to be a list and be the SOLE owner of this information
 	private String topLevelSequencer;
 
 
 	public void addTopLevelSequencer(Name topLevelSequencer)
 	{
-		this.topLevelSequencer = topLevelSequencer + ID_STR;
+		this.topLevelSequencer = topLevelSequencer + SID;
 	}
 	
 	public String getTopLevelSequencer()
@@ -42,6 +42,6 @@ public class SchedulableIdsEnv extends IdEnv
 	
 	public void addIdNames(String idName)
 	{
-		idNames.add(idName+ID_STR);
+		idNames.add(idName+SID);
 	}
 }

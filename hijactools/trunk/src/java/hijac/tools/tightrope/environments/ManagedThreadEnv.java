@@ -27,4 +27,10 @@ public class ManagedThreadEnv extends ParadigmEnv
 
 		return map;
 	}
+	
+	@Override
+	public void setId(String name)
+	{
+		super.setId(name+IdEnv.SID);
+	}
 }

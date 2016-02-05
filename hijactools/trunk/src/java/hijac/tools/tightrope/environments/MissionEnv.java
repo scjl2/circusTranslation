@@ -53,5 +53,11 @@ public class MissionEnv extends ParadigmEnv
 	{
 		schedulables.add(schedulable);
 	}
+	
+	@Override
+	public void setId(String name)
+	{
+		super.setId(name+IdEnv.MID);
+	}
 
 }

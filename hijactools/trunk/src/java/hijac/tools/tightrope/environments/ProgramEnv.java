@@ -19,7 +19,7 @@ public class ProgramEnv
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private List<MethodEnv> binderMethodEnvs;
 
-	private MissionIdsEnv missionIds;
+	private IdEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
 	private ThreadIdsEnv threadIds;
 	private ObjectIdsEnv objectIds;
@@ -371,7 +371,7 @@ public class ProgramEnv
 		addBinderMethodEnv(name, location, caller, null, null);
 	}
 
-	public MissionIdsEnv getMissionIdsEnv()
+	public IdEnv getMissionIdsEnv()
 	{
 		return missionIds;
 	}

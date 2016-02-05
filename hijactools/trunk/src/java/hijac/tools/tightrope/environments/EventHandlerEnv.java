@@ -36,4 +36,10 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 	{
 		handleAsync = method;
 	}
+	
+	@Override
+	public void setId(String name)
+	{
+		super.setId(name+IdEnv.SID);
+	}
 }

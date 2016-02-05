@@ -10,7 +10,7 @@ ${toplevelSequencer} : SchedulableID\\
 </#list>
 %
 \where
-  distinct \langle nullSequencerId, nullSchedulableId, ${toplevelSequencer}ID, \\
+  distinct \langle nullSequencerId, nullSchedulableId, ${toplevelSequencer}, \\
   <#list Schedulables as schedulable>
 	${schedulable}
 	<sep>

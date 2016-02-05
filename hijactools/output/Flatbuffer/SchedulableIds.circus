@@ -4,14 +4,14 @@
 \extracircusvspace
 %
 \begin{axdef}
-FlatBufferMissionSequencerID : SchedulableID\\
-	ReaderID : SchedulableID\\
-	WriterID : SchedulableID\\
+FlatBufferMissionSequencerSID : SchedulableID\\
+	ReaderSID : SchedulableID\\
+	WriterSID : SchedulableID\\
 %
 \where
-  distinct \langle nullSequencerId, nullSchedulableId, FlatBufferMissionSequencerIDID, \\
-	ReaderID
+  distinct \langle nullSequencerId, nullSchedulableId, FlatBufferMissionSequencerSID, \\
+	ReaderSID
 	,
-	WriterID
+	WriterSID
   \rangle
 \end{axdef}

@@ -6,4 +6,11 @@ public class NestedMissionSequencerEnv extends MissionSequencerEnv
 	{
 		super();
 	}
+	
+	@Override
+	public void setId(String name)
+	{
+		super.setId(name+IdEnv.SID);
+	}
+	
 }

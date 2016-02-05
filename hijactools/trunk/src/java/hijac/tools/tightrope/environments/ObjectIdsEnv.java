@@ -24,7 +24,7 @@ public class ObjectIdsEnv extends IdEnv
 
 		// ArrayList<String> list = new ArrayList<String>();
 
-		map.put(OBJECT_STR, getIdNames());
+		map.put(OBJECT_STR, idNames);
 
 		return map;
 

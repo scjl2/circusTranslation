@@ -21,6 +21,8 @@ public class ObjectEnv
 	protected static final String SYNC_METHODS = "SyncMethods";
 	protected static final String METHODS = "Methods";
 	protected static final String PROCESS_ID = "ProcessID";
+	protected static final String PROCESS_NAME = "ProcessName";
+	
 	protected static final String IMPORT_NAME = "ImportName";
 	protected static final String HANDLER_TYPE = "HandlerType";
 
@@ -60,9 +62,13 @@ public class ObjectEnv
 	 * file will depend on to parse
 	 */
 	private List<String> parents;
+		
+	private String id = "", objectID = "";
+	
+	
 
 	/**
-	 * >>>>>>> deferredParameterGathering The standard constructor, which simply
+	 *  The standard constructor, which simply
 	 * instantiates the lists
 	 */
 	public ObjectEnv()
@@ -646,7 +652,26 @@ public class ObjectEnv
 				v.setInit(paramInit);
 			}
 		}
-
+	}
+	
+	public void setId(String name)
+	{
+		this.id = name;
+	}
+	
+	public String getId()
+	{
+		return id;
+	}
+	
+	public void setObjectId(String name)
+	{
+		this.objectID = name;
+	}
+	
+	public String getObjectId()
+	{
+		return objectID;
 	}
 
 }

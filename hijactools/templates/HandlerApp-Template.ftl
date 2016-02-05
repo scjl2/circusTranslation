@@ -1,10 +1,10 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ ${ImportName}EventHandlerChan, SchedulableId, SchedulableIds \\
+  \SECTION ~ ${ProcessName}App ~ \parents ~ ${ImportName}EventHandlerChan, SchedulableId, SchedulableIds \\
  \t1  <#include "Parent-Template.ftl">
 \end{zsection}
 
 \begin{circus}
-\circprocess ${ProcessID}App \circdef <#include "Params-Template.ftl">  \circbegin
+\circprocess ${ProcessName}App \circdef <#include "Params-Template.ftl">  \circbegin
 \end{circus}
 
 <#include "State-Template.ftl">

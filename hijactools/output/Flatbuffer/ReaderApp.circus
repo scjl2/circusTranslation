@@ -29,7 +29,7 @@ ThreadIds
 \begin{circusaction}
 Run \circdef \\
 \circblockopen
-	runCall~.~Reader \then \\
+	runCall~.~ReaderSID \then \\
 	
       \circblockopen
 
@@ -41,10 +41,10 @@ Run \circdef \\
         \circblockclose
 
  \circseq \\
-	runRet~.~Reader \then \\
+	runRet~.~ReaderSID \then \\
 	\Skip
 \circblockclose
-\end{circusaction}	
+\end{circusaction}
 
 %
 %
@@ -56,13 +56,13 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_managedThread\_app~.~Reader \then \Skip)
+  \circinterrupt (end\_managedThread\_app~.~ReaderSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

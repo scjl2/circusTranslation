@@ -94,6 +94,7 @@ public class FrameworkEnv
 		public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 		{
 			this.topLevelMissionSequencerEnv.setName(topLevelMissionSequencer);
+			this.topLevelMissionSequencerEnv.setId(topLevelMissionSequencer.toString());
 			safeletEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 		}
 
@@ -582,36 +583,50 @@ public class FrameworkEnv
 
 		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
-			if (type == SchedulableTypeE.MT)
+			String nameString = name.toString();
+			
+			switch (type)
 			{
-				ManagedThreadEnv mtEnv = new ManagedThreadEnv();
-				mtEnv.setName(name);
-				managedThreadEnvs.add(mtEnv);
+				case PEH:
+					PeriodicEventHandlerEnv p = new PeriodicEventHandlerEnv();
+					p.setName(name);
+					p.setId(nameString);
+					periodEventHandlerEnvs.add(p);
+					break;
+
+				case APEH:
+					AperiodicEventHandlerEnv a = new AperiodicEventHandlerEnv();
+					a.setName(name);
+					a.setId(nameString);
+					aperiodicEventHandlerEnvs.add(a);
+					break;
+
+				case OSEH:
+					OneShotEventHandlerEnv osehEnv = new OneShotEventHandlerEnv();
+					osehEnv.setName(name);
+					osehEnv.setId(nameString);
+					oneShotEventHandlerEnvs.add(osehEnv);
+					break;
+
+				case MT:
+					ManagedThreadEnv mtEnv = new ManagedThreadEnv();
+					mtEnv.setName(name);
+					mtEnv.setId(nameString);
+					managedThreadEnvs.add(mtEnv);
+					break;
+
+				case SMS:
+					NestedMissionSequencerEnv nmsEnv = new NestedMissionSequencerEnv();
+					nmsEnv.setName(name);
+					nmsEnv.setId(nameString);
+					schedulableMissionSequencerEnvs.add(nmsEnv);
+					break;
+
+				default:
+					break;
+
 			}
-			if (type == SchedulableTypeE.PEH)
-			{
-				PeriodicEventHandlerEnv p = new PeriodicEventHandlerEnv();
-				p.setName(name);
-				periodEventHandlerEnvs.add(p);
-			}
-			if (type == SchedulableTypeE.APEH)
-			{
-				AperiodicEventHandlerEnv a = new AperiodicEventHandlerEnv();
-				a.setName(name);
-				aperiodicEventHandlerEnvs.add(a);
-			}
-			if (type == SchedulableTypeE.OSEH)
-			{
-				OneShotEventHandlerEnv osehEnv = new OneShotEventHandlerEnv();
-				osehEnv.setName(name);
-				oneShotEventHandlerEnvs.add(osehEnv);
-			}
-			if (type == SchedulableTypeE.SMS)
-			{
-				NestedMissionSequencerEnv nmsEnv = new NestedMissionSequencerEnv();
-				nmsEnv.setName(name);
-				schedulableMissionSequencerEnvs.add(nmsEnv);
-			}
+
 		}
 
 		public String toString()
@@ -767,7 +782,9 @@ public class FrameworkEnv
 
 	public void addMission(Name mission)
 	{
-		currentCluster.getMissionEnv().setName(mission);
+		MissionEnv missionEnv = currentCluster.getMissionEnv();
+		missionEnv.setName(mission);
+		missionEnv.setId("test-"+mission.toString());
 	}
 
 	public void newCluster(Name sequencer)

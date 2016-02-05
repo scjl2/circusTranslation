@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.tools.javah.Mangle;
+
 public abstract class ParadigmEnv extends ObjectEnv
 {
 
@@ -53,7 +55,11 @@ public abstract class ParadigmEnv extends ObjectEnv
 	public Map toMap()
 	{
 		Map map = new HashMap();
-		map.put(PROCESS_ID, getName().toString());
+		map.put(PROCESS_NAME, getName().toString());
+		
+		
+		map.put(PROCESS_ID, getId());
+		
 
 		map.put(FW_PARAMETERS, fwParamsList());
 		map.put(APP_PARAMETERS, appParamsList());

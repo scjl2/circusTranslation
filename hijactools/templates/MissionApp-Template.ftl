@@ -1,25 +1,25 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \SECTION ~ ${ProcessName}App ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan <#include "CommonImports-Template.ftl">
   \t1 <#include "Parent-Template.ftl">, ${ProcessID}MethChan
 \end{zsection}
 %\begin{circus}
-%\circchannelset ${ProcessID}AppSync == \\
+%\circchannelset ${ProcessName}AppSync == \\
 %	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
 %\end{circus}
 
 %\begin{circus}
-%\circchannelset ${ProcessID}AppChanSet == \\
+%\circchannelset ${ProcessName}AppChanSet == \\
 % \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
 
 <#list RegisteredSchedulables as SchedulableID >
-%    register~.~${SchedulableID}~.~${ProcessID} 
+%    register~.~${SchedulableID}~.~${ProcessID}
 </#list>
 %\rchanset
 %\end{circus}
 
 \begin{circus}
-\circprocess ${ProcessID}App \circdef <#include "Params-Template.ftl"> \circbegin
+\circprocess ${ProcessName}App \circdef <#include "Params-Template.ftl"> \circbegin
 \end{circus}
 
 <#include "State-Template.ftl">
@@ -28,7 +28,7 @@
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~${ProcessID} \then \\
-  
+
 <#list RegisteredSchedulables as SchedulableID >
 	register~!~${SchedulableID}~!~${ProcessID} \then   \\
 </#list>
@@ -36,9 +36,9 @@ InitializePhase \circdef \\
 
   initializeRet~.~${ProcessID} \then \\
   \Skip
-\circblockclose 
+\circblockclose
 \end{circusaction}
- 
+
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
@@ -52,13 +52,13 @@ CleanupPhase \circdef  \\
 <#include "Methods-Template.ftl">
 
 \begin{circusaction}
-Methods \circdef 
+Methods \circdef
 \circblockopen
 	InitializePhase \\
 	\extchoice \\
 	CleanupPhase \\
 <#include "MethodsAction-Template.ftl">
-\circblockclose 
+\circblockclose
 \circseq Methods
 \end{circusaction}
 

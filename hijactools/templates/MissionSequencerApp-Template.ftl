@@ -1,30 +1,30 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \SECTION ~ ${ProcessName}App ~ \parents ~ TopLevelMissionSequencerChan,\\
   \t1 MissionId, MissionIds, SchedulableId  <#include "CommonImports-Template.ftl">
   \t1 <#include "Parent-Template.ftl">
 \end{zsection}
 %\begin{circus}
-%\circchannelset ${ProcessID}AppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
+%\circchannelset ${ProcessName}AppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
 %\end{circus}
 
 %\begin{circus}
-%\circchannelset ${ProcessID}AppChanSet == ${ProcessID}AppSync
+%\circchannelset ${ProcessName}AppChanSet == ${ProcessID}AppSync
 %\end{circus}
 
 \begin{circus}
-\circprocess ${ProcessID}App \circdef <#include "Params-Template.ftl"> \circbegin\\ 
+\circprocess ${ProcessName}App \circdef <#include "Params-Template.ftl"> \circbegin\\
 \end{circus}
-   
+
 <#include "State-Template.ftl">
 
 \begin{circusaction}
 GetNextMission \circdef \circvar ret : MissionID \circspot \\
 \circblockopen
     getNextMissionCall~.~${ProcessID} \then \\
-	ret := this~.~getNextMission() \circseq \\
+	   ret := this~.~getNextMission() \circseq \\
     getNextMissionRet~.~${ProcessID}~!~ret  \then \\
 \Skip
-\circblockclose	
+\circblockclose
 \end{circusaction}
 
 <#include "Methods-Template.ftl">
@@ -34,7 +34,7 @@ Methods \circdef  \\
 \circblockopen
 	GetNextMission \\
 <#include "MethodsAction-Template.ftl">
-\circblockclose 
+\circblockclose
 \circseq Methods
 \end{circusaction}
 

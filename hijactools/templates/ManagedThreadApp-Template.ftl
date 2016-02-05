@@ -1,10 +1,10 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  <#include "CommonImports-Template.ftl">
+  \SECTION ~ ${ProcessName}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  <#include "CommonImports-Template.ftl">
   \t1 <#include "Parent-Template.ftl">
 \end{zsection}
 %
 \begin{circus}
-\circprocess ${ProcessID}App \circdef <#include "Params-Template.ftl"> \circbegin
+\circprocess ${ProcessName}App \circdef <#include "Params-Template.ftl"> \circbegin
 \end{circus}
 
 <#include "State-Template.ftl">
@@ -17,7 +17,7 @@ Run \circdef \\
 	runRet~.~${ProcessID} \then \\
 	\Skip
 \circblockclose
-\end{circusaction}	
+\end{circusaction}
 
 <#include "Methods-Template.ftl">
 
@@ -26,7 +26,7 @@ Methods \circdef \\
 \circblockopen
 	Run \\
 <#include "MethodsAction-Template.ftl">
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 
