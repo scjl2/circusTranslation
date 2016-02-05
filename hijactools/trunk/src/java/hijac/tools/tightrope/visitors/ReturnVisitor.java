@@ -77,6 +77,8 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 
 	public ReturnVisitor(Map<Name, Tree> varMap)
 	{
+
+		assert (varMap != null);
 		this.varMap = varMap;
 
 	}
@@ -84,7 +86,6 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	public ReturnVisitor()
 	{
 		this.varMap = new HashMap<Name, Tree>();
-
 	}
 
 	@Override
@@ -110,14 +111,12 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitIdentifier(IdentifierTree arg0,
-			Boolean returnExpression)
+	public ArrayList<Name> visitIdentifier(IdentifierTree arg0, Boolean returnExpression)
 	{
 
-		System.out.println("Return Visitor: visiting Identifier Tree: "
-				+ arg0.getName() + " arg kind= "+arg0.getKind());
+		System.out.println("Return Visitor: visiting Identifier Tree: " + arg0.getName()
+				+ " arg kind= " + arg0.getKind());
 
-		
 		// This adds a mission to returns
 
 		ArrayList<Name> idReturn = new ArrayList<Name>();
@@ -132,10 +131,37 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		else
 		{
 			// ArrayList<Name> ids = new ArrayList<Name>();
-			
-					idReturn.add(arg0.getName());
-				
-			
+
+			System.out.println("visitID varMap=" + this.varMap.toString());
+			// assert(false);
+			Name n = arg0.getName();
+			Tree t = varMap.get(n);
+
+//			System.out.println("Tree in varMap=" + t + " kind=" + t.getKind());
+			if(t != null)
+			{
+
+			Name returnName = null;
+			if (t instanceof ParameterizedTypeTree)
+			{
+				returnName = ((IdentifierTree) ((ParameterizedTypeTree) t).getType())
+						.getName();
+			}
+			else if (t instanceof IdentifierTree)
+			{
+				returnName = ((IdentifierTree) t).getName();
+			}
+
+			if (returnName != null)
+			{
+				idReturn.add(returnName);
+			}
+
+			}
+			else
+			{
+				idReturn.add(arg0.getName());
+			}
 			
 			return idReturn;
 		}
@@ -144,14 +170,13 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitIf(IfTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Visistor: visiting if tree "
-				+ arg0.getCondition());
+		System.out.println("Return Visistor: visiting if tree " + arg0.getCondition());
 		System.out.println("+++ Size of Returns = " + returns.size() + " +++");
 		ArrayList<StatementTree> branches = new ArrayList<StatementTree>();
 
 		branches.add(arg0.getThenStatement());
-		
-		if(arg0.getElseStatement() != null)
+
+		if (arg0.getElseStatement() != null)
 		{
 			branches.add(arg0.getElseStatement());
 		}
@@ -167,8 +192,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 
 			if (names != null)
 			{
-				System.out.println("+++ size of names = " + names.size()
-						+ " +++");
+				System.out.println("+++ size of names = " + names.size() + " +++");
 				for (Name n : names)
 				{
 					System.out.println("+++ names returned = " + n + " +++");
@@ -202,8 +226,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		{
 			tempReturns = new ArrayList<Name>();
 			StatementTree st = j.next();
-			System.out.println("Return Visitor: " + st + " is a "
-					+ st.getKind());
+			System.out.println("Return Visitor: " + st + " is a " + st.getKind());
 
 			if (st instanceof ExpressionStatementTree)
 			{
@@ -224,6 +247,13 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 				tempReturns = st.accept(this, false);
 
 			}
+
+			if (st instanceof VariableTree)
+			{
+				System.out.println("Found Variable Tree");
+
+				st.accept(this, false);
+			}
 			//
 
 			// if( st instanceof ExpressionStatementTree)
@@ -237,8 +267,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		{
 			System.out.println("\t \t+++ Temp Returns = " + tempReturns);
 			methodReturns.addAll(tempReturns);
-			System.out
-					.println("\t \t+++ Method Returns Now = " + methodReturns);
+			System.out.println("\t \t+++ Method Returns Now = " + methodReturns);
 		}
 
 		System.out.println("\t \t+++ Final Method Returns = " + methodReturns);
@@ -246,8 +275,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitNewClass(NewClassTree arg0,
-			Boolean returnExpression)
+	public ArrayList<Name> visitNewClass(NewClassTree arg0, Boolean returnExpression)
 	{
 
 		// ((IdentifierTree) ((NewClassTree) ((ReturnTree)
@@ -273,8 +301,86 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitAnnotatedType(AnnotatedTypeTree arg0,
+	public ArrayList<Name> visitTypeCast(TypeCastTree arg0, Boolean arg1)
+	{
+		System.out.println("Return Visitor: Type Cast Tree " + arg0);
+		System.out.println("-> Expression= " + arg0.getExpression());
+		System.out.println("-> Expression.getKind = " + arg0.getExpression().getKind());
+		System.out.println("-> Expression..getName = "
+				+ ((IdentifierTree) arg0.getExpression()).getName());
+
+		Name n = ((IdentifierTree) arg0.getExpression()).getName();
+
+		System.out.println("-> n = " + n);
+
+		if (varMap != null)
+		{
+			System.out.println("visitTypeCast varmap = " + varMap.toString());
+			System.out.println("-> getVariable = " + varMap.get(n));
+			Tree t = (varMap.get(n));
+
+			System.out.println("-> t = " + t);
+
+			ArrayList<Name> tcReturns = new ArrayList<Name>();
+
+			if (n != null)
+			{
+				System.out.println("T type= " + t.getKind());
+				IdentifierTree id = (IdentifierTree) t;
+				// returns.add(id.getName());
+				tcReturns.add(id.getName());
+			}
+			// return arg0.getExpression().accept(this, arg1);
+			return tcReturns;
+		}
+		else
+		{
+			System.out.println("Return Visitor Returning Null");
+			return null;
+		}
+
+	}
+
+	@Override
+	public ArrayList<Name> visitVariable(VariableTree arg0, Boolean arg1)
+	{
+		System.out.println("Return Visitor: Variable Tree");
+		// programEnv.addVariable(arg0.getName(), arg0.getType());
+		Name n = arg0.getName();
+		Tree t = arg0.getType();
+
+		varMap.size();
+
+		varMap.put(n, t);
+		System.out.println("visitVariable varMap=" + varMap.toString());
+
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitMethodInvocation(MethodInvocationTree arg0, Boolean arg1)
+	{
+		System.out.println("Return Visitor: method Invocation Found : " + arg0);
+
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitAssignment(AssignmentTree arg0, Boolean arg1)
+	{
+		System.out.println("Return Visitor: Assignment " + arg0);
+		return null;
+	}
+
+	@Override
+	public ArrayList<Name> visitExpressionStatement(ExpressionStatementTree arg0,
 			Boolean arg1)
+	{
+		return arg0.getExpression().accept(this, false);
+	}
+
+	@Override
+	public ArrayList<Name> visitAnnotatedType(AnnotatedTypeTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -305,13 +411,6 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	public ArrayList<Name> visitAssert(AssertTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitAssignment(AssignmentTree arg0, Boolean arg1)
-	{
-		System.out.println("Return Visitor: Assignment " + arg0);
 		return null;
 	}
 
@@ -351,8 +450,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitCompilationUnit(CompilationUnitTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitCompilationUnit(CompilationUnitTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -367,8 +465,8 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitConditionalExpression(
-			ConditionalExpressionTree arg0, Boolean arg1)
+	public ArrayList<Name> visitConditionalExpression(ConditionalExpressionTree arg0,
+			Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -389,16 +487,14 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitEmptyStatement(EmptyStatementTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitEmptyStatement(EmptyStatementTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitEnhancedForLoop(EnhancedForLoopTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitEnhancedForLoop(EnhancedForLoopTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -409,13 +505,6 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	{
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitExpressionStatement(
-			ExpressionStatementTree arg0, Boolean arg1)
-	{
-		return arg0.getExpression().accept(this, false);
 	}
 
 	@Override
@@ -440,24 +529,21 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitIntersectionType(IntersectionTypeTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitIntersectionType(IntersectionTypeTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitLabeledStatement(LabeledStatementTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitLabeledStatement(LabeledStatementTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitLambdaExpression(LambdaExpressionTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitLambdaExpression(LambdaExpressionTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -471,8 +557,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitMemberReference(MemberReferenceTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitMemberReference(MemberReferenceTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -482,15 +567,6 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	public ArrayList<Name> visitMemberSelect(MemberSelectTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitMethodInvocation(MethodInvocationTree arg0,
-			Boolean arg1)
-	{
-		System.out.println("Return Visitor: method Invocation Found : " + arg0);
-
 		return null;
 	}
 
@@ -516,24 +592,21 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitParameterizedType(ParameterizedTypeTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitParameterizedType(ParameterizedTypeTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitParenthesized(ParenthesizedTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitParenthesized(ParenthesizedTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ArrayList<Name> visitPrimitiveType(PrimitiveTypeTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitPrimitiveType(PrimitiveTypeTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -568,50 +641,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	}
 
 	@Override
-	public ArrayList<Name> visitTypeCast(TypeCastTree arg0, Boolean arg1)
-	{
-		System.out.println("Return Visitor: Type Cast Tree " + arg0);
-		System.out.println("-> Expression= " + arg0.getExpression());
-		System.out.println("-> Expression.getKind = "
-				+ arg0.getExpression().getKind());
-		System.out.println("-> Expression..getName = "
-				+ ((IdentifierTree) arg0.getExpression()).getName());
-
-		Name n = ((IdentifierTree) arg0.getExpression()).getName();
-
-		System.out.println("-> n = " + n);
-
-		if (varMap != null)
-		{
-			System.out.println("varmap = " + varMap.toString());
-			System.out.println("-> getVariable = " + varMap.get(n));
-			Tree t = (varMap.get(n));
-
-			System.out.println("-> t = " + t);
-
-			ArrayList<Name> tcReturns = new ArrayList<Name>();
-
-			if (n != null)
-			{
-				System.out.println("T type= " + t.getKind());
-				IdentifierTree id = (IdentifierTree) t;
-				// returns.add(id.getName());
-				tcReturns.add(id.getName());
-			}
-			// return arg0.getExpression().accept(this, arg1);
-			return tcReturns;
-		}
-		else
-		{
-			System.out.println("Return Visitor Returning Null");
-			return null;
-		}
-
-	}
-
-	@Override
-	public ArrayList<Name> visitTypeParameter(TypeParameterTree arg0,
-			Boolean arg1)
+	public ArrayList<Name> visitTypeParameter(TypeParameterTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -628,15 +658,6 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	public ArrayList<Name> visitUnionType(UnionTypeTree arg0, Boolean arg1)
 	{
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ArrayList<Name> visitVariable(VariableTree arg0, Boolean arg1)
-	{
-		System.out.println("Return Visitor: Variable Tree");
-		// programEnv.addVariable(arg0.getName(), arg0.getType());
-
 		return null;
 	}
 

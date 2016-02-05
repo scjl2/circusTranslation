@@ -84,7 +84,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 
 		Iterator<StatementTree> i = members.iterator();
-
+		assert(varMap != null);
 		returnVisitor = new ReturnVisitor(varMap);
 		MethodEnv m;
 		while (i.hasNext())

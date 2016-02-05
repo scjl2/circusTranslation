@@ -57,6 +57,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 	@SuppressWarnings("unchecked")
 	public ArrayList<Name> build(TypeElement missionTypeElement)
 	{
+		System.out.println("missionTypeElem="+missionTypeElement.toString());
 		ClassTree missionClassTree = trees.getTree(missionTypeElement);
 
 		getVariables(missionTypeElement, missionEnv);

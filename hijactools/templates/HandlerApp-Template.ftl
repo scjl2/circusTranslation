@@ -10,7 +10,7 @@
 <#include "State-Template.ftl">
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~${ProcessID} \then \\
 	${HandleAsync.Body} \circseq \\
@@ -24,7 +24,7 @@ handlerAsyncEvent \circdef \\
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 <#include "MethodsAction-Template.ftl">
 \circblockclose
 	 \circseq Methods

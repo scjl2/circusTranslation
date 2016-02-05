@@ -12,7 +12,6 @@ import javax.lang.model.type.TypeKind;
 
 public class MethodEnv
 {
-	
 
 	public static enum AccessMod
 	{
@@ -56,7 +55,7 @@ public class MethodEnv
 	}
 
 	public MethodEnv(Name name)
-	{
+	{	
 		this.methodName = name.toString();
 //		this.methodCallBinding = new BinderMethodEnv(name.toString());
 		locations = new HashSet<String>();

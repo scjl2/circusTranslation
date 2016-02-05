@@ -254,7 +254,7 @@ public class EnvironmentBuilder
 		System.out.println(BUILDING_TOP_LEVEL_SEQUENCER);
 		System.out.println();
 		
-String tlmsStr = ""+ Character.toUpperCase(tlms.charAt(0)) + tlms.subSequence(1, tlms.length());
+		String tlmsStr = ""+ Character.toUpperCase(tlms.charAt(0)) + tlms.subSequence(1, tlms.length());
 		
 		System.out.println("packagePrefix="+packagePrefix + " and tlms="+tlmsStr);
 		
@@ -262,7 +262,7 @@ String tlmsStr = ""+ Character.toUpperCase(tlms.charAt(0)) + tlms.subSequence(1,
 		
 		for(TypeElement te : type_elements)
 		{
-			System.out.println(te.toString());
+			System.out.println(te.toString() + " and " + tlmsStr);
 			if(te.toString().contains(tlmsStr))
 			{
 				System.out.println("found");
@@ -327,8 +327,8 @@ String tlmsStr = ""+ Character.toUpperCase(tlms.charAt(0)) + tlms.subSequence(1,
 
 		String fullName = packagePrefix + n;
 
-		// System.out.println("+++ Building Mission: Full Name = " + fullName
-		// + END_PLUSES);
+//		 System.out.println("+++ Building Mission: Full Name = " + fullName
+//		 + END_PLUSES);
 
 		TypeElement missionTypeElem = elems.getTypeElement(fullName);
 

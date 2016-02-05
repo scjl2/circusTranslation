@@ -66,7 +66,7 @@ public class MethodVisitor
 		MethodEnv m;
 
 		// return values
-		ArrayList<Name> returnsValues = mt.accept(new ReturnVisitor(null), null);
+		ArrayList<Name> returnsValues = mt.accept(new ReturnVisitor(), null);
 
 		Map<Object, Object> parameters = new HashMap<>();
 

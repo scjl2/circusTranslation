@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Name;
 
@@ -170,9 +171,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 				{
 					expressionTree = expression;
 				}
-				else
-
-				if (!(objectEnv.getName().toString().contains(expression.toString())))
+				else if (!(objectEnv.getName().toString().contains(expression.toString())))
 				{
 					// TODO HACKY! need to get what kind of ID here!
 					final String variableInitAndInput = "?" + varName.toString() + "In";
@@ -248,7 +247,19 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			if (statementReturn != null)
 			{
 				// System.out.println("Var Visitor: Block: Returned Adding");
-				returnMap.putAll(statementReturn);
+				// returnMap.putAll(statementReturn);
+
+				Set<Name> returnMapKeys = returnMap.keySet();
+
+				for (Name n : statementReturn.keySet())
+				{
+					System.out.println("Block adding " + n + "->"
+							+ statementReturn.get(n) + " to returnMap");
+
+					returnMap.put(n, statementReturn.get(n));
+
+				}
+
 			}
 			// else
 			// {
@@ -373,8 +384,27 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitIf(IfTree arg0, Boolean addToEnv)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<Name, Tree> returnMap = new HashMap<Name, Tree>();
+
+		Map<Name, Tree> tempMap = arg0.getThenStatement().accept(this, addToEnv);
+
+		// List<? extends StatementTree> statements = arg0.getStatements();
+		if (tempMap != null)
+		{
+			returnMap.putAll(tempMap);
+		}
+
+		if (arg0.getElseStatement() != null)
+		{
+			tempMap = arg0.getElseStatement().accept(this, addToEnv);
+
+			if (tempMap != null)
+			{
+				returnMap.putAll(tempMap);
+			}
+		}
+
+		return returnMap;
 	}
 
 	@Override
@@ -648,13 +678,13 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 						System.out.println("*/*/ Adding Parameter " + encodedName
 								+ " to ObjectEnv " + objectEnv.getName() + " of type "
 								+ objectEnv.getClass().getCanonicalName());
-						
-						VariableEnv v = new VariableEnv(encodedName, varTypeString, init ,false );
+
+						VariableEnv v = new VariableEnv(encodedName, varTypeString, init,
+								false);
 						v.setProgramType(varTypeString);
-						
+
 						classEnv.addVariable(v);
-						
-						
+
 					}
 
 				}

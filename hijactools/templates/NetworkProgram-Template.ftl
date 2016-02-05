@@ -67,7 +67,7 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 			ManagedThreadFW(${thread.Name}ID)\\
 			<#if thread_has_next>
 			<#if thread?counter % 2 == 0>
-			\circblockclosed
+			\circblockclose
 			\circblockopen
 			</#if>
 			\t1 \lpar SchedulablesSync \rpar\\

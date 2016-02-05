@@ -31,7 +31,7 @@ import com.sun.source.util.Trees;
 public class SafeletLevel2Builder extends ParadigmBuilder
 {
 
-	private static ReturnVisitor returnVisitor = new ReturnVisitor(null);
+	private static ReturnVisitor returnVisitor = new ReturnVisitor();
 
 	private Trees trees;
 
@@ -58,6 +58,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 
 		HashMap<Name, Tree> varMap = getVariables(e, safeletEnv);
 		// programEnv.getSafelet().setClassTree(ct);
+		
 
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 		Iterator<StatementTree> i = members.iterator();
@@ -82,9 +83,9 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 				if (returnType instanceof PrimitiveTypeTree)
 				{
 					((PrimitiveTypeTree) mt.getReturnType()).getPrimitiveTypeKind();
-
 				}
 				// ArrayList<Name> returns =
+				
 				mt.accept(new ReturnVisitor(varMap), null);
 
 				@SuppressWarnings("rawtypes")

@@ -75,8 +75,8 @@ public abstract class ParadigmBuilder
 			{
 				System.out.println("\t*** Name = " + n + " Type = " + m.get(n)
 						+ " Kind = " + m.get(n).getKind());
-				varMap.putIfAbsent(n, m.get(n));
-//				 varMap.put(n,m.get(n));
+//				varMap.putIfAbsent(n, m.get(n));
+				 varMap.put(n,m.get(n));
 			}
 		}
 		System.out.println("getVariables varMap = " + varMap);
