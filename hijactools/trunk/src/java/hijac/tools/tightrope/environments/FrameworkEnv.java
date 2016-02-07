@@ -784,7 +784,7 @@ public class FrameworkEnv
 	{
 		MissionEnv missionEnv = currentCluster.getMissionEnv();
 		missionEnv.setName(mission);
-		missionEnv.setId("test-"+mission.toString());
+		missionEnv.setId(mission.toString());
 	}
 
 	public void newCluster(Name sequencer)

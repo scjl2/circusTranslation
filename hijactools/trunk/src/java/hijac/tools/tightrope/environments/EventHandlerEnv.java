@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString.Name;
+
 import java.util.Map;
 
 public abstract class EventHandlerEnv extends ParadigmEnv
@@ -21,7 +23,7 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 		map.put(HANDLER_TYPE, getHandlerType());
 		map.put(IMPORT_NAME, getImportName());
 
-		Map handleAsyncMap = methodToMap(handleAsync);
+		Map handleAsyncMap = handleAsync.toMap();
 		map.put(HANDLE_ASYNC, handleAsyncMap);
 
 		return map;
@@ -36,10 +38,13 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 	{
 		handleAsync = method;
 	}
-	
+
 	@Override
 	public void setId(String name)
 	{
-		super.setId(name+IdEnv.SID);
+		super.setId(name + Name.SID);
+		// TODO THis will need to be changed when I streamline the S+S sections
+//		setObjectId(name);
+		setThreadID(name);
 	}
 }

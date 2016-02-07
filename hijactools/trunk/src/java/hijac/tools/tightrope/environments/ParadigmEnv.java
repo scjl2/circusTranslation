@@ -59,6 +59,7 @@ public abstract class ParadigmEnv extends ObjectEnv
 		
 		
 		map.put(PROCESS_ID, getId());
+		map.put("ProcObjectID", getObjectId());
 		
 
 		map.put(FW_PARAMETERS, fwParamsList());

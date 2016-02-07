@@ -22,7 +22,7 @@ public class ObjectEnv
 	protected static final String METHODS = "Methods";
 	protected static final String PROCESS_ID = "ProcessID";
 	protected static final String PROCESS_NAME = "ProcessName";
-	
+
 	protected static final String IMPORT_NAME = "ImportName";
 	protected static final String HANDLER_TYPE = "HandlerType";
 
@@ -62,14 +62,14 @@ public class ObjectEnv
 	 * file will depend on to parse
 	 */
 	private List<String> parents;
-		
-	private String id = "", objectID = "";
+
+	private String id = "", objectID = "", threadID = "";
 	
-	
+	private boolean hasSyncMeth = false;
+	private boolean needsThread = false;
 
 	/**
-	 *  The standard constructor, which simply
-	 * instantiates the lists
+	 * The standard constructor, which simply instantiates the lists
 	 */
 	public ObjectEnv()
 	{
@@ -87,7 +87,7 @@ public class ObjectEnv
 		newChannels = new ArrayList<ChannelEnv>();
 		parents = new ArrayList<String>();
 	}
-	
+
 	public String getIdType()
 	{
 		return "";
@@ -200,15 +200,15 @@ public class ObjectEnv
 
 	}
 
-	public void addVariable(String variableName, String variableType,
-			Object variableInit, String variableInput, boolean primitive)
-
-	{
-
-		addVariable(new VariableEnv(variableName, variableType, variableInit,
-				variableInput, primitive));
-
-	}
+//	public void addVariable(String variableName, String variableType,
+//			Object variableInit, String variableInput, boolean primitive)
+//
+//	{
+//
+//		addVariable(new VariableEnv(variableName, variableType, variableInit,
+//				variableInput, primitive));
+//
+//	}
 
 	public void addVariableInit(String varName, String init, boolean variableInput)
 	{
@@ -220,7 +220,6 @@ public class ObjectEnv
 				varEnv.setInput(variableInput);
 			}
 		}
-
 	}
 
 	/**
@@ -407,12 +406,13 @@ public class ObjectEnv
 
 	}
 
-	@SuppressWarnings("rawtypes")
-	public void addSyncMeth(Name methName, TypeKind returnType,
-			ArrayList<Name> returnValues, Map params)
-	{
-		syncMeths.add(new MethodEnv(methName, returnType, returnValues, params));
-	}
+//	@SuppressWarnings("rawtypes")
+//	public void addSyncMeth(Name methName, TypeKind returnType,
+//			ArrayList<Name> returnValues, Map params)
+//	{
+//		syncMeths.add(new MethodEnv(methName, returnType, returnValues, params));
+//		objectID = name + hijac.tools.tightrope.utils.TightRopeString.Name.OBJ_ID;
+//	}
 
 	public void addMeth(MethodEnv me)
 	{
@@ -425,6 +425,8 @@ public class ObjectEnv
 	{
 		System.out.println("Adding Sync Meth " + me.toString());
 		me.setSynchronised(true);
+		setHasSyncMeth(true);
+		this.objectID = name + hijac.tools.tightrope.utils.TightRopeString.Name.OBJ_ID;
 		syncMeths.add(me);
 
 	}
@@ -562,7 +564,7 @@ public class ObjectEnv
 
 		for (MethodEnv me : methods)
 		{
-			Map methodMap = methodToMap(me);
+			Map methodMap = me.toMap();
 
 			returnList.add(methodMap);
 		}
@@ -570,12 +572,22 @@ public class ObjectEnv
 		return returnList;
 	}
 
+	/**
+	 * Gets the lists of all the non-<code>synchronized</code> methods for the object this Environment represented.
+	 * 
+	 * @return List of Maps representing the non-synchronised methods.
+	 */
 	@SuppressWarnings({ "rawtypes" })
 	public List<Map> methsList()
 	{
 		return listMethods(MethsType.NOT_SYNC);
 	}
 
+	/**
+	 * Gets the lists of all the <code>synchronized</code> methods for the object this Environment represented.
+	 * 
+	 * @return List of Maps representing the synchronised methods.
+	 */
 	@SuppressWarnings({ "rawtypes" })
 	public List<Map> syncMethsList()
 	{
@@ -583,12 +595,11 @@ public class ObjectEnv
 
 	}
 
-	@SuppressWarnings({ "rawtypes" })
-	protected Map methodToMap(MethodEnv me)
-	{
-		return me.toMap();
-	}
-
+	/**
+	 * Gets the lists of all methods for the object this Environment represented.
+	 * 
+	 * @return List of Maps representing the methods.
+	 */
 	public List<MethodEnv> getMeths()
 	{
 		return meths;
@@ -644,7 +655,6 @@ public class ObjectEnv
 
 	public void addParameterInit(String paramName, String paramInit)
 	{
-
 		for (VariableEnv v : getParameters())
 		{
 			if (v.getName().equals(paramName))
@@ -653,25 +663,56 @@ public class ObjectEnv
 			}
 		}
 	}
-	
+
 	public void setId(String name)
 	{
 		this.id = name;
+		
 	}
-	
+
 	public String getId()
 	{
 		return id;
 	}
-	
+
 	public void setObjectId(String name)
 	{
-		this.objectID = name;
+		this.objectID = name + hijac.tools.tightrope.utils.TightRopeString.Name.OBJ_ID;
 	}
-	
+
 	public String getObjectId()
 	{
 		return objectID;
+	}
+
+	public String getThreadId()
+	{
+		return threadID;
+	}
+	
+	public void setThreadID(String name)
+	{
+		threadID = name + hijac.tools.tightrope.utils.TightRopeString.Name.Thread_ID;
+	}
+
+	public boolean hasSyncMeth()
+	{
+		return hasSyncMeth;
+	}
+
+	public void setHasSyncMeth(boolean hasSyncMeth)
+	{
+		this.hasSyncMeth = hasSyncMeth;
+	}
+	
+	public void setNeedsThread(boolean needsThread)
+	{
+		this.needsThread = needsThread;
+	}
+
+	public boolean needsThread()
+	{
+		return needsThread;
 	}
 
 }

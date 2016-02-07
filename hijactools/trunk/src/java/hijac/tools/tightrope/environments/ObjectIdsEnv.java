@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString.Name;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +16,6 @@ import java.util.Map;
 public class ObjectIdsEnv extends IdEnv
 {
 
-	private static final String OBJECT_ID_STR = "Object" + ID_STR;
 	private static final String OBJECT_STR = "Objects";
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -30,8 +31,20 @@ public class ObjectIdsEnv extends IdEnv
 
 	}
 
+	@Override
 	public void addIdNames(String idName)
 	{
-		idNames.add(idName + OBJECT_ID_STR);
+		if (!idNames.contains(idName+ Name.OBJ_ID))
+		{
+			idNames.add(idName + Name.OBJ_ID);
+		}
 	}
+
+	// @Override
+	// public boolean contains(String id)
+	// {
+	//
+	// return false;
+	// }
+
 }

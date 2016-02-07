@@ -22,7 +22,7 @@ public class SchedulableIdsEnv extends IdEnv
 
 	public void addTopLevelSequencer(Name topLevelSequencer)
 	{
-		this.topLevelSequencer = topLevelSequencer + SID;
+		this.topLevelSequencer = topLevelSequencer + hijac.tools.tightrope.utils.TightRopeString.Name.SID;
 	}
 	
 	public String getTopLevelSequencer()
@@ -42,6 +42,6 @@ public class SchedulableIdsEnv extends IdEnv
 	
 	public void addIdNames(String idName)
 	{
-		idNames.add(idName+SID);
+		idNames.add(idName+hijac.tools.tightrope.utils.TightRopeString.Name.SID);
 	}
 }

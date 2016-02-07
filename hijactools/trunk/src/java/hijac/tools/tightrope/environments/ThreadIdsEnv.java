@@ -1,5 +1,8 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString;
+import hijac.tools.tightrope.utils.TightRopeString.Name;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,36 +16,38 @@ import java.util.Map;
 public class ThreadIdsEnv extends IdEnv
 {
 
-	private static final String THREAD_ID_STR = "Thread"+ID_STR;
+//	private static final String THREAD_ID_STR = "Thread"+Name.ID_STR;
 	private Map<String, String> threadMap = new HashMap<String, String>();
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
 		Map map = new HashMap();
-//		map.put(THREADS_STR, getIdNames());
-//		assert(getIdNames() != null);
+
 		for(String id : threadMap.keySet())
 		{
-			String priority = threadMap.get(id); 
-			String threadID = id +THREAD_ID_STR;
-//			System.out.println("Adding* " + threadID + " -> " + priority);
+			String threadID = id ;
+			String priority = threadMap.get(id); 			
+			
 			map.put(threadID, priority);
 		}
 
 		return map;
 	}
-	
+	 
 	public void addIdNames(String idName)
 	{
-		idNames.add(idName);
-		threadMap.put(idName, "");
+		final String threadId = idName+TightRopeString.Name.Thread_ID;
+		idNames.add(threadId);
+		threadMap.put(threadId, "");
 	}
 
 	public void setThreadPriority(String threadName, String priority)
 	{
 		System.out.println("putting " + threadName + " -> " + priority);
-		threadMap.put(threadName, priority);		
+		
+			threadMap.put(threadName+TightRopeString.Name.Thread_ID, priority);	
+		
 	}
 
 }

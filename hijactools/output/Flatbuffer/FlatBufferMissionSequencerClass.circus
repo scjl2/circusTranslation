@@ -56,7 +56,7 @@ this~.~returnedMission :=true
 
       \circblockopen
 
-  ret := nullMissionId
+  ret := nullMId
 
 
         \circblockclose

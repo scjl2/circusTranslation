@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ FlatBufferMissionMethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
+  \SECTION ~ FlatBufferMissionMIDMethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
 \end{zsection}
 %
 

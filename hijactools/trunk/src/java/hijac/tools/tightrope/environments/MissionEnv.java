@@ -44,7 +44,13 @@ public class MissionEnv extends ParadigmEnv
 	{
 		Map map = super.toMap();
 
-		map.put("RegisteredSchedulables", schedulables);
+		ArrayList<String> schedulableIds = new ArrayList<String>();
+		for(Name n : schedulables)
+		{
+			schedulableIds.add(n.toString() + "SID");
+		}
+		
+		map.put("RegisteredSchedulables", schedulableIds);
 
 		return map;
 	}
@@ -57,7 +63,9 @@ public class MissionEnv extends ParadigmEnv
 	@Override
 	public void setId(String name)
 	{
-		super.setId(name+IdEnv.MID);
+		super.setId(name+hijac.tools.tightrope.utils.TightRopeString.Name.MID);
+		//TODO THis will need to be changed when I streamline the S+S sections
+//				setObjectId(name);
 	}
 
 }

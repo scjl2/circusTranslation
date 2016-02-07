@@ -23,7 +23,7 @@ InitializeApplication \circdef \\
 \circblockopen
      initializeApplicationCall \then \\
 
-	   	
+	   
 
      initializeApplicationRet \then \\
      \Skip
@@ -44,7 +44,7 @@ immortalMemorySizeMeth \circdef
 \circvar ret : \num \circspot
 \\
 \circblockopen
-immortalMemorySizeCall~.~FlatBuffer
+immortalMemorySizeCall~.~
 \then \\
 
       \circblockopen
@@ -56,7 +56,7 @@ immortalMemorySizeCall~.~FlatBuffer
 
   \circseq  \\
 
-immortalMemorySizeRet~.~FlatBuffer~!~ret \then \\
+immortalMemorySizeRet~.~~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}

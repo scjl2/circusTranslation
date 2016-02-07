@@ -58,7 +58,7 @@ public class CircusGenerator
 	private static final String MISSION_APP_TEMPLATE_FTL = "MissionApp-Template.ftl";
 	private static final String MISSION_SEQUENCER_APP_TEMPLATE_FTL = "MissionSequencerApp-Template.ftl";
 	private static final String HANDLER_APP_TEMPLATE_FTL = "HandlerApp-Template.ftl";
-	private static final String PROCESS_ID = "ProcessID";
+	private static final String PROCESS_Name = "ProcessName";
 	private static final String APP_CIRCUS = "App.circus";
 	private static final String TEMPLATE_DIRECTORY = "../templates";
 	private static final String OUTPUT_DIRECTORY = "../output/";
@@ -297,7 +297,7 @@ public class CircusGenerator
 
 		Map sMap = safelet.toMap();
 
-		procName = (String) sMap.get(PROCESS_ID);
+		procName = (String) sMap.get(PROCESS_Name);
 
 		translateCommon(sMap, SAFELET_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
@@ -328,7 +328,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			tlmsMap = tlmsEnv.toMap();
 
-			procName = (String) tlmsMap.get(PROCESS_ID);
+			procName = (String) tlmsMap.get(PROCESS_Name);
 
 			translateCommon(tlmsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
@@ -361,7 +361,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			missionMap = mEnv.toMap();
 
-			procName = (String) missionMap.get(PROCESS_ID);
+			procName = (String) missionMap.get(PROCESS_Name);
 
 			// Application Process
 			translateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
@@ -394,7 +394,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			smsMap = smsEnv.toMap();
 
-			procName = (String) smsMap.get(PROCESS_ID);
+			procName = (String) smsMap.get(PROCESS_Name);
 
 			translateCommon(smsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
@@ -470,7 +470,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			osehMap = osehEnv.toMap();
 
-			procName = (String) osehMap.get(PROCESS_ID);
+			procName = (String) osehMap.get(PROCESS_Name);
 			translateCommon(osehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels
@@ -501,7 +501,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			pehMap = pehEnv.toMap();
 
-			procName = (String) pehMap.get(PROCESS_ID);
+			procName = (String) pehMap.get(PROCESS_Name);
 			translateCommon(pehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels
@@ -532,7 +532,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			apehMap = apehEnv.toMap();
 
-			procName = (String) apehMap.get(PROCESS_ID);
+			procName = (String) apehMap.get(PROCESS_Name);
 			translateCommon(apehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels

@@ -36,13 +36,13 @@ ${meth.MethodName}Call~.~${ProcessID}~?~thread
 ~?~${param}
 </#list> \then \\
 \circblockopen
-startSyncMeth~.~${ProcessID}Object~.~thread \then \\
-lockAcquired~.~${ProcessID}Object~.~thread \then \\
+startSyncMeth~.~${ProcObjectID}~.~thread \then \\
+lockAcquired~.~${ProcObjectID}~.~thread \then \\
 ${meth.Body} \circseq  \\
-endSyncMeth~.~${ProcessID}Object~.~thread \then  \\
+endSyncMeth~.~${ProcObjectID}~.~thread \then  \\
 
 <#if meth.ReturnType != 'null'>
-${meth.MethodName}Ret~.~${ProcessID}~!~thread~!~ret \then \\
+${meth.MethodName}Ret~.~${ProcessID}~.~thread~!~ret \then \\
 <#else>
 ${meth.MethodName}Ret~.~${ProcessID}~.~thread \then \\
 </#if>

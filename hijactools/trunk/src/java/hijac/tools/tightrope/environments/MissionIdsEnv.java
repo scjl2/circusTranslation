@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString.Name;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,6 +20,6 @@ public class MissionIdsEnv extends IdEnv
 
 	public void addIdNames(String idName)
 	{
-		idNames.add(idName + MID);
+		idNames.add(idName + Name.MID);
 	}	
 }

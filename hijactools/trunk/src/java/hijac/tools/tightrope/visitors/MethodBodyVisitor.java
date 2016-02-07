@@ -17,6 +17,9 @@ import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
+import hijac.tools.tightrope.utils.TightRopeString.LATEX;
+import hijac.tools.tightrope.utils.TightRopeString.*;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,8 +81,9 @@ import com.sun.source.util.SimpleTreeVisitor;
 public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorContext>
 {
 
-	private static final String RET_FALSE = "ret := \\false";
-	private static final String RET_TRUE = "ret := \\true";
+	private static final String NULL_S_ID = "nullSId";
+	private static final String NULL_M_ID = "nullMId";
+	private static final String BINDER = "binder\\_";
 	private static final String TYPE_TEMPLATE = "L2Type.ftl";
 	private static final String EXPR_TEMPLATE = "L2Expr.ftl";
 	private static final String STMT_TEMPLATE = "L2Stmt.ftl";
@@ -155,7 +159,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1)
 				{
 					// TODO Auto-generated method stub
-					return (R) RET_TRUE;
+					return (R) LATEX.RET_TRUE;
 				}
 
 				@Override
@@ -185,7 +189,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				public <R, D> R accept(TreeVisitor<R, D> arg0, D arg1)
 				{
 					// TODO Auto-generated method stub
-					return (R) RET_FALSE;
+					return (R) LATEX.RET_FALSE;
 				}
 
 				@Override
@@ -304,7 +308,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				// + node.getExpression() ;
 				if (node.getExpression().toString().contains("~?~"))
 				{
-					return visitMethodInvocation(mit, ctxt) + " \\\\ "
+					return visitMethodInvocation(mit, ctxt) + LATEX.NEW_LINE
 							+ node.getVariable().toString() + " :="
 							+ node.getExpression();
 				}
@@ -453,11 +457,11 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				if (returnType.contains("MissionID"))
 				{
-					return "nullMissionId";
+					return NULL_M_ID;
 				}
 				else if (returnType.contains("SchedulableId"))
 				{
-					return "nullSchedulableId";
+					return NULL_S_ID;
 				}
 				else
 				{
@@ -519,7 +523,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				// This is for is the method call is: o.meth1().meth2();
 				output = visitMethodInvocation((MethodInvocationTree) expresison, ctxt);
-				output += "\\ \\ ";
+				output += "\\\\ ";
 
 				System.out.println("Output = " + output);
 
@@ -537,7 +541,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 			if (mst.getExpression().toString().startsWith("System"))
 			{
-				return "\\Skip";
+				return LATEX.SKIP;
 			}
 
 			identifier = mst.getIdentifier();
@@ -549,44 +553,45 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			identifier = it.getName();
 		}
 
-		Name objectEnvName = object.getName();
+		String objectID = object.getObjectId();
 		StringBuilder sb = new StringBuilder();
 
 		if (identifier != null)
 		{
 			if (identifier.contentEquals("notify"))
 			{
+				object.setNeedsThread(true);
+				
 				object.addParent("ObjectChan");
 				object.addParent("ObjectIds");
 				object.addParent("ThreadIds");
 
-				sb.append("notify~.~");
-				sb.append(objectEnvName.toString());
-				sb.append("ObjectID");
-				sb.append("~!~thread \\then ");
-				sb.append(" \\\\ ");
-				sb.append("\\Skip");
+				sb.append("notify"+LATEX.DOT);
+				sb.append(object.getObjectId());
+				sb.append(LATEX.SHRIEK+"thread "+LATEX.THEN);
+				sb.append(LATEX.NEW_LINE);
+				sb.append(LATEX.SKIP);
 
 				timeMachine.put("methodCall", false);
 				return sb.toString();
 			}
 			else if (identifier.contentEquals("wait"))
 			{
+				object.setNeedsThread(true);
+				
 				object.addParent("ObjectChan");
 				object.addParent("ObjectIds");
 				object.addParent("ThreadIds");
 
-				sb.append("waitCall~.~");
-				sb.append(objectEnvName.toString());
-				sb.append("ObjectID");
-				sb.append("~!~thread \\then");
-				sb.append(" \\\\ ");
+				sb.append("waitCall"+LATEX.DOT);
+				sb.append(object.getObjectId());
+				sb.append(LATEX.DOT +"thread "+ LATEX.THEN);
+				sb.append(LATEX.NEW_LINE);
 				sb.append("waitRet~.~");
-				sb.append(objectEnvName.toString());
-				sb.append("ObjectID");
-				sb.append("~!~thread \\then");
-				sb.append(" \\\\ ");
-				sb.append("\\Skip");
+				sb.append(object.getObjectId());
+				sb.append(LATEX.DOT+"thread "+LATEX.THEN);
+				sb.append(LATEX.NEW_LINE);
+				sb.append(LATEX.SKIP);
 
 				timeMachine.put("methodCall", false);
 				return sb.toString();
@@ -668,27 +673,28 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 				if (notIgnoredMethod)
 				{
-					sb.append("binder\\_");
+					sb.append(BINDER);
 				}
 				sb.append(identifier);
 				sb.append("Call");
-				sb.append("~.~");
+				sb.append(LATEX.DOT);
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
-				sb.append("~.~");
-				sb.append(objectEnvName.toString());
+				sb.append(LATEX.DOT);
+				sb.append(objectID.toString());
+				
+				final String threadId = object.getThreadId();
 				if (method.isSynchronised())
 				{
-					sb.append("~.~");
-					sb.append(objectEnvName.toString());
-					sb.append("ThreadID");
+					sb.append(LATEX.DOT);
+					sb.append(threadId);					
 				}
 
 				if (!parameters.isEmpty())
 				{
 					for (ExpressionTree s : parameters)
 					{
-						sb.append("~!~");
+						sb.append(LATEX.SHRIEK);
 						if (s instanceof IdentifierTree)
 						{
 
@@ -707,24 +713,24 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 						}
 					}
 				}
-				sb.append("\\then \\ \\ ");
+				sb.append(LATEX.THEN + LATEX.NEW_LINE);
 
 				if (notIgnoredMethod)
 				{
-					sb.append("binder\\_");
+					sb.append(BINDER);
 				}
 				sb.append(identifier);
 				sb.append("Ret");
-				sb.append("~.~");
+				sb.append(LATEX.DOT);
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
-				sb.append("~.~");
-				sb.append(objectEnvName.toString());
+				sb.append(LATEX.DOT);
+				sb.append(objectID.toString());
+				
 				if (method.isSynchronised())
 				{
-					sb.append("~.~");
-					sb.append(objectEnvName.toString());
-					sb.append("ThreadID");
+					sb.append(LATEX.DOT);
+					sb.append(threadId);	
 				}
 
 				System.out.println("!// !returnString.contains('null') =  "
@@ -741,13 +747,13 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 					sb.append(identifier.toString());
 					timeMachine.put("variableIdentifier", identifier);
-					sb.append("\\then \\ \\");
+					sb.append(LATEX.THEN + LATEX.NEW_LINE);
 
 				}
 				else
 				{
-					sb.append("\\then \\ \\ ");
-					sb.append("\\Skip");
+					sb.append(LATEX.THEN + LATEX.NEW_LINE);
+					sb.append(LATEX.SKIP);
 				}
 
 				timeMachine.put("methodCall", false);

@@ -39,13 +39,14 @@ public class ProgramEnv
 	public void addSafelet(Name safelet)
 	{
 		structureEnv.addSafelet(safelet);
-		objectIds.addIdNames(safelet.toString());
+		// objectIds.addIdNames(safelet.toString());
 	}
 
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 	{
 		structureEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 		schedulableIds.addTopLevelSequencer(topLevelMissionSequencer);
+		// objectIds.addIdNames(topLevelMissionSequencer.toString());
 	}
 
 	public void addMission(Name mission)
@@ -53,7 +54,17 @@ public class ProgramEnv
 		structureEnv.addMission(mission);
 		final String missionString = mission.toString();
 		missionIds.addIdNames(missionString);
-		objectIds.addIdNames(missionString);
+		// objectIds.addIdNames(missionString);
+	}
+
+	public void addObjectIdName(String name)
+	{
+		objectIds.addIdNames(name);
+	}
+
+	public void addThreadIdName(String name)
+	{
+		threadIds.addIdNames(name);
 	}
 
 	public FrameworkEnv getFrameworkEnv()
@@ -100,8 +111,8 @@ public class ProgramEnv
 		// Synchronised method
 		// if()
 
-		threadIds.addIdNames(nameString);
-		objectIds.addIdNames(nameString);
+		// threadIds.addIdNames(nameString);
+		// objectIds.addIdNames(nameString);
 
 	}
 
@@ -157,7 +168,6 @@ public class ProgramEnv
 		returnMap.put("Objects", getObjectIdsMap());
 		returnMap.put("Threads", getThreadIdsMap());
 		returnMap.put("MethodCallBindings", getBinderMethodEnvsMapList());
-		
 
 		return returnMap;
 	}
@@ -166,7 +176,7 @@ public class ProgramEnv
 	private List getBinderMethodEnvsMapList()
 	{
 		List binderMethodEnvsMap = new ArrayList();
-		
+
 		for (MethodEnv b : binderMethodEnvs)
 		{
 			Map binderMethodMap = new HashMap();
@@ -180,25 +190,25 @@ public class ProgramEnv
 			binderMethodMap.put("ReturnValue", b.getReturnValue());
 			binderMethodMap.put("LocType", b.getLocationType());
 			binderMethodMap.put("CallerType", b.getCallerType());
-			
-//			// TODO need to calculate these!
-//			for (String s : locs)
-//			{
-//				if (missionIds.contains(s))
-//				{
-////					b.setLocationType("MissionID");
-//					binderMethodMap.put("LocType", b.getLocationType());
-//				}
-//			}
-//
-//			for (String s : callers)
-//			{
-//				if (schedulableIds.contains(s))
-//				{
-//					b.setCallerType("SchedulableID");
-//					binderMethodMap.put("CallerType", b.getCallerType());
-//				}
-//			}
+
+			// // TODO need to calculate these!
+			// for (String s : locs)
+			// {
+			// if (missionIds.contains(s))
+			// {
+			// // b.setLocationType("MissionID");
+			// binderMethodMap.put("LocType", b.getLocationType());
+			// }
+			// }
+			//
+			// for (String s : callers)
+			// {
+			// if (schedulableIds.contains(s))
+			// {
+			// b.setCallerType("SchedulableID");
+			// binderMethodMap.put("CallerType", b.getCallerType());
+			// }
+			// }
 
 			binderMethodEnvsMap.add(binderMethodMap);
 		}
@@ -357,7 +367,10 @@ public class ProgramEnv
 
 	public void setThreadPriority(String threadID, String priority)
 	{
-		threadIds.setThreadPriority(threadID, priority);
+//		if (getObjectEnv(threadID).hasSyncMeth())
+//		{
+			threadIds.setThreadPriority(threadID, priority);
+//		}
 
 	}
 
@@ -376,7 +389,7 @@ public class ProgramEnv
 		return missionIds;
 	}
 
-	//not adding anything to the list
+	// not adding anything to the list
 	@Deprecated
 	public void addBinderMethodEnv(String name, String location, String caller,
 			String returnType, Map<String, Type> parameters)
@@ -384,41 +397,43 @@ public class ProgramEnv
 		String id = "ID";
 		boolean existingBME = false;
 		for (MethodEnv me : binderMethodEnvs)
-		{								
+		{
 			if (me.getMethodName().equals(name))
 			{
 				me.addLocation(location + id);
 				me.addCaller(caller + id);
 				me.setParameters(parameters);
-//				me.setLocationType(location);
-				
+				// me.setLocationType(location);
+
 				existingBME = true;
 			}
-			
+
 		}
 
-//		if (!existingBME)
-//		{
-//			// If the method isn't already there
-//			BinderMethodEnv bme = new BinderMethodEnv(name, location + id, caller + id);
-//			bme.setParameters(parameters);
-//
-//			if (returnType != null && !returnType.equals("null"))
-//			{
-//				bme.setReturnType("\\cross " + returnType);
-//			}
-//			binderMethodEnvs.add(bme);
-//		}
+		// if (!existingBME)
+		// {
+		// // If the method isn't already there
+		// BinderMethodEnv bme = new BinderMethodEnv(name, location + id, caller
+		// + id);
+		// bme.setParameters(parameters);
+		//
+		// if (returnType != null && !returnType.equals("null"))
+		// {
+		// bme.setReturnType("\\cross " + returnType);
+		// }
+		// binderMethodEnvs.add(bme);
+		// }
 
 	}
 
-	public void addBinderMethodEnv(MethodEnv method, String location, String caller, String callerType)
+	public void addBinderMethodEnv(MethodEnv method, String location, String caller,
+			String callerType)
 	{
 		method.addLocation(location);
 		method.addCaller(caller);
 		method.setCallerType(callerType);
-		
+
 		binderMethodEnvs.add(method);
-		
+
 	}
 }
