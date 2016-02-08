@@ -5,6 +5,7 @@ import hijac.tools.modelgen.circus.templates.CircusTemplateFactory;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
+import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.FrameworkEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
@@ -295,6 +296,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		System.out.println("/// AssignmentTree variable = " + node.getVariable());
 		System.out.println("/// AssignmentTree expression = " + node.getExpression());
 
+		final String nodeVariableString = node.getVariable().toString();
+		
 		if (node.getExpression() instanceof MethodInvocationTree)
 		{
 			MethodInvocationTree mit = (MethodInvocationTree) node.getExpression();
@@ -311,7 +314,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				if (node.getExpression().toString().contains("~?~"))
 				{
 					return visitMethodInvocation(mit, ctxt) + LATEX.NEW_LINE
-							+ node.getVariable().toString() + LATEX.ASSIGN
+							+ nodeVariableString + LATEX.ASSIGN
 							+ node.getExpression();
 				}
 				else
@@ -323,9 +326,23 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		}
 		else
 		{
-			if (object.getVariable(node.getVariable().toString()) == null)
+			if (object.getVariable(nodeVariableString) == null )
 			{
-				return "this~.~" + node.getVariable().toString() + LATEX.ASSIGN
+				if(object instanceof ParadigmEnv)
+				{
+					ParadigmEnv p = (ParadigmEnv) object;
+					
+					ClassEnv cE = p.getClassEnv();
+					System.out.println(cE);
+					
+					if(cE.getVariable(nodeVariableString) != null)
+					{
+						return  nodeVariableString + LATEX.ASSIGN
+								+ node.getExpression();
+					}
+					
+				}
+				return "this~.~" + nodeVariableString + LATEX.ASSIGN
 						+ node.getExpression();
 			}
 			else

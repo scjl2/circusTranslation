@@ -117,7 +117,7 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
 
 
-this~.~buffer :=update
+buffer :=update
 
 
                \circseq \\
@@ -160,7 +160,7 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
 
 
-this~.~buffer :=0
+buffer :=0
 
 
                \circseq \\

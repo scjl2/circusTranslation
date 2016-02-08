@@ -50,7 +50,7 @@ missionIds
 
 
 
-this~.~returnedMission :=true
+returnedMission :=true
 
 
                \circseq \\
