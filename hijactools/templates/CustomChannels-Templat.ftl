@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}MethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
+  \SECTION ~ ${ProcessName}MethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
 \end{zsection}
 %
 
@@ -16,8 +16,8 @@ ${param}
 \t1 \circchannel ${meth.MethodName}Ret : ${meth.LocType} <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> \cross ${meth.ReturnType} \\
 <#else>
 \t1 \circchannel ${meth.MethodName}Ret : ${meth.LocType} <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> \\
-</#if>    
-\end{circus}	
+</#if>
+\end{circus}
 %
 </#list>
 %
@@ -34,7 +34,7 @@ ${param}
 \t1 \circchannel ${meth.MethodName}Ret : ${meth.LocType}  <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> \cross ThreadID \cross ${meth.ReturnType} \\
 <#else>
 \t1 \circchannel ${meth.MethodName}Ret : ${meth.LocType}  <#if meth.ExternalAppmeth == true> \cross ${meth.CallerType} </#if> \cross ThreadID \\
-</#if>  
+</#if>
 \end{circus}
-% 
+%
 </#list>

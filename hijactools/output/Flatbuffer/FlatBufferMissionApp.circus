@@ -101,7 +101,7 @@ cleanUpRet~.~FlatBufferMissionMID~!~ret \then \\
 writeSyncMeth \circdef
 \\
 \circblockopen
-writeCall~.~FlatBufferMissionMID~?~thread
+writeCall~.~FlatBufferMissionMID~?~caller~?~thread
 ~?~update
  \then \\
 \circblockopen
@@ -117,7 +117,7 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
 
 
-buffer :=update
+this~.~buffer :=update
 
 
                \circseq \\
@@ -140,7 +140,7 @@ readSyncMeth \circdef
 \circvar ret : \num \circspot
 \\
 \circblockopen
-readCall~.~FlatBufferMissionMID~?~thread
+readCall~.~FlatBufferMissionMID~?~caller~?~thread
  \then \\
 \circblockopen
 startSyncMeth~.~FlatBufferMissionOID~.~thread \then \\
@@ -152,15 +152,14 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
                \circseq \\
 
-  \circvar out : \num \circspot out := buffer ~
-
+\circvar out : \num \circspot out := this~.~buffer
 
                \circseq \\
 
 
 
 
-buffer :=0
+this~.~buffer :=0
 
 
                \circseq \\

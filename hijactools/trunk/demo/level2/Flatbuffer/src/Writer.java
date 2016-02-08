@@ -26,7 +26,7 @@ public class Writer extends ManagedThread
 		//boolean terminationPending = fbMission.terminationPending();
 		while (!fbMission.terminationPending())
 		{
-		
+
 //				while (!fbMission.buffer.bufferEmpty("Writer"))
 //				{
 					try
@@ -40,9 +40,9 @@ public class Writer extends ManagedThread
 					}
 //				}
 
-				
+
 				i++;
-				
+
 				boolean keepWriting = false ;
 				if(i >= 5)
 				{
@@ -53,13 +53,13 @@ public class Writer extends ManagedThread
 					keepWriting = false;
 				}
 
-				
+
 				if(!keepWriting)
 				{
 					fbMission.requestTermination();
 				}
 
-				
+
 			//terminationPending = fbMission.terminationPending();
 		}
 

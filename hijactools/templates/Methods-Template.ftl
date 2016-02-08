@@ -6,7 +6,7 @@ ${meth.MethodName}Meth \circdef
 </#if>
 \\
 \circblockopen
-${meth.MethodName}Call~.~${ProcessID}
+${meth.MethodName}Call~.~${ProcessID}<#if meth.ExternalAppmeth == true> ~?~caller</#if>
 <#list meth.Parameters?keys as param>
 ~?~${param}
 </#list>
@@ -31,7 +31,7 @@ ${meth.MethodName}SyncMeth \circdef
 </#if>
 \\
 \circblockopen
-${meth.MethodName}Call~.~${ProcessID}~?~thread
+${meth.MethodName}Call~.~${ProcessID}<#if meth.ExternalAppmeth == true>~?~caller</#if>~?~thread
 <#list meth.Parameters?keys as param>
 ~?~${param}
 </#list> \then \\
