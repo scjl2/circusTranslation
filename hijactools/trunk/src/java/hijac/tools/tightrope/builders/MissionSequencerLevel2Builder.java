@@ -153,6 +153,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 					}
 					else
 					{// ADD METHOD TO MISSION ENV
+						sequencerEnv.setObjectId(sequencerEnv.getName().toString());
 						m = methodVisitor.visitMethod(o, false);
 						setMethodAccess(m, o);
 

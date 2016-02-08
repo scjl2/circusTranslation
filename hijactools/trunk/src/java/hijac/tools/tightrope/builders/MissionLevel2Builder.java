@@ -122,19 +122,17 @@ public class MissionLevel2Builder extends ParadigmBuilder
 					
 
 					if (syncMethod)
-					{
-
-						// missionEnv.addSyncMeth(mt.getName(), typeKind,
-						// returns,
-						// paramMap);
+					{	
+						final String missionName = missionEnv.getName().toString();
+						
+						missionEnv.setObjectId(missionName);
 						MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false);
-						
-						
-						
+															
 						setMethodAccess(missionMethodTree, m);
 						missionEnv.addSyncMeth(m);
 					
-						programEnv.addObjectIdName(missionEnv.getName().toString());
+						
+						programEnv.addObjectIdName(missionName);
 
 						System.out.println("/// method params =" + m.getParameters());
 					}

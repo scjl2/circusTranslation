@@ -426,7 +426,7 @@ public class ObjectEnv
 		System.out.println("Adding Sync Meth " + me.toString());
 		me.setSynchronised(true);
 		setHasSyncMeth(true);
-		this.objectID = name + hijac.tools.tightrope.utils.TightRopeString.Name.OBJ_ID;
+		
 		syncMeths.add(me);
 
 	}

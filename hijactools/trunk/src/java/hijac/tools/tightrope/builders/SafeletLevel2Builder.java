@@ -105,6 +105,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 				}
 				else if (isSyncMethod)
 				{
+					safeletEnv.setObjectId(safeletEnv.getName().toString());
 					MethodEnv m = methodVisitor.visitMethod(mt, false);
 					setMethodAccess(m, mt);
 					safeletEnv.getClassEnv().addSyncMeth(m);

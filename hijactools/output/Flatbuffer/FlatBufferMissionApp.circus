@@ -110,7 +110,7 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
       \circblockopen
 
-\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~~.~thread \then \\ waitRet~.~~.~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~FlatBufferMissionOID~.~thread \then \\ waitRet~.~FlatBufferMissionOID~.~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 
                \circseq \\
 
@@ -122,7 +122,7 @@ this~.~buffer :=update
 
                \circseq \\
 
-notify~.~~!~thread \then  \\ \Skip
+notify~.~FlatBufferMissionOID~!~thread \then  \\ \Skip
 
 
         \circblockclose
