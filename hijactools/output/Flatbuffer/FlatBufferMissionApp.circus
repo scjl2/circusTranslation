@@ -1,8 +1,8 @@
 \begin{zsection}
   \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , FlatBufferMissionMIDClass \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , FlatBufferMissionClass \\
 
-  \t1 , \\
+  \t1 , 
 ObjectChan
 , 
 

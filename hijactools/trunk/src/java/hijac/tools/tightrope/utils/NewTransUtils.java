@@ -3,6 +3,7 @@ package hijac.tools.tightrope.utils;
 import com.sun.source.tree.*;
 
 import hijac.tools.modelgen.circus.utils.TransUtils;
+import hijac.tools.tightrope.environments.ObjectEnv;
 
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
@@ -147,4 +148,7 @@ public class NewTransUtils extends TransUtils
 		// return result.toString();
 		return "";
 	}
+	
+		
+	
 }

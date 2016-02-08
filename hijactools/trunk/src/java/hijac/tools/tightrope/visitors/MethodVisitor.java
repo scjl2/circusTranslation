@@ -150,34 +150,17 @@ public class MethodVisitor
 	{
 		for (VariableTree vt : mt.getParameters())
 		{
-			if (!(vt.getType().toString().contains("String")))
-			{
-				// object.addParameter(vt.getName().toString(),
-				// NewTransUtils.encodeType(vt.getType()),
-				// NewTransUtils.encodeType(vt.getType()),
-				// (vt.getType() instanceof PrimitiveTypeTree),
-				// "FromMethVis");
-				//
-			}
-			// else
-			// {
 			VariableEnv parameter = new VariableEnv();
 
 			parameter.setName(vt.getName().toString());
 			parameter.setType(NewTransUtils.encodeType(vt.getType()));
 			parameter.setProgramType(NewTransUtils.encodeType(vt.getType()));
 
-			if (parameter.getType().endsWith("Parameters"))
+			if (! parameter.getType().endsWith("Parameters"))
 			{
-
-			}
-			else
-			{
-				// System.out.println("Adding Proc Param "
-				// + parameter.toString());
 				object.addProcParameter(parameter);
 			}
-			// }
+			
 		}
 	}
 }

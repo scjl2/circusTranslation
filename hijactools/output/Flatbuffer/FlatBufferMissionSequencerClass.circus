@@ -1,4 +1,16 @@
 
+\begin{zsection}
+  \SECTION ~ FlatBufferMissionSequencerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan   \\
+
+, 
+missionId
+, 
+
+missionIds
+
+
+\end{zsection}
+
 \begin{circus}
 \circclass FlatBufferMissionSequencerClass \circdef \circbegin
 \end{circus}
@@ -43,7 +55,7 @@ this~.~returnedMission :=true
 
                \circseq \\
 
-  ret := FlatBufferMission
+  ret := FlatBufferMissionMID
 
 
         \circblockclose
@@ -81,5 +93,3 @@ this~.~returnedMission :=true
 \begin{circus}
   \circend
 \end{circus}
-
-

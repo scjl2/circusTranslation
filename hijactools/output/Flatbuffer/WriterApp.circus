@@ -1,7 +1,7 @@
 \begin{zsection}
   \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
 
-  \t1 , \\
+  \t1 , 
 MissionMethChan
 , 
 

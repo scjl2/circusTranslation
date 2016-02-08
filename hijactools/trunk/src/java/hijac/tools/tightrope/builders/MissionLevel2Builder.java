@@ -280,5 +280,12 @@ public class MissionLevel2Builder extends ParadigmBuilder
 		{
 			m.setAccess(MethodEnv.AccessMod.PROTECTED);
 		}
+	}
+
+	@Override
+	public void addParents()
+	{
+		// TODO Auto-generated method stub
+		
 	}	
 }

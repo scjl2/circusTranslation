@@ -1,4 +1,4 @@
-<#if Parents?has_content>, \\
+<#if Parents?has_content>, 
 <#list Parents as parent>
 ${parent}
 <#sep>, </#sep>
@@ -6,5 +6,5 @@ ${parent}
 \\
 </#if>
 
-</#list> 
+</#list>
 </#if>

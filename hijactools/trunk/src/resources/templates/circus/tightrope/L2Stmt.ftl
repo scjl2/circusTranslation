@@ -62,8 +62,7 @@
 <#list statements as statement>
   ${TRANS(statement, CTXT)}<#lt/>
 <#if statement_has_next>
-  \circseq
-  \\
+  \circseq \\  
 </#if>
 </#list>
 <#else>

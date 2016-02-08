@@ -37,6 +37,8 @@ public abstract class ParadigmBuilder
 	}
 
 	public abstract ArrayList<Name> build(TypeElement paradigmTypeElement);
+	
+	public abstract void addParents(); 
 
 	protected HashMap<Name, Tree> getVariables(TypeElement arg0, ObjectEnv objectEnv)
 	{

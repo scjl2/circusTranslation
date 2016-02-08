@@ -5,6 +5,7 @@ import hijac.tools.modelgen.circus.templates.CircusTemplateFactory;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
+import hijac.tools.tightrope.environments.FrameworkEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
@@ -13,11 +14,12 @@ import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
+import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.NewTransUtils;
-import hijac.tools.tightrope.utils.TightRopeString.LATEX;
+import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.utils.TightRopeString.*;
 
 
@@ -309,7 +311,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				if (node.getExpression().toString().contains("~?~"))
 				{
 					return visitMethodInvocation(mit, ctxt) + LATEX.NEW_LINE
-							+ node.getVariable().toString() + " :="
+							+ node.getVariable().toString() + LATEX.ASSIGN
 							+ node.getExpression();
 				}
 				else
@@ -323,7 +325,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			if (object.getVariable(node.getVariable().toString()) == null)
 			{
-				return "this~.~" + node.getVariable().toString() + " :="
+				return "this~.~" + node.getVariable().toString() + LATEX.ASSIGN
 						+ node.getExpression();
 			}
 			else
@@ -422,8 +424,24 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	@Override
 	public String visitIdentifier(IdentifierTree node, MethodVisitorContext ctxt)
 	{
-
-		return callExprMacro(node, ctxt, "Identifier", node.getName());
+		Name nodeName = node.getName();
+	
+		
+		FrameworkEnv framework = TightRope.getProgramEnv().getFrameworkEnv();
+		
+		ObjectEnv o = framework.getObjectEnv(nodeName.toString());
+		String id = "";
+		if (o!=null)
+		{
+			id = o.getId();
+			System.out.println(id);
+			assert(false);
+			return callExprMacro(node, ctxt, "Identifier", id);
+		}
+		
+		return callExprMacro(node, ctxt, "Identifier", nodeName);
+		
+		
 	}
 
 	@Override
@@ -444,7 +462,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	public String visitLiteral(LiteralTree node, MethodVisitorContext ctxt)
 	{
 		/* Should we do the translation in a template macro here too? */
-		// System.out.println("///Literal ");
+
 		// This is supposed to cater for null id values, but is a bit hacky...
 
 		if (methodEnv != null)
@@ -1161,13 +1179,17 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				if (elem.getSimpleName().contentEquals(n))
 				{
-					if (elem.getSuperclass().toString().contains("Mission"))
+					String superClass = elem.getSuperclass().toString();
+					
+					if (superClass.contains("Mission"))
 					{
 						// if the thing we are returning is a mission then get
 						// its ID...somehow
 						// so far
-						return n.toString();
+						return n.toString() + TightRopeString.Name.MID;
 					}
+					
+//					if (superClass.contains(""))
 
 				}
 			}

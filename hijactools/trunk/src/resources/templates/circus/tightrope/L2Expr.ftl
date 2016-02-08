@@ -72,7 +72,7 @@
 
 <#-- Identifier Tree -->
 
-<#-- Is this identifier wihtin an expression? -->
+<#-- Is this identifier within an expression? -->
 
 <#macro Identifier name>
 <@compact>

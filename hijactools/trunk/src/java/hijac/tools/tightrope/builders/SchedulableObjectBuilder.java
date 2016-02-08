@@ -112,4 +112,11 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 		return null;
 	}
 
+	@Override
+	public void addParents()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 }

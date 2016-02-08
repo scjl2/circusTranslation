@@ -167,4 +167,9 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 			m.setAccess(MethodEnv.AccessMod.PROTECTED);
 		}
 	}
+
+	@Override
+	public void addParents()
+	{		
+	}
 }

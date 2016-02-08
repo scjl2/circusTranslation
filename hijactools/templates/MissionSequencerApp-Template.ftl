@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ ${ProcessName}App ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId  <#include "CommonImports-Template.ftl">
+  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  <#include "CommonImports-Template.ftl">
   \t1 <#include "Parent-Template.ftl">
 \end{zsection}
 %\begin{circus}

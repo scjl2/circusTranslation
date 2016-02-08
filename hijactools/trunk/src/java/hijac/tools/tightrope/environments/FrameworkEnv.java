@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString.LATEX;
+
 import java.util.ArrayList;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -21,32 +23,6 @@ public class FrameworkEnv
 
 	private TierEnv currentTier;
 	private ClusterEnv currentCluster;
-
-	private String toChannelSet(Set<String> set)
-	{
-		String safeletSyncString = "";
-		if (set.isEmpty())
-		{
-			safeletSyncString = "\\interleave";
-		}
-		else
-		{
-			safeletSyncString = "\\lpar \\lchanset ";
-			Iterator<String> safeletSyncIter = set.iterator();
-
-			while (safeletSyncIter.hasNext())
-			{
-				String s = safeletSyncIter.next();
-				safeletSyncString += s;
-				if (safeletSyncIter.hasNext())
-				{
-					safeletSyncString += ", ";
-				}
-				safeletSyncString += " \\rchanset \\rpar";
-			}
-		}
-		return safeletSyncString;
-	}
 
 	class ControlTierEnv
 	{
@@ -326,7 +302,6 @@ public class FrameworkEnv
 
 			return clusterList;
 		}
-
 	}
 
 	private class ClusterEnv
@@ -1081,6 +1056,66 @@ public class FrameworkEnv
 			}
 		}
 		return apehEnvs;
+	}
+
+	/**
+	 * Gets the ObjectEnv with the given name, or <code>null</code> if it does not exist.
+	 * 
+	 * @param nameOfObject The name of the ObjectEnv you're searching for
+	 * @return The ObjectEnv or <code>null</code>
+	 */
+	public ObjectEnv getObjectEnv(String nameOfObject)
+	{
+		for(ObjectEnv o : getAllObjectEnvs())
+		{
+			if(o.getName().equals(nameOfObject))
+			{
+				return o;
+			}
+		}
+		return null;
+	}
+
+	private ArrayList<ObjectEnv> getAllObjectEnvs()
+	{
+		ArrayList<ObjectEnv> objectEnvs = new ArrayList<ObjectEnv>();
+		
+		objectEnvs.add(controlTier.getSafeletEnv());
+		objectEnvs.add(controlTier.getTopLevelMissionSequencerEnv());
+		objectEnvs.addAll(getMissions());
+		objectEnvs.addAll(getManagedThreads());
+		objectEnvs.addAll(getAperiodicEventHandlers());
+		objectEnvs.addAll(getNestedMissionsequencers());
+		objectEnvs.addAll(getPeriodicEventHandlers());
+		objectEnvs.addAll(getNestedMissionsequencers());
+		
+		return objectEnvs;
+	}
+	
+	private String toChannelSet(Set<String> set)
+	{
+		String safeletSyncString = "";
+		if (set.isEmpty())
+		{
+			safeletSyncString = LATEX.INTERLEAVE;
+		}
+		else
+		{
+			safeletSyncString = LATEX.LPAR +LATEX.LCHANSET;
+			Iterator<String> safeletSyncIter = set.iterator();
+	
+			while (safeletSyncIter.hasNext())
+			{
+				String s = safeletSyncIter.next();
+				safeletSyncString += s;
+				if (safeletSyncIter.hasNext())
+				{
+					safeletSyncString += ", ";
+				}
+				safeletSyncString += LATEX.RCHANSET+LATEX.RPAR;
+			}
+		}
+		return safeletSyncString;
 	}
 
 	private String outputMethods(String output, List<MethodEnv> methods)

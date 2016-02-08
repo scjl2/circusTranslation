@@ -1,6 +1,11 @@
 
+\begin{zsection}
+  \SECTION ~ ${ProcessName}Class ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  <#include "CommonImports-Template.ftl">
+ <#include "Parent-Template.ftl">
+\end{zsection}
+
 \begin{circus}
-\circclass ${ProcessID}Class \circdef \circbegin
+\circclass ${ProcessName}Class \circdef \circbegin
 \end{circus}
 
 <#include "Class-Variables-Template.ftl">
@@ -15,5 +20,3 @@
 \begin{circus}
   \circend
 \end{circus}
-
-

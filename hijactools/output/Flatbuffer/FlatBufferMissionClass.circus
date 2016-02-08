@@ -1,4 +1,9 @@
 
+\begin{zsection}
+  \SECTION ~ FlatBufferMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan   \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass FlatBufferMissionClass \circdef \circbegin
 \end{circus}
@@ -78,5 +83,3 @@ ret := \false
 \begin{circus}
   \circend
 \end{circus}
-
-
