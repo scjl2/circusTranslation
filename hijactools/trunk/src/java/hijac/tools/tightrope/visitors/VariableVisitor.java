@@ -4,7 +4,7 @@ import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
-import hijac.tools.tightrope.utils.NewTransUtils;
+import hijac.tools.tightrope.utils.TightRopeTransUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -649,19 +649,19 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
 			{
 				System.out.println("var Visitor Primitive Type");
-				classEnv.addVariable(NewTransUtils.encodeName(varName),
-						NewTransUtils.encodeType(varType), init, true);
+				classEnv.addVariable(TightRopeTransUtils.encodeName(varName),
+						TightRopeTransUtils.encodeType(varType), init, true);
 			}
 			else if ((!(objectEnv.getName().toString().contains(varType.toString()))))
 			{
 				System.out.println("var Visitor var type not this Object'ss name");
 				{
 					System.out.println("*/*/ New Parameter for " + classEnv.getName()
-							+ " with name= " + NewTransUtils.encodeName(varName)
+							+ " with name= " + TightRopeTransUtils.encodeName(varName)
 							+ " type = " + varType.toString() + " programType = "
 							+ varType.toString() + " and primitve = " + false);
 
-					String encodedName = NewTransUtils.encodeName(varName);
+					String encodedName = TightRopeTransUtils.encodeName(varName);
 					String varTypeString = varType.toString();
 
 					if (GENERIC_PARADIGM_TYPES.contains(varTypeString))

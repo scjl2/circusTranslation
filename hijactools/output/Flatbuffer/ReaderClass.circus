@@ -1,6 +1,6 @@
 
 \begin{zsection}
-  \SECTION ~ ReaderClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan   \\
+  \SECTION ~ ReaderClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
 
 \end{zsection}
 

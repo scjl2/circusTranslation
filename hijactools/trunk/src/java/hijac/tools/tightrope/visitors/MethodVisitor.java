@@ -9,7 +9,7 @@ import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.generators.NewSCJApplication;
-import hijac.tools.tightrope.utils.NewTransUtils;
+import hijac.tools.tightrope.utils.TightRopeTransUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,7 +92,7 @@ public class MethodVisitor
 				if (!(vt.getType().toString().contains("String")))
 				{
 					parameters.put(vt.getName().toString(),
-							NewTransUtils.encodeType(vt.getType()));
+							TightRopeTransUtils.encodeType(vt.getType()));
 				}
 			}
 		}
@@ -105,12 +105,12 @@ public class MethodVisitor
 		{
 			body = mt.accept(franksMethodVisitor, new MethodVisitorContext());
 
-			m = new MethodEnv(methodName, NewTransUtils.encodeType(returnType),
+			m = new MethodEnv(methodName, TightRopeTransUtils.encodeType(returnType),
 					returnsValues, parameters, body);
 		}
 		else
 		{
-			m = new MethodEnv(methodName, NewTransUtils.encodeType(returnType),
+			m = new MethodEnv(methodName, TightRopeTransUtils.encodeType(returnType),
 					returnsValues, parameters, "");
 
 			franksMethodVisitor = new MethodBodyVisitor(application, object, m);
@@ -153,8 +153,8 @@ public class MethodVisitor
 			VariableEnv parameter = new VariableEnv();
 
 			parameter.setName(vt.getName().toString());
-			parameter.setType(NewTransUtils.encodeType(vt.getType()));
-			parameter.setProgramType(NewTransUtils.encodeType(vt.getType()));
+			parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
+			parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
 
 			if (! parameter.getType().endsWith("Parameters"))
 			{

@@ -1,4 +1,6 @@
-
+\begin{zsection}
+  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
+\end{zsection}
 
 <#list MethodCallBindings as mcb>
 \begin{circus}

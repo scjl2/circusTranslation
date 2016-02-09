@@ -1,6 +1,6 @@
 
 \begin{zsection}
-  \SECTION ~ FlatBufferMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan   \\
+  \SECTION ~ FlatBufferMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
 
 \end{zsection}
 
@@ -33,15 +33,14 @@
 
       \circblockopen
 
-
-
+      
 
   \circif ~ (buffer = 0) ~ \circthen ~
   \\
   \t1
 ret := \true
   \\
-  \circelse ~ (buffer = 0) ~ \circthen ~
+  \circelse ~ \lnot (buffer = 0) ~ \circthen ~
   \\
   \t1
 ret := \false
@@ -62,8 +61,7 @@ ret := \false
 
       \circblockopen
 
-
-
+      
 
   ret := \false
 

@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
+  \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  , MethodCallBindingChannels  \\
 
   \t1 , 
 MissionMethChan
@@ -33,11 +33,10 @@ Run \circdef \\
 	
       \circblockopen
 
+      
 
+\circblockopen \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission\then \\ terminationPendingRet~.~fbMission~?~terminationPending\then \\ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen \circvar result : \num \circspot result :=~-1 \circseq \\ \circblockopen binder\_readCall~.~fbMission~.~ReaderSID~.~ReaderTID\then \\ binder\_readRet~.~fbMission~.~ReaderSID~.~ReaderTID~?~read\then \\ \circblockclose \circseq \\ \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 
-
-            \circblockopen \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission~.~\then \\ terminationPendingRet~.~fbMission~.~~?~terminationPending\then \\ \ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen \circvar result : \num \circspot result :=~999 \circseq \\ \circblockopen binder\_readCall~.~fbMission~.~~.~ReaderTID\then \\ binder\_readRet~.~fbMission~.~~.~ReaderTID~?~read\then \\ \Skip \circblockclose \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
-\Skip
         \circblockclose
 
  \circseq \\

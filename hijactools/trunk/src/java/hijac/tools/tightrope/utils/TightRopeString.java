@@ -30,6 +30,18 @@ public final class TightRopeString
 		public static final String Thread_ID = "T"+ID_STR;
 		public static final String MISSION_IDS = "MissionIds";
 		public static final String MISSION_ID = "MissionId";
+		public static final String NULL_S_ID = "nullSchedulableId";
+		public static final String NULL_M_ID = "nullMissionId";
+		public static final String BINDER = "binder\\_";
+		
+	}
+	
+	public static class Location
+	{
+
+		public static final String TYPE_TEMPLATE = "L2Type.ftl";
+		public static final String EXPR_TEMPLATE = "L2Expr.ftl";
+		public static final String STMT_TEMPLATE = "L2Stmt.ftl";
 		
 	}
 

@@ -9,59 +9,38 @@ import devices.Console;
 public class Writer extends ManagedThread
 {
 	private final FlatBufferMission fbMission;
-	private int i = 1;
+	// private int i = 1;
 
 	public Writer(PriorityParameters priority, StorageParameters storage,
 			FlatBufferMission fbMission)
 	{
 		super(priority, storage);
-
 		this.fbMission = fbMission;
 	}
 
 	public void run()
 	{
 		Console.println("Writer!");
+		//Here, not as feild, becasue it goes to the class otherwise.
+		int i = 1;
 
-		//boolean terminationPending = fbMission.terminationPending();
 		while (!fbMission.terminationPending())
 		{
-
-//				while (!fbMission.buffer.bufferEmpty("Writer"))
-//				{
 					try
 					{
 						fbMission.write(i);
 					}
 					catch (InterruptedException e)
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-//				}
-
 
 				i++;
 
-				boolean keepWriting = false ;
 				if(i >= 5)
-				{
-					keepWriting = true ;
-				}
-				else
-				{
-					keepWriting = false;
-				}
-
-
-				if(!keepWriting)
 				{
 					fbMission.requestTermination();
 				}
-
-
-			//terminationPending = fbMission.terminationPending();
 		}
-
 	}
 }

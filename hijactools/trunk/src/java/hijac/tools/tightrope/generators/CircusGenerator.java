@@ -276,7 +276,7 @@ public class CircusGenerator
 		System.out.println("+++ Translating Method Call Binder +++");	
 		translateCommon(root, NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL, NETWORK_METHOD_CALL_BINDER_TEX);
 		
-		translateCommon(root, "MethodCallBindingChannels.ftl", "MethodCallBindingChannels.tex");
+		translateCommon(root, "MethodCallBindingChannels.ftl", "MethodCallBindingChannels.circus");
 		
 		System.out.println("+++ Translating Locking +++");	
 		translateCommon(root, NETWORK_LOCKING_TEMPLATE_FTL, NETWORK_LOCKING_TEX);

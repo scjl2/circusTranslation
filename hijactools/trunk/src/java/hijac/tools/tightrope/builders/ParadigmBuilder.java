@@ -4,7 +4,7 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
-import hijac.tools.tightrope.utils.NewTransUtils;
+import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
 import java.util.ArrayList;
@@ -110,8 +110,8 @@ public abstract class ParadigmBuilder
 			VariableEnv parameter = new VariableEnv();
 
 			parameter.setName(vt.getName().toString());
-			parameter.setType(NewTransUtils.encodeType(vt.getType()));
-			parameter.setProgramType(NewTransUtils.encodeType(vt.getType()));
+			parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
+			parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
 
 			if (parameter.getType().endsWith("Parameters")
 					|| parameter.getType().equals("String"))

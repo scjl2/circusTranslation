@@ -65,19 +65,7 @@
         <#assign stmtTrans=TRANS(statement, CTXT)>
 
         <#if stmtTrans="">
-            <#if statement_has_next>
-
-            <#else>
-                \Skip
-            </#if>
-
-        <#elseif stmtTrans?contains("~?~")>
-            ${stmtTrans}
-            <#if statement_has_next>
-
-            <#else>
-                 \Skip<#lt/>
-            </#if>
+      
         <#else>
             ${stmtTrans}<#lt/>
 
@@ -150,7 +138,7 @@
   \t1
   ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
-  \circelse ~ ${TRANS(condition, CTXT.enterExpression()) } ~ \circthen ~
+  \circelse ~ \lnot ${TRANS(condition, CTXT.enterExpression()) } ~ \circthen ~
   \\
   \t1
   ${TRANS(elsestatement, CTXT)}<#lt/>
@@ -162,7 +150,7 @@
   \t1
   ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
-  \circelse ~ ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
+  \circelse ~ \lnot ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
   \\
   \circfi \circseq \\
 </#if>
@@ -376,18 +364,14 @@
 <@compact>
 
   \circblockopen
-  \circmu X \circspot
-  \\
+  \circmu X \circspot  \\
   \circblockopen
   ${condition}
-  \circif ~ (loopVar = \true) ~ \circthen ~
-  \\
+  \circif ~ (loopVar = \true) ~ \circthen \\
   \t1
 
-  ${TRANS(statement, CTXT)} \circseq X
-  \\
-  \circelse ~ (loopVar = \false) \circthen \Skip
-  \\
+  ${TRANS(statement, CTXT)} \circseq X \\
+  \circelse ~ (loopVar = \false) \circthen \Skip \\
   \circfi
   \circblockclose
   \circblockclose

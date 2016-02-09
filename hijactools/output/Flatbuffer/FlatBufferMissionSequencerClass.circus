@@ -1,6 +1,6 @@
 
 \begin{zsection}
-  \SECTION ~ FlatBufferMissionSequencerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan   \\
+  \SECTION ~ FlatBufferMissionSequencerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
 
 , 
 MissionId
@@ -38,8 +38,7 @@ MissionIds
 
       \circblockopen
 
-
-
+      
 
   \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
   \\
@@ -47,8 +46,7 @@ MissionIds
 
       \circblockopen
 
-
-
+      
 
 this~.~returnedMission :=\true
 
@@ -62,13 +60,13 @@ this~.~returnedMission :=\true
 
 
   \\
-  \circelse ~ (\lnot returnedMission = \true) ~ \circthen ~
+  \circelse ~ \lnot (\lnot returnedMission = \true) ~ \circthen ~
   \\
   \t1
 
       \circblockopen
 
-  ret := nullMId
+  ret := nullMissionId
 
 
         \circblockclose

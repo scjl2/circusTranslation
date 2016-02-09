@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , FlatBufferMissionClass \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , MethodCallBindingChannels , FlatBufferMissionClass \\
 
   \t1 , 
 ObjectChan
@@ -110,12 +110,11 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
       \circblockopen
 
-\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~FlatBufferMissionOID~.~thread \then \\ waitRet~.~FlatBufferMissionOID~.~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen waitCall~.~FlatBufferMissionOID~.~thread \then \\ waitRet~.~FlatBufferMissionOID~.~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 
                \circseq \\
 
-
-
+      
 
 this~.~buffer :=update
 
@@ -148,7 +147,7 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
       \circblockopen
 
-\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~bufferEmpty()\circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~FlatBufferMissionOID~.~thread \then \\ waitRet~.~FlatBufferMissionOID~.~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~bufferEmpty()\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen waitCall~.~FlatBufferMissionOID~.~thread \then \\ waitRet~.~FlatBufferMissionOID~.~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 
                \circseq \\
 
@@ -156,8 +155,7 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
                \circseq \\
 
-
-
+      
 
 this~.~buffer :=0
 
