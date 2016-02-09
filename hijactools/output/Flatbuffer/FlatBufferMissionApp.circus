@@ -12,7 +12,7 @@ ObjectIds
 ThreadIds
 
 
-, FlatBufferMissionMIDMethChan
+, FlatBufferMissionMethChan
 \end{zsection}
 %\begin{circus}
 %\circchannelset FlatBufferMissionAppSync == \\
@@ -130,7 +130,7 @@ notify~.~FlatBufferMissionOID~!~thread \then  \\ \Skip
  \circseq  \\
 endSyncMeth~.~FlatBufferMissionOID~.~thread \then  \\
 
-writeRet~.~FlatBufferMissionMID~.~thread \then \\
+writeRet~.~FlatBufferMissionMID~.~caller~.~thread \then \\
 \Skip
 \circblockclose
 \circblockclose
@@ -177,7 +177,7 @@ notify~.~FlatBufferMissionOID~!~thread \then  \\ \Skip
  \circseq  \\
 endSyncMeth~.~FlatBufferMissionOID~.~thread \then  \\
 
-readRet~.~FlatBufferMissionMID~.~thread~!~ret \then \\
+readRet~.~FlatBufferMissionMID~.~caller~.~thread~!~ret \then \\
 \Skip
 \circblockclose
 \circblockclose

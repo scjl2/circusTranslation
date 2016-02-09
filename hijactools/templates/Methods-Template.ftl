@@ -14,9 +14,9 @@ ${meth.MethodName}Call~.~${ProcessID}<#if meth.ExternalAppmeth == true> ~?~calle
 ${meth.Body}  \circseq  \\
 
 <#if meth.ReturnType != 'null'>
-${meth.MethodName}Ret~.~${ProcessID}~!~ret \then \\
+${meth.MethodName}Ret~.~${ProcessID}<#if meth.ExternalAppmeth == true>~.~caller</#if>~!~ret \then \\
 <#else>
-${meth.MethodName}Ret~.~${ProcessID} \then \\
+${meth.MethodName}Ret~.~${ProcessID}<#if meth.ExternalAppmeth == true>~.~caller</#if> \then \\
 </#if>
 \Skip
 \circblockclose
@@ -42,9 +42,9 @@ ${meth.Body} \circseq  \\
 endSyncMeth~.~${ProcObjectID}~.~thread \then  \\
 
 <#if meth.ReturnType != 'null'>
-${meth.MethodName}Ret~.~${ProcessID}~.~thread~!~ret \then \\
+${meth.MethodName}Ret~.~${ProcessID}<#if meth.ExternalAppmeth == true>~.~caller</#if>~.~thread~!~ret \then \\
 <#else>
-${meth.MethodName}Ret~.~${ProcessID}~.~thread \then \\
+${meth.MethodName}Ret~.~${ProcessID}<#if meth.ExternalAppmeth == true>~.~caller</#if>~.~thread \then \\
 </#if>
 \Skip
 \circblockclose

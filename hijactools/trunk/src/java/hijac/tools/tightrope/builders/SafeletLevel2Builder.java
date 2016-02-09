@@ -78,7 +78,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 						.contains(Modifier.SYNCHRONIZED);
 				final boolean notIgnoredMethod = !(isGetSequencerMethod
 						|| mt.getName().contentEquals("<init>") || mt.getName()
-						.contentEquals("getLevel"));
+						.contentEquals("getLevel") || mt.getName().contentEquals("immortalMemorySize"));
 
 				if (returnType instanceof PrimitiveTypeTree)
 				{

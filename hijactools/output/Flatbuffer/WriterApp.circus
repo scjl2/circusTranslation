@@ -18,9 +18,9 @@ ThreadIds
 \end{zsection}
 %
 \begin{circus}
-\circprocess WriterApp \circdef \\ \qquad
+\circprocess WriterApp \circdef \\ \t1
   fbMission : MissionID
- 
+
 \circspot
  \circbegin
 \end{circus}

@@ -23,7 +23,7 @@ import com.sun.source.tree.VariableTree;
 
 public abstract class ParadigmBuilder
 {
-	protected ProgramEnv programEnv;
+	protected static ProgramEnv programEnv;
 	protected static SCJAnalysis analysis;
 	protected EnvironmentBuilder environmentBuilder;
 	public enum IDType {MissionID,SchedulableID};

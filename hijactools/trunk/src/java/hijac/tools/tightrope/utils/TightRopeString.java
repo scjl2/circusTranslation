@@ -28,6 +28,8 @@ public final class TightRopeString
 		public static final String SID = "S"+ID_STR;
 		public static final String OBJ_ID = "O"+ID_STR;
 		public static final String Thread_ID = "T"+ID_STR;
+		public static final String MISSION_IDS = "MissionIds";
+		public static final String MISSION_ID = "MissionId";
 		
 	}
 

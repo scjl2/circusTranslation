@@ -7,11 +7,11 @@
 \end{zed}
 %
 \begin{axdef}
-	SafeletThreadId:ThreadID
+	SafeletTID:ThreadID
 \end{axdef}
 %
 \begin{axdef}
-	nullThreadId : ThreadID
+	nullTID : ThreadID
 \end{axdef}
 %
 \begin{zed}
@@ -26,11 +26,11 @@
 ThreadMap == ThreadID \pfun \nat_1
 \end{zed}
 %
-\begin{zed} 
+\begin{zed}
 ExceptionType ::= interruptedException | illegalMonitorStateException | illegalArgumentException | \\ \t1  illegalThreadStateException | illegalStateException | ceilingViolationException
 \end{zed}
 %
-\begin{zed} 
+\begin{zed}
 maxNanos == 999999
 \end{zed}
 %

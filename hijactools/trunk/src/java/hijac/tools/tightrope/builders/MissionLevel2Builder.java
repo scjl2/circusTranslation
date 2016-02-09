@@ -28,14 +28,14 @@ import com.sun.source.util.Trees;
 public class MissionLevel2Builder extends ParadigmBuilder
 {
 	private static SCJAnalysis analysis;
-	private static RegistersVisitor registersVisitor;
+//	private static RegistersVisitor registersVisitor;
 	private static Trees trees;
 
 	private MissionEnv missionEnv;
 	private ArrayList<Name> schedulables;
 	private ProgramEnv programEnv;
 
-	private MethodVisitor methodVisitor;
+//	private MethodVisitor methodVisitor;
 
 	public MissionLevel2Builder(ProgramEnv programEnv, MissionEnv missionEnv,
 			SCJAnalysis analysis, EnvironmentBuilder environmentBuilder)
@@ -50,8 +50,8 @@ public class MissionLevel2Builder extends ParadigmBuilder
 		analysis.getTypeElements();
 
 		schedulables = new ArrayList<Name>();
-		registersVisitor = new RegistersVisitor(missionEnv, analysis);
-		methodVisitor = new MethodVisitor(analysis, missionEnv, IDType.MissionID);
+//		registersVisitor = new RegistersVisitor(missionEnv, analysis);
+//		methodVisitor = new MethodVisitor(analysis, missionEnv, IDType.MissionID);
 	}
 
 	@SuppressWarnings("unchecked")

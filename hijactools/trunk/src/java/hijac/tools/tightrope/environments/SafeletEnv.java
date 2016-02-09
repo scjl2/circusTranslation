@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -51,7 +53,7 @@ public class SafeletEnv extends ParadigmEnv
 
 	public void addTopLevelMissionSequencer(Name name)
 	{
-		tlmsNames.add(name+ID);
+		tlmsNames.add(name+TightRopeString.Name.SID);
 	}
 
 }

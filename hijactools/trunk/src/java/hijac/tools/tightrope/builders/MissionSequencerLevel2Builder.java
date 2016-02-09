@@ -29,8 +29,6 @@ import com.sun.source.util.Trees;
 
 public class MissionSequencerLevel2Builder extends ParadigmBuilder
 {
-	ProgramEnv programEnv;
-	SCJAnalysis analysis;
 
 	private Trees trees;
 	private ReturnVisitor returnVisitor;
@@ -44,8 +42,8 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 	{
 		super(analysis, programEnv, environmentBuilder);
 
-		this.analysis = analysis;
-		this.programEnv = programEnv;
+		ParadigmBuilder.analysis = analysis;
+		ParadigmBuilder.programEnv = programEnv;
 		this.sequencerEnv = sequencerEnv;
 
 		trees = analysis.TREES;
@@ -199,7 +197,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 	public void addParents()
 	{
 		ClassEnv msClassEnv = sequencerEnv.getClassEnv();
-		msClassEnv.addParent("missionId");
-		msClassEnv.addParent("missionIds");
+		msClassEnv.addParent(hijac.tools.tightrope.utils.TightRopeString.Name.MISSION_ID);
+		msClassEnv.addParent(hijac.tools.tightrope.utils.TightRopeString.Name.MISSION_IDS);
 	}
 }
