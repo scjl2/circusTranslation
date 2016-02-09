@@ -1,0 +1,69 @@
+\begin{zsection}
+  \SECTION ~ topSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \t1 MissionId, MissionIds, SchedulableId  , topSequencerClass \\
+
+  \t1 
+\end{zsection}
+%\begin{circus}
+%\circchannelset topSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset topSequencerAppChanSet == topSequencerAppSync
+%\end{circus}
+
+\begin{circus}
+\circprocess topSequencerApp \circdef \\ \qquad
+  name : String
+ 
+\circspot
+ \circbegin\\ 
+\end{circus}
+   
+\begin{schema}{State}
+  this : \circreftype topSequencerClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew topSequencerClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+GetNextMission \circdef \circvar ret : MissionID \circspot \\
+\circblockopen
+    getNextMissionCall~.~topSequencer \then \\
+	ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~topSequencer~!~ret  \then \\
+\Skip
+\circblockclose	
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+%
+%
+%
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  %\circhide MissionSequencerAppStateSync
+\circinterrupt (end\_sequencer\_app~.~topSequencer \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

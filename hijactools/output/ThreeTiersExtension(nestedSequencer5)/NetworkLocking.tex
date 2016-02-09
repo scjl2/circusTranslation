@@ -1,0 +1,65 @@
+%%%%%%%%%%%%%%%%%%THREADS
+%
+\begin{circus}
+\circprocess Threads \circdef  \\
+\circblockopen
+ThreadFW(MT2ThreadID, ) \\
+\interleave \\
+ThreadFW(MT1ThreadID, ) \\
+\interleave \\
+ThreadFW(BottomMissionSequencerBThreadID, ) \\
+\interleave \\
+ThreadFW(PEHThreadID, ) \\
+\interleave \\
+ThreadFW(APEHThreadID, ) \\
+\interleave \\
+ThreadFW(BottomMissionSequencerAThreadID, ) \\
+\interleave \\
+ThreadFW(MidMissionSequencerThreadID, ) \\
+\interleave \\
+ThreadFW(OSEHThreadID, ) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%OBJECTS
+%
+\begin{circus}
+\circprocess Objects \circdef \\
+\circblockopen
+ObjectFW(MyAppObjectID) \\
+\interleave \\
+ObjectFW(TopMissionObjectID) \\
+\interleave \\
+ObjectFW(MT1ObjectID) \\
+\interleave \\
+ObjectFW(MidMissionSequencerObjectID) \\
+\interleave \\
+ObjectFW(MidMissionAObjectID) \\
+\interleave \\
+ObjectFW(BottomMissionSequencerAObjectID) \\
+\interleave \\
+ObjectFW(BottomMissionAObjectID) \\
+\interleave \\
+ObjectFW(OSEHObjectID) \\
+\interleave \\
+ObjectFW(MT2ObjectID) \\
+\interleave \\
+ObjectFW(MidMissionBObjectID) \\
+\interleave \\
+ObjectFW(BottomMissionSequencerBObjectID) \\
+\interleave \\
+ObjectFW(BottomMissionBObjectID) \\
+\interleave \\
+ObjectFW(APEHObjectID) \\
+\interleave \\
+ObjectFW(PEHObjectID) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%LOCKING
+%
+\begin{circus}
+\circprocess Locking \circdef Threads \lpar ThreadSync \rpar Objects
+\end{circus}

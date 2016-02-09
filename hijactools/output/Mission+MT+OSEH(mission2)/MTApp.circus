@@ -1,0 +1,62 @@
+\begin{zsection}
+  \SECTION ~ MTApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
+
+  \t1 , \\
+MissionAMethChan
+
+
+
+\end{zsection}
+%
+\begin{circus}
+\circprocess MTApp \circdef \\ \qquad
+  controllingMission : MissionID
+ 
+\circspot
+ \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~MT \then \\
+	
+      \circblockopen
+
+
+
+
+binder\_systemActionCall~.~controllingMission~.~MT\then \ \ binder\_systemActionRet~.~controllingMission~.~MT\then \ \ \Skip
+
+
+        \circblockclose
+
+ \circseq \\
+	runRet~.~MT \then \\
+	\Skip
+\circblockclose
+\end{circusaction}	
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Run \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_managedThread\_app~.~MT \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,17 @@
+\begin{zsection}
+  \SECTION ~ ThreadIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	PEHThreadID : ThreadID \\
+	APEHThreadID : ThreadID \\
+
+\where
+  distinct \langle SafeletThreadId,
+  nullThreadId, \\
+	PEHThreadID
+	,
+	APEHThreadID
+  \rangle
+\end{axdef}

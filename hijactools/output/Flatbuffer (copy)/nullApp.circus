@@ -1,0 +1,65 @@
+\begin{zsection}
+  \SECTION ~ App ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \t1 MissionId, MissionIds, SchedulableId  , Class \\
+
+  \t1 
+\end{zsection}
+%\begin{circus}
+%\circchannelset AppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset AppChanSet == AppSync
+%\end{circus}
+
+\begin{circus}
+\circprocess App \circdef  \circbegin\\ 
+\end{circus}
+   
+\begin{schema}{State}
+  this : \circreftype FlatBufferMissionSequencerClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew FlatBufferMissionSequencerClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+GetNextMission \circdef \circvar ret : MissionID \circspot \\
+\circblockopen
+    getNextMissionCall~.~ \then \\
+	ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~~!~ret  \then \\
+\Skip
+\circblockclose	
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+%
+%
+%
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  %\circhide MissionSequencerAppStateSync
+\circinterrupt (end\_sequencer\_app~.~ \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

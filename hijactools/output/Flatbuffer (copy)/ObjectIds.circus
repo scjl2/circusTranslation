@@ -1,0 +1,14 @@
+\begin{zsection}
+  \SECTION ~ ObjectIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	FlatBufferMissionOID : ObjectID \\
+ 
+\where
+  distinct \langle 
+	FlatBufferMissionOID
+  \rangle
+\end{axdef}
+

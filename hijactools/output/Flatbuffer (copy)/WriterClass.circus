@@ -1,0 +1,33 @@
+
+\begin{circus}
+\circclass WriterClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  fbMission : FlatBufferMission\\ 
+  i : \num\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  i' = 1\\ 
+\end{schema}
+
+
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
+
+

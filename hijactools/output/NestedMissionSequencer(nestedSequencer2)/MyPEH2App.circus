@@ -1,0 +1,75 @@
+\begin{zsection}
+  \SECTION ~ MyPEH2App ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
+ \t1  
+\end{zsection}
+
+\begin{circus}
+\circprocess MyPEH2App \circdef \\ \qquad
+  m : MissionID
+ 
+\circspot
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~MyPEH2 \then \\
+	
+      \circblockopen
+
+  count := count + 1
+
+
+
+               \circseq \\
+
+              \circif ~ (count = 10) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+            requestTerminationCall~.~m~.~MyPEH2\then \ \ requestTerminationRet~.~m~.~MyPEH2~?~requestTermination\then \ \
+
+\Skip
+        \circblockclose
+
+
+  \\
+  \circelse ~ (count = 10) \circthen \Skip
+  \\
+  \circfi \circseq \\
+
+\Skip
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~MyPEH2 \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_periodic\_app~.~MyPEH2 \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

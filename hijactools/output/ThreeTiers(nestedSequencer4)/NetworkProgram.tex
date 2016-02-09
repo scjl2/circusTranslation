@@ -1,0 +1,213 @@
+
+%+++ Program +++
+%
+\begin{zsection}
+  \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
+  \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
+  \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
+  \t1 AperiodicEventHandlerFW, ObjectFW, ThreadFW, \\
+  \t1 MyAppApp, topSequencerApp,
+
+TopMissionApp,
+
+MT1App
+	,
+MidMissionSequencerApp
+	
+\\ \t1
+	
+	,
+MidMissionApp,
+
+BottomMissionSequencerAApp
+	,
+BottomMissionSequencerBApp
+	
+\\ \t1
+	
+	,
+BottomMissionAApp,
+
+MT2App
+	
+	
+	,
+BottomMissionBApp,
+
+MT3App
+	
+	
+	
+\end{zsection}
+%
+\begin{circus}
+\circprocess ControlTier \circdef \\
+\circblockopen
+SafeletFW \\
+\t1 \lpar ControlTierSync \rpar \\
+TopLevelMissionSequencerFW(topSequencer)
+\circblockclose
+\end{circus}
+%
+
+
+\begin{circus}
+\circprocess Tier0 \circdef \\
+
+\circblockopen
+	MissionFW(TopMissionID)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+			ManagedThreadFW(MT1ID)\\
+
+
+
+
+
+
+			SchedulableMissionSequencerFW(MidMissionSequencerID)\\
+\t1 \lpar SchedulablesSync \rpar\\
+
+
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circprocess Tier1 \circdef \\
+
+\circblockopen
+	MissionFW(MidMissionID)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+
+
+
+
+
+
+\circblockopen
+			SchedulableMissionSequencerFW(BottomMissionSequencerAID)\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			SchedulableMissionSequencerFW(BottomMissionSequencerBID)\\
+\circblockclose \\
+\t1 \lpar SchedulablesSync \rpar\\
+
+
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circprocess Tier2 \circdef \\
+
+\circblockopen
+	MissionFW(BottomMissionAID)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+			ManagedThreadFW(MT2ID)\\
+
+
+
+
+
+
+
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circprocess Tier3 \circdef \\
+
+\circblockopen
+	MissionFW(BottomMissionBID)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+			ManagedThreadFW(MT3ID)\\
+
+
+
+
+
+
+
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Framework +++
+%
+\begin{circus}
+\circprocess Framework \circdef \\
+\circblockopen
+ControlTier \\
+\t1 \lpar TierSync \rpar \\
+ \circblockopen
+Tier0
+\\ \t1 \lpar Tier0Sync \rpar \\
+Tier1
+\\ \t1 \lpar Tier1Sync \rpar \\
+Tier2
+\\ \t1 \lpar Tier2Sync \rpar \\
+Tier3
+\circblockclose
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPLICATION
+%
+\begin{circus}
+\circprocess  Application \circdef \\
+\circblockopen
+MyAppApp\\
+\interleave\\
+topSequencerApp\\
+\interleave \\
+		TopMissionApp\\
+		\interleave \\
+			MT1App\\
+			\interleave \\
+			MidMissionSequencerApp\\
+			
+		
+		\interleave \\
+		MidMissionApp\\
+		\interleave \\
+			BottomMissionSequencerAApp\\
+			\interleave \\
+			BottomMissionSequencerBApp\\
+			
+		
+		\interleave \\
+		BottomMissionAApp\\
+		\interleave \\
+			MT2App\\
+			
+		
+		\interleave \\
+		BottomMissionBApp\\
+		\interleave \\
+			MT3App\\
+			
+		
+\circblockclose
+\end{circus}

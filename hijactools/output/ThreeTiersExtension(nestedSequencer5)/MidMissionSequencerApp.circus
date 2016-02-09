@@ -1,0 +1,56 @@
+\begin{zsection}
+  \SECTION ~ MidMissionSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \t1 MissionId, MissionIds, SchedulableId  , MidMissionSequencerClass \\
+
+  \t1 
+\end{zsection}
+%\begin{circus}
+%\circchannelset MidMissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset MidMissionSequencerAppChanSet == MidMissionSequencerAppSync
+%\end{circus}
+
+\begin{circus}
+\circprocess MidMissionSequencerApp \circdef \\ \qquad
+  name : String
+ 
+\circspot
+ \circbegin\\ 
+\end{circus}
+   
+
+\begin{circusaction}
+GetNextMission \circdef \circvar ret : MissionID \circspot \\
+\circblockopen
+    getNextMissionCall~.~MidMissionSequencer \then \\
+	ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~MidMissionSequencer~!~ret  \then \\
+\Skip
+\circblockclose	
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+%
+%
+%
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  %\circhide MissionSequencerAppStateSync
+\circinterrupt (end\_sequencer\_app~.~MidMissionSequencer \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

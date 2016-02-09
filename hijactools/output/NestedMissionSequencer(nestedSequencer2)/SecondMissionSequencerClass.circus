@@ -1,0 +1,81 @@
+
+\begin{circus}
+\circclass SecondMissionSequencerClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  \circreftype myMissionClass : MissionClass\\ 
+  done : \boolean\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  \circreftype myMissionClass' = \circnew MissionClass()\\ 
+  done' = false\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circprotected ~ getNextMission ~ \circdef
+\circvar ret : MissionID \circspot
+\\
+
+
+      \circblockopen
+
+  \circif ~ (done = \true = \false) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+this~.~done :=true
+
+
+               \circseq \\
+
+  ret := myMission
+
+
+        \circblockclose
+
+
+  \\
+  \circelse ~ (done = \true = \false) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+  ret := nullMissionId
+
+
+        \circblockclose
+
+
+  \\
+  \circfi
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
+
+
