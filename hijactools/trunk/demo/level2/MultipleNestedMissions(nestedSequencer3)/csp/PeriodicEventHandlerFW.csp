@@ -1,0 +1,402 @@
+--PERIODIC EVENT HANDLER FW
+-- Models javax.safetycritical.PeriodicEventHandler
+
+
+-- PEH Channels
+
+channel circwait_startTime : num
+channel circwait_period : num 
+channel circwait_deadline : num 
+
+channel get_missedReleases : SchedulableID.num
+channel set_missedReleases : SchedulableID.num
+channel get_periodicTerminating : SchedulableID.Bool
+channel set_periodicTerminating : SchedulableID.Bool 
+channel end_periodicEventHandlerState : SchedulableID
+channel release_complete_PEH : SchedulableID.num
+channel reset_periodicEventHandlerState : SchedulableID
+channel end_periodicEventHandler_app : SchedulableID
+
+channel getRequestedStartTime : SchedulableID.num 
+
+nametype ReleaseSync_PEH =  {|release, end_releases |}
+nametype PTCSYnc =  {| get_periodicTerminating, set_periodicTerminating |}
+
+
+ nametype PEHStateSync = {|get_controllingMission, set_controllingMission, 
+                          get_applicationTerminating, set_applicationTerminating, 
+                          get_missedReleases,set_missedReleases, 
+                          get_periodicTerminating, set_periodicTerminating,
+                          get_startTime, set_startTime,
+                          end_periodicEventHandlerState|}
+
+
+nametype PEHFWChanSet = union(
+  union(PEHStateSync, ManagedSchedulableFWChanSet),
+  {|done_safeletFW, end_periodicEventHandler_app, 
+get_missedReleases,set_missedReleases,
+get_periodicTerminating,set_periodicTerminating,
+end_periodicEventHandlerState,release_complete_PEH,
+done_toplevel_sequencer, circwait_startTime , circwait_period, circwait_deadline, end_releases |}  )
+  
+
+
+PeriodicEventHandlerFW(schedulable, period, startTime, deadline, deadlineMissHandler) =
+( 
+  PeriodicEventHandlerBehaviour(schedulable, startTime, period, deadline, deadlineMissHandler)
+    [|PEHStateSync|]
+  PeriodicEventHandlerState(schedulable, period, startTime, deadline, deadlineMissHandler, 0, False)
+)\PEHStateSync
+
+PeriodicEventHandlerState(schedulable,  period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating) =
+(
+  (
+    get_missedReleases.schedulable!missedReleases ->
+    PeriodicEventHandlerState(schedulable, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+  )
+  []
+  (
+    set_missedReleases.schedulable?newMissedReleases ->
+     PeriodicEventHandlerState(schedulable, period, startTime, deadline, deadlineMissHandler, newMissedReleases, periodicTerminating)
+  )
+  []
+  (
+    get_periodicTerminating.schedulable!periodicTerminating ->
+    PeriodicEventHandlerState(schedulable, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+  )
+  []
+  (
+    set_periodicTerminating.schedulable?newPeriodicTerminating ->
+    PeriodicEventHandlerState(schedulable, period, startTime, deadline, deadlineMissHandler, missedReleases, newPeriodicTerminating)
+  )
+  []
+  ( 
+    get_startTime.schedulable!startTime ->
+    PeriodicEventHandlerState(schedulable, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating) 
+  )
+  []
+  (
+    set_startTime.schedulable?newStartTime ->
+    PeriodicEventHandlerState(schedulable, period, newStartTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating) 
+  )
+  []
+  (
+    end_periodicEventHandlerState.schedulable ->
+    SKIP
+  )
+)
+
+PeriodicEventHandlerBehaviour(schedulable, startTime, period, deadline, deadlineMissHandler) =
+(
+  Start_PEH(schedulable) ;
+  Execute_PEH(schedulable, startTime, period, deadline, deadlineMissHandler)  ; 
+  Cleanup_PEH(schedulable) ; 
+  Terminate_pehfw(schedulable)
+)
+
+
+Terminate_pehfw(schedulable) =
+(
+  (
+    done_safeletFW ->
+    SKIP
+  )
+  []
+  (
+    done_toplevel_sequencer ->   
+    SKIP
+  )
+);
+end_periodicEventHandlerState.schedulable ->
+end_periodicEventHandler_app.schedulable ->
+SKIP 
+
+Start_PEH(schedulable) =
+  Register_PEH(schedulable)
+   
+
+Register_PEH(schedulable) =
+  register.schedulable?controllingMission ->
+  Activate_PEH(schedulable, controllingMission)
+
+Activate_PEH(schedulable, controllingMission) =
+  activate_schedulables.controllingMission ->
+  SKIP
+
+Execute_PEH(schedulable, startTime, period, deadline, deadlineMissHandler) =
+circwait_startTime.startTime ->    
+(
+  (
+    ( 
+      (
+        if deadlineMissHandler != nullSchedulableId then
+          RunningWithDeadlineDetection(schedulable, period, deadline, deadlineMissHandler)
+        else 
+          Running(schedulable, period)         
+      )
+      []
+      (
+        end_releases.schedulable ->
+        done_schedulable.schedulable ->
+        SKIP
+      )
+    )  
+      [|  {|end_releases, done_schedulable |} |] 
+    SignalTermination_PEH(schedulable)
+  )
+  [|  {|end_releases|} |] 
+  GetRequestedStartTime(schedulable, startTime)
+)\{|end_releases|}
+  
+
+Running(schedulable, period)  =
+( 
+  ( 
+    (
+      release.schedulable -> 
+      PeriodicClock(schedulable, period)
+    )
+    []
+    (
+      end_releases.schedulable -> 
+      SKIP
+    )  
+  )
+    [| ReleaseSync_PEH |] 
+  Release_PEH(schedulable,0, 0)
+)
+
+RunningWithDeadlineDetection(schedulable, period, deadline, deadlineMissHandler) =
+(
+  Running(schedulable, period)
+    [| {|release_complete_PEH, end_releases, circwait_period |} |] 
+  (DeadlineClock_PEH(schedulable, 0, deadline, period, deadlineMissHandler) 
+    /\ 
+    (
+      end_releases.schedulable ->   
+      SKIP
+    )
+  )
+) \ {|release_complete_PEH|}
+
+PeriodicClock(schedulable, period) =
+(
+  ( 
+    circwait_period.period ->
+    (  
+      (
+        release.schedulable ->
+        PeriodicClock(schedulable, period)
+      )
+      []
+      (
+        end_releases.schedulable ->
+        SKIP 
+      )
+    )
+  )
+  []
+  (
+    end_releases.schedulable ->
+    SKIP 
+  )      
+)
+ 
+
+{-Release_PEH(schedulable, index) =
+get_missedReleases.schedulable?missedReleases ->
+(
+  (   
+      end_releases.schedulable ->
+      --signalTerminationRet.schedulable ->
+      SKIP 
+  ) 
+  []
+  ( 
+    (
+      if missedReleases == 0 then 
+       (
+         release.schedulable ->
+         handleAsyncEventCall.schedulable ->
+         SKIP
+       )
+       else 
+       (
+         handleAsyncEventCall.schedulable ->
+         if missedReleases-1 < 0 then
+           SKIP
+         else
+           set_missedReleases.schedulable!(missedReleases -1) ->
+           SKIP
+       )   
+    )
+    ;
+    (
+    (
+    (
+      (
+        handleAsyncEventRet.schedulable ->
+        release_complete_PEH.schedulable.index ->
+        SKIP
+      ) 
+        [| {|handleAsyncEventRet|} |] 
+      FireCatcher(schedulable) 
+    ) 
+    ;
+    (
+      (
+        get_periodicTerminating.schedulable?periodicTerminating:({False}) ->
+        --This is just to help FDR by limiting the amount of times this will recurse.
+        if index + 1 > maxNum then
+          end_releases.schedulable ->
+          SKIP 
+        else
+          Release_PEH(schedulable, index + 1)
+      )
+      []
+      (
+        get_periodicTerminating.schedulable?periodicTerminating:({True}) ->
+        end_releases.schedulable ->
+        --signalTerminationRet.schedulable ->
+        SKIP
+      )
+    )
+  )
+    []
+  (
+    end_releases.schedulable -> handleAsyncEventRet.schedulable -> release_complete_PEH.schedulable.index -> SKIP
+
+  )  
+  ) 
+
+)-}
+
+Release_PEH(schedulable, index, 0) =
+(  
+  release.schedulable ->
+  (  
+    handleAsyncEventCall.schedulable ->
+    (
+      (handleAsyncEventRet.schedulable ->
+        --This is just to help FDR by limiting the amount of times this will recurse.
+          if index + 1 > maxNum then
+              get_missedReleases.schedulable?missed ->
+              Release_PEH(schedulable,index+1, missed)
+          else
+            end_releases.schedulable ->
+            done_schedulable.schedulable ->
+            SKIP
+      )
+      []
+      (
+        end_releases.schedulable ->
+        handleAsyncEventRet.schedulable ->
+        done_schedulable.schedulable ->
+        SKIP
+      )
+    )
+    [| {|handleAsyncEventRet|}  |]
+  FireCatcher(schedulable)
+  )
+    
+)
+[]
+(
+  end_releases.schedulable ->
+  done_schedulable.schedulable ->
+  SKIP
+)
+
+
+Release_PEH(schedulable, index, missed) =
+  handleAsyncEventCall.schedulable ->
+  handleAsyncEventRet.schedulable ->
+  if index + 1 > maxNum then
+            Release_PEH(schedulable, index+1, missed -1)
+  else
+    end_releases.schedulable ->
+    done_schedulable.schedulable ->
+    SKIP
+  
+
+
+FireCatcher(schedulable) = 
+(
+  (
+    release.schedulable ->
+    get_missedReleases.schedulable?missedReleases ->
+    if missedReleases +1 > maxNum then
+       handleAsyncEventRet.schedulable -> 
+     SKIP
+    else
+      set_missedReleases.schedulable!(missedReleases +1) ->
+      FireCatcher(schedulable)
+  )
+  []
+  (
+    handleAsyncEventRet.schedulable -> 
+    SKIP
+  )
+)
+
+DeadlineClock_PEH(schedulable, index, deadline, period, deadlineMissHandler) =
+(
+  (
+    (   
+      (
+        circwait_deadline.deadline ->
+        release.deadlineMissHandler ->
+        release_complete_PEH.schedulable.index ->
+        SKIP
+      ) 
+      []
+      (
+        release_complete_PEH.schedulable.index ->
+        SKIP
+      )
+    )
+    |||
+    (
+      (
+        circwait_period.period ->
+        if index +1 > maxNum then
+          SKIP
+        else 
+          DeadlineClock_PEH(schedulable, index + 1, deadline, period, deadlineMissHandler)
+      )       
+    )
+  ) 
+)
+  
+
+
+SignalTermination_PEH(schedulable) =
+(
+  signalTerminationCall.schedulable ->
+  set_periodicTerminating.schedulable!True ->
+  end_releases.schedulable ->
+  signalTerminationRet.schedulable ->
+  done_schedulable.schedulable ->
+  SKIP
+)
+
+GetRequestedStartTime(schedulable, startTime)=
+(
+  (
+    getRequestedStartTime.schedulable!startTime ->
+    GetRequestedStartTime(schedulable, startTime)
+  )
+  []
+  (
+    end_releases.schedulable ->
+    SKIP
+  )
+)
+
+Cleanup_PEH(schedulable) =
+(
+  cleanupSchedulableCall.schedulable ->
+  cleanupSchedulableRet.schedulable ->
+  SKIP
+)
+

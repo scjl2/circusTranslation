@@ -1,0 +1,118 @@
+--TopLevelMissionSequencer
+-- Models javax.safetycritical.MissionSequencer
+
+
+--TLMS CHANNELS
+channel  start_toplevel_sequencer: TopLevelSequencerIDs 
+
+channel  done_toplevel_sequencer 
+
+
+channel set_continue : MissionSequencerIDs . Bool 
+
+channel end_toplevelsequencerState : MissionSequencerIDs
+
+nametype TopLevelMissionSequencerFWChanSet = union(
+  union(MissionSequencerFWSharedChanSet, TLMSStateSync) ,
+  {|done_safeletFW, start_toplevel_sequencer,end_methods, 
+getNextMissionCall, getNextMissionRet, start_mission, done_mission,
+ done_toplevel_sequencer, end_sequencer_app |})
+
+nametype TopLevelMissionSequencerFWChan  =  {| start_toplevel_sequencer,  end_sequencer_app, end_methods, get_continue, set_continue |}
+nametype TLMSStateSync = {|get_continue, set_continue, get_currentMission, set_currentMission, end_toplevelsequencerState |}
+
+--TLMS
+
+TopLevelMissionSequencerFW(sequencer) =
+ (
+    TopLevelMissionSequencerFWState(sequencer, nullMissionId, True )
+      [| TLMSStateSync |]
+    TopLevelMissionSequencerFWBehaviour(sequencer)
+)\ TLMSStateSync
+
+TopLevelMissionSequencerFWState(sequencer, currentMission, continue) =
+(
+  set_currentMission.sequencer?newCurrentMission ->
+  TopLevelMissionSequencerFWState(sequencer, newCurrentMission, continue)
+)
+[]
+(
+  get_currentMission.sequencer!currentMission ->
+  TopLevelMissionSequencerFWState(sequencer, currentMission, continue)
+)
+[]
+(
+  get_continue.sequencer!continue ->
+  TopLevelMissionSequencerFWState(sequencer, currentMission, continue)
+)
+[]
+(
+  set_continue.sequencer?newContinue ->
+  TopLevelMissionSequencerFWState(sequencer, currentMission, newContinue)
+)
+[]
+(
+  end_toplevelsequencerState.sequencer ->
+  SKIP
+)
+
+
+TopLevelMissionSequencerFWBehaviour(sequencer) =
+(
+  done_safeletFW -> 
+  end_toplevelsequencerState.sequencer ->
+  end_sequencer_app.sequencer ->
+  SKIP
+)
+[]
+(
+  Start_TLS(sequencer) ; 
+  Execute_TLS(sequencer) ; 
+  Finish_TLS(sequencer) ; 
+  end_toplevelsequencerState.sequencer ->
+  end_sequencer_app.sequencer ->
+  SKIP
+)
+
+Start_TLS(sequencer)  = 
+( 
+  start_toplevel_sequencer.sequencer -> 
+  SKIP 
+)
+
+Execute_TLS(sequencer)  =
+  RunMission_TLS(sequencer)
+
+RunMission_TLS(sequencer) = 
+  GetNextMission_TLS(sequencer) 
+
+GetNextMission_TLS(sequencer)  =  
+  getNextMissionCall.sequencer -> 
+  getNextMissionRet.sequencer?next ->
+  StartMission_TLS(sequencer, next)
+
+StartMission_TLS(sequencer, currentMission) = 
+(
+	if currentMission != nullMissionId then
+  ( 
+    start_mission.currentMission.sequencer ->
+    done_mission.currentMission?returnedcontinue -> 
+    Continue_TLS(sequencer,returnedcontinue)
+  )
+  else 
+    Continue_TLS(sequencer, False)
+)    
+ 
+Continue_TLS(sequencer, continue) = 
+if continue == True then
+  RunMission_TLS(sequencer) 
+else
+  SKIP
+
+Finish_TLS(sequencer)   = 
+  done_toplevel_sequencer ->  
+  SKIP   
+   
+assert TopLevelMissionSequencerFW(TopLevelSequencerId); Loop :[ deadlock free [FD] ]
+assert TopLevelMissionSequencerFW(TopLevelSequencerId) :[ divergence free ]
+assert TopLevelMissionSequencerFW(TopLevelSequencerId) :[ deterministic  [FD] ]

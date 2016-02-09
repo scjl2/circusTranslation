@@ -1,0 +1,149 @@
+\begin{zsection}
+  \SECTION ~ TopLevelMissionSequencerFW ~ \parents ~ TopLevelMissionSequencerChan,
+  \t1 MissionId, MissionMethChan, SchedulableId, MissionFWChan, FrameworkChan 
+\end{zsection}
+%
+\begin{circus}
+  \circprocess ~ TopLevelMissionSequencerFW ~ \circdef ~ sequencer : SchedulableID \circspot ~ \circbegin 
+\end{circus}
+%
+\begin{schema}{State}
+  currentMission : MissionID\\
+  continue : \boolean
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+  State~'
+\where
+  continue' = \true \\
+  currentMission' = nullMissionId
+\end{schema}
+%
+\begin{circusaction}
+Start ~ \circdef ~ \\
+\t1 start\_toplevel\_sequencer~.~sequencer \then \\
+\t1 \Skip \\
+\end{circusaction}
+% \circblockclose
+\begin{circusaction}
+Execute ~ \circdef
+\t1 \circblockopen 
+	\circblockopen
+  		\circblockopen
+    			RunMission \circseq\\
+    			end\_methods~.~sequencer \then \\
+    			\Skip\\
+    		\circblockclose\\
+    			\lpar \{currentMission \} | \lchanset end\_methods \rchanset | \emptyset \rpar\\
+    		Methods\\    	
+    	 \circblockclose   
+    	 	\lpar \emptyset | CCSync | \{ continue \} \rpar\\
+    	 ContinueController \\
+    \circblockclose\\ 
+\end{circusaction}
+%
+\begin{circusaction}
+RunMission \circdef \\
+\t1 GetNextMission \circseq \\
+\t1 StartMission \circseq \\
+\t1 Continue
+\end{circusaction}
+%
+\begin{circusaction}
+GetNextMission ~ \circdef ~ \\
+\t1    getNextMissionCall~.~sequencer \then \\
+\t1    getNextMissionRet~.~sequencer~?~next \then\\
+\t1    currentMission := next
+\end{circusaction}
+%
+\begin{circusaction}
+StartMission~ \circdef ~\\
+\t1    \circif currentMission \neq nullMissionId \circthen\\
+\t2    \circblockopen 
+	     start\_mission~.~currentMission~.~sequencer \then\\
+	     done\_mission~.~currentMission~?~returnedcontinue \then \\
+	     set\_continue~.~sequencer~!~returnedcontinue \then \\
+	     \Skip
+    \circblockclose\\
+\t1   \circelse currentMission = nullMissionId \circthen\\
+\t2    \circblockopen 
+ 	     set\_continue~.~sequencer~!~\false \then\\
+ 	     \Skip\\
+    \circblockclose \\
+\t1     \circfi
+
+\end{circusaction} 
+%
+\begin{circusaction}
+Continue \circdef \\
+\t1 \circblockopen 
+	get\_continue~.~sequencer~?~continue\prefixcolon(continue = \true) \then \\
+ 	RunMission \\
+    \circblockclose		
+\t1 \extchoice
+\t1 \circblockopen
+	get\_continue~.~sequencer~?~continue\prefixcolon(continue = \false) \then \\
+ 	\Skip\\
+    \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+Methods ~ \circdef \\
+\circblockopen
+   \circblockopen
+     SequenceTerminationPending \circseq\\
+     Methods\\
+   \circblockclose\\
+   \extchoice \\
+   \circblockopen 
+   	end\_methods~.~sequencer \then \\
+   	\Skip\\
+   \circblockclose \\
+\circblockclose   
+\end{circusaction}
+%
+\begin{circusaction}
+SequenceTerminationPending ~ \circdef \\
+\t1	sequenceTerminationPendingCall~.~sequencer \then \\
+\t1	get\_continue~.~sequencer~?~continue \then \\
+\t1 	sequenceTerminationPendingRet~.~sequencer~!~continue \then\\
+\t1 	\Skip\\
+\end{circusaction}
+%
+\begin{circusaction}
+ContinueController \circdef \\
+\t1 \circblockopen
+	get\_continue~.~sequencer~!~continue \then \\
+	ContinueController\\
+    \circblockclose\\
+\t1 \extchoice \\
+\t1 \circblockopen
+	set\_continue~.~sequencer~?~newContinue \then \\
+	continue := newContinue \circseq\\
+	ContinueController\\
+     \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+Finish ~ \circdef ~\\
+\t1 \circblockopen
+  	done\_toplevel\_sequencer \then\\
+  	end\_sequencer\_app~.~sequencer \then \\
+  	\Skip   \\
+    \circblockclose
+\end{circusaction}
+% 
+\begin{circusaction}
+  \circspot \lschexpract Init \rschexpract \circseq Start \circseq Execute \circseq Finish
+\end{circusaction}
+% 
+\begin{circus}
+  \circend
+\end{circus}
+

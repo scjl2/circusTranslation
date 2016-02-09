@@ -1,0 +1,159 @@
+--Thread
+--Models java.lang.Thread
+
+include "Thread.csp"
+
+
+--Thread Channels
+channel get_priorityLevel : ThreadID . ObjectID . PriorityLevel 
+
+channel raise_thread_priority : ThreadID . PriorityLevel 
+channel lower_thread_priority : ThreadID  
+
+channel set_interrupted : ThreadID . Bool 
+channel get_interrupted : ThreadID . Bool 
+
+--channel interrupt : ThreadID 
+
+--channel isInterrupted : ThreadID . Bool 
+channel isInterruptedCall : ThreadID 
+channel isInterruptedRet : ThreadID . Bool 
+
+--channel interrupted : ThreadID . Bool 
+channel interruptedCall : ThreadID 
+channel interruptedRet : ThreadID . Bool 
+
+channel get_priorityStack : ThreadID.Seq(PriorityLevel)
+channel end_threadState : ThreadID
+
+
+minStackId = 0
+maxStackId = 2
+nametype pStackId = {minStackId..maxStackId}
+
+channel pSatck_push : pStackId.PriorityLevel
+channel pStack_pop : pStackId
+channel pStack_resume : pStackId
+channel pStack_top : pStackId.PriorityLevel
+
+
+
+ThreadFW(thread, basePriority) =
+( 
+	Execute(thread, basePriority, <basePriority>,basePriority, False)
+)
+/\(done_toplevel_sequencer -> SKIP)
+
+Execute(thread, basePriority, priorityStack, activePriority, interruptedVar) = 
+(  
+	(PStack(thread, basePriority)
+			[| {|raise_thread_priority, lower_thread_priority, get_priorityLevel|} |]
+		Priority (thread, basePriority) 
+	)
+	|||
+	Interrupts(thread, interruptedVar) 	
+)																																																																																																																																																																																																																																																																																																																																																																																																																													
+
+Priority(thread, basePriority)= 
+
+(
+	IncreasePriority(thread, basePriority) 
+	[]
+	DecreasePriority(thread, basePriority) 
+	[]
+	GetPriorityLevel(thread, basePriority) 
+	
+) 
+ 
+
+
+ 
+Free(id) = 
+	pSatck_push.id?v -> Full(id, v)
+
+Full(id, v) =
+	(id != 0)&
+	pStack_pop.id-> 
+	(	
+		if id > minStackId then
+			pStack_resume.id-1 -> Free(id)
+		else
+			Free(id)
+	)
+	[]
+	(id < maxStackId )&
+		pSatck_push.id+1?_ -> pStack_resume.id -> Full(id, v)
+	[]
+	pStack_top.id!v -> Full(id, v)
+
+AlphaFree(id) =
+	Union ({
+				{| pSatck_push.id, pStack_pop.id, pStack_resume.id, pStack_top.id |},
+				{| pSatck_push.id+1 | id<maxStackId  |},
+				{| pStack_resume.id-1 | id > minStackId  |}
+			})
+
+PStack(thread, basePriority) = 
+(
+	(	|| i : PriorityLevel @ [ AlphaFree(i) ] if i == 0 then
+												Full(i, basePriority)
+											else
+												Free(i)
+	)
+[[ pSatck_push.id <- raise_thread_priority.thread, pStack_pop.id <- lower_thread_priority.thread| id <- pStackId  ]]
+[[ pStack_top.id <- get_priorityLevel.thread.o | id <- pStackId, o <- ObjectID ]]
+) \ {| pStack_resume|}
+
+IncreasePriority(thread, basePriority)= 
+	raise_thread_priority.thread?ceilingPriority ->
+	Priority(thread, basePriority)
+
+DecreasePriority(thread, basePriority)= 
+	lower_thread_priority.thread -> 
+	Priority(thread, basePriority)
+
+GetPriorityLevel(thread, basePriority) =
+ 	get_priorityLevel.thread?object?_ -> 
+	Priority(thread, basePriority)
+
+
+assert Priority(WriterThreadID, 0); Loop :[ deadlock free [FD] ]
+assert Priority(WriterThreadID, 0):[ divergence free ]
+assert Priority(WriterThreadID, 0) :[ deterministic  [FD] ]  
+
+
+
+Interrupts(thread, interruptedV) = 
+(
+	Interrupt(thread, interruptedV) 
+	[]
+	IsInterrupted(thread, interruptedV)		 
+	[]
+	Interrupted(thread, interruptedV)
+)
+
+
+Interrupt(thread, interruptedV) = 
+	interrupt.thread -> 
+	Interrupts(thread, True)
+
+
+IsInterrupted(thread, interruptedV) = 
+	isInterrupted.thread!interruptedV -> 
+	Interrupts(thread, interruptedV)
+
+
+Interrupted(thread, interruptedV) = 
+	interrupted.thread!interruptedV ->
+	Interrupts(thread, False)
+
+
+assert Interrupts(WriterThreadID, False); Loop :[ deadlock free [FD] ]
+assert Interrupts(WriterThreadID, False) :[ divergence free ]
+assert Interrupts(WriterThreadID, False) :[ deterministic  [FD] ]  
+
+
+
+assert ThreadFW(WriterThreadID, 0); Loop :[ deadlock free [FD] ]
+assert ThreadFW(WriterThreadID, 0) :[ divergence free ]
+assert ThreadFW(WriterThreadID, 0) :[ deterministic  [FD] ]  

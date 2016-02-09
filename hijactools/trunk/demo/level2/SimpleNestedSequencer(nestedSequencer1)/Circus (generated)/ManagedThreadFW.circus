@@ -1,0 +1,104 @@
+\begin{zsection}
+  \SECTION ~ ManagedThreadFW ~ \parents ~ ManagedThreadChan, SchedulableId, MissionId, MissionIds, TopLevelMissionSequencerChan,\\
+  SchedulableChan, SafeletMethChan, FrameworkChan
+\end{zsection}
+
+%
+\begin{circus}
+  \circprocess ManagedThreadFW ~ \circdef ~ schedulable : SchedulableID \circspot ~\circbegin
+\end{circus}
+%
+\begin{schema}{State}
+  controllingMission : MissionID\\
+  applicationTerminating : \boolean
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+  State~'
+  \where
+  controllingMission' = nullMissionId\\
+  applicationTerminating' = \false
+\end{schema}
+%
+\begin{circusaction}
+Start \circdef\\
+\t1 \circblockopen
+   Register \circseq \\
+   Activate\\
+  \circblockclose   \\
+\t1  \extchoice\\
+\t1  \circblockopen
+  	activate\_schedulables?someMissionID \then \\
+  	Start
+  \circblockclose  \\
+\t1  \extchoice \\
+\t1  \circblockopen
+	done\_toplevel\_sequencer \then \\
+	applicationTerminating := \true \\
+      \circblockclose 
+\end{circusaction}
+%
+
+\begin{circusaction}
+Register \circdef\\
+  register~.~schedulable~?~mID \then\\
+  controllingMission := mID  
+\end{circusaction}
+%
+\begin{circusaction}
+Activate \circdef\\
+  activate\_schedulables~.~controllingMission \then\\  
+  \Skip
+\end{circusaction}
+% 
+\begin{circusaction}
+   Execute ~ \circdef ~ Run  \lpar \emptyset | \lchanset runRet \rchanset | \emptyset \rpar Methods
+\end{circusaction}
+%
+\begin{circusaction}
+Run \circdef\\
+  runCall~.~schedulable \then\\
+  runRet~.~schedulable \then \\
+  done\_schedulable~.~schedulable \then\\
+  \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+Methods \circdef \\
+	\circblockopen SignalTerminationMeth \circseq Methods\circblockclose  \extchoice runRet~.~schedulable \then \Skip  
+
+\end{circusaction}
+%
+\begin{circusaction}
+SignalTerminationMeth \circdef \\
+  \t1 signalTerminationCall~.~schedulable \then \\
+  \t1 signalTerminationRet~.~schedulable \then \Skip
+\end{circusaction}  
+%
+\begin{circusaction}
+Cleanup \circdef \\
+  \t1 cleanupSchedulableCall~.~schedulable \then\\
+  \t1 cleanupSchedulableRet~.~schedulable \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+  \circspot \circblockopen \circmu X \circspot \lschexpract Init \rschexpract \circseq Start \circseq\\ 
+  		\circblockopen\circif applicationTerminating = \false \circthen \\
+  		\t2 \circblockopen Execute \circseq Cleanup \circseq X \circblockclose \\ 
+  		\circelse applicationTerminating = \true \circthen \\
+  		\t2 \circblockopen
+  			end\_managedThread\_app~.~schedulable \then\\
+  			\Skip
+  		\circblockclose 
+  		\circfi \circblockclose \circblockclose 
+\end{circusaction}
+%  
+\begin{circus}
+  \circend
+\end{circus}

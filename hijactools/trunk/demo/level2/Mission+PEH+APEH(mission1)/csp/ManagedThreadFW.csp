@@ -1,0 +1,100 @@
+-- MANAGED THREAD
+-- Models javax.safetycritical.ManagedThread
+
+
+-- MT CHannels
+
+channel runCall : SchedulableID 
+channel runRet : SchedulableID
+
+channel end_managedThread_app : SchedulableID
+channel end_managedThreadState : SchedulableID
+
+nametype ManagedThreadSync = {|runCall, runRet |} 
+
+
+nametype MTFWChanSet = 
+  union(ManagedSchedulableFWChanSet,
+  {|runCall,runRet, done_toplevel_sequencer |} )
+
+--Managed Thread
+
+ManagedThreadFW(schedulable) = 
+  ManagedThreadFWBehaviour(schedulable)
+
+ManagedThreadFWBehaviour(schedulable) =
+
+(
+  Start_MT(schedulable) ; 
+  Execute_MT(schedulable) ; 
+  Cleanup_MT(schedulable) ; 
+  Terminate_mtfw(schedulable)
+)
+
+Terminate_mtfw(schedulable) =
+(
+  (
+    (
+      done_safeletFW -> 
+      SKIP 
+    )
+    [] 
+    (
+      done_toplevel_sequencer -> 
+      SKIP 
+    )
+  );
+    end_managedThread_app.schedulable ->
+    SKIP
+)
+
+Start_MT(schedulable) =
+  Register_MT(schedulable)
+
+
+Register_MT(schedulable) =
+  register.schedulable?controllingMission ->
+  Activate_MT(schedulable, controllingMission)
+
+
+Activate_MT(schedulable, controllingMission) =
+  activate_schedulables.controllingMission ->  
+  SKIP
+
+Execute_MT(schedulable)  = 
+   Run_MT(schedulable)
+      [| {| runRet |} |]
+   Methods_MT(schedulable)
+
+
+Run_MT(schedulable) =
+  runCall.schedulable ->
+  runRet.schedulable -> 
+  done_schedulable.schedulable ->
+  SKIP
+
+
+Methods_MT(schedulable) = 
+(
+  SignalTerminationMeth_MT(schedulable) ; 
+  Methods_MT(schedulable)
+)
+[]
+(
+  runRet.schedulable -> 
+  SKIP  
+)
+
+SignalTerminationMeth_MT(schedulable) = 
+  signalTerminationCall.schedulable -> 
+  signalTerminationRet.schedulable -> 
+  SKIP
+
+Cleanup_MT(schedulable) = 
+  cleanupSchedulableCall.schedulable ->
+  cleanupSchedulableRet.schedulable -> 
+  SKIP
+ 
+--assert ManagedThreadFW(schedulableA); Loop :[ deadlock free [FD] ]
+--assert ManagedThreadFW(schedulableA) :[ divergence free ]
+--assert ManagedThreadFW(schedulableA) :[ deterministic  [FD] ]  

@@ -1,0 +1,270 @@
+\begin{zsection}
+  \SECTION ~ PeriodicEventHandlerFW ~ \parents ~ MissionChan, SchedulableChan, SchedulableId,\\
+   \t1 MissionId, MissionIds, TopLevelMissionSequencerChan, PeriodicEventHandlerChan, \\
+   \t1 SafeletMethChan, FrameworkChan, PeriodicParameters
+\end{zsection}
+%
+\begin{circus}
+  \circprocess PeriodicEventHandlerFW ~ \circdef \\
+  \t1 ~ schedulable : SchedulableID ; periodicParameters : PeriodicParameters \circspot ~\circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore State}
+  controllingMission : MissionID\\
+  applicationTerminating : \boolean \\
+  period : JTime \\
+  startTime : JTime \\
+  deadline : JTime \\
+  deadlineMissHandler : SchedulableID\\
+  missedReleases : \nat \\
+  periodicTerminating : \boolean \\
+\where
+	valueOf(deadline) \leq valueOf(period)
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+  State~'\\
+\where
+  controllingMission' = nullMissionId\\
+  applicationTerminating' = \false \\
+  periodicTerminating' = \false \\
+  period' = periodOf(periodicParameters)\\
+  startTimeOf(periodicParameters) = NULL \implies startTime' = time~(0,0)\\
+  startTimeOf(periodicParameters) \neq NULL \implies startTime' = startTimeOf(periodicParameters)\\  
+  deadlineOfPeriodic(periodicParameters) = NULL \implies deadline' = period'\\
+  deadlineOfPeriodic(periodicParameters) \neq NULL \implies deadline' =  deadlineOfPeriodic(periodicParameters) \\
+  missedReleases' = 0 \\
+  deadlineMissHandler' = missHandlerOfPeriodic(periodicParameters) \\
+\end{schema}
+% 
+\begin{circusaction}
+Start \circdef\\
+\t1 \circblockopen 
+   Register \circseq \\
+   Activate
+ \circblockclose  \\
+\t1  \extchoice\\
+\t1 \circblockopen 
+  		activate\_schedulables?someMissionID \then \\
+  		Start
+   \circblockclose  \\
+\t1 \extchoice \\  
+\t1 \circblockopen 
+		done\_toplevel\_sequencer \then \\
+		applicationTerminating := \true \\
+	 \circblockclose   
+\end{circusaction}
+%
+\begin{circusaction}
+Register \circdef \\
+\t1    register~.~schedulable~?~missionID \then \\
+\t1    controllingMission := missionID 
+\end{circusaction}
+%  
+\begin{circusaction}
+Activate ~ \circdef ~ \\
+\t1    activate\_schedulables~.~controllingMission \then \\
+\t1    \Skip
+\end{circusaction}
+
+\begin{circusaction}
+Execute \circdef  \\
+\t1\circblockopen 
+  	\circblockopen  
+		\circblockopen 
+			%\circwait valueOf(startTime) \circseq \\
+			\circif deadlineMissHandler \neq nullSchedulableId \circthen \\
+  			\t1	RunningWithDeadlineDetection \\
+  			\circelse deadlineMissHandler = nullSchedulableId \circthen \\
+  			\t1	Running \\
+	  		\circfi
+	  	 \circblockclose \\
+  		\extchoice\\
+  		\circblockopen 
+		 	end\_releases~.~schedulable \then \\
+			\Skip\\
+		 \circblockclose 
+	\circblockclose   \\
+\t1  \lpar \{startTime\} |\lchanset stop\_period \rchanset| \emptyset \rpar\\
+	SignalTermination
+  \circblockclose 
+  \t1  \lpar \{startTime\} | PTCSYnc | \emptyset \rpar\\
+  PeriodicTerminatingController
+\end{circusaction}
+%    
+\begin{circusaction}
+Running \circdef \\
+\t1\circblockopen  
+		PeriodicClock \\
+		\t1 \lpar \emptyset | ReleaseSync | \{ missedReleases \}  \rpar \\
+		Release(0)
+   \circblockclose 
+\end{circusaction}
+%
+
+
+\begin{circusaction}
+RunningWithDeadlineDetection \circdef \\
+\t1\circblockopen 
+		Running \\
+		\t1 \lpar \{missedReleases\} | ReleaseSync  | \emptyset  \rpar \\
+		DeadlineClock(0) \\
+   \circblockclose 
+\end{circusaction}
+%
+\begin{circusaction}
+PeriodicClock \circdef \\
+\t1 fire~.~schedulable \then \\
+\t1 \circmu X \circspot
+  \circblockopen 
+	\circblockopen 
+		%\circwait valueOf(period) \circseq \\
+		fire~.~schedulable \then \\		
+		X
+	\circblockclose \\
+	\extchoice \\
+	\circblockopen 
+		end\_releases~.~schedulable \then \\
+		\Skip \\
+	 \circblockclose 			
+  \circblockclose 	
+\end{circusaction}
+%
+\begin{circusaction}
+Release \circdef \circval index : \nat \circspot \\
+\t1 \circif missedReleases = 0 \circthen \\
+\t2 \circblockopen 
+	fire~.~schedulable \then \\
+	releaseCall~.~schedulable \then \\
+	\Skip
+    \circblockclose 
+\t1 \circelse missedReleases \neq 0 \circthen \\
+\t2 \circblockopen 
+	releaseCall~.~schedulable \then \\
+	missedReleases := missedReleases -1 \circseq \\
+	\Skip
+     \circblockclose 
+\t1 \circfi \circseq \\
+\t1 \circblockopen 
+	\circblockopen 
+		releaseRet~.~schedulable \then \\
+		periodic\_release\_complete~.~schedulable~.~index \then \\
+		\Skip
+	\circblockclose  \\
+\t1	\lpar \emptyset | \lchanset releaseRet \rchanset | \emptyset \rpar
+   \circblockopen 
+   \circmu X \circspot
+	\circblockopen 
+		\circblockopen 
+			fire~.~schedulable \then \\
+			missedReleases := missedReleases +1 \circseq \\
+			X
+		\circblockclose  \\
+		\extchoice \\
+		\circblockopen 
+			releaseRet~.~schedulable \then \\ 
+			\Skip
+		\circblockclose 
+	\circblockclose 
+   \circblockclose 
+\circblockclose 	\circseq \\
+\t1 \circblockopen 
+	\circblockopen 
+		get\_periodicTerminating~.~schedulable~?~periodicTerminating\prefixcolon(periodicTerminating = \false) \then \\
+		Release(index + 1)
+	\circblockclose 
+	\extchoice \\
+	\circblockopen 
+		get\_periodicTerminating~.~schedulable~?~periodicTerminating\prefixcolon(periodicTerminating = \true) \then \\
+		\Skip
+	\circblockclose 
+\circblockclose 
+\end{circusaction}
+%
+\begin{circusaction}
+DeadlineClock \circdef \circval index : \nat \circspot \\
+
+\t1 \circblockopen 
+		\circblockopen 		
+			\circblockopen 
+				%\circwait valueOf(deadline) \circseq \\
+				fire~.~deadlineMissHandler \then \\
+				periodic\_release\_complete~.~schedulable~.~index \then \\
+				\Skip 
+			\circblockclose  \\
+			\extchoice \\
+			\circblockopen 
+		 		periodic\_release\_complete~.~schedulable~.~index \then \\
+				\Skip 
+			\circblockclose 
+		\circblockclose 
+		\interleave
+		\circblockopen 
+			\circblockopen 
+				%\circwait valueOf(period) \circseq \\
+				DeadlineClock(index + 1)
+			\circblockclose  \\			
+		\circblockclose 
+
+
+    \circblockclose  \\
+    \circseq%\circinterrupt 
+    \circblockopen 
+    		end\_releases~.~schedulable \then \\
+    		periodic\_release\_complete~.~schedulable~?~index \then \\
+    		\Skip
+    \circblockclose 
+\end{circusaction}
+%
+\begin{circusaction}
+SignalTermination \circdef \\
+\t1	signalTerminationCall~.~schedulable\then\\
+\t1 	set\_periodicTerminating~.~schedulable~!~\true \then \\
+\t1	end\_releases~.~schedulable \then\\
+\t1	signalTerminationRet~.~schedulable \then\\
+\t1	done\_schedulable~.~schedulable \then\\
+\t1	\Skip\\
+\end{circusaction}
+%
+\begin{circusaction}
+Cleanup \circdef \\
+\t1 cleanupSchedulableCall~.~schedulable \then\\
+\t1 cleanupSchedulableRet~.~schedulable \then \\
+\t1 \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+PeriodicTerminatingController \circdef \\
+\t1 \circblockopen 
+	get\_periodicTerminating~.~schedulable~!~periodicTerminating \then \\
+	PeriodicTerminatingController
+    \circblockclose \\
+\t1 \extchoice \\
+\t1 \circblockopen 
+	set\_periodicTerminating~.~schedulable~?~newPeriodicTerminating \then \\
+	periodicTerminating := newPeriodicTerminating \circseq \\
+	PeriodicTerminatingController
+    \circblockclose 
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot\circblockopen \circmu X \circspot\circblockopen  \lschexpract Init \rschexpract  \circseq Start \circseq\\
+\circblockopen \circif applicationTerminating = \false \circthen \\ 
+	\t2 \circblockopen Execute \circseq Cleanup \circseq X\circblockclose \\
+ \circelse applicationTerminating = \true \circthen \\ 
+ 	\t2\circblockopen 
+ 		end\_periodic\_app~.~schedulable \then \\
+ 		\Skip 
+ 	\circblockclose  
+\circfi \circblockclose  \circblockclose  \circblockclose 
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

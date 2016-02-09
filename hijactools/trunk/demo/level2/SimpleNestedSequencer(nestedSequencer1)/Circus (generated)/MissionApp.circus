@@ -1,0 +1,62 @@
+\begin{zsection}
+  \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan
+\end{zsection}
+%\begin{circus}
+%\circchannelset MissionAppSync == \\
+%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset MissionAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~Reader~.~FlatBufferMission 
+%    register~.~Writer~.~FlatBufferMission 
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess FlatBufferMissionApp \circdef \circbegin
+\end{circus}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~FlatBufferMission \then \\
+  
+	register~!~Reader~!~FlatBufferMission \then   \\
+	register~!~Writer~!~FlatBufferMission \then   \\
+
+
+  initializeRet~.~FlatBufferMission \then \\
+  \Skip
+\circblockclose 
+\end{circusaction}
+ 
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+ cleanupMissionCall~.~FlatBufferMission \then \\
+ cleanupMissionRet~.~FlatBufferMission~?~\false \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot (Methods) %\circinterrupt (end\_mission\_app~.~FlatBufferMission \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

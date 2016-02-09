@@ -1,0 +1,2662 @@
+--GLOBALS
+
+datatype SchedulableID = nullSequencerId|nullSchedulableId|
+          schedulableA|schedulableB | 
+          TopLevelSequencerId | FirstMissionSequencerID | SecondMissionSequencerID | ThirdMissionSequencerID |
+					MyPEH1Id  | MyPEH2Id | MyMyPEH3Id
+
+datatype MissionID = nullMissionId|
+                          missionA|missionB |  
+                        TopMission1ID | MyMission1ID | MyMission2ID | MyMission3ID 
+
+datatype ExceptionType = interruptedException | illegalMonitorStateException | illegalArgumentException | illegalThreadStateException | illegalStateException | ceilingViolationException
+nametype Bit = {0,1}
+datatype ObjectID = objectA | objectB
+maxNum = 11
+nametype num = {0..maxNum}
+
+
+channel a
+Loop = a-> Loop
+
+channel circwait : num
+channel  throw : ExceptionType 
+
+
+--SAFELET
+
+--SAFELET CHANNELS
+channel get_globallyRegistered : Set(SchedulableID)
+channel add_globallyRegistered : Set(SchedulableID)
+channel remove_globallyRegistered : Set(SchedulableID)
+channel get_topLevelSequencer : SchedulableID
+channel set_topLevelSequencer :SchedulableID
+channel end_SafeletFWState
+
+nametype SafeletStateChan = {|get_globallyRegistered, add_globallyRegistered,
+                    remove_globallyRegistered, get_topLevelSequencer, set_topLevelSequencer, end_SafeletFWState|}
+
+channel initializeApplicationCall 
+channel initializeApplicationRet 
+channel checkSchedulable : MissionID.Bool 
+channel getSequencerCall 
+channel getSequencerRet : SchedulableID
+
+
+
+
+SafeletFW =
+  SafeletFWState({}, nullSequencerId)
+  [| SafeletStateChan |]
+  SafeletFWBehaviour
+
+
+SafeletFWState(globallyRegistered, topLevelSequencer) = 
+(  
+  (
+    get_globallyRegistered!globallyRegistered ->
+    SafeletFWState(globallyRegistered, topLevelSequencer)
+  )
+  []
+  (
+    add_globallyRegistered?schedulablesToAdd ->
+    SafeletFWState(union(globallyRegistered, schedulablesToAdd) , topLevelSequencer)
+  )
+  []
+  (
+    remove_globallyRegistered?schedulablesToRemove ->
+    SafeletFWState(diff(globallyRegistered, schedulablesToRemove) , topLevelSequencer)
+  )
+  []
+  (
+    get_topLevelSequencer!topLevelSequencer ->
+    SafeletFWState(globallyRegistered, topLevelSequencer)
+  )
+  []
+  (
+    set_topLevelSequencer?newTopLevelSequencer ->
+    SafeletFWState(globallyRegistered, newTopLevelSequencer)
+  )
+  []
+  (
+    end_SafeletFWState ->
+    SKIP
+  )
+)
+
+SafeletFWBehaviour=
+   InitializeApplication ;
+   Execute_S ;
+   end_SafeletFWState -> SKIP
+
+InitializeApplication =
+  initializeApplicationCall ->
+  initializeApplicationRet ->
+  SKIP
+   
+Execute_S =
+  GetSequencerMeth ;
+  get_topLevelSequencer?topLevelSequencer ->
+  if topLevelSequencer != nullSequencerId then
+  (
+     	start_toplevel_sequencer.topLevelSequencer -> 
+     	Methods_S 
+  ) 
+  else
+    SKIP
+
+GetSequencerMeth =
+  getSequencerCall ->
+  getSequencerRet?sequencer ->
+  set_topLevelSequencer!sequencer ->
+  SKIP
+   
+Methods_S =
+(
+  (Register_S ; Methods_S)
+  []
+  (Deregister_S ; Methods_S)
+  []
+  (done_toplevel_sequencer -> SKIP)
+)   
+
+Register_S =
+  get_globallyRegistered?globallyRegistered ->
+ ( 
+  (
+    register?schedulable:diff(SchedulableID, globallyRegistered)
+                                        ?mission ->
+    (
+    	add_globallyRegistered!{schedulable} ->
+    	checkSchedulable.mission!True -> 
+    	SKIP
+	  )
+  )
+  []
+  (
+    register?schedulable:globallyRegistered?mission ->		
+    checkSchedulable.mission!False -> 
+    SKIP
+  )
+)
+
+Deregister_S =
+ 
+  deregister?schedulables ->
+  remove_globallyRegistered!schedulables ->  
+  SKIP
+
+
+assert SafeletFW; Loop :[ deadlock free [FD] ]
+assert SafeletFW :[ divergence free ]
+assert SafeletFW :[ deterministic  [FD] ]
+
+
+--MIssionSequencerShared
+channel get_currentMission :SchedulableID.MissionID
+channel set_currentMission : SchedulableID.MissionID
+channel get_continue : SchedulableID.Bool
+
+channel get_controllingMission : SchedulableID.MissionID
+channel set_controllingMission : SchedulableID.MissionID
+
+channel  getNextMissionCall : SchedulableID
+channel  getNextMissionRet : (SchedulableID . MissionID) 
+channel  requestSequenceTermination : (SchedulableID . Bool) 
+channel  sequenceTerminationPendingCall : SchedulableID   
+channel  sequenceTerminationPendingRet : (SchedulableID . Bool) 
+
+
+channel  end_sequencer_app:SchedulableID
+channel  end_methods : SchedulableID
+channel  end_terminations : SchedulableID
+
+--TopLevelMissionSequencer
+
+
+
+--TLMS CHANNELS
+
+
+
+channel  start_toplevel_sequencer:SchedulableID 
+
+channel  done_toplevel_sequencer 
+
+
+channel set_continue : SchedulableID . Bool 
+
+channel end_toplevelsequencerState : SchedulableID
+
+
+
+nametype TopLevelMissionSequencerFWChan  =  {| start_toplevel_sequencer,  end_sequencer_app, end_methods, get_continue, set_continue |}
+nametype TLMSStateSync = {|get_continue, set_continue, get_currentMission, set_currentMission, end_toplevelsequencerState |}
+
+--TLMS
+
+TopLevelMissionSequencerFW(sequencer) =
+  TopLevelMissionSequencerFWState(sequencer, nullMissionId, True )
+    [| TLMSStateSync |]
+  TopLevelMissionSequencerFWBehaviour(sequencer)
+
+
+TopLevelMissionSequencerFWState(sequencer, currentMission, continue) =
+  (
+    set_currentMission.sequencer?newCurrentMission ->
+    TopLevelMissionSequencerFWState(sequencer, newCurrentMission, continue)
+  )
+  []
+  (
+    get_currentMission.sequencer!currentMission ->
+    TopLevelMissionSequencerFWState(sequencer, currentMission, continue)
+  )
+  []
+  (
+    get_continue.sequencer!continue ->
+    TopLevelMissionSequencerFWState(sequencer, currentMission, continue)
+  )
+  []
+  (
+    set_continue.sequencer?newContinue ->
+    TopLevelMissionSequencerFWState(sequencer, currentMission, newContinue)
+  )
+  []
+  (
+    end_toplevelsequencerState.sequencer ->
+    SKIP
+  )
+
+
+TopLevelMissionSequencerFWBehaviour(sequencer)=
+  Start_TLS(sequencer) ; 
+  Execute_TLS(sequencer) ; 
+  Finish_TLS(sequencer) ; 
+  end_toplevelsequencerState.sequencer ->
+  SKIP
+
+
+Start_TLS(sequencer)  =  
+ start_toplevel_sequencer.sequencer -> 
+ SKIP 
+
+
+Execute_TLS(sequencer)  =
+ ( 
+     (
+      (
+          RunMission_TLS(sequencer) ;
+          end_methods.sequencer -> 
+          SKIP
+        )
+          [| {| end_methods |} |]
+        Methods_TLS(sequencer)     
+       )   
+        
+    ) 
+
+
+RunMission_TLS(sequencer) = 
+ GetNextMission_TLS(sequencer) ; 
+ StartMission_TLS(sequencer) ; 
+ Continue_TLS(sequencer)
+
+
+
+GetNextMission_TLS(sequencer)  =  
+    getNextMissionCall.sequencer -> 
+    getNextMissionRet.sequencer?next ->
+    set_currentMission.sequencer!next ->
+    SKIP
+
+StartMission_TLS(sequencer) = 
+  get_currentMission.sequencer?currentMission ->
+  (
+    if currentMission != nullMissionId then
+    ( 
+      start_mission.currentMission.sequencer ->
+      done_mission.currentMission?returnedcontinue -> 
+      set_continue.sequencer.returnedcontinue -> 
+      SKIP
+    )
+     else 
+    ( 
+      set_continue.sequencer!False ->
+      SKIP
+    ) 
+  )
+    
+ 
+Continue_TLS(sequencer) = 
+
+  (
+    get_continue.sequencer?continue:({True}) -> 
+    RunMission_TLS(sequencer) 
+  )
+  []
+  (
+    get_continue.sequencer?continue:( {False}) -> 
+    SKIP
+  )
+
+
+Methods_TLS(sequencer)   = 
+(
+   (
+     SequenceTerminationPending_TLS(sequencer)  ;
+     Methods_TLS(sequencer)    
+   )
+   [] 
+   ( 
+    end_methods.sequencer -> 
+    SKIP
+   ) 
+)   
+
+SequenceTerminationPending_TLS(sequencer)   = 
+ sequenceTerminationPendingCall.sequencer -> 
+ get_continue.sequencer?continue -> 
+ sequenceTerminationPendingRet.sequencer.continue ->
+ SKIP
+
+
+Finish_TLS(sequencer)   = 
+ (  
+     done_toplevel_sequencer ->
+     SKIP   
+    )
+
+   
+assert TopLevelMissionSequencerFW(schedulableA); Loop :[ deadlock free [FD] ]
+assert TopLevelMissionSequencerFW(schedulableA) :[ divergence free ]
+assert TopLevelMissionSequencerFW(schedulableA) :[ deterministic  [FD] ]
+ 
+
+  
+
+
+--MissionFW
+
+--Mission Channels
+
+channel set_controllingSequencer : MissionID.SchedulableID
+channel set_applicationTerminating_M : MissionID.Bool 
+channel get_applicationTerminating_M : MissionID.Bool 
+channel set_missionTerminating : MissionID.Bool 
+channel set_activeSchedulables: MissionID.Set(SchedulableID) 
+channel get_activeSchedulables: MissionID.Set(SchedulableID) 
+channel add_schedulable: MissionID.SchedulableID
+channel remove_activeSchedulables : MissionID.SchedulableID
+channel get_missionTerminating : MissionID.Bool
+channel get_registeredSchedulables : MissionID.Set(SchedulableID)
+
+nametype MissionFWStateChan = 
+  {|end_mission_state, set_controllingSequencer, set_applicationTerminating_M, get_applicationTerminating_M, set_missionTerminating, set_activeSchedulables, get_activeSchedulables, add_schedulable, remove_activeSchedulables, get_missionTerminating, get_registeredSchedulables |}
+
+channel start_mission : MissionID.SchedulableID
+
+channel initializeCall : MissionID
+channel initializeRet : MissionID
+
+channel register : SchedulableID.MissionID
+channel deregister : Set(SchedulableID)
+
+
+channel setCeilingPriority : MissionID.ObjectID.Bit
+channel done_schedulables : MissionID
+channel activate_schedulables : MissionID
+channel stop_schedulables : MissionID
+channel schedulables_stopped : MissionID
+
+
+channel schedulables_terminated : MissionID
+channel end_mission_terminations : MissionID
+channel requestTermination : MissionID.SchedulableID
+channel terminationPendingCall : MissionID
+channel terminationPendingRet : MissionID.Bool
+channel cleanupSchedulableCall : SchedulableID
+channel cleanupSchedulableRet : SchedulableID
+channel cleanupMissionCall : MissionID 
+channel cleanupMissionRet : MissionID.Bool
+channel end_mission_app : MissionID
+channel done_mission : MissionID.Bool
+channel end_mission_state : MissionID
+
+
+nametype TerminateSync = 
+  {| schedulables_terminated, schedulables_stopped |}
+
+
+MissionFW(mission) = 
+  MissionFWState(mission, {}, {}, False, False, nullSequencerId)
+  [|MissionFWStateChan|]
+  MissionFWBehaviour(mission)
+
+
+MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer) =
+  (
+    set_controllingSequencer.mission?mySequencer ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, mySequencer)
+  )
+  []
+  (
+    set_applicationTerminating_M.mission?newApplicationTerminating ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, newApplicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    get_applicationTerminating_M.mission!applicationTerminating ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    set_missionTerminating.mission?newMissionTerminating ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, newMissionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    set_activeSchedulables.mission?newActiveSchedulables ->
+    MissionFWState(mission, registeredSchedulables, newActiveSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    get_activeSchedulables.mission!activeSchedulables ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    add_schedulable.mission?newSchedulable ->
+    MissionFWState(mission, union(registeredSchedulables, {newSchedulable}), activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    get_registeredSchedulables.mission!registeredSchedulables ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    remove_activeSchedulables.mission?schedulable ->
+    MissionFWState(mission, registeredSchedulables, diff(activeSchedulables, {schedulable}), missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    get_missionTerminating.mission!missionTerminating ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    end_mission_state.mission -> SKIP
+    )
+
+MissionFWBehaviour(mission) =
+  (  Start_M(mission) ;
+    (
+      get_applicationTerminating_M.mission?applicationTerminating ->
+      if applicationTerminating == False then 
+      (
+          InitializePhase(mission) ; 
+          MissionPhase(mission) ; 
+          CleanupPhase(mission) ; 
+          MissionFWBehaviour(mission)
+      )
+      else 
+         end_mission_state.mission -> SKIP
+      )
+  )
+
+Start_M(mission) =
+  (
+    start_mission.mission?mySequencer ->
+    set_controllingSequencer.mission!mySequencer ->
+    SKIP
+  ) 
+  []
+  (
+    done_toplevel_sequencer ->
+    set_applicationTerminating_M.mission!True ->
+    SKIP
+  )
+
+InitializePhase(mission) =
+  initializeCall.mission ->
+  (
+    ( 
+      Register_M(mission) ;
+      InitializePhase(mission)
+    ) 
+    []
+    (
+      SetCeilingPriority(mission) ;
+      InitializePhase(mission)
+    ) 
+    []
+    (
+      initializeRet.mission ->
+      SKIP
+    ) 
+  ) 
+
+Register_M(mission) =
+register?s!mission ->
+(
+  (
+    checkSchedulable.mission?check:({True}) ->
+    add_schedulable.mission!s ->
+    SKIP
+  )
+  []
+  (
+    checkSchedulable.mission?check:({False}) ->
+    throw.illegalStateException ->
+      CHAOS(Events)
+    )
+  )
+
+RegisterException(mission) =
+  register?s!mission ->
+  throw.illegalStateException ->
+  CHAOS(Events)  
+
+SetCeilingPriority(mission) =
+ setCeilingPriority.mission?o?p -> 
+ SKIP
+
+SetCeilingPriorityException(mission) =
+ setCeilingPriority.mission?o?p -> 
+ throw.illegalStateException ->
+ CHAOS(Events)
+
+Execute_M(mission) =
+ ( 
+  get_registeredSchedulables.mission?registeredSchedulables ->
+  if registeredSchedulables == {} then 
+  (
+    done_schedulables.mission ->
+    SKIP
+  )
+  else 
+  ( 
+     activate_schedulables.mission ->
+     set_activeSchedulables.mission!registeredSchedulables ->
+     (
+        TerminateAndDone(mission) 
+          [| {| stop_schedulables, done_schedulables |} |]          
+        Methods_M(mission)
+       ) 
+    )
+  
+  ) \  {|done_schedulables|}
+
+TerminateAndDone(mission) =
+ (
+    (
+    SignalTermination_M(mission)              
+      [| TerminateSync |] 
+    DoneSchedulables(mission)       
+  );
+  done_schedulables.mission ->
+  SKIP
+)
+ 
+SignalTermination_M(mission) =
+ (
+  stop_schedulables.mission ->
+  get_activeSchedulables.mission?schedulablesToStop ->
+  StopSchedulables(schedulablesToStop) ;
+  schedulables_stopped.mission ->
+  SKIP
+)
+/\ (schedulables_terminated.mission -> SKIP)
+
+StopSchedulables(schedulablesToStop) =
+    (|||  s :  schedulablesToStop @
+          signalTerminationCall.s ->
+        signalTerminationRet.s ->
+        SKIP)
+
+DoneSchedulables(mission) =
+   (
+    schedulables_stopped.mission -> 
+    SKIP
+   )
+   []
+
+  (
+    get_activeSchedulables.mission?activeSchedulables ->  
+    (
+    (
+      [] schedulable : activeSchedulables @
+        done_schedulable.schedulable ->  
+        remove_activeSchedulables.mission!schedulable ->
+        SKIP
+    );  
+    
+    if activeSchedulables == {} then    
+    (
+      schedulables_terminated.mission ->
+      SKIP
+    )
+    else 
+      DoneSchedulables(mission)
+    )
+  )
+
+Methods_M(mission) =
+ (
+        ( 
+          (
+            RequestTerminationMeth(mission)
+              [|  {|end_mission_terminations|} |] 
+            TerminationPendingMeth(mission)
+          )         
+        )
+          [| {|end_mission_terminations|} |] 
+        (
+          done_schedulables.mission ->
+          end_mission_terminations.mission ->
+          SKIP
+        ) 
+    )
+
+RequestTerminationMeth(mission) =
+  (
+    end_mission_terminations.mission -> 
+    SKIP
+  )
+  []
+  (
+    get_registeredSchedulables.mission?registeredSchedulables ->
+    (
+      [] schedulable: registeredSchedulables @
+      requestTermination.mission.schedulable ->
+      SKIP
+    ) ;
+    (
+      (
+        get_missionTerminating.mission?missionTerminating:({False}) ->
+        set_missionTerminating.mission!True ->
+        stop_schedulables.mission ->
+        RequestTerminationMeth(mission)
+      )
+      []
+      (
+        get_missionTerminating.mission?missionTerminating:({True}) ->
+        RequestTerminationMeth(mission)
+      )
+    ) 
+  )
+
+TerminationPendingMeth(mission) =
+   (
+  end_mission_terminations.mission ->
+  SKIP
+   )
+  []
+  (
+  terminationPendingCall.mission ->
+  get_missionTerminating.mission?missionTerminating ->
+  terminationPendingRet.mission!missionTerminating ->
+  TerminationPendingMeth(mission)
+   )
+
+Cleanup_M(mission) =
+( 
+  get_registeredSchedulables.mission?registeredSchedulables ->
+  deregister!registeredSchedulables ->
+    CleanupSchedulables(mission) ;
+     
+    cleanupMissionCall.mission ->
+    cleanupMissionRet.mission?continueSequencer ->
+    Finish_M(mission, continueSequencer)
+)
+
+CleanupSchedulables(mission) =
+  get_registeredSchedulables.mission?registeredSchedulables ->
+  ||| s : registeredSchedulables @
+                cleanupSchedulableCall.s ->
+                cleanupSchedulableRet.s ->  
+                SKIP
+
+Finish_M(mission, continueSequencer) =
+   end_mission_app.mission ->
+   done_mission.mission!continueSequencer ->
+   SKIP
+
+Exceptions(mission) =
+( 
+  RegisterException(mission) 
+  |||
+  SetCeilingPriorityException(mission) 
+) 
+[]
+(
+  done_schedulables.mission ->
+  SKIP
+)
+
+MissionPhase(mission) =
+Execute_M(mission)
+  [|  {|done_schedulables|} |] 
+Exceptions(mission)
+
+CleanupPhase(mission) =
+Cleanup_M(mission)
+  [|  {|done_schedulables|} |] 
+Exceptions(mission)
+
+
+assert MissionFW(missionA); Loop :[ deadlock free [FD] ]
+assert MissionFW(missionA) :[ divergence free ]
+assert MissionFW(missionA) :[ deterministic  [FD] ]
+
+
+
+
+--Schedulable SHARED
+channel release_complete:SchedulableID
+channel done_schedulable : SchedulableID 
+channel end_releases:SchedulableID
+channel fire:SchedulableID
+channel releaseCall:SchedulableID 
+channel releaseRet:SchedulableID 
+
+  channel  signalTerminationCall : SchedulableID
+  channel  signalTerminationRet : SchedulableID
+channel set_applicationTerminating: SchedulableID.Bool
+channel get_applicationTerminating: SchedulableID.Bool
+
+
+--SchedulablelMissionSequencer
+
+
+
+--SMS CHANNELS
+ 
+
+channel set_continueAbove : SchedulableID.Bool
+channel set_continueBelow : SchedulableID.Bool
+
+channel end_schedulableMissionSequencerState : SchedulableID
+
+
+
+  
+  nametype  SchedulableMissionSequencerFWChan  = {| end_sequencer_app, end_methods, end_terminations, get_continue  |}
+  nametype  SMSStateSync = {|get_currentMission, set_currentMission, get_continue, set_continueAbove, set_continueBelow,get_controllingMission, set_controllingMission, get_applicationTerminating, set_applicationTerminating, end_schedulableMissionSequencerState |}
+
+-- SchedulableMissionSequencer
+
+SchedulableMissionSequencerFW(sequencer)  =  
+  SchedulableMissionSequencerState(sequencer, nullMissionId, True, True, nullMissionId, False)
+    [| SMSStateSync |]
+  SchedulableMissionSequencerBehaviour(sequencer)
+
+
+SchedulableMissionSequencerState(sequencer, currentMission, continueAbove, continueBelow, controllingMission, applicationTerminating) =
+  (
+    get_currentMission.sequencer!currentMission -> 
+    SchedulableMissionSequencerState(sequencer, currentMission, continueAbove, continueBelow, controllingMission, applicationTerminating)
+  )
+  []
+  (
+    set_currentMission.sequencer?newCurrentMission -> 
+    SchedulableMissionSequencerState(sequencer, newCurrentMission, continueAbove, continueBelow, controllingMission, applicationTerminating)
+  )
+    []
+  (
+    get_continue.sequencer!(continueAbove and continueBelow) ->
+    SchedulableMissionSequencerState(sequencer, currentMission, continueAbove, continueBelow, controllingMission, applicationTerminating)
+  )
+  []
+  (
+    set_continueAbove.sequencer?newContinueAbove -> 
+    SchedulableMissionSequencerState(sequencer, currentMission, newContinueAbove, continueBelow, controllingMission, applicationTerminating)
+  )
+  []
+  (
+    set_continueBelow.sequencer?newContinueBelow ->
+    SchedulableMissionSequencerState(sequencer, currentMission, continueAbove, newContinueBelow, controllingMission, applicationTerminating)
+  )
+  []
+  (
+    get_controllingMission.sequencer!controllingMission ->
+    SchedulableMissionSequencerState(sequencer, currentMission, continueAbove, continueBelow, controllingMission, applicationTerminating)
+  )
+  []
+  (
+    set_controllingMission.sequencer?newControllingMission ->
+    SchedulableMissionSequencerState(sequencer, currentMission, continueAbove, continueBelow, newControllingMission, applicationTerminating)
+  )
+  []
+  (
+    get_applicationTerminating.sequencer!applicationTerminating ->
+    SchedulableMissionSequencerState(sequencer, currentMission, continueAbove, continueBelow, controllingMission, applicationTerminating)
+  )
+  []
+  (
+    set_applicationTerminating.sequencer?newApplicationTerminating ->
+    SchedulableMissionSequencerState(sequencer, currentMission, continueAbove, continueBelow, controllingMission, newApplicationTerminating)
+  )
+  []
+  (
+    end_schedulableMissionSequencerState.sequencer ->
+    SKIP
+  )
+
+
+
+SchedulableMissionSequencerBehaviour(sequencer) =
+  Start_SMS(sequencer) ; 
+  get_applicationTerminating.sequencer?applicationTerminating ->
+    (if applicationTerminating == False then 
+       (
+          Execute_SMS(sequencer) ; 
+          Cleanup_SMS(sequencer) ; 
+          SchedulableMissionSequencerBehaviour(sequencer) 
+        ) 
+     else  
+       end_schedulableMissionSequencerState.sequencer -> SKIP 
+     )
+
+
+Start_SMS(sequencer) =  
+ (
+      Register_SMS(sequencer) ;
+      Activate_SMS(sequencer)
+    )
+ []
+ (
+    done_toplevel_sequencer -> 
+    set_applicationTerminating.sequencer!True ->
+  SKIP
+  )
+ []
+ (
+    activate_schedulables?someMissionID -> 
+    Start_SMS(sequencer) 
+  ) 
+
+
+
+Register_SMS(sequencer) = 
+ register.sequencer?mID ->
+ set_controllingMission.sequencer!mID ->
+ SKIP
+
+Activate_SMS(sequencer) =
+ get_controllingMission.sequencer?controllingMission -> 
+ activate_schedulables.controllingMission -> 
+ SKIP
+
+Execute_SMS(sequencer) = 
+(
+  ( 
+      (
+            RunMission_SMS(sequencer) ;
+            end_methods.sequencer -> 
+            SKIP
+         )
+        [| {| end_methods |} |]
+     Methods_SMS(sequencer)
+    )   
+) ; done_schedulable.sequencer -> SKIP
+
+
+
+RunMission_SMS(sequencer) = 
+ GetNextMission_SMS(sequencer) ; 
+ StartMission_SMS(sequencer) ; 
+ Continue_SMS(sequencer)
+
+GetNextMission_SMS(sequencer)  =  
+    getNextMissionCall.sequencer -> 
+    getNextMissionRet.sequencer?next -> 
+    set_currentMission.sequencer!next ->
+  SKIP
+
+StartMission_SMS(sequencer)  = 
+get_currentMission.sequencer?currentMission ->  
+   if  currentMission != nullMissionId  then
+   (    
+      start_mission.currentMission.sequencer ->
+      initializeRet.currentMission ->      
+      (      
+        SignalTermination_SMS(sequencer)
+         [| {| end_terminations |} |]
+        (   
+            done_mission.currentMission?continueReturn -> 
+            set_continueBelow.sequencer!continueReturn -> 
+            end_terminations.sequencer -> 
+            SKIP
+        ) 
+      ) 
+  )
+  else  
+  (
+      set_continueBelow.sequencer!False -> 
+      SKIP 
+  )
+
+
+Continue_SMS(sequencer) = 
+  (
+    get_continue.sequencer?continue:({True}) -> 
+      RunMission_SMS(sequencer) 
+  )
+  []  
+  (
+    get_continue.sequencer?continue:({False}) -> 
+        SKIP
+  )
+
+SignalTermination_SMS(sequencer)  = 
+( 
+    (end_terminations.sequencer -> SKIP)
+    []
+    ( 
+      signalTerminationCall.sequencer -> 
+      set_continueAbove.sequencer!False -> 
+    get_currentMission.sequencer?currentMission ->
+      requestTermination.currentMission.sequencer ->  
+      signalTerminationRet.sequencer ->      
+      SKIP
+    ) ; 
+    end_terminations.sequencer -> 
+    SKIP
+ )
+
+Methods_SMS(sequencer)  = 
+  (
+      SequenceTerminationPending_SMS(sequencer) ;
+        Methods_SMS(sequencer)
+    )
+    [] 
+  (
+      end_methods.sequencer ->  
+      SKIP
+    )
+
+SequenceTerminationPending_SMS(sequencer)  = 
+  sequenceTerminationPendingCall.sequencer -> 
+  get_continue.sequencer?continue ->
+    sequenceTerminationPendingRet.sequencer!continue ->
+  SKIP
+
+Cleanup_SMS(sequencer)  = 
+  cleanupSchedulableCall.sequencer -> 
+  cleanupSchedulableRet.sequencer -> 
+  Finish_SMS(sequencer)
+
+
+Finish_SMS(sequencer) = 
+  done_schedulable.sequencer -> 
+  SKIP
+
+  
+assert SchedulableMissionSequencerFW(schedulableA); Loop :[ deadlock free [FD] ]
+assert SchedulableMissionSequencerFW(schedulableA) :[ divergence free ]
+assert SchedulableMissionSequencerFW(schedulableA) :[ deterministic  [FD] ]  
+
+
+
+
+--Aperiocidc EVENT HANDLER FW
+ 
+--APEH TYPES
+
+datatype AperiodicType = aperiodic | aperiodicLong
+
+-- APEH Channels
+
+
+channel set_pending : SchedulableID . Bool
+channel get_pending : SchedulableID . Bool
+channel set_data : SchedulableID . num
+channel get_data : SchedulableID . num
+channel end_aperiodicEventHandlerState : SchedulableID
+
+
+channel fireLong : SchedulableID . num
+channel releaseLongCall : SchedulableID . num
+channel releaseLongRet : SchedulableID 
+
+
+channel scheduleNextRelease : SchedulableID.num 
+
+
+
+nametype DeadlineSync_APEH =  {|releaseCall, end_releases, deschedule_handler, release_complete|}
+nametype APEHStateSync = 
+  {|get_controllingMission, set_controllingMission, get_applicationTerminating, set_applicationTerminating,
+      get_pending, set_pending, get_data, set_data, end_aperiodicEventHandlerState|}
+
+
+AperiodicEventHandlerFW(schedulable, aperiodicType, deadline, deadlineMissHandler) =
+
+AperiodicEventHandlerState(schedulable, nullMissionId, False, False, 0, deadline, deadlineMissHandler )
+[|APEHStateSync|]
+AperiodicEventHandlerBehaviour(schedulable,aperiodicType, deadline, deadlineMissHandler)
+
+AperiodicEventHandlerState(schedulable, controllingMission, applicationTerminating, pending, data, deadline, deadlineMissHandler) =
+(
+  get_controllingMission.schedulable!controllingMission ->
+  AperiodicEventHandlerState(schedulable, controllingMission, applicationTerminating, pending, data, deadline, deadlineMissHandler)
+)
+[]
+(
+  set_controllingMission.schedulable?newControllingMission ->
+  AperiodicEventHandlerState(schedulable, newControllingMission, applicationTerminating, pending, data, deadline, deadlineMissHandler)
+)
+[]
+(
+  get_applicationTerminating.schedulable!applicationTerminating ->
+  AperiodicEventHandlerState(schedulable, controllingMission, applicationTerminating, pending, data, deadline, deadlineMissHandler)
+)
+[]
+(
+  set_applicationTerminating.schedulable?newApplicationTerminating ->
+  AperiodicEventHandlerState(schedulable, controllingMission, newApplicationTerminating, pending, data, deadline, deadlineMissHandler)
+)
+
+[]
+(
+  set_pending.schedulable?newPending ->
+  AperiodicEventHandlerState(schedulable, controllingMission, applicationTerminating, newPending, data, deadline, deadlineMissHandler)
+ )
+[]
+(
+  get_pending.schedulable!pending ->
+  AperiodicEventHandlerState(schedulable, controllingMission, applicationTerminating, pending, data, deadline, deadlineMissHandler)
+
+)
+[]
+(
+  get_data.schedulable!data ->
+  AperiodicEventHandlerState(schedulable, controllingMission, applicationTerminating, pending, data, deadline, deadlineMissHandler)
+
+)
+[]
+(
+  set_data.schedulable?newData ->
+  AperiodicEventHandlerState(schedulable, controllingMission, applicationTerminating, pending, newData, deadline, deadlineMissHandler)
+
+)
+
+  []
+  ( end_aperiodicEventHandlerState.schedulable ->
+    SKIP
+  )
+
+
+AperiodicEventHandlerBehaviour(schedulable,aperiodicType, deadline, deadlineMissHandler) =
+  (   Start_APEH(schedulable) ;
+    get_applicationTerminating.schedulable?applicationTerminating ->
+   ( if applicationTerminating == False then 
+   (
+    Execute_APEH(schedulable,aperiodicType, deadline, deadlineMissHandler) ; 
+    Cleanup_APEH(schedulable)  ; 
+    AperiodicEventHandlerBehaviour(schedulable,aperiodicType, deadline, deadlineMissHandler)
+  )
+  else 
+       end_aperiodicEventHandlerState.schedulable ->
+       SKIP 
+  ))
+
+
+Start_APEH(schedulable) =
+  (
+    Register_APEH(schedulable) ; 
+    Activate_APEH(schedulable)
+  )  
+  []
+  (
+    activate_schedulables?someMissionID -> 
+    Start_APEH(schedulable)
+  ) 
+  [] 
+  ( 
+  done_toplevel_sequencer -> 
+  set_applicationTerminating.schedulable!True ->
+  SKIP
+  )
+
+
+
+Register_APEH(schedulable) = 
+    register.schedulable?missionID -> 
+    set_controllingMission.schedulable!missionID->
+    SKIP 
+
+  
+
+Activate_APEH(schedulable)  =  
+  get_controllingMission.schedulable?controllingMission ->
+    activate_schedulables.controllingMission -> 
+    SKIP
+
+
+
+Execute_APEH(schedulable,aperiodicType, deadline, deadlineMissHandler) =  
+ if deadlineMissHandler != nullSchedulableId then 
+ ( 
+  (
+  (
+    if aperiodicType == aperiodic then 
+      Ready_APEH(schedulable)
+    else 
+      ReadyLong(schedulable)    
+  )
+    [| DeadlineSync_APEH |]
+    DeadlineClock_APEH(schedulable, deadline, deadlineMissHandler)
+    )
+
+     [|{| end_releases |}|]
+  SignalTermination_APEH(schedulable)
+)
+ else
+ (    
+  (
+    if aperiodicType == aperiodic then 
+      Ready_APEH(schedulable)
+    else 
+      ReadyLong(schedulable)    
+  )
+     [|{| end_releases |}|]
+  SignalTermination_APEH(schedulable)
+) 
+
+DeadlineClock_APEH(schedulable, deadline, deadlineMissHandler) = 
+(
+ releaseCall.schedulable ->  
+  (
+    (   
+      (
+        circwait.deadline -> 
+        fire.deadlineMissHandler ->         
+        DeadlineClock_APEH(schedulable, deadline, deadlineMissHandler)
+      ) 
+      [] 
+      (
+        release_complete.schedulable -> 
+        DeadlineClock_APEH(schedulable, deadline, deadlineMissHandler)
+      )       
+    )
+  )
+) 
+    /\
+    (
+        end_releases.schedulable -> 
+        release_complete.schedulable -> 
+        SKIP
+    )
+
+
+Ready_APEH(schedulable) = 
+ (
+  fire.schedulable -> 
+  releaseCall.schedulable -> 
+  Release_APEH(schedulable)
+ )
+ []
+ (
+  end_releases.schedulable ->
+  SKIP
+ )
+
+
+
+ReadyLong(schedulable) = 
+ (  
+  fireLong.schedulable?data -> 
+  set_data.schedulable!data ->
+  releaseLongCall.schedulable.data -> 
+  ReleaseLong(schedulable) 
+ )
+ []
+ (
+  end_releases.schedulable ->
+  SKIP
+ )
+
+
+
+SignalTermination_APEH(schedulable) = 
+  ( 
+    signalTerminationCall.schedulable ->
+    end_releases.schedulable ->
+    signalTerminationRet.schedulable ->
+    done_schedulable.schedulable ->
+    SKIP 
+  )
+
+
+Release_APEH(schedulable) =  
+  
+  ( 
+    fire.schedulable -> 
+    set_pending.schedulable!True ->
+    Release_APEH(schedulable)
+  )
+  []
+  (
+    releaseRet.schedulable -> 
+    get_pending.schedulable?pending ->
+    if pending == True then
+    ( 
+      set_pending.schedulable!False ->
+      release_complete.schedulable -> 
+      releaseCall.schedulable -> 
+      Release_APEH(schedulable)
+    )
+    else 
+       Ready_APEH(schedulable)   
+  )
+   []
+  (
+    end_releases.schedulable -> 
+    SKIP
+  )
+
+ReleaseLong(schedulable) =  
+ ( 
+    fireLong.schedulable?data -> 
+    set_data.schedulable!data ->
+    set_pending.schedulable!True ->
+    ReleaseLong(schedulable)
+  )
+    []
+  (
+    releaseLongRet.schedulable -> 
+    get_pending.schedulable?pending ->
+    if pending == True then
+    ( 
+      set_pending.schedulable!False ->
+      release_complete.schedulable -> 
+      get_data.schedulable?data ->
+      releaseLongCall.schedulable.data -> 
+      ReleaseLong(schedulable)
+    )
+    else 
+       ReadyLong(schedulable) 
+    
+  )
+   []
+  (
+    end_releases.schedulable -> 
+    SKIP
+  )
+
+
+
+Cleanup_APEH(schedulable) = 
+ cleanupSchedulableCall.schedulable ->
+ cleanupSchedulableRet.schedulable -> 
+ SKIP 
+
+
+ assert AperiodicEventHandlerFW(schedulableA, aperiodic, 2, nullSchedulableId) ; Loop :[ deadlock free [FD] ]
+assert  AperiodicEventHandlerFW(schedulableA, aperiodic, 2, nullSchedulableId) :[ divergence free ]
+assert  AperiodicEventHandlerFW(schedulableA, aperiodic, 2, nullSchedulableId) :[ deterministic  [FD] ] 
+
+
+--OSEH and PEH SHARED
+channel get_startTime : SchedulableID.num
+channel set_startTime : SchedulableID.num
+
+
+--One SHot EVENT HANDLER FW
+ 
+
+
+-- OSEH Channels
+
+channel end_oneshotEventHandlerState : SchedulableID
+
+
+channel reschedule_handler : SchedulableID.num
+channel deschedule_handler : SchedulableID
+channel getNextReleaseTimeCall : SchedulableID
+channel getNextReleaseTimeRet : SchedulableID.num
+channel descheduleCall : SchedulableID
+channel descheduleRet : SchedulableID.Bool
+
+
+nametype MethodsSync_OSEH =  {|end_releases, reschedule_handler, deschedule_handler|} 
+nametype ReleaseSync_OSEH = {|releaseCall, reschedule_handler, end_releases|}
+nametype DeadlineSync_OSEH =  {|releaseCall, end_releases, deschedule_handler, release_complete|}
+nametype OSEHStateSync = 
+  {|get_controllingMission, set_controllingMission, get_applicationTerminating, set_applicationTerminating,
+        end_oneshotEventHandlerState|}
+
+-- ONE SHOT EVENT HANDLER
+
+OneShotEventHandlerFW(schedulable, startTime, deadline, deadlineMissHandler) = 
+  OneShotEventHandlerBehaviour(schedulable, deadline, deadlineMissHandler)
+    [|OSEHStateSync |]
+  OneShotEventHandlerState(schedulable, nullMissionId, False, startTime, deadline, deadlineMissHandler)
+
+OneShotEventHandlerState(schedulable, controllingMission, applicationTerminating, startTime, deadline, deadlineMissHandler) = 
+(
+  get_controllingMission.schedulable!controllingMission ->
+  OneShotEventHandlerState(schedulable, controllingMission, applicationTerminating, startTime, deadline, deadlineMissHandler)
+)
+[]
+(
+  set_controllingMission.schedulable?newControllingMission ->
+  OneShotEventHandlerState(schedulable, newControllingMission, applicationTerminating, startTime, deadline, deadlineMissHandler)
+)
+[]
+(
+  get_applicationTerminating.schedulable!applicationTerminating ->
+  OneShotEventHandlerState(schedulable, controllingMission, applicationTerminating, startTime, deadline, deadlineMissHandler)
+)
+[]
+(
+  set_applicationTerminating.schedulable?newApplicationTerminating ->
+  OneShotEventHandlerState(schedulable, controllingMission, newApplicationTerminating, startTime, deadline, deadlineMissHandler)
+)
+[]
+( 
+  get_startTime.schedulable!startTime ->
+  OneShotEventHandlerState(schedulable, controllingMission, applicationTerminating, startTime, deadline, deadlineMissHandler)
+
+  )
+[]
+(
+  set_startTime.schedulable?newStartTime ->
+   OneShotEventHandlerState(schedulable, controllingMission, applicationTerminating, newStartTime, deadline, deadlineMissHandler)
+
+  )
+  []
+  (
+  end_oneshotEventHandlerState.schedulable ->
+  SKIP
+ )
+
+
+OneShotEventHandlerBehaviour(schedulable, deadline, deadlineMissHandler) = 
+  Start_OSEH(schedulable) ;
+  get_applicationTerminating.schedulable?applicationTerminating ->
+  ( 
+    if applicationTerminating == False then  
+      (Execute_OSEH(schedulable, deadline, deadlineMissHandler) ; 
+        Cleanup_OSEH(schedulable) ; 
+        OneShotEventHandlerBehaviour(schedulable, deadline, deadlineMissHandler)
+        )
+    else 
+      end_oneshotEventHandlerState.schedulable ->
+      SKIP 
+  ) 
+
+
+
+Start_OSEH(schedulable) =
+  ( 
+    Register_OSEH(schedulable) ; 
+    Activate_OSEH(schedulable)
+     )  
+  []
+  (
+    activate_schedulables?someMissionID -> 
+    Start_OSEH(schedulable)
+  ) 
+  [] 
+ (
+  done_toplevel_sequencer ->  
+  set_applicationTerminating.schedulable!True   ->
+  SKIP
+  )
+
+
+
+Register_OSEH(schedulable) = 
+    register.schedulable?mID -> 
+    set_controllingMission.schedulable!mID ->
+    SKIP
+
+Activate_OSEH(schedulable)  =  
+  get_controllingMission.schedulable?controllingMission ->
+    activate_schedulables.controllingMission -> 
+    SKIP
+
+Execute_OSEH(schedulable, deadline, deadlineMissHandler) =  
+(
+  (
+    Run_OSEH(schedulable, deadline, deadlineMissHandler)
+       [| MethodsSync_OSEH |]
+    Methods_OSEH(schedulable)
+  )
+    [| {| end_releases |} |]
+  SignalTermination_OSEH(schedulable)
+) 
+
+Run_OSEH(schedulable, deadline, deadlineMissHandler) = 
+  
+  if deadlineMissHandler == nullSchedulableId then 
+  ( 
+    ScheduleOrWait(schedulable) 
+      [| ReleaseSync_OSEH |] 
+    Release_OSEH(schedulable) 
+  ) 
+  else
+  (
+    (
+      ScheduleOrWait(schedulable) 
+        [| ReleaseSync_OSEH |]
+      Release_OSEH(schedulable)
+    )
+      [| DeadlineSync_OSEH |]
+      DeadlineClock_OSEH(schedulable, deadline, deadlineMissHandler)
+  )
+
+ScheduleOrWait(schedulable) = 
+ get_startTime.schedulable?startTime -> 
+ if startTime != 0 then 
+        Scheduled(schedulable) 
+  else 
+      NotScheduled(schedulable) 
+
+Release_OSEH(schedulable) = 
+ ( 
+      releaseCall.schedulable -> 
+      releaseRet.schedulable ->   
+      release_complete.schedulable -> 
+      Release_OSEH(schedulable)
+  ) 
+ []
+ (
+    reschedule_handler.schedulable?newStartTime -> 
+    set_startTime.schedulable!newStartTime -> 
+    Release_OSEH(schedulable)
+    )
+ []
+ (
+    end_releases.schedulable -> 
+    SKIP
+     )
+
+
+
+DeadlineClock_OSEH(schedulable, deadline, deadlineMissHandler) = 
+(
+ releaseCall.schedulable ->  
+
+  (
+    (   
+      (
+        circwait.deadline -> 
+        fire.deadlineMissHandler ->         
+        DeadlineClock_OSEH(schedulable, deadline, deadlineMissHandler)
+      ) 
+      [] 
+      (
+        release_complete.schedulable -> 
+        DeadlineClock_OSEH(schedulable, deadline, deadlineMissHandler)
+      ) 
+      [] 
+      (
+        deschedule_handler.schedulable -> 
+        DeadlineClock_OSEH(schedulable, deadline, deadlineMissHandler)
+      )
+    )
+  )
+) 
+ []
+    (
+        end_releases.schedulable -> 
+        release_complete.schedulable -> 
+        SKIP
+    )
+
+ 
+
+Scheduled(schedulable) = 
+ get_startTime.schedulable?startTime -> 
+ (
+  ( 
+    circwait.startTime ->     
+    releaseCall.schedulable -> 
+    NotScheduled(schedulable)
+     ) 
+     [] 
+  (  
+      ( 
+          deschedule_handler.schedulable -> 
+          NotScheduled(schedulable)
+        )
+      [] 
+      ( 
+        reschedule_handler.schedulable?newStartTime -> 
+        set_startTime.schedulable!newStartTime -> 
+        Scheduled(schedulable)   
+      ) 
+   )   
+ )
+
+
+NotScheduled(schedulable) =
+    ( 
+          deschedule_handler.schedulable -> 
+          NotScheduled(schedulable)
+       )
+    []
+    ( 
+          reschedule_handler.schedulable?newStartTime -> 
+          set_startTime.schedulable!newStartTime -> 
+          Scheduled(schedulable)        
+        )     
+    []
+    (
+    end_releases.schedulable -> 
+    SKIP
+  )
+
+
+Methods_OSEH(schedulable) = 
+ (
+   Deschedule(schedulable) ; 
+   Methods_OSEH(schedulable)
+ ) 
+ [] 
+ (
+   GetNextReleaseTime(schedulable) ; 
+   Methods_OSEH(schedulable)
+ ) 
+ [] 
+ (
+    ScheduleNextRelease(schedulable); 
+   Methods_OSEH(schedulable)
+ ) 
+ []
+ (
+   end_releases.schedulable -> 
+   SKIP
+  )
+
+
+Deschedule(schedulable) = 
+ 
+  descheduleCall.schedulable ->
+  deschedule_handler.schedulable ->
+  get_startTime.schedulable?startTime -> 
+
+
+ (if startTime == 0 then
+  --set_wasScheduled.schedulable!False ->
+  set_startTime.schedulable.0 ->  
+    descheduleRet.schedulable.False -> 
+  SKIP
+ 
+ else 
+  --set_wasScheduled.schedulable!True->
+  set_startTime.schedulable.0 ->  
+    descheduleRet.schedulable.True -> 
+  SKIP
+  
+ )  
+
+
+GetNextReleaseTime(schedulable) = 
+  getNextReleaseTimeCall.schedulable -> 
+  get_startTime.schedulable?startTime -> 
+  getNextReleaseTimeRet.schedulable!startTime -> 
+  SKIP
+
+
+ScheduleNextRelease(schedulable) = 
+ scheduleNextRelease.schedulable?newStartTime -> 
+ set_startTime.schedulable!newStartTime -> 
+ if newStartTime == 0 then 
+  (
+    deschedule_handler.schedulable -> 
+    SKIP
+  )
+ else 
+  (
+    reschedule_handler.schedulable!newStartTime -> 
+    SKIP 
+  ) 
+
+SignalTermination_OSEH(schedulable) =
+ signalTerminationCall.schedulable ->
+ end_releases.schedulable ->
+ signalTerminationRet.schedulable ->
+ done_schedulable.schedulable ->
+ SKIP
+
+Cleanup_OSEH(schedulable) = 
+  cleanupSchedulableCall.schedulable ->
+  cleanupSchedulableRet.schedulable -> 
+  SKIP
+
+
+assert OneShotEventHandlerFW(schedulableA, 0, 2, nullSchedulableId); Loop :[ deadlock free [FD] ]
+assert OneShotEventHandlerFW(schedulableA, 0, 2, nullSchedulableId) :[ divergence free ]
+assert OneShotEventHandlerFW(schedulableA, 0, 2, nullSchedulableId) :[ deterministic  [FD] ]  
+
+
+--PERIODIC EVENT HANDLER FW
+ 
+
+--datatype boolean = True | False
+
+-- PEH Channels
+
+
+channel get_missedReleases : SchedulableID.num
+channel set_missedReleases : SchedulableID.num
+channel get_periodicTerminating : SchedulableID.Bool
+channel set_periodicTerminating : SchedulableID.Bool 
+channel end_periodicEventHandlerState : SchedulableID
+channel release_complete_PEH : SchedulableID.num
+
+ nametype ReleaseSync_PEH =  {|fire, end_releases |}
+nametype  PTCSYnc =  {| get_periodicTerminating, set_periodicTerminating |}
+
+
+ nametype PEHStateSync = {|get_controllingMission, set_controllingMission, get_applicationTerminating, set_applicationTerminating, 
+                           get_missedReleases,set_missedReleases, get_periodicTerminating, set_periodicTerminating, end_periodicEventHandlerState|}
+
+
+
+PeriodicEventHandlerFW(schedulable, period, startTime, deadline, deadlineMissHandler) =
+  PeriodicEventHandlerBehaviour(schedulable, startTime, period, deadline, deadlineMissHandler)
+  [|PEHStateSync|]
+  PeriodicEventHandlerState(schedulable, nullMissionId, False, period, startTime, deadline, deadlineMissHandler, 0, False)
+
+
+PeriodicEventHandlerState(schedulable, controllingMission, applicationTerminating, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating) =
+(
+  (
+    get_controllingMission.schedulable!controllingMission ->
+    PeriodicEventHandlerState(schedulable, controllingMission, applicationTerminating, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+  )
+  []
+  (
+    set_controllingMission.schedulable?newControllingMission ->
+    PeriodicEventHandlerState(schedulable, newControllingMission, applicationTerminating, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+   )
+  []
+  (
+    get_applicationTerminating.schedulable!applicationTerminating ->
+    PeriodicEventHandlerState(schedulable, controllingMission, applicationTerminating, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+  )
+  []
+  (
+    set_applicationTerminating.schedulable?newApplicationTerminating ->
+    PeriodicEventHandlerState(schedulable, controllingMission, newApplicationTerminating, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+  )
+  []
+  (
+    get_missedReleases.schedulable!missedReleases ->
+    PeriodicEventHandlerState(schedulable, controllingMission, applicationTerminating, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+  )
+  []
+  (
+    set_missedReleases.schedulable?newMissedReleases ->
+     PeriodicEventHandlerState(schedulable, controllingMission, applicationTerminating, period, startTime, deadline, deadlineMissHandler, newMissedReleases, periodicTerminating)
+  )
+  []
+  (
+    get_periodicTerminating.schedulable!periodicTerminating ->
+    PeriodicEventHandlerState(schedulable, controllingMission, applicationTerminating, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+  )
+  []
+  (
+    set_periodicTerminating.schedulable?newPeriodicTerminating ->
+    PeriodicEventHandlerState(schedulable, controllingMission, applicationTerminating, period, startTime, deadline, deadlineMissHandler, missedReleases, newPeriodicTerminating)
+  )
+  []
+  ( 
+  get_startTime.schedulable!startTime ->
+  PeriodicEventHandlerState(schedulable, controllingMission, applicationTerminating, period, startTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+ 
+  )
+[]
+(
+  set_startTime.schedulable?newStartTime ->
+   PeriodicEventHandlerState(schedulable, controllingMission, applicationTerminating, period, newStartTime, deadline, deadlineMissHandler, missedReleases, periodicTerminating)
+ 
+  )
+  []
+  (
+    end_periodicEventHandlerState.schedulable ->
+    SKIP
+  )
+)
+
+PeriodicEventHandlerBehaviour(schedulable, startTime, period, deadline, deadlineMissHandler) =
+    Start_PEH(schedulable) ;
+    get_applicationTerminating.schedulable?applicationTerminating ->
+    (
+      if applicationTerminating == False then  
+      (
+           Execute_PEH(schedulable, startTime, period, deadline, deadlineMissHandler)  ; 
+           Cleanup_PEH(schedulable) ; 
+           PeriodicEventHandlerBehaviour(schedulable, startTime, period, deadline, deadlineMissHandler)
+      )
+      else  
+         end_periodicEventHandlerState.schedulable ->
+         SKIP 
+    ) 
+
+Start_PEH(schedulable) =
+ (
+   Register_PEH(schedulable) ;
+   Activate_PEH(schedulable)
+ ) 
+ []
+ (
+      activate_schedulables?someMissionID ->
+      Start_PEH(schedulable)
+ ) 
+ []
+ (
+    done_toplevel_sequencer ->
+    set_applicationTerminating.schedulable!True ->
+    SKIP
+   )  
+
+Register_PEH(schedulable) =
+   register.schedulable?missionID ->
+   set_controllingMission.schedulable!missionID ->
+   SKIP
+
+Activate_PEH(schedulable) =
+    get_controllingMission.schedulable?controllingMission -> 
+    activate_schedulables.controllingMission ->
+    SKIP
+
+Execute_PEH(schedulable, startTime, period, deadline, deadlineMissHandler) =
+    circwait.startTime ->    
+(
+  ( 
+    (
+      
+      if deadlineMissHandler != nullSchedulableId then
+        RunningWithDeadlineDetection(schedulable, period, deadline, deadlineMissHandler)
+      else 
+        Running(schedulable, period) 
+        
+    )
+    []
+    (
+      end_releases.schedulable ->
+      signalTerminationRet.schedulable ->
+      SKIP
+    )
+  )  
+    [|  {|end_releases, signalTerminationRet|} |] 
+  SignalTermination_PEH(schedulable)
+)
+  
+
+Running(schedulable, period)  =
+( 
+  (fire.schedulable -> PeriodicClock(schedulable, period))
+    [| ReleaseSync_PEH |] 
+  Release_PEH(schedulable,0)
+)
+
+RunningWithDeadlineDetection(schedulable, period, deadline, deadlineMissHandler) =
+(
+  Running(schedulable, period)
+    [| {|release_complete, end_releases|} |] 
+  DeadlineClock_PEH(schedulable, 0, deadline, period, deadlineMissHandler) 
+)
+
+PeriodicClock(schedulable, period) =
+ (
+  ( 
+    circwait.period ->
+    (  
+      (
+        fire.schedulable ->
+        PeriodicClock(schedulable, period)
+      )
+      []
+      (
+        end_releases.schedulable ->
+       SKIP 
+      )
+    )
+  )
+  []
+  (
+    end_releases.schedulable ->
+    SKIP 
+  )      
+)
+ 
+
+Release_PEH(schedulable, index) =
+get_missedReleases.schedulable?missedReleases ->
+(
+  if missedReleases == 0 then 
+  (
+    fire.schedulable ->
+    releaseCall.schedulable ->
+    SKIP
+  )
+  else 
+  (
+    releaseCall.schedulable ->
+    if missedReleases-1 < 0 then
+      SKIP
+    else
+      set_missedReleases.schedulable!(missedReleases -1) ->
+      SKIP
+  )
+);
+(
+  (
+    releaseRet.schedulable ->
+    release_complete_PEH.schedulable.index ->
+    SKIP
+  ) 
+    [| {|releaseRet|} |] 
+  FireCatcher(schedulable) 
+) ;
+(
+  (
+    get_periodicTerminating.schedulable?periodicTerminating:({False}) ->
+    if index + 1 > maxNum then 
+      signalTerminationRet.schedulable ->
+      SKIP 
+    else
+      Release_PEH(schedulable, index + 1)
+   )
+  []
+  (
+    --get_periodicTerminating.schedulable?periodicTerminating:(periodicTerminating == True) ->
+    end_releases.schedulable ->
+    signalTerminationRet.schedulable ->
+    SKIP
+  )
+)
+
+FireCatcher(schedulable) = 
+(
+  (
+    fire.schedulable ->
+    get_missedReleases.schedulable?missedReleases ->
+    if missedReleases +1 > maxNum then
+     SKIP
+    else
+      set_missedReleases.schedulable!(missedReleases +1) ->
+      FireCatcher(schedulable)
+  )
+  []
+  (
+    releaseRet.schedulable -> 
+    SKIP
+  )
+)
+
+DeadlineClock_PEH(schedulable, index, deadline, period, deadlineMissHandler) =
+(
+  (
+  (   
+    (
+        
+        circwait.deadline ->
+        fire.deadlineMissHandler ->
+        release_complete_PEH.schedulable.index ->
+        SKIP
+      ) 
+      []
+      (
+        release_complete_PEH.schedulable.index ->
+        SKIP
+      )
+    )
+    |||
+    (
+      (
+        circwait.period ->
+        if index +1 > maxNum then
+          SKIP
+        else 
+          DeadlineClock_PEH(schedulable, index + 1, deadline, period, deadlineMissHandler)
+      )       
+    )
+) 
+/\ 
+  (
+    end_releases.schedulableA ->
+   -- release_complete_PEH.schedulable?index ->
+    SKIP
+  )
+)
+
+SignalTermination_PEH(schedulable) =
+  signalTerminationCall.schedulable ->
+  set_periodicTerminating.schedulable!True ->
+  end_releases.schedulable ->
+  signalTerminationRet.schedulable ->
+  done_schedulable.schedulable ->
+  SKIP
+
+Cleanup_PEH(schedulable) =
+  cleanupSchedulableCall.schedulable ->
+  cleanupSchedulableRet.schedulable ->
+  SKIP
+
+
+assert PeriodicEventHandlerFW(schedulableA, 1, 0, 2, nullSchedulableId); Loop :[ deadlock free [FD] ]
+assert PeriodicEventHandlerFW(schedulableA, 1, 0, 2, nullSchedulableId) :[ divergence free ]
+assert PeriodicEventHandlerFW(schedulableA, 1, 0, 2, nullSchedulableId) :[ deterministic  [FD] ]
+
+
+
+-- MANAGED THREAD
+
+--MT Types
+
+
+
+-- MT CHannels
+
+
+channel runCall : SchedulableID 
+channel runRet : SchedulableID
+
+
+channel end_managedThreadState : SchedulableID
+
+nametype MTStateSync = {|get_controllingMission, set_controllingMission, get_applicationTerminating, set_applicationTerminating, end_managedThreadState |}
+nametype ManagedThreadSync = {|runCall, runRet |} 
+--Managed Thread
+
+ManagedThreadFW(schedulable) = 
+
+  ManagedThreadFWState(schedulable, nullMissionId, False)
+    [| MTStateSync |]
+  ManagedThreadFWBehaviour(schedulable)
+
+
+ManagedThreadFWState(schedulable, controllingMission, applicationTerminating) =
+  (
+    get_controllingMission.schedulable!controllingMission ->
+    ManagedThreadFWState(schedulable, controllingMission, applicationTerminating)
+  )
+  []
+  (
+    set_controllingMission.schedulable?newControllingMission ->
+    ManagedThreadFWState(schedulable, newControllingMission, applicationTerminating)
+  )
+  []
+  (
+    get_applicationTerminating.schedulable!applicationTerminating ->
+    ManagedThreadFWState(schedulable, controllingMission, applicationTerminating)
+  )
+  []
+  (
+    set_applicationTerminating.schedulable?newApplicationTerminating ->
+    ManagedThreadFWState(schedulable, controllingMission, newApplicationTerminating)
+  )
+  []
+  (
+    end_managedThreadState.schedulable -> 
+    SKIP 
+  )
+
+
+ManagedThreadFWBehaviour(schedulable) =
+    Start_MT(schedulable) ; 
+  get_applicationTerminating.schedulable?applicationTerminating ->
+    (
+    if applicationTerminating == False then 
+      (Execute_MT(schedulable) ; Cleanup_MT(schedulable) ; ManagedThreadFWBehaviour(schedulable) ) 
+      else 
+    (
+      end_managedThreadState.schedulable -> 
+        SKIP
+      ) 
+   )
+
+
+Start_MT(schedulable) =
+  (
+   Register_MT(schedulable) ; 
+   Activate_MT(schedulable)
+  )  
+  []
+  (
+    activate_schedulables?someMissionID -> 
+    Start_MT(schedulable)
+  ) 
+  [] 
+  (
+    done_toplevel_sequencer -> 
+    set_applicationTerminating.schedulable!True ->
+    SKIP 
+  )
+
+
+
+Register_MT(schedulable) =
+  register.schedulable?mID ->
+  checkSchedulable.mID?result ->
+  set_controllingMission.schedulable!mID ->
+  SKIP
+
+
+Activate_MT(schedulable) =
+  get_controllingMission.schedulable?controllingMission ->  
+  activate_schedulables.controllingMission ->  
+  SKIP
+
+Execute_MT(schedulable)  = 
+   Run_MT(schedulable)
+      [| {| runRet |} |]
+   Methods_MT(schedulable)
+
+
+Run_MT(schedulable) =
+  runCall.schedulable ->
+  runRet.schedulable -> 
+  done_schedulable.schedulable ->
+  SKIP
+
+
+  Methods_MT(schedulable) = 
+    (
+    SignalTerminationMeth_MT(schedulable) ; 
+    Methods_MT(schedulable)
+  )
+  []
+  (
+    runRet.schedulable -> 
+    SKIP  
+    )
+
+
+  SignalTerminationMeth_MT(schedulable) = 
+   signalTerminationCall.schedulable -> 
+   signalTerminationRet.schedulable -> SKIP
+ 
+
+Cleanup_MT(schedulable) = 
+   cleanupSchedulableCall.schedulable ->
+   cleanupSchedulableRet.schedulable -> SKIP
+
+
+
+ 
+assert ManagedThreadFW(schedulableA); Loop :[ deadlock free [FD] ]
+assert ManagedThreadFW(schedulableA) :[ divergence free ]
+assert ManagedThreadFW(schedulableA) :[ deterministic  [FD] ]  
+  
+
+
+--TopLevelMissionSequencers()=
+--  ([| |] )
+
+TopLevelMissionSequencers(TopLevelSequencerIds) =
+([|{| done_toplevel_sequencer |}|] ms : TopLevelSequencerIds @ TopLevelMissionSequencerFW(ms)) 
+ 
+
+Missions(missions) = ([|{| done_toplevel_sequencer |}|] m : missions @ MissionFW(m))
+
+
+
+Schedulables(schedulableSequencers, aperiodicEventHanders, oneShotEventHandlers,periodicEventHandlers,managedThreads)=
+([|{| done_toplevel_sequencer |}|] sms : schedulableSequencers @ SchedulableMissionSequencerFW(sms) )
+  |||
+([|{| done_toplevel_sequencer |}|] (apeh, type, start, missHandler) : aperiodicEventHanders @ AperiodicEventHandlerFW(apeh, type, start, missHandler) )
+  |||
+([|{| done_toplevel_sequencer |}|] (oseh, start, deadline, missHandler) : oneShotEventHandlers @ OneShotEventHandlerFW(oseh, start, deadline, missHandler ) )
+  |||
+([|{| done_toplevel_sequencer |}|] (peh, period, start, deadline, missHandler) : periodicEventHandlers @ PeriodicEventHandlerFW(peh, period, start, deadline, missHandler) )
+  |||
+([|{| done_toplevel_sequencer |}|] mt : managedThreads @ ManagedThreadFW(mt) )
+
+
+
+nametype SafeltSync = {| start_toplevel_sequencer, done_toplevel_sequencer, register, deregister, checkSchedulable|}
+nametype TopLevelMissionSequencerSync = {|start_mission, done_mission, done_toplevel_sequencer|}
+nametype MissionSync = {| done_toplevel_sequencer,  
+                   signalTerminationCall, signalTerminationRet, activate_schedulables, done_schedulable, 
+                   cleanupSchedulableCall, cleanupSchedulableRet, register|} 
+
+Framework(topLeveSequencers,missions,schedulableSequencers,aperiodicEventHanders,oneShotEventHandlers,periodicEventHandlers,managedThreads) =
+(
+    SafeletFW 
+      [| SafeltSync |]
+    (  
+      TopLevelMissionSequencers(topLeveSequencers)
+        [| TopLevelMissionSequencerSync |]
+      ( 
+        Missions(missions)
+          [| MissionSync |]
+        Schedulables(schedulableSequencers, aperiodicEventHanders,oneShotEventHandlers,periodicEventHandlers,managedThreads)
+      )
+  )
+)
+
+SimpleFramework = Framework({TopLevelSequencerId}, {missionA}, {schedulableA}, {(schedulableB, aperiodic, 2, nullSchedulableId)}, {}, {}, {} )
+
+
+assert SimpleFramework ; Loop :[ deadlock free [FD] ]
+assert SimpleFramework :[ divergence free ]
+assert SimpleFramework :[ deterministic  [FD] ]
+
+
+--****************************************************************************************************************************************************************************************************
+--*******************************************************************************************APLICATION***********************************************************************************************
+--****************************************************************************************************************************************************************************************************
+
+-- SAFELET: MY APP
+
+channel get_safelet_done : Bool
+channel set_safelet_done : Bool
+channel end_safelet_app
+
+
+MyApp  = 
+	(
+	 	Methods_s [| {|get_safelet_done, set_safelet_done|} |] DoneController_s(False)
+	)		
+ /\	(end_safelet_app -> SKIP)
+
+DoneController_s(done) =
+(
+	get_safelet_done!done ->
+	DoneController_s(done)
+)
+[]
+(
+	set_safelet_done?newDone ->
+	DoneController_s(newDone)
+)
+
+GetSequencer_s = 
+	getSequencerCall -> 
+	get_safelet_done?done ->
+	if done == False then 
+	(
+		set_safelet_done!True ->
+		getSequencerRet!TopLevelSequencerId ->
+		SKIP
+	)
+	else
+	(
+		getSequencerRet!nullSequencerId ->
+		SKIP
+	)
+       
+InitializeApplication_s =  
+     initializeApplicationCall -> 
+     initializeApplicationRet ->
+     SKIP
+
+Methods_s = 
+ ( 
+	GetSequencer_s
+	[] 
+	InitializeApplication_s 
+ ); Methods_s
+
+
+
+
+--TOP LEVEL SEQUENCER: MY SEQUENCER
+
+channel get_sequencer_done : SchedulableID.Bool
+channel set_sequencer_done : SchedulableID.Bool
+
+
+MySequencerApp = 
+	(Methods_tlms [|{|get_sequencer_done, set_sequencer_done |}|] DoneController_tlms(False) )/\ (end_sequencer_app.TopLevelSequencerId -> SKIP)
+   
+
+DoneController_tlms(done) =
+(
+	get_sequencer_done.TopLevelSequencerId!done ->
+	DoneController_tlms(done)
+)
+[]
+(
+	set_sequencer_done.TopLevelSequencerId?newDone ->
+	DoneController_tlms(newDone)
+)
+
+
+GetNextMission_tlms = 
+    getNextMissionCall.TopLevelSequencerId -> 
+	get_sequencer_done.TopLevelSequencerId?done ->
+	(
+	  if done == False then
+	  (
+		set_sequencer_done.TopLevelSequencerId!True ->
+		getNextMissionRet.TopLevelSequencerId!TopMission1ID ->
+		SKIP
+      )
+	  else 
+	  (
+			getNextMissionRet.TopLevelSequencerId!nullMissionId ->
+		    SKIP
+	  )
+    )
+
+Methods_tlms = 
+ (
+	GetNextMission_tlms 
+ ) ; Methods_tlms
+
+  
+
+
+--TOP LEVEL MISSION: TOP MISSION 1
+
+channel end_mission_fw : MissionID
+
+TopMission1App = 
+( 
+	(
+			(Methods_tlm1 )
+			/\ 
+			(end_mission_app.TopMission1ID -> TopMission1App )
+	) 
+	/\
+	(end_mission_fw.TopMission1ID -> SKIP)
+)
+
+
+InitializePhase_tlm1 = 
+  initializeCall.TopMission1ID  -> 
+  register!FirstMissionSequencerID!TopMission1ID -> 
+  register!SecondMissionSequencerID!TopMission1ID -> 
+  register!ThirdMissionSequencerID!TopMission1ID -> 
+  initializeRet.TopMission1ID -> 
+ SKIP
+
+CleanupPhase_tlm1 = 
+ cleanupMissionCall.TopMission1ID ->
+ cleanupMissionRet.TopMission1ID?continueSequencer ->
+ SKIP
+
+Methods_tlm1 = 
+( 
+	InitializePhase_tlm1 
+	[] 
+	CleanupPhase_tlm1
+) ; Methods_tlm1
+  
+
+
+
+--NESTED SEQUENCER: FIRST SEQUENCER
+
+FirstMissionSequencerApp = 
+(Methods_ms1 [|{|get_sequencer_done, set_sequencer_done |}|] DoneController_ms1(False) ) /\ (end_sequencer_app.FirstMissionSequencerID -> SKIP)
+
+
+DoneController_ms1(done) =
+(
+	get_sequencer_done.FirstMissionSequencerID!done ->
+	DoneController_ms1(done)
+)
+[]
+(
+	set_sequencer_done.FirstMissionSequencerID?newDone ->
+	DoneController_ms1(newDone)
+)
+
+GetNextMission_ms1 = 
+    getNextMissionCall.FirstMissionSequencerID -> 
+	get_sequencer_done.FirstMissionSequencerID?done ->
+	if done == False then 
+    (  
+		set_sequencer_done.FirstMissionSequencerID!True ->
+		getNextMissionRet.FirstMissionSequencerID!MyMission1ID ->
+		SKIP
+	)
+	else
+	(  
+		getNextMissionRet.FirstMissionSequencerID!nullMissionId ->
+		SKIP
+	)
+
+
+Methods_ms1 = 
+( 
+	GetNextMission_ms1 	
+) ; Methods_ms1
+
+  
+
+
+-- NESTED MISSION: MY MISSION 1
+MyMission1App = 
+(
+	( 
+		Methods_m1 
+		/\ 
+		(end_mission_app.MyMission1ID -> MyMission1App )
+	) 
+	/\ 
+	(end_mission_fw.MyMission1ID -> SKIP)
+)
+
+InitializePhase_m1 = 
+  initializeCall.MyMission1ID  -> 
+  register!MyPEH1Id!MyMission1ID -> 
+  initializeRet.MyMission1ID -> 
+ SKIP
+
+CleanupPhase_m1 = 
+ cleanupMissionCall.MyMission1ID ->
+ cleanupMissionRet.MyMission1ID!True ->
+	SKIP
+
+Methods_m1 = 
+( 
+	InitializePhase_m1 
+	[] 
+	CleanupPhase_m1
+) ; Methods_m1
+
+
+
+-- PEH: MY PEH 1
+ 
+channel get_count : SchedulableID.num
+channel increment_count : SchedulableID
+channel end_periodic_app : SchedulableID
+
+MyPEH1App(m) = 
+(Methods_peh1(m)  [| {|get_count, increment_count |} |] CountController_peh1(0) )   /\ (end_periodic_app.MyPEH1Id -> SKIP)
+
+
+CountController_peh1(count) =
+(
+	get_count.MyPEH1Id!count ->
+	CountController_peh1(count)
+)
+[]
+(
+	increment_count.MyPEH1Id ->
+	CountController_peh1(count +1)
+)
+
+
+Release_peh1(m) = 
+ releaseCall.MyPEH1Id -> 
+ increment_count.MyPEH1Id ->
+ get_count.MyPEH1Id?count ->
+ if count == 10 then 
+ (
+	releaseRet.MyPEH1Id -> 
+	SKIP
+ )
+ else 
+ (
+	requestTermination.m.MyPEH1Id -> 	
+	releaseRet.MyPEH1Id -> 
+	SKIP
+ )
+  	 
+
+Cleanup_peh1 = 
+ cleanupSchedulableCall.MyPEH1Id ->
+ cleanupSchedulableRet.MyPEH1Id -> SKIP
+
+Methods_peh1(m) = 
+( 
+	Release_peh1(m)
+	[] 
+	Cleanup_peh1
+) ; Methods_peh1(m)
+
+ 
+
+
+-- NESTED SEQUENCER: SECOND SEQUENCER
+
+SecondSequencerApp = 
+(Methods_ms2 [|{|get_sequencer_done, set_sequencer_done |}|] DoneController_ms2(False) ) /\ (end_sequencer_app.SecondMissionSequencerID -> SKIP)
+
+
+DoneController_ms2(done) =
+(
+	get_sequencer_done.SecondMissionSequencerID!done ->
+	DoneController_ms2(done)
+)
+[]
+(
+	set_sequencer_done.SecondMissionSequencerID?newDone ->
+	DoneController_ms2(newDone)
+)
+
+GetNextMission_ms2 = 
+    getNextMissionCall.SecondMissionSequencerID -> 
+	get_sequencer_done.SecondMissionSequencerID?done ->
+	if done == False then 
+    (  
+		set_sequencer_done.SecondMissionSequencerID!True ->
+		getNextMissionRet.SecondMissionSequencerID!MyMission2ID ->
+		SKIP
+	)
+	else
+	(  
+		getNextMissionRet.SecondMissionSequencerID!nullMissionId ->
+		SKIP
+	)
+
+Methods_ms2 = 
+( 
+	GetNextMission_ms2 	
+) ; Methods_ms2
+
+  
+
+
+-- NESTED MISSION: MY MISSION 2
+
+ MyMission2App = 
+(
+	( 
+		Methods_m2 
+		/\
+		(end_mission_app.MyMission2ID -> MyMission2App )
+	) 
+	/\ 
+	(end_mission_fw.MyMission2ID -> SKIP)
+)
+
+InitializePhase_m2 = 
+  initializeCall.MyMission2ID  -> 
+  register!MyPEH2Id!MyMission2ID -> 
+  initializeRet.MyMission2ID -> 
+ SKIP
+
+CleanupPhase_m2 = 
+ cleanupMissionCall.MyMission2ID ->
+ cleanupMissionRet.MyMission2ID!True ->
+	SKIP
+
+Methods_m2 = 
+( 
+	InitializePhase_m2
+	[] 
+	CleanupPhase_m2
+) ; Methods_m2
+
+
+-- PEH: MY PEH 2
+
+MyPEH2App(m) =  
+(Methods_peh2(m)  [| {|get_count, increment_count |} |] CountController_peh2(0) )   /\ (end_periodic_app.MyPEH2Id -> SKIP)
+
+
+CountController_peh2(count) =
+(
+	get_count.MyPEH2Id!count ->
+	CountController_peh2(count)
+)
+[]
+(
+	increment_count.MyPEH2Id ->
+	CountController_peh2(count +1)
+)
+
+
+Release_peh2(m) = 
+ releaseCall.MyPEH2Id -> 
+ increment_count.MyPEH2Id ->
+ get_count.MyPEH2Id?count ->
+ if count == 10 then 
+ (
+	releaseRet.MyPEH2Id -> 
+	SKIP
+ )
+ else 
+ (
+	requestTermination.m.MyPEH2Id -> 	
+	releaseRet.MyPEH2Id -> 
+	SKIP
+ )
+  	 
+
+Cleanup_peh2 = 
+ cleanupSchedulableCall.MyPEH2Id ->
+ cleanupSchedulableRet.MyPEH2Id -> SKIP
+
+Methods_peh2(m) = 
+( 
+	Release_peh2(m)
+	[] 
+	Cleanup_peh2
+) ; Methods_peh2(m)
+
+  
+
+
+-- NESTED SEQUENCER: THIRD SEQUENCER
+
+ThirdMissionSequencerApp =
+(Methods_ms3 [|{|get_sequencer_done, set_sequencer_done |}|] DoneController_ms3(False) ) /\ (end_sequencer_app.ThirdMissionSequencerID -> SKIP)
+
+
+DoneController_ms3(done) =
+(
+	get_sequencer_done.ThirdMissionSequencerID!done ->
+	DoneController_ms3(done)
+)
+[]
+(
+	set_sequencer_done.ThirdMissionSequencerID?newDone ->
+	DoneController_ms3(newDone)
+)
+
+GetNextMission_ms3 = 
+    getNextMissionCall.ThirdMissionSequencerID -> 
+	get_sequencer_done.ThirdMissionSequencerID?done ->
+	if done == False then 
+    (  
+		set_sequencer_done.ThirdMissionSequencerID!True ->
+		getNextMissionRet.ThirdMissionSequencerID!MyMission1ID ->
+		SKIP
+	)
+	else
+	(  
+		getNextMissionRet.ThirdMissionSequencerID!nullMissionId ->
+		SKIP
+	)
+
+
+Methods_ms3 = 
+( 
+	GetNextMission_ms3 	
+) ; Methods_ms3
+
+
+  
+
+
+-- NESTED MISSION: MY MISSION 3
+
+MyMission3App = 
+(
+	( 
+		Methods_m3 
+		/\
+		(end_mission_app.MyMission3ID -> MyMission3App )
+	) 
+	/\ 
+	(end_mission_fw.MyMission3ID -> SKIP)
+)
+
+InitializePhase_m3 = 
+  initializeCall.MyMission3ID  -> 
+  register!MyMyPEH3Id!MyMission3ID -> 
+  initializeRet.MyMission3ID -> 
+ SKIP
+
+CleanupPhase_m3 = 
+ cleanupMissionCall.MyMission3ID ->
+ cleanupMissionRet.MyMission3ID!True ->
+	SKIP
+
+Methods_m3 = 
+( 
+	InitializePhase_m3 
+	[] 
+	CleanupPhase_m3
+) ; Methods_m3
+
+
+
+-- PEH: MY PEH 3
+
+MyMyPEH3App(m) =  
+(Methods_peh3(m)  [| {|get_count, increment_count |} |] CountController_peh3(0) )   /\ (end_periodic_app.MyMyPEH3Id -> SKIP)
+
+
+CountController_peh3(count) =
+(
+	get_count.MyMyPEH3Id!count ->
+	CountController_peh3(count)
+)
+[]
+(
+	increment_count.MyMyPEH3Id ->
+	CountController_peh3(count +1)
+)
+
+
+Release_peh3(m) = 
+ releaseCall.MyMyPEH3Id -> 
+ increment_count.MyMyPEH3Id ->
+ get_count.MyMyPEH3Id?count ->
+ if count == 10 then 
+ (
+	releaseRet.MyMyPEH3Id -> 
+	SKIP
+ )
+ else 
+ (
+	requestTermination.m.MyMyPEH3Id -> 	
+	releaseRet.MyMyPEH3Id -> 
+	SKIP
+ )
+  	 
+
+Cleanup_peh3 = 
+ cleanupSchedulableCall.MyMyPEH3Id ->
+ cleanupSchedulableRet.MyMyPEH3Id -> SKIP
+
+Methods_peh3(m) = 
+( 
+	Release_peh3(m)
+	[] 
+	Cleanup_peh3
+) ; Methods_peh3(m)
+
+
+
+nametype SafeltAppSync = {||}
+nametype TopLevelMissionSequencerAppSync = {||}
+nametype PEHAppSync = {||}
+
+  
+Program_Missions = 
+	(MissionFW(TopMission1ID) [| MissionSync |] TopMission1App)
+	|||
+	(MissionFW(MyMission1ID) [| MissionSync |] MyMission1App)
+  |||
+	(MissionFW(MyMission2ID) [| MissionSync|] MyMission2App)
+  |||
+	(MissionFW(MyMission3ID ) [| MissionSync |] MyMission3App)
+
+Program_Schedulables =
+	PeriodicEventHandlerFW(MyPEH1Id,1, 0, 0, nullSchedulableId) [| PEHAppSync |] MyPEH1App(MyMission1ID)
+	|||
+	PeriodicEventHandlerFW(MyPEH2Id,1, 0, 0, nullSchedulableId) [| PEHAppSync |] MyPEH2App(MyMission2ID)
+	|||
+	PeriodicEventHandlerFW(MyMyPEH3Id,1, 0, 0, nullSchedulableId) [| PEHAppSync |] MyMyPEH3App(MyMission3ID)
+
+
+Program = 
+(
+    (SafeletFW [| SafeltAppSync |] MyApp)
+      [| SafeltSync |]
+    (  
+      (TopLevelMissionSequencerFW(TopLevelSequencerId) [| TopLevelMissionSequencerAppSync |] MySequencerApp)
+        [| TopLevelMissionSequencerSync |]
+      ( 
+       Program_Missions
+          [| MissionSync |]
+        Program_Schedulables
+      )
+  )
+)
+
+transparent diamond 
+
+assert diamond(Program) ; Loop :[ deadlock free [FD] ]
+assert Program :[ divergence free ]
+assert Program :[ deterministic  [FD] ]
+

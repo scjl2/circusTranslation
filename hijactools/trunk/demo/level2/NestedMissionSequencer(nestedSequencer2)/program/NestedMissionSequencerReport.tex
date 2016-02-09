@@ -1,0 +1,94 @@
+\documentclass{article}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{comment}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{comment}
+%COMMENTS
+\includecomment{comment} %show comments
+%\excludecomment{comment}  %do not show comments
+
+%\includecomment{parser} %show comments
+\excludecomment{parser}  %do not show comments
+
+\usepackage{soul}
+%\usepackage{wasysym}
+
+\usepackage{listings}
+\lstset{ %
+language=Java,                % choose the language of the code
+basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=5pt,                  % how far the line-numbers are from the code
+%backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=single,           % adds a frame around the code
+tabsize=2,          % sets default tabsize to 2 spaces
+captionpos=b,           % sets the caption-position to bottom
+breaklines=true,        % sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)}          % if you want to add a comment within your code
+}
+
+\begin{document}
+
+\section{MyApp}
+\lstinputlisting[language=Java]{MyApp.java}
+\newpage
+
+\section{MySequencer.java}
+\lstinputlisting[language=Java]{MySequencer.java}
+\newpage
+
+\section{TopMission1}
+\lstinputlisting[language=Java]{TopMission1.java}
+\newpage
+
+\section{FirstMissionSequencer}
+\lstinputlisting[language=Java]{FirstMissionSequencer.java}
+\newpage
+
+\section{MyMission1}
+\lstinputlisting[language=Java]{MyMission1.java}
+\newpage
+
+\section{MyPEH1}
+\lstinputlisting[language=Java]{MyPEH1.java}
+\newpage
+
+\section{SecondMissionSequencer}
+\lstinputlisting[language=Java]{SecondMissionSequencer.java}
+\newpage
+
+\section{MyMission2}
+\lstinputlisting[language=Java]{MyMission2.java}
+\newpage
+
+\section{MyPEH2}
+\lstinputlisting[language=Java]{MyPEH2.java}
+\newpage
+
+\section{ThirdMissionSequencer}
+\lstinputlisting[language=Java]{ThirdMissionSequencer.java}
+\newpage
+
+
+\section{MyMission3}
+\lstinputlisting[language=Java]{MyMission3.java}
+\newpage
+
+\section{MyPEH3}
+\lstinputlisting[language=Java]{MyPEH3.java}
+\newpage
+
+\end{document}

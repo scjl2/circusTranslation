@@ -1,0 +1,12 @@
+\begin{zsection}
+  \SECTION ~ MissionIds ~ \parents ~ scj\_prelude, MissionId
+\end{zsection}
+%
+\begin{axdef}
+ TopMission1ID  : MissionID\\
+MyMission1ID : MissionID\\
+ MyMission2ID : MissionID\\
+ MyMission3ID : MissionID\\
+\where
+  distinct \langle nullMissionId, TopMission1ID, MyMission1ID, MyMission2ID, MyMission3ID  \rangle
+\end{axdef}

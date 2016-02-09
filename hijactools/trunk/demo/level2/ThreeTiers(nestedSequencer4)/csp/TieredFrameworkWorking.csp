@@ -1,0 +1,128 @@
+
+nametype SafeletTierSync = 
+    {|start_toplevel_sequencer, done_toplevel_sequencer, done_safeletFW |}
+nametype SafeletTierChan = 
+        union(SafeletFWChanSet, TopLevelMissionSequencerFWChanSet)
+
+
+SafeletTier(topLevelMissionSequencerIDs) =
+(
+  SafeletFW
+    [|SafeletTierSync|]
+  TopLevelMissionSequencers(topLevelMissionSequencerIDs)
+)  
+
+
+nametype MissionSync = {| done_safeletFW, done_toplevel_sequencer,  
+                          signalTerminationCall, signalTerminationRet, 
+                          activate_schedulables, done_schedulable, 
+                          cleanupSchedulableCall, cleanupSchedulableRet, register |} 
+
+Tier(missionIDs, (schedulableSequencers, aperiodicEventHanders, oneShotEventHandlers,periodicEventHandlers,managedThreads) ) =
+ (
+    Missions(missionIDs)
+      [|MissionSync|]
+    Schedulables(schedulableSequencers, 
+                  aperiodicEventHanders, 
+                  oneShotEventHandlers,
+                  periodicEventHandlers,
+                  managedThreads)
+)
+
+nametype MissionAndSchedulableChans = 
+    Union({ MissionFWCHanSet, SchedulableMissionSequencerFWChanSet, 
+            MTFWChanSet, APEHFWChanSet, PEHFWChanSet, OSEHFWChanSet})
+
+nametype SchedulableEndApps =  
+    {| end_managedThread_app, end_sequencer_app, end_periodic_app, 
+       end_aperiodicEventHandler_app, end_oneshotEventHandler_app  |} 
+
+NestedTiers(nestedTierIDs) =
+(
+  || (missionIDs, managedSchedulableIDs) : nestedTierIDs @ 
+      [ Union(
+        { SchedulableEndApps,
+          diff(
+                MissionAndSchedulableChans, 
+                {|start_mission, done_mission, initializeRet, requestTermination|} 
+              ),
+          {| start_mission.x, done_mission.x, 
+             initializeRet.x, requestTermination.x, register.s.x | 
+                    s <-SchedulableID, x <- MissionID , member(x, missionIDs) 
+          |} 
+        }) 
+      ] Tier(missionIDs, managedSchedulableIDs)
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+TieredFramework(topLevelSequencerIDs, tier0MissionIDs, tier0SchedulableIDS, nestedTierIDs) =
+(  
+  SafeletTier(topLevelSequencerIDs)
+    [|TierSync|]
+  (
+    Tier0(tier0MissionIDs,tier0SchedulableIDS) 
+      [| union(
+                  TierCommonChan, 
+                  {| start_mission.x, done_mission.x, 
+                     initializeRet.x, requestTermination.x  | 
+                        x <- MissionID , member(x, p(nestedTierIDs) ) 
+                  |}
+               )  
+      |]
+    NestedTiers( nestedTierIDs )
+  )
+)
+
+NestedMissionSequencerTest =
+(  
+  MyApp
+  |||
+  MySequencerApp
+  |||
+  TopMission1App
+  |||
+  FirstMissionSequencerApp
+  |||
+  MyMission1App
+  |||
+  MyPEH1App(MyMission1ID)
+  |||
+  SecondSequencerApp
+  |||
+  MyMission2App
+  |||
+  MyPEH2App(MyMission2ID)
+  |||
+  ThirdMissionSequencerApp
+  |||
+  MyMission3App
+  |||
+  MyMyPEH3App(MyMission3ID)
+ 
+)
+
+
+Program(topLevelSequencerIDs, tier0MissionIDs, tier0SchedulableIDS, nestedTierIDs) = 
+(  
+  TieredFramework(topLevelSequencerIDs, tier0MissionIDs, tier0SchedulableIDS, nestedTierIDs)
+    [| Union({
+                SafeltAppSync, MissionSequencerAppSync, 
+                MissionAppSync, PEHAppSync, 
+                {|end_mission_app, setCeilingPriority|}})  
+    |]
+  NestedMissionSequencerTest  
+)

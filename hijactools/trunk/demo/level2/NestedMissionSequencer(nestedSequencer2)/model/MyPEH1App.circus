@@ -1,0 +1,81 @@
+\begin{zsection}
+  \SECTION ~ MyPEH1App ~ \parents ~ MissionChan, SchedulableChan, SchedulableId,\\
+   \t1 MissionId, MissionIds, TopLevelMissionSequencerChan, PeriodicEventHandlerChan, \\
+   \t1 SafeletMethChan, FrameworkChan
+\end{zsection}
+%
+\begin{circus}
+  \circprocess ~  MyPEH1App ~\circdef ~ m : MissionID \circspot \circbegin
+\end{circus}
+%
+%public MyPEH(PriorityParameters priority, PeriodicParameters release, StorageParameters storage, Mission m) {
+%			super(priority, release, storage, "mission1--peh");
+%			this.m = m;
+%		}
+%
+%		public void handleAsyncEvent() {
+%			devices.Console.println("Mission 1: PEH1: " + count);
+%			count++;
+%			if (count == 10) {
+%				m.requestTermination();
+%				devices.Console.println("Mission T");
+%			}
+%		}
+%	}
+\begin{schema}{\circstateignore State}
+	count : \num \\
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+	State~'
+\where
+	count' = 0 \\
+\end{schema}
+%
+\begin{circusaction}
+Release \circdef \\
+\t1 releaseCall~.~MyPEH1 \then \\
+\t1 count := count +1 \circseq \\
+\t1 \circif count = 10 \circthen \\
+\t2 (
+		releaseRet~.~MyPEH1 \then \\
+		\Skip\\
+	)
+\t1 \circelse \lnot (count = 10) \circthen \\
+\t2 (
+		requestTermination.m.MyPEH1 \then \\
+		releaseRet~.~MyPEH1 \then \\
+		\Skip\\
+	)
+\t1 \circfi
+\end{circusaction}
+%
+\begin{circusaction}
+Cleanup \circdef \\
+\t1 cleanupSchedulableCall~.~MyPEH1 \then\\
+\t1 cleanupSchedulableRet~.~MyPEH1 \then \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+Methods \circdef \\
+\t1 \circmu X \circspot (
+				Release \\
+				\extchoice \\
+				Cleanup
+			) \circseq X
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods)  \circinterrupt \\
+	\t1				(end\_periodic\_app~.~MyPEH1 \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

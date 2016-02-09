@@ -1,0 +1,54 @@
+--SAFELET
+--Models javax.safetycritical.Safelet
+
+--SAFELET CHANNELS
+
+channel done_safeletFW
+
+channel initializeApplicationCall 
+channel initializeApplicationRet 
+
+channel getSequencerCall 
+channel getSequencerRet : TopLevelSequencerIDs
+channel end_safelet_app
+
+nametype SafeletFWChanSet = 
+  {|initializeApplicationCall,initializeApplicationRet,
+    getSequencerCall,getSequencerRet, start_toplevel_sequencer, 
+    end_safelet_app,done_safeletFW |}
+
+
+SafeletFW =
+  SafeletFWBehaviour 
+
+SafeletFWBehaviour=
+  InitializeApplication ;
+  Execute_S ;    
+  SKIP
+
+InitializeApplication =
+  initializeApplicationCall ->
+  initializeApplicationRet ->
+  SKIP
+   
+--Contains GetSequencerMeth events   
+Execute_S =
+  getSequencerCall ->
+  getSequencerRet?topLevelSequencer ->
+  if topLevelSequencer != nullSequencerId then
+  (
+      start_toplevel_sequencer.topLevelSequencer ->    
+	  done_toplevel_sequencer ->  
+      end_safelet_app ->
+      SKIP
+  ) 
+  else
+    end_safelet_app ->
+    done_safeletFW -> SKIP
+  
+
+
+
+assert  SafeletFW ; Loop :[ deadlock free [FD] ]
+assert  SafeletFW  :[ divergence free ]
+assert  SafeletFW  :[ deterministic  [FD] ]

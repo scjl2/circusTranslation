@@ -1,0 +1,22 @@
+\begin{zsection}
+  \SECTION ~ PeriodicEventHandlerFWChan ~ \parents ~  HandlerChan, HandlerMethChan, MissionFWChan, JTime
+\end{zsection}
+%
+\begin{circus}
+  \circchannel get\_missedReleases :SchedulableID \cross \num \\
+  \circchannel increment\_missedReleases : SchedulableID \\
+  \circchannel decrement\_missedReleases : SchedulableID \\
+  \circchannel stop\_period : SchedulableID \\
+  \circchannel periodic\_release\_complete : SchedulableID \cross \num \\
+\end{circus}
+%
+\begin{circus}
+\circchannel get\_periodicTerminating : SchedulableID \cross \boolean \\
+\circchannel set\_periodicTerminating : SchedulableID \cross \boolean \\
+\end{circus}
+%
+\begin{circus}
+\circchannelset MRCSync == \lchanset get\_missedReleases, increment\_missedReleases, decrement\_missedReleases \rchanset \\
+\circchannelset ReleaseSync == \lchanset fire,  stop\_period \rchanset \\
+\circchannelset PTCSYnc == \lchanset get\_periodicTerminating, set\_periodicTerminating \rchanset \\ 
+\end{circus}

@@ -1,0 +1,204 @@
+%+++ Channel Sets +++
+
+% MAKE THIS PARSE
+
+\begin{zsection}
+	\SECTION ~ NetworkChannels ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+		\t1 SchedulableId, SchedulableIds, MissionChan, SchedulableChan, TopLevelMissionSequencerFWChan,\\
+		\t1 FrameworkChan, SafeletChan
+\end{zsection}
+%
+% done\_safeletFW doesn't exist...
+%
+\begin{circus}
+\circchannelset ~ TerminateSync == \\ \t1 \lchanset schedulables\_terminated, schedulables\_stopped, get\_activeSchedulables \rchanset
+\end{circus}
+%
+\begin{circus}	
+\circchannelset ~ ControlTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
+\end{circus}
+%Start Mission and Done Mission wont parse? .MainMission .MainMission
+\begin{circus}
+\circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission, done\_mission,\\ \t1 done\_safeletFW, done\_toplevel\_sequencer\rchanset 
+\end{circus}
+%
+\begin{circus}
+\circchannelset ~ MissionSync == \\ \t1 \lchanset done\_safeletFW, done\_toplevel\_sequencer, register, \\
+                 signalTerminationCall, signalTerminationRet, activate\_schedulables, done\_schedulable, \\
+                 cleanupSchedulableCall, cleanupSchedulableRet  \rchanset  
+\end{circus}
+%
+\begin{circus}
+\circchannelset ~ SchedulablesSync == \\ \t1 \lchanset activate\_schedulables, done\_safeletFW, done\_toplevel\_sequencer \rchanset 
+\end{circus}
+%
+\begin{circus}
+\circchannelset ~ ClusterSync == \\ \t1 \lchanset done\_toplevel\_sequencer, done\_safeletFW \rchanset 
+\end{circus}
+%
+
+
+\begin{circus}
+\circchannelset MissionSequencerAppSync == \lchanset  \rchanset\\
+\circchannelset MissionAppSync == \lchanset  \rchanset\\
+\circchannelset MTAppSync == \lchanset  \rchanset\\
+\circchannelset OSEHSync == \lchanset  \rchanset\\
+\circchannelset APEHSync == \lchanset  \rchanset\\
+
+%\circchannelset AppSyncCommon == \lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet \rchanset \\
+
+%\circchannelset ~ AppSync == \\ \t1  SafeletAppSync \cup MissionSequencerAppSync %\cup MissionAppSync \cup MTAppSync \cup OSEHSync \cup APEHSync%\cup AppSyncCommon \\    
+\end{circus}
+
+%
+\begin{circus}
+\circchannelset ~ Tier0Sync == \lchanset done\_toplevel\_sequencer, done\_safeletFW
+, 
+start\_mission,%~.~NestedMission,
+done\_mission,%~.~NestedMission,
+initializeRet,%~.~NestedMission,
+requestTermination%~.~NestedMission~.~MainMissionSequencer 
+\rchanset
+\end{circus}
+%
+%
+%
+%
+\newpage
+
+%
+%+++ Program +++
+%
+\begin{zsection}
+  \SECTION ~ Program ~ \parents ~ 
+scj\_prelude
+%, MissionId
+%, MissionIds
+%, SchedulableId
+%, SchedulableIds
+%, MissionChan
+%, SchedulableMethChan
+%, MissionFW
+, SafeletFW
+, TopLevelMissionSequencerFW
+, NetworkChannels
+, ManagedThreadFW
+, SchedulableMissionSequencerFW
+, PeriodicEventHandlerFW
+, OneShotEventHandlerFW
+, AperiodicEventHandlerFW
+, TestSafeletApp
+, MainMissionSequencerApp
+, MainMissionApp
+,NestedMissionSequencerApp
+, NestedMissionApp
+, NestedOneShotEventHandlerApp 
+\end{zsection}
+%
+\begin{circus}
+\circprocess ControlTier \circdef \\
+\circblockopen
+SafeletFW \\
+\t1 \lpar ControlTierSync \rpar \\
+TopLevelMissionSequencerFW(MainMissionSequencer)
+\circblockclose
+\end{circus}
+%
+
+
+\begin{circus}
+\circprocess Tier0 \circdef \\
+
+\circblockopen
+	%MissionFW(MainMission)\\
+	%	\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+
+			SchedulableMissionSequencerFW(NestedMissionSequencer)\\
+%\t1 \lpar SchedulablesSync \rpar\\
+
+
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circprocess Tier1 \circdef \\
+
+\circblockopen
+	%MissionFW(NestedMission)\\
+	%	\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+
+
+
+
+	%OneShotEventHandlerFW(NestedOneShotEventHandler)\\
+(ManagedThreadFW(MainMissionSequencer) 
+\lpar  SchedulablesSync \rpar 
+ManagedThreadFW(MainMissionSequencer)) 
+\lpar SchedulablesSync \rpar 
+ManagedThreadFW(MainMissionSequencer)
+
+
+
+
+
+%\t1 \lpar SchedulablesSync \rpar\\
+
+
+
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+%
+%+++ Framework +++ 
+%
+\begin{circus}
+\circprocess Framework \circdef \\
+\circblockopen
+ControlTier \\
+\t1 \lpar TierSync \rpar \\
+ \circblockopen
+Tier0
+\\ \t1 \lpar Tier0Sync \rpar \\
+Tier1
+\circblockclose
+\circblockclose
+\end{circus}
+%
+%+++ Application
+%
+\begin{circus}
+\circprocess  Application \circdef \\
+\circblockopen
+
+TestSafeletApp\\
+\interleave \\
+MainMissionSequencerApp\\
+\interleave \\
+MainMissionApp\\
+\interleave \\
+
+NestedMissionSequencerApp\\
+\interleave \\
+NestedMissionApp\\
+\interleave \\
+
+NestedOneShotEventHandlerApp\\
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circprocess Program \circdef Framework \lpar AppSync \rpar Application
+\end{circus}
+

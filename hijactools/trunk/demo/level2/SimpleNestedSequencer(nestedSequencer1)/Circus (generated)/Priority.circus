@@ -1,0 +1,15 @@
+\begin{zsection}
+  \SECTION ~ Priority ~ \parents ~ scj\_prelude
+\end{zsection}
+%
+\begin{axdef}
+MinPriority : \nat_1 \\
+MaxPriority : \nat_1 \\
+\where
+MaxPriority - MinPriority \geq 2 \\
+\end{axdef}
+%
+\begin{zed}
+PriorityLevel == MinPriority \upto MaxPriority
+\end{zed}
+

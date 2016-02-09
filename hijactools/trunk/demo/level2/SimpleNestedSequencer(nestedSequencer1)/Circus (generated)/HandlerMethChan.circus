@@ -1,0 +1,11 @@
+\begin{zsection}
+  \SECTION ~ HandlerMethChan ~ \parents ~ scj\_prelude, SchedulableId, GlobalTypes 
+\end{zsection}
+%
+\begin{circus}
+  \circchannel releaseCall : SchedulableID  \\
+  \circchannel releaseRet : SchedulableID  \\
+  \circchannel fire : SchedulableID \\
+  \circchannel descheduleCall : SchedulableID\\
+  \circchannel descheduleRet : SchedulableID \cross \boolean \\
+\end{circus}

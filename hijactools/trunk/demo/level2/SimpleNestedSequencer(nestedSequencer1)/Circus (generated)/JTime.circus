@@ -1,0 +1,31 @@
+\begin{zsection}
+  \SECTION ~ JTime ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+%
+\begin{zed}
+JTime ::= NULL | time\ldata \num \cross \num\rdata
+\end{zed}
+%
+\begin{axdef}
+timeMillis : JTime \pfun \num
+\where
+\exists j:JTime ; t: \num \cross \num; m : \num  | j \neq NULL \land  j = time~t \land m = first~t @ timeMillis(j) = m
+\end{axdef}
+%
+\begin{axdef}
+timeNanos :JTime \pfun \num 
+\where
+\exists j:JTime ; t: \num \cross \num; n : \num  | j \neq NULL \land  j = time~t \land n = second~t @ timeNanos(j) = n
+\end{axdef}
+%
+\begin{axdef}
+timeOf : JTime \pfun \num \cross \num
+\where
+\exists j : JTime ; t : \num \cross \num | j \neq NULL \land j = time~t @ timeOf(j) = t
+\end{axdef}
+%
+\begin{axdef}
+valueOf : JTime \pfun \num
+\where
+\exists j : JTime ; v : \num | j \neq NULL \land v = (timeMillis(j)*1000000)+timeNanos(j) @ valueOf(j) = v
+\end{axdef}

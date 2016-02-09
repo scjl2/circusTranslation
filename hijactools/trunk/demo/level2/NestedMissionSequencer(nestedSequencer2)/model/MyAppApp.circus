@@ -1,0 +1,62 @@
+\begin{zsection}
+  \SECTION ~ MyAppApp ~ \parents ~ scj\_prelude, SchedulableId, SafeletChan, TopLevelMissionSequencerChan, FrameworkChan, SchedulableChan, MyAppClass
+\end{zsection}
+%
+\begin{circus}
+ \circprocess  MyAppApp ~ \circdef ~ \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore State}
+this : MyAppClass 
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+State~' 
+\where
+this' = \circnew ~ MyAppClass 
+\end{schema}
+
+% public MissionSequencer<Mission> getSequencer() {
+%		return new MySequencer(new PriorityParameters(15), MySCJ.storageParameters);
+%	}
+\begin{circusaction}
+GetSequencer \circdef \\
+\t1 	getSequencerCall \then\\ 
+\t1 \left( \begin{array}{l}
+	\circvar ret : SchedulableID \circspot \\
+	this~.~getSequencer(ret) \circseq \\
+	getSequencerRet~!~ret \then\\
+	\Skip
+    \end{array} \right)
+\end{circusaction}
+%	public void initializeApplication() {  	}
+\begin{circusaction}       
+InitializeApplication \circdef \\ 
+\t1     initializeApplicationCall \then \\
+\t1     initializeApplicationRet \then\\
+\t1     \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+Methods \circdef \\
+\t1 \circmu X \circspot \left( \begin{array}{l}
+						GetSequencer \\
+						\extchoice \\
+						InitializeApplication \\
+					\end{array} \right)\circseq X
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot Methods \circinterrupt \\
+	\t1		(end\_safelet\_app \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

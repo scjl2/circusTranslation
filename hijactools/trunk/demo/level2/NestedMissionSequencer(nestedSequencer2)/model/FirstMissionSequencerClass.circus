@@ -1,0 +1,68 @@
+\begin{zsection}
+  \SECTION ~ FirstMissionSequencerClass~ \parents ~ MissionSequencerMethChan, SchedulableChan, TopLevelMissionSequencerChan, MissionId, MissionIds, MissionMethChan, SchedulableId, MissionFWChan, FrameworkChan
+\end{zsection}
+%
+\begin{circus}
+\circprocess ~  FirstMissionSequencerClass \circdef \circbegin 
+\end{circus}
+%
+\begin{schema}{\circstateignore State}
+done : \boolean
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{\circinitial Init}
+State~'\\
+\where
+done' = \false\\
+\end{schema}
+
+%public class FirstSequencer extends MissionSequencer<Mission>{
+%    private Mission myMission;
+%    private int count = 0;
+%    
+%    public FirstSequencer(PriorityParameters priority, StorageParameters storage) {
+%	super(priority, storage,"1ms");
+%//	super(priority, storage);
+%	myMission = new MyMission1();
+%   }
+
+%    protected Mission getNextMission() {
+%//	devices.Console.println("		second sequencer is running. ");
+%//	return myMission;
+%	if (count == 0) {
+%	    count ++;
+%//	    devices.Console.println("1st sequencer: has next misison");
+%    return myMission;
+%	}
+%	else{
+%//	    devices.Console.println("1st sequencer: has no more misison");
+%	    return null;
+%	}
+%   }
+%}
+
+\begin{circusaction*}
+\circpublic getNextMission ~ \circdef \circres ret : MissionID \circspot\\
+  \t1 \circif done = \false \circthen\\
+  \t2 ret := MyMission1ID \circseq \\
+  \t2 done := \true \\
+  \t1 \circelse done = \true \circthen \\
+  \t2 ret := nullMissionId \\	
+  \t1 \circfi
+\end{circusaction*}
+
+\begin{parser}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}}
+\end{parser}
+%
+\begin{circus}
+  \circend
+\end{circus}

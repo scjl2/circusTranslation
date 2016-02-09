@@ -1,0 +1,20 @@
+--MIssionSequencerShared
+channel get_currentMission :SchedulableID.MissionID
+channel set_currentMission : SchedulableID.MissionID
+channel get_continue : SchedulableID.Bool
+
+channel get_controllingMission : SchedulableID.MissionID
+channel set_controllingMission : SchedulableID.MissionID
+
+channel  getNextMissionCall : SchedulableID
+channel  getNextMissionRet : (SchedulableID . MissionID) 
+channel  requestSequenceTermination : (SchedulableID . Bool) 
+
+channel  end_sequencer_app:SchedulableID
+channel  end_methods : SchedulableID
+channel  end_terminations : SchedulableID
+
+nametype MissionSequencerFWSharedChanSet = 
+  {| get_currentMission, set_currentMission, get_continue, get_controllingMission,set_controllingMission,
+      getNextMissionCall, getNextMissionRet, requestSequenceTermination, 
+       end_sequencer_app, end_methods, end_terminations |}

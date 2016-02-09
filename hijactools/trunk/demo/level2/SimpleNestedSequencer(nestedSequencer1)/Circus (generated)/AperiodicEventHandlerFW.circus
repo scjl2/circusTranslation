@@ -1,0 +1,225 @@
+\begin{zsection}
+  \SECTION ~ AperiodicEventHandlerFW ~ \parents ~ MissionChan, SchedulableChan, SchedulableId, \\
+  \t1 MissionId, MissionIds, TopLevelMissionSequencerChan,\\
+  \t1 SafeletMethChan, FrameworkChan, AperiodicEventHandlerChan, AperiodicParameters
+  \end{zsection}
+%
+\begin{circus}
+  \circprocess AperiodicEventHandlerFW ~ \circdef ~ schedulable : SchedulableID; aperiodicType : AperiodicType ; aperiodicParameters : AperiodicParameters \circspot ~\circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore State}
+  controllingMission : MissionID\\
+  applicationTerminating : \boolean \\
+  pending : \boolean \\
+  data : \num \\
+  deadline : JTime \\
+  deadlineMissHandler : SchedulableID \\
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+  State~'\\
+\where
+  controllingMission' = nullMissionId\\
+  applicationTerminating' = \false \\
+  pending' = \false \\
+  deadline' = deadlineOfAperiodic(aperiodicParameters) \\
+  deadlineMissHandler' = missHandlerOfAperiodic(aperiodicParameters) \\
+\end{schema}
+%
+\begin{circusaction}
+Start \circdef\\
+\t1  \circblockopen 
+   	Register \circseq \\
+   	Activate
+  \circblockclose  \\
+\t1  \extchoice\\
+\t1  \circblockopen 
+  	activate\_schedulables?someMissionID \then \\
+  	Start
+  \circblockclose \\
+\t1  \extchoice \\
+\t1  \circblockopen  
+	done\_toplevel\_sequencer \then \\
+	applicationTerminating := \true \\
+     \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+Register \circdef \\
+\t1    register~.~schedulable~?~missionID \then \\
+\t1    controllingMission := missionID 
+\end{circusaction}
+%  
+\begin{circusaction}
+Activate ~ \circdef ~ \\
+\t1    activate\_schedulables~.~controllingMission \then \\
+\t1    \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+Execute \circdef  \\
+\t1 \circblockopen  
+	\circblockopen 
+		\circif aperiodicType = aperiodic \circthen \\
+			Ready\\
+		\circelse aperiodicType = aperiodicLong \circthen \\
+			ReadyLong \\
+		\circfi
+	\circblockclose
+   	 \lpar \{pending, data\}  |\lchanset end\_releases \rchanset| \emptyset \rpar\\
+  SignalTermination\\
+\circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+DeadlineClock \circdef \\
+
+\t1 releaseCall~.~schedulable \then \\ 
+\t1	\circblockopen 
+		\circblockopen 		
+			\circblockopen 
+				%\circwait valueOf(deadline) \circseq \\
+				fire~.~deadlineMissHandler \then \\				
+				DeadlineClock 
+			\circblockclose \\
+			\extchoice \\
+			\circblockopen 
+	 			release\_complete~.~schedulable \then \\
+				DeadlineClock 
+			\circblockclose				
+		\circblockclose
+	\circblockclose	
+    \circseq%\circinterrupt 
+    \circblockopen 
+    		end\_releases~.~schedulable \then \\
+    		%release\_complete~.~schedulable \then \\
+	    	\Skip
+    \circblockclose
+\end{circusaction}
+%short
+\begin{circusaction}
+Ready \circdef \\
+\t1 \circblockopen 
+	fire.schedulable \then\\ 
+	releaseCall~.~schedulable \then\\ 
+	Release
+    \circblockclose\\
+\t1 \extchoice\\
+\t1 \circblockopen 
+	end\_releases~.~schedulable \then\\
+	\Skip
+    \circblockclose
+\end{circusaction}
+%long
+\begin{circusaction}
+ReadyLong \circdef \\
+\t1 \circblockopen 	
+	fireLong~.~schedulable~?~longData \then\\ 
+	data := longData \circseq \\
+	releaseLongCall~.~schedulable~.~data \then\\ 
+	ReleaseLong 
+     \circblockclose\\
+\t1 \extchoice\\
+\t1 \circblockopen 
+	end\_releases~.~schedulable \then\\
+	\Skip
+     \circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+SignalTermination \circdef \\
+\t1	\circblockopen  
+		signalTerminationCall~.~schedulable \then\\
+		end\_releases~.~schedulable \then\\
+		signalTerminationRet~.~schedulable \then\\
+		done\_schedulable~.~schedulable \then\\
+		\Skip 
+	\circblockclose
+\end{circusaction}
+%short
+\begin{circusaction}
+Release \circdef \\	
+\t1 \circblockopen  
+		fire.schedulable \then\\ 
+		pending := \true \circseq\\ 
+		Release
+	\circblockclose\\
+\t1	\extchoice\\
+\t1	\circblockopen 
+		releaseRet.schedulable \then \\
+		\circif pending = \true \circthen\\
+\t2		\circblockopen  
+			pending := \false \circseq \\ 
+			release\_complete~.~schedulable \then \\
+			releaseCall.schedulable \then\\ 
+			Release
+		\circblockclose\\
+		\circelse pending = \false \circthen\\
+\t2			 Ready\\
+		\circfi
+\t1	\circblockclose\\
+\t1	 \extchoice\\
+\t1	\circblockopen 
+		end\_releases.schedulable \then \\
+		\Skip
+	\circblockclose\\
+\end{circusaction}
+%long
+\begin{circusaction}
+ReleaseLong \circdef \\	
+\t1 \circblockopen  
+		fireLong.schedulable~?~longData \then\\ 
+		data := longData \circseq \\
+		pending := \true \circseq\\ 
+		ReleaseLong
+	\circblockclose\\
+\t1		\extchoice\\
+\t1	\circblockopen 
+		releaseLongRet.schedulable \then \\
+		\circif pending = \true \circthen\\
+\t2		\circblockopen  
+			pending := \false \circseq \\ 
+			release\_complete~.~schedulable \then \\
+			releaseLongCall.schedulable.data \then\\ 
+			ReleaseLong
+		\circblockclose\\
+		\circelse pending = \false \circthen\\
+\t2			 ReadyLong \\
+		\circfi
+\t1	\circblockclose\\
+\t1	 \extchoice\\
+\t1	\circblockopen 
+		end\_releases.schedulable \then \\
+		\Skip
+	\circblockclose\\
+\end{circusaction}
+%
+\begin{circusaction}
+Cleanup \circdef \\
+\t1 cleanupSchedulableCall~.~schedulable \then\\
+\t1 cleanupSchedulableRet~.~schedulable \then \\
+\t1 \Skip  
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot \circblockopen  \circmu X \circspot \circblockopen   \lschexpract Init \rschexpract \circseq Start \circseq\\
+   \circblockopen  \circif applicationTerminating = \false \circthen \\
+	\t2 \circblockopen Execute \circseq Cleanup \circseq X \circblockclose\\
+ \circelse applicationTerminating = \true \circthen \\ 
+ \t2 \circblockopen 
+	end\_aperiodic\_app~.~schedulable \then \\ 
+	\Skip
+ \circblockclose 
+\circfi \circblockclose \circblockclose \circblockclose
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

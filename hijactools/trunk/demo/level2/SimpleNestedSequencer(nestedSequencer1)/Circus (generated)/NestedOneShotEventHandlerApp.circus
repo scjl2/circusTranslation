@@ -1,0 +1,32 @@
+\begin{zsection}
+  \SECTION ~ NestedOneShotEventHandlerApp ~ \parents ~ OneShotEventHandlerChan, SchedulableId, SchedulableIds, SchedulableChan
+\end{zsection}
+
+\begin{circus}
+\circprocess NestedOneShotEventHandlerApp \circdef \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+Methods \circdef \\
+	handlerAsyncEvent \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+%	handleAsyncEventCall~.~NestedOneShotEventHandler \then \\
+
+ %   handleAsyncEventRet~.~NestedOneShotEventHandler \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+    
+\begin{circusaction}
+\circspot (Methods) %\circinterrupt 
+\circseq(end\_oneShot\_app~.~NestedOneShotEventHandler \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,438 @@
+--MissionFW
+
+--Mission Channels
+
+channel set_controllingSequencer : MissionID.SchedulableID
+channel set_applicationTerminating_M : MissionID.Bool 
+channel get_applicationTerminating_M : MissionID.Bool 
+channel set_missionTerminating : MissionID.Bool 
+channel set_activeSchedulables: MissionID.Set(SchedulableID) 
+channel get_activeSchedulables: MissionID.Set(SchedulableID) 
+channel add_schedulable: MissionID.SchedulableID
+channel remove_activeSchedulables : MissionID.SchedulableID
+channel get_missionTerminating : MissionID.Bool
+channel get_registeredSchedulables : MissionID.Set(SchedulableID)
+channel end_mission_state : MissionID
+channel get_controllingSequencer : MissionID.SchedulableID
+
+
+nametype MissionFWStateChan = 
+  {|activate_schedulables, end_mission_state, set_controllingSequencer, 
+  set_applicationTerminating_M, get_applicationTerminating_M, 
+  set_missionTerminating, set_activeSchedulables, 
+  get_activeSchedulables, add_schedulable, remove_activeSchedulables, 
+  get_missionTerminating, get_registeredSchedulables, get_controllingSequencer |}
+
+channel start_mission : MissionID.SchedulableID
+
+channel initializeCall : MissionID
+channel initializeRet : MissionID
+
+channel register : SchedulableID.MissionID
+channel deregister : Set(SchedulableID)
+
+
+channel setCeilingPriority : MissionID.ObjectID.Bit
+channel done_schedulables : MissionID
+channel activate_schedulables : MissionID
+channel stop_schedulables : MissionID
+channel schedulables_stopped : MissionID
+
+channel schedulables_terminated : MissionID
+channel end_mission_terminations : MissionID
+channel requestTermination : MissionID.SchedulableID
+channel cleanupSchedulableCall : SchedulableID
+channel cleanupSchedulableRet : SchedulableID
+channel cleanupMissionCall : MissionID 
+channel cleanupMissionRet : MissionID.Bool
+channel end_mission_app : MissionID
+channel done_mission : MissionID.Bool
+
+
+
+
+
+nametype MissionFWCHanSet = union(
+  MissionFWStateChan, 
+  {|done_safeletFW, done_toplevel_sequencer, initializeCall, initializeRet,
+checkSchedulable, throw, setCeilingPriority, 
+activate_schedulables, stop_schedulables, done_schedulables, schedulables_stopped,
+signalTerminationCall, signalTerminationRet, done_schedulable, end_mission_terminations,
+requestTermination, deregister, 
+cleanupMissionCall, cleanupMissionRet, cleanupSchedulableCall, cleanupSchedulableRet,
+ done_mission, start_mission |})    
+
+
+nametype TerminateSync = 
+  {| schedulables_terminated, schedulables_stopped |}
+
+
+MissionFW(mission) = 
+(  
+  MissionFWState(mission, {}, {}, False, False, nullSequencerId)
+    [|MissionFWStateChan|]
+  MissionFWBehaviour(mission)
+) \ diff(MissionFWStateChan, {|activate_schedulables|})
+
+
+MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer) =
+  (
+    set_controllingSequencer.mission?mySequencer ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, mySequencer)
+  )
+  []
+  (
+    get_controllingSequencer.mission!controllingSequencer ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    set_applicationTerminating_M.mission?newApplicationTerminating ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, newApplicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    get_applicationTerminating_M.mission!applicationTerminating ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    set_missionTerminating.mission?newMissionTerminating ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, newMissionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    activate_schedulables.mission ->
+    MissionFWState(mission, registeredSchedulables, registeredSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    get_activeSchedulables.mission!activeSchedulables ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    add_schedulable.mission?newSchedulable ->
+    MissionFWState(mission, union(registeredSchedulables, {newSchedulable}), activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    get_registeredSchedulables.mission!registeredSchedulables ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    remove_activeSchedulables.mission?schedulable ->
+    MissionFWState(mission, registeredSchedulables, diff(activeSchedulables, {schedulable}), missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    get_missionTerminating.mission!missionTerminating ->
+    MissionFWState(mission, registeredSchedulables, activeSchedulables, missionTerminating, applicationTerminating, controllingSequencer)
+  )
+  []
+  (
+    end_mission_state.mission -> SKIP
+  )
+
+MissionFWBehaviour(mission) =
+
+( 
+  Start_M(mission) ;
+    (
+      get_applicationTerminating_M.mission?applicationTerminating ->
+      if applicationTerminating == False then 
+      (
+          InitializePhase(mission) ; 
+          MissionPhase(mission) ; 
+       --   CleanupPhase(mission) ; 
+          MissionFWBehaviour(mission)
+      )
+      else 
+        end_mission_state.mission -> 
+        end_mission_app.mission ->
+        SKIP
+      )
+)
+
+Start_M(mission) =
+  (
+    start_mission.mission?mySequencer ->
+    set_controllingSequencer.mission!mySequencer ->
+    SKIP
+  ) 
+  []
+  (
+  done_safeletFW -> 
+  set_applicationTerminating_M.mission!True ->
+  SKIP
+)
+[]
+(
+  done_toplevel_sequencer ->
+  set_applicationTerminating_M.mission!True ->
+  SKIP
+)
+
+InitializePhase(mission) =
+  initializeCall.mission ->
+  (
+    Initialize(mission)
+  ) 
+
+Initialize(mission) =
+( 
+  Register_M(mission) ;
+  Initialize(mission)
+) 
+[]
+(
+  SetCeilingPriority(mission) ;
+  Initialize(mission)
+) 
+[]
+(
+  initializeRet.mission ->
+  SKIP
+) 
+
+Register_M(mission) =
+register?s!mission ->
+(
+  (
+    checkSchedulable.mission?check:({True}) ->
+    add_schedulable.mission!s ->
+    SKIP
+  )
+  []
+  (
+    checkSchedulable.mission?check:({False}) ->
+    throw.illegalStateException ->
+    --CHAOS(Events)
+    STOP
+  )
+)
+
+RegisterException(mission) =
+  register?s!mission ->
+  throw.illegalStateException ->
+  --CHAOS(Events)  
+  STOP
+
+SetCeilingPriority(mission) =
+ setCeilingPriority.mission?o?p -> 
+ SKIP
+
+SetCeilingPriorityException(mission) =
+ setCeilingPriority.mission?o?p -> 
+ throw.illegalStateException ->
+ --CHAOS(Events)
+ STOP
+
+MissionPhase(mission) =
+(
+  Execute_M(mission)
+--   [|  {|done_schedulables|} |] 
+-- MissionExceptions(mission)
+)\{|done_schedulables|}
+
+Execute_M(mission) =
+ ( 
+  get_registeredSchedulables.mission?registeredSchedulables ->
+  if registeredSchedulables == {} then 
+  (
+    done_schedulables.mission ->
+    SKIP
+  )
+  else 
+  ( 
+     activate_schedulables.mission ->
+    -- set_activeSchedulables.mission!registeredSchedulables ->
+     (
+        TerminateAndDone(mission, registeredSchedulables) 
+          [| {| stop_schedulables, done_schedulables |} |]          
+        Methods_M(mission, registeredSchedulables)
+      );
+     CleanupPhase(mission, registeredSchedulables)
+
+  )
+) 
+
+TerminateAndDone(mission, activeSchedulables) =
+ (
+    (
+    SignalTermination_M(mission)              
+      [| TerminateSync |] 
+    DoneSchedulables(mission, activeSchedulables)       
+  );
+  done_schedulables.mission ->
+  SKIP
+)\TerminateSync
+ 
+SignalTermination_M(mission) =
+ (
+  stop_schedulables.mission ->
+  get_activeSchedulables.mission?schedulablesToStop ->
+  StopSchedulables(schedulablesToStop) ;
+  schedulables_stopped.mission ->
+  SKIP
+)
+--/\ (schedulables_terminated.mission -> SKIP)
+/\ (schedulables_stopped.mission -> SKIP )
+
+StopSchedulables(schedulablesToStop) =
+    (|||  s :  schedulablesToStop @
+          signalTerminationCall.s ->
+          signalTerminationRet.s ->
+          SKIP)
+
+DoneSchedulables(mission, activeSchedulables) =
+--get_activeSchedulables.mission?activeSchedulables ->
+(  
+  
+ -- []
+  (
+    (
+      (
+        [] schedulable : activeSchedulables @
+        done_schedulable.schedulable ->  
+        remove_activeSchedulables.mission!schedulable ->
+        SKIP
+      )  
+      ;
+       (
+          get_activeSchedulables.mission?activeSchedulables ->
+          (
+            if activeSchedulables == {} then    
+            (
+              schedulables_stopped.mission -> 
+              SKIP
+            ) 
+            else 
+            (
+              DoneSchedulables(mission, activeSchedulables)
+            )
+          )
+        )
+            --get_activeSchedulables.mission?activeSchedulables ->
+     -- if activeSchedulables == {} then    
+   --   (
+   --     schedulables_terminated.mission ->
+  --     SKIP
+  --    ) 
+   --   else 
+   --     DoneSchedulables(mission)
+    )
+  )
+)
+
+Methods_M(mission, registeredSchedulables) =
+(  
+  RequestTerminationMeth(mission, registeredSchedulables)
+    [| {|end_mission_terminations|} |] 
+  (
+    done_schedulables.mission ->
+    end_mission_terminations.mission ->
+    SKIP
+  ) 
+) \{| end_mission_terminations |}
+
+RequestTerminationMeth(mission, registeredSchedulables) =
+--get_registeredSchedulables.mission?registeredSchedulables ->
+get_controllingSequencer.mission?controllingSequencer ->
+(  
+  (
+    end_mission_terminations.mission -> 
+    SKIP
+  )
+  []
+  (     
+    (--
+      [] schedulable: union(registeredSchedulables, {|controllingSequencer|})  @
+      requestTermination.mission.schedulable ->
+      SKIP
+    ) ;--
+    (
+      (
+        get_missionTerminating.mission?missionTerminating:({False}) ->
+        set_missionTerminating.mission!True ->
+        stop_schedulables.mission ->
+        RequestTerminationMeth(mission, registeredSchedulables)
+      )
+      []
+      (
+        get_missionTerminating.mission?missionTerminating:({True}) ->
+        RequestTerminationMeth(mission, registeredSchedulables)
+      )
+    ) 
+  )
+)
+
+MissionExceptions(mission) =
+( 
+  RegisterException(mission) 
+  |||
+  SetCeilingPriorityException(mission) 
+) 
+[]
+( 
+ done_schedulables.mission ->
+  SKIP
+)
+
+
+CleanupPhase(mission, registeredSchedulables) =
+(
+  Cleanup_M(mission, registeredSchedulables)
+    [|  {|cleanupMissionRet|} |] 
+  CleanupExceptions(mission)
+)--\{|cleanupMissionRet|}
+
+Cleanup_M(mission, registeredSchedulables) =
+( 
+  (
+    if registeredSchedulables == {} then
+    (
+     --get_registeredSchedulables.mission?registeredSchedulables:({}) ->
+      SKIP
+    )
+    else  
+    ( 
+     -- get_registeredSchedulables.mission?registeredSchedulables:(Set(SchedulableID)) ->
+      deregister!registeredSchedulables ->
+      CleanupSchedulables(mission, registeredSchedulables) ;
+      SKIP
+    )    
+  );    
+    cleanupMissionCall.mission ->
+    cleanupMissionRet.mission?continueSequencer ->
+    Finish_M(mission, continueSequencer)
+)
+
+CleanupSchedulables(mission, registeredSchedulables) =
+  ||| s : registeredSchedulables @
+                cleanupSchedulableCall.s ->
+                cleanupSchedulableRet.s ->  
+                SKIP
+
+CleanupExceptions(mission) =
+( 
+  RegisterException(mission) 
+  |||
+  SetCeilingPriorityException(mission) 
+) 
+[]
+(
+  cleanupMissionRet.mission?c ->
+  SKIP
+)
+
+Finish_M(mission, continueSequencer) =
+  
+   done_mission.mission!continueSequencer ->
+   SKIP
+
+
+-- assert MissionFW(missionA); Loop :[ deadlock free [FD] ]
+-- assert MissionFW(missionA) :[ divergence free ]
+-- assert MissionFW(missionA) :[ deterministic  [FD] ]
