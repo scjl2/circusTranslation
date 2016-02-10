@@ -26,7 +26,11 @@ public abstract class ParadigmBuilder
 	protected static ProgramEnv programEnv;
 	protected static SCJAnalysis analysis;
 	protected EnvironmentBuilder environmentBuilder;
-	public enum IDType {MissionID,SchedulableID};
+
+	public enum IDType
+	{
+		MissionID, SchedulableID
+	};
 
 	public ParadigmBuilder(SCJAnalysis analysis, ProgramEnv programEnv,
 			EnvironmentBuilder environmentBuilder)
@@ -37,8 +41,8 @@ public abstract class ParadigmBuilder
 	}
 
 	public abstract ArrayList<Name> build(TypeElement paradigmTypeElement);
-	
-	public abstract void addParents(); 
+
+	public abstract void addParents();
 
 	protected HashMap<Name, Tree> getVariables(TypeElement arg0, ObjectEnv objectEnv)
 	{
@@ -47,16 +51,10 @@ public abstract class ParadigmBuilder
 		VariableVisitor varVisitor;
 
 		assert (objectEnv != null);
-		// if (objectEnv != null)
-		// {
-		varVisitor = new VariableVisitor(programEnv, objectEnv);
-		// }
-		// else
-		// {
-		// varVisitor = new VariableVisitor(programEnv);
-		// }
 
-		System.out.println("arg="+arg0);
+		varVisitor = new VariableVisitor(programEnv, objectEnv);
+
+		// System.out.println("arg=" + arg0);
 		ClassTree ct = analysis.TREES.getTree(arg0);
 		List<? extends Tree> members = ct.getMembers();
 		Iterator<? extends Tree> i = members.iterator();
@@ -66,22 +64,21 @@ public abstract class ParadigmBuilder
 			Tree s = i.next();
 			// TODO if this is only ever going to return one value at a time
 			// then it shouldn't be a map
-			System.out.println("s=" + s + "s.kind=" + s.getKind());
+			// System.out.println("s=" + s + "s.kind=" + s.getKind());
 			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, true);
 
-			assert (m != null);
-			System.out.println("getVariables m = " + m);
 			// TODO this is a bit of a hack...
-
 			for (Name n : m.keySet())
 			{
-				System.out.println("\t*** Name = " + n + " Type = " + m.get(n)
-						+ " Kind = " + m.get(n).getKind());
+				// System.out.println("\t*** Name = " + n + " Type = " +
+				// m.get(n)
+				// + " Kind = " + m.get(n).getKind());
 //				varMap.putIfAbsent(n, m.get(n));
-				 varMap.put(n,m.get(n));
+				 varMap.put(n, m.get(n));
 			}
 		}
-		System.out.println("getVariables varMap = " + varMap);
+//		System.out.println("getVariables varMap = " + varMap);
+		
 		return varMap;
 
 	}
@@ -113,14 +110,11 @@ public abstract class ParadigmBuilder
 			parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
 			parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
 
-			if (parameter.getType().endsWith("Parameters")
-					|| parameter.getType().equals("String"))
-			{
+			final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
+					|| parameter.getType().equals("String");
 
-			}
-			else
+			if (!ignoredParameter)
 			{
-
 				object.addProcParameter(parameter);
 			}
 

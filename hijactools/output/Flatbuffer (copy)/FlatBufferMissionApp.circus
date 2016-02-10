@@ -1,8 +1,8 @@
 \begin{zsection}
   \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , FlatBufferMissionMIDClass \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , MethodCallBindingChannels , FlatBufferMissionClass \\
 
-  \t1 , \\
+  \t1 , 
 ObjectChan
 , 
 
@@ -12,7 +12,7 @@ ObjectIds
 ThreadIds
 
 
-, FlatBufferMissionMIDMethChan
+, FlatBufferMissionMethChan
 \end{zsection}
 %\begin{circus}
 %\circchannelset FlatBufferMissionAppSync == \\
@@ -101,7 +101,7 @@ cleanUpRet~.~FlatBufferMissionMID~!~ret \then \\
 writeSyncMeth \circdef
 \\
 \circblockopen
-writeCall~.~FlatBufferMissionMID~?~thread
+writeCall~.~FlatBufferMissionMID~?~caller~?~thread
 ~?~update
  \then \\
 \circblockopen
@@ -110,19 +110,18 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
       \circblockopen
 
-\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~~!~thread \then \\ waitRet~.~~!~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen waitCall~.~FlatBufferMissionOID~.~thread \then \\ waitRet~.~FlatBufferMissionOID~.~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 
                \circseq \\
 
-
-
+      
 
 this~.~buffer :=update
 
 
                \circseq \\
 
-notify~.~~!~thread \then  \\ \Skip
+notify~.~FlatBufferMissionOID~!~thread \then  \\ \Skip
 
 
         \circblockclose
@@ -130,7 +129,7 @@ notify~.~~!~thread \then  \\ \Skip
  \circseq  \\
 endSyncMeth~.~FlatBufferMissionOID~.~thread \then  \\
 
-writeRet~.~FlatBufferMissionMID~.~thread \then \\
+writeRet~.~FlatBufferMissionMID~.~caller~.~thread \then \\
 \Skip
 \circblockclose
 \circblockclose
@@ -140,7 +139,7 @@ readSyncMeth \circdef
 \circvar ret : \num \circspot
 \\
 \circblockopen
-readCall~.~FlatBufferMissionMID~?~thread
+readCall~.~FlatBufferMissionMID~?~caller~?~thread
  \then \\
 \circblockopen
 startSyncMeth~.~FlatBufferMissionOID~.~thread \then \\
@@ -148,17 +147,15 @@ lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
       \circblockopen
 
-\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~bufferEmpty()\circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen waitCall~.~FlatBufferMissionOID~!~thread \then \\ waitRet~.~FlatBufferMissionOID~!~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+\circblockopen \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~bufferEmpty()\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen waitCall~.~FlatBufferMissionOID~.~thread \then \\ waitRet~.~FlatBufferMissionOID~.~thread \then \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
 
                \circseq \\
 
-  \circvar out : \num \circspot out := buffer ~
-
+\circvar out : \num \circspot out := this~.~buffer
 
                \circseq \\
 
-
-
+      
 
 this~.~buffer :=0
 
@@ -178,7 +175,7 @@ notify~.~FlatBufferMissionOID~!~thread \then  \\ \Skip
  \circseq  \\
 endSyncMeth~.~FlatBufferMissionOID~.~thread \then  \\
 
-readRet~.~FlatBufferMissionMID~!~thread~!~ret \then \\
+readRet~.~FlatBufferMissionMID~.~caller~.~thread~!~ret \then \\
 \Skip
 \circblockclose
 \circblockclose

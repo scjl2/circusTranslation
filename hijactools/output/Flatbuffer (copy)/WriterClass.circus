@@ -1,11 +1,15 @@
 
+\begin{zsection}
+  \SECTION ~ WriterClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass WriterClass \circdef \circbegin
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  fbMission : FlatBufferMission\\ 
-  i : \num\\ 
+  fbMission_TEST : FlatBufferMission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -15,7 +19,6 @@
 \begin{schema}{\circinitial Init}
   State~'
 \where
-  i' = 1\\ 
 \end{schema}
 
 
@@ -29,5 +32,3 @@
 \begin{circus}
   \circend
 \end{circus}
-
-

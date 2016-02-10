@@ -41,19 +41,19 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 
 		ClassTree ct = analysis.TREES.getTree(paradigmTypeElement);
 
-		String extendsClause = ct.getExtendsClause().toString();
+		
 		if (schedulableEnv instanceof AperiodicEventHandlerEnv)
 		{
+			String extendsClause = ct.getExtendsClause().toString();
+			AperiodicEventHandlerEnv apehEnv = (AperiodicEventHandlerEnv) schedulableEnv;
 			if (extendsClause.equals("AperiodicEventHandler"))
 			{
-				((AperiodicEventHandlerEnv) schedulableEnv)
-						.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodic);
+				apehEnv.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodic);
 
 			}
 			else if (extendsClause.equals("AperiodicLongEventHandler"))
 			{
-				((AperiodicEventHandlerEnv) schedulableEnv)
-						.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodicLong);
+				apehEnv.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodicLong);
 			}
 		}
 
@@ -61,7 +61,7 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 
 		Iterator<StatementTree> i = members.iterator();
 
-		getVariables(paradigmTypeElement, schedulableEnv);
+		
 
 		while (i.hasNext())
 		{
@@ -109,6 +109,8 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 				}
 			}
 		}
+		
+		getVariables(paradigmTypeElement, schedulableEnv);
 		return null;
 	}
 

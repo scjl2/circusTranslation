@@ -1,10 +1,15 @@
 
+\begin{zsection}
+  \SECTION ~ ReaderClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass ReaderClass \circdef \circbegin
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  fbMission : FlatBufferMission\\ 
+  fbMission_TEST : FlatBufferMission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -27,5 +32,3 @@
 \begin{circus}
   \circend
 \end{circus}
-
-

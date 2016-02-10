@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ FlatBufferApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan   \\
+  \SECTION ~ FlatBufferApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
 
   \t1 
 \end{zsection}
@@ -34,32 +34,11 @@ InitializeApplication \circdef \\
 GetSequencer \circdef \\
 \circblockopen
 	getSequencerCall \then \\
-	getSequencerRet~!~FlatBufferMissionSequencerID  \then \\
+	getSequencerRet~!~FlatBufferMissionSequencerSID  \then \\
 	\Skip
 \circblockclose
 \end{circusaction}
 
-\begin{circusaction}
-immortalMemorySizeMeth \circdef
-\circvar ret : \num \circspot
-\\
-\circblockopen
-immortalMemorySizeCall~.~
-\then \\
-
-      \circblockopen
-
-  ret := 1000000
-
-
-        \circblockclose
-
-  \circseq  \\
-
-immortalMemorySizeRet~.~~!~ret \then \\
-\Skip
-\circblockclose
-\end{circusaction}
 %
 %
 
@@ -70,8 +49,6 @@ Methods \circdef \\
 	\extchoice  \\
 	InitializeApplication  \\
 %
-\extchoice \\
-	immortalMemorySizeMeth \\ 
 %
 %
 \circblockclose

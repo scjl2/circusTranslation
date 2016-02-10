@@ -679,11 +679,23 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 								+ " to ObjectEnv " + objectEnv.getName() + " of type "
 								+ objectEnv.getClass().getCanonicalName());
 
-						VariableEnv v = new VariableEnv(encodedName, varTypeString, init,
-								false);
-						v.setProgramType(varTypeString);
+						boolean stillAddToEnv = true;
+						for (VariableEnv v : objectEnv.getProcParameters())
+						{
+							if(v.getName().equals(encodedName))
+							{
+								stillAddToEnv=false;							
+							}
+						}
 
-						classEnv.addVariable(v);
+						if (stillAddToEnv)
+						{
+							VariableEnv v = new VariableEnv(encodedName ,
+									varTypeString, init, false);
+							v.setProgramType(varTypeString);
+
+							classEnv.addVariable(v);
+						}
 
 					}
 
