@@ -1,4 +1,4 @@
-\input{MethodCallBindingChannels.circus}
+vv\input{MethodCallBindingChannels.circus}
 
 \begin{circus}
 \circprocess  MethodCallBinder \circdef \circbegin \\
@@ -8,10 +8,13 @@
 \begin{circusaction}
 read\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_readCall\\ \t1 ~?~loc\prefixcolon(loc \in readLocs)\\ \t1 ~?~caller\prefixcolon(caller \in readCallers)  \then \\
-	readCall~.~loc~.~caller  \then \\
-	readRet~.~loc~.~caller~?~ret \then \\
-	binder\_readRet~.~loc~.~caller~!~ret  \then \\
+	binder\_readCall\\
+	\t1 ~?~loc\prefixcolon(loc \in readLocs)\\
+	\t1 ~?~caller\prefixcolon(caller \in readCallers) 
+	 \\ \t1 ~?~callingThread  \then \\
+	readCall~.~loc~.~caller~.~callingThread   \then \\
+	readRet~.~loc~.~caller~.~callingThread ~?~ret \then \\
+	binder\_readRet~.~loc~.~caller  ~.~callingThread ~ !~ret  \then \\
 	read\_MethodBinder
 	\circblockclose
 \end{circusaction}
@@ -20,10 +23,13 @@ read\_MethodBinder \circdef \\
 \begin{circusaction}
 write\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_writeCall\\ \t1 ~?~loc\prefixcolon(loc \in writeLocs)\\ \t1 ~?~caller\prefixcolon(caller \in writeCallers)  \cross \num  \then \\
-	writeCall~.~loc~.~caller  \cross \num  \then \\
-	writeRet~.~loc~.~caller \then \\
-	binder\_writeRet~.~loc~.~caller  \then \\
+	binder\_writeCall\\
+	\t1 ~?~loc\prefixcolon(loc \in writeLocs)\\
+	\t1 ~?~caller\prefixcolon(caller \in writeCallers)  \cross \num 
+	 \\ \t1 ~?~callingThread  \then \\
+	writeCall~.~loc~.~caller~.~callingThread   \cross \num  \then \\
+	writeRet~.~loc~.~caller~.~callingThread  \then \\
+	binder\_writeRet~.~loc~.~caller  ~.~callingThread ~   \then \\
 	write\_MethodBinder
 	\circblockclose
 \end{circusaction}

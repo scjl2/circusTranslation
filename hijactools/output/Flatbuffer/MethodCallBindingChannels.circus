@@ -1,11 +1,11 @@
 \begin{zsection}
-  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
+  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId, ThreadId
 \end{zsection}
 
 \begin{circus}
 
-\circchannel binder\_readCall :  MissionID  \cross SchedulableID  \\
-\circchannel binder\_readRet : MissionID \cross SchedulableID \cross \num \\
+\circchannel binder\_readCall :  MissionID  \cross SchedulableID  \cross ThreadId  \\
+\circchannel binder\_readRet : MissionID \cross SchedulableID  \cross ThreadId  \cross \num \\
 \end{circus}
 %
 \begin{zed}
@@ -15,11 +15,11 @@ readCallers == \{ Reader \}
 %
 \begin{circus}
 
-\circchannel binder\_writeCall :  MissionID  \cross SchedulableID   \cross
+\circchannel binder\_writeCall :  MissionID  \cross SchedulableID  \cross ThreadId   \cross
 \num
 
 \\
-\circchannel binder\_writeRet : MissionID  \cross SchedulableID  \\
+\circchannel binder\_writeRet : MissionID  \cross SchedulableID  \cross ThreadId   \\
 \end{circus}
 %
 \begin{zed}

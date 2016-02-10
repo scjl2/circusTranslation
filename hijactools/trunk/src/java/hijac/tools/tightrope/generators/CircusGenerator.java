@@ -118,7 +118,7 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Translating +++");
 		System.out.println();
-
+			
 		translateNetwork();
 
 		translateSafelet();
@@ -140,7 +140,6 @@ public class CircusGenerator
 		translateIDFiles();
 
 		generateReport();
-
 	}
 
 	/**

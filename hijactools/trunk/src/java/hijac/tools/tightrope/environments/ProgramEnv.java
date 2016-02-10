@@ -190,6 +190,7 @@ public class ProgramEnv
 			binderMethodMap.put("ReturnValue", b.getReturnValue());
 			binderMethodMap.put("LocType", b.getLocationType());
 			binderMethodMap.put("CallerType", b.getCallerType());
+			binderMethodMap.put("Sync", b.isSynchronised());
 
 			// // TODO need to calculate these!
 			// for (String s : locs)
