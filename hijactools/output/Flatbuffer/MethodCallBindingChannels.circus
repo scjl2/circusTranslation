@@ -9,8 +9,8 @@
 \end{circus}
 %
 \begin{zed}
-readLocs == \{ FlatBufferMission \}  \\
-readCallers == \{ Reader \}
+readLocs == \{ FlatBufferMissionMID \}  \\
+readCallers == \{ ReaderSID \}
 \end{zed}
 %
 \begin{circus}
@@ -23,8 +23,8 @@ readCallers == \{ Reader \}
 \end{circus}
 %
 \begin{zed}
-writeLocs == \{ FlatBufferMission \}  \\
-writeCallers == \{ Writer \}
+writeLocs == \{ FlatBufferMissionMID \}  \\
+writeCallers == \{ WriterSID \}
 \end{zed}
 %
 

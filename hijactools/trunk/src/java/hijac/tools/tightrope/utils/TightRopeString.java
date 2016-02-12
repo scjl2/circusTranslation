@@ -45,6 +45,18 @@ public final class TightRopeString
 		
 	}
 
+	public static class ParadigmName
+	{
+		public static final String SAFELET = "Safelet";
+		public static final String MISSION_SEQUENCER = "MissionSequencer";
+		public static final String MISSION = "Mission";
+		public static final String APERIODIC_EVENT_HANDLER = "AperiodicEventHandler";
+		public static final String ONE_SHOT_EVENT_HANDLER = "OneShotEventHandler" ;
+ 		public static final String PERIODIC_EVENT_HANDLER = "PeriodicEventHandler" ; 
+		public static final String MANAGED_THREAD = "ManagedThread";
+
+		
+	}
 	
 	
 }

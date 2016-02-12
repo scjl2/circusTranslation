@@ -395,7 +395,7 @@ public class ProgramEnv
 	public void addBinderMethodEnv(String name, String location, String caller,
 			String returnType, Map<String, Type> parameters)
 	{
-		String id = "ID";
+		String id = "";
 		boolean existingBME = false;
 		for (MethodEnv me : binderMethodEnvs)
 		{

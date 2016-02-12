@@ -97,7 +97,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			.getGenericParadigmTypes();
 
 	protected final NewSCJApplication CONTEXT;
-	private Name varType;
+	private String varType;
 
 	/**
 	 * Constructor for the Method Body Visitor
@@ -319,16 +319,17 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			ExpressionTree expressiontree = node.getExpression();
 			String expression = "";
-			
-			if(expressiontree instanceof LiteralTree)
+
+			if (expressiontree instanceof LiteralTree)
 			{
-				 expression = TightRopeTransUtils.encodeLiteral((LiteralTree) expressiontree );  
+				expression = TightRopeTransUtils
+						.encodeLiteral((LiteralTree) expressiontree);
 			}
 			else
 			{
 				expression = expressiontree.toString();
-			}			
-			
+			}
+
 			if (object instanceof ParadigmEnv)
 			{
 				ParadigmEnv p = (ParadigmEnv) object;
@@ -336,21 +337,20 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				System.out.println(cE);
 				if (cE.getVariable(nodeVariableString) != null)
 				{
-					
+
 					if (node.getExpression() instanceof LiteralTree)
 					{
 						expression = TightRopeTransUtils.encodeLiteral((LiteralTree) node
 								.getExpression());
 					}
-					
+
 					return "this~.~" + nodeVariableString + LATEX.ASSIGN + expression;
 				}
 			}
-			
+
 			if (object.getVariable(nodeVariableString) == null)
-			{				
-				return "this~.~" + nodeVariableString + LATEX.ASSIGN
-						+ expression;
+			{
+				return "this~.~" + nodeVariableString + LATEX.ASSIGN + expression;
 			}
 			else
 			{
@@ -581,7 +581,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 			if (mst.getExpression().toString().startsWith("System"))
 			{
-//				return LATEX.SKIP;
+				// return LATEX.SKIP;
 				return "";
 			}
 
@@ -656,8 +656,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				{
 
 					TightRope.getProgramEnv().addBinderMethodEnv(method,
-							varType.toString(), object.getName().toString(),
-							object.getIdType());
+							varType.toString(), object.getId(), object.getIdType());
 				}
 
 				if (method.isAPIMethod())
@@ -718,12 +717,12 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				if (!method.isAPIMethod())
 				{
 					sb.append(LATEX.DOT);
-//					sb.append("TESTE"+objectID.toString());
+					// sb.append("TESTE"+objectID.toString());
 					sb.append(object.getId());
 				}
 				final String threadId = object.getThreadId();
 				if (method.isSynchronised())
-				{				
+				{
 					sb.append(LATEX.DOT);
 					sb.append(threadId);
 				}
@@ -765,7 +764,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				if (!method.isAPIMethod())
 				{
 					sb.append(LATEX.DOT);
-//					sb.append(objectID.toString());
+					// sb.append(objectID.toString());
 					sb.append(object.getId());
 				}
 
@@ -1004,6 +1003,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			}
 
 			Name varType = null;
+			String IDString="";
 			final boolean objectNotNull = object != null;
 			System.out.println("/// objectNotNull = " + objectNotNull);
 			if (objectNotNull)
@@ -1036,11 +1036,14 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 								VariableTree vt = (VariableTree) tree;
 
 								System.out.println("/// vt.getName = " + vt.getName());
+								
 								// / ... to find the variable with the same name
 								// as the expression in our method call
 								// i.e. expression.methodCall()
 								if (vt.getName().contentEquals(identifier.toString()))
 								{
+									
+									
 									Tree typeTree = vt.getType();
 
 									System.out.println("/// typeTree = " + typeTree);
@@ -1049,11 +1052,38 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 									{
 
 										IdentifierTree it = (IdentifierTree) typeTree;
+										for(TypeElement typeElem : CONTEXT.getAnalysis().getTypeElements())
+										{
+											if(typeElem.getSimpleName().contentEquals(vt.getType().toString()))
+											{
+												ClassTree classTree = CONTEXT.getAnalysis().TREES.getTree(typeElem);
+												
+												if(classTree.getExtendsClause().toString().contains(TightRopeString.ParadigmName.MISSION))
+												{
+													 IDString = TightRopeString.Name.MID;
+												}
+												else if ((classTree.getExtendsClause().toString().contains(TightRopeString.ParadigmName.MANAGED_THREAD)) ||
+														ct.getExtendsClause().toString().contains(TightRopeString.ParadigmName.APERIODIC_EVENT_HANDLER) ||
+														ct.getExtendsClause().toString().contains(TightRopeString.ParadigmName.PERIODIC_EVENT_HANDLER) ||
+														ct.getExtendsClause().toString().contains(TightRopeString.ParadigmName.ONE_SHOT_EVENT_HANDLER) ||
+														ct.getExtendsClause().toString().contains(TightRopeString.ParadigmName.MISSION_SEQUENCER) )
+												{
+													IDString = TightRopeString.Name.SID;
+												}
+											}
+										}
+										
+									
+										
 										// And finally get the TYPE (as a
 										// String) of
 										// the variable we are calling the
 										// method of
+										
+											
+										
 										varType = it.getName();
+										
 										// String varTypeString =
 										// varType.toString();
 									}
@@ -1070,7 +1100,10 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 						}
 					}
 				}
-				this.varType = varType;
+				
+				
+				
+				this.varType = varType + IDString;
 				System.out.println("/// varType = " + varType);
 
 				// Then we get the Type Element of the variable we're calling
@@ -1317,12 +1350,11 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		else if (initializer instanceof LiteralTree)
 		{
 			final LiteralTree initLiteral = (LiteralTree) initializer;
-			
+
 			String initString = TightRopeTransUtils.encodeLiteral(initLiteral).toString();
 			if (object.getVariable(initString) != null)
 			{
-				initString = "this~.~"
-						+ TightRopeTransUtils.encodeLiteral(initLiteral);
+				initString = "this~.~" + TightRopeTransUtils.encodeLiteral(initLiteral);
 			}
 			// initString = "TEST";
 			return "\\circvar " + node.getName() + " : "
@@ -1338,8 +1370,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				if (classEnv.getVariable(initializer.toString()) != null)
 				{
 					return "\\circvar " + node.getName() + " : "
-							+ TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
-							+ node.getName() + " := this~.~" + initializer.toString();
+							+ TightRopeTransUtils.encodeType(node.getType())
+							+ " \\circspot " + node.getName() + " := this~.~"
+							+ initializer.toString();
 				}
 				return "\\circvar " + node.getName() + " : "
 						+ TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
@@ -1378,7 +1411,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			String conditionTrans = visit(condition, ctxt);
 			String conditionString = "";
-//			System.out.println("/// conditionTrans = " + conditionTrans);
+			// System.out.println("/// conditionTrans = " + conditionTrans);
 
 			boolean isStillMethodCall = (boolean) timeMachine.get("methodCall");
 			if (isStillMethodCall)
@@ -1394,7 +1427,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				// TODO SUPER HACKY!
 				conditionTrans = conditionTrans.substring(1, conditionTrans.length() - 1);
-//				System.out.println("/// conditionTrans sub = " + conditionTrans);
+				// System.out.println("/// conditionTrans sub = " +
+				// conditionTrans);
 
 				boolean negative = conditionTrans.startsWith("\\lnot");
 
@@ -1409,7 +1443,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				}
 				else
 				{
-					conditionString = conditionTrans 
+					conditionString = conditionTrans
 							+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
 							+ timeMachine.get("variableIdentifier") + "\\circseq \\\\";
 				}
