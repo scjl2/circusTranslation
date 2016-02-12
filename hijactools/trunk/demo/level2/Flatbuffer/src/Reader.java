@@ -24,7 +24,7 @@ public class Reader extends ManagedThread
 
 		while (!fbMission.terminationPending())
 		{
-				int result=-1;
+				int result=0;
 
 				try
 				{

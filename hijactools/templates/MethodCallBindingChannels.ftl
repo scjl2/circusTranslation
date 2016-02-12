@@ -1,11 +1,11 @@
 \begin{zsection}
-  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId, ThreadId
+  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, SchedulableId, ThreadIds
 \end{zsection}
 
 <#list MethodCallBindings as mcb>
 \begin{circus}
 
-\circchannel binder\_${mcb.Name}Call :  ${mcb.LocType}  \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadId </#if> <#if mcb.Parameters?has_content> \cross
+\circchannel binder\_${mcb.Name}Call :  ${mcb.LocType}  \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadID </#if> <#if mcb.Parameters?has_content> \cross
 <#list mcb.Parameters?values as param>
 ${param}
 <#sep>\cross </#sep>
@@ -13,9 +13,9 @@ ${param}
 </#if>
 \\
 <#if mcb.ReturnType != 'null'>
-\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadId </#if> \cross ${mcb.ReturnType} \\
+\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadID </#if> \cross ${mcb.ReturnType} \\
 <#else>
-\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType}  \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadId </#if>  \\
+\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType}  \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadID </#if>  \\
 </#if>
 \end{circus}
 %
