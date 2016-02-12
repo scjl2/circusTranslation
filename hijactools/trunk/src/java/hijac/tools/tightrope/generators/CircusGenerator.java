@@ -34,13 +34,13 @@ import java.util.Map;
  */
 public class CircusGenerator
 {
-	private static final String NETWORK_PROGRAM_TEX = "NetworkProgram.tex";
+	private static final String NETWORK_PROGRAM = "NetworkProgram.circus";
 	private static final String NETWORK_PROGRAM_TEMPLATE_FTL = "NetworkProgram-Template.ftl";
-	private static final String NETWORK_LOCKING_TEX = "NetworkLocking.tex";
+	private static final String NETWORK_LOCKING = "NetworkLocking.circus";
 	private static final String NETWORK_LOCKING_TEMPLATE_FTL = "NetworkLocking-Template.ftl";
-	private static final String NETWORK_METHOD_CALL_BINDER_TEX = "NetworkMethodCallBinder.tex";
+	private static final String NETWORK_METHOD_CALL_BINDER = "NetworkMethodCallBinder.circus";
 	private static final String NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL = "NetworkMethodCallBinder-Template.ftl";
-	private static final String NETWORK_CHAN_TEX = "NetworkChan.tex";
+	private static final String NETWORK_CHAN = "NetworkChan.circus";
 	private static final String NETWORK_CHAN_TEMPLATE_FTL = "NetworkChan-Template.ftl";
 	private static final String ID_TYPE = "IDType";
 	private static final String CLASS_CIRCUS = "Class.circus";
@@ -270,18 +270,18 @@ public class CircusGenerator
 		Map root = programEnv.geNetworkMap();
 		
 		System.out.println("+++ Translating Network Channels +++");
-		translateCommon(root, NETWORK_CHAN_TEMPLATE_FTL, NETWORK_CHAN_TEX);
+		translateCommon(root, NETWORK_CHAN_TEMPLATE_FTL, NETWORK_CHAN);
 		
 		System.out.println("+++ Translating Method Call Binder +++");	
-		translateCommon(root, NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL, NETWORK_METHOD_CALL_BINDER_TEX);
+		translateCommon(root, NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL, NETWORK_METHOD_CALL_BINDER);
 		
 		translateCommon(root, "MethodCallBindingChannels.ftl", "MethodCallBindingChannels.circus");
 		
 		System.out.println("+++ Translating Locking +++");	
-		translateCommon(root, NETWORK_LOCKING_TEMPLATE_FTL, NETWORK_LOCKING_TEX);
+		translateCommon(root, NETWORK_LOCKING_TEMPLATE_FTL, NETWORK_LOCKING);
 		
 		System.out.println("+++ Translating Program +++");	
-		translateCommon(root, NETWORK_PROGRAM_TEMPLATE_FTL, NETWORK_PROGRAM_TEX);
+		translateCommon(root, NETWORK_PROGRAM_TEMPLATE_FTL, NETWORK_PROGRAM);
 		
 
 		translateCommon(root, NETWORK_TEMPLATE_FTL, NETWORK_CIRCUS);

@@ -1,0 +1,56 @@
+%%%%%%%%%%%%%%%%%%THREADS
+%
+\begin{circus}
+\circprocess Threads \circdef  \\
+\circblockopen
+ThreadFW(InstrumentLandingSystemMonitorTID, 5) \\
+\interleave \\
+ThreadFW(SafeLandingHandlerTID, 5) \\
+\interleave \\
+ThreadFW(GroundDistanceMonitorTID, 5) \\
+\interleave \\
+ThreadFW(CommunicationsHandlerTID, 5) \\
+\interleave \\
+ThreadFW(ControlHandlerTID, 5) \\
+\interleave \\
+ThreadFW(AperiodicSimulatorTID, 5) \\
+\interleave \\
+ThreadFW(TakeOffFailureHandlerTID, 5) \\
+\interleave \\
+ThreadFW(LandingGearHandlerLandTID, 5) \\
+\interleave \\
+ThreadFW(EnvironmentMonitorTID, 5) \\
+\interleave \\
+ThreadFW(FlightSensorsMonitorTID, 5) \\
+\interleave \\
+ThreadFW(NavigationMonitorTID, 5) \\
+\interleave \\
+ThreadFW(ACModeChangerTID, 5) \\
+\interleave \\
+ThreadFW(BeginLandingHandlerTID, 5) \\
+\interleave \\
+ThreadFW(LandingGearHandlerTakeOffTID, 5) \\
+\interleave \\
+ThreadFW(TakeOffMonitorTID, 5) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%OBJECTS
+%
+\begin{circus}
+\circprocess Objects \circdef \\
+\circblockopen
+ObjectFW(TakeOffMissionOID) \\
+\interleave \\
+ObjectFW(LandMissionOID) \\
+
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%LOCKING
+%
+\begin{circus}
+\circprocess Locking \circdef Threads \lpar ThreadSync \rpar Objects
+\end{circus}

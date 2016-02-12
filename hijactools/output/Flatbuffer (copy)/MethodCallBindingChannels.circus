@@ -1,0 +1,38 @@
+\begin{zsection}
+  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
+\end{zsection}
+
+\begin{circus}
+
+\circchannel binder\_readCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_readRet : MissionID \cross SchedulableID \cross \num \\
+\end{circus}
+%
+\begin{zed}
+readLocs == \{ FlatBufferMission \}  \\
+readCallers == \{ Reader \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_writeCall :  MissionID  \cross SchedulableID   \cross
+\num
+
+\\
+\circchannel binder\_writeRet : MissionID  \cross SchedulableID  \\
+\end{circus}
+%
+\begin{zed}
+writeLocs == \{ FlatBufferMission \}  \\
+writeCallers == \{ Writer \}
+\end{zed}
+%
+
+\begin{circus}
+\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer,
+binder\_readCall, binder\_readRet
+,\\
+binder\_writeCall, binder\_writeRet
+
+\rchanset
+\end{circus}

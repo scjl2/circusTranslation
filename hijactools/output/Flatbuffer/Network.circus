@@ -1,20 +1,20 @@
 \subsection{Network Channel Sets}
-\input{NetworkChan.tex}
+\input{NetworkChan.circus}
 
 \newpage
 
 \subsection{MethodCallBinder}
-\input{NetworkMethodCallBinder.tex}
+\input{NetworkMethodCallBinder.circus}
 
 \newpage
 
 \subsection{Locking}
-\input{NetworkLocking.tex}
+\input{NetworkLocking.circus}
 
 \newpage
 
 \subsection{Program}
-\input{NetworkProgram.tex}
+\input{NetworkProgram.circus}
 %
 \begin{circus}
 \circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar ApplicationB \circblockclose \lpar LockingSync \rpar Locking

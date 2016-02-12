@@ -29,7 +29,7 @@ writeCallers == \{ Writer \}
 %
 
 \begin{circus}
-\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer,
+\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, \\
 binder\_readCall, binder\_readRet
 ,\\
 binder\_writeCall, binder\_writeRet
