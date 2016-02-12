@@ -183,7 +183,6 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 					classEnv.addVariableInit(varName.toString(), variableInitAndInput,
 							true);
-
 				}
 			}
 		}
@@ -204,9 +203,12 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 						+ expressionTree.toString());
 				// classEnv.addVariable(NewTransUtils.encodeName(varName),"type",
 				// expressionTree, false);
-
-				classEnv.addVariableInit(varName.toString(), expressionTree.toString(),
-						true);
+				String expressionString = expressionTree.toString();
+				if (expression instanceof LiteralTree)
+				{
+					expressionString = TightRopeTransUtils.encodeLiteral((LiteralTree) expression);
+				}
+				classEnv.addVariableInit(varName.toString(),expressionString ,true);
 
 				// objectEnv.addVariableInit(varName.toString(),
 				// "?"+varName.toString()+"In");
