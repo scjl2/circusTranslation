@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ FlightSensorsMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
- \t1  , \\
+ \t1  , 
 MainMissionMethChan
 
 
@@ -8,43 +8,40 @@ MainMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess FlightSensorsMonitorApp \circdef \\ \qquad
+\circprocess FlightSensorsMonitorApp \circdef \\ \t1
   mainMission : MissionID
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~FlightSensorsMonitor \then \\
+	handleAsyncEventCall~.~FlightSensorsMonitorSID \then \\
 	
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
+binder\_setAirSpeedCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then  \\ binder\_setAirSpeedRet~.~controllingMission~.~FlightSensorsMonitorSID\then  \\ \Skip
 
-setAirSpeedCall~.~controllingMission~!~0\then \\setAirSpeedRet~.~controllingMission\then \\\Skip
- 
 
-               \circseq \\ 
+               \circseq \\
 
-setAltitudeCall~.~controllingMission~!~0\then \\setAltitudeRet~.~controllingMission\then \\\Skip
- 
+binder\_setAltitudeCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then  \\ binder\_setAltitudeRet~.~controllingMission~.~FlightSensorsMonitorSID\then  \\ \Skip
 
-               \circseq \\ 
 
-setHeadingCall~.~controllingMission~!~0\then \\setHeadingRet~.~controllingMission\then \\\Skip
- 
+               \circseq \\
 
-        \circblockclose  
+binder\_setHeadingCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then  \\ binder\_setHeadingRet~.~controllingMission~.~FlightSensorsMonitorSID\then  \\ \Skip
+
+
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~FlightSensorsMonitor \then \\
+    handleAsyncEventRet~.~FlightSensorsMonitorSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -55,7 +52,7 @@ setHeadingCall~.~controllingMission~!~0\then \\setHeadingRet~.~controllingMissio
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -65,7 +62,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~FlightSensorsMonitor \then \Skip)
+  \circinterrupt (end\_periodic\_app~.~FlightSensorsMonitorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

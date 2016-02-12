@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ ACModeChangerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId  , ACModeChangerClass \\
+  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  , MethodCallBindingChannels , ACModeChangerClass \\
 
   \t1 
 \end{zsection}
@@ -9,26 +9,26 @@
 %\end{circus}
 
 %\begin{circus}
-%\circchannelset ACModeChangerAppChanSet == ACModeChangerAppSync
+%\circchannelset ACModeChangerAppChanSet == ACModeChangerSIDAppSync
 %\end{circus}
 
 \begin{circus}
-\circprocess ACModeChangerApp \circdef \\ \qquad
+\circprocess ACModeChangerApp \circdef \\ \t1
   controllingMission : MissionID
- 
+
 \circspot
- \circbegin\\ 
+ \circbegin\\
 \end{circus}
-   
+
 
 \begin{circusaction}
 GetNextMission \circdef \circvar ret : MissionID \circspot \\
 \circblockopen
-    getNextMissionCall~.~ACModeChanger \then \\
-	ret := this~.~getNextMission() \circseq \\
-    getNextMissionRet~.~ACModeChanger~!~ret  \then \\
+    getNextMissionCall~.~ACModeChangerSID \then \\
+	   ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~ACModeChangerSID~!~ret  \then \\
 \Skip
-\circblockclose	
+\circblockclose
 \end{circusaction}
 
 %
@@ -41,14 +41,14 @@ Methods \circdef  \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
 \circspot ( Methods) 
   %\circhide MissionSequencerAppStateSync
-\circinterrupt (end\_sequencer\_app~.~ACModeChanger \then \Skip)
+\circinterrupt (end\_sequencer\_app~.~ACModeChangerSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

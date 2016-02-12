@@ -4,28 +4,26 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess InstrumentLandingSystemMonitorApp \circdef \\ \qquad
+\circprocess InstrumentLandingSystemMonitorApp \circdef \\ \t1
   mission : MissionID
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~InstrumentLandingSystemMonitor \then \\
+	handleAsyncEventCall~.~InstrumentLandingSystemMonitorSID \then \\
 	
       \circblockopen
 
-\Skip
- 
-
-        \circblockclose  
+      
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~InstrumentLandingSystemMonitor \then \\
+    handleAsyncEventRet~.~InstrumentLandingSystemMonitorSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -36,7 +34,7 @@ handlerAsyncEvent \circdef \\
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -46,7 +44,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~InstrumentLandingSystemMonitor \then \Skip)
+  \circinterrupt (end\_periodic\_app~.~InstrumentLandingSystemMonitorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

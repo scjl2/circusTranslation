@@ -66,7 +66,8 @@ public class TightRopeTransUtils extends TransUtils
 						returnString = "float";
 						break;
 					case DOUBLE:
-						returnString = "\\mathbb{R}";
+//						returnString = "\\mathbb{R}";
+						returnString = "\\power \\arithmos";
 						break;
 					case CHAR:
 						returnString = "char";

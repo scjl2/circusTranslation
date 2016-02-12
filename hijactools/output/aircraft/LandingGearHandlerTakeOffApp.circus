@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ LandingGearHandlerTakeOffApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
- \t1  , \\
+ \t1  , 
 TakeOffMissionMethChan
 , 
 
@@ -14,28 +14,26 @@ ThreadIds
 \end{zsection}
 
 \begin{circus}
-\circprocess LandingGearHandlerTakeOffApp \circdef \\ \qquad
+\circprocess LandingGearHandlerTakeOffApp \circdef \\ \t1
   mission : MissionID
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~LandingGearHandlerTakeOff \then \\
+	handleAsyncEventCall~.~LandingGearHandlerTakeOffSID \then \\
 	
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
+binder\_isLandingGearDeployedCall~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ binder\_isLandingGearDeployedRet~.~mission~.~LandingGearHandlerTakeOffSID~?~isLandingGearDeployed\then  \\ \ \ \circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed\ \
 
-            isLandingGearDeployedCall~.~mission\then \\isLandingGearDeployedRet~.~mission~?~isLandingGearDeployed\then \\\\ \circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed\\
-
+               \circseq \\
 
   \circif ~ landingGearIsDeployed = \true ~ \circthen ~
   \\
@@ -43,10 +41,10 @@ handlerAsyncEvent \circdef \\
 
       \circblockopen
 
-stowLandingGearCall~.~mission\then \\stowLandingGearRet~.~mission\then \\\Skip
- 
+binder\_stowLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ binder\_stowLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ \Skip
 
-        \circblockclose  
+
+        \circblockclose
 
 
   \\
@@ -56,20 +54,20 @@ stowLandingGearCall~.~mission\then \\stowLandingGearRet~.~mission\then \\\Skip
 
       \circblockopen
 
-deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOffThread\then \\deployLandingGearRet~.~mission~.~LandingGearHandlerTakeOffThread\then \\\Skip
- 
+binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then  \\ binder\_deployLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then  \\ \Skip
 
-        \circblockclose  
+
+        \circblockclose
 
 
   \\
   \circfi
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~LandingGearHandlerTakeOff \then \\
+    handleAsyncEventRet~.~LandingGearHandlerTakeOffSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -80,7 +78,7 @@ deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOffThread\then \\deployL
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -90,7 +88,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~LandingGearHandlerTakeOff \then \Skip)
+  \circinterrupt (end\_aperiodic\_app~.~LandingGearHandlerTakeOffSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

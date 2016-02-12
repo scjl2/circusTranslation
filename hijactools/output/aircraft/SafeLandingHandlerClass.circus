@@ -1,11 +1,15 @@
 
+\begin{zsection}
+  \SECTION ~ SafeLandingHandlerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass SafeLandingHandlerClass \circdef \circbegin
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  mainMission : MainMission\\ 
-  threshold : \mathbb{R}\\ 
+  threshold : \power \arithmos\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -28,5 +32,3 @@
 \begin{circus}
   \circend
 \end{circus}
-
-

@@ -4,33 +4,30 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess BeginLandingHandlerApp \circdef \\ \qquad
+\circprocess BeginLandingHandlerApp \circdef \\ \t1
   controllingMission : MissionID
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~BeginLandingHandler \then \\
+	handleAsyncEventCall~.~BeginLandingHandlerSID \then \\
 	
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
+requestTerminationCall~.~controllingMission\then  \\ requestTerminationRet~.~controllingMission~?~requestTermination\then  \\ 
 
-            requestTerminationCall~.~controllingMission\then \\requestTerminationRet~.~controllingMission~?~requestTermination\then \\
 
-\Skip
-        \circblockclose  
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~BeginLandingHandler \then \\
+    handleAsyncEventRet~.~BeginLandingHandlerSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -41,7 +38,7 @@ handlerAsyncEvent \circdef \\
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -51,7 +48,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~BeginLandingHandler \then \Skip)
+  \circinterrupt (end\_aperiodic\_app~.~BeginLandingHandlerSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

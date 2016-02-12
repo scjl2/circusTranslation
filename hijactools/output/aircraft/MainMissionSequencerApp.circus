@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ MainMissionSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId  , MainMissionSequencerClass \\
+  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  , MethodCallBindingChannels , MainMissionSequencerClass \\
 
   \t1 
 \end{zsection}
@@ -9,13 +9,13 @@
 %\end{circus}
 
 %\begin{circus}
-%\circchannelset MainMissionSequencerAppChanSet == MainMissionSequencerAppSync
+%\circchannelset MainMissionSequencerAppChanSet == MainMissionSequencerSIDAppSync
 %\end{circus}
 
 \begin{circus}
-\circprocess MainMissionSequencerApp \circdef  \circbegin\\ 
+\circprocess MainMissionSequencerApp \circdef  \circbegin\\
 \end{circus}
-   
+
 \begin{schema}{State}
   this : \circreftype MainMissionSequencerClass\\ 
 \end{schema}
@@ -33,11 +33,11 @@
 \begin{circusaction}
 GetNextMission \circdef \circvar ret : MissionID \circspot \\
 \circblockopen
-    getNextMissionCall~.~MainMissionSequencer \then \\
-	ret := this~.~getNextMission() \circseq \\
-    getNextMissionRet~.~MainMissionSequencer~!~ret  \then \\
+    getNextMissionCall~.~MainMissionSequencerSID \then \\
+	   ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~MainMissionSequencerSID~!~ret  \then \\
 \Skip
-\circblockclose	
+\circblockclose
 \end{circusaction}
 
 %
@@ -50,14 +50,14 @@ Methods \circdef  \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
 \circspot ( \lschexpract Init \rschexpract \circseq Methods) 
   %\circhide MissionSequencerAppStateSync
-\circinterrupt (end\_sequencer\_app~.~MainMissionSequencer \then \Skip)
+\circinterrupt (end\_sequencer\_app~.~MainMissionSequencerSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

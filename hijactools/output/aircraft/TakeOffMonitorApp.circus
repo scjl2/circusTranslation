@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
- \t1  , \\
+ \t1  , 
 MainMissionMethChan
 
 
@@ -8,54 +8,50 @@ MainMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess TakeOffMonitorApp \circdef \\ \qquad
+\circprocess TakeOffMonitorApp \circdef \\ \t1
   mainMission : MissionID
-,\\ 
+,\\
   takeOffMission : MissionID
-,\\ 
-  takeOffAltitude : \mathbb{R}
-,\\ 
+,\\
+  takeOffAltitude : \power \arithmos
+,\\
   landingGearHandler : SchedulableID
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~TakeOffMonitor \then \\
+	handleAsyncEventCall~.~TakeOffMonitorSID \then \\
 	
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
+binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then  \\ binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then  \\ \ \ \circvar altitude : \power \arithmos \circspot altitude :=~getAltitude\ \
 
-            getAltitudeCall~.~mainMission\then \\getAltitudeRet~.~mainMission~?~getAltitude\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
+               \circseq \\
 
-
-              \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
+  \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
   \\
   \t1
 
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
-
-            releaseCall~.~landingGearHandler\then \\releaseRet~.~landingGearHandler~?~release\then \\
+releaseCall~.~landingGearHandler\then  \\ releaseRet~.~landingGearHandler~?~release\then  \\ 
 
 
+               \circseq \\
 
-            requestTerminationCall~.~takeoffMission\then \\requestTerminationRet~.~takeoffMission~?~requestTermination\then \\
+requestTerminationCall~.~takeoffMission\then  \\ requestTerminationRet~.~takeoffMission~?~requestTermination\then  \\ 
 
-\Skip
-        \circblockclose  
+
+        \circblockclose
 
 
   \\
@@ -63,11 +59,11 @@ handlerAsyncEvent \circdef \\
   \\
   \circfi \circseq \\
 
-\Skip
-        \circblockclose  
+
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~TakeOffMonitor \then \\
+    handleAsyncEventRet~.~TakeOffMonitorSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -78,7 +74,7 @@ handlerAsyncEvent \circdef \\
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -88,7 +84,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~TakeOffMonitor \then \Skip)
+  \circinterrupt (end\_periodic\_app~.~TakeOffMonitorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

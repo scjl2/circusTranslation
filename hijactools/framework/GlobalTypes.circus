@@ -27,7 +27,8 @@ ThreadMap == ThreadID \pfun \nat_1
 \end{zed}
 %
 \begin{zed}
-ExceptionType ::= interruptedException | illegalMonitorStateException | illegalArgumentException | \\ \t1  illegalThreadStateException | illegalStateException | ceilingViolationException
+ExceptionType ::= interruptedException | illegalMonitorStateException | illegalArgumentException | \\
+\t1  illegalThreadStateException | illegalStateException | ceilingViolationException
 \end{zed}
 %
 \begin{zed}

@@ -1,4 +1,9 @@
 
+\begin{zsection}
+  \SECTION ~ AperiodicSimulatorClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass AperiodicSimulatorClass \circdef \circbegin
 \end{circus}
@@ -27,5 +32,3 @@
 \begin{circus}
   \circend
 \end{circus}
-
-

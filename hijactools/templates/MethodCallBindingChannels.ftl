@@ -27,7 +27,7 @@ ${mcb.Name}Callers == \{ <#list mcb.Callers as caller>${caller}<#sep>,</#sep></#
 </#list>
 
 \begin{circus}
-\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer,
+\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, \\
 <#list MethodCallBindings as mcb>
 binder\_${mcb.Name}Call, binder\_${mcb.Name}Ret
 <#sep>,\\</#sep>

@@ -1,12 +1,15 @@
 
+\begin{zsection}
+  \SECTION ~ TakeOffFailureHandlerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass TakeOffFailureHandlerClass \circdef \circbegin
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  mainMission : MainMission\\ 
-  takeoffMission : TakeOffMission\\ 
-  threshold : \mathbb{R}\\ 
+  threshold : \power \arithmos\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -29,5 +32,3 @@
 \begin{circus}
   \circend
 \end{circus}
-
-

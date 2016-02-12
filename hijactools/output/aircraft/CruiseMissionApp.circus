@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ CruiseMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , CruiseMissionClass \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , MethodCallBindingChannels , CruiseMissionClass \\
 
   \t1 , CruiseMissionMethChan
 \end{zsection}
@@ -13,15 +13,15 @@
 %\circchannelset CruiseMissionAppChanSet == \\
 % \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
 
-%    register~.~BeginLandingHandler~.~CruiseMission 
-%    register~.~NavigationMonitor~.~CruiseMission 
+%    register~.~BeginLandingHandlerSID~.~CruiseMissionMID
+%    register~.~NavigationMonitorSID~.~CruiseMissionMID
 %\rchanset
 %\end{circus}
 
 \begin{circus}
-\circprocess CruiseMissionApp \circdef \\ \qquad
+\circprocess CruiseMissionApp \circdef \\ \t1
   controllingMission : MissionID
- 
+
 \circspot
  \circbegin
 \end{circus}
@@ -43,23 +43,23 @@
 \begin{circusaction}
 InitializePhase \circdef \\
 \circblockopen
-  initializeCall~.~CruiseMission \then \\
-  
-	register~!~BeginLandingHandler~!~CruiseMission \then   \\
-	register~!~NavigationMonitor~!~CruiseMission \then   \\
+  initializeCall~.~CruiseMissionMID \then \\
+
+	register~!~BeginLandingHandlerSID~!~CruiseMissionMID \then   \\
+	register~!~NavigationMonitorSID~!~CruiseMissionMID \then   \\
 
 
-  initializeRet~.~CruiseMission \then \\
+  initializeRet~.~CruiseMissionMID \then \\
   \Skip
-\circblockclose 
+\circblockclose
 \end{circusaction}
- 
+
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
- cleanupMissionCall~.~CruiseMission \then \\
+ cleanupMissionCall~.~CruiseMissionMID \then \\
 
- cleanupMissionRet~.~CruiseMission~!~\true \then \\
+ cleanupMissionRet~.~CruiseMissionMID~!~\true \then \\
  \Skip
 \circblockclose
 \end{circusaction}
@@ -69,11 +69,11 @@ getControllingMissionMeth \circdef
 \circvar ret : MissionID \circspot
 \\
 \circblockopen
-getControllingMissionCall~.~CruiseMission
+getControllingMissionCall~.~CruiseMissionMID
 \then \\
 ret := this~.~getControllingMission()  \circseq  \\
 
-getControllingMissionRet~.~CruiseMission~!~ret \then \\
+getControllingMissionRet~.~CruiseMissionMID~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -81,7 +81,7 @@ getControllingMissionRet~.~CruiseMission~!~ret \then \\
 %
 
 \begin{circusaction}
-Methods \circdef 
+Methods \circdef
 \circblockopen
 	InitializePhase \\
 	\extchoice \\
@@ -91,13 +91,13 @@ Methods \circdef
 	getControllingMissionMeth \\ 
 %
 %
-\circblockclose 
+\circblockclose
 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
 \circspot ( \lschexpract Init \rschexpract \circseq Methods) 
- \circinterrupt (end\_mission\_app~.~CruiseMission \then \Skip)
+ \circinterrupt (end\_mission\_app~.~CruiseMissionMID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

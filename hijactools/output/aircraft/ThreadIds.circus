@@ -4,53 +4,52 @@
 \extracircusvspace
 %
 \begin{axdef}
-	SafeLandingHandlerThreadID : ThreadID \\
-	ACModeChangerThreadID : ThreadID \\
-	TakeOffFailureHandlerThreadID : ThreadID \\
-	InstrumentLandingSystemMonitorThreadID : ThreadID \\
-	FlightSensorsMonitorThreadID : ThreadID \\
-	TakeOffMonitorThreadID : ThreadID \\
-	AperiodicSimulatorThreadID : ThreadID \\
-	LandingGearHandlerLandThreadID : ThreadID \\
-	LandingGearHandlerTakeOffThreadID : ThreadID \\
-	GroundDistanceMonitorThreadID : ThreadID \\
-	ControlHandlerThreadID : ThreadID \\
-	CommunicationsHandlerThreadID : ThreadID \\
-	BeginLandingHandlerThreadID : ThreadID \\
-	NavigationMonitorThreadID : ThreadID \\
-	EnvironmentMonitorThreadID : ThreadID \\
+	InstrumentLandingSystemMonitorTID : ThreadID \\
+	SafeLandingHandlerTID : ThreadID \\
+	GroundDistanceMonitorTID : ThreadID \\
+	CommunicationsHandlerTID : ThreadID \\
+	ControlHandlerTID : ThreadID \\
+	AperiodicSimulatorTID : ThreadID \\
+	TakeOffFailureHandlerTID : ThreadID \\
+	LandingGearHandlerLandTID : ThreadID \\
+	EnvironmentMonitorTID : ThreadID \\
+	FlightSensorsMonitorTID : ThreadID \\
+	NavigationMonitorTID : ThreadID \\
+	ACModeChangerTID : ThreadID \\
+	BeginLandingHandlerTID : ThreadID \\
+	LandingGearHandlerTakeOffTID : ThreadID \\
+	TakeOffMonitorTID : ThreadID \\
 
 \where
-  distinct \langle SafeletThreadId,
-  nullThreadId, \\
-	SafeLandingHandlerThreadID
+  distinct \langle SafeletTID, nullTID, \\
+	InstrumentLandingSystemMonitorTID
 	,
-	ACModeChangerThreadID
+	SafeLandingHandlerTID
 	,\\
-	TakeOffFailureHandlerThreadID
+	GroundDistanceMonitorTID
 	,
-	InstrumentLandingSystemMonitorThreadID
+	CommunicationsHandlerTID
 	,\\
-	FlightSensorsMonitorThreadID
+	ControlHandlerTID
 	,
-	TakeOffMonitorThreadID
+	AperiodicSimulatorTID
 	,\\
-	AperiodicSimulatorThreadID
+	TakeOffFailureHandlerTID
 	,
-	LandingGearHandlerLandThreadID
+	LandingGearHandlerLandTID
 	,\\
-	LandingGearHandlerTakeOffThreadID
+	EnvironmentMonitorTID
 	,
-	GroundDistanceMonitorThreadID
+	FlightSensorsMonitorTID
 	,\\
-	ControlHandlerThreadID
+	NavigationMonitorTID
 	,
-	CommunicationsHandlerThreadID
+	ACModeChangerTID
 	,\\
-	BeginLandingHandlerThreadID
+	BeginLandingHandlerTID
 	,
-	NavigationMonitorThreadID
+	LandingGearHandlerTakeOffTID
 	,\\
-	EnvironmentMonitorThreadID
+	TakeOffMonitorTID
   \rangle
 \end{axdef}

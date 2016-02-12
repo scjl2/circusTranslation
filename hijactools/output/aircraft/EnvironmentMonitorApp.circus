@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ EnvironmentMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
- \t1  , \\
+ \t1  , 
 MainMissionMethChan
 
 
@@ -8,43 +8,40 @@ MainMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess EnvironmentMonitorApp \circdef \\ \qquad
+\circprocess EnvironmentMonitorApp \circdef \\ \t1
   mainMission : MissionID
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~EnvironmentMonitor \then \\
+	handleAsyncEventCall~.~EnvironmentMonitorSID \then \\
 	
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
+binder\_setCabinPressureCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then  \\ binder\_setCabinPressureRet~.~controllingMission~.~EnvironmentMonitorSID\then  \\ \Skip
 
-setCabinPressureCall~.~controllingMission~!~0\then \\setCabinPressureRet~.~controllingMission\then \\\Skip
- 
 
-               \circseq \\ 
+               \circseq \\
 
-setEmergencyOxygenCall~.~controllingMission~!~0\then \\setEmergencyOxygenRet~.~controllingMission\then \\\Skip
- 
+binder\_setEmergencyOxygenCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then  \\ binder\_setEmergencyOxygenRet~.~controllingMission~.~EnvironmentMonitorSID\then  \\ \Skip
 
-               \circseq \\ 
 
-setFuelRemainingCall~.~controllingMission~!~0\then \\setFuelRemainingRet~.~controllingMission\then \\\Skip
- 
+               \circseq \\
 
-        \circblockclose  
+binder\_setFuelRemainingCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then  \\ binder\_setFuelRemainingRet~.~controllingMission~.~EnvironmentMonitorSID\then  \\ \Skip
+
+
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~EnvironmentMonitor \then \\
+    handleAsyncEventRet~.~EnvironmentMonitorSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -55,7 +52,7 @@ setFuelRemainingCall~.~controllingMission~!~0\then \\setFuelRemainingRet~.~contr
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -65,7 +62,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~EnvironmentMonitor \then \Skip)
+  \circinterrupt (end\_periodic\_app~.~EnvironmentMonitorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

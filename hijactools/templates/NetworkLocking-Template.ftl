@@ -3,10 +3,14 @@
 \begin{circus}
 \circprocess Threads \circdef  \\
 \circblockopen
+<#if Threads?has_content>
 <#list Threads?keys as thread>
 ThreadFW(${thread}, ${Threads[thread]}) \\
 <#sep>\interleave \\</#sep>
 </#list>
+<#else>
+\Skip
+</#if>
 \circblockclose
 \end{circus}
 %
@@ -15,10 +19,15 @@ ThreadFW(${thread}, ${Threads[thread]}) \\
 \begin{circus}
 \circprocess Objects \circdef \\
 \circblockopen
+<#if Objects.Objects?has_content>
 <#list Objects.Objects as object>
 ObjectFW(${object}) \\
 <#sep>\interleave \\</#sep>
 </#list>
+<#else>
+\Skip
+</#if>
+
 \circblockclose
 \end{circus}
 %

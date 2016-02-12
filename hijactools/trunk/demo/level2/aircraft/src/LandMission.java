@@ -89,7 +89,6 @@ public class LandMission extends Mission //implements LandingGearUser
 	public synchronized void deployLandingGear()
 	{
 		landingGearDeployed = true;
-
 	}
 
 

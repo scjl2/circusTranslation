@@ -310,7 +310,7 @@ public class ProgramEnv
 	}
 
 	/**
-	 * >>>>>>> deferredParameterGathering Gets the object environment within
+	 * Gets the object environment within
 	 * this program environment that shares the same name as the parameter, if
 	 * it does not exists this method will return <code>null</code>. Internally,
 	 * this method calls <code>getObjectEnv(String objectName)</code>.
@@ -408,23 +408,7 @@ public class ProgramEnv
 
 				existingBME = true;
 			}
-
 		}
-
-		// if (!existingBME)
-		// {
-		// // If the method isn't already there
-		// BinderMethodEnv bme = new BinderMethodEnv(name, location + id, caller
-		// + id);
-		// bme.setParameters(parameters);
-		//
-		// if (returnType != null && !returnType.equals("null"))
-		// {
-		// bme.setReturnType("\\cross " + returnType);
-		// }
-		// binderMethodEnvs.add(bme);
-		// }
-
 	}
 
 	public void addBinderMethodEnv(MethodEnv method, String location, String caller,

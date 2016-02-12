@@ -4,57 +4,53 @@
 \extracircusvspace
 %
 \begin{axdef}
-MainMissionSequencerID : SchedulableID\\
-	ACModeChangerID : SchedulableID\\
-	EnvironmentMonitorID : SchedulableID\\
-	ControlHandlerID : SchedulableID\\
-	FlightSensorsMonitorID : SchedulableID\\
-	CommunicationsHandlerID : SchedulableID\\
-	AperiodicSimulatorID : SchedulableID\\
-	LandingGearHandlerTakeOffID : SchedulableID\\
-	TakeOffMonitorID : SchedulableID\\
-	TakeOffFailureHandlerID : SchedulableID\\
-	BeginLandingHandlerID : SchedulableID\\
-	NavigationMonitorID : SchedulableID\\
-	GroundDistanceMonitorID : SchedulableID\\
-	LandingGearHandlerLandID : SchedulableID\\
-	InstrumentLandingSystemMonitorID : SchedulableID\\
-	SafeLandingHandlerID : SchedulableID\\
- %eg MainMissionSequencer : SchedulableID\\
- % NestedMissionSequencer : SchedulableID\\
- % NestedOneShotEventHandler : SchedulableID\\   
-  
+MainMissionSequencerSID : SchedulableID\\
+	ACModeChangerSID : SchedulableID\\
+	EnvironmentMonitorSID : SchedulableID\\
+	ControlHandlerSID : SchedulableID\\
+	FlightSensorsMonitorSID : SchedulableID\\
+	CommunicationsHandlerSID : SchedulableID\\
+	AperiodicSimulatorSID : SchedulableID\\
+	LandingGearHandlerTakeOffSID : SchedulableID\\
+	TakeOffMonitorSID : SchedulableID\\
+	TakeOffFailureHandlerSID : SchedulableID\\
+	BeginLandingHandlerSID : SchedulableID\\
+	NavigationMonitorSID : SchedulableID\\
+	GroundDistanceMonitorSID : SchedulableID\\
+	LandingGearHandlerLandSID : SchedulableID\\
+	InstrumentLandingSystemMonitorSID : SchedulableID\\
+	SafeLandingHandlerSID : SchedulableID\\
+%
 \where
-  distinct \langle nullSequencerId, nullSchedulableId, MainMissionSequencerID, \\
-	ACModeChangerID
+  distinct \langle nullSequencerId, nullSchedulableId, MainMissionSequencerSID, \\
+	ACModeChangerSID
 	,
-	EnvironmentMonitorID
+	EnvironmentMonitorSID
 	,\\
-	ControlHandlerID
+	ControlHandlerSID
 	,
-	FlightSensorsMonitorID
+	FlightSensorsMonitorSID
 	,\\
-	CommunicationsHandlerID
+	CommunicationsHandlerSID
 	,
-	AperiodicSimulatorID
+	AperiodicSimulatorSID
 	,\\
-	LandingGearHandlerTakeOffID
+	LandingGearHandlerTakeOffSID
 	,
-	TakeOffMonitorID
+	TakeOffMonitorSID
 	,\\
-	TakeOffFailureHandlerID
+	TakeOffFailureHandlerSID
 	,
-	BeginLandingHandlerID
+	BeginLandingHandlerSID
 	,\\
-	NavigationMonitorID
+	NavigationMonitorSID
 	,
-	GroundDistanceMonitorID
+	GroundDistanceMonitorSID
 	,\\
-	LandingGearHandlerLandID
+	LandingGearHandlerLandSID
 	,
-	InstrumentLandingSystemMonitorID
+	InstrumentLandingSystemMonitorSID
 	,\\
-	SafeLandingHandlerID
+	SafeLandingHandlerSID
   \rangle
 \end{axdef}
-

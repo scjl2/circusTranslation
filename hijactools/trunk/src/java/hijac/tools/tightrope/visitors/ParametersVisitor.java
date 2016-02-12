@@ -6,7 +6,6 @@ import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -71,9 +70,6 @@ import com.sun.source.tree.WildcardTree;
 
 public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 {
-	// TODO This returns Names and Trees, it should return Names and
-	// TypeKinds....but how?
-
 	private final ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
 	private HashMap<Name, Tree> varMap;
@@ -97,8 +93,8 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 		System.out.println("Params Visitor: Variable " + arg0.toString());
 		for (TypeElement et : TightRope.ANALYSIS.getTypeElements())
 		{
-			System.out.println("et.simpleName = " + et.getSimpleName()
-					+ "\t\t arg0.name = " + arg0.getName());
+//			System.out.println("et.simpleName = " + et.getSimpleName()
+//					+ "\t\t arg0.name = " + arg0.getName());
 			if (et.getSimpleName().toString().equals(arg0.getType().toString()))
 			{
 				ExpressionTree initialiser = arg0.getInitializer();
@@ -134,8 +130,8 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			assert (args.size() == 1);
 
 			ExpressionTree arg = args.get(0);
-			System.out.println("arg " + arg.toString() + " in PriParams is "
-					+ arg.getKind());
+//			System.out.println("arg " + arg.toString() + " in PriParams is "
+//					+ arg.getKind());
 
 			// System.out.println(programEnv.getObjectEnv(originClass).getVariables().toString());
 			// System.out.println(((ParadigmEnv)
@@ -168,7 +164,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			else if (arg instanceof LiteralTree)
 			{
 				// v.setProgramType(arg.toString());
-				System.out.println("arg.toString = " + arg.toString());
+//				System.out.println("arg.toString = " + arg.toString());
 				
 				//TODO FOx this, attempted to only set the thread priority if 'needsThread' is true, 
 				//which should be set when the MethodBodyVisitor finds a call to wait or notify.
@@ -382,7 +378,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	@Override
 	public VariableEnv visitIdentifier(IdentifierTree arg0, VariableEnv arg1)
 	{
-		System.out.println("Param Visitor: Identifier->" + arg0.toString());
+//		System.out.println("Param Visitor: Identifier->" + arg0.toString());
 
 		{
 			VariableEnv v = new VariableEnv();
@@ -402,9 +398,9 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				ObjectEnv originObject = programEnv.getObjectEnv(originClass);
 
 				Tree varTree = varMap.get(varName);
-				System.out.println(varName);
-				System.out.println(varMap);
-				System.out.println(varTree);
+//				System.out.println(varName);
+//				System.out.println(varMap);
+//				System.out.println(varTree);
 
 				if (varTree != null)
 				{
@@ -412,7 +408,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 					if (varTreeString.equals("StorageParameters"))
 					{
-						System.out.println("Ignored Arg " + varName);
+//						System.out.println("Ignored Arg " + varName);
 						return null;
 					}
 
@@ -441,22 +437,22 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				}
 				else
 				{
-					System.out.println("VAR TREE NULL");
-					System.out.println("originObject = " + originObject.getName());
+//					System.out.println("VAR TREE NULL");
+//					System.out.println("originObject = " + originObject.getName());
 
-					System.out.println("Getting var " + varName + " from origin object");
+//					System.out.println("Getting var " + varName + " from origin object");
 					VariableEnv theVar = originObject.getVariable(varName);
 
 					if (theVar == null)
 					{
-						System.out.println("Getting from classEnv");
+//						System.out.println("Getting from classEnv");
 						theVar = ((ParadigmEnv) originObject).getClassEnv().getVariable(
 								varName);
 					}
 
-					System.out.println("originObject = " + originObject.getName());
-
-					System.out.println(theVar);
+//					System.out.println("originObject = " + originObject.getName());
+//
+//					System.out.println(theVar);
 					// System.out.println(theVar.getInit().toString());
 					// theVar.setProgramType(theVar.getInit().toString());
 
@@ -472,7 +468,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	@Override
 	public VariableEnv visitLiteral(LiteralTree arg0, VariableEnv arg1)
 	{
-		System.out.println("Param Visitor : Literal");
+//		System.out.println("Param Visitor : Literal");
 
 		if (arg0 != null)
 		{
@@ -495,7 +491,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					String varType = (objVar.getType());
 					if (varType.equals("StorageParameters"))
 					{
-						System.out.println("Ignored Arg " + varType);
+//						System.out.println("Ignored Arg " + varType);
 
 					}
 					else
@@ -506,13 +502,13 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 				v.setInit(arg0.getValue());
 
-				System.out.println("Returning " + v.toString() + " from literal");
+//				System.out.println("Returning " + v.toString() + " from literal");
 				return v;
 
 			}
 		}
 
-		System.out.println("Returning null form Literal");
+//		System.out.println("Returning null form Literal");
 		return null;
 	}
 

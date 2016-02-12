@@ -483,24 +483,7 @@ public class FrameworkEnv
 			sMap.put("Name", p.getName());
 
 			ArrayList<String> params = new ArrayList<String>();
-			// <<<<<<< HEAD
-			// for(VariableEnv v : p.getParameters())
-			// {
-			// System.out.println("Variable v = " + v.toString());
-			// System.out.println("name= " + v.getVariableName());
-			// System.out.println("type = " + v.getVariableType());
-			// System.out.println("programType = " + v.getProgramType());
-			// System.out.println("varInit = " + v.getVariableInit());
-			//
-			// //This adds the type from the program E.G. FlatBufferMission not
-			// MissionID
-			// // params.add(v.getVariableName());
-			// params.add(v.getProgramType());
-			// // params.add("TEST");
-			// }
-			//
-			// sMap.put("Parameters", params);
-			// =======
+		
 			for (VariableEnv v : p.getFWParameters())
 			{
 				// This adds the type from the program E.G. FlatBufferMission

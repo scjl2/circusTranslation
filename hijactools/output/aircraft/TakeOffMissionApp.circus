@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ TakeOffMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , TakeOffMissionClass \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , MethodCallBindingChannels , TakeOffMissionClass \\
 
   \t1 , TakeOffMissionMethChan
 \end{zsection}
@@ -13,16 +13,16 @@
 %\circchannelset TakeOffMissionAppChanSet == \\
 % \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
 
-%    register~.~LandingGearHandlerTakeOff~.~TakeOffMission 
-%    register~.~TakeOffMonitor~.~TakeOffMission 
-%    register~.~TakeOffFailureHandler~.~TakeOffMission 
+%    register~.~LandingGearHandlerTakeOffSID~.~TakeOffMissionMID
+%    register~.~TakeOffMonitorSID~.~TakeOffMissionMID
+%    register~.~TakeOffFailureHandlerSID~.~TakeOffMissionMID
 %\rchanset
 %\end{circus}
 
 \begin{circus}
-\circprocess TakeOffMissionApp \circdef \\ \qquad
+\circprocess TakeOffMissionApp \circdef \\ \t1
   controllingMission : MissionID
- 
+
 \circspot
  \circbegin
 \end{circus}
@@ -44,24 +44,24 @@
 \begin{circusaction}
 InitializePhase \circdef \\
 \circblockopen
-  initializeCall~.~TakeOffMission \then \\
-  
-	register~!~LandingGearHandlerTakeOff~!~TakeOffMission \then   \\
-	register~!~TakeOffMonitor~!~TakeOffMission \then   \\
-	register~!~TakeOffFailureHandler~!~TakeOffMission \then   \\
+  initializeCall~.~TakeOffMissionMID \then \\
+
+	register~!~LandingGearHandlerTakeOffSID~!~TakeOffMissionMID \then   \\
+	register~!~TakeOffMonitorSID~!~TakeOffMissionMID \then   \\
+	register~!~TakeOffFailureHandlerSID~!~TakeOffMissionMID \then   \\
 
 
-  initializeRet~.~TakeOffMission \then \\
+  initializeRet~.~TakeOffMissionMID \then \\
   \Skip
-\circblockclose 
+\circblockclose
 \end{circusaction}
- 
+
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
- cleanupMissionCall~.~TakeOffMission \then \\
+ cleanupMissionCall~.~TakeOffMissionMID \then \\
 
- cleanupMissionRet~.~TakeOffMission~!~\true \then \\
+ cleanupMissionRet~.~TakeOffMissionMID~!~\true \then \\
  \Skip
 \circblockclose
 \end{circusaction}
@@ -70,11 +70,11 @@ CleanupPhase \circdef  \\
 abortMeth \circdef
 \\
 \circblockopen
-abortCall~.~TakeOffMission
+abortCall~.~TakeOffMissionMID ~?~caller
 \then \\
 this~.~abort()  \circseq  \\
 
-abortRet~.~TakeOffMission \then \\
+abortRet~.~TakeOffMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -83,11 +83,11 @@ getControllingMissionMeth \circdef
 \circvar ret : MissionID \circspot
 \\
 \circblockopen
-getControllingMissionCall~.~TakeOffMission
+getControllingMissionCall~.~TakeOffMissionMID
 \then \\
 ret := this~.~getControllingMission()  \circseq  \\
 
-getControllingMissionRet~.~TakeOffMission~!~ret \then \\
+getControllingMissionRet~.~TakeOffMissionMID~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -95,12 +95,12 @@ getControllingMissionRet~.~TakeOffMission~!~ret \then \\
 setControllingMissionMeth \circdef
 \\
 \circblockopen
-setControllingMissionCall~.~TakeOffMission
+setControllingMissionCall~.~TakeOffMissionMID
 ~?~controllingMission
 \then \\
 this~.~setControllingMission(controllingMission)  \circseq  \\
 
-setControllingMissionRet~.~TakeOffMission \then \\
+setControllingMissionRet~.~TakeOffMissionMID \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -109,11 +109,11 @@ cleanUpMeth \circdef
 \circvar ret : \boolean \circspot
 \\
 \circblockopen
-cleanUpCall~.~TakeOffMission
+cleanUpCall~.~TakeOffMissionMID
 \then \\
 ret := this~.~cleanUp()  \circseq  \\
 
-cleanUpRet~.~TakeOffMission~!~ret \then \\
+cleanUpRet~.~TakeOffMissionMID~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -121,11 +121,11 @@ cleanUpRet~.~TakeOffMission~!~ret \then \\
 stowLandingGearMeth \circdef
 \\
 \circblockopen
-stowLandingGearCall~.~TakeOffMission
+stowLandingGearCall~.~TakeOffMissionMID ~?~caller
 \then \\
 this~.~stowLandingGear()  \circseq  \\
 
-stowLandingGearRet~.~TakeOffMission \then \\
+stowLandingGearRet~.~TakeOffMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -134,11 +134,11 @@ isLandingGearDeployedMeth \circdef
 \circvar ret : \boolean \circspot
 \\
 \circblockopen
-isLandingGearDeployedCall~.~TakeOffMission
+isLandingGearDeployedCall~.~TakeOffMissionMID ~?~caller
 \then \\
 ret := this~.~isLandingGearDeployed()  \circseq  \\
 
-isLandingGearDeployedRet~.~TakeOffMission~!~ret \then \\
+isLandingGearDeployedRet~.~TakeOffMissionMID~.~caller~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -147,23 +147,23 @@ isLandingGearDeployedRet~.~TakeOffMission~!~ret \then \\
 deployLandingGearSyncMeth \circdef
 \\
 \circblockopen
-deployLandingGearCall~.~TakeOffMission~?~thread
+deployLandingGearCall~.~TakeOffMissionMID~?~caller~?~thread
  \then \\
 \circblockopen
-startSyncMeth~.~TakeOffMissionObject~.~thread \then \\
-lockAcquired~.~TakeOffMissionObject~.~thread \then \\
+startSyncMeth~.~TakeOffMissionOID~.~thread \then \\
+lockAcquired~.~TakeOffMissionOID~.~thread \then \\
 
       \circblockopen
 
-this~.~landingGearDeployed :=true
- 
+this~.~landingGearDeployed :=\true
 
-        \circblockclose  
+
+        \circblockclose
 
  \circseq  \\
-endSyncMeth~.~TakeOffMissionObject~.~thread \then  \\
+endSyncMeth~.~TakeOffMissionOID~.~thread \then  \\
 
-deployLandingGearRet~.~TakeOffMission~.~thread \then \\
+deployLandingGearRet~.~TakeOffMissionMID~.~caller~.~thread \then \\
 \Skip
 \circblockclose
 \circblockclose
@@ -171,7 +171,7 @@ deployLandingGearRet~.~TakeOffMission~.~thread \then \\
 %
 
 \begin{circusaction}
-Methods \circdef 
+Methods \circdef
 \circblockopen
 	InitializePhase \\
 	\extchoice \\
@@ -193,13 +193,13 @@ Methods \circdef
 	\extchoice \\
 	deployLandingGearSyncMeth \\	
 %
-\circblockclose 
+\circblockclose
 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
 \circspot ( \lschexpract Init \rschexpract \circseq Methods) 
- \circinterrupt (end\_mission\_app~.~TakeOffMission \then \Skip)
+ \circinterrupt (end\_mission\_app~.~TakeOffMissionMID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

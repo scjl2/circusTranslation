@@ -4,22 +4,22 @@
 \extracircusvspace
 %
 \begin{axdef}
-	MainMissionID : MissionID\\
-	TakeOffMissionID : MissionID\\
-	CruiseMissionID : MissionID\\
-	LandMissionID : MissionID\\
+	MainMissionMID : MissionID\\
+	TakeOffMissionMID : MissionID\\
+	CruiseMissionMID : MissionID\\
+	LandMissionMID : MissionID\\
  %eg MainMission : MissionID\\
 %  NestedMission : MissionID\\
  
 \where
   distinct \langle nullMissionId, 
-	MainMissionID
+	MainMissionMID
 	,
-	TakeOffMissionID
+	TakeOffMissionMID
 	,\\
-	CruiseMissionID
+	CruiseMissionMID
 	,
-	LandMissionID
+	LandMissionMID
   \rangle
 \end{axdef}
 
