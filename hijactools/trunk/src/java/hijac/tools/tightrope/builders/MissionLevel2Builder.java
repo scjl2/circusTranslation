@@ -146,6 +146,8 @@ public class MissionLevel2Builder extends ParadigmBuilder
 							
 							
 							setMethodAccess(missionMethodTree, m);
+						
+							
 							missionEnv.getClassEnv().addMeth(m);
 
 							MethodEnv m2 = methodVisitor.visitMethod(missionMethodTree,	false);

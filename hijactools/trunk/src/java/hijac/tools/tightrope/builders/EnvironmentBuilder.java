@@ -278,7 +278,7 @@ public class EnvironmentBuilder
 		tlmsClassEnv.setName(tlms);
 		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
-		MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(
+		ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(
 				programEnv, topLevelMissionSequencer, analysis, this);
 
 		// msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
@@ -435,7 +435,7 @@ public class EnvironmentBuilder
 
 			System.out.println("nestedMissionSequencer = " + nestedMissionSequencer);
 
-			MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(
+			ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(
 					programEnv, nestedMissionSequencer, analysis, this);
 
 			// msl2Visitor.setVarMap(getVariables(tlmsElement,

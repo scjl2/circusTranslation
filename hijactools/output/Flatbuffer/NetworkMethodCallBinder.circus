@@ -1,4 +1,4 @@
-vv\input{MethodCallBindingChannels.circus}
+\input{MethodCallBindingChannels.circus}
 
 \begin{circus}
 \circprocess  MethodCallBinder \circdef \circbegin \\

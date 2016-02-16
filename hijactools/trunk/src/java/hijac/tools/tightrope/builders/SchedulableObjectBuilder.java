@@ -16,6 +16,7 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.EventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -79,8 +80,10 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 
 					schedulableEnv.setObjectId(schedulableEnv.getName().toString());
 					
-					schedulableEnv.getClassEnv().addSyncMeth(
-							methodVisitor.visitMethod(mt, false));
+					MethodEnv m = methodVisitor.visitMethod(mt, false);
+				
+					
+					schedulableEnv.getClassEnv().addSyncMeth(m);
 
 				}
 				else if ((mt.getName().contentEquals("<init>")))

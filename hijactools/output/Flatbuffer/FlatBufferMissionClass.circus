@@ -32,20 +32,19 @@
 
 
       \circblockopen
-
-      
-
-  \circif ~ (buffer = 0) ~ \circthen ~
+              \circif ~ (buffer = 0) ~ \circthen ~
   \\
-  \t1
-ret := \true
+\t1 ret := \true
   \\
   \circelse ~ \lnot (buffer = 0) ~ \circthen ~
   \\
-  \t1
-ret := \false
+\t1 ret := \false
   \\
   \circfi
+
+            
+
+
 
 
         \circblockclose
@@ -60,10 +59,11 @@ ret := \false
 
 
       \circblockopen
+              ret := \false
 
-      
+            
 
-  ret := \false
+
 
 
         \circblockclose

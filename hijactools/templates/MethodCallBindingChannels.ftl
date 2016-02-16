@@ -1,5 +1,6 @@
 \begin{zsection}
-  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, SchedulableId, ThreadIds
+  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, MissionIds,
+  \t1 SchedulableId, SchedulableIds, ThreadIds, FrameworkChan
 \end{zsection}
 
 <#list MethodCallBindings as mcb>

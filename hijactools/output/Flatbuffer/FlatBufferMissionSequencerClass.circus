@@ -37,23 +37,15 @@ MissionIds
 
 
       \circblockopen
-
-      
-
-  \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
+              \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
+              ret := FlatBufferMissionMID
 
-      
-
-this~.~returnedMission :=\true
+            
 
 
-               \circseq \\
-
-  ret := FlatBufferMissionMID
 
 
         \circblockclose
@@ -62,11 +54,13 @@ this~.~returnedMission :=\true
   \\
   \circelse ~ \lnot (\lnot returnedMission = \true) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
+              ret := nullMissionId
 
-  ret := nullMissionId
+            
+
+
 
 
         \circblockclose
@@ -74,6 +68,10 @@ this~.~returnedMission :=\true
 
   \\
   \circfi
+
+            
+
+
 
 
         \circblockclose

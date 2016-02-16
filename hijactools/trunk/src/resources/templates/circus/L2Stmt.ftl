@@ -55,25 +55,22 @@
 <#---------------->
 <#-- Block Tree -->
 <#---------------->
-
-
 <#macro Block statements>
 
 <#if statements?has_content>
       \circblockopen
     <#list statements as statement>
-        <#assign stmtTrans=TRANS(statement, CTXT)>
+        <#if statement="">
 
-        <#if stmtTrans="">
-      
         <#else>
-            ${stmtTrans}<#lt/>
-
-            <#if statement_has_next>
-               \circseq \\
-            </#if>
+            ${statement}
+            <#sep> \circseq \\ </#sep>
         </#if>
+
+
+
     </#list>
+
         \circblockclose
 <#else>
    <@EmptyStatement/>
@@ -135,24 +132,21 @@
 <#if elsestatement?has_content>
   \circif ~ ${TRANS(condition, CTXT.enterExpression()) } ~ \circthen ~
   \\
-  \t1
-  ${TRANS(thenstatement, CTXT)}<#lt/>
+  \t1 ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
   \circelse ~ \lnot ${TRANS(condition, CTXT.enterExpression()) } ~ \circthen ~
   \\
-  \t1
-  ${TRANS(elsestatement, CTXT)}<#lt/>
+  \t1 ${TRANS(elsestatement, CTXT)}<#lt/>
   \\
   \circfi
 <#else>
   \circif ~ ${TRANS(condition, CTXT.enterExpression()) } ~ \circthen ~
   \\
-  \t1
-  ${TRANS(thenstatement, CTXT)}<#lt/>
+  \t1 ${TRANS(thenstatement, CTXT)}<#lt/>
   \\
   \circelse ~ \lnot ${TRANS(condition, CTXT.enterExpression())} \circthen \Skip
   \\
-  \circfi \circseq \\
+  \circfi \\
 </#if>
 </#macro>
 
@@ -356,14 +350,14 @@
 
 
 <#-------------------->
-<#-- WhileLoop Tree   <@keep_newlines>  </@keep_newlines> -->
+<#-- WhileLoop Tree Condition  <@keep_newlines>  </@keep_newlines> -->
 <#-------------------- \circblockopen    \circblockclose  -->
 
 
 <#macro WhileLoopMethCond condition statement>
 <@compact>
 
-  \circblockopen
+
   \circmu X \circspot  \\
   \circblockopen
   ${condition}
@@ -374,7 +368,7 @@
   \circelse ~ (loopVar = \false) \circthen \Skip \\
   \circfi
   \circblockclose
-  \circblockclose
+
 	\\
 </@compact>
 </#macro>

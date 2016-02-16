@@ -1,9 +1,11 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
@@ -120,4 +122,6 @@ public abstract class ParadigmBuilder
 
 		}
 	}
+
+	
 }
