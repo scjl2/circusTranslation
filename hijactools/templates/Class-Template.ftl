@@ -1,7 +1,7 @@
 
 \begin{zsection}
-  \SECTION ~ ${ProcessName}Class ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  <#include "CommonImports-Template.ftl">
- <#include "Parent-Template.ftl">
+  \SECTION ~ ${ProcessName}Class ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  <#include "CommonImports-Template.ftl">  <#include "Parent-Template.ftl">
 \end{zsection}
 
 \begin{circus}

@@ -383,23 +383,14 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			st = iter.next();
 
-			// if(iter.hasNext())
-			// {
-			// putSkip = false;
-			// }
-			// else
-			// {
-			// putSkip = true;
-			// }
-			if (st instanceof ExpressionStatementTree)
+			if (st instanceof MethodInvocationTree)
 			{
-				if (!node.toString().contains("Console") || node.toString().contains("System"))
+				if (!(node.toString().contains("Console") || node.toString().contains(
+						"System")))
 				{
+					String statementString = st.accept(this, ctxt);
 
-				String statementString = st.accept(this, ctxt);
-
-
-				processedBlockStatements.add(statementString);
+					processedBlockStatements.add(statementString);
 				}
 			}
 			else
@@ -407,13 +398,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 				String statementString = st.accept(this, ctxt);
 
-				
-
 				processedBlockStatements.add(statementString);
 			}
-				
-			
-				
+
 		}
 
 		return callStmtMacro(node, ctxt, "Block", processedBlockStatements);
@@ -656,7 +643,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(object.getObjectId());
 				sb.append(LATEX.SHRIEK + "thread " + LATEX.THEN);
 				sb.append(LATEX.NEW_LINE);
-				// sb.append(LATEX.SKIP);
+				 sb.append(LATEX.SKIP);
 
 				timeMachine.put("methodCall", false);
 
@@ -682,7 +669,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(object.getObjectId());
 				sb.append(LATEX.DOT + "thread " + LATEX.THEN);
 				sb.append(LATEX.NEW_LINE);
-				// sb.append(LATEX.SKIP);
+				 sb.append(LATEX.SKIP);
 
 				timeMachine.put("methodCall", false);
 
@@ -843,7 +830,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 					sb.append(identifier.toString());
 					timeMachine.put("variableIdentifier", identifier);
 					sb.append(LATEX.THEN + LATEX.NEW_LINE);
-//This adds a skip when not needed, somtimes.					
+					// This adds a skip when not needed, somtimes.
 					sb.append(LATEX.SKIP);
 
 				}
@@ -1515,13 +1502,13 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			String conditionTrans = visit(condition, ctxt);
 			String conditionString = "";
-			 System.out.println("/// conditionTrans = " + conditionTrans);
+			System.out.println("/// conditionTrans = " + conditionTrans);
 
 			boolean isStillMethodCall = (boolean) timeMachine.get("methodCall");
 			if (isStillMethodCall)
 			{
 
-				conditionString =  "\\circvar loopVar : \\boolean \\circspot loopVar :=~"
+				conditionString = "\\circvar loopVar : \\boolean \\circspot loopVar :=~"
 						+ conditionTrans + "\\circseq \\\\";
 
 				// return callStmtMacro(node, ctxt, "WhileLoopMethCond",
@@ -1540,14 +1527,16 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				{
 					conditionTrans = conditionTrans.substring(5);
 
-					conditionString = conditionTrans +"\\circseq"+ TightRopeString.LATEX.NEW_LINE 
+					conditionString = conditionTrans + "\\circseq"
+							+ TightRopeString.LATEX.NEW_LINE
 							+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
 							+ " (\\lnot " + timeMachine.get("variableIdentifier")
 							+ ") \\circseq \\\\";
 				}
 				else
 				{
-					conditionString = conditionTrans + "\\circseq"+TightRopeString.LATEX.NEW_LINE 
+					conditionString = conditionTrans + "\\circseq"
+							+ TightRopeString.LATEX.NEW_LINE
 							+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
 							+ timeMachine.get("variableIdentifier") + "\\circseq \\\\";
 				}

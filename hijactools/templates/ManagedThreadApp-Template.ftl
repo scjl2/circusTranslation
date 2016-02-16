@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessName}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  <#include "CommonImports-Template.ftl">
+  \SECTION ~ ${ProcessName}App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  <#include "CommonImports-Template.ftl"> \\
   \t1 <#include "Parent-Template.ftl">
 \end{zsection}
 %

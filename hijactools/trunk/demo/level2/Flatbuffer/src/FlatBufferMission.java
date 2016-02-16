@@ -35,7 +35,7 @@ public class FlatBufferMission extends Mission
 
 		Writer w = new Writer(new PriorityParameters(10), storageParameters, this);
 		w.register();
-		
+
 		//buffer = new Buffer();
 
 		Console.println("FlatBufferMission init");
@@ -53,9 +53,9 @@ public class FlatBufferMission extends Mission
 		while (!bufferEmpty("Writer"))
 		{
 			Console.println("Writer" + " Waiting on Buffer");
-			
+
 			this.wait();
-			
+
 			//bufferEmpty =  bufferEmpty("Writer");
 		}
 
@@ -70,10 +70,10 @@ public class FlatBufferMission extends Mission
 		while(bufferEmpty("Reader"))
 		{
 			Console.println("Reader" + " Waiting on Buffer");
-			
-			
+
+
 			this.wait();
-			
+
 			//bufferEmptyCond = bufferEmpty("Reader");
 		}
 
@@ -84,7 +84,7 @@ public class FlatBufferMission extends Mission
 
 		return out;
 	}
-	
+
 	public boolean cleanUp()
 	{
 		Console.print("FlatBufferMission Cleanup");

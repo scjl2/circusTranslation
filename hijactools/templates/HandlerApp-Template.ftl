@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessName}App ~ \parents ~ ${ImportName}EventHandlerChan, SchedulableId, SchedulableIds \\
+  \SECTION ~ ${ProcessName}App ~ \parents ~ ${ImportName}EventHandlerChan, SchedulableId, SchedulableIds <#include "CommonImports-Template.ftl"> \\
  \t1  <#include "Parent-Template.ftl">
 \end{zsection}
 

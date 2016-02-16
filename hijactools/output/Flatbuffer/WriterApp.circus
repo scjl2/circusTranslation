@@ -1,6 +1,6 @@
 \begin{zsection}
-  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  , MethodCallBindingChannels  \\
-
+  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  , MethodCallBindingChannels 
+ \\
   \t1 , 
 MissionMethChan
 , 
@@ -32,6 +32,10 @@ Run \circdef \\
 	runCall~.~WriterSID \then \\
 	
       \circblockopen
+
+
+
+
             \circvar i : \num \circspot i :=~1
              \circseq \\ 
 
