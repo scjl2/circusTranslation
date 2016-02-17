@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString.LATEX;
+
 import java.util.ArrayList;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -13,8 +15,7 @@ import javax.lang.model.element.Name;
 
 public class FrameworkEnv
 {
-	private static final String LINE_SEPARATOR = System
-			.getProperty("line.separator");
+	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
 	private ControlTierEnv controlTier;
 
@@ -22,32 +23,6 @@ public class FrameworkEnv
 
 	private TierEnv currentTier;
 	private ClusterEnv currentCluster;
-
-	private String toChannelSet(Set<String> set)
-	{
-		String safeletSyncString = "";
-		if(set.isEmpty())
-		{
-			safeletSyncString = "\\interleave";
-		}
-		else
-		{
-			safeletSyncString = "\\lpar \\lchanset ";
-			Iterator<String> safeletSyncIter = set.iterator();
-			
-		while(safeletSyncIter.hasNext())
-		{
-			String s = safeletSyncIter.next();
-			safeletSyncString += s;
-			if(safeletSyncIter.hasNext())
-			{
-				safeletSyncString += ", ";
-			}
-			safeletSyncString += " \\rchanset \\rpar";
-		}
-		}
-		return safeletSyncString;
-	}
 
 	class ControlTierEnv
 	{
@@ -60,10 +35,10 @@ public class FrameworkEnv
 		public ControlTierEnv()
 		{
 			safeletEnv = new SafeletEnv();
-			safeletSync =  new HashSet<String>();
+			safeletSync = new HashSet<String>();
 			topLevelMissionSequencerEnv = new TopLevelMissionSequencerEnv();
 			controlTierSync = new HashSet<String>();
-			
+
 		}
 
 		public SafeletEnv getSafeletEnv()
@@ -95,6 +70,7 @@ public class FrameworkEnv
 		public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 		{
 			this.topLevelMissionSequencerEnv.setName(topLevelMissionSequencer);
+			this.topLevelMissionSequencerEnv.setId(topLevelMissionSequencer.toString());
 			safeletEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 		}
 
@@ -103,9 +79,9 @@ public class FrameworkEnv
 			return safeletSync;
 		}
 
-		public void addChannelToSafeletSync(String channel)
+		public void setSafeletSync(Set<String> safeletSync)
 		{
-			safeletSync.add(channel);
+			this.safeletSync = safeletSync;
 		}
 
 		public String toString()
@@ -118,56 +94,51 @@ public class FrameworkEnv
 			List<MethodEnv> methods = safeletEnv.getMeths();
 			// TODO Output sync meths?
 			output = outputMethods(output, methods);
-		
+
 			output += LINE_SEPARATOR;
 			output += "\t Top-Level Mission Sequencer: "
 					+ topLevelMissionSequencerEnv.getName();
 			output += LINE_SEPARATOR;
 			output += "\t Top Level Sequencer Methods:";
 			output += LINE_SEPARATOR;
-		
+
 			methods = topLevelMissionSequencerEnv.getMeths();
 			output = outputMethods(output, methods);
-		
+
 			return output;
-		
+
 		}
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		public Map toMap()
 		{
-		
+
 			Map clusterMap = new HashMap();
 			clusterMap.put("safelet", safeletEnv.getName());
-		
+
 			List topLevelSequencersList = new ArrayList();
-		
+
 			// for(TopLevelMissionSequencerEnv t : )
 			topLevelSequencersList.add(topLevelMissionSequencerEnv.getName());
-		
+
 			clusterMap.put("topLevelSequencers", topLevelSequencersList);
-		
+
 			return clusterMap;
 		}
 
 		public String getSafeletSyncString()
-		{			
+		{
 			return toChannelSet(safeletSync);
 		}
 
 		public String getControlTierSync()
-		{			
-			return toChannelSet(controlTierSync);
-		}
-		
-		public void addToControlTierSync(String channel)
 		{
-			controlTierSync.add(channel);
+			return toChannelSet(controlTierSync);
 		}
 	}
 
 	private class TierEnv
-	{		
+	{
 		private List<ClusterEnv> clusters;
 
 		private Set<String> interfaceSync;
@@ -178,10 +149,10 @@ public class FrameworkEnv
 			currentCluster = null;
 			interfaceSync = new HashSet<String>();
 		}
-		
+
 		public TierEnv(boolean makeTier0)
 		{
-			if(makeTier0)
+			if (makeTier0)
 			{
 				clusters = new ArrayList<ClusterEnv>();
 				currentCluster = null;
@@ -253,15 +224,10 @@ public class FrameworkEnv
 			}
 
 		}
-		
-		public void addChannelToInterfaceSync(String channel)
-		{
-			interfaceSync.add(channel);
-		}
-		
+
 		public String getInterfaceSyncString()
 		{
-			if(interfaceSync == null)
+			if (interfaceSync == null)
 			{
 				return "";
 			}
@@ -269,7 +235,7 @@ public class FrameworkEnv
 			{
 				return toChannelSet(interfaceSync);
 			}
-			
+
 		}
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -280,9 +246,9 @@ public class FrameworkEnv
 			for (ClusterEnv c : clusters)
 			{
 				Map clusterMap = new HashMap();
-				
+
 				clusterMap.put("InterfaceSync", getInterfaceSyncString());
-				
+
 				clusterMap.put("Sequencer", c.getSequencer());
 
 				Map missionMap = new HashMap();
@@ -315,23 +281,20 @@ public class FrameworkEnv
 				missionMap.put("ThreadParameters", params);
 
 				clusterMap.put("Mission", missionMap);
-				clusterMap
-						.put("Mission_HasClass", c.getMissionEnv().hasClass());
+				clusterMap.put("Mission_HasClass", c.getMissionEnv().hasClass());
 
 				Map schedulablesMap = new HashMap();
 				schedulablesMap.put("Periodics", c.getSchedulablesEnv()
 						.getPeriodicsList());
 				schedulablesMap.put("Aperiodics", c.getSchedulablesEnv()
 						.getAperiodicsList());
-				schedulablesMap.put("Oneshots", c.getSchedulablesEnv()
-						.getOneshotsList());
+				schedulablesMap.put("Oneshots", c.getSchedulablesEnv().getOneshotsList());
 				schedulablesMap.put("NestedSequencers", c.getSchedulablesEnv()
 						.getNestedSequencersList());
-				schedulablesMap.put("Threads", c.getSchedulablesEnv()
-						.getThreadsList());
+				schedulablesMap.put("Threads", c.getSchedulablesEnv().getThreadsList());
 
 				clusterMap.put("Schedulables", schedulablesMap);
-				
+
 				clusterMap.put("MissionSync", c.getMissionSyncString());
 
 				clusterList.add(clusterMap);
@@ -339,7 +302,6 @@ public class FrameworkEnv
 
 			return clusterList;
 		}
-
 	}
 
 	private class ClusterEnv
@@ -348,17 +310,15 @@ public class FrameworkEnv
 		private MissionEnv missionEnv;
 		private Set<String> missionSync;
 		private SchedulablesEnv schedulablesEnv;
-		
+
 		public ClusterEnv(Name sequencer)
 		{
 			missionEnv = new MissionEnv();
 			schedulablesEnv = new SchedulablesEnv();
 			this.sequencer = sequencer;
-			
-			missionSync= new HashSet<String>();
-		}
 
-		
+			missionSync = new HashSet<String>();
+		}
 
 		public String getMissionSyncString()
 		{
@@ -385,16 +345,16 @@ public class FrameworkEnv
 			schedulablesEnv.addSchedulable(type, name);
 		}
 
-		
-
+		@SuppressWarnings("unused")
 		public Set<String> getMissionSync()
 		{
 			return missionSync;
 		}
 
-		public void addChannelToMissionSync(String channel)
+		@SuppressWarnings("unused")
+		public void setMissionSync(Set<String> missionSync)
 		{
-			missionSync.add(channel);
+			this.missionSync = missionSync;
 		}
 
 		public String toString()
@@ -523,24 +483,7 @@ public class FrameworkEnv
 			sMap.put("Name", p.getName());
 
 			ArrayList<String> params = new ArrayList<String>();
-			// <<<<<<< HEAD
-			// for(VariableEnv v : p.getParameters())
-			// {
-			// System.out.println("Variable v = " + v.toString());
-			// System.out.println("name= " + v.getVariableName());
-			// System.out.println("type = " + v.getVariableType());
-			// System.out.println("programType = " + v.getProgramType());
-			// System.out.println("varInit = " + v.getVariableInit());
-			//
-			// //This adds the type from the program E.G. FlatBufferMission not
-			// MissionID
-			// // params.add(v.getVariableName());
-			// params.add(v.getProgramType());
-			// // params.add("TEST");
-			// }
-			//
-			// sMap.put("Parameters", params);
-			// =======
+		
 			for (VariableEnv v : p.getFWParameters())
 			{
 				// This adds the type from the program E.G. FlatBufferMission
@@ -598,36 +541,50 @@ public class FrameworkEnv
 
 		public void addSchedulable(SchedulableTypeE type, Name name)
 		{
-			if (type == SchedulableTypeE.MT)
+			String nameString = name.toString();
+			
+			switch (type)
 			{
-				ManagedThreadEnv mtEnv = new ManagedThreadEnv();
-				mtEnv.setName(name);
-				managedThreadEnvs.add(mtEnv);
+				case PEH:
+					PeriodicEventHandlerEnv p = new PeriodicEventHandlerEnv();
+					p.setName(name);
+					p.setId(nameString);
+					periodEventHandlerEnvs.add(p);
+					break;
+
+				case APEH:
+					AperiodicEventHandlerEnv a = new AperiodicEventHandlerEnv();
+					a.setName(name);
+					a.setId(nameString);
+					aperiodicEventHandlerEnvs.add(a);
+					break;
+
+				case OSEH:
+					OneShotEventHandlerEnv osehEnv = new OneShotEventHandlerEnv();
+					osehEnv.setName(name);
+					osehEnv.setId(nameString);
+					oneShotEventHandlerEnvs.add(osehEnv);
+					break;
+
+				case MT:
+					ManagedThreadEnv mtEnv = new ManagedThreadEnv();
+					mtEnv.setName(name);
+					mtEnv.setId(nameString);
+					managedThreadEnvs.add(mtEnv);
+					break;
+
+				case SMS:
+					NestedMissionSequencerEnv nmsEnv = new NestedMissionSequencerEnv();
+					nmsEnv.setName(name);
+					nmsEnv.setId(nameString);
+					schedulableMissionSequencerEnvs.add(nmsEnv);
+					break;
+
+				default:
+					break;
+
 			}
-			if (type == SchedulableTypeE.PEH)
-			{
-				PeriodicEventHandlerEnv p = new PeriodicEventHandlerEnv();
-				p.setName(name);
-				periodEventHandlerEnvs.add(p);
-			}
-			if (type == SchedulableTypeE.APEH)
-			{
-				AperiodicEventHandlerEnv a = new AperiodicEventHandlerEnv();
-				a.setName(name);
-				aperiodicEventHandlerEnvs.add(a);
-			}
-			if (type == SchedulableTypeE.OSEH)
-			{
-				OneShotEventHandlerEnv osehEnv = new OneShotEventHandlerEnv();
-				osehEnv.setName(name);
-				oneShotEventHandlerEnvs.add(osehEnv);
-			}
-			if (type == SchedulableTypeE.SMS)
-			{
-				NestedMissionSequencerEnv nmsEnv = new NestedMissionSequencerEnv();
-				nmsEnv.setName(name);
-				schedulableMissionSequencerEnvs.add(nmsEnv);
-			}
+
 		}
 
 		public String toString()
@@ -783,7 +740,9 @@ public class FrameworkEnv
 
 	public void addMission(Name mission)
 	{
-		currentCluster.getMissionEnv().setName(mission);
+		MissionEnv missionEnv = currentCluster.getMissionEnv();
+		missionEnv.setName(mission);
+		missionEnv.setId(mission.toString());
 	}
 
 	public void newCluster(Name sequencer)
@@ -797,7 +756,7 @@ public class FrameworkEnv
 
 	public void newTier()
 	{
-		if(tiers.isEmpty())
+		if (tiers.isEmpty())
 		{
 			currentTier = new TierEnv(true);
 		}
@@ -805,7 +764,6 @@ public class FrameworkEnv
 		{
 			currentTier = new TierEnv();
 		}
-		
 
 		tiers.add(currentTier);
 	}
@@ -932,8 +890,7 @@ public class FrameworkEnv
 	}
 
 	// Bit hacky
-	public void addMissionSequencerMission(Name missionSequencerName,
-			Name missionName)
+	public void addMissionSequencerMission(Name missionSequencerName, Name missionName)
 	{
 		// System.out.println("*** Adding " + n + " to " + tlms + " ***");
 		if (controlTier.topLevelMissionSequencerEnv.getName() == missionSequencerName)
@@ -945,8 +902,7 @@ public class FrameworkEnv
 		{
 			for (ClusterEnv c : t.clusters)
 			{
-				if (!c.schedulablesEnv.schedulableMissionSequencerEnvs
-						.isEmpty())
+				if (!c.schedulablesEnv.schedulableMissionSequencerEnvs.isEmpty())
 				{
 					for (NestedMissionSequencerEnv p : c.schedulablesEnv.schedulableMissionSequencerEnvs)
 					{
@@ -999,8 +955,8 @@ public class FrameworkEnv
 		Map safeletMap = new HashMap();
 		safeletMap.put("Name", getControlTier().getSafeletEnv().getName());
 
-		safeletMap.put("FWParameters", getControlTier().getSafeletEnv()
-				.getFWParameters());
+		safeletMap
+				.put("FWParameters", getControlTier().getSafeletEnv().getFWParameters());
 		safeletMap.put("AppParameters", getControlTier().getSafeletEnv()
 				.getAppParameters());
 		safeletMap.put("ThreadParameters", getControlTier().getSafeletEnv()
@@ -1008,28 +964,26 @@ public class FrameworkEnv
 
 		networkMap.put("Safelet", safeletMap);
 
-				
 		networkMap.put("SafeletSync", getControlTier().getSafeletSyncString());
-		
+
 		networkMap.put("Safelet_HasClass",
 
 		getControlTier().getSafeletEnv().hasClass());
 
 		Map tlmsMap = new HashMap();
-		tlmsMap.put("Name", getControlTier().getTopLevelMissionSequencerEnv()
-				.getName());
+		tlmsMap.put("Name", getControlTier().getTopLevelMissionSequencerEnv().getName());
 
-		tlmsMap.put("FWParameters", getControlTier()
-				.getTopLevelMissionSequencerEnv().getFWParameters());
-		tlmsMap.put("AppParameters", getControlTier()
-				.getTopLevelMissionSequencerEnv().getAppParameters());
-		tlmsMap.put("ThreadParameters", getControlTier()
-				.getTopLevelMissionSequencerEnv().getThreadParameters());
+		tlmsMap.put("FWParameters", getControlTier().getTopLevelMissionSequencerEnv()
+				.getFWParameters());
+		tlmsMap.put("AppParameters", getControlTier().getTopLevelMissionSequencerEnv()
+				.getAppParameters());
+		tlmsMap.put("ThreadParameters", getControlTier().getTopLevelMissionSequencerEnv()
+				.getThreadParameters());
 
 		networkMap.put("TopLevelSequencer", tlmsMap);
 
 		networkMap.put("ControlTierSync", getControlTier().getControlTierSync());
-		
+
 		networkMap.put("TopLevelSequencer_HasClass", getControlTier()
 
 		.getTopLevelMissionSequencerEnv().hasClass());
@@ -1087,6 +1041,66 @@ public class FrameworkEnv
 		return apehEnvs;
 	}
 
+	/**
+	 * Gets the ObjectEnv with the given name, or <code>null</code> if it does not exist.
+	 * 
+	 * @param nameOfObject The name of the ObjectEnv you're searching for
+	 * @return The ObjectEnv or <code>null</code>
+	 */
+	public ObjectEnv getObjectEnv(String nameOfObject)
+	{
+		for(ObjectEnv o : getAllObjectEnvs())
+		{
+			if(o.getName().equals(nameOfObject))
+			{
+				return o;
+			}
+		}
+		return null;
+	}
+
+	private ArrayList<ObjectEnv> getAllObjectEnvs()
+	{
+		ArrayList<ObjectEnv> objectEnvs = new ArrayList<ObjectEnv>();
+		
+		objectEnvs.add(controlTier.getSafeletEnv());
+		objectEnvs.add(controlTier.getTopLevelMissionSequencerEnv());
+		objectEnvs.addAll(getMissions());
+		objectEnvs.addAll(getManagedThreads());
+		objectEnvs.addAll(getAperiodicEventHandlers());
+		objectEnvs.addAll(getNestedMissionsequencers());
+		objectEnvs.addAll(getPeriodicEventHandlers());
+		objectEnvs.addAll(getNestedMissionsequencers());
+		
+		return objectEnvs;
+	}
+	
+	private String toChannelSet(Set<String> set)
+	{
+		String safeletSyncString = "";
+		if (set.isEmpty())
+		{
+			safeletSyncString = LATEX.INTERLEAVE;
+		}
+		else
+		{
+			safeletSyncString = LATEX.LPAR +LATEX.LCHANSET;
+			Iterator<String> safeletSyncIter = set.iterator();
+	
+			while (safeletSyncIter.hasNext())
+			{
+				String s = safeletSyncIter.next();
+				safeletSyncString += s;
+				if (safeletSyncIter.hasNext())
+				{
+					safeletSyncString += ", ";
+				}
+				safeletSyncString += LATEX.RCHANSET+LATEX.RPAR;
+			}
+		}
+		return safeletSyncString;
+	}
+
 	private String outputMethods(String output, List<MethodEnv> methods)
 	{
 		if (methods.size() <= 0)
@@ -1105,8 +1119,8 @@ public class FrameworkEnv
 					params = parameterMap.toString();
 				}
 
-				output += "\t\t\t" + me.getReturnType() + ":"
-						+ me.getMethodName() + "(" + params + ")";
+				output += "\t\t\t" + me.getReturnType() + ":" + me.getMethodName() + "("
+						+ params + ")";
 				output += LINE_SEPARATOR;
 			}
 		}

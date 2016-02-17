@@ -34,6 +34,15 @@ import java.util.Map;
  */
 public class CircusGenerator
 {
+	private static final String NETWORK_PROGRAM = "NetworkProgram.circus";
+	private static final String NETWORK_PROGRAM_TEMPLATE_FTL = "NetworkProgram-Template.ftl";
+	private static final String NETWORK_LOCKING = "NetworkLocking.circus";
+	private static final String NETWORK_LOCKING_TEMPLATE_FTL = "NetworkLocking-Template.ftl";
+	private static final String NETWORK_METHOD_CALL_BINDER = "NetworkMethodCallBinder.circus";
+	private static final String NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL = "NetworkMethodCallBinder-Template.ftl";
+	private static final String NETWORK_CHAN = "NetworkChan.circus";
+	private static final String NETWORK_CHAN_TEMPLATE_FTL = "NetworkChan-Template.ftl";
+	private static final String ID_TYPE = "IDType";
 	private static final String CLASS_CIRCUS = "Class.circus";
 	private static final String CLASS_TEMPLATE_FTL = "Class-Template.ftl";
 	private static final String FILE_DELIMITER = "/";
@@ -49,7 +58,7 @@ public class CircusGenerator
 	private static final String MISSION_APP_TEMPLATE_FTL = "MissionApp-Template.ftl";
 	private static final String MISSION_SEQUENCER_APP_TEMPLATE_FTL = "MissionSequencerApp-Template.ftl";
 	private static final String HANDLER_APP_TEMPLATE_FTL = "HandlerApp-Template.ftl";
-	private static final String PROCESS_ID = "ProcessID";
+	private static final String PROCESS_Name = "ProcessName";
 	private static final String APP_CIRCUS = "App.circus";
 	private static final String TEMPLATE_DIRECTORY = "../templates";
 	private static final String OUTPUT_DIRECTORY = "../output/";
@@ -109,7 +118,7 @@ public class CircusGenerator
 	{
 		System.out.println("+++ Translating +++");
 		System.out.println();
-
+			
 		translateNetwork();
 
 		translateSafelet();
@@ -131,7 +140,6 @@ public class CircusGenerator
 		translateIDFiles();
 
 		generateReport();
-
 	}
 
 	/**
@@ -213,7 +221,8 @@ public class CircusGenerator
 		if (!objEnv.getMeths().isEmpty() && !objEnv.getSyncMeths().isEmpty())
 		{
 			objEnv.getMeths().remove("handleAsyncEvent");
-			chanMap.put("IDType", "SchedulableID");
+			//TODO Calculate ID TYPE
+			chanMap.put(ID_TYPE, "SchedulableID");
 			translateCommon(chanMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
 		}
@@ -259,11 +268,26 @@ public class CircusGenerator
 		System.out.println("+++ Translating Network +++ ");
 		/* Create a data-model */
 		Map root = programEnv.geNetworkMap();
+		
+		System.out.println("+++ Translating Network Channels +++");
+		translateCommon(root, NETWORK_CHAN_TEMPLATE_FTL, NETWORK_CHAN);
+		
+		System.out.println("+++ Translating Method Call Binder +++");	
+		translateCommon(root, NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL, NETWORK_METHOD_CALL_BINDER);
+		
+		translateCommon(root, "MethodCallBindingChannels.ftl", "MethodCallBindingChannels.circus");
+		
+		System.out.println("+++ Translating Locking +++");	
+		translateCommon(root, NETWORK_LOCKING_TEMPLATE_FTL, NETWORK_LOCKING);
+		
+		System.out.println("+++ Translating Program +++");	
+		translateCommon(root, NETWORK_PROGRAM_TEMPLATE_FTL, NETWORK_PROGRAM);
+		
 
 		translateCommon(root, NETWORK_TEMPLATE_FTL, NETWORK_CIRCUS);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateSafelet()
 	{
 		System.out.println("+++ Translating Safelet +++ ");
@@ -272,7 +296,7 @@ public class CircusGenerator
 
 		Map sMap = safelet.toMap();
 
-		procName = (String) sMap.get(PROCESS_ID);
+		procName = (String) sMap.get(PROCESS_Name);
 
 		translateCommon(sMap, SAFELET_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
@@ -290,7 +314,7 @@ public class CircusGenerator
 		translateClass(classEnv);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateTopLevelMissionSequencers()
 	{
 		System.out.println("+++ Translating Top Level Mission Sequencers +++");
@@ -303,7 +327,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			tlmsMap = tlmsEnv.toMap();
 
-			procName = (String) tlmsMap.get(PROCESS_ID);
+			procName = (String) tlmsMap.get(PROCESS_Name);
 
 			translateCommon(tlmsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
@@ -323,7 +347,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateMissions()
 	{
 		System.out.println("+++ Translating Missions +++");
@@ -336,7 +360,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			missionMap = mEnv.toMap();
 
-			procName = (String) missionMap.get(PROCESS_ID);
+			procName = (String) missionMap.get(PROCESS_Name);
 
 			// Application Process
 			translateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
@@ -357,7 +381,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateNestedMissionSequencers()
 	{
 		System.out.println("+++ Translating Nested Mission Sequencers +++");
@@ -369,7 +393,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			smsMap = smsEnv.toMap();
 
-			procName = (String) smsMap.get(PROCESS_ID);
+			procName = (String) smsMap.get(PROCESS_Name);
 
 			translateCommon(smsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
@@ -389,7 +413,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateManagedThreads()
 	{
 		System.out.println("+++ Translating Managed Threads +++ ");
@@ -433,7 +457,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translateOneShotEventHandlers()
 	{
 		System.out.println("+++ Translating One Shot Event Handlers +++");
@@ -445,7 +469,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			osehMap = osehEnv.toMap();
 
-			procName = (String) osehMap.get(PROCESS_ID);
+			procName = (String) osehMap.get(PROCESS_Name);
 			translateCommon(osehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels
@@ -464,7 +488,7 @@ public class CircusGenerator
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	private void translatePeriodicEventHandlers()
 	{
 		System.out.println("+++ Translating Periodic Event Handlers +++");
@@ -476,7 +500,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			pehMap = pehEnv.toMap();
 
-			procName = (String) pehMap.get(PROCESS_ID);
+			procName = (String) pehMap.get(PROCESS_Name);
 			translateCommon(pehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels
@@ -507,7 +531,7 @@ public class CircusGenerator
 			/* Create a data-model */
 			apehMap = apehEnv.toMap();
 
-			procName = (String) apehMap.get(PROCESS_ID);
+			procName = (String) apehMap.get(PROCESS_Name);
 			translateCommon(apehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels

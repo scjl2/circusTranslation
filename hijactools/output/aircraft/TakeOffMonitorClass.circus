@@ -1,13 +1,16 @@
 
+\begin{zsection}
+  \SECTION ~ TakeOffMonitorClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass TakeOffMonitorClass \circdef \circbegin
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  mainMission : MainMission\\ 
   takeoffMission : TakeOffMission\\ 
-  takeOffAltitude : \mathbb{R}\\ 
-  landingGearHandler : AperiodicEventHandler\\ 
+  takeOffAltitude : \power \arithmos\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -30,5 +33,3 @@
 \begin{circus}
   \circend
 \end{circus}
-
-

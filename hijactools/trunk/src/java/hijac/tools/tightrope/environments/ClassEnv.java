@@ -16,11 +16,13 @@ public class ClassEnv extends ParadigmEnv
 	public Map toMap()
 	{
 		Map map = new HashMap();
-		map.put(PROCESS_ID, getName().toString());
+		map.put(PROCESS_NAME, getName().toString());
+		
 
 		map.put(METHODS, methsList());
 		map.put(SYNC_METHODS, syncMethsList());
 		map.put(VARIABLES_STR, varsList());
+		map.put(PARENTS_STR, getParents());
 		map.put(INITED_VARIABLES, initedVarsList());
 
 		return map;

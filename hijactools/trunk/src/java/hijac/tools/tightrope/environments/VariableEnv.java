@@ -29,6 +29,8 @@ public class VariableEnv
 		this.type = variableType;
 		this.primitive = primitive;
 
+		
+		programType = "TEST";
 		if (variableInit == null)
 		{
 			this.init = "init\\_placeholder";

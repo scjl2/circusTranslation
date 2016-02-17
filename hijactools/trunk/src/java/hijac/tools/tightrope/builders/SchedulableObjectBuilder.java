@@ -16,6 +16,7 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.EventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -41,19 +42,19 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 
 		ClassTree ct = analysis.TREES.getTree(paradigmTypeElement);
 
-		String extendsClause = ct.getExtendsClause().toString();
+		
 		if (schedulableEnv instanceof AperiodicEventHandlerEnv)
 		{
+			String extendsClause = ct.getExtendsClause().toString();
+			AperiodicEventHandlerEnv apehEnv = (AperiodicEventHandlerEnv) schedulableEnv;
 			if (extendsClause.equals("AperiodicEventHandler"))
 			{
-				((AperiodicEventHandlerEnv) schedulableEnv)
-						.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodic);
+				apehEnv.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodic);
 
 			}
 			else if (extendsClause.equals("AperiodicLongEventHandler"))
 			{
-				((AperiodicEventHandlerEnv) schedulableEnv)
-						.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodicLong);
+				apehEnv.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodicLong);
 			}
 		}
 
@@ -61,7 +62,7 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 
 		Iterator<StatementTree> i = members.iterator();
 
-		getVariables(paradigmTypeElement, schedulableEnv);
+		
 
 		while (i.hasNext())
 		{
@@ -77,8 +78,12 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 						.contains(Modifier.SYNCHRONIZED))
 				{
 
-					schedulableEnv.getClassEnv().addSyncMeth(
-							methodVisitor.visitMethod(mt, false));
+					schedulableEnv.setObjectId(schedulableEnv.getName().toString());
+					
+					MethodEnv m = methodVisitor.visitMethod(mt, false);
+				
+					
+					schedulableEnv.getClassEnv().addSyncMeth(m);
 
 				}
 				else if ((mt.getName().contentEquals("<init>")))
@@ -107,7 +112,16 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 				}
 			}
 		}
+		
+		getVariables(paradigmTypeElement, schedulableEnv);
 		return null;
+	}
+
+	@Override
+	public void addParents()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

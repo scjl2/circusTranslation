@@ -28,14 +28,14 @@ import com.sun.source.util.Trees;
 public class MissionLevel2Builder extends ParadigmBuilder
 {
 	private static SCJAnalysis analysis;
-	private static RegistersVisitor registersVisitor;
+//	private static RegistersVisitor registersVisitor;
 	private static Trees trees;
 
 	private MissionEnv missionEnv;
 	private ArrayList<Name> schedulables;
 	private ProgramEnv programEnv;
 
-	private MethodVisitor methodVisitor;
+//	private MethodVisitor methodVisitor;
 
 	public MissionLevel2Builder(ProgramEnv programEnv, MissionEnv missionEnv,
 			SCJAnalysis analysis, EnvironmentBuilder environmentBuilder)
@@ -50,19 +50,22 @@ public class MissionLevel2Builder extends ParadigmBuilder
 		analysis.getTypeElements();
 
 		schedulables = new ArrayList<Name>();
-		registersVisitor = new RegistersVisitor(missionEnv, analysis);
-		methodVisitor = new MethodVisitor(analysis, missionEnv);
+//		registersVisitor = new RegistersVisitor(missionEnv, analysis);
+//		methodVisitor = new MethodVisitor(analysis, missionEnv, IDType.MissionID);
 	}
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<Name> build(TypeElement missionTypeElement)
 	{
+		System.out.println("missionTypeElem="+missionTypeElement.toString());
 		ClassTree missionClassTree = trees.getTree(missionTypeElement);
 
 		getVariables(missionTypeElement, missionEnv);
 
 		List<Tree> missionMembers = (List<Tree>) missionClassTree.getMembers();
 		Iterator<Tree> missionMembersIterator = missionMembers.iterator();
+		
+		MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv, IDType.MissionID);
 
 		while (missionMembersIterator.hasNext())
 		{
@@ -116,17 +119,20 @@ public class MissionLevel2Builder extends ParadigmBuilder
 				else
 				{
 					// ADD METHOD TO MISSION ENV
-					MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv);
+					
 
 					if (syncMethod)
-					{
-
-						// missionEnv.addSyncMeth(mt.getName(), typeKind,
-						// returns,
-						// paramMap);
+					{	
+						final String missionName = missionEnv.getName().toString();
+						
+						missionEnv.setObjectId(missionName);
 						MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false);
+															
 						setMethodAccess(missionMethodTree, m);
 						missionEnv.addSyncMeth(m);
+					
+						
+						programEnv.addObjectIdName(missionName);
 
 						System.out.println("/// method params =" + m.getParameters());
 					}
@@ -137,15 +143,18 @@ public class MissionLevel2Builder extends ParadigmBuilder
 							MethodEnv m = methodVisitor.visitMethod(missionMethodTree,
 									false);
 
+							
+							
 							setMethodAccess(missionMethodTree, m);
+						
+							
 							missionEnv.getClassEnv().addMeth(m);
 
-							MethodEnv m2 = methodVisitor.visitMethod(missionMethodTree,
-									false);
+							MethodEnv m2 = methodVisitor.visitMethod(missionMethodTree,	false);
 
-							System.out.println("/// method params 2 ="
-									+ m2.getParameters());
-							System.out.println("/// m2 sync? = " + m2.isSynchronised());
+//							System.out.println("/// method params 2 ="
+//									+ m2.getParameters());
+//							System.out.println("/// m2 sync? = " + m2.isSynchronised());
 							StringBuilder body;
 
 							if (m2.getReturnType() == "null")
@@ -275,106 +284,10 @@ public class MissionLevel2Builder extends ParadigmBuilder
 		}
 	}
 
-	// private void getParameters( Tree tree)
-	// {
-	// System.out.println("*** Get Params *** ");
-	//
-	// List<? extends ExpressionTree> args = new ArrayList();
-	//
-	// // ObjectEnv objectWithParams = null;
-	//
-	// if (tree instanceof VariableTree)
-	// {
-	// System.out.println("Tree: " + tree + " instance of VairableTree ");
-	//
-	// ExpressionTree et = ((VariableTree) tree).getInitializer();
-	// if (et instanceof NewClassTree)
-	// {
-	// args = ((NewClassTree) et).getArguments();
-	// }
-	//
-	// System.out.println("trying to get objectEnv for " + ((VariableTree) tree)
-	// .getType().toString());
-	// // objectWithParams = programEnv.getObjectEnv(((VariableTree) tree)
-	// // .getType().toString());
-	//
-	// }
-	// else if (tree instanceof NewClassTree)
-	// {
-	// System.out.println("Tree: " + tree + " instance of NewClassTree ");
-	//
-	// args = ((NewClassTree) tree).getArguments();
-	//
-	// ExpressionTree identifier = ((NewClassTree) tree).getIdentifier();
-	//
-	// System.out.println("trying to get objectEnv for " + identifier);
-	// // objectWithParams = programEnv.getObjectEnv(identifier.toString());
-	//
-	// }
-	//
-	// System.out.println("args = " + args.toString());
-	//
-	// if (!args.isEmpty())
-	// {
-	// ParametersVisitor paramVisitor = new ParametersVisitor(programEnv,
-	// missionEnv, null);
-	//
-	// List<VariableEnv> params = new ArrayList();
-	//
-	// for (ExpressionTree et : args)
-	// {
-	// System.out.println("visiting " + et.toString());
-	//
-	// VariableEnv returns = et.accept(paramVisitor, null);
-	//
-	// if (returns != null)
-	// {
-	// System.out
-	// .println("returns = " + returns.getVariableName());
-	// if (objectWithParams != null)
-	// {
-	// objectWithParams.addParameter(returns);
-	// }
-	// else
-	// {
-	// System.out.println("objectWithParams was null");
-	// }
-	// }
-	// else
-	// {
-	// System.out.println("returns = null");
-	// }
-	// }
-	//
-	// }
-	//
-	// // if (tree instanceof NewClassTree)
-	// // {
-	// // List<? extends ExpressionTree> args = ((NewClassTree) tree)
-	// // .getArguments();
-	// //
-	// // for (ExpressionTree et : args)
-	// // {
-	// // System.out.println(et);
-	// // VariableEnv varEnv = new VariableEnv();
-	// //
-	// // params = et.accept(paramVisitor, null);
-	// //
-	// // }
-	// //
-	// // }
-	// //
-	// // // System.out.println("/*/* Params = " + params);
-	// //
-	// // if (params != null)
-	// // {
-	// // for (VariableEnv v : params)
-	// // {
-	// // missionEnv.addParameter(v);
-	// // System.out.println("/*/* Param for "
-	// // + missionEnv.getName().toString() + " is "
-	// // + v.getVariableName());
-	// // }
-	// // }
-	// }
+	@Override
+	public void addParents()
+	{
+		// TODO Auto-generated method stub
+		
+	}	
 }

@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
- \t1  , \\
+ \t1  , 
 MainMissionMethChan
 
 
@@ -8,25 +8,26 @@ MainMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess SafeLandingHandlerApp \circdef \\ \qquad
+\circprocess SafeLandingHandlerApp \circdef \\ \t1
   mainMission : MissionID
-,\\ 
+,\\
   threshold : Double
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~SafeLandingHandler \then \\
+	handleAsyncEventCall~.~SafeLandingHandlerSID \then \\
 	
       \circblockopen
 
-            getAltitudeCall~.~mainMission\then \\getAltitudeRet~.~mainMission~?~getAltitude\then \\\\ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\\
+binder\_getAltitudeCall~.~mainMission~.~SafeLandingHandlerSID\then  \\ binder\_getAltitudeRet~.~mainMission~.~SafeLandingHandlerSID~?~getAltitude\then  \\ \ \ \circvar altitude : \power \arithmos \circspot altitude :=~getAltitude\ \
 
+               \circseq \\
 
   \circif ~ (altitude < threshold) ~ \circthen ~
   \\
@@ -34,10 +35,8 @@ handlerAsyncEvent \circdef \\
 
       \circblockopen
 
-\Skip
- 
-
-        \circblockclose  
+      
+        \circblockclose
 
 
   \\
@@ -47,20 +46,18 @@ handlerAsyncEvent \circdef \\
 
       \circblockopen
 
-\Skip
- 
-
-        \circblockclose  
+      
+        \circblockclose
 
 
   \\
   \circfi
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~SafeLandingHandler \then \\
+    handleAsyncEventRet~.~SafeLandingHandlerSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -71,7 +68,7 @@ handlerAsyncEvent \circdef \\
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -81,7 +78,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~SafeLandingHandler \then \Skip)
+  \circinterrupt (end\_aperiodic\_app~.~SafeLandingHandlerSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

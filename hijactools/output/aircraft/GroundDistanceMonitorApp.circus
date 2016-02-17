@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ GroundDistanceMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
- \t1  , \\
+ \t1  , 
 MainMissionMethChan
 
 
@@ -8,44 +8,39 @@ MainMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess GroundDistanceMonitorApp \circdef \\ \qquad
+\circprocess GroundDistanceMonitorApp \circdef \\ \t1
   mainMission : MissionID
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~GroundDistanceMonitor \then \\
+	handleAsyncEventCall~.~GroundDistanceMonitorSID \then \\
 	
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
+binder\_getAltitudeCall~.~mainMission~.~GroundDistanceMonitorSID\then  \\ binder\_getAltitudeRet~.~mainMission~.~GroundDistanceMonitorSID~?~getAltitude\then  \\ \ \ \circvar distance : \power \arithmos \circspot distance :=~getAltitude\ \
 
-            getAltitudeCall~.~mainMission\then \\getAltitudeRet~.~mainMission~?~getAltitude\then \\\\ \circvar distance : \mathbb{R} \circspot distance :=~getAltitude\\
+               \circseq \\
 
-
-              \circif ~ (distance = readingOnGround) ~ \circthen ~
+  \circif ~ (distance = readingOnGround) ~ \circthen ~
   \\
   \t1
 
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
+requestTerminationCall~.~mainMission\then  \\ requestTerminationRet~.~mainMission~?~requestTermination\then  \\ 
 
-            requestTerminationCall~.~mainMission\then \\requestTerminationRet~.~mainMission~?~requestTermination\then \\
 
-\Skip
-        \circblockclose  
+        \circblockclose
 
 
   \\
@@ -53,11 +48,11 @@ handlerAsyncEvent \circdef \\
   \\
   \circfi \circseq \\
 
-\Skip
-        \circblockclose  
+
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~GroundDistanceMonitor \then \\
+    handleAsyncEventRet~.~GroundDistanceMonitorSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -68,7 +63,7 @@ handlerAsyncEvent \circdef \\
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -78,7 +73,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~GroundDistanceMonitor \then \Skip)
+  \circinterrupt (end\_periodic\_app~.~GroundDistanceMonitorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

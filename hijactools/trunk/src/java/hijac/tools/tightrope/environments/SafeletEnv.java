@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -9,9 +11,8 @@ public class SafeletEnv extends ParadigmEnv
 {
 
 	private MethodEnv initMethod, getSequencerMeth;
-
-	// temp
-	private ArrayList<Name> tlmsNames = new ArrayList<Name>();
+	
+	private ArrayList<String> tlmsNames = new ArrayList<String>();
 
 	public void addInitMethod(MethodEnv initMethod)
 	{
@@ -41,9 +42,10 @@ public class SafeletEnv extends ParadigmEnv
 		// map.put("initializeApplicationMethod", methodToMap(initMethod));
 		map.put("initializeApplicationMethod", "");
 
-		for (Name n : tlmsNames)
+		//Should this only have one element?
+		for (String name : tlmsNames)
 		{
-			map.put("SchedulableID", n);
+			map.put("SchedulableID", name);
 		}
 
 		return map;
@@ -51,7 +53,7 @@ public class SafeletEnv extends ParadigmEnv
 
 	public void addTopLevelMissionSequencer(Name name)
 	{
-		tlmsNames.add(name);
+		tlmsNames.add(name+TightRopeString.Name.SID);
 	}
 
 }

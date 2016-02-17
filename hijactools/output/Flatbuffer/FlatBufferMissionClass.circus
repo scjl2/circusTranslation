@@ -1,10 +1,17 @@
 
+\begin{zsection}
+  \SECTION ~ FlatBufferMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
+\end{zsection}
+
 \begin{circus}
 \circclass FlatBufferMissionClass \circdef \circbegin
 \end{circus}
 
 \begin{schema}{\circstateignore State}
   buffer : \num\\ 
+  t : testClass\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -15,13 +22,14 @@
   State~'
 \where
   buffer' = 0\\ 
+  t' = testClass\\ 
 \end{schema}
 
 
 \begin{circusaction}
-\circpublic ~ bufferEmpty ~ \circdef 
+\circpublic ~ bufferEmpty ~ \circdef
 \circvar ret : \boolean \circspot
-\\ 
+\\
 
 
       \circblockopen
@@ -29,28 +37,30 @@
 
 
 
-  \circif ~ (buffer = 0) ~ \circthen ~
+              \circif ~ (buffer = 0) ~ \circthen ~
   \\
-  \t1
-ret := \true
+\t1 ret := \true
   \\
   \circelse ~ \lnot (buffer = 0) ~ \circthen ~
   \\
-  \t1
-ret := \false
+\t1 ret := \false
   \\
   \circfi
+
+            
+
+
+
+
+        \circblockclose
+
  
 
-        \circblockclose  
-
- 
-
-\end{circusaction}	
+\end{circusaction}
 \begin{circusaction}
-\circpublic ~ cleanUp ~ \circdef 
+\circpublic ~ cleanUp ~ \circdef
 \circvar ret : \boolean \circspot
-\\ 
+\\
 
 
       \circblockopen
@@ -58,14 +68,18 @@ ret := \false
 
 
 
-  ret := \false
+              ret := \false
+
+            
+
+
+
+
+        \circblockclose
+
  
 
-        \circblockclose  
-
- 
-
-\end{circusaction}	
+\end{circusaction}
 %
 %
 
@@ -76,5 +90,3 @@ ret := \false
 \begin{circus}
   \circend
 \end{circus}
-
-

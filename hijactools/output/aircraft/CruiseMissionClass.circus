@@ -1,4 +1,9 @@
 
+\begin{zsection}
+  \SECTION ~ CruiseMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass CruiseMissionClass \circdef \circbegin
 \end{circus}
@@ -26,9 +31,9 @@
       \circblockopen
 
   ret := controllingMission
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -43,5 +48,3 @@
 \begin{circus}
   \circend
 \end{circus}
-
-

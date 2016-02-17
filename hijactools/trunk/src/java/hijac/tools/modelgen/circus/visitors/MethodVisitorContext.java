@@ -6,11 +6,6 @@ import hijac.tools.collections.Copyable;
 import hijac.tools.modelgen.circus.datamodel.MacroModel;
 import hijac.tools.modelgen.circus.utils.Layout;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.lang.model.element.Name;
-
 /* Immutable class */
 
 /**

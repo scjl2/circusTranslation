@@ -1,17 +1,22 @@
 
+\begin{zsection}
+  \SECTION ~ MainMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass MainMissionClass \circdef \circbegin
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  ALTITUDE\_READING\_ON\_GROUND : \mathbb{R}\\ 
+  ALTITUDE\_READING\_ON\_GROUND : \power \arithmos\\ 
   test : \num\\ 
-  cabinPressure : \mathbb{R}\\ 
-  emergencyOxygen : \mathbb{R}\\ 
-  fuelRemaining : \mathbb{R}\\ 
-  altitude : \mathbb{R}\\ 
-  airSpeed : \mathbb{R}\\ 
-  heading : \mathbb{R}\\ 
+  cabinPressure : \power \arithmos\\ 
+  emergencyOxygen : \power \arithmos\\ 
+  fuelRemaining : \power \arithmos\\ 
+  altitude : \power \arithmos\\ 
+  airSpeed : \power \arithmos\\ 
+  heading : \power \arithmos\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -28,96 +33,96 @@
 
 \begin{circusaction}
 \circpublic ~ getAirSpeed ~ \circdef
-\circvar ret : \mathbb{R} \circspot
+\circvar ret : \power \arithmos \circspot
 \\
 
 
       \circblockopen
 
   ret := airSpeed
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getAltitude ~ \circdef
-\circvar ret : \mathbb{R} \circspot
+\circvar ret : \power \arithmos \circspot
 \\
 
 
       \circblockopen
 
   ret := altitude
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getCabinPressure ~ \circdef
-\circvar ret : \mathbb{R} \circspot
+\circvar ret : \power \arithmos \circspot
 \\
 
 
       \circblockopen
 
   ret := cabinPressure
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getEmergencyOxygen ~ \circdef
-\circvar ret : \mathbb{R} \circspot
+\circvar ret : \power \arithmos \circspot
 \\
 
 
       \circblockopen
 
   ret := emergencyOxygen
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getFuelRemaining ~ \circdef
-\circvar ret : \mathbb{R} \circspot
+\circvar ret : \power \arithmos \circspot
 \\
 
 
       \circblockopen
 
   ret := fuelRemaining
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getHeading ~ \circdef
-\circvar ret : \mathbb{R} \circspot
+\circvar ret : \power \arithmos \circspot
 \\
 
 
       \circblockopen
 
   ret := heading
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -130,9 +135,9 @@
       \circblockopen
 
 this~.~this.airSpeed :=airSpeed
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -145,9 +150,9 @@ this~.~this.airSpeed :=airSpeed
       \circblockopen
 
 this~.~this.altitude :=altitude
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -160,9 +165,9 @@ this~.~this.altitude :=altitude
       \circblockopen
 
 this~.~this.cabinPressure :=cabinPressure
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -175,9 +180,9 @@ this~.~this.cabinPressure :=cabinPressure
       \circblockopen
 
 this~.~this.emergencyOxygen :=emergencyOxygen
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -190,9 +195,9 @@ this~.~this.emergencyOxygen :=emergencyOxygen
       \circblockopen
 
 this~.~this.fuelRemaining :=fuelRemaining
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -205,9 +210,9 @@ this~.~this.fuelRemaining :=fuelRemaining
       \circblockopen
 
 this~.~this.heading :=heading
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -222,5 +227,3 @@ this~.~this.heading :=heading
 \begin{circus}
   \circend
 \end{circus}
-
-

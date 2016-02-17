@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
- \t1  , \\
+ \t1  , 
 MainMissionMethChan
 , 
 
@@ -11,48 +11,46 @@ TakeOffMissionMethChan
 \end{zsection}
 
 \begin{circus}
-\circprocess TakeOffFailureHandlerApp \circdef \\ \qquad
+\circprocess TakeOffFailureHandlerApp \circdef \\ \t1
   mainMission : MissionID
-,\\ 
+,\\
   takeoffMission : MissionID
-,\\ 
+,\\
   threshold : Double
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~TakeOffFailureHandler \then \\
+	handleAsyncEventCall~.~TakeOffFailureHandlerSID \then \\
 	
       \circblockopen
 
-            getAirSpeedCall~.~mainMission\then \\getAirSpeedRet~.~mainMission~?~getAirSpeed\then \\\\ \circvar currentSpeed : \mathbb{R} \circspot currentSpeed :=~getAirSpeed\\
+binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then  \\ binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then  \\ \ \ \circvar currentSpeed : \power \arithmos \circspot currentSpeed :=~getAirSpeed\ \
 
+               \circseq \\
 
-              \circif ~ (currentSpeed < threshold) ~ \circthen ~
+  \circif ~ (currentSpeed < threshold) ~ \circthen ~
   \\
   \t1
 
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
+binder\_abortCall~.~takeoffMission~.~TakeOffFailureHandlerSID\then  \\ binder\_abortRet~.~takeoffMission~.~TakeOffFailureHandlerSID\then  \\ \Skip
 
-abortCall~.~takeoffMission\then \\abortRet~.~takeoffMission\then \\\Skip
- 
 
-               \circseq \\ 
+               \circseq \\
 
-            requestTerminationCall~.~takeoffMission\then \\requestTerminationRet~.~takeoffMission~?~requestTermination\then \\
+requestTerminationCall~.~takeoffMission\then  \\ requestTerminationRet~.~takeoffMission~?~requestTermination\then  \\ 
 
-\Skip
-        \circblockclose  
+
+        \circblockclose
 
 
   \\
@@ -62,20 +60,18 @@ abortCall~.~takeoffMission\then \\abortRet~.~takeoffMission\then \\\Skip
 
       \circblockopen
 
-\Skip
- 
-
-        \circblockclose  
+      
+        \circblockclose
 
 
   \\
   \circfi
 
-\Skip
-        \circblockclose  
+
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~TakeOffFailureHandler \then \\
+    handleAsyncEventRet~.~TakeOffFailureHandlerSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -86,7 +82,7 @@ abortCall~.~takeoffMission\then \\abortRet~.~takeoffMission\then \\\Skip
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -96,7 +92,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~TakeOffFailureHandler \then \Skip)
+  \circinterrupt (end\_aperiodic\_app~.~TakeOffFailureHandlerSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

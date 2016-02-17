@@ -1,57 +1,59 @@
 \begin{zsection}
-  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  
-
-  \t1 , \\
+  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  , MethodCallBindingChannels 
+ \\
+  \t1 , 
 MissionMethChan
 , 
+
 FlatBufferMissionMethChan
 , 
+
 ObjectIds
 , 
+
 ThreadIds
+
 
 
 \end{zsection}
 %
 \begin{circus}
-\circprocess WriterApp \circdef   fbMission : MissionID
-\circspot 
+\circprocess WriterApp \circdef \\ \t1
+  fbMission : MissionID
+
+\circspot
  \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  i : \num\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  i' = 1\\ 
-\end{schema}
 
 \begin{circusaction}
 Run \circdef \\
 \circblockopen
-	runCall~.~Writer \then \\
+	runCall~.~WriterSID \then \\
 	
       \circblockopen
 
 
 
 
-            \circblockopen \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission\then \\terminationPendingRet~.~fbMission~?~terminationPending\then \\\ \circvar loopVar : \bool \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen writeCall~.~fbMission~.~WriterThread~!~i\then \\writeRet~.~fbMission~.~WriterThread\then \\\Skip \circblockclose \circseq \\ i := i + 1 \circseq \\ \circvar keepWriting : \boolean \circspot keepWriting := (i \geq 5) ~ \circseq \\ \circif ~ (\lnot keepWriting = \true) ~ \circthen ~ \\ \t1 \circblockopen requestTerminationCall~.~fbMission\then \\requestTerminationRet~.~fbMission~?~requestTermination\then \\ \Skip \circblockclose \\ \circelse ~ \lnot (\lnot keepWriting = \true) \circthen \Skip \\ \circfi \circseq \\ \Skip \circblockclose \circseq X \\ \circelse ~ ~ \lnot(loopVar) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
-\Skip
-        \circblockclose  
+            \circvar i : \num \circspot i :=~1
+             \circseq \\ 
+
+
+
+            \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission\then \\ terminationPendingRet~.~fbMission~?~terminationPending\then \\ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen binder\_writeCall~.~fbMission~.~WriterSID~.~WriterTID~!~i\then \\ binder\_writeRet~.~fbMission~.~WriterSID~.~WriterTID\then \\ \Skip \circseq \\ i := i + 1 \circseq \\ \circif ~ (i \geq 5) ~ \circthen ~ \\ \t1 \circblockopen requestTerminationCall~.~fbMission\then \\ requestTerminationRet~.~fbMission~?~requestTermination\then \\ \Skip \circblockclose \\ \circelse ~ \lnot (i \geq 5) \circthen \Skip \\ \circfi \\ \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
+            
+
+
+
+
+        \circblockclose
 
  \circseq \\
-	runRet~.~Writer \then \\
+	runRet~.~WriterSID \then \\
 	\Skip
 \circblockclose
-\end{circusaction}	
+\end{circusaction}
 
 %
 %
@@ -63,13 +65,13 @@ Methods \circdef \\
 %
 %
 %
-\circblockclose 
+\circblockclose
 	 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
-  \circinterrupt (end\_managedThread\_app~.~Writer \then \Skip)
+\circspot ( Methods) 
+  \circinterrupt (end\_managedThread\_app~.~WriterSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

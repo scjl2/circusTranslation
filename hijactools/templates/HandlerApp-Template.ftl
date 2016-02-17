@@ -1,16 +1,16 @@
 \begin{zsection}
-  \SECTION ~ ${ProcessID}App ~ \parents ~ ${ImportName}EventHandlerChan, SchedulableId, SchedulableIds \\
+  \SECTION ~ ${ProcessName}App ~ \parents ~ ${ImportName}EventHandlerChan, SchedulableId, SchedulableIds <#include "CommonImports-Template.ftl"> \\
  \t1  <#include "Parent-Template.ftl">
 \end{zsection}
 
 \begin{circus}
-\circprocess ${ProcessID}App \circdef <#include "Params-Template.ftl">  \circbegin
+\circprocess ${ProcessName}App \circdef <#include "Params-Template.ftl">  \circbegin
 \end{circus}
 
 <#include "State-Template.ftl">
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~${ProcessID} \then \\
 	${HandleAsync.Body} \circseq \\
@@ -24,7 +24,7 @@ handlerAsyncEvent \circdef \\
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 <#include "MethodsAction-Template.ftl">
 \circblockclose
 	 \circseq Methods

@@ -1,4 +1,16 @@
 
+\begin{zsection}
+  \SECTION ~ ACModeChangerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+, 
+MissionId
+, 
+
+MissionIds
+
+
+\end{zsection}
+
 \begin{circus}
 \circclass ACModeChangerClass \circdef \circbegin
 \end{circus}
@@ -35,14 +47,14 @@
 
   modesLeft := modesLeft - 1
 
- 
 
-               \circseq \\ 
 
-  ret := TakeOffMission
- 
+               \circseq \\
 
-        \circblockclose  
+  ret := TakeOffMissionMID
+
+
+        \circblockclose
 
 
   \\
@@ -57,14 +69,14 @@
 
   modesLeft := modesLeft - 1
 
- 
 
-               \circseq \\ 
 
-  ret := CruiseMission
- 
+               \circseq \\
 
-        \circblockclose  
+  ret := CruiseMissionMID
+
+
+        \circblockclose
 
 
   \\
@@ -79,14 +91,14 @@
 
   modesLeft := modesLeft - 1
 
- 
 
-               \circseq \\ 
 
-  ret := LandMission
- 
+               \circseq \\
 
-        \circblockclose  
+  ret := LandMissionMID
+
+
+        \circblockclose
 
 
   \\
@@ -97,22 +109,22 @@
       \circblockopen
 
   ret := nullMissionId
- 
-
-        \circblockclose  
 
 
-  \\
-  \circfi
+        \circblockclose
+
 
   \\
   \circfi
 
   \\
   \circfi
- 
 
-        \circblockclose  
+  \\
+  \circfi
+
+
+        \circblockclose
 
  
 
@@ -127,5 +139,3 @@
 \begin{circus}
   \circend
 \end{circus}
-
-

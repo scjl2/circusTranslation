@@ -34,6 +34,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -252,8 +253,24 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println(BUILDING_TOP_LEVEL_SEQUENCER);
 		System.out.println();
-
-		TypeElement tlmsElement = analysis.ELEMENTS.getTypeElement(packagePrefix + tlms);
+		
+		String tlmsStr = ""+ Character.toUpperCase(tlms.charAt(0)) + tlms.subSequence(1, tlms.length());
+		
+		System.out.println("packagePrefix="+packagePrefix + " and tlms="+tlmsStr);
+		
+		TypeElement tlmsElement = null;// = analysis.getTypeElement(packagePrefix + tlms);
+		
+		for(TypeElement te : type_elements)
+		{
+			System.out.println(te.toString() + " and " + tlmsStr);
+			if(te.toString().contains(tlmsStr))
+			{
+				System.out.println("found");
+				tlmsElement = te;
+			}
+		}
+		
+		
 
 		TopLevelMissionSequencerEnv topLevelMissionSequencer = programEnv
 				.getTopLevelMissionSequencer(tlms);
@@ -261,11 +278,12 @@ public class EnvironmentBuilder
 		tlmsClassEnv.setName(tlms);
 		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
-		MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(
+		ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(
 				programEnv, topLevelMissionSequencer, analysis, this);
 
 		// msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
 
+		System.out.println("tlmselement="+tlmsElement);
 		ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
 
 		topLevelMissionSequencer.addVariable(THIS, CIRCREFTYPE + tlms.toString() + CLASS,
@@ -309,8 +327,8 @@ public class EnvironmentBuilder
 
 		String fullName = packagePrefix + n;
 
-		// System.out.println("+++ Building Mission: Full Name = " + fullName
-		// + END_PLUSES);
+//		 System.out.println("+++ Building Mission: Full Name = " + fullName
+//		 + END_PLUSES);
 
 		TypeElement missionTypeElem = elems.getTypeElement(fullName);
 
@@ -390,7 +408,9 @@ public class EnvironmentBuilder
 
 		new SchedulableObjectBuilder(analysis, programEnv, schedulableEnv, this)
 				.build(schedulableType);
-
+		
+		
+		
 	}
 
 	private void buildSchedulableMissionSequencer(ArrayList<Name> nestedSequencers)
@@ -415,7 +435,7 @@ public class EnvironmentBuilder
 
 			System.out.println("nestedMissionSequencer = " + nestedMissionSequencer);
 
-			MissionSequencerLevel2Builder msl2Visitor = new MissionSequencerLevel2Builder(
+			ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(
 					programEnv, nestedMissionSequencer, analysis, this);
 
 			// msl2Visitor.setVarMap(getVariables(tlmsElement,
@@ -513,7 +533,7 @@ public class EnvironmentBuilder
 
 			Tree tree = deferred.tree;
 			String nameOfClassBeingTranslated = "";
-
+			System.out.println("Tree kind = "+ tree.getKind());
 			if (tree instanceof VariableTree)
 			{
 				System.out.println("Tree: " + tree + " instance of VairableTree ");
@@ -546,6 +566,31 @@ public class EnvironmentBuilder
 
 				nameOfClassBeingTranslated = ((NewClassTree) tree).getIdentifier()
 						.toString();
+			}
+			else if (tree instanceof ExpressionStatementTree)
+			{
+				System.out.println("Tree: " + tree + " instance of ExpressionStatement ");
+
+				ExpressionTree et = ((ExpressionStatementTree) tree).getExpression();
+				
+				System.out.println("et kind = " + et.getKind());
+				
+				if (et instanceof NewClassTree)
+				{
+					System.out.println("Tree: " + tree + " instance of ExpressionStatement->Expression->NewClassTree ");
+
+					args = ((NewClassTree) tree).getArguments();
+
+					ExpressionTree identifierTree = ((NewClassTree) tree).getIdentifier();
+					//
+					System.out.println("trying to get objectEnv for " + identifierTree);
+
+					objectWithParams = programEnv.getObjectEnv(identifierTree.toString());
+
+					nameOfClassBeingTranslated = ((NewClassTree) tree).getIdentifier()
+							.toString();
+				}
+				
 			}
 
 			System.out.println("args = " + args.toString());

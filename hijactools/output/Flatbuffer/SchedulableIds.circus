@@ -4,18 +4,14 @@
 \extracircusvspace
 %
 \begin{axdef}
-FlatBufferMissionSequencer : SchedulableID\\
-	Reader : SchedulableID\\
-	Writer : SchedulableID\\
- %eg MainMissionSequencer : SchedulableID\\
- % NestedMissionSequencer : SchedulableID\\
- % NestedOneShotEventHandler : SchedulableID\\   
-  
+FlatBufferMissionSequencerSID : SchedulableID\\
+	ReaderSID : SchedulableID\\
+	WriterSID : SchedulableID\\
+%
 \where
-  distinct \langle nullSequencerId, nullSchedulableId,
-	Reader
-	,\\
-	Writer
+  distinct \langle nullSequencerId, nullSchedulableId, FlatBufferMissionSequencerSID, \\
+	ReaderSID
+	,
+	WriterSID
   \rangle
 \end{axdef}
-

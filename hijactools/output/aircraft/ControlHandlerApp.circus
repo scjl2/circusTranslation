@@ -9,19 +9,17 @@
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~ControlHandler \then \\
+	handleAsyncEventCall~.~ControlHandlerSID \then \\
 	
       \circblockopen
 
-\Skip
- 
-
-        \circblockclose  
+      
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~ControlHandler \then \\
+    handleAsyncEventRet~.~ControlHandlerSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -32,7 +30,7 @@ handlerAsyncEvent \circdef \\
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -42,7 +40,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~ControlHandler \then \Skip)
+  \circinterrupt (end\_aperiodic\_app~.~ControlHandlerSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

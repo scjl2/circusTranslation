@@ -16,12 +16,18 @@ public class SchedulableIdsEnv extends IdEnv
 	private static final String SCHEDULABLES_STR = "Schedulables";
 	private static final String TOPLEVEL_SEQUENCER = "toplevelSequencer";
 	
-	private Name topLevelSequencer;
+	//TODO This needs to be a list and be the SOLE owner of this information
+	private String topLevelSequencer;
 
 
 	public void addTopLevelSequencer(Name topLevelSequencer)
 	{
-		this.topLevelSequencer = topLevelSequencer;
+		this.topLevelSequencer = topLevelSequencer + hijac.tools.tightrope.utils.TightRopeString.Name.SID;
+	}
+	
+	public String getTopLevelSequencer()
+	{
+		return topLevelSequencer;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -36,6 +42,6 @@ public class SchedulableIdsEnv extends IdEnv
 	
 	public void addIdNames(String idName)
 	{
-		idNames.add(idName+ID_STR);
+		idNames.add(idName+hijac.tools.tightrope.utils.TightRopeString.Name.SID);
 	}
 }

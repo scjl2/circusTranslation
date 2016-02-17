@@ -1,11 +1,16 @@
 
+\begin{zsection}
+  \SECTION ~ LandMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
+
+\end{zsection}
+
 \begin{circus}
 \circclass LandMissionClass \circdef \circbegin
 \end{circus}
 
 \begin{schema}{\circstateignore State}
   controllingMission : MainMission\\ 
-  SAFE\_LANDING\_ALTITUDE : \mathbb{R}\\ 
+  SAFE\_LANDING\_ALTITUDE : \power \arithmos\\ 
   abort : \boolean\\ 
   landingGearDeployed : \boolean\\ 
 \end{schema}
@@ -29,10 +34,10 @@
 
       \circblockopen
 
-this~.~landingGearDeployed :=false
- 
+this~.~landingGearDeployed :=\false
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -46,9 +51,9 @@ this~.~landingGearDeployed :=false
       \circblockopen
 
   ret := landingGearDeployed = \true
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -62,9 +67,9 @@ this~.~landingGearDeployed :=false
       \circblockopen
 
   ret := controllingMission
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -76,10 +81,10 @@ this~.~landingGearDeployed :=false
 
       \circblockopen
 
-this~.~abort :=true
- 
+this~.~abort :=\true
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -92,16 +97,13 @@ this~.~abort :=true
 
       \circblockopen
 
-\Skip
- 
-
-               \circseq \\ 
+      
 
   ret :=   (\lnot abort = \true)
 
- 
 
-        \circblockclose  
+
+        \circblockclose
 
  
 
@@ -116,5 +118,3 @@ this~.~abort :=true
 \begin{circus}
   \circend
 \end{circus}
-
-

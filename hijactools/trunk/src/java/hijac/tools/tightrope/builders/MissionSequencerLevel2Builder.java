@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
@@ -28,8 +29,6 @@ import com.sun.source.util.Trees;
 
 public class MissionSequencerLevel2Builder extends ParadigmBuilder
 {
-	ProgramEnv programEnv;
-	SCJAnalysis analysis;
 
 	private Trees trees;
 	private ReturnVisitor returnVisitor;
@@ -43,22 +42,15 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 	{
 		super(analysis, programEnv, environmentBuilder);
 
-		this.analysis = analysis;
-		this.programEnv = programEnv;
+		ParadigmBuilder.analysis = analysis;
+		ParadigmBuilder.programEnv = programEnv;
 		this.sequencerEnv = sequencerEnv;
 
 		trees = analysis.TREES;
 
 		methodVisitor = new MethodVisitor(analysis, sequencerEnv);
-
 	}
-
-	// public void setVarMap(Map<Name, Tree> varMap)
-	// {
-	// this.varMap = varMap;
-	// returnVisitor = new ReturnVisitor(varMap);
-	// }
-
+	
 	// TODO Tuning: have this method accept an empty ArrayList to fill
 	@SuppressWarnings("unchecked")
 	public ArrayList<Name> build(TypeElement arg0)
@@ -68,6 +60,10 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 		System.out.println();
 
 		assert (sequencerEnv != null);
+		
+		addParents();
+		
+	
 
 		varMap = getVariables(arg0, sequencerEnv);
 
@@ -84,7 +80,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 
 		Iterator<StatementTree> i = members.iterator();
-
+		assert(varMap != null);
 		returnVisitor = new ReturnVisitor(varMap);
 		MethodEnv m;
 		while (i.hasNext())
@@ -136,7 +132,6 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 
 					if (isGetNextMissionMethod)
 					{
-
 						ArrayList<Name> getNextReturns = null;
 
 						getNextReturns = o.accept(returnVisitor, false);
@@ -149,10 +144,13 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 						m = methodVisitor.visitMethod(o, false);
 						setMethodAccess(m, o);
 
+						
 						sequencerEnv.getClassEnv().addMeth(m);
+						
 					}
 					else
 					{// ADD METHOD TO MISSION ENV
+						sequencerEnv.setObjectId(sequencerEnv.getName().toString());
 						m = methodVisitor.visitMethod(o, false);
 						setMethodAccess(m, o);
 
@@ -196,5 +194,12 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 		{
 			m.setAccess(MethodEnv.AccessMod.PROTECTED);
 		}
+	}
+	
+	public void addParents()
+	{
+		ClassEnv msClassEnv = sequencerEnv.getClassEnv();
+		msClassEnv.addParent(hijac.tools.tightrope.utils.TightRopeString.Name.MISSION_ID);
+		msClassEnv.addParent(hijac.tools.tightrope.utils.TightRopeString.Name.MISSION_IDS);
 	}
 }

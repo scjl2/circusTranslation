@@ -3,7 +3,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-
+\usepackage[UKenglish]{babel}
 \usepackage{xcolor}
 
 \usepackage{circus}
@@ -13,30 +13,35 @@
 
 \title{Flatbuffer}
 
-\author{Tight Rope v0.6}
+\author{Tight Rope v0.65}
+
+\date{\today}
 
 \begin{document}
 
 \maketitle
 
-\section{Network}
-\input{Network.circus}
-\newpage
-
 \section{ID Files}
 \subsection{MissionIds}
 \input{MissionIds.circus}
+\newpage
 
 \subsection{SchedulablesIds}
 \input{SchedulableIds.circus}
+\newpage
 
 \subsection{ThreadIds}
 \input{ThreadIds.circus}
-
+\newpage
 
 \subsection{ObjectIds}
 \input{ObjectIds.circus}
 \newpage
+
+\section{Network}
+\input{Network.circus}
+\newpage
+
 
 \section{Safelet}
 \input{FlatBufferApp.circus}
@@ -68,7 +73,7 @@
 \input{FlatBufferMissionMethChan.circus}}{}
 \newpage
 
-\subsection{Schedulables of }
+\subsection{Schedulables of FlatBufferMission}
 
 \input{ReaderApp.circus}
 \IfFileExists{ReaderClass.circus}{\newpage

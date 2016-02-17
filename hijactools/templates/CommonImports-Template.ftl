@@ -1,1 +1,1 @@
-<#if HasClass = true>, ${ProcessID}Class</#if> \\
+<#if HasClass = true>, ${ProcessName}Class</#if>, MethodCallBindingChannels 

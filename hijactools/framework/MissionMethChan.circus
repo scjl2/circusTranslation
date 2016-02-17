@@ -13,7 +13,8 @@
 \end{circus}
 %
 \begin{circus}
-  \circchannel ~ requestTermination : MissionID \cross SchedulableID
+  \circchannel ~ requestTerminationCall : MissionID \cross SchedulableID \\
+  \circchannel ~ requestTerminationRet : MissionID \cross SchedulableID \cross \boolean
 \end{circus}
 %
 \begin{circus}
@@ -28,5 +29,5 @@
 \begin{circus}
   \circchannelset ~ MissionMethChan ~ ==\\
   \t1 \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,\\  
-  \t1 requestTermination, terminationPendingCall, terminationPendingRet \rchanset
+  \t1 requestTerminationCall, requestTerminationRet, terminationPendingCall, terminationPendingRet \rchanset
 \end{circus}

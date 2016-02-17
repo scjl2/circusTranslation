@@ -4,33 +4,30 @@
 \end{zsection}
 
 \begin{circus}
-\circprocess AperiodicSimulatorApp \circdef \\ \qquad
+\circprocess AperiodicSimulatorApp \circdef \\ \t1
   aperiodicEvent : SchedulableID
- 
+
 \circspot
   \circbegin
 \end{circus}
 
 
 \begin{circusaction}
-handlerAsyncEvent \circdef \\
+handleAsyncEvent \circdef \\
 \circblockopen
-	handleAsyncEventCall~.~AperiodicSimulator \then \\
+	handleAsyncEventCall~.~AperiodicSimulatorSID \then \\
 	
       \circblockopen
 
-\Skip
- 
+      
 
-               \circseq \\ 
+releaseCall~.~event\then  \\ releaseRet~.~event~?~release\then  \\ 
 
-            releaseCall~.~event\then \\releaseRet~.~event~?~release\then \\
 
-\Skip
-        \circblockclose  
+        \circblockclose
 
  \circseq \\
-    handleAsyncEventRet~.~AperiodicSimulator \then \\
+    handleAsyncEventRet~.~AperiodicSimulatorSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
@@ -41,7 +38,7 @@ handlerAsyncEvent \circdef \\
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
-	handlerAsyncEvent \\
+	handleAsyncEvent \\
 %
 %
 %
@@ -51,7 +48,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~AperiodicSimulator \then \Skip)
+  \circinterrupt (end\_periodic\_app~.~AperiodicSimulatorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

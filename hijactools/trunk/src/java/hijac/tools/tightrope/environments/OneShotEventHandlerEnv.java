@@ -34,26 +34,28 @@ public class OneShotEventHandlerEnv extends EventHandlerEnv
 	@Override
 	public List<MethodEnv> getMeths()
 	{
-		List<MethodEnv> apehMeths = super.getMeths();
-		apehMeths.addAll(EVENT_HANDLER_API_METHODS);
+		List<MethodEnv> osehMeths = new ArrayList<MethodEnv>();						
+				
+		osehMeths.addAll(super.getMeths());
+		osehMeths.addAll(EVENT_HANDLER_API_METHODS);
 
-		return apehMeths;
+		return osehMeths;
 	}
 
 	@Override
 	@SuppressWarnings("rawtypes")
 	public List<Map> methsList()
 	{
-		List<Map> apehMethodsList = super.methsList();
+		List<Map> osehMethodsList = super.methsList();
 
-		for (MethodEnv me : EVENT_HANDLER_API_METHODS)
-		{
-			Map methodMap = methodToMap(me);
+//		for (MethodEnv me : EVENT_HANDLER_API_METHODS)
+//		{
+//			Map methodMap = methodToMap(me);
+//
+//			apehMethodsList.add(methodMap);
+//		}
 
-			apehMethodsList.add(methodMap);
-		}
-
-		return apehMethodsList;
+		return osehMethodsList;
 	}
 
 }

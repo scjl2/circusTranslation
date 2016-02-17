@@ -6,7 +6,7 @@ ${meth.MethodName}Meth \circdef
 </#if>
 \\
 \circblockopen
-${meth.MethodName}Call~.~${ProcessID}
+${meth.MethodName}Call~.~${ProcessID}<#if meth.ExternalAppmeth == true> ~?~caller</#if>
 <#list meth.Parameters?keys as param>
 ~?~${param}
 </#list>
@@ -14,9 +14,9 @@ ${meth.MethodName}Call~.~${ProcessID}
 ${meth.Body}  \circseq  \\
 
 <#if meth.ReturnType != 'null'>
-${meth.MethodName}Ret~.~${ProcessID}~!~ret \then \\
+${meth.MethodName}Ret~.~${ProcessID}<#if meth.ExternalAppmeth == true>~.~caller</#if>~!~ret \then \\
 <#else>
-${meth.MethodName}Ret~.~${ProcessID} \then \\
+${meth.MethodName}Ret~.~${ProcessID}<#if meth.ExternalAppmeth == true>~.~caller</#if> \then \\
 </#if>
 \Skip
 \circblockclose
@@ -31,20 +31,20 @@ ${meth.MethodName}SyncMeth \circdef
 </#if>
 \\
 \circblockopen
-${meth.MethodName}Call~.~${ProcessID}~?~thread
+${meth.MethodName}Call~.~${ProcessID}<#if meth.ExternalAppmeth == true>~?~caller</#if>~?~thread
 <#list meth.Parameters?keys as param>
 ~?~${param}
 </#list> \then \\
 \circblockopen
-startSyncMeth~.~${ProcessID}Object~.~thread \then \\
-lockAcquired~.~${ProcessID}Object~.~thread \then \\
+startSyncMeth~.~${ProcObjectID}~.~thread \then \\
+lockAcquired~.~${ProcObjectID}~.~thread \then \\
 ${meth.Body} \circseq  \\
-endSyncMeth~.~${ProcessID}Object~.~thread \then  \\
+endSyncMeth~.~${ProcObjectID}~.~thread \then  \\
 
 <#if meth.ReturnType != 'null'>
-${meth.MethodName}Ret~.~${ProcessID}~!~thread~!~ret \then \\
+${meth.MethodName}Ret~.~${ProcessID}<#if meth.ExternalAppmeth == true>~.~caller</#if>~.~thread~!~ret \then \\
 <#else>
-${meth.MethodName}Ret~.~${ProcessID}~.~thread \then \\
+${meth.MethodName}Ret~.~${ProcessID}<#if meth.ExternalAppmeth == true>~.~caller</#if>~.~thread \then \\
 </#if>
 \Skip
 \circblockclose

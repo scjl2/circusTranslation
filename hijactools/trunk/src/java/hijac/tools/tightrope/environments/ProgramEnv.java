@@ -1,12 +1,15 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
+import java.lang.reflect.Type;
 import hijac.tools.tightrope.environments.FrameworkEnv;
 
 import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Name;
 
@@ -14,8 +17,9 @@ public class ProgramEnv
 {
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
+	private List<MethodEnv> binderMethodEnvs;
 
-	private MissionIdsEnv missionIds;
+	private IdEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
 	private ThreadIdsEnv threadIds;
 	private ObjectIdsEnv objectIds;
@@ -24,6 +28,7 @@ public class ProgramEnv
 	{
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
+		this.binderMethodEnvs = new ArrayList<MethodEnv>();
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
@@ -34,13 +39,14 @@ public class ProgramEnv
 	public void addSafelet(Name safelet)
 	{
 		structureEnv.addSafelet(safelet);
-		objectIds.addIdNames(safelet.toString());
+		// objectIds.addIdNames(safelet.toString());
 	}
 
 	public void addTopLevelMissionSequencer(Name topLevelMissionSequencer)
 	{
 		structureEnv.addTopLevelMissionSequencer(topLevelMissionSequencer);
 		schedulableIds.addTopLevelSequencer(topLevelMissionSequencer);
+		// objectIds.addIdNames(topLevelMissionSequencer.toString());
 	}
 
 	public void addMission(Name mission)
@@ -48,7 +54,17 @@ public class ProgramEnv
 		structureEnv.addMission(mission);
 		final String missionString = mission.toString();
 		missionIds.addIdNames(missionString);
-		objectIds.addIdNames(missionString);
+		// objectIds.addIdNames(missionString);
+	}
+
+	public void addObjectIdName(String name)
+	{
+		objectIds.addIdNames(name);
+	}
+
+	public void addThreadIdName(String name)
+	{
+		threadIds.addIdNames(name);
 	}
 
 	public FrameworkEnv getFrameworkEnv()
@@ -95,8 +111,8 @@ public class ProgramEnv
 		// Synchronised method
 		// if()
 
-		threadIds.addIdNames(nameString);
-		objectIds.addIdNames(nameString);
+		// threadIds.addIdNames(nameString);
+		// objectIds.addIdNames(nameString);
 
 	}
 
@@ -151,8 +167,53 @@ public class ProgramEnv
 		Map returnMap = structureEnv.getNetworkMap();
 		returnMap.put("Objects", getObjectIdsMap());
 		returnMap.put("Threads", getThreadIdsMap());
+		returnMap.put("MethodCallBindings", getBinderMethodEnvsMapList());
 
 		return returnMap;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private List getBinderMethodEnvsMapList()
+	{
+		List binderMethodEnvsMap = new ArrayList();
+
+		for (MethodEnv b : binderMethodEnvs)
+		{
+			Map binderMethodMap = new HashMap();
+
+			binderMethodMap.put("Name", b.getMethodName());
+			binderMethodMap.put("Locations", b.getLocations());
+			binderMethodMap.put("Callers", b.getCallers());
+			binderMethodMap.put("Return", b.hasReturn());
+			binderMethodMap.put("ReturnType", b.getReturnType());
+			binderMethodMap.put("Parameters", b.getParameters());
+			binderMethodMap.put("ReturnValue", b.getReturnValue());
+			binderMethodMap.put("LocType", b.getLocationType());
+			binderMethodMap.put("CallerType", b.getCallerType());
+			binderMethodMap.put("Sync", b.isSynchronised());
+
+			// // TODO need to calculate these!
+			// for (String s : locs)
+			// {
+			// if (missionIds.contains(s))
+			// {
+			// // b.setLocationType("MissionID");
+			// binderMethodMap.put("LocType", b.getLocationType());
+			// }
+			// }
+			//
+			// for (String s : callers)
+			// {
+			// if (schedulableIds.contains(s))
+			// {
+			// b.setCallerType("SchedulableID");
+			// binderMethodMap.put("CallerType", b.getCallerType());
+			// }
+			// }
+
+			binderMethodEnvsMap.add(binderMethodMap);
+		}
+		return binderMethodEnvsMap;
 	}
 
 	public ArrayList<NestedMissionSequencerEnv> getNestedMissionSequencers()
@@ -249,7 +310,7 @@ public class ProgramEnv
 	}
 
 	/**
-	 * >>>>>>> deferredParameterGathering Gets the object environment within
+	 * Gets the object environment within
 	 * this program environment that shares the same name as the parameter, if
 	 * it does not exists this method will return <code>null</code>. Internally,
 	 * this method calls <code>getObjectEnv(String objectName)</code>.
@@ -293,7 +354,7 @@ public class ProgramEnv
 		return null;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes" })
 	public Map getThreadIdsMap()
 	{
 		return threadIds.toMap();
@@ -307,12 +368,57 @@ public class ProgramEnv
 
 	public void setThreadPriority(String threadID, String priority)
 	{
-		threadIds.setThreadPriority(threadID, priority);
+//		if (getObjectEnv(threadID).hasSyncMeth())
+//		{
+			threadIds.setThreadPriority(threadID, priority);
+//		}
 
 	}
-	
-	public MissionIdsEnv getMissionIdsEnv()
+
+	public List<MethodEnv> getBinderMethodEnvs()
+	{
+		return binderMethodEnvs;
+	}
+
+	public void addBinderMethodEnv(String name, String location, String caller)
+	{
+		addBinderMethodEnv(name, location, caller, null, null);
+	}
+
+	public IdEnv getMissionIdsEnv()
 	{
 		return missionIds;
+	}
+
+	// not adding anything to the list
+	@Deprecated
+	public void addBinderMethodEnv(String name, String location, String caller,
+			String returnType, Map<String, Type> parameters)
+	{
+		String id = "";
+		boolean existingBME = false;
+		for (MethodEnv me : binderMethodEnvs)
+		{
+			if (me.getMethodName().equals(name))
+			{
+				me.addLocation(location + id);
+				me.addCaller(caller + id);
+				me.setParameters(parameters);
+				// me.setLocationType(location);
+
+				existingBME = true;
+			}
+		}
+	}
+
+	public void addBinderMethodEnv(MethodEnv method, String location, String caller,
+			String callerType)
+	{
+		method.addLocation(location);
+		method.addCaller(caller);
+		method.setCallerType(callerType);
+
+		binderMethodEnvs.add(method);
+
 	}
 }

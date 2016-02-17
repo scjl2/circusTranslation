@@ -4,9 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.tools.javah.Mangle;
+
 public abstract class ParadigmEnv extends ObjectEnv
 {
 
+	private static final String MISSION_ID = "MissionID";
+	private static final String SCHEDULABLE_ID = "SchedulableID";
 	private static final String PROC_PARAMETERS = "ProcParameters";
 	private static final String APP_PARAMETERS = "AppParameters";
 	private static final String FW_PARAMETERS = "FWParameters";
@@ -51,7 +55,12 @@ public abstract class ParadigmEnv extends ObjectEnv
 	public Map toMap()
 	{
 		Map map = new HashMap();
-		map.put(PROCESS_ID, getName().toString());
+		map.put(PROCESS_NAME, getName().toString());
+		
+		
+		map.put(PROCESS_ID, getId());
+		map.put("ProcObjectID", getObjectId());
+		
 
 		map.put(FW_PARAMETERS, fwParamsList());
 		map.put(APP_PARAMETERS, appParamsList());
@@ -87,5 +96,22 @@ public abstract class ParadigmEnv extends ObjectEnv
 		}
 
 		return GENERIC_PARADIGM_TYPES;
+	}
+
+	public String getIdType()
+	{
+		if ((this instanceof EventHandlerEnv) || this instanceof ManagedThreadEnv
+				|| this instanceof NestedMissionSequencerEnv)
+		{
+			return SCHEDULABLE_ID;
+		}
+		else if (this instanceof MissionEnv)
+		{
+			return MISSION_ID;
+		}
+		else
+		{
+			return "";
+		}
 	}
 }

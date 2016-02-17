@@ -12,11 +12,6 @@ import com.sun.source.tree.Tree;
 
 public class ObjectEnv
 {
-	private static final String RETURN_VALUE = "ReturnValue";
-	protected static final String ACCESS = "Access";
-	protected static final String BODY = "Body";
-	protected static final String RETURN_TYPE = "ReturnType";
-	protected static final String METHOD_NAME = "MethodName";
 	private static final String VAR_INPUT = "VarInput";
 	private static final String VAR_INIT = "VarInit";
 	private static final String VAR_TYPE = "VarType";
@@ -26,10 +21,13 @@ public class ObjectEnv
 	protected static final String SYNC_METHODS = "SyncMethods";
 	protected static final String METHODS = "Methods";
 	protected static final String PROCESS_ID = "ProcessID";
+	protected static final String PROCESS_NAME = "ProcessName";
+
 	protected static final String IMPORT_NAME = "ImportName";
 	protected static final String HANDLER_TYPE = "HandlerType";
-	protected static final String PARAMETERS_STR = "Parameters";
+
 	protected static final String PARENTS_STR = "Parents";
+	protected static final String ID = "ID";
 	// ClassTree classTree;
 	/**
 	 * The name of the entity this environment represents
@@ -65,9 +63,13 @@ public class ObjectEnv
 	 */
 	private List<String> parents;
 
+	private String id = "", objectID = "", threadID = "";
+	
+	private boolean hasSyncMeth = false;
+	private boolean needsThread = false;
+
 	/**
-	 * >>>>>>> deferredParameterGathering The standard constructor, which simply
-	 * instantiates the lists
+	 * The standard constructor, which simply instantiates the lists
 	 */
 	public ObjectEnv()
 	{
@@ -84,6 +86,11 @@ public class ObjectEnv
 
 		newChannels = new ArrayList<ChannelEnv>();
 		parents = new ArrayList<String>();
+	}
+
+	public String getIdType()
+	{
+		return "";
 	}
 
 	public Name getName()
@@ -193,15 +200,15 @@ public class ObjectEnv
 
 	}
 
-	public void addVariable(String variableName, String variableType,
-			Object variableInit, String variableInput, boolean primitive)
-
-	{
-
-		addVariable(new VariableEnv(variableName, variableType, variableInit,
-				variableInput, primitive));
-
-	}
+//	public void addVariable(String variableName, String variableType,
+//			Object variableInit, String variableInput, boolean primitive)
+//
+//	{
+//
+//		addVariable(new VariableEnv(variableName, variableType, variableInit,
+//				variableInput, primitive));
+//
+//	}
 
 	public void addVariableInit(String varName, String init, boolean variableInput)
 	{
@@ -213,7 +220,6 @@ public class ObjectEnv
 				varEnv.setInput(variableInput);
 			}
 		}
-
 	}
 
 	/**
@@ -400,12 +406,13 @@ public class ObjectEnv
 
 	}
 
-	@SuppressWarnings("rawtypes")
-	public void addSyncMeth(Name methName, TypeKind returnType,
-			ArrayList<Name> returnValues, Map params)
-	{
-		syncMeths.add(new MethodEnv(methName, returnType, returnValues, params));
-	}
+//	@SuppressWarnings("rawtypes")
+//	public void addSyncMeth(Name methName, TypeKind returnType,
+//			ArrayList<Name> returnValues, Map params)
+//	{
+//		syncMeths.add(new MethodEnv(methName, returnType, returnValues, params));
+//		objectID = name + hijac.tools.tightrope.utils.TightRopeString.Name.OBJ_ID;
+//	}
 
 	public void addMeth(MethodEnv me)
 	{
@@ -416,8 +423,10 @@ public class ObjectEnv
 
 	public void addSyncMeth(MethodEnv me)
 	{
-		System.out.println("Adding Sync Meth " + me.getMethodName());
+		System.out.println("Adding Sync Meth " + me.toString());
 		me.setSynchronised(true);
+		setHasSyncMeth(true);
+		
 		syncMeths.add(me);
 
 	}
@@ -555,7 +564,7 @@ public class ObjectEnv
 
 		for (MethodEnv me : methods)
 		{
-			Map methodMap = methodToMap(me);
+			Map methodMap = me.toMap();
 
 			returnList.add(methodMap);
 		}
@@ -563,12 +572,22 @@ public class ObjectEnv
 		return returnList;
 	}
 
+	/**
+	 * Gets the lists of all the non-<code>synchronized</code> methods for the object this Environment represented.
+	 * 
+	 * @return List of Maps representing the non-synchronised methods.
+	 */
 	@SuppressWarnings({ "rawtypes" })
 	public List<Map> methsList()
 	{
 		return listMethods(MethsType.NOT_SYNC);
 	}
 
+	/**
+	 * Gets the lists of all the <code>synchronized</code> methods for the object this Environment represented.
+	 * 
+	 * @return List of Maps representing the synchronised methods.
+	 */
 	@SuppressWarnings({ "rawtypes" })
 	public List<Map> syncMethsList()
 	{
@@ -576,23 +595,11 @@ public class ObjectEnv
 
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected Map methodToMap(MethodEnv me)
-	{
-		Map methodMap = new HashMap();
-
-		String s = me.getMethodName();
-
-		methodMap.put(METHOD_NAME, s);
-		methodMap.put(RETURN_TYPE, me.getReturnType());
-		methodMap.put(RETURN_VALUE, me.getReturnValue());
-		methodMap.put(PARAMETERS_STR, me.getParameters());
-		methodMap.put(ACCESS, me.getAccessString());
-		methodMap.put(BODY, me.getBody());
-
-		return methodMap;
-	}
-
+	/**
+	 * Gets the lists of all methods for the object this Environment represented.
+	 * 
+	 * @return List of Maps representing the methods.
+	 */
 	public List<MethodEnv> getMeths()
 	{
 		return meths;
@@ -648,7 +655,6 @@ public class ObjectEnv
 
 	public void addParameterInit(String paramName, String paramInit)
 	{
-
 		for (VariableEnv v : getParameters())
 		{
 			if (v.getName().equals(paramName))
@@ -656,7 +662,57 @@ public class ObjectEnv
 				v.setInit(paramInit);
 			}
 		}
+	}
 
+	public void setId(String name)
+	{
+		this.id = name;
+		
+	}
+
+	public String getId()
+	{
+		return id;
+	}
+
+	public void setObjectId(String name)
+	{
+		this.objectID = name + hijac.tools.tightrope.utils.TightRopeString.Name.OBJ_ID;
+	}
+
+	public String getObjectId()
+	{
+		return objectID;
+	}
+
+	public String getThreadId()
+	{
+		return threadID;
+	}
+	
+	public void setThreadID(String name)
+	{
+		threadID = name + hijac.tools.tightrope.utils.TightRopeString.Name.Thread_ID;
+	}
+
+	public boolean hasSyncMeth()
+	{
+		return hasSyncMeth;
+	}
+
+	public void setHasSyncMeth(boolean hasSyncMeth)
+	{
+		this.hasSyncMeth = hasSyncMeth;
+	}
+	
+	public void setNeedsThread(boolean needsThread)
+	{
+		this.needsThread = needsThread;
+	}
+
+	public boolean needsThread()
+	{
+		return needsThread;
 	}
 
 }

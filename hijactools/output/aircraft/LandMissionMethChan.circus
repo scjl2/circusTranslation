@@ -2,34 +2,35 @@
   \SECTION ~ LandMissionMethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
 \end{zsection}
 %
+
 \begin{circus}
-\t1 \circchannel stowLandingGearCall :SchedulableID  \\
-\t1 \circchannel stowLandingGearRet : SchedulableID \\
+\t1 \circchannel stowLandingGearCall : MissionID  \cross SchedulableID  \\
+\t1 \circchannel stowLandingGearRet : MissionID  \cross SchedulableID  \\
 \end{circus}
 %
 \begin{circus}
-\t1 \circchannel isLandingGearDeployedCall :SchedulableID  \\
-\t1 \circchannel isLandingGearDeployedRet : SchedulableID \cross  \boolean \\
+\t1 \circchannel isLandingGearDeployedCall : MissionID  \cross SchedulableID  \\
+\t1 \circchannel isLandingGearDeployedRet : MissionID  \cross SchedulableID  \cross \boolean \\
 \end{circus}
 %
 \begin{circus}
-\t1 \circchannel getControllingMissionCall :SchedulableID  \\
-\t1 \circchannel getControllingMissionRet : SchedulableID \cross  MissionID \\
+\t1 \circchannel getControllingMissionCall : MissionID  \\
+\t1 \circchannel getControllingMissionRet : MissionID  \cross MissionID \\
 \end{circus}
 %
 \begin{circus}
-\t1 \circchannel abortCall :SchedulableID  \\
-\t1 \circchannel abortRet : SchedulableID \\
+\t1 \circchannel abortCall : MissionID  \\
+\t1 \circchannel abortRet : MissionID  \\
 \end{circus}
 %
 \begin{circus}
-\t1 \circchannel cleanUpCall :SchedulableID  \\
-\t1 \circchannel cleanUpRet : SchedulableID \cross  \boolean \\
+\t1 \circchannel cleanUpCall : MissionID  \\
+\t1 \circchannel cleanUpRet : MissionID  \cross \boolean \\
 \end{circus}
 %
 %
 \begin{circus}
-\t1 \circchannel deployLandingGearCall : SchedulableID \cross ThreadID   \\
-\t1 \circchannel deployLandingGearRet : SchedulableID \cross  ThreadID\\
+\t1 \circchannel deployLandingGearCall : MissionID   \cross SchedulableID  \cross ThreadID   \\
+\t1 \circchannel deployLandingGearRet : MissionID   \cross SchedulableID  \cross ThreadID \\
 \end{circus}
-% 
+%

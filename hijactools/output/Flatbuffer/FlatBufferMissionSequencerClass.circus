@@ -1,4 +1,17 @@
 
+\begin{zsection}
+  \SECTION ~ FlatBufferMissionSequencerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  , 
+MissionId
+, 
+
+MissionIds
+
+
+
+\end{zsection}
+
 \begin{circus}
 \circclass FlatBufferMissionSequencerClass \circdef \circbegin
 \end{circus}
@@ -14,14 +27,14 @@
 \begin{schema}{\circinitial Init}
   State~'
 \where
-  returnedMission' = false\\ 
+  returnedMission' = \false\\ 
 \end{schema}
 
 
 \begin{circusaction}
-\circprotected ~ getNextMission ~ \circdef 
+\circprotected ~ getNextMission ~ \circdef
 \circvar ret : MissionID \circspot
-\\ 
+\\
 
 
       \circblockopen
@@ -29,48 +42,58 @@
 
 
 
-  \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
+              \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
 
 
 
 
-this~.~returnedMission :=true
- 
+            this~.~returnedMission :=\true
 
-               \circseq \\ 
+             \circseq \\ 
 
-  ret := FlatBufferMission
- 
 
-        \circblockclose  
+
+              ret := FlatBufferMissionMID
+
+            
+
+
+
+
+        \circblockclose
 
 
   \\
   \circelse ~ \lnot (\lnot returnedMission = \true) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
+              ret := nullMissionId
 
-  ret := nullMissionId
- 
+            
 
-        \circblockclose  
+
+
+
+        \circblockclose
 
 
   \\
   \circfi
+
+            
+
+
+
+
+        \circblockclose
+
  
 
-        \circblockclose  
-
- 
-
-\end{circusaction}	
+\end{circusaction}
 %
 %
 
@@ -81,5 +104,3 @@ this~.~returnedMission :=true
 \begin{circus}
   \circend
 \end{circus}
-
-
