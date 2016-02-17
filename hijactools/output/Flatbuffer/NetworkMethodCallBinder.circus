@@ -1,4 +1,7 @@
-\input{MethodCallBindingChannels.circus}
+\begin{zsection}
+	\SECTION ~ MethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels
+\end{zsection}
 
 \begin{circus}
 \circprocess  MethodCallBinder \circdef \circbegin \\
