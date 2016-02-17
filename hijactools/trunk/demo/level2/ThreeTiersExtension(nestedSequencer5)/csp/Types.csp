@@ -1,0 +1,24 @@
+--GLOBALS
+transparent sbisim, diamond
+
+datatype SchedulableID = nullSequencerId|nullSchedulableId| TopLevelSequencerId 
+                          | Tier0SequencerId  | Tier0ManagedThreadId 
+                          | Tier1SequencerAId | Tier1SequencerBId
+                          | Tier2ManagedThreadId | Tier2OSEHId | Tier2PEHId | Tier2APEHId
+
+datatype MissionID = nullMissionId
+                    | Tier0MissionId  | 
+                    	Tier1MissionAId  | Tier1MissionBId |
+                    	Tier2MissionAId   | Tier2MissionBId
+
+datatype ExceptionType = interruptedException | 
+                          illegalMonitorStateException | 
+                          illegalArgumentException | 
+                          illegalThreadStateException | 
+                          illegalStateException | 
+                          ceilingViolationException
+nametype Bit = {0,1}
+datatype ObjectID = objectA | objectB
+maxNum = 2
+nametype num = {0..maxNum}
+

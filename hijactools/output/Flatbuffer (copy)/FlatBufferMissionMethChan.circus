@@ -1,0 +1,29 @@
+\begin{zsection}
+  \SECTION ~ FlatBufferMissionMethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId 
+\end{zsection}
+%
+
+\begin{circus}
+\t1 \circchannel bufferEmptyCall : MissionID  \\
+\t1 \circchannel bufferEmptyRet : MissionID  \cross \boolean \\
+\end{circus}
+%
+\begin{circus}
+\t1 \circchannel cleanUpCall : MissionID  \\
+\t1 \circchannel cleanUpRet : MissionID  \cross \boolean \\
+\end{circus}
+%
+%
+\begin{circus}
+\t1 \circchannel writeCall : MissionID   \cross SchedulableID  \cross ThreadID  \cross
+\num
+
+  \\
+\t1 \circchannel writeRet : MissionID   \cross SchedulableID  \cross ThreadID \\
+\end{circus}
+%
+\begin{circus}
+\t1 \circchannel readCall : MissionID   \cross SchedulableID  \cross ThreadID   \\
+\t1 \circchannel readRet : MissionID   \cross SchedulableID  \cross ThreadID \cross \num \\
+\end{circus}
+%

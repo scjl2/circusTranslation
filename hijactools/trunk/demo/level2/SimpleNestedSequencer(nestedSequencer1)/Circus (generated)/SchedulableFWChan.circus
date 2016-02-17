@@ -1,0 +1,9 @@
+\begin{zsection}
+  \SECTION ~ SchedulableFWChan  ~ \parents ~ MissionId, SchedulableId
+\end{zsection}
+%
+\begin{circus}
+    \circchannel ~ activate\_schedulables : MissionID\\
+    \circchannel ~ done\_schedulable : SchedulableID\\
+    \circchannel ~ end\_ periodic\_app : SchedulableID\\
+\end{circus}

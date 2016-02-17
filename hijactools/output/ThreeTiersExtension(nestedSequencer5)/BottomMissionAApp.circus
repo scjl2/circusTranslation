@@ -1,0 +1,86 @@
+\begin{zsection}
+  \SECTION ~ BottomMissionAApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan  \\
+
+  \t1 , BottomMissionAMethChan
+\end{zsection}
+%\begin{circus}
+%\circchannelset BottomMissionAAppSync == \\
+%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset BottomMissionAAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~OSEH~.~BottomMissionA 
+%    register~.~MT2~.~BottomMissionA 
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess BottomMissionAApp \circdef  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype BottomMissionAClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew BottomMissionAClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~BottomMissionA \then \\
+  
+	register~!~OSEH~!~BottomMissionA \then   \\
+	register~!~MT2~!~BottomMissionA \then   \\
+
+
+  initializeRet~.~BottomMissionA \then \\
+  \Skip
+\circblockclose 
+\end{circusaction}
+ 
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+ cleanupMissionCall~.~BottomMissionA \then \\
+
+ cleanupMissionRet~.~BottomMissionA~!~\true \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef 
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+%
+%
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~BottomMissionA \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

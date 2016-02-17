@@ -1,0 +1,276 @@
+
+--include "Framework.csp"
+
+include "FrameworkProcess.csp"
+
+--****************************************************************************************************************************************************************************************************
+--*******************************************************************************************APLICATION***********************************************************************************************
+--****************************************************************************************************************************************************************************************************
+
+-- SAFELET: MY APP
+
+nametype SafeltAppSync = 
+    {| getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end_safelet_app |}
+
+
+MyApp  = 
+	(
+	 	Methods_s 
+	)		
+ /\	(end_safelet_app -> SKIP)
+
+InitializeApplication_s =  
+     initializeApplicationCall -> 
+     initializeApplicationRet ->
+     SKIP
+
+GetSequencer_s = 
+	getSequencerCall -> 
+	getSequencerRet!TopLevelSequencerId ->
+	SKIP
+
+Methods_s = 
+ ( 
+	GetSequencer_s
+	[] 
+	InitializeApplication_s 
+ ); Methods_s
+
+
+--TOP LEVEL SEQUENCER:
+
+channel get_sequencer_returnedA : SchedulableID.Bool
+channel set_sequencer_returnedA : SchedulableID.Bool
+
+channel get_sequencer_returnedB : SchedulableID.Bool
+channel set_sequencer_returnedB : SchedulableID.Bool
+
+nametype Tier0MissionSequencerSync = 
+	{|get_sequencer_returnedA, set_sequencer_returnedA,
+	  get_sequencer_returnedB,set_sequencer_returnedB |}
+
+
+
+nametype MissionSequencerAppSync = {|getNextMissionCall, getNextMissionRet,end_sequencer_app|}
+
+
+
+MainSequencerApp = 
+(
+  Methods_tlms 
+    [|Tier0MissionSequencerSync|] 
+  ReturnController_tlms(False, False) 
+) \Tier0MissionSequencerSync
+/\ (end_sequencer_app.TopLevelSequencerId -> SKIP)
+
+
+ReturnController_tlms(returnedA,returnedB ) =
+(
+	get_sequencer_returnedA.TopLevelSequencerId!returnedA ->
+	ReturnController_tlms(returnedA,returnedB )
+)
+[]
+(
+	set_sequencer_returnedA.TopLevelSequencerId?newReturnedA ->
+	ReturnController_tlms(newReturnedA,returnedB )
+)
+[]
+(
+	get_sequencer_returnedB.TopLevelSequencerId!returnedB ->
+	ReturnController_tlms(returnedA,returnedB )
+)
+[]
+(
+	set_sequencer_returnedB.TopLevelSequencerId?newReturnedB ->
+	ReturnController_tlms(returnedA,newReturnedB )
+)
+
+GetNextMission_tlms = 
+    getNextMissionCall.TopLevelSequencerId -> 
+	get_sequencer_returnedA.TopLevelSequencerId?returnedA ->
+	if returnedA == False then 
+    (  
+		set_sequencer_returnedA.TopLevelSequencerId!True ->
+		getNextMissionRet.TopLevelSequencerId!MissionAId ->
+		SKIP
+	)
+    else
+    (
+    	get_sequencer_returnedB.TopLevelSequencerId?returnedB ->
+	    if returnedB == False then 
+	    (  
+			set_sequencer_returnedB.TopLevelSequencerId!True ->
+			getNextMissionRet.TopLevelSequencerId!MissionBId ->
+			SKIP
+		)
+	    else
+		(  
+			getNextMissionRet.TopLevelSequencerId!nullMissionId ->
+			SKIP
+		)
+    )	
+
+Methods_tlms = 
+( 
+	GetNextMission_tlms 	
+) ; Methods_tlms 
+
+
+
+
+
+
+
+
+nametype MissionAppSync = {|initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet   |}
+
+
+
+--  Mission A
+
+
+MissionAApp = 
+(
+	( 
+		Methods_ma
+		/\ 
+		(end_mission_app.MissionAId -> SKIP )
+	) 
+)
+
+InitializePhase_ma = 
+  initializeCall.MissionAId  -> 
+  register!ManagedThread1Id!MissionAId ->  
+  register!ManagedThread2Id!MissionAId ->  
+  initializeRet.MissionAId -> 
+  SKIP
+
+CleanupPhase_ma = 
+ cleanupMissionCall.MissionAId ->
+ cleanupMissionRet.MissionAId!True ->
+	SKIP
+
+Methods_ma = 
+( 
+	InitializePhase_ma 
+	[] 
+	CleanupPhase_ma
+) ; Methods_ma
+
+
+
+--  Mission B
+
+
+MissionBApp = 
+(
+	( 
+		Methods_mb
+		/\ 
+		(end_mission_app.MissionBId -> SKIP )
+	) 
+)
+
+InitializePhase_mb = 
+  initializeCall.MissionBId  -> 
+  register!ManagedThread1Id!MissionBId ->
+  register!ManagedThread2Id!MissionBId ->   
+  initializeRet.MissionBId -> 
+  SKIP
+
+CleanupPhase_mb = 
+ cleanupMissionCall.MissionBId ->
+ cleanupMissionRet.MissionBId!True ->
+	SKIP
+
+Methods_mb = 
+( 
+	InitializePhase_mb 
+	[] 
+	CleanupPhase_mb
+) ; Methods_mb
+
+
+
+--ManagedThread1App
+
+ManagedThread1App = 
+(
+	Methods_mt1
+)
+/\ (end_managedThread_app.ManagedThread1Id -> SKIP)
+
+Methods_mt1 =
+	Run_mt1 ; Methods_mt1
+
+Run_mt1 =
+	runCall.ManagedThread1Id -> 
+		
+	runRet.ManagedThread1Id ->
+	SKIP
+
+
+--ManagedThread2App
+
+ManagedThread2App = 
+(
+	Methods_mt2
+)
+/\ (end_managedThread_app.ManagedThread2Id -> SKIP)
+
+Methods_mt2 =
+	Run_mt2 ; Methods_mt2
+
+Run_mt2 =
+	runCall.ManagedThread2Id -> 
+		
+	runRet.ManagedThread2Id ->
+	SKIP
+
+
+
+nametype MTAppSync = {| runCall, runRet,  end_managedThread_app |}
+
+
+nametype TopLevelMissionSequencerProgramSync = {|done_safeletFW, start_mission, done_mission, done_toplevel_sequencer|}
+
+MultipleNestedMissions =
+(  
+	MyApp
+	|||
+	MainSequencerApp
+	|||
+	MissionAApp
+	|||
+	MissionBApp
+	|||
+	ManagedThread1App
+	|||
+	ManagedThread2App
+
+)	
+
+
+--nametype APEHSync = {| release |}
+--nametype OSEHSync = {| descheduleCall, descheduleRet, scheduleNextRelease, getNextReleaseTimeCall, getNextReleaseTimeRet |}
+
+Program(topLevelSequencerIDs, tier0) = 
+(  
+	ClustereAndTieredFramework(topLevelSequencerIDs, tier0)
+		[| Union({SafeltAppSync, MissionSequencerAppSync, MissionAppSync, MTAppSync, --OSEHSync , --APEHSync, 
+		 {|end_mission_app, setCeilingPriority, requestTermination, end_oneshotEventHandler_app, end_periodicEventHandler_app, end_aperiodicEventHandler_app, handleAsyncEventCall, handleAsyncEventRet|}})  |]
+	MultipleNestedMissions	
+)
+
+TestProgram = 
+	Program(
+				{TopLevelSequencerId},
+
+				{ (MissionAId, ({}, {}, {},  {}, {ManagedThread1Id, ManagedThread2Id})  ), 
+					(MissionBId, ({}, {}, {},  {}, {ManagedThread1Id, ManagedThread2Id})  ) }	                 
+            )
+
+
+assert sbisim(diamond(TestProgram)) ; Loop :[ deadlock free [FD] ]
+assert sbisim(diamond(TestProgram)) :[ divergence free ]
+assert sbisim(diamond(TestProgram)) :[ deterministic  [FD] ]

@@ -1,0 +1,33 @@
+%%%%%%%%%%%%%%%%%%THREADS
+%
+\begin{circus}
+\circprocess Threads \circdef  \\
+\circblockopen
+ThreadFW(PEHThreadID, ) \\
+\interleave \\
+ThreadFW(APEHThreadID, ) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%OBJECTS
+%
+\begin{circus}
+\circprocess Objects \circdef \\
+\circblockopen
+ObjectFW(MyAppObjectID) \\
+\interleave \\
+ObjectFW(MyMissionObjectID) \\
+\interleave \\
+ObjectFW(APEHObjectID) \\
+\interleave \\
+ObjectFW(PEHObjectID) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%LOCKING
+%
+\begin{circus}
+\circprocess Locking \circdef Threads \lpar ThreadSync \rpar Objects
+\end{circus}

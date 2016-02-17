@@ -1,0 +1,76 @@
+\begin{zsection}
+  \SECTION ~ FirstMissionSequencerApp~ \parents ~ MissionSequencerMethChan, SchedulableChan, TopLevelMissionSequencerChan, MissionId, MissionIds, MissionMethChan, \\
+  \t1 SchedulableId, MissionFWChan, FrameworkChan, FirstMissionSequencerClass, SchedulableIds
+\end{zsection}
+%
+\begin{circus}
+\circprocess FirstMissionSequencerApp \circdef \circbegin 
+\end{circus}
+%
+\begin{schema}{\circstateignore State}
+this : FirstMissionSequencerClass
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+State~'\\
+\where
+this' = \circnew FirstMissionSequencerClass 
+\end{schema}
+
+%public class FirstSequencer extends MissionSequencer<Mission>{
+%    private Mission myMission;
+%    private int count = 0;
+%    
+%    public FirstSequencer(PriorityParameters priority, StorageParameters storage) {
+%	super(priority, storage,"1ms");
+%//	super(priority, storage);
+%	myMission = new MyMission1();
+%   }
+
+%    protected Mission getNextMission() {
+%//	devices.Console.println("		second sequencer is running. ");
+%//	return myMission;
+%	if (count == 0) {
+%	    count ++;
+%//	    devices.Console.println("1st sequencer: has next misison");
+%    return myMission;
+%	}
+%	else{
+%//	    devices.Console.println("1st sequencer: has no more misison");
+%	    return null;
+%	}
+%   }
+%}
+
+\begin{circusaction}
+GetNextMission \circdef \\
+\t1    getNextMissionCall~.~FirstMissionSequencerID \then \\
+\t1   \left( \begin{array}{l}
+	\circvar ret : MissionID \circspot \\
+	this~.~getNextMission(ret) \circseq \\
+	getNextMissionRet~.~FirstMissionSequencerID~!~ret \then\\
+	\Skip
+	\end{array} \right)
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef \\
+\t1 \circmu X \circspot \left( \begin{array}{l}
+	GetNextMission 	
+	\end{array} \right) \circseq X
+\end{circusaction}
+
+\begin{circusaction}
+\circspot Methods \circinterrupt \\
+	\t1		(end\_sequencer\_app~.~FirstMissionSequencerID \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

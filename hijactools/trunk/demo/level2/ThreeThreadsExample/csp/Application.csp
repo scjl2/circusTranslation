@@ -1,0 +1,234 @@
+
+--include "Framework.csp"
+
+include "FrameworkProcess.csp"
+
+--****************************************************************************************************************************************************************************************************
+--*******************************************************************************************APLICATION***********************************************************************************************
+--****************************************************************************************************************************************************************************************************
+
+-- SAFELET: MY APP
+
+nametype SafeltAppSync = 
+    {| getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end_safelet_app |}
+
+
+MyApp  = 
+	(
+	 	Methods_s 
+	)		
+ /\	(end_safelet_app -> SKIP)
+
+InitializeApplication_s =  
+     initializeApplicationCall -> 
+     initializeApplicationRet ->
+     SKIP
+
+GetSequencer_s = 
+	getSequencerCall -> 
+	getSequencerRet!TopLevelSequencerId ->
+	SKIP
+
+Methods_s = 
+ ( 
+	GetSequencer_s
+	[] 
+	InitializeApplication_s 
+ ); Methods_s
+
+
+--TOP LEVEL SEQUENCER: MY SEQUENCER
+
+channel get_sequencer_done : SchedulableID.Bool
+channel set_sequencer_done : SchedulableID.Bool
+
+nametype MissionSequencerAppStateSync = {| get_sequencer_done, set_sequencer_done |}
+
+nametype MissionSequencerAppSync = {|getNextMissionCall, getNextMissionRet,end_sequencer_app|}
+
+
+
+MainSequencerApp = 
+(
+  Methods_tlms 
+    [|MissionSequencerAppStateSync|] 
+  DoneController_tlms(False) 
+)\ MissionSequencerAppStateSync
+/\ (end_sequencer_app.TopLevelSequencerId -> SKIP)
+   
+
+DoneController_tlms(done) =
+(
+	get_sequencer_done.TopLevelSequencerId!done ->
+	DoneController_tlms(done)
+)
+[]
+(
+	set_sequencer_done.TopLevelSequencerId?newDone ->
+	DoneController_tlms(newDone)
+)
+
+
+GetNextMission_tlms = 
+    getNextMissionCall.TopLevelSequencerId -> 
+	get_sequencer_done.TopLevelSequencerId?done ->
+	(
+	  if done == False then
+	  (
+		set_sequencer_done.TopLevelSequencerId!True ->
+		getNextMissionRet.TopLevelSequencerId!MissionId  ->
+		SKIP
+      )
+	  else 
+	  (
+			getNextMissionRet.TopLevelSequencerId!nullMissionId ->
+		    SKIP
+	  )
+    )
+
+Methods_tlms = 
+ (
+	GetNextMission_tlms 
+ ) ; Methods_tlms  
+
+
+
+
+
+
+--TOP LEVEL MISSION: TOP MISSION 1
+
+nametype MissionAppSync = {|initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet   |}
+
+MainMissionApp = 
+( 
+	(
+		(Methods_tlm1 )
+		/\ 
+		(end_mission_app.MissionId -> SKIP )
+	) 
+)
+
+InitializePhase_tlm1 = 
+  initializeCall.MissionId   -> 
+  register!ManagedThread1Id!MissionId  -> 
+  register!ManagedThread2Id!MissionId  -> 
+   register!ManagedThread3Id!MissionId  -> 
+  initializeRet.MissionId  -> 
+ SKIP
+
+CleanupPhase_tlm1 = 
+ cleanupMissionCall.MissionId  ->
+ cleanupMissionRet.MissionId?false ->
+ SKIP
+
+Methods_tlm1 = 
+( 
+	InitializePhase_tlm1 
+	[] 
+	CleanupPhase_tlm1
+) ; Methods_tlm1
+  
+
+
+-- ManagedThread1App
+
+ManagedThread1App = 
+(
+	Methods_mt1
+)
+/\ (end_managedThread_app.ManagedThread1Id -> SKIP)
+
+Methods_mt1 =
+	Run_mt1
+
+Run_mt1 =
+	runCall.ManagedThread1Id -> 
+		
+	runRet.ManagedThread1Id ->
+	SKIP
+
+
+
+
+
+-- ManagedThread2App
+
+ManagedThread2App = 
+(
+	Methods_mt2
+)
+/\ (end_managedThread_app.ManagedThread2Id -> SKIP)
+
+Methods_mt2 =
+	Run_mt2
+
+Run_mt2 =
+	runCall.ManagedThread2Id -> 
+		
+	runRet.ManagedThread2Id ->
+	SKIP
+
+
+--ManagedThread3App
+
+ManagedThread3App = 
+(
+	Methods_mt3
+)
+/\ (end_managedThread_app.ManagedThread3Id -> SKIP)
+
+Methods_mt3 =
+	Run_mt3
+
+Run_mt3 =
+	runCall.ManagedThread3Id -> 
+		
+	runRet.ManagedThread3Id ->
+	SKIP
+
+
+
+
+nametype MTAppSync = {| runCall, runRet,  end_managedThread_app |}
+
+
+nametype TopLevelMissionSequencerProgramSync = {|done_safeletFW, start_mission, done_mission, done_toplevel_sequencer|}
+
+ThreeThreads =
+(  
+	MyApp
+	|||
+	MainSequencerApp
+	|||
+	MainMissionApp
+	|||
+	ManagedThread1App
+	|||
+	ManagedThread2App
+	|||
+	ManagedThread3App
+)	
+
+
+--nametype APEHSync = {| release.Tier0APEHId |}
+--nametype OSEHSync = {| descheduleCall, descheduleRet, scheduleNextRelease, getNextReleaseTimeCall, getNextReleaseTimeRet |}
+
+Program(topLevelSequencerIDs, tier0) = 
+(  
+	ClustereAndTieredFramework(topLevelSequencerIDs, tier0)
+		[| Union({SafeltAppSync, MissionSequencerAppSync, MissionAppSync, MTAppSync, --OSEHSync , --APEHSync, 
+		 {|end_mission_app, setCeilingPriority, requestTermination, end_oneshotEventHandler_app, end_periodicEventHandler_app, end_aperiodicEventHandler_app, handleAsyncEventCall, handleAsyncEventRet|}})  |]
+	ThreeThreads	
+)
+
+TestProgram = 
+	Program(
+				{TopLevelSequencerId},
+
+				{ (MissionId , ({}, {}, {},  {}, {ManagedThread1Id, ManagedThread2Id, ManagedThread3Id})  )   }	                 
+            )
+
+assert sbisim(diamond(TestProgram)) ; Loop :[ deadlock free [FD] ]
+assert sbisim(diamond(TestProgram)) :[ divergence free ]
+assert sbisim(diamond(TestProgram)) :[ deterministic  [FD] ]

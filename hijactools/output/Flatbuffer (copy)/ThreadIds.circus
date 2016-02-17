@@ -1,0 +1,16 @@
+\begin{zsection}
+  \SECTION ~ ThreadIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	WriterTID : ThreadID \\
+	ReaderTID : ThreadID \\
+
+\where
+  distinct \langle SafeletTID, nullTID, \\
+	WriterTID
+	,
+	ReaderTID
+  \rangle
+\end{axdef}

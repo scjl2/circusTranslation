@@ -1,0 +1,21 @@
+\begin{zsection}
+  \SECTION ~ SchedulableIds ~ \parents ~ scj\_prelude, SchedulableId
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	MainMissionSequencer : SchedulableID \\
+	NestedMissionSequencer : SchedulableID\\
+	NestedOneShotEventHandler : SchedulableID\\
+ %eg MainMissionSequencer : SchedulableID\\
+ % NestedMissionSequencer : SchedulableID\\
+ % NestedOneShotEventHandler : SchedulableID\\   
+  
+\where
+  distinct \langle nullSequencerId, nullSchedulableId,
+	NestedMissionSequencer
+	,\\
+	NestedOneShotEventHandler
+  \rangle
+\end{axdef}
+

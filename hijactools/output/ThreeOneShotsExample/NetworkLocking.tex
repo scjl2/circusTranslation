@@ -1,0 +1,37 @@
+%%%%%%%%%%%%%%%%%%THREADS
+%
+\begin{circus}
+\circprocess Threads \circdef  \\
+\circblockopen
+ThreadFW(OSEH2ThreadID, ) \\
+\interleave \\
+ThreadFW(OSEH1ThreadID, ) \\
+\interleave \\
+ThreadFW(OSEH3ThreadID, ) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%OBJECTS
+%
+\begin{circus}
+\circprocess Objects \circdef \\
+\circblockopen
+ObjectFW(MyAppObjectID) \\
+\interleave \\
+ObjectFW(MissionAObjectID) \\
+\interleave \\
+ObjectFW(OSEH1ObjectID) \\
+\interleave \\
+ObjectFW(OSEH2ObjectID) \\
+\interleave \\
+ObjectFW(OSEH3ObjectID) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%LOCKING
+%
+\begin{circus}
+\circprocess Locking \circdef Threads \lpar ThreadSync \rpar Objects
+\end{circus}

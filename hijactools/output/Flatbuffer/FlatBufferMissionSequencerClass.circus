@@ -38,24 +38,10 @@ MissionIds
 
 
       \circblockopen
-
-
-
-
               \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
   \\
 \t1 
       \circblockopen
-
-
-
-
-            this~.~returnedMission :=\true
-
-             \circseq \\ 
-
-
-
               ret := FlatBufferMissionMID
 
             

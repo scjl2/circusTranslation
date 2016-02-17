@@ -1,0 +1,28 @@
+%%%%%%%%%%%%%%%%%%THREADS
+%
+\begin{circus}
+\circprocess Threads \circdef  \\
+\circblockopen
+ThreadFW(WriterTID, 10) \\
+\interleave \\
+ThreadFW(ReaderTID, 10) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%OBJECTS
+%
+\begin{circus}
+\circprocess Objects \circdef \\
+\circblockopen
+ObjectFW(FlatBufferMissionOID) \\
+
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%LOCKING
+%
+\begin{circus}
+\circprocess Locking \circdef Threads \lpar ThreadSync \rpar Objects
+\end{circus}

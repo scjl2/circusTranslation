@@ -1,0 +1,26 @@
+\begin{zsection}
+  \SECTION ~ ObjectIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	MySafeletObjectID : ObjectID \\
+	MainMissionObjectID : ObjectID \\
+	NestedMissionSequencerObjectID : ObjectID \\
+	NestedMissionObjectID : ObjectID \\
+	NestedOneShotEventHandlerObjectID : ObjectID \\
+ 
+\where
+  distinct \langle 
+	MySafeletObjectID
+	,
+	MainMissionObjectID
+	,\\
+	NestedMissionSequencerObjectID
+	,
+	NestedMissionObjectID
+	,\\
+	NestedOneShotEventHandlerObjectID
+  \rangle
+\end{axdef}
+

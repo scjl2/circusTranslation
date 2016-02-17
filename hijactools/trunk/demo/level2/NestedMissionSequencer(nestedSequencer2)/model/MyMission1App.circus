@@ -1,0 +1,62 @@
+\begin{zsection}
+  \SECTION ~ MyMission1App~ \parents ~ SafeletMethChan, MissionId, MissionIds,\\
+  \t1 SchedulableId, MissionChan, SchedulableChan, FrameworkChan, ServicesChan, \\
+  \t1 scj\_prelude
+\end{zsection}
+%
+\begin{circus}
+\circprocess  ~ MyMission1App \circdef \circbegin
+\end{circus}
+%
+%public class MyMission1 extends Mission {
+%
+%	protected void initialize() {
+%		MyPEH myPEH = new MyPEH(new PriorityParameters(5), new PeriodicParameters(new RelativeTime(Clock.getRealtimeClock()),
+%				new RelativeTime(1000, 0, Clock.getRealtimeClock())), MySCJ.storageParameters_Handlers, this);
+%		myPEH.register();
+%	}
+%
+%	public long missionMemorySize() {
+%		return 50000;
+%	}
+%}
+%
+\begin{circusaction}
+InitializePhase \circdef \\
+\t1  initializeCall~.~MyMission1ID ~ \then \\
+\t1  register~!~MyPEH1~!~MyMission1ID \then \\
+\t1  initializeRet~.~MyMission1ID \then \\
+\t1 \Skip
+\end{circusaction}
+%
+\begin{circusaction}
+CleanupPhase \circdef \\
+\t1 cleanupMissionCall~.~MyMission1ID \then\\
+\t1 cleanupMissionRet~.~MyMission1ID~!~\true \then\\
+\t1	\Skip
+\end{circusaction}
+%
+\begin{circusaction}
+Methods \circdef \\
+\t1 \circmu X \circspot \left( \begin{array}{l}
+							InitializePhase \\
+							\extchoice \\
+							CleanupPhase
+					    \end{array} \right) \circseq X
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot \circmu X \circspot \left( \begin{array}{l}
+					\left( \begin{array}{l}
+						Methods \\
+						\circinterrupt \\
+						(end\_mission\_app~.~MyMission1ID \then X )
+				   	\end{array} \right) \\
+				   	 \circinterrupt \\
+				   		(end\_mission\_fw~.~MyMission1ID \then \Skip)
+				 \end{array} \right)
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

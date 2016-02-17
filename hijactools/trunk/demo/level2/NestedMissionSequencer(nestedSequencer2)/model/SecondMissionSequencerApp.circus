@@ -1,0 +1,73 @@
+\begin{zsection}
+  \SECTION ~ SecondSequencerApp~ \parents ~ MissionSequencerMethChan, SchedulableChan, TopLevelMissionSequencerChan, MissionId, MissionIds,\\
+  \t1 MissionMethChan, SchedulableId, MissionFWChan, FrameworkChan, SecondMissionSequencerClass, SchedulableIds
+\end{zsection}
+%
+\begin{circus}
+\circprocess SecondSequencerApp \circdef \circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore State}
+this : SecondMissionSequencerClass
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+State~'\\
+\where
+this' = \circnew SecondMissionSequencerClass
+\end{schema}
+
+%public class SecondMissionSequencer extends MissionSequencer<Mission>{
+%    private Mission myMission;
+%    private int count = 0;
+%    public  SecondMissionSequencer(PriorityParameters priority, StorageParameters storage) {
+%	super(priority, storage,"2ms");
+%//	super(priority, storage);
+%	myMission = new MyMission2();
+%    }
+    
+%    protected Mission getNextMission() {
+%//	  return myMission;
+%	if (count == 0) {
+%	    count ++;
+%//	    devices.Console.println("2ed sequencer: has next misison");
+%	    return myMission;
+%	}
+%	else{
+%//	    devices.Console.println("2ed sequencer: has no more misison");
+%	    return null;
+%	}
+%   }    
+%}
+\begin{circusaction}
+GetNextMission \circdef \\
+\t1    getNextMissionCall~.~SecondMissionSequencerID \then \\
+\t1  \left( \begin{array}{l}
+	\circvar ret : MissionID \circspot \\
+	this~.~getNextMission(ret) \circseq \\
+	getNextMissionRet~.~SecondMissionSequencerID~!~ret \then\\
+	\Skip
+	\end{array} \right)
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef \\
+\t1  \circmu X \circspot \left( \begin{array}{l}
+	GetNextMission 
+	\end{array} \right) \circseq  X
+\end{circusaction}
+
+\begin{circusaction}
+\circspot Methods \circinterrupt \\
+	\t1		(end\_sequencer\_app~.~SecondMissionSequencerID \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

@@ -33,10 +33,6 @@
 
 
       \circblockopen
-
-
-
-
               \circif ~ (buffer = 0) ~ \circthen ~
   \\
 \t1 ret := \true
@@ -64,10 +60,6 @@
 
 
       \circblockopen
-
-
-
-
               ret := \false
 
             

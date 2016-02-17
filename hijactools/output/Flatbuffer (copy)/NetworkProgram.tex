@@ -1,0 +1,90 @@
+
+%+++ Program +++
+%
+\begin{zsection}
+  \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
+  \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
+  \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
+  \t1 AperiodicEventHandlerFW, ObjectFW, ThreadFW, \\
+  \t1 FlatBufferApp, FlatBufferMissionSequencerApp,
+
+FlatBufferMissionApp,
+
+ReaderApp
+	,
+WriterApp
+	
+\\ \t1
+	
+	
+\end{zsection}
+%
+\begin{circus}
+\circprocess ControlTier \circdef \\
+\circblockopen
+SafeletFW \\
+\t1 \lpar ControlTierSync \rpar \\
+TopLevelMissionSequencerFW(FlatBufferMissionSequencer)
+\circblockclose
+\end{circus}
+%
+
+
+\begin{circus}
+\circprocess Tier0 \circdef \\
+
+\circblockopen
+	MissionFW(FlatBufferMissionID)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+
+			ManagedThreadFW(ReaderID)\\
+			\t1 \lpar SchedulablesSync \rpar\\
+			ManagedThreadFW(WriterID)\\
+
+
+
+
+
+
+
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Framework +++
+%
+\begin{circus}
+\circprocess Framework \circdef \\
+\circblockopen
+ControlTier \\
+\t1 \lpar TierSync \rpar \\
+ \circblockopen
+Tier0
+\circblockclose
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPLICATION
+%
+\begin{circus}
+\circprocess  Application \circdef \\
+\circblockopen
+FlatBufferApp\\
+\interleave\\
+FlatBufferMissionSequencerApp\\
+\interleave \\
+		FlatBufferMissionApp\\
+		\interleave \\
+			ReaderApp ( FlatBufferMissionID  ) \\
+			\interleave \\
+			WriterApp ( FlatBufferMissionID  ) \\
+			
+		
+\circblockclose
+\end{circus}

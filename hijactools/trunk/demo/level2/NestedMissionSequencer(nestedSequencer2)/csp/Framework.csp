@@ -1,0 +1,50 @@
+--GLOBALS
+transparent sbisim, diamond
+
+datatype SchedulableID = nullSequencerId|nullSchedulableId| TopLevelSequencerId 
+                          | FirstMissionSequencerID | schedulableA |schedulableB | schedulableC
+                          | ThirdMissionSequencerID | SecondMissionSequencerID | MyPEH1Id | MyPEH2Id | MyPEH3Id
+
+datatype MissionID = nullMissionId
+                     --| missionA|missionB 
+                    | TopMission1ID | MyMission1ID | MyMission2ID | MyMission3ID 
+
+datatype ExceptionType = interruptedException | 
+                          illegalMonitorStateException | 
+                          illegalArgumentException | 
+                          illegalThreadStateException | 
+                          illegalStateException | 
+                          ceilingViolationException
+nametype Bit = {0,1}
+datatype ObjectID = objectA | objectB
+maxNum = 10
+nametype num = {0..maxNum}
+
+
+channel a
+Loop = a-> Loop
+
+channel circwait : num
+channel  throw : ExceptionType 
+
+include "SafeletFW.csp"
+
+include "MissionSequencerSharedChan.csp"
+
+include "TopLevelMissionSequencerFW.csp"
+
+include "MissionFW.csp"
+
+include "ManagedSchedulableSharedChan.csp"
+
+include "SchedulableMissionSequencerFW.csp"
+
+include "AperiodicEventHandlerFW.csp"
+
+include "OneShotandPeriodicSharedChan.csp"
+
+include "OneShotEventHandlerFW.csp"
+
+include "PeriodicEventHandlerFW.csp"
+
+include "ManagedThreadFW.csp" 

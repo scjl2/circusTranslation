@@ -1,0 +1,12 @@
+\begin{zsection}
+  \SECTION ~ ObjectChan ~ \parents ~ ObjectFWChan, ObjectMethChan, ServicesChan
+\end{zsection}
+%
+\begin{circus}
+	\circchannelset MonitorSync == \lchanset fully\_unlock, relock, relock\_this \rchanset \\
+	\circchannelset MLCSync == \lchanset relock\_this, lock\_request, lockAcquired, get\_lockedBy, reset\_lockedBy, fully\_unlock \rchanset\\
+	\circchannelset CPCSync == \lchanset setCeilingPriority, get\_ceilingPriority \rchanset \\
+	\circchannelset WaitSync == \lchanset cancel\_wait\_timer, waitRet, waitForObjectRet \rchanset \\
+	\circchannelset WQSync == \lchanset add\_to\_wait, remove\_from\_wait, remove\_most\_eligible\_from\_wait \rchanset\\
+	\circchannelset InterruptSync == \lchanset remove\_from\_wait, get\_waitQueue \rchanset \\ 
+\end{circus}

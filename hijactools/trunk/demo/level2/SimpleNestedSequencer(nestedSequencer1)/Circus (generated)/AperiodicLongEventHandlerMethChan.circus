@@ -1,0 +1,9 @@
+\begin{zsection}
+  \SECTION ~ AperiodicLongEventHandlerMethChan ~ \parents ~  HandlerChan, HandlerMethChan, MissionFWChan, JTime
+\end{zsection}
+%
+\begin{circus}
+\circchannel fireLong : SchedulableID \cross \num \\
+\circchannel releaseLongCall : SchedulableID \cross \num \\
+\circchannel releaseLongRet : SchedulableID \\
+\end{circus}

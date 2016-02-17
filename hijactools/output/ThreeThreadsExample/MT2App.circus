@@ -1,0 +1,50 @@
+\begin{zsection}
+  \SECTION ~ MT2App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
+
+  \t1 
+\end{zsection}
+%
+\begin{circus}
+\circprocess MT2App \circdef  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~MT2 \then \\
+	
+      \circblockopen
+
+                \Skip
+
+        \circblockclose
+
+ \circseq \\
+	runRet~.~MT2 \then \\
+	\Skip
+\circblockclose
+\end{circusaction}	
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Run \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_managedThread\_app~.~MT2 \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,59 @@
+\input{MethodCallBindingChannels.circus}
+
+\begin{circus}
+\circprocess  MethodCallBinder \circdef \circbegin \\
+\end{circus}
+%
+%
+\begin{circusaction}
+read\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_readCall\\
+	\t1 ~?~loc\prefixcolon(loc \in readLocs)\\
+	\t1 ~?~caller\prefixcolon(caller \in readCallers) 
+	 \\ \t1 ~?~callingThread  \then \\
+	readCall~.~loc~.~caller~.~callingThread   \then \\
+	readRet~.~loc~.~caller~.~callingThread ~?~ret \then \\
+	binder\_readRet~.~loc~.~caller  ~.~callingThread ~ !~ret  \then \\
+	read\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+write\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_writeCall\\
+	\t1 ~?~loc\prefixcolon(loc \in writeLocs)\\
+	\t1 ~?~caller\prefixcolon(caller \in writeCallers)  \cross \num 
+	 \\ \t1 ~?~callingThread  \then \\
+	writeCall~.~loc~.~caller~.~callingThread   \cross \num  \then \\
+	writeRet~.~loc~.~caller~.~callingThread  \then \\
+	binder\_writeRet~.~loc~.~caller  ~.~callingThread ~   \then \\
+	write\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circus}
+BinderActions \circdef \\
+\circblockopen 
+	read\_MethodBinder
+	\\ \interleave \\
+
+	write\_MethodBinder
+	
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circspot BinderActions \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\end{circus}
+%
+\begin{circus}
+\circend
+\end{circus}
+%
+\begin{circus}
+\circprocess ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
+\end{circus}

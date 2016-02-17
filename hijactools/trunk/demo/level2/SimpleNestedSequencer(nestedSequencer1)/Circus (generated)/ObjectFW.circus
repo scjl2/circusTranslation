@@ -1,0 +1,731 @@
+\begin{zsection}
+  \SECTION ~ Object ~ \parents ~ scj\_prelude, GlobalTypes, ObjectChan, MissionChan, SchedulableChan, \\
+   \t1 SchedulableId, MissionId, MissionIds, TopLevelMissionSequencerChan, \\
+   \t1 HandlerChan, SafeletMethChan, FrameworkChan, PriorityQueue, Priority, ThreadChan 
+\end{zsection}
+%
+\begin{circus}
+  \circprocess Object  ~ \circdef ~ object: ObjectID ~ \circspot ~\circbegin
+\end{circus}
+%
+\begin{schema}{\circstateignore ~ State}
+	waitQueue: PriorityQueue \\ 
+	lockedBy : ThreadID \\
+	locks : \nat \\
+	previousLocks : ThreadMap \\
+	queueForLock : PriorityQueue \\	
+	ceilingPriority : PriorityLevel \\
+	waitForObjectThreads : \power ThreadID \\
+\where
+	locks > 0 \iff lockedBy \neq nullSchedulableID \\
+	lockedBy \notin \dom previousLocks \\
+	lockedBy \notin ElementsOf( waitQueue) \\
+	lockedBy \notin ElementsOf( queueForLock ) \\ 
+	waitForObjectThreads \subseteq ElementsOf( waitQueue ) \\
+\end{schema}
+%
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+	State~' \\	
+\where
+	IsEmpty(queueForLock') = True\\
+	IsEmpty(waitQueue') = True \\
+	locks' = 0\\	
+	previousLocks' = \emptyset \\	
+	ceilingPriority' = MaxPriority \\
+	waitForObjectThreads' = \emptyset \\ 
+\end{schema}	
+%
+\begin{schema}{FullyUnlock}
+\Delta State\\
+lockedBy? : ThreadID \\
+locks? : \nat_1\\
+\where
+previousLocks' = previousLocks \oplus \{lockedBy? \mapsto locks?\} \\
+lockedBy' = nullSchedulableID \\
+locks' = 0 \\
+waitQueue' = waitQueue \\
+queueForLock' = queueForLock \\
+ceilingPriority'= ceilingPriority \\
+waitForObjectThreads' = waitForObjectThreads \\
+\end{schema}
+%
+\begin{schema}{AddToQueueForLock}
+\Delta State \\
+someThread? : ThreadID \\
+priorityLevel? : PriorityLevel \\
+
+\where
+someThread? \neq nullSchedulableID \\
+someThread? \notin ElementsOf (queueForLock ) \\
+queueForLock' = AddToPriorityQueue(queueForLock, someThread?, priorityLevel?) \\
+lockedBy' = lockedBy \\
+locks' = locks\\
+previousLocks' = previousLocks \\
+waitQueue' = waitQueue \\
+ceilingPriority'= ceilingPriority \\
+waitForObjectThreads' = waitForObjectThreads \\
+\end{schema}
+%
+\begin{schema}{AssignEligible}
+\Delta State \\
+\where
+(queueForLock', lockedBy') = RemoveFromPriorityQueue(queueForLock) \\
+lockedBy' \in \dom previousLocks \implies locks' = previousLocks(lockedBy') \\
+lockedBy' \notin \dom previousLocks \implies locks' = 1 \\
+previousLocks' = \{lockedBy\} \ndres previousLocks \\ 
+waitQueue' = waitQueue \\
+ceilingPriority'= ceilingPriority \\
+waitForObjectThreads' = waitForObjectThreads \\
+\end{schema}
+%
+\begin{schema}{AddToWaitQueue}
+\Delta State \\
+someThread? : ThreadID \\
+priorityLevel? : PriorityLevel \\
+waitType? : WaitType \\
+\where
+someThread? \neq nullSchedulableID \\
+someThread? \notin ElementsOf(waitQueue) \\
+waitQueue' = AddToPriorityQueue(waitQueue, someThread?, priorityLevel?)  \\	
+lockedBy' = lockedBy \\
+locks' = locks\\
+previousLocks' = previousLocks \\
+queueForLock' = queueForLock\\
+ceilingPriority'= ceilingPriority \\
+waitType? = waitForObject \implies waitForObjectThreads' = waitForObjectThreads \cup \{someThread? \} \\
+waitType? = wait \implies waitForObjectThreads' = waitForObjectThreads \\
+\end{schema}
+%
+\begin{schema}{RemoveThreadFromWaitQueue}
+\Delta State \\
+waitingThread? : ThreadID \\
+priorityLevel? : PriorityLevel \\
+\where
+waitingThread? \in \ran(waitQueue(priorityLevel?)) \\
+waitQueue' = RemoveThreadFromPriorityQueue(waitQueue, waitingThread?, priorityLevel?) \\
+lockedBy' = lockedBy \\
+locks' = locks\\
+previousLocks' = previousLocks \\
+ceilingPriority'= ceilingPriority \\
+waitForObjectThreads' = waitForObjectThreads \setminus \{ waitingThread? \} \\
+\end{schema}
+%
+\begin{schema}{RemoveMostEligigbleFromWaitQueue}
+\Delta State \\
+notified! : ThreadID \\
+waitType! : WaitType \\
+\where
+(waitQueue', notified!)  = RemoveFromPriorityQueue(waitQueue) \\   
+lockedBy' = lockedBy \\
+locks' = locks \\
+previousLocks' = previousLocks \\
+queueForLock' = queueForLock \\
+ceilingPriority'= ceilingPriority \\
+notified! \in waitForObjectThreads \implies waitType! = waitForObject \\
+notified! \notin waitForObjectThreads \implies waitType! = wait \\
+waitForObjectThreads' = waitForObjectThreads \setminus \{notified!\}
+\end{schema}
+
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+
+\begin{circusaction}
+Execute \circdef \\
+\t1 \circvar interruptedThreads : \power ThreadID \circspot \\
+\t1 (
+	(
+	( Monitor\\
+	\lpar \emptyset| \\ \t1 MonitorSync | \\ \{ waitQueue, waitForObjectThreads \} \rpar \\
+	Synchronisation 
+	) \\
+	\lpar \{ waitQueue, waitForObjectThreads \} | \\ \t1 MLCSync | \\ \{ queueForLock, previousLocks, locks, lockedBy \} \rpar \\
+	MonitorLockController(interruptedThreads)
+) \\
+\t1 \lpar \{ waitQueue, waitForObjectThreads, queueForLock, previousLocks, locks, lockedBy \} | \\ \t2 CPCSync | \\ \t1 \{ ceilingPriority \} \rpar \\
+ CeilingPriorityController \\
+) \\ 
+
+\end{circusaction}
+%
+\begin{circusaction}
+Monitor \circdef \\
+\t1	MonitorUnlocked
+\end{circusaction}
+
+\begin{circusaction}
+MonitorUnlocked \circdef \\
+\t1 (
+	startSynchMeth~.~object~?~someThread \then \\	
+	lock\_request~.~object~!~someThread \then\\
+	MonitorUnlocked		
+) \\
+\t1 \extchoice \\
+\t1 (
+	lockAcquired~.~object~?~lockingThread \then \\
+	get\_ceilingPriority~.~object~?~ceilingPriority \then \\
+	(
+		(
+			get\_priorityLevel~.~lockingThread~.~object~?~priority\prefixcolon(priority \leq ceilingPriority) \then \\
+			raise\_thread\_priority~.~lockingThread~!~ceilingPriority \then \\ 
+			MonitorLocked(lockingThread) \\
+		)\\
+		\extchoice\\
+		(
+			get\_priorityLevel~.~lockingThread~.~object~?~priority\prefixcolon(priority > ceilingPriority) \then \\
+			throw.ceilingViolationException \then \\
+			\Chaos
+		)
+		
+	)	
+) \\
+\end{circusaction}
+%
+\begin{circusaction}
+MonitorLocked \circdef \circval lockedBy : ThreadID \circspot \\
+
+\t1	(
+		startSynchMeth~.~object~.~lockedBy \then \\	
+		increment\_locks~.~object \then \\
+		MonitorLocked(lockedBy)
+
+	)	\\
+\t1	\extchoice \\
+\t1	(
+		startSynchMeth~.~object~?~someThread\prefixcolon(someThread \neq lockedBy) \then \\	
+		lock\_request~.~object~!~someThread \then\\
+		MonitorLocked(lockedBy)
+
+	)	\\
+\t1	\extchoice \\
+\t1	(
+		endSyncMeth~.~object~.~lockedBy \then \\
+		(
+			(
+				decrement\_locks~.~object~.~0 \then \\
+				lower\_thread\_priority~.~lockedBy \then \\	
+				MonitorUnlocked
+			) \\
+			\extchoice \\
+			(
+				decrement\_locks~.~object~?~l\prefixcolon(l \neq 0) \then \\
+				MonitorLocked(lockedBy)
+
+			) \\
+		
+		) \\		
+	)	\\
+\t1	\extchoice \\
+\t1	(
+		unlock\_Monitor~.~object~?~unlockingThread \then \\
+		fully\_unlock~.~object \then \\ 
+		lower\_thread\_priority~.~unlockingThread \then \\
+		MonitorUnlocked
+	) \\
+\end{circusaction}
+%
+\begin{circusaction}
+Synchronisation \circdef \\
+\t1 (
+	(
+		(
+			WaitActions \\
+			\lpar \emptyset  | WaitSync | \emptyset \rpar \\ 
+			NotifyActions 
+		) \\
+	\t1 \lpar \emptyset  |\\ \t2  WQSync | \\ \t1 \{waitQueue, waitForObjectThreads\} \rpar  \\
+	WaitQueueController  \\
+	)\\ 
+	\lpar \{waitQueue, waitForObjectThreads\}  | InterruptSync | \emptyset \rpar  \\
+	Interrupt
+	)
+\end{circusaction}
+%
+\begin{circusaction}
+WaitActions \circdef \\
+\t1	(Wait \interleave TimedWait) \interleave WaitForObject 
+\end{circusaction}
+%
+\begin{circusaction}
+NotifyActions \circdef \\
+\t1	Notify \interleave NotifyAll
+\end{circusaction}
+%
+
+
+\begin{circusaction}
+Wait \circdef \\
+
+\t1	waitCall~.~object~?~someThread \then \\ 
+\t1 ( 
+	(
+		isInterruptedCall~.~someThread \then \\
+		isInterruptedRet~.~someThread~.~False \then\\
+		(
+		(
+			get\_lockedBy~.~object~.~someThread \then \\
+			get\_priorityLevel~.~someThread~.~object~?~priorityLevel \then \\
+			add\_to\_wait~.~object~!~someThread~!~priorityLevel~!~wait \then \\
+			unlock\_Monitor~.~object~!~someThread \then \\ 
+			Wait
+		) \\	
+		\extchoice \\ 
+		(
+			get\_lockedBy~.~object~?~lockedBy\prefixcolon(lockedBy \neq someThread) \then \\
+			throw~.~illegalMonitorStateException \then \\
+			\Chaos
+		) \\
+	) 
+	) \\
+	\extchoice \\
+       (
+       		isInterruptedCall~.~someThread \then \\
+       		isInterruptedRet~.~someThread~.~True \then \\
+       		throw.interruptedException \then \\
+       		\Chaos
+       )
+)
+	
+\end{circusaction}
+%		
+\begin{circusaction}
+TimedWait \circdef \\
+\t1	TimedWaitHandler\\
+\t2	\lpar \emptyset | \lchanset start\_timer \rchanset | \emptyset \rpar \\
+\t1	(\Interleave t : ThreadID \circspot TimedWaitTimer(t))
+
+\end{circusaction}
+%
+\begin{circusaction}
+TimedWaitHandler \circdef \\
+
+\t1    timedWaitCall~.~object~?~someThread~?~waitTime \then \\	
+\t1    (
+	(
+	get\_lockedBy~.~object~.~someThread \then \\
+		\circif ( (timeMillis(waitTime) < 0) \lor (timeNanos(waitTime) < 0 \land timeNanos(waitTime) > maxNanos) ) \circthen \\
+		(
+			throw~.~illegalArgumentException \then  \\
+			\Chaos
+		) \\
+		\circelse ( (timeMillis(waitTime) > 0) \land (timeNanos(waitTime) > 0) \land (timeNanos(waitTime) \leq maxNanos)) \circthen \\
+		(
+			get\_priorityLevel~.~someThread~.~object~?~priorityLevel \then \\
+			add\_to\_wait~.~object~!~someThread~!~priorityLevel~!~wait \then \\
+			start\_timer~.~object~!~someThread~!~priorityLevel~!~waitTime \then \\
+			unlock\_Monitor~.~object~!~someThread \then \\
+			TimedWaitHandler
+		) \\
+		\circfi
+	)		\\	
+\t1 \extchoice \\
+	(	
+		get\_lockedBy~.~object~?~lockedBy\prefixcolon(lockedBy \neq someThread) \then \\
+		throw~.~illegalMonitorStateException \then \\
+		\Chaos
+	)\\
+    )	
+\end{circusaction}
+%
+\begin{circusaction}
+TimedWaitTimer \circdef \circval waitingThread : ThreadID \circspot \\
+
+\t1	(
+	start\_timer~.~object~.~waitingThread~?~priorityLevel~?~waitTime \then \\
+	(
+	(
+		(
+			%\circwait valueOf(waitTime) \circseq \\
+			remove\_from\_wait~.~object~!~waitingThread~!~priorityLevel \then  \\			
+			waitRet~.~object~!~waitingThread \then\\
+			\Skip \\
+		) \\
+		\extchoice  \\
+		(
+			cancel\_wait\_timer~.~object~.~waitingThread \then \\
+			\Skip
+		)
+         	
+	)\\
+	\circseq \\
+	relock\_this~.~object~!~waitingThread \then \\
+	TimedWaitTimer(waitingThread)\\
+	)
+	) \\
+\t1	\extchoice \\
+\t1	(
+		cancel\_wait\_timer~.~object~.~waitingThread \then \\
+		TimedWaitTimer(waitingThread)
+	)\\
+\t1 \extchoice \\
+\t1 (
+	(waitRet~.~object~.~waitingThread \then TimedWaitTimer(waitingThread))\\
+	\extchoice \\
+	(waitForObjectRet~.~object~.~waitingThread~?~w \then TimedWaitTimer(waitingThread))
+     
+     )
+
+\end{circusaction}	
+%
+\begin{circusaction}
+WaitForObject \circdef \\
+\t1	WaitForObjectHandler\\
+\t2	\lpar \emptyset | \lchanset start\_waitForObject\_timer \rchanset | \emptyset \rpar \\
+\t1	(\Interleave t : ThreadID \circspot WaitForObjectTimer(t))
+\end{circusaction}
+%
+\begin{circusaction}
+WaitForObjectHandler \circdef \\
+\t1    waitForObjectCall~.~object~?~someThread~?~waitTime \then \\	
+\t1    (
+	(
+	get\_lockedBy~.~object~.~someThread \then \\
+		\circif ( (timeMillis(waitTime) < 0) \lor (timeNanos(waitTime) < 0) ) \circthen \\
+		(
+			throw~.~illegalArgumentException \then  \\
+			\Chaos
+		 ) \\
+		\circelse ( (timeMillis(waitTime) \geq 0) \land (timeNanos(waitTime) \geq 0) ) \circthen \\
+		(
+			get\_priorityLevel~.~someThread~.~object~?~priorityLevel \then \\
+			add\_to\_wait~.~object~?~someThread~?~priorityLevel~!~waitForObject \then \\
+			start\_waitForObject\_timer~.~object~!~someThread~!~priorityLevel~!~waitTime \then \\
+			unlock\_Monitor~.~object~!~someThread \then \\
+			WaitForObjectHandler\\
+		 ) \\
+		\circfi
+	 )		\\	
+\t1 \extchoice \\
+	(	
+		get\_lockedBy~.~object~?~lockedBy\prefixcolon(lockedBy \neq someThread) \then \\
+		throw~.~illegalMonitorStateException \then \\
+		\Chaos
+	 )\\
+     )	
+\end{circusaction}
+%
+\begin{circusaction}
+WaitForObjectTimer \circdef \circval waitingThread : ThreadID \circspot \\
+
+\t1	(
+	start\_waitForObject\_timer~.~object~?~waitingThread~?~priorityLevel~?~waitTime \then \\
+	(
+	(
+		(
+			%\circwait valueOf(waitTime) \circseq \\
+			remove\_from\_wait~.~object~!~waitingThread~!~priorityLevel \then  \\			
+			waitForObjectRet~.~object~!~waitingThread~!~\false \then\\
+			\Skip \\
+		 ) \\
+		\extchoice  \\
+		(
+			cancel\_wait\_timer~.~object~.~waitingThread \then \\
+			\Skip
+		 )
+         	
+	 ) \circseq \\
+	relock\_this~.~object~!~waitingThread \then \\
+	WaitForObjectTimer(waitingThread)
+	 )
+	 ) \\
+\t1	\extchoice \\
+\t1	(
+		cancel\_wait\_timer~.~object~.~waitingThread \then \\
+		WaitForObjectTimer(waitingThread)
+	 ) \\
+\t1 \extchoice \\
+\t1 (
+	(waitRet~.~object~?~n \then WaitForObjectTimer(waitingThread))\\
+	\extchoice \\
+	(waitForObjectRet~.~object~?~n~?~w \then WaitForObjectTimer(waitingThread))
+     
+     )
+
+\end{circusaction}	
+%
+\begin{circusaction}
+Notify \circdef \\
+\t1(
+ notify~.~object~?~someThread \then \\
+ (
+	(
+		get\_lockedBy~.~object~.~someThread \then \\
+		(
+			\circif ~ IsEmpty(waitQueue) = False  \circthen \\
+			(
+				ResumeThread \circseq\\
+			 	Notify\\
+			) \\
+			\circelse ~ IsEmpty(waitQueue) = True \circthen \\
+			\t1	Notify\\
+			\circfi
+		)
+	)\\
+ \extchoice \\
+	(
+		get\_lockedBy~.~object~?~lockedBy\prefixcolon(lockedBy \neq someThread) \then \\
+		throw~.~illegalMonitorStateException \then \\
+		\Chaos
+	) \\
+) \\
+) \\
+\t1 \extchoice \\
+\t1 (
+	(waitRet~.~object~?~n \then Notify)\\
+	\extchoice \\
+	(waitForObjectRet~.~object~?~n~?~w \then Notify)
+     
+     )
+\end{circusaction}
+%
+\begin{circusaction}
+ResumeThread \circdef \\
+\t1 		(
+					removed\_thread~.~object~?~notified~.~wait \then \\
+					cancel\_wait\_timer~.~object~!~notified \then \\
+					relock\_this~.~object~!~notified \then \\
+					waitRet~.~object~!~notified \then \\
+					\Skip\\
+				)\\
+\t1				\extchoice\\
+\t1				(
+					removed\_thread~.~object~?~notified~.~waitForObject \then \\
+					cancel\_wait\_timer~.~object~!~notified \then \\
+					relock\_this~.~object~!~notified \then \\
+					waitForObjectRet~.~object~!~notified~!~\true \then \\
+					\Skip\\
+				)	\\	
+\end{circusaction}
+%
+\begin{circusaction}
+NotifyAll \circdef \\
+\t1 (
+ 	notifyAll~.~object~?~someThread \then \\
+ 	(
+		(			
+			get\_lockedBy~.~object~.~someThread \then \\
+			NotifyAllHandler \circseq\\
+			NotifyAll
+		)  \\	
+		\extchoice \\
+		(
+			get\_lockedBy~.~object~?~lockedBy\prefixcolon(lockedBy \neq someThread) \then \\
+			throw~.~illegalMonitorStateException \then \\
+			\Chaos
+		) \\
+	)
+  )\\
+\t1 \extchoice \\
+\t1 (
+	(waitRet~.~object~?~n \then NotifyAll)\\
+	\extchoice \\
+	(waitForObjectRet~.~object~?~n~?~w \then NotifyAll)
+     
+    )
+\end{circusaction}
+%
+\begin{circusaction}
+NotifyAllHandler \circdef \circvar notified : ThreadID \circspot\\
+\t1	\circif ~ IsEmpty(waitQueue) = False \circthen \\
+\t2	(
+		ResumeThread \circseq\\		
+		NotifyAllHandler\\
+	 ) \\ 
+\t1	\circelse ~ IsEmpty(waitQueue) = True \circthen \\
+\t2		\Skip  \\
+
+\t1	\circfi
+
+\end{circusaction}
+%
+%
+
+
+%
+\begin{circusaction}
+ WaitQueueController \circdef  \\
+\t1 (
+	add\_to\_wait~.~object~?~someThread~?~priorityLevel~?~waitType \then \\
+	\lschexpract AddToWaitQueue \rschexpract \circseq \\
+	WaitQueueController \\
+ ) \\
+\t1 \extchoice\\
+\t1 (                                                                                                                                   
+ 	remove\_from\_wait~.~object~?~waitingThread~?~priorityLevel \then  \\
+ 	\lschexpract RemoveThreadFromWaitQueue \rschexpract  \circseq \\ 	
+	WaitQueueController 	\\	
+ ) \\
+\t1 \extchoice\\
+\t1 (
+ 	\lcircguard IsEmpty(waitQueue) = False \rcircguard \circguard \\
+ 	\circvar notified : ThreadID \circspot \\
+ 	\circvar waitType : WaitType \circspot \\
+	\lschexpract RemoveMostEligigbleFromWaitQueue \rschexpract  \circseq \\
+	removed\_thread~.~object~!~notified~!~waitType \then \\
+ 	WaitQueueController \\
+ ) \\
+\t1 \extchoice\\
+\t1 (
+ 	get\_waitQueue~.~object~!~waitQueue \then \\
+ 	WaitQueueController 	\\
+ ) \\
+\t1 \extchoice\\
+\t1 (
+ 	get\_waitForObjectThreads~.~object~!~waitForObjectThreads \then \\
+ 	WaitQueueController 	\\
+ ) \\ 
+ 
+\end{circusaction}
+%
+\begin{circusaction}
+Interrupt \circdef \\
+
+\t1	interrupt~?~waitingThread \then \\
+\t1(
+
+(
+	get\_waitQueue~.~object~?~retreivedWait\prefixcolon(waitingThread \in ElementsOf(retreivedWait)  ) \then \\
+ 	cancel\_wait\_timer~.~object~!~waitingThread \then \\
+ 	get\_priorityLevel~.~waitingThread~.~object~?~priorityLevel \then \\
+ 	remove\_from\_wait~.~object~!~waitingThread~!~priorityLevel \then \\
+	relock\_this~.~object~!~waitingThread \then \\
+  	(
+		(
+			get\_waitForObjectThreads~.~object~?~wfot\prefixcolon(waitingThread \notin wfot) \then \\					
+			waitRet~.~object~!~waitingThread \then \\
+			\Skip\\
+		)\\
+		\extchoice\\
+		(
+			get\_waitForObjectThreads~.~object~?~wfot\prefixcolon(waitingThread \in wfot) \then \\
+			waitForObjectRet~.~object~!~waitingThread~!~\true \then \\
+			\Skip\\
+		)	\\	 	
+ 	)	\circseq\\ 	
+ 	
+	Interrupt
+ ) \\
+ \extchoice \\
+ (
+ 	get\_waitQueue~.~object~?~retreivedWait\prefixcolon(waitingThread \notin ElementsOf( retreivedWait ) ) \then \\
+	Interrupt \\
+   )\\
+ ) 
+\end{circusaction}
+%
+%
+\begin{circusaction}
+MonitorLockController \circdef \circval interruptedThreads : \power ThreadID \circspot \\
+\t1 (
+	lock\_request~.~object~?~someThread \then\\
+	get\_priorityLevel~.~someThread~.~object~?~priorityLevel \then \\
+	\lschexpract AddToQueueForLock \rschexpract \circseq \\	
+	MonitorLockController(interruptedThreads) \\ 
+) \\   
+\t1 \extchoice\\
+\t1 (
+	relock\_this~.~object~?~someThread \then \\
+	get\_priorityLevel~.~someThread~.~object~?~priorityLevel \then \\
+	(
+		\lschexpract AddToQueueForLock \rschexpract \circseq \\	
+		(
+			(	
+				isInterruptedCall~.~someThread \then \\
+				isInterruptedRet~.~someThread~.~False \then\\
+				MonitorLockController(interruptedThreads) \\
+			)\\
+			\extchoice \\
+			(
+				isInterruptedCall~.~someThread \then \\
+				isInterruptedRet~.~someThread~.~True \then\\
+				interruptedThreads := interruptedThreads \cup \{someThread\} \circseq \\
+				MonitorLockController(interruptedThreads) \\
+			)
+		)
+	)
+)\\
+\t1 \extchoice\\
+\t1 (	
+		\lcircguard IsEmpty(queueForLock) = False \land lockedBy = nullSchedulableID \rcircguard \circguard \\
+		(	
+			\lschexpract AssignEligible \rschexpract  \circseq \\
+			lockAcquired~.~object~.~lockedBy \then \\
+			\circif lockedBy \in interruptedThreads \circthen \\
+			(
+				
+				throw.interruptedException \then \\
+				\Chaos
+			) \\
+			%\extchoice \\
+			\circelse lockedBy \notin interruptedThreads \circthen
+			(
+				
+				MonitorLockController(interruptedThreads)
+								
+			) \\
+			\circfi
+		)	
+	)\\
+\t1 \extchoice\\
+\t1 (	
+	get\_lockedBy~.~object~!~lockedBy \then \\
+	MonitorLockController(interruptedThreads)
+	)	\\
+\t1 \extchoice\\
+\t1 (	
+	increment\_locks~.~object \then \\
+	locks := locks +1 \circseq \\
+	MonitorLockController(interruptedThreads) \\
+)\\
+\t1 \extchoice\\
+\t1 (		
+	decrement\_locks~.~object~!~(locks - 1)  \then \\
+	(
+		locks := locks -1 \circseq \\
+		(
+			\circif locks = 0 \circthen \\
+			(
+				lockedBy := nullSchedulableID \circseq \\
+				MonitorLockController(interruptedThreads) \\
+			)\\
+			\circelse locks \neq 0 \circthen \\
+				\t1 MonitorLockController(interruptedThreads)  \\
+			\circfi
+		)
+	) \\
+)\\
+\t1 \extchoice\\
+\t1 (		
+	fully\_unlock~.~object \then \\
+	\lschexpract FullyUnlock \rschexpract \circseq \\
+	MonitorLockController(interruptedThreads) \\
+)\\
+\end{circusaction}
+%
+\begin{circusaction}
+CeilingPriorityController \circdef \\
+\t1 (
+ 	setCeilingPriority~?~mission~!~object~?~priority \then \\
+ 	ceilingPriority := priority \circseq\\
+ 	\circmu X \circspot ( get\_ceilingPriority~.~object~!~ceilingPriority \then X)    
+     ) \\
+\t1 \extchoice \\
+\t1 (
+	get\_ceilingPriority~.~object~!~ceilingPriority \then \\
+	CeilingPriorityController \\
+    )\\
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Execute)%\circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

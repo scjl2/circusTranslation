@@ -1,0 +1,17 @@
+\begin{zsection}
+  \SECTION ~ ThreadIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	NestedOneShotEventHandlerThreadID : ThreadID \\
+	NestedMissionSequencerThreadID : ThreadID \\
+
+\where
+  distinct \langle SafeletThreadId,
+  nullThreadId, \\
+	NestedOneShotEventHandlerThreadID
+	,
+	NestedMissionSequencerThreadID
+  \rangle
+\end{axdef}

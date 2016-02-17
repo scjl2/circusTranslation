@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.2"
+   width="744.09448"
+   height="1052.3622"
+   id="svg2"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="MultipleNestedMissions.svg"
+   inkscape:export-filename="/home/matt/Documents/Model/Examples/MultipleNestedMissions(nestedSequencer3)/MultipleNestedMissions.png"
+   inkscape:export-xdpi="500"
+   inkscape:export-ydpi="500">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1855"
+     inkscape:window-height="1056"
+     id="namedview122"
+     showgrid="false"
+     inkscape:zoom="1.2467191"
+     inkscape:cx="325.27375"
+     inkscape:cy="710.15393"
+     inkscape:window-x="65"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs4">
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-1"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-0"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-0"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-1"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-19"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-4"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-9"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-5"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-17"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-9"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-2"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-18"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-192"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-59"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-5"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-188"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-14"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-12"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-53"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-3"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-28"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-2"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-146"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-8"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-8"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-96"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-7"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-39"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-77"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-6"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-00"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-91"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-57"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-37"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-15"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-99"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-01"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-53"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       refX="0"
+       refY="0"
+       orient="auto"
+       id="Arrow2Mend-18"
+       style="overflow:visible">
+      <path
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="scale(-0.6,-0.6)"
+         id="path4176-40"
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <rect
+     style="fill:#cccccc;fill-opacity:1;stroke:#ffffff;stroke-width:0.41061983;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2985"
+     y="6.0541072"
+     x="357.59134"
+     ry="0"
+     height="48.286221"
+     width="190.8051"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <rect
+     style="fill:#cccccc;fill-opacity:1;stroke:#ffffff;stroke-width:0.51338416;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2985-7"
+     y="93.44278"
+     x="298.74133"
+     ry="0"
+     height="43.242359"
+     width="333.04962"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <rect
+     style="fill:#cccccc;fill-opacity:1;stroke:#ffffff;stroke-width:0.64138168;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2985-0"
+     y="276.78522"
+     x="180.86792"
+     ry="0"
+     height="55.004715"
+     width="408.66422"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <rect
+     style="fill:#cccccc;fill-opacity:1;stroke:#ffffff;stroke-width:0.62671453;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2985-3"
+     y="362.8096"
+     x="401.13028"
+     ry="0"
+     height="65.15947"
+     width="329.3786"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <rect
+     style="fill:#cccccc;fill-opacity:1;stroke:#ffffff;stroke-width:0.41729769;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2985-4"
+     y="489.30563"
+     x="84.218521"
+     ry="0"
+     height="55.363247"
+     width="171.87149"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3068"
+     transform="translate(-45.01258,-45.164836)"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000"><flowRegion
+       id="flowRegion3070"><rect
+         style="stroke:#ffffff"
+         id="rect3072"
+         y="49.094482"
+         x="422.14285"
+         height="52.142857"
+         width="282.85715" /></flowRegion><flowPara
+       id="flowPara3074">MyApp</flowPara></flowRoot>  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3076"
+     transform="translate(0,308.2677)"><flowRegion
+       id="flowRegion3078"><rect
+         id="rect3080"
+         y="210.52306"
+         x="448.57144"
+         height="42.857143"
+         width="218.57143" /></flowRegion><flowPara
+       id="flowPara3082">MySequencer</flowPara></flowRoot>  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3084"
+     transform="translate(0,308.2677)"><flowRegion
+       id="flowRegion3086"><rect
+         id="rect3088"
+         y="204.80876"
+         x="405.71429"
+         height="47.857143"
+         width="266.42856" /></flowRegion><flowPara
+       id="flowPara3090" /></flowRoot>  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3092"
+     transform="translate(0,308.2677)"><flowRegion
+       id="flowRegion3094"><rect
+         id="rect3096"
+         y="203.3802"
+         x="402.14285"
+         height="42.142857"
+         width="295" /></flowRegion><flowPara
+       id="flowPara3098">My</flowPara></flowRoot>  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3068-1"
+     transform="translate(-113.97743,37.793534)"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000"><flowRegion
+       id="flowRegion3070-3"><rect
+         style="stroke:#ffffff"
+         id="rect3072-8"
+         y="49.094482"
+         x="422.14285"
+         height="55.351273"
+         width="403.17294" /></flowRegion><flowPara
+       id="flowPara3074-9">MainSequencer</flowPara></flowRoot>  <rect
+     style="fill:#cccccc;fill-opacity:1;stroke:#ffffff;stroke-width:0.46831715;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2985-7-8"
+     y="164.9689"
+     x="307.2674"
+     ry="0"
+     height="44.800308"
+     width="267.5054"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3068-1-8"
+     transform="translate(-95.80436,110.45273)"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000"><flowRegion
+       id="flowRegion3070-3-4"><rect
+         style="stroke:#ffffff"
+         id="rect3072-8-2"
+         y="49.094482"
+         x="422.14285"
+         height="52.142857"
+         width="282.85715" /></flowRegion><flowPara
+       id="flowPara3074-9-9">MainMission</flowPara></flowRoot>  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3068-1-8-2"
+     transform="translate(-238.50125,237.60356)"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000"><flowRegion
+       id="flowRegion3070-3-4-7"><rect
+         style="stroke:#ffffff"
+         id="rect3072-8-2-0"
+         y="49.094482"
+         x="422.14285"
+         height="62.142853"
+         width="462.85715" /></flowRegion><flowPara
+       style="font-size:32px;stroke:#ffffff"
+       id="flowPara3074-9-9-0">NestedMissionSequencer</flowPara></flowRoot>  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3068-1-8-7"
+     transform="matrix(1.0284846,0,0,1,-41.955448,319.65727)"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000"><flowRegion
+       id="flowRegion3070-3-4-8"><rect
+         style="stroke:#ffffff"
+         id="rect3072-8-2-7"
+         y="49.896587"
+         x="433.06134"
+         height="52.142857"
+         width="335.88971" /></flowRegion><flowPara
+       id="flowPara3074-9-9-9">NestedMissionB</flowPara></flowRoot>  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3068-1-8-7-3"
+     transform="translate(-289.85412,440.20522)"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000"><flowRegion
+       id="flowRegion3070-3-4-8-1"><rect
+         style="stroke:#ffffff"
+         id="rect3072-8-2-7-5"
+         y="49.094482"
+         x="422.14285"
+         height="52.142857"
+         width="282.85715" /></flowRegion><flowPara
+       id="flowPara3074-9-9-9-6">MT1</flowPara><flowPara
+       id="flowPara3351" /></flowRoot>  <rect
+     style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.57166308;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect3349"
+     y="233.08626"
+     x="79.252533"
+     height="12.544211"
+     width="560.27203"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589"
+     d="m 445.71007,54.255394 0,37.14285"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:1.68965912;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589-4"
+     d="m 442.11942,138.1453 0,26.51023"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:1.44962192;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589-7"
+     d="m 438.3796,209.33183 0,19.51303"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:1.83120954;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589-6"
+     d="m 363.89531,242.68348 0,30.4652"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:1.79485953;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589-8"
+     d="m 501.96557,331.80172 0,29.13215"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:1.64581978;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589-49"
+     d="m 546.92394,427.54671 0,25.15242"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <rect
+     style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.22785696;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect3349-8"
+     y="28.103991"
+     x="40.098347"
+     height="6.2532387"
+     width="178.55898"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <flowRoot
+     style="font-size:20px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot4925"
+     transform="translate(-827.25686,-20.91483)"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000"><flowRegion
+       id="flowRegion4927"><rect
+         id="rect4929"
+         y="69.312584"
+         x="864.69055"
+         height="132.32999"
+         width="181.82745" /></flowRegion><flowPara
+       id="flowPara4931">Indicates that the objects below the bar run in parallel</flowPara></flowRoot>  <rect
+     style="fill:none;stroke:#000000;stroke-width:1.6475873;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect4933"
+     y="8.906847"
+     x="6.7904863"
+     height="138.74332"
+     width="234.70779"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <rect
+     style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.43001741;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect3349-7"
+     y="454.17139"
+     x="415.79172"
+     height="12.474057"
+     width="318.806"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:1.64581978;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589-49-0"
+     d="m 173.23894,465.21702 0,25.15242"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <rect
+     style="fill:#cccccc;fill-opacity:1;stroke:#ffffff;stroke-width:0.64235181;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2985-3-4"
+     y="365.26221"
+     x="10.568502"
+     ry="0"
+     height="65.16404"
+     width="345.99612"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3068-1-8-7-4"
+     transform="matrix(1.0917444,0,0,1,-450.96943,322.91428)"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000"><flowRegion
+       id="flowRegion3070-3-4-8-8"><rect
+         style="stroke:#ffffff"
+         id="rect3072-8-2-7-7"
+         y="49.094482"
+         x="422.14285"
+         height="52.142857"
+         width="318.92459" /></flowRegion><flowPara
+       id="flowPara3074-9-9-9-5">NestedMissionA</flowPara></flowRoot>  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:1.79485953;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589-8-6"
+     d="m 258.26067,332.80781 0,29.13215"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <rect
+     style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:0.43001741;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect3349-7-8"
+     y="450.96298"
+     x="9.8412228"
+     height="12.474057"
+     width="318.806"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:1.49364901;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589-49-7"
+     d="m 157.99894,429.93312 0,20.71631"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <rect
+     style="fill:#cccccc;fill-opacity:1;stroke:#ffffff;stroke-width:0.41729769;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:17.39999962;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+     id="rect2985-4-1"
+     y="488.39197"
+     x="492.38217"
+     ry="0"
+     height="55.363247"
+     width="171.87149"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+  <flowRoot
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:#ffffff;font-family:Sans"
+     xml:space="preserve"
+     id="flowRoot3068-1-8-7-3-2"
+     transform="translate(118.30954,439.29156)"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000"><flowRegion
+       id="flowRegion3070-3-4-8-1-1"><rect
+         style="stroke:#ffffff"
+         id="rect3072-8-2-7-5-1"
+         y="49.094482"
+         x="422.14285"
+         height="52.142857"
+         width="282.85715" /></flowRegion><flowPara
+       id="flowPara3074-9-9-9-6-2">MT2</flowPara><flowPara
+       id="flowPara3351-0" /></flowRoot>  <path
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-width:1.64581978;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow2Mend)"
+     id="path4589-49-0-1"
+     d="m 581.4026,464.30336 0,25.15242"
+     inkscape:export-filename="/usr/userfs/m/ml881/Documents/Model/Examples/MultipleNestedMissions/MultipleNestedMissions.png"
+     inkscape:export-xdpi="1000"
+     inkscape:export-ydpi="1000" />
+</svg>

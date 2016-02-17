@@ -1,0 +1,27 @@
+\begin{zsection}
+  \SECTION ~ MyAppClass ~ \parents ~ scj\_prelude, SchedulableId, SafeletChan, TopLevelMissionSequencerChan, FrameworkChan, SchedulableChan
+\end{zsection}
+%
+\begin{circus}
+ \circclass ~ MyAppClass ~ \circdef ~ \circbegin
+\end{circus}
+%
+
+% public MissionSequencer<Mission> getSequencer() {
+%		return new MySequencer(new PriorityParameters(15), MySCJ.storageParameters);
+%	}
+\begin{circusaction*}
+  \circpublic getSequencer ~ \circdef ~\\
+  \t1 \circres ret : SchedulableID \circspot\\
+  \t1 ret := TopLevelSequencerID
+\end{circusaction*}
+%
+\begin{parser}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}}
+\end{parser}
+%
+\begin{circus}
+  \circend
+\end{circus}

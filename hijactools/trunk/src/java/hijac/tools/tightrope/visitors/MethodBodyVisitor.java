@@ -383,7 +383,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			st = iter.next();
 
-			if (st instanceof MethodInvocationTree)
+			
+			System.out.println("/// st=" + st.toString() + " st.kind="+st.getKind());
+			if (st instanceof ExpressionStatementTree)
 			{
 				if (!(node.toString().contains("Console") || node.toString().contains(
 						"System")))
@@ -756,12 +758,15 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(LATEX.DOT);
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
-				if (!method.isAPIMethod())
+				
+				if ( (!method.isAPIMethod()) || (method.getMethodName().contains("requestTermination")))
+
 				{
 					sb.append(LATEX.DOT);
 					// sb.append("TESTE"+objectID.toString());
 					sb.append(object.getId());
 				}
+				
 				final String threadId = object.getThreadId();
 				if (method.isSynchronised())
 				{
@@ -802,7 +807,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(LATEX.DOT);
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
-				if (!method.isAPIMethod())
+				
+				if ( (!method.isAPIMethod()) || (method.getMethodName().contains("requestTermination")))
 				{
 					sb.append(LATEX.DOT);
 					// sb.append(objectID.toString());

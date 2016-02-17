@@ -1,0 +1,18 @@
+--Schedulable SHARED
+channel release_complete:SchedulableIDs
+channel done_schedulable : SchedulableIDs 
+channel end_releases:SchedulableIDs
+channel release:SchedulableIDs
+
+channel handleAsyncEventCall :SchedulableIDs 
+channel handleAsyncEventRet :SchedulableIDs 
+
+channel signalTerminationCall : SchedulableIDs
+channel signalTerminationRet : SchedulableIDs
+channel set_applicationTerminating: SchedulableIDs.Bool
+channel get_applicationTerminating: SchedulableIDs.Bool
+
+nametype ManagedSchedulableFWChanSet = 
+  {| done_schedulable,release,handleAsyncEventCall,handleAsyncEventRet, 
+  signalTerminationCall,signalTerminationRet,set_applicationTerminating,get_applicationTerminating,
+  cleanupSchedulableCall, cleanupSchedulableRet, activate_schedulables |}

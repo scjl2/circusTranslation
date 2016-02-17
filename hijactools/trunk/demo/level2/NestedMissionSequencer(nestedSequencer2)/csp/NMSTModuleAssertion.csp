@@ -1,0 +1,738 @@
+
+include "Framework.csp"
+
+include "FrameworkProcess.csp"
+
+--****************************************************************************************************************************************************************************************************
+--*******************************************************************************************APLICATION***********************************************************************************************
+--****************************************************************************************************************************************************************************************************
+
+-- SAFELET: MY APP
+
+nametype SafeltAppSync = 
+    {| getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end_safelet_app |}
+
+nametype MyAppChanSet =
+  {| getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end_safelet_app |}
+
+MyApp  = 
+	(
+	 	Methods_s 
+	)		
+ /\	(end_safelet_app -> SKIP)
+
+GetSequencer_s = 
+	getSequencerCall -> 
+	getSequencerRet!TopLevelSequencerId ->
+	SKIP
+       
+InitializeApplication_s =  
+     initializeApplicationCall -> 
+     initializeApplicationRet ->
+     SKIP
+
+Methods_s = 
+ ( 
+	GetSequencer_s
+	[] 
+	InitializeApplication_s 
+ ); Methods_s
+
+
+--TOP LEVEL SEQUENCER: MY SEQUENCER
+
+channel get_sequencer_done : SchedulableID.Bool
+channel set_sequencer_done : SchedulableID.Bool
+
+nametype MissionSequencerAppStateSync = {| get_sequencer_done, set_sequencer_done |}
+
+nametype MissionSequencerAppSync = {|getNextMissionCall, getNextMissionRet,end_sequencer_app|}
+
+nametype MySequencerAppChanSet =
+  union(MissionSequencerAppStateSync,MissionSequencerAppSync)
+
+MySequencerApp = 
+(
+  Methods_tlms 
+    [|MissionSequencerAppStateSync|] 
+  DoneController_tlms(False) 
+)\ MissionSequencerAppStateSync
+/\ (end_sequencer_app.TopLevelSequencerId -> SKIP)
+   
+
+DoneController_tlms(done) =
+(
+	get_sequencer_done.TopLevelSequencerId!done ->
+	DoneController_tlms(done)
+)
+[]
+(
+	set_sequencer_done.TopLevelSequencerId?newDone ->
+	DoneController_tlms(newDone)
+)
+
+
+GetNextMission_tlms = 
+    getNextMissionCall.TopLevelSequencerId -> 
+	get_sequencer_done.TopLevelSequencerId?done ->
+	(
+	  if done == False then
+	  (
+		set_sequencer_done.TopLevelSequencerId!True ->
+		getNextMissionRet.TopLevelSequencerId!TopMission1ID ->
+		SKIP
+      )
+	  else 
+	  (
+			getNextMissionRet.TopLevelSequencerId!nullMissionId ->
+		    SKIP
+	  )
+    )
+
+Methods_tlms = 
+ (
+	GetNextMission_tlms 
+ ) ; Methods_tlms  
+
+
+
+
+
+
+--TOP LEVEL MISSION: TOP MISSION 1
+
+
+
+nametype TopMission1AppChanSet =
+  {| initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+    register.FirstMissionSequencerID.TopMission1ID, register.SecondMissionSequencerID.TopMission1ID,
+    register.ThirdMissionSequencerID.TopMission1ID|}
+
+TopMission1App = 
+( 
+	(
+			(Methods_tlm1 )
+			/\ 
+			(end_mission_app.TopMission1ID -> TopMission1App )
+	) 
+)
+
+
+InitializePhase_tlm1 = 
+  initializeCall.TopMission1ID  -> 
+  register!FirstMissionSequencerID!TopMission1ID -> 
+  register!SecondMissionSequencerID!TopMission1ID -> 
+  register!ThirdMissionSequencerID!TopMission1ID -> 
+  initializeRet.TopMission1ID -> 
+ SKIP
+
+CleanupPhase_tlm1 = 
+ cleanupMissionCall.TopMission1ID ->
+ cleanupMissionRet.TopMission1ID?continueSequencer ->
+ SKIP
+
+Methods_tlm1 = 
+( 
+	InitializePhase_tlm1 
+	[] 
+	CleanupPhase_tlm1
+) ; Methods_tlm1
+  
+
+
+
+--NESTED SEQUENCER: FIRST SEQUENCER
+
+nametype FirstMissionSequencerAppChanSet = 
+  {|get_sequencer_done, set_sequencer_done, end_sequencer_app,getNextMissionCall, getNextMissionRet |}
+
+FirstMissionSequencerApp = 
+(
+  Methods_ms1 
+    [|MissionSequencerAppStateSync|] 
+    DoneController_ms1(False) 
+) \MissionSequencerAppStateSync
+/\ (end_sequencer_app.FirstMissionSequencerID -> SKIP)
+
+
+DoneController_ms1(done) =
+(
+	get_sequencer_done.FirstMissionSequencerID!done ->
+	DoneController_ms1(done)
+)
+[]
+(
+	set_sequencer_done.FirstMissionSequencerID?newDone ->
+	DoneController_ms1(newDone)
+)
+
+GetNextMission_ms1 = 
+  getNextMissionCall.FirstMissionSequencerID -> 
+	get_sequencer_done.FirstMissionSequencerID?done ->
+	if done == False then 
+    (  
+		set_sequencer_done.FirstMissionSequencerID!True ->
+		getNextMissionRet.FirstMissionSequencerID!MyMission1ID ->
+		SKIP
+	)
+	else
+	(  
+		getNextMissionRet.FirstMissionSequencerID!nullMissionId ->
+		SKIP
+	)
+
+
+Methods_ms1 = 
+( 
+	GetNextMission_ms1 	
+) ; Methods_ms1
+
+  
+
+
+-- NESTED MISSION: MY MISSION 1
+
+nametype MyMission1AppChanSet = 
+  {|end_mission_app, initializeCall, initializeRet,register.MyPEH1Id.MyMission1ID,cleanupMissionCall,cleanupMissionRet    |}
+
+MyMission1App = 
+(
+	( 
+		Methods_m1 
+		/\ 
+		(end_mission_app.MyMission1ID -> MyMission1App )
+	) 
+
+)
+
+InitializePhase_m1 = 
+  initializeCall.MyMission1ID  -> 
+  register!MyPEH1Id!MyMission1ID -> 
+  initializeRet.MyMission1ID -> 
+ SKIP
+
+CleanupPhase_m1 = 
+ cleanupMissionCall.MyMission1ID ->
+ cleanupMissionRet.MyMission1ID!True ->
+	SKIP
+
+Methods_m1 = 
+( 
+	InitializePhase_m1 
+	[] 
+	CleanupPhase_m1
+) ; Methods_m1
+
+
+
+-- PEH: MY PEH 1
+ 
+channel get_count : SchedulableID.num
+channel increment_count : SchedulableID
+
+
+nametype MyPEHStateSync = {|get_count,increment_count, end_periodic_app|}
+
+CountController(id, count) =
+(
+  get_count.id!count ->
+  CountController(id, count)
+)
+[]
+(
+  increment_count.id ->
+  if count < maxNum then
+    CountController(id, count +1)
+  else
+    CountController(id, maxNum)
+)
+
+nametype MyPEH1AppChanSet =
+  {|get_count,increment_count, end_periodic_app,
+  releaseCall,releaseRet,
+  requestTermination, 
+  cleanupSchedulableCall, cleanupSchedulableRet |}
+
+MyPEH1App(m) = 
+(
+  Methods_peh1(m)  
+    [| MyPEHStateSync |] 
+  CountController(MyPEH1Id, 0) 
+)\MyPEHStateSync
+   /\ (end_periodic_app.MyPEH1Id -> SKIP)
+
+
+Release_peh1(m) = 
+ releaseCall.MyPEH1Id -> 
+ increment_count.MyPEH1Id ->
+ get_count.MyPEH1Id?count ->
+ if count == 10 then 
+ (
+	releaseRet.MyPEH1Id -> 
+	SKIP
+ )
+ else 
+ (
+	requestTermination.m.MyPEH1Id -> 	
+	releaseRet.MyPEH1Id -> 
+	SKIP
+ )
+  	 
+
+Cleanup_peh1 = 
+ cleanupSchedulableCall.MyPEH1Id ->
+ cleanupSchedulableRet.MyPEH1Id -> SKIP
+
+Methods_peh1(m) = 
+( 
+	Release_peh1(m)
+	[] 
+	Cleanup_peh1
+) ; Methods_peh1(m)
+
+ 
+
+
+-- NESTED SEQUENCER: SECOND SEQUENCER
+nametype SecondMissionSequencerAppChanSet = 
+  {|get_sequencer_done, set_sequencer_done, end_sequencer_app,getNextMissionCall, getNextMissionRet |}
+
+SecondSequencerApp = 
+(
+  Methods_ms2 
+    [|MissionSequencerAppStateSync|] 
+  DoneController_ms2(False) 
+)\MissionSequencerAppStateSync
+ /\ (end_sequencer_app.SecondMissionSequencerID -> SKIP)
+
+
+DoneController_ms2(done) =
+(
+	get_sequencer_done.SecondMissionSequencerID!done ->
+	DoneController_ms2(done)
+)
+[]
+(
+	set_sequencer_done.SecondMissionSequencerID?newDone ->
+	DoneController_ms2(newDone)
+)
+
+GetNextMission_ms2 = 
+    getNextMissionCall.SecondMissionSequencerID -> 
+	get_sequencer_done.SecondMissionSequencerID?done ->
+	if done == False then 
+    (  
+		set_sequencer_done.SecondMissionSequencerID!True ->
+		getNextMissionRet.SecondMissionSequencerID!MyMission2ID ->
+		SKIP
+	)
+	else
+	(  
+		getNextMissionRet.SecondMissionSequencerID!nullMissionId ->
+		SKIP
+	)
+
+Methods_ms2 = 
+( 
+	GetNextMission_ms2 	
+) ; Methods_ms2
+
+  
+
+
+-- NESTED MISSION: MY MISSION 2
+
+nametype MyMission2AppChanSet = 
+  {|end_mission_app, initializeCall, initializeRet,register.MyPEH2Id.MyMission2ID,cleanupMissionCall,cleanupMissionRet    |}
+
+
+ MyMission2App = 
+(
+	( 
+		Methods_m2 
+		/\
+		(end_mission_app.MyMission2ID -> MyMission2App )
+	) 
+
+)
+
+InitializePhase_m2 = 
+  initializeCall.MyMission2ID  -> 
+  register!MyPEH2Id!MyMission2ID -> 
+  initializeRet.MyMission2ID -> 
+ SKIP
+
+CleanupPhase_m2 = 
+ cleanupMissionCall.MyMission2ID ->
+ cleanupMissionRet.MyMission2ID!True ->
+	SKIP
+
+Methods_m2 = 
+( 
+	InitializePhase_m2
+	[] 
+	CleanupPhase_m2
+) ; Methods_m2
+
+
+-- PEH: MY PEH 2
+
+nametype MyPEH2AppChanSet =
+    {|get_count,increment_count, end_periodic_app,
+  releaseCall,releaseRet,
+  requestTermination, end_periodic_app,
+  cleanupSchedulableCall, cleanupSchedulableRet |}
+MyPEH2App(m) =  
+(
+  Methods_peh2(m)  
+    [| MyPEHStateSync|] 
+  CountController(MyPEH2Id, 0) 
+) \MyPEHStateSync
+/\ (end_periodic_app.MyPEH2Id -> SKIP)
+
+
+
+
+
+Release_peh2(m) = 
+ releaseCall.MyPEH2Id -> 
+ increment_count.MyPEH2Id ->
+ get_count.MyPEH2Id?count ->
+ if count == 10 then 
+ (
+	releaseRet.MyPEH2Id -> 
+	SKIP
+ )
+ else 
+ (
+	requestTermination.m.MyPEH2Id -> 	
+	releaseRet.MyPEH2Id -> 
+	SKIP
+ )
+  	 
+
+Cleanup_peh2 = 
+ cleanupSchedulableCall.MyPEH2Id ->
+ cleanupSchedulableRet.MyPEH2Id -> SKIP
+
+Methods_peh2(m) = 
+( 
+	Release_peh2(m)
+	[] 
+	Cleanup_peh2
+) ; Methods_peh2(m)
+
+  
+
+
+-- NESTED SEQUENCER: THIRD SEQUENCER
+
+nametype ThirdMissionSequencerAppChanSet = 
+  {|get_sequencer_done, set_sequencer_done, end_sequencer_app,getNextMissionCall, getNextMissionRet |}
+
+ThirdMissionSequencerApp =
+(
+  Methods_ms3 
+    [|MissionSequencerAppStateSync|] 
+  DoneController_ms3(False) 
+)\MissionSequencerAppStateSync
+ /\ (end_sequencer_app.ThirdMissionSequencerID -> SKIP)
+
+
+DoneController_ms3(done) =
+(
+	get_sequencer_done.ThirdMissionSequencerID!done ->
+	DoneController_ms3(done)
+)
+[]
+(
+	set_sequencer_done.ThirdMissionSequencerID?newDone ->
+	DoneController_ms3(newDone)
+)
+
+GetNextMission_ms3 = 
+    getNextMissionCall.ThirdMissionSequencerID -> 
+	get_sequencer_done.ThirdMissionSequencerID?done ->
+	if done == False then 
+    (  
+		set_sequencer_done.ThirdMissionSequencerID!True ->
+		getNextMissionRet.ThirdMissionSequencerID!MyMission3ID ->
+		SKIP
+	)
+	else
+	(  
+		getNextMissionRet.ThirdMissionSequencerID!nullMissionId ->
+		SKIP
+	)
+
+
+Methods_ms3 = 
+( 
+	GetNextMission_ms3 	
+) ; Methods_ms3
+
+
+  
+
+
+-- NESTED MISSION: MY MISSION 3
+
+nametype MyMission3AppChanSet = 
+  {|end_mission_app, initializeCall, initializeRet,register.MyPEH3Id.MyMission3ID,cleanupMissionCall,cleanupMissionRet |}
+
+
+MyMission3App = 
+(
+	( 
+		Methods_m3 
+		/\
+		(end_mission_app.MyMission3ID -> MyMission3App )
+	) 
+
+)
+
+InitializePhase_m3 = 
+  initializeCall.MyMission3ID  -> 
+  register!MyPEH3Id!MyMission3ID -> 
+  initializeRet.MyMission3ID -> 
+ SKIP
+
+CleanupPhase_m3 = 
+ cleanupMissionCall.MyMission3ID ->
+ cleanupMissionRet.MyMission3ID!True ->
+	SKIP
+
+Methods_m3 = 
+( 
+	InitializePhase_m3 
+	[] 
+	CleanupPhase_m3
+) ; Methods_m3
+
+
+
+-- PEH: MY PEH 3
+
+nametype MyPEH3AppChanSet =
+   {|get_count,increment_count, end_periodic_app,
+  releaseCall,releaseRet,
+  requestTermination, end_periodic_app,
+  cleanupSchedulableCall, cleanupSchedulableRet |}
+
+
+nametype PEHAppSync = {|releaseCall, releaseRet, requestTermination, cleanupSchedulableCall, cleanupSchedulableRet, end_periodic_app |}
+
+MyMyPEH3App(m) =  
+(
+  Methods_peh3(m)  
+    [| MyPEHStateSync |] 
+  CountController(MyPEH3Id, 0) 
+)\MyPEHStateSync
+   /\ (end_periodic_app.MyPEH3Id -> SKIP)
+
+
+Release_peh3(m) = 
+ releaseCall.MyPEH3Id -> 
+ increment_count.MyPEH3Id ->
+ get_count.MyPEH3Id?count ->
+ if count == 10 then 
+ (
+	releaseRet.MyPEH3Id -> 
+	SKIP
+ )
+ else 
+ (
+	requestTermination.m.MyPEH3Id -> 	
+	releaseRet.MyPEH3Id -> 
+	SKIP
+ )
+  	 
+
+Cleanup_peh3 = 
+ cleanupSchedulableCall.MyPEH3Id ->
+ cleanupSchedulableRet.MyPEH3Id -> SKIP
+
+Methods_peh3(m) = 
+( 
+	Release_peh3(m)
+	[] 
+	Cleanup_peh3
+) ; Methods_peh3(m)
+
+
+
+
+
+nametype SafeletProgramSync = {| done_safeletFW, start_toplevel_sequencer, done_toplevel_sequencer, deregister, checkSchedulable, 
+                                register.FirstMissionSequencerID.TopMission1ID, register.SecondMissionSequencerID.TopMission1ID, 
+                                register.ThirdMissionSequencerID.TopMission1ID, register.MyPEH1Id.MyMission1ID, 
+                                register.MyPEH2Id.MyMission2ID, register.MyPEH3Id.MyMission3ID|}
+
+
+nametype TopLevelMissionSequencerProgramSync = {|done_safeletFW, start_mission, done_mission, done_toplevel_sequencer|}
+
+
+nametype Mission1Sync = {| done_safeletFW, done_toplevel_sequencer,  
+                   signalTerminationCall, signalTerminationRet, activate_schedulables, done_schedulable, 
+                   cleanupSchedulableCall, cleanupSchedulableRet, 
+                   register.FirstMissionSequencerID.TopMission1ID, 
+                   register.SecondMissionSequencerID.TopMission1ID, 
+                   register.ThirdMissionSequencerID.TopMission1ID|}
+
+
+
+nametype MyMission1Sync = {| done_safeletFW, done_toplevel_sequencer,  
+                   signalTerminationCall, signalTerminationRet, activate_schedulables, done_schedulable, 
+                   cleanupSchedulableCall, cleanupSchedulableRet, register.MyPEH1Id.MyMission1ID|} 
+
+
+nametype MyMission2Sync = {| done_safeletFW, done_toplevel_sequencer,  
+                   signalTerminationCall, signalTerminationRet, activate_schedulables, done_schedulable, 
+                   cleanupSchedulableCall, cleanupSchedulableRet, register.MyPEH2Id.MyMission2ID|} 
+
+
+nametype MyMission3Sync = {| done_safeletFW, done_toplevel_sequencer,  
+                   signalTerminationCall, signalTerminationRet, activate_schedulables, done_schedulable, 
+                   cleanupSchedulableCall, cleanupSchedulableRet, register.MyPEH3Id.MyMission3ID|} 
+
+nametype TopMission1AppSync = 
+  {|initializeCall, initializeRet, register.FirstMissionSequencerID.TopMission1ID, register.SecondMissionSequencerID.TopMission1ID, 
+  register.ThirdMissionSequencerID.TopMission1ID, setCeilingPriority, terminationPendingCall, terminationPendingRet, 
+  cleanupMissionCall, cleanupMissionRet, 
+  end_mission_app |}
+
+
+nametype MyMission1AppSync = 
+  {|initializeCall, initializeRet, register.MyPEH1Id.MyMission1ID, setCeilingPriority, terminationPendingCall, terminationPendingRet, 
+  cleanupMissionCall, cleanupMissionRet, 
+  end_mission_app |}
+
+  nametype MyMission2AppSync = 
+  {|initializeCall, initializeRet, register.MyPEH2Id.MyMission2ID, setCeilingPriority, terminationPendingCall, terminationPendingRet, 
+  cleanupMissionCall, cleanupMissionRet, 
+  end_mission_app |}
+
+  nametype MyMission3AppSync = 
+  {|initializeCall, initializeRet, register.MyPEH3Id.MyMission3ID, setCeilingPriority, terminationPendingCall, terminationPendingRet, 
+  cleanupMissionCall, cleanupMissionRet, 
+  end_mission_app |}
+
+
+nametype TopMission1Register = {|register.FirstMissionSequencerID.TopMission1ID, 
+                                  register.SecondMissionSequencerID.TopMission1ID, 
+                                  register.ThirdMissionSequencerID.TopMission1ID |}
+
+nametype MyMission1Register = {| register.MyPEH1Id.MyMission1ID  |}
+
+nametype MyMission2Register = {| register.MyPEH2Id.MyMission2ID  |}
+
+nametype MyMission3Register = {| register.MyPEH3Id.MyMission3ID  |}
+
+
+nametype FirstMissionSequncerRegister = {| register.FirstMissionSequencerID.TopMission1ID |}
+nametype SecondMissionSequncerRegister = {| register.SecondMissionSequencerID.TopMission1ID |}
+nametype ThirdMissionSequncerRegister = {| register.ThirdMissionSequencerID.TopMission1ID |}
+
+
+
+MyApp_Safelet = (SafeletFW [ SafeletFWChanSet || MyAppChanSet ] MyApp)
+MySequencer1 = (TopLevelMissionSequencerFW(TopLevelSequencerId) [ TopLevelMissionSequencerFWChanSet || MySequencerAppChanSet ] MySequencerApp)
+TopMission1 = (MissionFW(TopMission1ID) [ union(MissionFWCHanSet,TopMission1Register ) || union(TopMission1AppChanSet, {|setCeilingPriority|}) ] TopMission1App)
+
+nametype SafeletTierCHanSet = 
+  Union({SafeletFWChanSet,TopMission1Register,MyMission1Register, MyMission2Register,MyMission3Register,MyAppChanSet})
+
+
+nametype TopTierChanSet = 
+  Union({    TopLevelMissionSequencerFWChanSet,MySequencerAppChanSet,
+    MissionFWCHanSet,TopMission1Register,TopMission1AppChanSet })
+
+FirstMissionSequncer =  (SchedulableMissionSequencerFW(FirstMissionSequencerID) [union(SchedulableMissionSequencerFWChanSet,FirstMissionSequncerRegister )||FirstMissionSequencerAppChanSet] FirstMissionSequencerApp)
+MyMission1 = (MissionFW(MyMission1ID) [union(MissionFWCHanSet, MyMission1Register) ||MyMission1AppChanSet] MyMission1App)
+MyPEH1 = (PeriodicEventHandlerFW(MyPEH1Id,1, 0, 0, nullSchedulableId) [PEHFWChanSet||MyPEH1AppChanSet] MyPEH1App(MyMission1ID))
+
+SecondMissionSequencer =  (SchedulableMissionSequencerFW(SecondMissionSequencerID) [union(SchedulableMissionSequencerFWChanSet,SecondMissionSequncerRegister )||SecondMissionSequencerAppChanSet] SecondSequencerApp)
+MyMission2 = (MissionFW(MyMission2ID) [union(MissionFWCHanSet,MyMission2Register )|| MyMission2AppChanSet] MyMission2App)
+MyPEH2 = (PeriodicEventHandlerFW(MyPEH2Id,1, 0, 0, nullSchedulableId) [PEHFWChanSet||MyPEH2AppChanSet] MyPEH2App(MyMission2ID))
+
+ThirdMissionSequencer = (SchedulableMissionSequencerFW(ThirdMissionSequencerID) [union(SchedulableMissionSequencerFWChanSet,ThirdMissionSequncerRegister )||ThirdMissionSequencerAppChanSet] ThirdMissionSequencerApp)
+MyMission3 = (MissionFW(MyMission3ID ) [union(MissionFWCHanSet,MyMission3Register )||MyMission3AppChanSet ] MyMission3App)
+MyPEH3 = (PeriodicEventHandlerFW(MyPEH3Id,1, 0, 0, nullSchedulableId) [PEHFWChanSet||MyPEH3AppChanSet] MyMyPEH3App(MyMission3ID))
+
+Tier1ChanSet = 
+  Union({SchedulableMissionSequencerFWChanSet,FirstMissionSequencerAppChanSet,
+        MissionFWCHanSet, MyMission1Register, MyMission1AppChanSet,
+        PEHFWChanSet, MyPEH1AppChanSet,
+        SchedulableMissionSequencerFWChanSet, SecondMissionSequencerAppChanSet,
+        MissionFWCHanSet,MyMission2Register, MyMission2AppChanSet,
+        PEHFWChanSet,MyPEH2AppChanSet,
+        SchedulableMissionSequencerFWChanSet,ThirdMissionSequencerAppChanSet,
+        MissionFWCHanSet,MyMission3Register,MyMission3AppChanSet,
+        PEHFWChanSet,MyPEH3AppChanSet})
+
+CatchNextTierBroadcastsOff(m) = 
+	activate_schedulables.m -> CatchNextTierBroadcastsOn
+
+CatchNextTierBroadcastsOn =
+	(register?s?m -> CatchNextTierBroadcastsOn)
+  []
+  (activate_schedulables?m -> CatchNextTierBroadcastsOn)
+	
+
+Program = 
+(  
+MyApp_Safelet
+  [SafeletTierCHanSet|| union(TopTierChanSet,Tier1ChanSet)]
+(
+(
+( 
+	(MySequencer1
+		[union(TopLevelMissionSequencerFWChanSet,MySequencerAppChanSet) || Union({MissionFWCHanSet,TopMission1Register,TopMission1AppChanSet})]
+	TopMission1
+	)
+)
+  [TopTierChanSet|| {|activate_schedulables,register|}]
+  CatchNextTierBroadcastsOff(TopMission1ID)
+
+)
+[ TopTierChanSet ||  Tier1ChanSet ]  
+(
+	(
+		FirstMissionSequncer
+			[| {|done_safeletFW, start_mission, done_mission, done_toplevel_sequencer, initializeRet|} |]
+		 (MyMission1 [| MyMission1Sync |] MyPEH1 )
+	)                              
+	[| {|activate_schedulables.TopMission1ID|} |] 
+	((
+		SecondMissionSequencer
+			[| {|done_safeletFW, start_mission, done_mission, done_toplevel_sequencer, initializeRet|} |]
+		(MyMission2 [| MyMission2Sync |] MyPEH2 ) 
+	) 
+	[| {|activate_schedulables.TopMission1ID|} |]
+	(
+		ThirdMissionSequencer
+			[| {|done_safeletFW, start_mission, done_mission, done_toplevel_sequencer, initializeRet|} |]
+		(MyMission3 [| MyMission3Sync |] MyPEH3 ) 
+	))
+)
+)	
+)
+
+
+
+
+
+Module = 
+(
+    FirstMissionSequncer
+      [| {|done_safeletFW, start_mission, done_mission, done_toplevel_sequencer, initializeRet|} |]
+     (MyMission1 [| MyMission1Sync |] MyPEH1 )
+)
+
+--assert sbisim(diamond(Module)) ; Loop :[ deadlock free [FD] ]
+--assert sbisim(diamond(Module)) :[ divergence free ]
+--assert sbisim(diamond(Module)) :[ deterministic  [FD] ]
+
+
+
+

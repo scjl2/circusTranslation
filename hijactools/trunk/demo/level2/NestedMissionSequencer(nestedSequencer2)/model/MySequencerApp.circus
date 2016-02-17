@@ -1,0 +1,78 @@
+\begin{zsection}
+  \SECTION ~ MySequencerApp ~ \parents ~ MissionSequencerMethChan, SchedulableChan, TopLevelMissionSequencerChan, MissionId, MissionMethChan, SchedulableId, MissionFWChan, FrameworkChan, MySequencerClass
+\end{zsection}
+%
+\begin{circus}
+  \circprocess ~ MySequencerApp ~ \circdef \circbegin 
+\end{circus}
+
+\begin{schema}{State}
+this : MySequencerClass
+\end{schema}
+
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{Init}
+State~'\\
+\where
+this' = \circnew MySequencerClass
+\end{schema}
+
+
+%public class MySequencer extends MissionSequencer<Mission> {
+%    private Mission[] missionArray;
+%    private int count = 0;
+
+%    public MySequencer(PriorityParameters priority, StorageParameters storage) {
+%	super(priority, storage,"OM--ms");
+%//	super(priority, storage);
+%	// initialize missions here
+%	missionArray = new Mission[2];
+%	missionArray[0] = new TopMission1();
+%	// missionArray[2] = new TopMission3();
+%    }
+
+%
+%    protected Mission getNextMission() {
+%	if (count == 0) {
+%	    count++;
+%	    return missionArray[0];
+%	}
+%//	if (count == 1 || count == 2) {
+%//	    count++;
+%//	    return missionArray[1];
+%//	}
+%	
+%	return null;
+%
+ %   }
+\begin{circusaction}
+GetNextMission \circdef \\
+\t1    getNextMissionCall~.~TopLevelSequencerId \then \\
+\t1   \left( \begin{array}{l}
+	\circvar ret : MissionID \circspot \\
+	this~.~getNextMission(ret) \circseq \\
+	getNextMissionRet~.~TopLevelSequencerId~!~ret \then\\
+	\Skip
+	\end{array} \right)
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef \\
+\t1 \circmu X \circspot \left( \begin{array}{l}
+	GetNextMission 
+	\end{array} \right) \circseq X
+\end{circusaction}
+
+\begin{circusaction}
+\circspot Methods  \circinterrupt \\
+\t1 (end\_sequencer\_app~.~TopLevelSequencerId \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,38 @@
+\input{MethodCallBindingChannels.tex}
+
+\begin{circus}
+\circprocess  MethodCallBinder \circdef \circbegin \\
+\end{circus}
+%
+%
+\begin{circusaction}
+systemAction\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_systemActionCall\\ \t1 ~?~loc\prefixcolon(loc \in systemActionLocs)\\ \t1 ~?~caller\prefixcolon(caller \in systemActionCallers)  \then \\
+	systemActionCall~.~loc~.~caller  \then \\
+	systemActionRet~.~loc~.~caller \then \\
+	binder\_systemActionRet~.~loc~.~caller  \then \\
+	systemAction\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circus}
+BinderActions \circdef \\
+\circblockopen 
+	systemAction\_MethodBinder
+	
+\circblockclose
+\end{circus}
+%
+\begin{circus}
+\circspot BinderActions \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\end{circus}
+%
+\begin{circus}
+\circend
+\end{circus}
+%
+\begin{circus}
+\circprocess ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
+\end{circus}

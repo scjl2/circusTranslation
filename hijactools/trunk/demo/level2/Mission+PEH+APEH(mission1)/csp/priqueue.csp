@@ -1,0 +1,113 @@
+MAX = 10
+PriQueueCellId = {0..MAX-1}
+
+--datatype ThreadId = ThreadA | ThreadB
+--Priority = {0..10}
+
+nametype PriQueueItem = (ThreadID, PriorityLevel)
+
+-- The first item is earlier in the list (i.e. is older)
+priQueueComp((t1, p1), (t2, p2)) =
+    if p1 >= p2 then (t1, p1)
+    else (t2, p2)
+
+channel priq_steal : PriQueueCellId.PriQueueItem
+channel priq_search, priq_search_result : PriQueueCellId.PriQueueCellId.PriQueueItem
+channel priq_empty : PriQueueCellId
+channel priq_removeAt : PriQueueCellId
+channel priq_insert : PriQueueCellId.PriQueueItem
+
+channel priq_push, priq_pop: PriQueueItem
+channel priq_emptyQueue : Bool
+channel priq_member, priq_notMember, priq_remove : ThreadID
+channel priq_memberInternal, priq_removeItem : PriQueueCellId.ThreadID
+
+
+SearchController(nextItem) =
+    (priq_search.0.0.nextItem -> -- value ignored by cell 0
+            priq_search_result?_?cell?answer ->
+            priq_removeAt.cell ->
+            Controller(answer)
+        [] priq_empty.0 -> EmptyController)
+
+
+EmptyController = priq_push?v -> Controller(v) [] priq_emptyQueue.True -> EmptyController [] priq_notMember?_ -> EmptyController
+Controller( nextItem@@(t,_) ) = 
+    priq_remove.t ->  SearchController(nextItem)
+    []
+    priq_notMember?_:(diff(ThreadID, {t}) ) -> Controller(nextItem)
+    []
+    priq_member.t -> Controller(nextItem)
+    []
+    priq_emptyQueue.False -> Controller(nextItem)
+    []
+    priq_pop.nextItem ->
+        SearchController(nextItem)
+  [] priq_push?v ->
+        let
+            (_, p1) = v
+            (_, p2) = nextItem
+            (newer, older) =
+                if p1 > p2 then (v, nextItem)
+                else (nextItem, v)
+        within
+            priq_insert?_!older ->
+            Controller(newer)
+
+
+Empty(i) =
+    priq_notMember?v -> Empty(i)
+    []
+    priq_empty.i -> Empty(i)
+    [] priq_insert.i?v -> Full_PQ(i, v)
+    [] i > 0 & priq_search.i?cell?v -> priq_search_result.i.cell.v -> Empty(i)
+
+Steal(i) =
+    if i == MAX-1 then
+        Empty(i)
+    else
+        priq_empty.i+1 -> Empty(i)
+        [] priq_steal.(i+1)?v' -> Full_PQ(i, v')
+
+Full_PQ(i, v @@ (t,_)) =
+    priq_removeItem.i.t -> Steal(i)
+    []
+    priq_notMember?_:(diff(ThreadID, {t}) ) -> Full_PQ(i, v)
+    []
+    priq_memberInternal.i.t -> Full_PQ(i, v)
+    []
+    i < MAX-1 & priq_insert.(i+1)?_ -> Full_PQ(i, v)
+    [] i > 0 & priq_steal.i.v -> Steal(i)
+    [] priq_removeAt.i -> Steal(i)
+    [] i == 0 & priq_search.i?_?_ -> priq_search.i+1.i.v -> Full_PQ(i, v)
+    [] i != 0 & priq_search.i?cell?proposal ->
+        (let
+            (t1, p1) = v
+            (t2, p2) = proposal
+            (newCell, newMax) =
+                if p1 > p2 then (i, v)
+                else (cell, proposal)
+        within
+            if i < MAX-1 then
+                priq_search.i+1.newCell.newMax -> Full_PQ(i, v)
+            else
+                priq_search_result.i.newCell.newMax -> Full_PQ(i, v))
+
+AlphaCell(i) =
+    Union({
+        {|
+            priq_empty.i, priq_insert.i, priq_search.i,
+            priq_search_result.i, priq_steal.i, priq_removeAt.i, priq_memberInternal.i, priq_notMember, priq_removeItem.i
+        |},
+        {| priq_insert.i+1, priq_search.i+1, priq_empty.i+1,
+            priq_steal.i+1 | i < MAX-1 |}
+    })
+
+Cells = (|| i : PriQueueCellId @ [AlphaCell(i)] Empty(i)) [[priq_memberInternal.i <- priq_member, priq_removeItem.i <- priq_remove | i<- PriQueueCellId ]]
+
+external chase
+PQSystem =
+    chase(
+        (EmptyController [| {| priq_empty.0, priq_search.0, priq_search_result, priq_insert, priq_removeAt, priq_notMember |} |] Cells)
+        \ {| priq_empty, priq_steal, priq_search, priq_search_result, priq_insert, priq_removeAt |}
+    )

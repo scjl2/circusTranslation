@@ -1,0 +1,8 @@
+\begin{zsection}
+  \SECTION ~ AperiodicEventHandlerChan ~ \parents ~  HandlerChan, HandlerMethChan, AperiodicLongEventHandlerMethChan, SchedulableId
+\end{zsection}
+%
+\begin{circus}
+
+  \circchannel end\_aperiodic\_app : SchedulableID
+\end{circus}

@@ -1,0 +1,71 @@
+\begin{zsection}
+  \SECTION ~ MySequencerClass ~ \parents ~ MissionSequencerMethChan, SchedulableChan, TopLevelMissionSequencerChan, MissionId, MissionMethChan, SchedulableId, MissionFWChan, FrameworkChan
+\end{zsection}
+%
+\begin{circus}
+  \circprocess ~ MySequencerClass ~ \circdef \circbegin 
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+done : \boolean
+\end{schema}
+
+\begin{parser}
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+\end{parser}
+%
+\begin{schema}{\circinitial Init}
+State~'\\
+\where
+done' = \false\\
+\end{schema}
+
+
+%public class MySequencer extends MissionSequencer<Mission> {
+%    private Mission[] missionArray;
+%    private int count = 0;
+
+%    public MySequencer(PriorityParameters priority, StorageParameters storage) {
+%	super(priority, storage,"OM--ms");
+%//	super(priority, storage);
+%	// initialize missions here
+%	missionArray = new Mission[2];
+%	missionArray[0] = new TopMission1();
+%	// missionArray[2] = new TopMission3();
+%    }
+
+%
+%    protected Mission getNextMission() {
+%	if (count == 0) {
+%	    count++;
+%	    return missionArray[0];
+%	}
+%//	if (count == 1 || count == 2) {
+%//	    count++;
+%//	    return missionArray[1];
+%//	}
+%	
+%	return null;
+%
+ %   }
+\begin{circusaction*}
+\circpublic getNextMission ~ \circdef \circres ret : MissionID \circspot\\
+  \t1 \circif done = \false \circthen\\
+  \t2 ret := TopMission1ID \circseq \\
+  \t2 done := \true \\
+  \t1 \circelse done = \true \circthen \\
+  \t2 ret := nullMissionId \\	
+  \t1 \circfi
+\end{circusaction*}
+
+\begin{parser}
+\begin{circusaction}
+  \circspot \Skip
+\end{circusaction}}
+\end{parser}
+%
+\begin{circus}
+  \circend
+\end{circus}

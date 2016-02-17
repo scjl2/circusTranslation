@@ -1,0 +1,42 @@
+\begin{zsection}
+  \SECTION ~ NestedMissionSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \t1 MissionId, MissionIds, SchedulableId 
+\end{zsection}
+%\begin{circus}
+%\circchannelset MissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset MySequencerAppChanSet == MissionSequencerAppSync
+%\end{circus}
+
+\begin{circus}
+\circprocess NestedMissionSequencerApp \circdef \circbegin\\ 
+\end{circus}
+   
+\begin{circusaction}
+GetNextMission \circdef \\
+\circblockopen
+    getNextMissionCall~.~NestedMissionSequencer \then \\
+	
+	getNextMissionRet~.~NestedMissionSequencer~!~NestedMission  \then \\
+	\Skip
+\circblockclose	
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+\circblockclose 
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot (Methods) %\circhide MissionSequencerAppStateSync
+%\circinterrupt (end\_sequencer\_app~.~NestedMissionSequencer \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

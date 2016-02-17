@@ -1,0 +1,88 @@
+\begin{zsection}
+  \SECTION ~ MyAppApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan   \\
+
+  \t1 
+\end{zsection}
+%\begin{circus}
+%\circchannelset MyAppAppSync \circdef \\
+%   \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
+%\end{circus}
+
+%\begin{circus}
+%\circchannelset MyAppChanSet \circdef \\
+%  \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess MyAppApp  \circdef  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+InitializeApplication \circdef \\
+\circblockopen
+     initializeApplicationCall \then \\
+
+	   	
+
+     initializeApplicationRet \then \\
+     \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+GetSequencer \circdef \\
+\circblockopen
+	getSequencerCall \then \\
+	getSequencerRet~!~topSequencerID  \then \\
+	\Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+immortalMemorySizeMeth \circdef
+\circvar ret : \num \circspot
+\\
+\circblockopen
+immortalMemorySizeCall~.~MyApp
+\then \\
+
+      \circblockopen
+
+  ret := Const.IMMORTAL\_MEM\_DEFAULT
+
+
+        \circblockclose
+
+  \circseq  \\
+
+immortalMemorySizeRet~.~MyApp~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	GetSequencer \\
+	\extchoice  \\
+	InitializeApplication  \\
+%
+\extchoice \\
+	immortalMemorySizeMeth \\ 
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+ \circinterrupt (end\_safelet\_app \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

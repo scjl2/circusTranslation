@@ -1,0 +1,53 @@
+\begin{zsection}
+  \SECTION ~ ObjectIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	MyAppObjectID : ObjectID \\
+	TopMissionObjectID : ObjectID \\
+	MT1ObjectID : ObjectID \\
+	MidMissionSequencerObjectID : ObjectID \\
+	MidMissionAObjectID : ObjectID \\
+	BottomMissionSequencerAObjectID : ObjectID \\
+	BottomMissionAObjectID : ObjectID \\
+	OSEHObjectID : ObjectID \\
+	MT2ObjectID : ObjectID \\
+	MidMissionBObjectID : ObjectID \\
+	BottomMissionSequencerBObjectID : ObjectID \\
+	BottomMissionBObjectID : ObjectID \\
+	APEHObjectID : ObjectID \\
+	PEHObjectID : ObjectID \\
+ 
+\where
+  distinct \langle 
+	MyAppObjectID
+	,
+	TopMissionObjectID
+	,\\
+	MT1ObjectID
+	,
+	MidMissionSequencerObjectID
+	,\\
+	MidMissionAObjectID
+	,
+	BottomMissionSequencerAObjectID
+	,\\
+	BottomMissionAObjectID
+	,
+	OSEHObjectID
+	,\\
+	MT2ObjectID
+	,
+	MidMissionBObjectID
+	,\\
+	BottomMissionSequencerBObjectID
+	,
+	BottomMissionBObjectID
+	,\\
+	APEHObjectID
+	,
+	PEHObjectID
+  \rangle
+\end{axdef}
+
