@@ -29,5 +29,5 @@
 \begin{circus}
   \circchannelset ~ MissionMethChan ~ ==\\
   \t1 \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,\\  
-  \t1 requestTermination, terminationPendingCall, terminationPendingRet \rchanset
+  \t1 requestTerminationCall, requestTerminationRet, terminationPendingCall, terminationPendingRet \rchanset
 \end{circus}

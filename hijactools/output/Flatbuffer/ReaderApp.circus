@@ -36,7 +36,7 @@ Run \circdef \\
 
 
 
-            \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission\then \\ terminationPendingRet~.~fbMission~?~terminationPending\then \\ \Skip\circseq \\ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen \circvar result : \num \circspot result :=~0 \circseq \\ binder\_readCall~.~fbMission~.~ReaderSID~.~ReaderTID\then \\ binder\_readRet~.~fbMission~.~ReaderSID~.~ReaderTID~?~read\then \\ \Skip \circseq \\ \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
+            \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission\then \\ terminationPendingRet~.~fbMission~?~terminationPending\then \\ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen \circvar result : \num \circspot result :=~0 \circseq \\ binder\_readCall~.~fbMission~.~ReaderSID~.~ReaderTID\then \\ binder\_readRet~.~fbMission~.~ReaderSID~.~ReaderTID~?~read\then \\ \Skip \circseq \\ \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
             
 
 

@@ -41,7 +41,7 @@ Run \circdef \\
 
 
 
-            \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission\then \\ terminationPendingRet~.~fbMission~?~terminationPending\then \\ \Skip\circseq \\ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen binder\_writeCall~.~fbMission~.~WriterSID~.~WriterTID~!~i\then \\ binder\_writeRet~.~fbMission~.~WriterSID~.~WriterTID\then \\ \Skip \circseq \\ i := i + 1 \circseq \\ \circif ~ (i \geq 5) ~ \circthen ~ \\ \t1 \circblockopen requestTerminationCall~.~fbMission\then \\ requestTerminationRet~.~fbMission~?~requestTermination\then \\ \Skip \circblockclose \\ \circelse ~ \lnot (i \geq 5) \circthen \Skip \\ \circfi \\ \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
+            \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission\then \\ terminationPendingRet~.~fbMission~?~terminationPending\then \\ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen binder\_writeCall~.~fbMission~.~WriterSID~.~WriterTID~!~i\then \\ binder\_writeRet~.~fbMission~.~WriterSID~.~WriterTID\then \\ \Skip \circseq \\ i := i + 1 \circseq \\ \circif ~ (i \geq 5) ~ \circthen ~ \\ \t1 \circblockopen requestTerminationCall~.~fbMission~.~WriterSID\then \\ requestTerminationRet~.~fbMission~.~WriterSID~?~requestTermination\then \\ \Skip \circblockclose \\ \circelse ~ \lnot (i \geq 5) \circthen \Skip \\ \circfi \\ \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
             
 
 

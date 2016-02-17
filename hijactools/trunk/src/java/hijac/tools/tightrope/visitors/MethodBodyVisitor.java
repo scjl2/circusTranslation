@@ -756,12 +756,15 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(LATEX.DOT);
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
-				if (!method.isAPIMethod())
+				
+				if ( (!method.isAPIMethod()) || (method.getMethodName().contains("requestTermination")))
+
 				{
 					sb.append(LATEX.DOT);
 					// sb.append("TESTE"+objectID.toString());
 					sb.append(object.getId());
 				}
+				
 				final String threadId = object.getThreadId();
 				if (method.isSynchronised())
 				{
@@ -802,7 +805,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(LATEX.DOT);
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
-				if (!method.isAPIMethod())
+				
+				if ( (!method.isAPIMethod()) || (method.getMethodName().contains("requestTermination")))
 				{
 					sb.append(LATEX.DOT);
 					// sb.append(objectID.toString());
@@ -1501,6 +1505,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		if (condition.toString().contains("("))
 		{
 			String conditionTrans = visit(condition, ctxt);
+			conditionTrans = conditionTrans.replace("\\Skip", "");
+					
 			String conditionString = "";
 			System.out.println("/// conditionTrans = " + conditionTrans);
 
@@ -1527,16 +1533,16 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				{
 					conditionTrans = conditionTrans.substring(5);
 
-					conditionString = conditionTrans + "\\circseq"
-							+ TightRopeString.LATEX.NEW_LINE
+					conditionString = conditionTrans 
+							
 							+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
 							+ " (\\lnot " + timeMachine.get("variableIdentifier")
 							+ ") \\circseq \\\\";
 				}
 				else
 				{
-					conditionString = conditionTrans + "\\circseq"
-							+ TightRopeString.LATEX.NEW_LINE
+					conditionString = conditionTrans
+							
 							+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
 							+ timeMachine.get("variableIdentifier") + "\\circseq \\\\";
 				}
