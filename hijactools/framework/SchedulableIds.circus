@@ -4,14 +4,7 @@
 \extracircusvspace
 %
 \begin{axdef}
-  InputHandlerId : SchedulableID\\
-  OutputHandlerId : SchedulableID\\   
-  MainMissionSequencerId: SchedulableID\\
-  EchoMissionSequencerId : SchedulableID\\
-  InputMissionSequencerId : SchedulableID\\
-  OutputMissionSequencerId : SchedulableID\\
+  
 \where
-  distinct \langle TopLevelSequencerId, InputHandlerId, OutputHandlerId,\\
-  \t2 MainMissionSequencerId, EchoMissionSequencerId,\\
-  \t2 InputMissionSequencerId, OutputMissionSequencerId, nullSequencerId, nullSchedulableId \rangle
+  distinct \langle TopLevelSequencerId, nullSequencerId, nullSchedulableId \rangle
 \end{axdef}

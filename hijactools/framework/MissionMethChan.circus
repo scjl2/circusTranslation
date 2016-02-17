@@ -19,7 +19,7 @@
 %
 \begin{circus}
   \circchannel ~ terminationPendingCall : MissionID  \\	
-  \circchannel ~ terminationPendingRet : MissionID \cross \boolean \\
+  \circchannel ~ terminationPendingRet : MissionID \cross \boolean 
 \end{circus}
 %
 \begin{circus}

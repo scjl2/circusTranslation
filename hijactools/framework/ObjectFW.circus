@@ -17,7 +17,7 @@
 	ceilingPriority : PriorityLevel \\
 	waitForObjectThreads : \power ThreadID \\
 \where
-	locks > 0 \iff lockedBy \neq nullSchedulableID \\
+	locks > 0 \iff lockedBy \neq nullThreadId \\
 	lockedBy \notin \dom previousLocks \\
 	lockedBy \notin ElementsOf( waitQueue) \\
 	lockedBy \notin ElementsOf( queueForLock ) \\ 
@@ -47,7 +47,7 @@ lockedBy? : ThreadID \\
 locks? : \nat_1\\
 \where
 previousLocks' = previousLocks \oplus \{lockedBy? \mapsto locks?\} \\
-lockedBy' = nullSchedulableID \\
+lockedBy' = nullThreadId \\
 locks' = 0 \\
 waitQueue' = waitQueue \\
 queueForLock' = queueForLock \\
@@ -61,7 +61,7 @@ someThread? : ThreadID \\
 priorityLevel? : PriorityLevel \\
 
 \where
-someThread? \neq nullSchedulableID \\
+someThread? \neq nullThreadId \\
 someThread? \notin ElementsOf (queueForLock ) \\
 queueForLock' = AddToPriorityQueue(queueForLock, someThread?, priorityLevel?) \\
 lockedBy' = lockedBy \\
@@ -90,7 +90,7 @@ someThread? : ThreadID \\
 priorityLevel? : PriorityLevel \\
 waitType? : WaitType \\
 \where
-someThread? \neq nullSchedulableID \\
+someThread? \neq nullThreadId \\
 someThread? \notin ElementsOf(waitQueue) \\
 waitQueue' = AddToPriorityQueue(waitQueue, someThread?, priorityLevel?)  \\	
 lockedBy' = lockedBy \\
@@ -162,7 +162,7 @@ Monitor \circdef \\
 \begin{circusaction}
 MonitorUnlocked \circdef \\
 \t1 (
-	startSynchMeth~.~object~?~someThread \then \\	
+	startSyncMeth~.~object~?~someThread \then \\	
 	lock\_request~.~object~!~someThread \then\\
 	MonitorUnlocked		
 ) \\
@@ -191,14 +191,14 @@ MonitorUnlocked \circdef \\
 MonitorLocked \circdef \circval lockedBy : ThreadID \circspot \\
 
 \t1	(
-		startSynchMeth~.~object~.~lockedBy \then \\	
+		startSyncMeth~.~object~.~lockedBy \then \\	
 		increment\_locks~.~object \then \\
 		MonitorLocked(lockedBy)
 
 	)	\\
 \t1	\extchoice \\
 \t1	(
-		startSynchMeth~.~object~?~someThread\prefixcolon(someThread \neq lockedBy) \then \\	
+		startSyncMeth~.~object~?~someThread\prefixcolon(someThread \neq lockedBy) \then \\	
 		lock\_request~.~object~!~someThread \then\\
 		MonitorLocked(lockedBy)
 
@@ -652,7 +652,7 @@ MonitorLockController \circdef \circval interruptedThreads : \power ThreadID \ci
 )\\
 \t1 \extchoice\\
 \t1 (	
-		\lcircguard IsEmpty(queueForLock) = False \land lockedBy = nullSchedulableID \rcircguard \circguard \\
+		\lcircguard IsEmpty(queueForLock) = False \land lockedBy = nullThreadId \rcircguard \circguard \\
 		(	
 			\lschexpract AssignEligible \rschexpract  \circseq \\
 			lockAcquired~.~object~.~lockedBy \then \\
@@ -691,7 +691,7 @@ MonitorLockController \circdef \circval interruptedThreads : \power ThreadID \ci
 		(
 			\circif locks = 0 \circthen \\
 			(
-				lockedBy := nullSchedulableID \circseq \\
+				lockedBy := nullThreadId \circseq \\
 				MonitorLockController(interruptedThreads) \\
 			)\\
 			\circelse locks \neq 0 \circthen \\
