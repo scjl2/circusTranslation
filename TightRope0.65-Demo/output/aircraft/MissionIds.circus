@@ -1,0 +1,25 @@
+\begin{zsection}
+  \SECTION ~ MissionIds ~ \parents ~ scj\_prelude, MissionId
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	MainMissionID : MissionID\\
+	TakeOffMissionID : MissionID\\
+	CruiseMissionID : MissionID\\
+	LandMissionID : MissionID\\
+ %eg MainMission : MissionID\\
+%  NestedMission : MissionID\\
+ 
+\where
+  distinct \langle nullMissionId, 
+	MainMissionID
+	,
+	TakeOffMissionID
+	,\\
+	CruiseMissionID
+	,
+	LandMissionID
+  \rangle
+\end{axdef}
+

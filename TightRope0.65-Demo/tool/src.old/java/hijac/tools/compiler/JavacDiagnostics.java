@@ -1,0 +1,46 @@
+package hijac.tools.compiler;
+
+import java.io.PrintStream;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticListener;
+import javax.tools.JavaFileObject;
+
+/**
+ * @author Frank Zeyda
+ * @version $Revision: 198 $
+ */
+public class JavacDiagnostics implements DiagnosticListener<JavaFileObject> {
+
+   protected List<Diagnostic<JavaFileObject>> diagnostics;
+
+   public JavacDiagnostics() {
+      reset();
+   }
+
+   @SuppressWarnings("unchecked")
+   public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
+      diagnostics.add((Diagnostic<JavaFileObject>) diagnostic);
+   }
+
+   public void reset() {
+      diagnostics = new ArrayList<Diagnostic<JavaFileObject>>();
+   }
+
+   public boolean hasError() {
+      return !diagnostics.isEmpty();
+   }
+
+   public List<Diagnostic<JavaFileObject>> getErrors() {
+      return diagnostics;
+   }
+
+   public void print(PrintStream out) {
+      for (Diagnostic<JavaFileObject> diagnostic : diagnostics) {
+         out.println(diagnostic.toString());
+      }
+   }
+}

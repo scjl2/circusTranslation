@@ -1,0 +1,56 @@
+\begin{zsection}
+  \SECTION ~ SchedulableIds ~ \parents ~ scj\_prelude, SchedulableId
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+MainMissionSequencerID : SchedulableID\\
+	ACModeChangerID : SchedulableID\\
+	EnvironmentMonitorID : SchedulableID\\
+	ControlHandlerID : SchedulableID\\
+	FlightSensorsMonitorID : SchedulableID\\
+	CommunicationsHandlerID : SchedulableID\\
+	AperiodicSimulatorID : SchedulableID\\
+	LandingGearHandlerTakeOffID : SchedulableID\\
+	TakeOffMonitorID : SchedulableID\\
+	TakeOffFailureHandlerID : SchedulableID\\
+	BeginLandingHandlerID : SchedulableID\\
+	NavigationMonitorID : SchedulableID\\
+	GroundDistanceMonitorID : SchedulableID\\
+	LandingGearHandlerLandID : SchedulableID\\
+	InstrumentLandingSystemMonitorID : SchedulableID\\
+	SafeLandingHandlerID : SchedulableID\\
+%
+\where
+  distinct \langle nullSequencerId, nullSchedulableId, MainMissionSequencerIDID, \\
+	ACModeChangerID
+	,
+	EnvironmentMonitorID
+	,\\
+	ControlHandlerID
+	,
+	FlightSensorsMonitorID
+	,\\
+	CommunicationsHandlerID
+	,
+	AperiodicSimulatorID
+	,\\
+	LandingGearHandlerTakeOffID
+	,
+	TakeOffMonitorID
+	,\\
+	TakeOffFailureHandlerID
+	,
+	BeginLandingHandlerID
+	,\\
+	NavigationMonitorID
+	,
+	GroundDistanceMonitorID
+	,\\
+	LandingGearHandlerLandID
+	,
+	InstrumentLandingSystemMonitorID
+	,\\
+	SafeLandingHandlerID
+  \rangle
+\end{axdef}

@@ -1,0 +1,226 @@
+
+\begin{circus}
+\circclass MainMissionClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  ALTITUDE\_READING\_ON\_GROUND : \mathbb{R}\\ 
+  test : \num\\ 
+  cabinPressure : \mathbb{R}\\ 
+  emergencyOxygen : \mathbb{R}\\ 
+  fuelRemaining : \mathbb{R}\\ 
+  altitude : \mathbb{R}\\ 
+  airSpeed : \mathbb{R}\\ 
+  heading : \mathbb{R}\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  ALTITUDE\_READING\_ON\_GROUND' = 0.0\\ 
+  test' = 0\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circpublic ~ getAirSpeed ~ \circdef
+\circvar ret : \mathbb{R} \circspot
+\\
+
+
+      \circblockopen
+
+  ret := airSpeed
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getAltitude ~ \circdef
+\circvar ret : \mathbb{R} \circspot
+\\
+
+
+      \circblockopen
+
+  ret := altitude
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getCabinPressure ~ \circdef
+\circvar ret : \mathbb{R} \circspot
+\\
+
+
+      \circblockopen
+
+  ret := cabinPressure
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getEmergencyOxygen ~ \circdef
+\circvar ret : \mathbb{R} \circspot
+\\
+
+
+      \circblockopen
+
+  ret := emergencyOxygen
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getFuelRemaining ~ \circdef
+\circvar ret : \mathbb{R} \circspot
+\\
+
+
+      \circblockopen
+
+  ret := fuelRemaining
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getHeading ~ \circdef
+\circvar ret : \mathbb{R} \circspot
+\\
+
+
+      \circblockopen
+
+  ret := heading
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setAirSpeed ~ \circdef
+\\
+
+
+      \circblockopen
+
+this~.~this.airSpeed :=airSpeed
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setAltitude ~ \circdef
+\\
+
+
+      \circblockopen
+
+this~.~this.altitude :=altitude
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setCabinPressure ~ \circdef
+\\
+
+
+      \circblockopen
+
+this~.~this.cabinPressure :=cabinPressure
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setEmergencyOxygen ~ \circdef
+\\
+
+
+      \circblockopen
+
+this~.~this.emergencyOxygen :=emergencyOxygen
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setFuelRemaining ~ \circdef
+\\
+
+
+      \circblockopen
+
+this~.~this.fuelRemaining :=fuelRemaining
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setHeading ~ \circdef
+\\
+
+
+      \circblockopen
+
+this~.~this.heading :=heading
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
+
+
