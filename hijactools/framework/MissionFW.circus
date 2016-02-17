@@ -237,24 +237,24 @@ RequestTerminationMeth ~ \circdef\\
 	\circblockclose\\
 \t1	\extchoice\\
 \t1	\circblockopen
-	  \circblockopen
+	  
 	   	\Extchoice schedulable: registeredSchedulables \circspot
-	   	requestTermination~.~mission~.~schedulable \then \\
-	   	\Skip\\
-	  \circblockclose \circseq\\
-	  \circblockopen
-	  	\circblockopen
-	  		get\_missionTerminating~.~mission?missionTerminating\prefixcolon(missionTerminating = \false) \then \\
-	  		set\_missionTerminating~.~mission~!~\true \then \\
-	  		stop\_schedulables~.~mission \then \\
-	  		RequestTerminationMeth\\
-	  	\circblockclose\\
-	  	\extchoice \\
-	  	\circblockopen
-	  		get\_missionTerminating~.~mission?missionTerminating\prefixcolon(missionTerminating = \true) \then \\
-	  		RequestTerminationMeth\\
-	  	\circblockclose\\
-	  \circblockclose \\
+	   	requestTerminationCall~.~mission~.~schedulable \then \\
+	   	\circblockopen
+		  	\circblockopen
+		  		get\_missionTerminating~.~mission?missionTerminating\prefixcolon(missionTerminating = \false) \then \\
+		  		set\_missionTerminating~.~mission~!~\true \then \\			
+		  		stop\_schedulables~.~mission \then \\
+				requestTerminationRet ~.~mission~.~schedulable~.~\false \then \\
+		  		RequestTerminationMeth\\
+		  	\circblockclose\\
+		  	\extchoice \\
+		  	\circblockopen
+		  		get\_missionTerminating~.~mission?missionTerminating\prefixcolon(missionTerminating = \true) \then \\
+				requestTerminationRet ~.~mission~.~schedulable~.~\true \then \\
+		  		RequestTerminationMeth\\
+		  	\circblockclose\\
+	  	\circblockclose \\
 	\circblockclose
 \end{circusaction}
 %

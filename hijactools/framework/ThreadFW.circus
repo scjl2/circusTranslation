@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ ThreadFW ~ \parents ~ scj\_prelude, GlobalTypes, ThreadChan, ObjectFWChan, FrameworkChan, \\
-   \t1 Priority
+   \t1 Priority 
 \end{zsection}
 %
 \begin{circus}
@@ -23,19 +23,19 @@
 %
 \begin{schema}{Init}
 	\Delta State  \\
-\where
+\where	
 	priorityStack' = \langle basePriority \rangle \\
-	interrupted' = \false
-\end{schema}
+	interrupted' = \false 
+\end{schema}	
 %
 \begin{circusaction}
 Execute \circdef \\
-\t1 	(
+\t1 	( 
 		(
 			(
 				Priority \\
 				\linter \{ basePriority \} | \{ interrupted \} \rinter\\
-				Interrupts
+				Interrupts 
 			) \\
 			\interleave \\
 			GetPriorityLevel \\
@@ -44,8 +44,8 @@ Execute \circdef \\
 	\circseq %\circinterrupt \\
 		(
 			done\_toplevel\_sequencer \then \\
-			\Skip
-		)
+			\Skip 
+		)	
 \end{circusaction}
 %
 \begin{circusaction}
@@ -72,7 +72,7 @@ IncreasePriority \circdef \\
 DecreasePriority \circdef \\
 \t1	lower\_thread\_priority~.~thread \then \\
 \t1	activePriority := basePriority \circseq \\
-\t1 DecreasePriority
+\t1 	DecreasePriority 
 \end{circusaction}
 %
 \begin{circusaction}
@@ -88,7 +88,7 @@ Interrupts \circdef \\
 		Interrupted
 	)
 	\t1 \lpar \emptyset | \lchanset set\_interrupted, get\_interrupted \rchanset | \emptyset \rpar \\
-	InterruptedController
+	InterruptedController	
     )
 \end{circusaction}
 %
@@ -101,7 +101,7 @@ Interrupt \circdef \\
 %
 \begin{circusaction}
 IsInterrupted \circdef \\
-\t1 isInterruptedCall~.~thread \then
+\t1 isInterruptedCall~.~thread \then 
 \t1 get\_interrupted~.~thread~?~interrupted \then \\
 \t1 isInterruptedRet~.~thread~!~interrupted \then \\
 \t1 \Skip
@@ -137,7 +137,7 @@ GetPriorityLevel \circdef
 \end{circusaction}
 %
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Execute) \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\circspot ( \lschexpract Init \rschexpract \circseq Execute)%\circinterrupt (done\_toplevel\_sequencer \then \Skip)
 \end{circusaction}
 %
 \begin{circus}
