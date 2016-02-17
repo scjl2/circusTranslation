@@ -1,0 +1,98 @@
+\begin{zsection}
+  \SECTION ~ LandingGearHandlerTakeOffApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
+ \t1  , \\
+TakeOffMissionMethChan
+, 
+
+ObjectIds
+, 
+
+ThreadIds
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess LandingGearHandlerTakeOffApp \circdef \\ \qquad
+  mission : MissionID
+ 
+\circspot
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~LandingGearHandlerTakeOff \then \\
+	
+      \circblockopen
+
+\Skip
+
+
+               \circseq \\
+
+            binder\_isLandingGearDeployedCall~.~mission~.~LandingGearHandlerTakeOff\then \ \ binder\_isLandingGearDeployedRet~.~mission~.~LandingGearHandlerTakeOff~?~isLandingGearDeployed\then \ \\ \ \circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed\ \
+
+
+  \circif ~ landingGearIsDeployed = \true ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+binder\_stowLandingGearCall~.~mission~.~LandingGearHandlerTakeOff\then \ \ binder\_stowLandingGearRet~.~mission~.~LandingGearHandlerTakeOff\then \ \ \Skip
+
+
+        \circblockclose
+
+
+  \\
+  \circelse ~ landingGearIsDeployed = \true ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOff~.~LandingGearHandlerTakeOffThreadID\then \ \ binder\_deployLandingGearRet~.~mission~.~LandingGearHandlerTakeOff~.~LandingGearHandlerTakeOffThreadID\then \ \ \Skip
+
+
+        \circblockclose
+
+
+  \\
+  \circfi
+
+
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~LandingGearHandlerTakeOff \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handlerAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_aperiodic\_app~.~LandingGearHandlerTakeOff \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<project name="fetch-m2" default="get-m2"
+    xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+  <!-- The following did not work on my Ant on Ubuntu 10.04. -->
+  <!-- <property name="ant.lib.dir" location="${ant.library.dir}"/> -->
+  <!-- <property file="${ant.lib.dir}/libraries.properties"/> -->
+  <!-- <import file="${ant.home}/get-m2.xml"/> -->
+  <!-- It is a safer to include get-m2.xml in the distribution. -->
+
+  <!-- Properties file required for get-m2.xml. -->
+  <property file="${ant.dir}/libraries.properties"/>
+
+  <!-- We reuse get-m2.xml of the Ant installation. -->
+  <import file="get-m2.xml"/>
+
+  <!-- Macro that defers an action until the Maven task is available. -->
+  <target name="post-get-m2-macro" depends="get-m2">
+    <macrodef name="post-get-m2">
+      <element name="body" implicit="yes"/>
+      <sequential>
+        <body/>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <!-- Macro that fetches a third-party library using the Maven task. -->
+  <target name="fetch-macro" depends="post-get-m2-macro">
+    <macrodef name="fetch-m2">
+      <attribute name="groupId"/>
+      <attribute name="artifactId"/>
+      <attribute name="version"/>
+      <attribute name="remoteUrl" default=""/>
+      <sequential>
+        <post-get-m2>
+          <artifact:dependencies pathId="@{artifactId}.path">
+            <dependency
+              groupId="@{groupId}"
+              artifactId="@{artifactId}"
+              version="@{version}"/>
+            <remoteRepository url="@{remoteUrl}"/>
+          </artifact:dependencies>
+          <!-- We assume that lib.dir is set to the target location. -->
+          <copy todir="${lib.dir}" flatten="true">
+            <path refid="@{artifactId}.path"/>
+          </copy>
+        </post-get-m2>
+      </sequential>
+    </macrodef>
+  </target>
+</project>

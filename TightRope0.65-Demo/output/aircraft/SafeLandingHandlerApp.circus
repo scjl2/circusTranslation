@@ -1,0 +1,89 @@
+\begin{zsection}
+  \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
+ \t1  , \\
+MainMissionMethChan
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess SafeLandingHandlerApp \circdef \\ \qquad
+  mainMission : MissionID
+,\\ 
+  threshold : Double
+ 
+\circspot
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handlerAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~SafeLandingHandler \then \\
+	
+      \circblockopen
+
+            binder\_getAltitudeCall~.~mainMission~.~SafeLandingHandler\then \ \ binder\_getAltitudeRet~.~mainMission~.~SafeLandingHandler~?~getAltitude\then \ \\ \ \circvar altitude : \mathbb{R} \circspot altitude :=~getAltitude\ \
+
+
+  \circif ~ (altitude < threshold) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+\Skip
+
+
+        \circblockclose
+
+
+  \\
+  \circelse ~ (altitude < threshold) ~ \circthen ~
+  \\
+  \t1
+
+      \circblockopen
+
+\Skip
+
+
+        \circblockclose
+
+
+  \\
+  \circfi
+
+
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~SafeLandingHandler \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handlerAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_aperiodic\_app~.~SafeLandingHandler \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

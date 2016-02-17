@@ -1,0 +1,70 @@
+\begin{zsection}
+  \SECTION ~ WriterApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds   \\
+
+  \t1 , \\
+MissionMethChan
+, 
+
+FlatBufferMissionMethChan
+, 
+
+ObjectIds
+, 
+
+ThreadIds
+
+
+
+\end{zsection}
+%
+\begin{circus}
+\circprocess WriterApp \circdef \\ \qquad
+  fbMission : MissionID
+ 
+\circspot
+ \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~Writer \then \\
+	
+      \circblockopen
+
+
+
+
+            \circblockopen \circmu X \circspot \\ \circblockopen terminationPendingCall~.~fbMission~.~Writer\then \ \ terminationPendingRet~.~fbMission~.~Writer~?~terminationPending\then \ \\ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen ~ \\ \t1 \circblockopen \circblockopen binder\_writeCall~.~fbMission~.~Writer~.~WriterThreadID~!~i\then \ \ binder\_writeRet~.~fbMission~.~Writer~.~WriterThreadID\then \ \ \Skip \circblockclose \circseq \\ i := i + 1 \circseq \\ \circvar keepWriting : \boolean \circspot keepWriting :=~false \circseq \\ \circif ~ (i \geq 5) ~ \circthen ~ \\ \t1 \circblockopen this~.~keepWriting :=true \circblockclose \\ \circelse ~ (i \geq 5) ~ \circthen ~ \\ \t1 \circblockopen this~.~keepWriting :=false \circblockclose \\ \circfi \circseq \\ \circif ~ (\lnot keepWriting = \true) ~ \circthen ~ \\ \t1 \circblockopen requestTerminationCall~.~fbMission~.~Writer\then \ \ requestTerminationRet~.~fbMission~.~Writer~?~requestTermination\then \ \ \Skip \circblockclose \\ \circelse ~ (\lnot keepWriting = \true) \circthen \Skip \\ \circfi \circseq \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \circblockclose \\
+\Skip
+        \circblockclose
+
+ \circseq \\
+	runRet~.~Writer \then \\
+	\Skip
+\circblockclose
+\end{circusaction}	
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Run \\
+%
+%
+%
+\circblockclose 
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_managedThread\_app~.~Writer \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

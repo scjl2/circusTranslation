@@ -1,0 +1,120 @@
+
+\begin{circus}
+\circclass LandMissionClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  controllingMission : MainMission\\ 
+  SAFE\_LANDING\_ALTITUDE : \mathbb{R}\\ 
+  abort : \boolean\\ 
+  landingGearDeployed : \boolean\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  SAFE\_LANDING\_ALTITUDE' = 10.0\\ 
+  abort' = false\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circpublic ~ stowLandingGear ~ \circdef
+\\
+
+
+      \circblockopen
+
+this~.~landingGearDeployed :=false
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ isLandingGearDeployed ~ \circdef
+\circvar ret : \boolean \circspot
+\\
+
+
+      \circblockopen
+
+  ret := landingGearDeployed = \true
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getControllingMission ~ \circdef
+\circvar ret : MissionID \circspot
+\\
+
+
+      \circblockopen
+
+  ret := controllingMission
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ abort ~ \circdef
+\\
+
+
+      \circblockopen
+
+this~.~abort :=true
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ cleanUp ~ \circdef
+\circvar ret : \boolean \circspot
+\\
+
+
+      \circblockopen
+
+\Skip
+
+
+               \circseq \\
+
+  ret :=   (\lnot abort = \true)
+
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
+
+
