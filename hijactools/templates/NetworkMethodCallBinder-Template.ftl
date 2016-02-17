@@ -2,7 +2,7 @@
 	\SECTION ~ MethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
 		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels
 \end{zsection}
-
+%
 \begin{circus}
 \circprocess  MethodCallBinder \circdef \circbegin \\
 \end{circus}
@@ -12,11 +12,9 @@
 \begin{circusaction}
 ${mcb.Name}\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_${mcb.Name}Call\\
-	\t1 ~?~loc\prefixcolon(loc \in ${mcb.Name}Locs)\\
-	\t1 ~?~caller\prefixcolon(caller \in ${mcb.Name}Callers) <#list mcb.Parameters?keys as paramName> \cross ${mcb.Parameters[paramName]} </#list>
-	 <#if mcb.Sync==true>\\ \t1 ~?~callingThread </#if> \then \\
-	${mcb.Name}Call~.~loc~.~caller<#if mcb.Sync==true>~.~callingThread </#if> <#list mcb.Parameters?keys as paramName> \cross ${mcb.Parameters[paramName]} </#list> \then \\
+	binder\_${mcb.Name}Call~?~loc\prefixcolon(loc \in ${mcb.Name}Locs)~?~caller\prefixcolon(caller \in ${mcb.Name}Callers) <#list mcb.Parameters?keys as paramName>~?~p${paramName?counter} </#list>
+	 <#if mcb.Sync==true>~?~callingThread </#if> \then \\
+	${mcb.Name}Call~.~loc~.~caller<#if mcb.Sync==true>~.~callingThread </#if> <#list mcb.Parameters?keys as paramName>~!~p${paramName?counter} </#list> \then \\
 	${mcb.Name}Ret~.~loc~.~caller<#if mcb.Sync==true>~.~callingThread </#if><#if mcb.ReturnType != 'null'>~?~ret</#if> \then \\
 	binder\_${mcb.Name}Ret~.~loc~.~caller  <#if mcb.Sync==true>~.~callingThread </#if>~ <#if mcb.ReturnType != 'null'>!~ret</#if>  \then \\
 	${mcb.Name}\_MethodBinder
