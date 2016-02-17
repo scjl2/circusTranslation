@@ -33,10 +33,13 @@
 
 
       \circblockopen
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> master
               \circif ~ (buffer = 0) ~ \circthen ~
   \\
 \t1 ret := \true
@@ -64,10 +67,13 @@
 
 
       \circblockopen
+              ret := \false
+
+            
 
 
 
-
+<<<<<<< HEAD
               ret := \false
 
             
@@ -75,6 +81,9 @@
 
 
 
+=======
+
+>>>>>>> master
         \circblockclose
 
  

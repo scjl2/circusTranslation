@@ -38,18 +38,24 @@ MissionIds
 
 
       \circblockopen
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> master
               \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
   \\
 \t1 
       \circblockopen
+              ret := FlatBufferMissionMID
+
+            
 
 
 
-
+<<<<<<< HEAD
             this~.~returnedMission :=\true
 
              \circseq \\ 
@@ -62,6 +68,8 @@ MissionIds
 
 
 
+=======
+>>>>>>> master
 
         \circblockclose
 
