@@ -1,6 +1,6 @@
 \begin{zsection}
 	\SECTION ~ MethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels
+		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels\\  ,FlatBufferMissionMethChan  
 \end{zsection}
 %
 \begin{circus}
@@ -11,8 +11,7 @@
 \begin{circusaction}
 read\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_readCall~?~loc\prefixcolon(loc \in readLocs)~?~caller\prefixcolon(caller \in readCallers) 
-	 ~?~callingThread  \then \\
+	binder\_readCall~?~loc\prefixcolon(loc \in readLocs)~?~caller\prefixcolon(caller \in readCallers)~?~callingThread   \then \\
 	readCall~.~loc~.~caller~.~callingThread   \then \\
 	readRet~.~loc~.~caller~.~callingThread ~?~ret \then \\
 	binder\_readRet~.~loc~.~caller  ~.~callingThread ~ !~ret  \then \\
@@ -24,8 +23,7 @@ read\_MethodBinder \circdef \\
 \begin{circusaction}
 write\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_writeCall~?~loc\prefixcolon(loc \in writeLocs)~?~caller\prefixcolon(caller \in writeCallers) ~?~p1 
-	 ~?~callingThread  \then \\
+	binder\_writeCall~?~loc\prefixcolon(loc \in writeLocs)~?~caller\prefixcolon(caller \in writeCallers)~?~callingThread  ~?~p1  \then \\
 	writeCall~.~loc~.~caller~.~callingThread  ~!~p1  \then \\
 	writeRet~.~loc~.~caller~.~callingThread  \then \\
 	binder\_writeRet~.~loc~.~caller  ~.~callingThread ~   \then \\
@@ -34,7 +32,7 @@ write\_MethodBinder \circdef \\
 \end{circusaction}
 %
 %
-\begin{circus}
+\begin{circusaction}
 BinderActions \circdef \\
 \circblockopen 
 	read\_MethodBinder
@@ -43,16 +41,12 @@ BinderActions \circdef \\
 	write\_MethodBinder
 	
 \circblockclose
-\end{circus}
+\end{circusaction}
 %
-\begin{circus}
+\begin{circusaction}
 \circspot BinderActions \circinterrupt (done\_toplevel\_sequencer \then \Skip)
-\end{circus}
+\end{circusaction}
 %
 \begin{circus}
 \circend
-\end{circus}
-%
-\begin{circus}
-\circprocess ApplicationB \circdef Application \lpar MethodCallBinderSync \rpar MethodCallBinder
 \end{circus}

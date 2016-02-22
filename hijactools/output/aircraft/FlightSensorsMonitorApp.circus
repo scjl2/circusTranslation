@@ -1,10 +1,7 @@
 \begin{zsection}
-  \SECTION ~ FlightSensorsMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
- \t1  , 
-MainMissionMethChan
-
-
-
+  \SECTION ~ FlightSensorsMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
+ \t1  
 \end{zsection}
 
 \begin{circus}
@@ -21,24 +18,7 @@ handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~FlightSensorsMonitorSID \then \\
 	
-      \circblockopen
-
-      
-
-binder\_setAirSpeedCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then  \\ binder\_setAirSpeedRet~.~controllingMission~.~FlightSensorsMonitorSID\then  \\ \Skip
-
-
-               \circseq \\
-
-binder\_setAltitudeCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then  \\ binder\_setAltitudeRet~.~controllingMission~.~FlightSensorsMonitorSID\then  \\ \Skip
-
-
-               \circseq \\
-
-binder\_setHeadingCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then  \\ binder\_setHeadingRet~.~controllingMission~.~FlightSensorsMonitorSID\then  \\ \Skip
-
-
-        \circblockclose
+  \Skip
 
  \circseq \\
     handleAsyncEventRet~.~FlightSensorsMonitorSID \then \\

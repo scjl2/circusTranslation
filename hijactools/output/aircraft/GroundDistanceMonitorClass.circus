@@ -1,7 +1,8 @@
 
 \begin{zsection}
-  \SECTION ~ GroundDistanceMonitorClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
-
+  \SECTION ~ GroundDistanceMonitorClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
 \end{zsection}
 
 \begin{circus}

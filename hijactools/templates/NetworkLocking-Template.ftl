@@ -1,3 +1,10 @@
+\begin{zsection}
+  \SECTION ~ NetworkLocking ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, MissionIds, \\
+  \t1 ThreadIds, NetworkChannels, ObjectFW, ThreadFW
+\end{zsection}
+
+
+
 %%%%%%%%%%%%%%%%%%THREADS
 %
 \begin{circus}

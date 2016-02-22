@@ -1,7 +1,8 @@
 
 \begin{zsection}
-  \SECTION ~ MainMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
-
+  \SECTION ~ MainMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
 \end{zsection}
 
 \begin{circus}
@@ -38,8 +39,11 @@
 
 
       \circblockopen
+              ret := airSpeed
 
-  ret := airSpeed
+            
+
+
 
 
         \circblockclose
@@ -54,8 +58,11 @@
 
 
       \circblockopen
+              ret := altitude
 
-  ret := altitude
+            
+
+
 
 
         \circblockclose
@@ -70,8 +77,11 @@
 
 
       \circblockopen
+              ret := cabinPressure
 
-  ret := cabinPressure
+            
+
+
 
 
         \circblockclose
@@ -86,8 +96,11 @@
 
 
       \circblockopen
+              ret := emergencyOxygen
 
-  ret := emergencyOxygen
+            
+
+
 
 
         \circblockclose
@@ -102,8 +115,11 @@
 
 
       \circblockopen
+              ret := fuelRemaining
 
-  ret := fuelRemaining
+            
+
+
 
 
         \circblockclose
@@ -118,8 +134,11 @@
 
 
       \circblockopen
+              ret := heading
 
-  ret := heading
+            
+
+
 
 
         \circblockclose
@@ -133,8 +152,11 @@
 
 
       \circblockopen
+            this~.~this.airSpeed :=airSpeed
 
-this~.~this.airSpeed :=airSpeed
+            
+
+
 
 
         \circblockclose
@@ -148,8 +170,11 @@ this~.~this.airSpeed :=airSpeed
 
 
       \circblockopen
+            this~.~this.altitude :=altitude
 
-this~.~this.altitude :=altitude
+            
+
+
 
 
         \circblockclose
@@ -163,8 +188,11 @@ this~.~this.altitude :=altitude
 
 
       \circblockopen
+            this~.~this.cabinPressure :=cabinPressure
 
-this~.~this.cabinPressure :=cabinPressure
+            
+
+
 
 
         \circblockclose
@@ -178,8 +206,11 @@ this~.~this.cabinPressure :=cabinPressure
 
 
       \circblockopen
+            this~.~this.emergencyOxygen :=emergencyOxygen
 
-this~.~this.emergencyOxygen :=emergencyOxygen
+            
+
+
 
 
         \circblockclose
@@ -193,8 +224,11 @@ this~.~this.emergencyOxygen :=emergencyOxygen
 
 
       \circblockopen
+            this~.~this.fuelRemaining :=fuelRemaining
 
-this~.~this.fuelRemaining :=fuelRemaining
+            
+
+
 
 
         \circblockclose
@@ -208,8 +242,11 @@ this~.~this.fuelRemaining :=fuelRemaining
 
 
       \circblockopen
+            this~.~this.heading :=heading
 
-this~.~this.heading :=heading
+            
+
+
 
 
         \circblockclose

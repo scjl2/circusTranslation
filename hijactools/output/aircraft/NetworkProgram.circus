@@ -252,25 +252,25 @@ MainMissionSequencerApp\\
 		\interleave \\
 			LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
 			\interleave \\
-			TakeOffFailureHandlerApp ( MainMission ,  TakeOffMissionID ,  TEST  ) \\
+			TakeOffFailureHandlerApp ( MissionID ,  TakeOffMissionID ,  NOT\_SET  ) \\
 			\interleave \\
-			TakeOffMonitorApp ( MainMission ,  TakeOffMissionID ,  TEST ,  landingGearHandlerID  ) \\
+			TakeOffMonitorApp ( MissionID ,  TakeOffMissionID ,  NOT\_SET ,  landingGearHandlerID  ) \\
 			
 		\interleave \\
 		CruiseMissionApp\\
 		\interleave \\
-			BeginLandingHandlerApp ( MainMission  ) \\
+			BeginLandingHandlerApp ( MissionID  ) \\
 			\interleave \\
-			NavigationMonitorApp ( MainMission  ) \\
+			NavigationMonitorApp ( MissionID  ) \\
 			
 		\interleave \\
 		LandMissionApp\\
 		\interleave \\
 			LandingGearHandlerLandApp ( LandMissionID  ) \\
 			\interleave \\
-			SafeLandingHandlerApp ( MainMission ,  TEST  ) \\
+			SafeLandingHandlerApp ( MissionID ,  NOT\_SET  ) \\
 			\interleave \\
-			GroundDistanceMonitorApp ( MainMission  ) \\
+			GroundDistanceMonitorApp ( MissionID  ) \\
 			\interleave \\
 			InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
 			

@@ -4,8 +4,9 @@
 
 \begin{zsection}
 	\SECTION ~ NetworkChannels ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-		\t1 SchedulableId, SchedulableIds, MissionChan, SchedulableChan, TopLevelMissionSequencerFWChan,\\
-		\t1 FrameworkChan, SafeletChan
+		\t1 SchedulableId, SchedulableIds, MissionChan, TopLevelMissionSequencerFWChan,\\
+		\t1 FrameworkChan, SafeletChan, AperiodicEventHandlerChan, ManagedThreadChan, \\
+		\t1 OneShotEventHandlerChan, PeriodicEventHandlerChan
 \end{zsection}
 %
 \begin{circus}
@@ -36,18 +37,32 @@
 \end{circus}
 %
 \begin{circus}
-\circchannelset ~ AppSync == \\ \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\ \t1 MTAppSync, OSEHSync , APEHSync,  \\ \t1
-	\lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\ \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\ \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet \rchanset  \}
+\circchannelset SafeltAppSync \circdef \\
+   \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
 \end{circus}
 %
-%\begin{circus}
-%\circchannelset ~ ObjectSync   == \\ \t1    \lchanset	 \rchanset
-%\end{circus}
-
+\begin{circus}
+\circchannelset MissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
+\end{circus}
+%
+\begin{circus}
+\circchannelset MissionAppSync == \\
+	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
+\end{circus}
+%
+\begin{circus}
+\circchannelset ~ AppSync == \\
+\t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\
+\t1 MTAppSync, OSEHSync , APEHSync, PEHSync \\
+\t1 \lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\
+\t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\
+\t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet \rchanset  \}
+\end{circus}
+%
 \begin{circus}
 \circchannelset ~ ThreadSync == \\ \t1  \lchanset raise\_thread\_priority, lower\_thread\_priority, isInterruptedCall, isInterruptedRet, get\_priorityLevel \rchanset
 \end{circus}
-
+%
 \begin{circus}
 \circchannelset ~ LockingSync == \\ \t1  \lchanset lockAcquired, startSyncMeth, endSyncMeth, waitCall, waitRet, notify, isInterruptedCall, isInterruptedRet, \\
 \t1 interruptedCall, interruptedRet, done\_toplevel\_sequencer, get\_priorityLevel  \rchanset

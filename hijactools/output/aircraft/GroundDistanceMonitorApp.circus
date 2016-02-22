@@ -1,5 +1,6 @@
 \begin{zsection}
-  \SECTION ~ GroundDistanceMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
+  \SECTION ~ GroundDistanceMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
  \t1  , 
 MainMissionMethChan
 
@@ -22,31 +23,25 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~GroundDistanceMonitorSID \then \\
 	
       \circblockopen
+            binder\_getAltitudeCall~.~mainMission~.~GroundDistanceMonitorSID\then  \\ binder\_getAltitudeRet~.~mainMission~.~GroundDistanceMonitorSID~?~getAltitude\then  \\ \Skip\circvar distance : \power \arithmos \circspot distance :=~getAltitude
+             \circseq \\ 
 
-      
 
-binder\_getAltitudeCall~.~mainMission~.~GroundDistanceMonitorSID\then  \\ binder\_getAltitudeRet~.~mainMission~.~GroundDistanceMonitorSID~?~getAltitude\then  \\ \ \ \circvar distance : \power \arithmos \circspot distance :=~getAltitude\ \
 
-               \circseq \\
-
-  \circif ~ (distance = readingOnGround) ~ \circthen ~
+              \circif ~ (distance = readingOnGround) ~ \circthen ~
   \\
-  \t1
-
-      \circblockopen
-
-      
-
-requestTerminationCall~.~mainMission\then  \\ requestTerminationRet~.~mainMission~?~requestTermination\then  \\ 
-
-
-        \circblockclose
+\t1 
+  \Skip
 
 
   \\
   \circelse ~ \lnot (distance = readingOnGround) \circthen \Skip
   \\
-  \circfi \circseq \\
+  \circfi \\
+
+            
+
+
 
 
         \circblockclose

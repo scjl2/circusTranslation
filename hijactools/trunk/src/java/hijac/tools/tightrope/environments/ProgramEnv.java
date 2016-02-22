@@ -165,6 +165,12 @@ public class ProgramEnv
 	public Map geNetworkMap()
 	{
 		Map returnMap = structureEnv.getNetworkMap();
+		
+		
+		
+		
+		returnMap.put("AppProcNames", getAppProcNamesList());
+		
 		returnMap.put("Objects", getObjectIdsMap());
 		returnMap.put("Threads", getThreadIdsMap());
 		returnMap.put("MethodCallBindings", getBinderMethodEnvsMapList());
@@ -173,6 +179,34 @@ public class ProgramEnv
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private List getAppProcNamesList()
+	{
+		List appProcNames = new ArrayList();
+		String app = "App";
+		
+		
+		appProcNames.add(getSafelet().getName()+app);
+		
+		for(ParadigmEnv p : getTopLevelMissionSequencers())
+		{
+			appProcNames.add(p.getName()+app);
+		}
+		
+		for(ParadigmEnv p : getSchedulables())
+		{
+			appProcNames.add(p.getName()+app);
+		}
+		
+		for(ParadigmEnv p : getMissions())
+		{
+			appProcNames.add(p.getName()+app);
+		}
+		
+		
+		return appProcNames;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
 	private List getBinderMethodEnvsMapList()
 	{
 		List binderMethodEnvsMap = new ArrayList();
@@ -191,28 +225,37 @@ public class ProgramEnv
 			binderMethodMap.put("LocType", b.getLocationType());
 			binderMethodMap.put("CallerType", b.getCallerType());
 			binderMethodMap.put("Sync", b.isSynchronised());
+			
+			
 
-			// // TODO need to calculate these!
-			// for (String s : locs)
-			// {
-			// if (missionIds.contains(s))
-			// {
-			// // b.setLocationType("MissionID");
-			// binderMethodMap.put("LocType", b.getLocationType());
-			// }
-			// }
-			//
-			// for (String s : callers)
-			// {
-			// if (schedulableIds.contains(s))
-			// {
-			// b.setCallerType("SchedulableID");
-			// binderMethodMap.put("CallerType", b.getCallerType());
-			// }
-			// }
+			
 
 			binderMethodEnvsMap.add(binderMethodMap);
 		}
+		
+		ArrayList<String> tempStrings = new ArrayList<String>();
+		String methChan = "MethChan";
+		
+		for(Object o : binderMethodEnvsMap)
+		{
+			Map b = (Map) o;
+			
+			
+			Set<String> locs = (Set<String>) b.get("Locations");
+			
+			//TODO Will break if the same method is in two locations?
+			for(String l : locs)
+			{			
+				String locParentString = l.substring(0,l.length()-3)+methChan;
+				
+				if(! tempStrings.contains(locParentString))
+				{				
+					b.put("LocParent", locParentString);
+					tempStrings.add(locParentString);
+				}
+			}
+		}
+		
 		return binderMethodEnvsMap;
 	}
 

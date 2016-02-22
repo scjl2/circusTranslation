@@ -9,7 +9,7 @@
 </#list>
 
 \where
-  distinct \langle SafeletTID, nullTID, \\
+  distinct \langle SafeletTId, nullThreadId, \\
   <#list Threads?keys as thread>
 	${thread}
 	<sep>

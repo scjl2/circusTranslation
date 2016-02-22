@@ -1,13 +1,10 @@
 \begin{zsection}
   \SECTION ~ CruiseMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , MethodCallBindingChannels , CruiseMissionClass \\
-
-  \t1 , CruiseMissionMethChan
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, CruiseMissionMethChan \\
+ , CruiseMissionClass, MethodCallBindingChannels 
+ 
 \end{zsection}
-%\begin{circus}
-%\circchannelset CruiseMissionAppSync == \\
-%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
-%\end{circus}
+
 
 %\begin{circus}
 %\circchannelset CruiseMissionAppChanSet == \\

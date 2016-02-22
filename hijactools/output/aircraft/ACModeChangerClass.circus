@@ -1,12 +1,13 @@
 
 \begin{zsection}
-  \SECTION ~ ACModeChangerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
-
-, 
+  \SECTION ~ ACModeChangerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  , 
 MissionId
 , 
 
 MissionIds
+
 
 
 \end{zsection}
@@ -38,20 +39,22 @@ MissionIds
 
 
       \circblockopen
-
-  \circif ~ (modesLeft = 3) ~ \circthen ~
+              \circif ~ (modesLeft = 3) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
-
-  modesLeft := modesLeft - 1
-
+              modesLeft := modesLeft - 1
 
 
-               \circseq \\
+             \circseq \\ 
 
-  ret := TakeOffMissionMID
+
+
+              ret := TakeOffMissionMID
+
+            
+
+
 
 
         \circblockclose
@@ -60,20 +63,22 @@ MissionIds
   \\
   \circelse ~ \lnot (modesLeft = 3) ~ \circthen ~
   \\
-  \t1
-  \circif ~ (modesLeft = 2) ~ \circthen ~
+\t1   \circif ~ (modesLeft = 2) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
-
-  modesLeft := modesLeft - 1
-
+              modesLeft := modesLeft - 1
 
 
-               \circseq \\
+             \circseq \\ 
 
-  ret := CruiseMissionMID
+
+
+              ret := CruiseMissionMID
+
+            
+
+
 
 
         \circblockclose
@@ -82,20 +87,22 @@ MissionIds
   \\
   \circelse ~ \lnot (modesLeft = 2) ~ \circthen ~
   \\
-  \t1
-  \circif ~ (modesLeft = 1) ~ \circthen ~
+\t1   \circif ~ (modesLeft = 1) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
-
-  modesLeft := modesLeft - 1
-
+              modesLeft := modesLeft - 1
 
 
-               \circseq \\
+             \circseq \\ 
 
-  ret := LandMissionMID
+
+
+              ret := LandMissionMID
+
+            
+
+
 
 
         \circblockclose
@@ -104,11 +111,13 @@ MissionIds
   \\
   \circelse ~ \lnot (modesLeft = 1) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
+              ret := nullMissionId
 
-  ret := nullMissionId
+            
+
+
 
 
         \circblockclose
@@ -122,6 +131,10 @@ MissionIds
 
   \\
   \circfi
+
+            
+
+
 
 
         \circblockclose

@@ -4,9 +4,6 @@
 
   \t1 
 \end{zsection}
-%\begin{circus}
-%\circchannelset FlatBufferMissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
-%\end{circus}
 
 %\begin{circus}
 %\circchannelset FlatBufferMissionSequencerAppChanSet == FlatBufferMissionSequencerSIDAppSync

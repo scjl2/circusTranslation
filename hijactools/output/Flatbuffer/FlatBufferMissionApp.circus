@@ -2,12 +2,9 @@
   \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, FlatBufferMissionMethChan \\
  , FlatBufferMissionClass, MethodCallBindingChannels 
-    
+ 
 \end{zsection}
-%\begin{circus}
-%\circchannelset FlatBufferMissionAppSync == \\
-%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
-%\end{circus}
+
 
 %\begin{circus}
 %\circchannelset FlatBufferMissionAppChanSet == \\

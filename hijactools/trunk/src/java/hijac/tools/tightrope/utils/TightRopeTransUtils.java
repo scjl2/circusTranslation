@@ -1,19 +1,21 @@
 package hijac.tools.tightrope.utils;
 
-import com.sun.source.tree.*;
-
 import hijac.tools.modelgen.circus.utils.TransUtils;
-import hijac.tools.tightrope.environments.ObjectEnv;
 
 import javax.lang.model.element.Name;
 import javax.lang.model.type.TypeKind;
+
+import com.sun.source.doctree.IdentifierTree;
+import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.PrimitiveTypeTree;
+import com.sun.source.tree.Tree;
 
 /* There is more to do here. We should really use the templates and also
  * properly handler types that are represented by identifiers... */
 
 /**
- * Utility methods for the low-level translation of Java into Circus. Extends 
- * TransUtils, from TransCircus.
+ * Utility methods for the low-level translation of Java into Circus. Extends
+ * <code>hijac.tools.modelgen.circus.utils.TransUtils</code>
  * 
  * @author Matt Luckcuck
  * @version $Revision$
@@ -43,7 +45,11 @@ public class TightRopeTransUtils extends TransUtils
 
 		if (returnTree != null)
 		{
-			if (returnTree instanceof PrimitiveTypeTree)
+			if (returnTree.toString().equalsIgnoreCase("double"))
+			{
+				returnString = "\\power \\arithmos";
+			}
+			else if (returnTree instanceof PrimitiveTypeTree)
 			{
 
 				TypeKind returnTypeKind = ((PrimitiveTypeTree) returnTree)
@@ -54,36 +60,39 @@ public class TightRopeTransUtils extends TransUtils
 					case BOOLEAN:
 						returnString = "\\boolean";
 						break;
-						//I changed this, rather a coarse coverage of these three. Will not produce good model checking results
-					case BYTE:						
+					// I changed this, rather a coarse coverage of these three.
+					// Will not produce good model checking results
+					case BYTE:
 					case INT:
 					case LONG:
 						returnString = "\\num";
 						break;
 
-						//TODO What do I do with these?
+					// TODO What do I do with these?
 					case FLOAT:
 						returnString = "float";
 						break;
 					case DOUBLE:
-//						returnString = "\\mathbb{R}";
+						// returnString = "\\mathbb{R}";
 						returnString = "\\power \\arithmos";
 						break;
 					case CHAR:
 						returnString = "char";
 						break;
-					
+
 					default:
 						break;
 				}
-			} else
+			}
+			else
 			{
 				String s = returnTree.toString();
 
 				if (s.contains("Mission"))
 				{
 					returnString = "MissionID";
-				} else if (s.contains("MissionSequencer")
+				}
+				else if (s.contains("MissionSequencer")
 						|| s.contains("OneShotEventHandler")
 						|| s.contains("AperiodicEventHandler")
 						|| s.contains("PeriodicEventHandler")
@@ -93,16 +102,16 @@ public class TightRopeTransUtils extends TransUtils
 				}
 				else
 				{
-					returnString = returnTree.toString();							
+					returnString = returnTree.toString();
+
 				}
-				
+
 			}
 
 		}
 		return returnString;
 	}
 
-	
 	public static String encodeLiteral(LiteralTree node)
 	{
 		switch (node.getKind())
@@ -117,7 +126,7 @@ public class TightRopeTransUtils extends TransUtils
 
 			case FLOAT_LITERAL:
 			case DOUBLE_LITERAL:
-				return FAILED_RESULT;
+				return "\\power \\arithmos";
 
 			case STRING_LITERAL:
 				return encodeString((String) node.getValue());
@@ -126,9 +135,8 @@ public class TightRopeTransUtils extends TransUtils
 				return "\\circnull";
 
 			default:
-				throw new AssertionError(
-						"Unexpected Tree.Kind in LiteralTree: "
-								+ node.getKind());
+				throw new AssertionError("Unexpected Tree.Kind in LiteralTree: "
+						+ node.getKind());
 		}
 	}
 
@@ -150,7 +158,5 @@ public class TightRopeTransUtils extends TransUtils
 		// return result.toString();
 		return "";
 	}
-	
-		
-	
+
 }

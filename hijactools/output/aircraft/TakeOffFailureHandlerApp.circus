@@ -1,10 +1,8 @@
 \begin{zsection}
-  \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
+  \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
  \t1  , 
 MainMissionMethChan
-, 
-
-TakeOffMissionMethChan
 
 
 
@@ -16,7 +14,7 @@ TakeOffMissionMethChan
 ,\\
   takeoffMission : MissionID
 ,\\
-  threshold : Double
+  threshold : \power \arithmos
 
 \circspot
   \circbegin
@@ -29,43 +27,30 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~TakeOffFailureHandlerSID \then \\
 	
       \circblockopen
+            binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then  \\ binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then  \\ \Skip\circvar currentSpeed : \power \arithmos \circspot currentSpeed :=~getAirSpeed
+             \circseq \\ 
 
-binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then  \\ binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then  \\ \ \ \circvar currentSpeed : \power \arithmos \circspot currentSpeed :=~getAirSpeed\ \
 
-               \circseq \\
 
-  \circif ~ (currentSpeed < threshold) ~ \circthen ~
+              \circif ~ (currentSpeed < threshold) ~ \circthen ~
   \\
-  \t1
-
-      \circblockopen
-
-      
-
-binder\_abortCall~.~takeoffMission~.~TakeOffFailureHandlerSID\then  \\ binder\_abortRet~.~takeoffMission~.~TakeOffFailureHandlerSID\then  \\ \Skip
-
-
-               \circseq \\
-
-requestTerminationCall~.~takeoffMission\then  \\ requestTerminationRet~.~takeoffMission~?~requestTermination\then  \\ 
-
-
-        \circblockclose
+\t1 
+  \Skip
 
 
   \\
   \circelse ~ \lnot (currentSpeed < threshold) ~ \circthen ~
   \\
-  \t1
-
-      \circblockopen
-
-      
-        \circblockclose
+\t1 
+  \Skip
 
 
   \\
   \circfi
+
+            
+
+
 
 
         \circblockclose

@@ -1,7 +1,8 @@
 
 \begin{zsection}
-  \SECTION ~ TakeOffMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
-
+  \SECTION ~ TakeOffMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
 \end{zsection}
 
 \begin{circus}
@@ -35,8 +36,11 @@
 
 
       \circblockopen
+            this~.~abort :=\true
 
-this~.~abort :=\true
+            
+
+
 
 
         \circblockclose
@@ -51,8 +55,11 @@ this~.~abort :=\true
 
 
       \circblockopen
+              ret := controllingMission
 
-  ret := controllingMission
+            
+
+
 
 
         \circblockclose
@@ -66,8 +73,11 @@ this~.~abort :=\true
 
 
       \circblockopen
+            this~.~this.controllingMission :=controllingMission
 
-this~.~this.controllingMission :=controllingMission
+            
+
+
 
 
         \circblockclose
@@ -82,10 +92,11 @@ this~.~this.controllingMission :=controllingMission
 
 
       \circblockopen
+              ret :=   (\lnot abort = \true)
 
-      
 
-  ret :=   (\lnot abort = \true)
+            
+
 
 
 
@@ -100,8 +111,11 @@ this~.~this.controllingMission :=controllingMission
 
 
       \circblockopen
+            this~.~landingGearDeployed :=\false
 
-this~.~landingGearDeployed :=\false
+            
+
+
 
 
         \circblockclose
@@ -116,8 +130,11 @@ this~.~landingGearDeployed :=\false
 
 
       \circblockopen
+              ret := landingGearDeployed = \true
 
-  ret := landingGearDeployed = \true
+            
+
+
 
 
         \circblockclose

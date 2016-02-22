@@ -1,13 +1,10 @@
 \begin{zsection}
   \SECTION ~ LandMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , MethodCallBindingChannels , LandMissionClass \\
-
-  \t1 , LandMissionMethChan
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, LandMissionMethChan \\
+ , LandMissionClass, MethodCallBindingChannels 
+ 
 \end{zsection}
-%\begin{circus}
-%\circchannelset LandMissionAppSync == \\
-%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
-%\end{circus}
+
 
 %\begin{circus}
 %\circchannelset LandMissionAppChanSet == \\
@@ -143,8 +140,11 @@ startSyncMeth~.~LandMissionOID~.~thread \then \\
 lockAcquired~.~LandMissionOID~.~thread \then \\
 
       \circblockopen
+            this~.~landingGearDeployed :=\true
 
-this~.~landingGearDeployed :=\true
+            
+
+
 
 
         \circblockclose
