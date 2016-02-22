@@ -28,7 +28,6 @@ MissionIds
 \begin{schema}{\circinitial Init}
   State~'
 \where
-  modesLeft' = 3\\ 
 \end{schema}
 
 
