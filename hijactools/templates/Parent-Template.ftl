@@ -1,4 +1,4 @@
-<#if Parents?has_content>, 
+<#if Parents?has_content>,
 <#list Parents as parent>
 ${parent}
 <#sep>, </#sep>
@@ -8,3 +8,4 @@ ${parent}
 
 </#list>
 </#if>
+<#if SyncMethods?has_content>, ObjectFWChan, ObjectIds</#if>

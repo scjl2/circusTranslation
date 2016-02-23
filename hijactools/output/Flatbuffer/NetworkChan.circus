@@ -6,7 +6,7 @@
 	\SECTION ~ NetworkChannels ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
 		\t1 SchedulableId, SchedulableIds, MissionChan, TopLevelMissionSequencerFWChan,\\
 		\t1 FrameworkChan, SafeletChan, AperiodicEventHandlerChan, ManagedThreadChan, \\
-		\t1 OneShotEventHandlerChan, PeriodicEventHandlerChan
+		\t1 OneShotEventHandlerChan, PeriodicEventHandlerChan, MissionSequencerMethChan
 \end{zsection}
 %
 \begin{circus}
@@ -53,7 +53,7 @@
 \begin{circus}
 \circchannelset ~ AppSync == \\
 \t1  \bigcup \{SafeltAppSync, MissionSequencerAppSync, MissionAppSync, \\
-\t1 MTAppSync, OSEHSync , APEHSync, PEHSync \\
+\t1 MTAppSync, OSEHSync , APEHSync, PEHSync, \\
 \t1 \lchanset getSequencer, end\_mission\_app, end\_managedThread\_app, \\
 \t1 setCeilingPriority, requestTerminationCall,requestTerminationRet, terminationPendingCall, \\
 \t1 terminationPendingRet, handleAsyncEventCall, handleAsyncEventRet \rchanset  \}

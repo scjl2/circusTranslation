@@ -2,7 +2,8 @@
   \SECTION ~ FlatBufferMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, FlatBufferMissionMethChan \\
  , FlatBufferMissionClass, MethodCallBindingChannels 
- 
+ , ObjectFWChan, ObjectIds
+
 \end{zsection}
 
 
