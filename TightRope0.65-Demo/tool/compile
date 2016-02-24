@@ -1,7 +1,0 @@
-#!/bin/sh
-set -e
-
-HIJAC_HOME=$(readlink -f $(dirname $0))
-
-# Note that the logger is not essential for compilation.
-ant -emacs -logger org.apache.tools.ant.NoBannerLogger compile
