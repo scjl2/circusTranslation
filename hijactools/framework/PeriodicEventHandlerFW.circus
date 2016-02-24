@@ -9,7 +9,7 @@
   \t1 ~ schedulable : SchedulableID ; periodicParameters : PeriodicParameters \circspot ~\circbegin
 \end{circus}
 %
-\begin{schema}{\circstateignore State}
+\begin{schema}{\circstateignore PEH\_State}
   controllingMission : MissionID\\
   applicationTerminating : \boolean \\
   period : JTime \\
@@ -24,12 +24,12 @@
 %
 \begin{parser}
 \begin{circusaction}
-\circstate State
+\circstate PEH\_State
 \end{circusaction}
 \end{parser}
 %
-\begin{schema}{Init}
-  State~'\\
+\begin{schema}{PEH\_Init}
+  PEH\_State~'\\
 \where
   controllingMission' = nullMissionId\\
   applicationTerminating' = \false \\
@@ -78,7 +78,7 @@ Execute \circdef  \\
 \t1\circblockopen
   	\circblockopen
 		\circblockopen
-			\circwait valueOf(startTime) \circseq \\
+		%%%%%PARSING%%%%%% \circwait valueOf(startTime) \circseq \\
 			\circif deadlineMissHandler \neq nullSchedulableId \circthen \\
   			\t1	RunningWithDeadlineDetection \\
   			\circelse deadlineMissHandler = nullSchedulableId \circthen \\
@@ -122,7 +122,7 @@ PeriodicClock \circdef \\
 \t1 \circmu X \circspot
   \circblockopen
 	\circblockopen
-		\circwait valueOf(period) \circseq \\
+	%%%%%PARSING%%%%%%	\circwait valueOf(period) \circseq \\
 		release~.~schedulable \then \\
 		X
 	\circblockclose \\
@@ -190,7 +190,7 @@ DeadlineClock \circdef \circval index : \nat \circspot \\
 \t1 \circblockopen
 		\circblockopen
 			\circblockopen
-				\circwait valueOf(deadline) \circseq \\
+				%%%%%PARSING%%%%%%\circwait valueOf(deadline) \circseq \\
 				release~.~deadlineMissHandler \then \\
 				periodic\_release\_complete~.~schedulable~.~index \then \\
 				\Skip
@@ -204,14 +204,14 @@ DeadlineClock \circdef \circval index : \nat \circspot \\
 		\interleave
 		\circblockopen
 			\circblockopen
-				\circwait valueOf(period) \circseq \\
+				%%%%%PARSING%%%%%%\circwait valueOf(period) \circseq \\
 				DeadlineClock(index + 1)
 			\circblockclose  \\
 		\circblockclose
 
 
     \circblockclose  \\
-  \circinterrupt
+    \circseq %%%%%PARSING%%%%%% \circinterrupt
     \circblockopen
     		end\_releases~.~schedulable \then \\
     		periodic\_release\_complete~.~schedulable~?~index \then \\
@@ -251,7 +251,7 @@ PeriodicTerminatingController \circdef \\
 \end{circusaction}
 %
 \begin{circusaction}
-\circspot\circblockopen \circmu X \circspot\circblockopen  \lschexpract Init \rschexpract  \circseq Start \circseq\\
+	\circspot\circblockopen \circmu X \circspot\circblockopen  \lschexpract PEH\_Init \rschexpract  \circseq Start \circseq\\
 \circblockopen \circif applicationTerminating = \false \circthen \\
 	\t2 \circblockopen Execute \circseq Cleanup \circseq X\circblockclose \\
  \circelse applicationTerminating = \true \circthen \\

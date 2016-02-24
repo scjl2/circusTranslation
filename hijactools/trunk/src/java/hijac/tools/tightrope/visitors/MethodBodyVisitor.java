@@ -389,7 +389,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			if (st instanceof ExpressionStatementTree)
 
 			{
-				if (!(node.toString().contains("Console") || node.toString().contains(
+				if (!(st.toString().contains("Console") || st.toString().contains(
 						"System")))
 				{
 					String statementString = st.accept(this, ctxt);
@@ -850,10 +850,10 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 				timeMachine.put("methodCall", false);
 
-				if (putSkip)
-				{
-					sb.append(TightRopeString.LATEX.SKIP);
-				}
+//				if (putSkip)
+//				{
+//					sb.append(TightRopeString.LATEX.SKIP);
+//				}
 
 				return sb.toString();
 
@@ -1400,14 +1400,18 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				final MemberSelectTree memberSelectTree = (MemberSelectTree) mit
 						.getMethodSelect();
-				System.out.println("!// not my method, variable, putting key: "
-						+ memberSelectTree.getIdentifier().toString() + " value: "
-						+ node.getName().toString());
+//				System.out.println("!// not my method, variable, putting key: "
+//						+ memberSelectTree.getIdentifier().toString() + " value: "
+//						+ node.getName().toString());
 
 				timeMachine.putIfAbsent(memberSelectTree.getIdentifier().toString(), node
 						.getName().toString());
 
-				return visitMethodInvocation(mit, ctxt) + "\\circvar " + node.getName()
+				String methodCallTrans =  visitMethodInvocation(mit, ctxt);
+				
+				methodCallTrans = methodCallTrans.replace("\\Skip", "");
+				
+				return methodCallTrans + "\\circvar " + node.getName()
 						+ " : " + TightRopeTransUtils.encodeType(node.getType())
 						+ " \\circspot " + node.getName() + " :=~"
 						+ memberSelectTree.getIdentifier().toString();// +

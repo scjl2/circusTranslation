@@ -8,7 +8,7 @@
   \circprocess AperiodicEventHandlerFW ~ \circdef ~ schedulable : SchedulableID; aperiodicType : AperiodicType ; aperiodicParameters : AperiodicParameters \circspot ~\circbegin
 \end{circus}
 %
-\begin{schema}{\circstateignore State}
+\begin{schema}{\circstateignore APEH\_State}
   controllingMission : MissionID\\
   applicationTerminating : \boolean \\
   pending : \boolean \\
@@ -19,12 +19,12 @@
 %
 \begin{parser}
 \begin{circusaction}
-\circstate State
+\circstate APEH\_State
 \end{circusaction}
 \end{parser}
 %
-\begin{schema}{Init}
-  State~'\\
+\begin{schema}{APEH\_Init}
+  APEH\_State~'\\
 \where
   controllingMission' = nullMissionId\\
   applicationTerminating' = \false \\
@@ -77,7 +77,8 @@ Execute \circdef  \\
    \lpar \{pending, data\}  |\lchanset end\_releases \rchanset| \emptyset \rpar \\
 SignalTermination\\
 \circblockclose
-  \lpar \{pending, data\} | DeadlineClockSync \cup \lchanset  release~.~schedulable, releaseLong.schedulable \rchanset | \emptyset \rpar \\
+%%%%PARSING%%%%  \lpar \{pending, data\} | DeadlineClockSync \cup \lchanset  release.schedulable, releaseLong.schedulable \rchanset | \emptyset \rpar \\
+   \lpar \{pending, data\} | DeadlineClockSync  | \emptyset \rpar \\
 \circblockopen
 \circblockopen
   \circblockopen
@@ -86,13 +87,13 @@ SignalTermination\\
       releaseLong~.~schedulable?data \then \Skip
     \circblockclose \circseq DeadlineClock
 \circblockclose
-\circinterupt
+\circseq%%%%%%%PARSING%%%%%\circinterupt
 \circblockopen
     end\_releases.schedulable \then
     \Skip
 \circblockclose
 \circblockclose
-\t1 \circelse deadlineMissHandler == nullSchedulableId \circthen \\
+\t1 \circelse deadlineMissHandler  = nullSchedulableId \circthen \\
 \t1 \circblockopen
 	\circblockopen
 		\circif aperiodicType = aperiodic \circthen \\
@@ -112,7 +113,7 @@ DeadlineClock \circdef \\
 \t1	\circblockopen
 		\circblockopen
 			\circblockopen
-				\circwait valueOf(deadline) \circseq \\
+			%%%%PASRSING%%%%\circwait valueOf(deadline) \circseq \\
 				release~.~deadlineMissHandler \then \\
 				DeadlineClock
 			\circblockclose \\
@@ -123,7 +124,7 @@ DeadlineClock \circdef \\
 			\circblockclose
 		\circblockclose
 	\circblockclose
-    \circinterrupt
+	\circseq %%%%PARSING%%%% \circinterrupt
     \circblockopen
     		end\_releases~.~schedulable \then \\
     		%release\_complete~.~schedulable \then \\
@@ -236,7 +237,7 @@ Cleanup \circdef \\
 \end{circusaction}
 %
 \begin{circusaction}
-\circspot \circblockopen  \circmu X \circspot \circblockopen   \lschexpract Init \rschexpract \circseq Start \circseq\\
+\circspot \circblockopen  \circmu X \circspot \circblockopen   \lschexpract APEH\_Init \rschexpract \circseq Start \circseq\\
    \circblockopen  \circif applicationTerminating = \false \circthen \\
 	\t2 \circblockopen Execute \circseq Cleanup \circseq X \circblockclose\\
  \circelse applicationTerminating = \true \circthen \\

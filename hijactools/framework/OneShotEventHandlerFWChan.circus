@@ -6,7 +6,7 @@
 \circchannel wait\_for\_start\_time : SchedulableID\\
 \circchannel end\_schedule : SchedulableID\\
 \circchannel reschedule\_handler: SchedulableID \cross JTime \\
-\circchannel deschedule\_handler: SchedulableID\\
+\circchannel stop\_release : SchedulableID 
 \end{circus}
 %
 \begin{circus}

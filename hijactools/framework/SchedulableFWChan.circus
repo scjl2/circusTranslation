@@ -4,6 +4,5 @@
 %
 \begin{circus}
     \circchannel ~ activate\_schedulables : MissionID\\
-    \circchannel ~ done\_schedulable : SchedulableID\\
-    \circchannel ~ end\_ periodic\_app : SchedulableID\\
+    \circchannel ~ done\_schedulable : SchedulableID
 \end{circus}

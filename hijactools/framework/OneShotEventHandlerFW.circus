@@ -8,7 +8,7 @@
   \circprocess OneShotEventHandlerFW ~ \circdef ~ schedulable : SchedulableID; startTime: JTime ; aperiodicParameters : AperiodicParameters \circspot ~\circbegin
 \end{circus}
 %
-\begin{schema}{\circstateignore State}
+\begin{schema}{\circstateignore OSEH\_State}
   controllingMission : MissionID\\
   applicationTerminating : \boolean \\
   deadline : JTime \\
@@ -17,12 +17,12 @@
 %
 \begin{parser}
 \begin{circusaction}
-\circstate State
+\circstate OSEH\_State
 \end{circusaction}
 \end{parser}
 %
-\begin{schema}{Init}
- State~'\\
+\begin{schema}{OSEH\_Init}
+ OSEH\_State~'\\
  \where
   controllingMission' = nullMissionId\\
   applicationTerminating' = \false \\
@@ -136,7 +136,7 @@ DeadlineClock \circdef \\
 \t1	\circblockopen
 		\circblockopen
 			\circblockopen
-				\circwait valueOf(deadline) \circseq \\
+			%%%%PARSING%%%%\circwait valueOf(deadline) \circseq \\
 				release~.~deadlineMissHandler \then \\
 				DeadlineClock
 			\circblockclose  \\
@@ -152,7 +152,7 @@ DeadlineClock \circdef \\
 			\circblockclose
 		\circblockclose
 	\circblockclose
-    \circinterrupt
+	\circseq %%%%PARSING%%%%  \circinterrupt
     \circblockopen
     		end\_releases~.~schedulable \then \\
 	    	\Skip
@@ -164,12 +164,12 @@ Scheduled \circdef \\
 \t1 get\_startTime~.~schedulable~?~startTime \then \\
 \t1 \circblockopen
   \circblockopen
-		\circwait valueOf(startTime) \\
+  %%%%%PARSING%%%%%\circwait valueOf(startTime) \\
     release~.~schedulable \then \\
 		handleAsyncEventCall~.~schedulable \then \\
 	 	NotScheduled
      \circblockclose \\
-  \circinterrupt \\
+     \circseq  %%%%%PARSING%%%% \circinterrupt \\
   \circblockopen
      	\circblockopen
       		deschedule\_handler~.~schedulable \then \\
@@ -300,7 +300,7 @@ Cleanup \circdef \\
 \end{circusaction}
 %
 \begin{circusaction}
-\circspot \circblockopen  \circmu X \circspot \circblockopen   \lschexpract Init \rschexpract \circseq Start \circseq\\
+	\circspot \circblockopen  \circmu X \circspot \circblockopen   \lschexpract OSEH\_Init \rschexpract \circseq Start \circseq\\
 \circblockopen  \circif applicationTerminating = \false \circthen \\
 		\t1 \circblockopen Execute \circseq Cleanup \circseq X\circblockclose \\
 	\circelse applicationTerminating = \true \circthen \\

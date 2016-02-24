@@ -7,19 +7,19 @@
   \circprocess ~ TopLevelMissionSequencerFW ~ \circdef ~ sequencer : SchedulableID \circspot ~ \circbegin 
 \end{circus}
 %
-\begin{schema}{State}
+\begin{schema}{\circstateignore TLMS\_State}
   currentMission : MissionID\\
   continue : \boolean
 \end{schema}
 %
 \begin{parser}
 \begin{circusaction}
-\circstate State
+	\circstate TLMS\_State
 \end{circusaction}
 \end{parser}
 %
-\begin{schema}{Init}
-  State~'
+\begin{schema}{TLMS\_Init}
+	TLMS\_State~'
 \where
   continue' = \true \\
   currentMission' = nullMissionId
@@ -145,7 +145,7 @@ Finish ~ \circdef ~\\
 \end{circusaction}
 % 
 \begin{circusaction}
-  \circspot \lschexpract Init \rschexpract \circseq Start \circseq Execute \circseq Finish
+  \circspot \lschexpract TLMS\_Init \rschexpract \circseq Start \circseq Execute \circseq Finish
 \end{circusaction}
 % 
 \begin{circus}

@@ -57,7 +57,7 @@ public class GroundDistanceMonitor extends PeriodicEventHandler
 
 		if (distance == readingOnGround)
 		{
-			System.out.println("Aircraft Landed, Terminating Mission");
+		System.out.println("Aircraft Landed, Terminating Mission");
 			mainMission.requestTermination();
 		}
 	}

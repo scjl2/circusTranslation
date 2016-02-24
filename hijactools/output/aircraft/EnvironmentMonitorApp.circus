@@ -1,7 +1,12 @@
 \begin{zsection}
   \SECTION ~ EnvironmentMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
- \t1  
+ \t1  ,
+MainMissionMethChan
+
+
+
+
 \end{zsection}
 
 \begin{circus}
@@ -18,7 +23,17 @@ handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~EnvironmentMonitorSID \then \\
 	
-  \Skip
+      \circblockopen
+            binder\_setCabinPressureCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then  \\ binder\_setCabinPressureRet~.~controllingMission~.~EnvironmentMonitorSID\then  \\ \Skip
+
+             \circseq \\ 
+            binder\_setEmergencyOxygenCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then  \\ binder\_setEmergencyOxygenRet~.~controllingMission~.~EnvironmentMonitorSID\then  \\ \Skip
+
+             \circseq \\ 
+            binder\_setFuelRemainingCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then  \\ binder\_setFuelRemainingRet~.~controllingMission~.~EnvironmentMonitorSID\then  \\ \Skip
+
+            
+        \circblockclose
 
  \circseq \\
     handleAsyncEventRet~.~EnvironmentMonitorSID \then \\

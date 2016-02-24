@@ -353,6 +353,11 @@ public class MethodEnv
 		
 		return methodMap;
 	}
+	
+	public boolean equals(MethodEnv m)
+	{
+		return this.getMethodName().equals(m.getMethodName());
+	}
 
 //	public BinderMethodEnv getMethodCallBinding()
 //	{

@@ -2,11 +2,12 @@
 \begin{zsection}
   \SECTION ~ MainMissionSequencerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
   , MethodCallBindingChannels 
-  , 
+  ,
 MissionId
 , 
 
 MissionIds
+
 
 
 
@@ -45,16 +46,9 @@ MissionIds
             this~.~returnedMission :=\true
 
              \circseq \\ 
-
-
-
               ret := MainMissionMID
 
             
-
-
-
-
         \circblockclose
 
 
@@ -66,10 +60,6 @@ MissionIds
               ret := nullMissionId
 
             
-
-
-
-
         \circblockclose
 
 
@@ -77,10 +67,6 @@ MissionIds
   \circfi
 
             
-
-
-
-
         \circblockclose
 
  

@@ -66,11 +66,7 @@
             ${statement}
             <#sep> \circseq \\ </#sep>
         </#if>
-
-
-
     </#list>
-
         \circblockclose
 <#else>
    <@EmptyStatement/>

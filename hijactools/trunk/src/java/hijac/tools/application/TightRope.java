@@ -63,6 +63,7 @@ public class TightRope
 		System.out.println("+++++++++++++++++++++");
 		System.out.println("+++ Compile Phase +++");
 		System.out.println("+++++++++++++++++++++");
+		System.out.println();
 
 		SCJCompilationConfig config = SCJCompilationConfig.getDefault();
 
@@ -84,6 +85,7 @@ public class TightRope
 		System.out.println("+++++++++++++++++++");
 		System.out.println("+++ Build Phase +++");
 		System.out.println("+++++++++++++++++++");
+		System.out.println();
 		
 		scjApplication = new NewSCJApplication(ANALYSIS);
 		environmentBuilder = new EnvironmentBuilder(ANALYSIS);

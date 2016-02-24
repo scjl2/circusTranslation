@@ -2,6 +2,7 @@
   \SECTION ~ AperiodicSimulatorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
  \t1  
+
 \end{zsection}
 
 \begin{circus}
@@ -18,7 +19,11 @@ handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~AperiodicSimulatorSID \then \\
 	
-  \Skip
+      \circblockopen
+            releaseCall~.~event\then  \\ releaseRet~.~event~?~release\then  \\ \Skip
+
+            
+        \circblockclose
 
  \circseq \\
     handleAsyncEventRet~.~AperiodicSimulatorSID \then \\

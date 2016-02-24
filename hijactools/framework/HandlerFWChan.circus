@@ -1,8 +1,9 @@
 \begin{zsection}
-  \SECTION ~ HandlerFWChan ~ \parents ~ scj\_prelude, SchedulableId, GlobalTypes, JTime 
+  \SECTION ~ HandlerFWChan ~ \parents ~ scj\_prelude, SchedulableId, GlobalTypes, JTime
 \end{zsection}
 %
 \begin{circus}
+	  \circchannel deschedule\_handler : SchedulableID \\	
   \circchannel end\_releases : SchedulableID \\
   \circchannel release\_complete : SchedulableID \\
 \end{circus}

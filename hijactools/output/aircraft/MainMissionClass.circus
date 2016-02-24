@@ -3,6 +3,7 @@
   \SECTION ~ MainMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
   , MethodCallBindingChannels 
   
+
 \end{zsection}
 
 \begin{circus}
@@ -40,10 +41,6 @@
               ret := airSpeed
 
             
-
-
-
-
         \circblockclose
 
  
@@ -59,10 +56,6 @@
               ret := altitude
 
             
-
-
-
-
         \circblockclose
 
  
@@ -78,10 +71,6 @@
               ret := cabinPressure
 
             
-
-
-
-
         \circblockclose
 
  
@@ -97,10 +86,6 @@
               ret := emergencyOxygen
 
             
-
-
-
-
         \circblockclose
 
  
@@ -116,10 +101,6 @@
               ret := fuelRemaining
 
             
-
-
-
-
         \circblockclose
 
  
@@ -135,10 +116,6 @@
               ret := heading
 
             
-
-
-
-
         \circblockclose
 
  
@@ -153,10 +130,6 @@
             this~.~this.airSpeed :=airSpeed
 
             
-
-
-
-
         \circblockclose
 
  
@@ -171,10 +144,6 @@
             this~.~this.altitude :=altitude
 
             
-
-
-
-
         \circblockclose
 
  
@@ -189,10 +158,6 @@
             this~.~this.cabinPressure :=cabinPressure
 
             
-
-
-
-
         \circblockclose
 
  
@@ -207,10 +172,6 @@
             this~.~this.emergencyOxygen :=emergencyOxygen
 
             
-
-
-
-
         \circblockclose
 
  
@@ -225,10 +186,6 @@
             this~.~this.fuelRemaining :=fuelRemaining
 
             
-
-
-
-
         \circblockclose
 
  
@@ -243,10 +200,6 @@
             this~.~this.heading :=heading
 
             
-
-
-
-
         \circblockclose
 
  

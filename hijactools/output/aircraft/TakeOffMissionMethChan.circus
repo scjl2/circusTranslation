@@ -4,8 +4,8 @@
 %
 
 \begin{circus}
-\t1 \circchannel abortCall : MissionID  \\
-\t1 \circchannel abortRet : MissionID  \\
+\t1 \circchannel abortCall : MissionID  \cross SchedulableID  \\
+\t1 \circchannel abortRet : MissionID  \cross SchedulableID  \\
 \end{circus}
 %
 \begin{circus}

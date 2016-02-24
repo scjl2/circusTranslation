@@ -7,9 +7,9 @@
 \end{circus}
 %
 \begin{circus}
-	\circchannelset APEHSync == \lchanset handleAsyncEventCall, handleAsyncEventRet, end\_aperiodicEventHandler\_app \rchanset \\
+	\circchannelset APEHAppSync == \lchanset handleAsyncEventCall, handleAsyncEventRet, handleAsyncLongEventCall, handleAsyncLongEventRet, end\_aperiodic\_app \rchanset \\
 \end{circus}
 %
 \begin{circus}
-  \circchannelset DeadlineClockSync ==  \lchanset end\_releases, deschedule\_handler, release\_complete \rchanset \\
+  \circchannelset DeadlineClockSync ==  \lchanset end\_releases, deschedule\_handler, release\_complete, release, releaseLong \rchanset \\
 \end{circus}

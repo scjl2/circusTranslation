@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ ManagedThread ~ \parents ~ ManagedThreadChan, SchedulableId, MissionId, MissionIds, TopLevelMissionSequencerChan,\\
+	\SECTION ~ ManagedThreadFW ~ \parents ~ ManagedThreadChan, SchedulableId, MissionId, MissionIds, TopLevelMissionSequencerChan,\\
   SchedulableChan, SafeletMethChan, FrameworkChan
 \end{zsection}
 
@@ -8,19 +8,19 @@
   \circprocess ManagedThreadFW ~ \circdef ~ schedulable : SchedulableID \circspot ~\circbegin
 \end{circus}
 %
-\begin{schema}{State}
+\begin{schema}{\circstateignore MT\_State}
   controllingMission : MissionID\\
   applicationTerminating : \boolean
 \end{schema}
 %
 \begin{parser}
 \begin{circusaction}
-\circstate State
+\circstate MT\_State
 \end{circusaction}
 \end{parser}
 %
-\begin{schema}{Init}
-  State~'
+\begin{schema}{MT\_Init}
+  MT\_State~'
   \where
   controllingMission' = nullMissionId\\
   applicationTerminating' = \false
@@ -88,7 +88,7 @@ Cleanup \circdef \\
 \end{circusaction}
 %
 \begin{circusaction}
-  \circspot \circblockopen \circmu X \circspot \lschexpract Init \rschexpract \circseq Start \circseq\\ 
+	\circspot \circblockopen \circmu X \circspot \lschexpract MT\_Init \rschexpract \circseq Start \circseq\\ 
   		\circblockopen\circif applicationTerminating = \false \circthen \\
   		\t2 \circblockopen Execute \circseq Cleanup \circseq X \circblockclose \\ 
   		\circelse applicationTerminating = \true \circthen \\
