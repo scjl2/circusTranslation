@@ -1,7 +1,8 @@
 
 \begin{zsection}
-  \SECTION ~ EnvironmentMonitorClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
-
+  \SECTION ~ EnvironmentMonitorClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
 \end{zsection}
 
 \begin{circus}

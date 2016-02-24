@@ -1,7 +1,8 @@
 
 \begin{zsection}
-  \SECTION ~ LandMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
-
+  \SECTION ~ LandMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
 \end{zsection}
 
 \begin{circus}
@@ -22,8 +23,6 @@
 \begin{schema}{\circinitial Init}
   State~'
 \where
-  SAFE\_LANDING\_ALTITUDE' = 10.0\\ 
-  abort' = false\\ 
 \end{schema}
 
 
@@ -33,8 +32,11 @@
 
 
       \circblockopen
+            this~.~landingGearDeployed :=\false
 
-this~.~landingGearDeployed :=\false
+            
+
+
 
 
         \circblockclose
@@ -49,8 +51,11 @@ this~.~landingGearDeployed :=\false
 
 
       \circblockopen
+              ret := landingGearDeployed = \true
 
-  ret := landingGearDeployed = \true
+            
+
+
 
 
         \circblockclose
@@ -65,8 +70,11 @@ this~.~landingGearDeployed :=\false
 
 
       \circblockopen
+              ret := controllingMission
 
-  ret := controllingMission
+            
+
+
 
 
         \circblockclose
@@ -80,8 +88,11 @@ this~.~landingGearDeployed :=\false
 
 
       \circblockopen
+            this~.~abort :=\true
 
-this~.~abort :=\true
+            
+
+
 
 
         \circblockclose
@@ -96,10 +107,11 @@ this~.~abort :=\true
 
 
       \circblockopen
+              ret :=   (\lnot abort = \true)
 
-      
 
-  ret :=   (\lnot abort = \true)
+            
+
 
 
 

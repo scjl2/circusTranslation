@@ -1,7 +1,7 @@
 \begin{zsection}
   \SECTION ~ ReaderApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  , MethodCallBindingChannels 
  \\
-  \t1 , 
+  \t1 ,
 MissionMethChan
 , 
 
@@ -12,6 +12,7 @@ ObjectIds
 , 
 
 ThreadIds
+
 
 
 

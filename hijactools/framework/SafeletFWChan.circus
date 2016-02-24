@@ -3,9 +3,6 @@
 \end{zsection}
 %
 \begin{circus}
-  \circchannel ~ end\_safelet\_app
-\end{circus}
-%
-\begin{circus}
+  \circchannel ~ end\_safelet\_app \\
 	\circchannel ~ done\_safeletFW
 \end{circus}

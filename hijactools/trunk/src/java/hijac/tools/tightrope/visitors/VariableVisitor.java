@@ -651,8 +651,11 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
 			{
 				System.out.println("var Visitor Primitive Type");
-				classEnv.addVariable(TightRopeTransUtils.encodeName(varName),
+				VariableEnv v = new VariableEnv(TightRopeTransUtils.encodeName(varName),
 						TightRopeTransUtils.encodeType(varType), init, true);
+				v.setProgramType(init);
+				classEnv.addVariable(v);
+				
 			}
 			else if ((!(objectEnv.getName().toString().contains(varType.toString()))))
 			{
@@ -694,7 +697,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 						{
 							VariableEnv v = new VariableEnv(encodedName ,
 									varTypeString, init, false);
-							v.setProgramType(varTypeString);
+							v.setProgramType(TightRopeTransUtils.encodeType(varType));
 
 							classEnv.addVariable(v);
 						}

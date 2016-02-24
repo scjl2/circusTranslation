@@ -30,7 +30,7 @@ public class VariableEnv
 		this.primitive = primitive;
 
 		
-		programType = "TEST";
+		programType = "NOT\\_SET";
 		if (variableInit == null)
 		{
 			this.init = "init\\_placeholder";

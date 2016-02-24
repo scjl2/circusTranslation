@@ -1,12 +1,9 @@
 \begin{zsection}
   \SECTION ~ ${ProcessName}App ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, ${ProcessName}MethChan \\
- <#include "CommonImports-Template.ftl"> <#include "Parent-Template.ftl">   
+ <#include "CommonImports-Template.ftl"> <#include "Parent-Template.ftl">
 \end{zsection}
-%\begin{circus}
-%\circchannelset ${ProcessName}AppSync == \\
-%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
-%\end{circus}
+
 
 %\begin{circus}
 %\circchannelset ${ProcessName}AppChanSet == \\

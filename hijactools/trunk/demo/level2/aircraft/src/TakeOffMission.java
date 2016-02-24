@@ -20,6 +20,8 @@ public class TakeOffMission extends Mission //implements LandingGearUser
 	final double SAFE_AIRSPEED_THRESHOLD = 10.00;
 	final double TAKEOFF_ALTITUDE = 10.00;
 
+
+
 	private MainMission controllingMission;
 
 	private boolean abort = false;
@@ -43,6 +45,8 @@ public class TakeOffMission extends Mission //implements LandingGearUser
 	@Override
 	protected void initialize()
 	{
+
+
 		StorageParameters storageParametersSchedulable = new StorageParameters(
 				Const.PRIVATE_MEM_DEFAULT - 30 * 1000,
 				new long[] { Const.HANDLER_STACK_SIZE },

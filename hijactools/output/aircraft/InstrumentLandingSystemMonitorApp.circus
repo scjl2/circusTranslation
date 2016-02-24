@@ -1,5 +1,6 @@
 \begin{zsection}
-  \SECTION ~ InstrumentLandingSystemMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
+  \SECTION ~ InstrumentLandingSystemMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
  \t1  
 \end{zsection}
 
@@ -17,10 +18,7 @@ handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~InstrumentLandingSystemMonitorSID \then \\
 	
-      \circblockopen
-
-      
-        \circblockclose
+  \Skip
 
  \circseq \\
     handleAsyncEventRet~.~InstrumentLandingSystemMonitorSID \then \\

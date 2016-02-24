@@ -1,12 +1,13 @@
 
 \begin{zsection}
-  \SECTION ~ MainMissionSequencerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
-
-, 
+  \SECTION ~ MainMissionSequencerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  , 
 MissionId
 , 
 
 MissionIds
+
 
 
 \end{zsection}
@@ -26,7 +27,7 @@ MissionIds
 \begin{schema}{\circinitial Init}
   State~'
 \where
-  returnedMission' = false\\ 
+  returnedMission' = \false\\ 
 \end{schema}
 
 
@@ -37,19 +38,21 @@ MissionIds
 
 
       \circblockopen
-
-  \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
+              \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
+            this~.~returnedMission :=\true
 
-this~.~returnedMission :=\true
+             \circseq \\ 
 
 
-               \circseq \\
 
-  ret := MainMissionMID
+              ret := MainMissionMID
+
+            
+
+
 
 
         \circblockclose
@@ -58,11 +61,13 @@ this~.~returnedMission :=\true
   \\
   \circelse ~ \lnot (\lnot returnedMission = \true) ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
+              ret := nullMissionId
 
-  ret := nullMissionId
+            
+
+
 
 
         \circblockclose
@@ -70,6 +75,10 @@ this~.~returnedMission :=\true
 
   \\
   \circfi
+
+            
+
+
 
 
         \circblockclose

@@ -3,9 +3,6 @@
   \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  <#include "CommonImports-Template.ftl">
   \t1 <#include "Parent-Template.ftl">
 \end{zsection}
-%\begin{circus}
-%\circchannelset ${ProcessName}AppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
-%\end{circus}
 
 %\begin{circus}
 %\circchannelset ${ProcessName}AppChanSet == ${ProcessID}AppSync

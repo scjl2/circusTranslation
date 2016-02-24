@@ -1,7 +1,8 @@
 
 \begin{zsection}
-  \SECTION ~ AperiodicSimulatorClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels  \\
-
+  \SECTION ~ AperiodicSimulatorClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
 \end{zsection}
 
 \begin{circus}

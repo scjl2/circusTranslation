@@ -5,6 +5,7 @@ import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.TightRopeTransUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -367,7 +368,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 		}
 		else
 		{
-			v.setProgramType(arg0.getIdentifier().toString());
+			v.setProgramType(TightRopeTransUtils.encodeType(arg0.getIdentifier()).toString());
 		}
 
 		v.setName(arg0.getIdentifier().toString());
@@ -455,7 +456,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 //					System.out.println(theVar);
 					// System.out.println(theVar.getInit().toString());
 					// theVar.setProgramType(theVar.getInit().toString());
-
+					
 					v = theVar;
 				}
 			}
@@ -496,7 +497,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					}
 					else
 					{
-						v.setProgramType(varType);
+						v.setProgramType("T"+varType);
 					}
 				}
 

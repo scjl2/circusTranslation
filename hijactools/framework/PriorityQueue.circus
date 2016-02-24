@@ -6,7 +6,7 @@
 PriorityQueue == PriorityLevel \fun (\iseq ThreadID)
 \where
 \forall pq : PriorityQueue @
- nullThreadId  \notin \ran (\bigcup(\ran pq))\\
+nullThreadId  \notin \ran (\bigcup(\ran pq))\\
 \end{axdef}
 %
 \begin{axdef}
@@ -20,7 +20,7 @@ IsEmpty : PriorityQueue \fun \boolean
 AddToPriorityQueue : PriorityQueue \cross ThreadID \cross PriorityLevel \fun PriorityQueue
 \where
 \forall pq : PriorityQueue ; t : ThreadID ; p : PriorityLevel | \\
-	\t1	t \neq nullThreadId \land \\
+\t1	t \neq nullThreadId \land \\
 	\t1	t \notin \ran (\bigcup(\ran(pq) )) @ \\
 AddToPriorityQueue(pq, t, p) = (pq \oplus \{ p \mapsto pq(p) \cat \langle t\rangle \})
 \end{axdef}

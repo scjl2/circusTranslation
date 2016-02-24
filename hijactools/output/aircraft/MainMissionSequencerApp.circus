@@ -1,12 +1,9 @@
 \begin{zsection}
   \SECTION ~ MainMissionSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  , MethodCallBindingChannels , MainMissionSequencerClass \\
+  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  , MainMissionSequencerClass, MethodCallBindingChannels 
 
   \t1 
 \end{zsection}
-%\begin{circus}
-%\circchannelset MainMissionSequencerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
-%\end{circus}
 
 %\begin{circus}
 %\circchannelset MainMissionSequencerAppChanSet == MainMissionSequencerSIDAppSync

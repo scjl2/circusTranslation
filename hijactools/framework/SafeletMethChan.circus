@@ -4,16 +4,16 @@
 %
 \begin{circus}
  \circchannel initializeApplicationCall \\
- \circchannel initializeApplicationRet \\
+ \circchannel initializeApplicationRet
 \end{circus}
 %
 \begin{circus}
- \circchannel getSequencerCall \\  
- \circchannel getSequencerRet: SchedulableID \\
+ \circchannel getSequencerCall \\
+ \circchannel getSequencerRet: SchedulableID 
 \end{circus}
 %
 \begin{circus}
- \circchannel checkSchedulable : MissionID \cross \boolean 
+ \circchannel checkSchedulable : MissionID \cross \boolean
 \end{circus}
 %
 \begin{circus}

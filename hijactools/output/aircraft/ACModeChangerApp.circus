@@ -1,12 +1,9 @@
 \begin{zsection}
   \SECTION ~ ACModeChangerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
-  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  , MethodCallBindingChannels , ACModeChangerClass \\
+  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  , ACModeChangerClass, MethodCallBindingChannels 
 
   \t1 
 \end{zsection}
-%\begin{circus}
-%\circchannelset ACModeChangerAppSync == \\ \lchanset getNextMissionCall, getNextMissionRet,end\_sequencer\_app \rchanset
-%\end{circus}
 
 %\begin{circus}
 %\circchannelset ACModeChangerAppChanSet == ACModeChangerSIDAppSync

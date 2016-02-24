@@ -7,11 +7,8 @@
 \end{zed}
 %
 \begin{axdef}
-	SafeletTID:ThreadID
-\end{axdef}
-%
-\begin{axdef}
-	nullTID : ThreadID
+	SafeletTId:ThreadID \\
+  nullThreadId : ThreadID
 \end{axdef}
 %
 \begin{zed}
@@ -28,7 +25,7 @@ ThreadMap == ThreadID \pfun \nat_1
 %
 \begin{zed}
 ExceptionType ::= interruptedException | illegalMonitorStateException | illegalArgumentException | \\
-\t1  illegalThreadStateException | illegalStateException | ceilingViolationException
+  \t1 illegalThreadStateException | illegalStateException | ceilingViolationException
 \end{zed}
 %
 \begin{zed}

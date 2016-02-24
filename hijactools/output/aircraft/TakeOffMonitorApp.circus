@@ -1,5 +1,6 @@
 \begin{zsection}
-  \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds \\
+  \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
  \t1  , 
 MainMissionMethChan
 
@@ -28,36 +29,25 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~TakeOffMonitorSID \then \\
 	
       \circblockopen
+            binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then  \\ binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then  \\ \Skip\circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
+             \circseq \\ 
 
-      
 
-binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then  \\ binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then  \\ \ \ \circvar altitude : \power \arithmos \circspot altitude :=~getAltitude\ \
 
-               \circseq \\
-
-  \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
+              \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
   \\
-  \t1
-
-      \circblockopen
-
-      
-
-releaseCall~.~landingGearHandler\then  \\ releaseRet~.~landingGearHandler~?~release\then  \\ 
-
-
-               \circseq \\
-
-requestTerminationCall~.~takeoffMission\then  \\ requestTerminationRet~.~takeoffMission~?~requestTermination\then  \\ 
-
-
-        \circblockclose
+\t1 
+  \Skip
 
 
   \\
   \circelse ~ \lnot (altitude > takeOffAltitude) \circthen \Skip
   \\
-  \circfi \circseq \\
+  \circfi \\
+
+            
+
+
 
 
         \circblockclose

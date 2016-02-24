@@ -383,9 +383,11 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			st = iter.next();
 
+
 			
 			System.out.println("/// st=" + st.toString() + " st.kind="+st.getKind());
 			if (st instanceof ExpressionStatementTree)
+
 			{
 				if (!(node.toString().contains("Console") || node.toString().contains(
 						"System")))

@@ -60,9 +60,7 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 
-		Iterator<StatementTree> i = members.iterator();
-
-		
+		Iterator<StatementTree> i = members.iterator();		
 
 		while (i.hasNext())
 		{

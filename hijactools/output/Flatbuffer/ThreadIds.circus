@@ -8,7 +8,7 @@
 	ReaderTID : ThreadID \\
 
 \where
-  distinct \langle SafeletTID, nullTID, \\
+  distinct \langle SafeletTId, nullThreadId, \\
 	WriterTID
 	,
 	ReaderTID

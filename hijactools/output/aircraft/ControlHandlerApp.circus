@@ -1,5 +1,6 @@
 \begin{zsection}
-  \SECTION ~ ControlHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
+  \SECTION ~ ControlHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
  \t1  
 \end{zsection}
 
@@ -13,10 +14,7 @@ handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~ControlHandlerSID \then \\
 	
-      \circblockopen
-
-      
-        \circblockclose
+  \Skip
 
  \circseq \\
     handleAsyncEventRet~.~ControlHandlerSID \then \\

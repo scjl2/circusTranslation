@@ -10,7 +10,7 @@
 	\circchannel unlock\_Monitor : ObjectID \cross ThreadID\\
 	\circchannel relock: ObjectID \cross ThreadID\\
 	\circchannel relock\_this : ObjectID \cross ThreadID \\
-	\circchannel startSynchMeth : ObjectID \cross ThreadID \\
+	\circchannel startSyncMeth : ObjectID \cross ThreadID \\
 	\circchannel lockAcquired : ObjectID \cross ThreadID \\
 	\circchannel endSyncMeth : ObjectID \cross ThreadID\\
 	\circchannel cancel\_wait\_timer : ObjectID \cross ThreadID \\

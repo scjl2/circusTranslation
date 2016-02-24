@@ -1,13 +1,10 @@
 \begin{zsection}
   \SECTION ~ TakeOffMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan , MethodCallBindingChannels , TakeOffMissionClass \\
-
-  \t1 , TakeOffMissionMethChan
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, TakeOffMissionMethChan \\
+ , TakeOffMissionClass, MethodCallBindingChannels 
+ 
 \end{zsection}
-%\begin{circus}
-%\circchannelset TakeOffMissionAppSync == \\
-%	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
-%\end{circus}
+
 
 %\begin{circus}
 %\circchannelset TakeOffMissionAppChanSet == \\
@@ -70,11 +67,11 @@ CleanupPhase \circdef  \\
 abortMeth \circdef
 \\
 \circblockopen
-abortCall~.~TakeOffMissionMID ~?~caller
+abortCall~.~TakeOffMissionMID
 \then \\
 this~.~abort()  \circseq  \\
 
-abortRet~.~TakeOffMissionMID~.~caller \then \\
+abortRet~.~TakeOffMissionMID \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -154,8 +151,11 @@ startSyncMeth~.~TakeOffMissionOID~.~thread \then \\
 lockAcquired~.~TakeOffMissionOID~.~thread \then \\
 
       \circblockopen
+            this~.~landingGearDeployed :=\true
 
-this~.~landingGearDeployed :=\true
+            
+
+
 
 
         \circblockclose

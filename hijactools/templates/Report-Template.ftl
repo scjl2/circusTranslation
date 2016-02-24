@@ -39,6 +39,29 @@
 \newpage
 
 \section{Network}
+\subsection{Network Channel Sets}
+\input{NetworkChan.circus}
+
+\newpage
+
+
+
+\subsection{MethodCallBinder}
+
+\input{MethodCallBindingChannels.circus}
+
+\input{NetworkMethodCallBinder.circus}
+
+\newpage
+
+\subsection{Locking}
+\input{NetworkLocking.circus}
+
+\newpage
+
+\subsection{Program}
+\input{NetworkProgram.circus}
+
 \input{Network.circus}
 \newpage
 

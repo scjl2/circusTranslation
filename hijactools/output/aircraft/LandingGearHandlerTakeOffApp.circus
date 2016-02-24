@@ -1,5 +1,6 @@
 \begin{zsection}
-  \SECTION ~ LandingGearHandlerTakeOffApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds \\
+  \SECTION ~ LandingGearHandlerTakeOffApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
  \t1  , 
 TakeOffMissionMethChan
 , 
@@ -28,20 +29,20 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~LandingGearHandlerTakeOffSID \then \\
 	
       \circblockopen
+            binder\_isLandingGearDeployedCall~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ binder\_isLandingGearDeployedRet~.~mission~.~LandingGearHandlerTakeOffSID~?~isLandingGearDeployed\then  \\ \Skip\circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed
+             \circseq \\ 
 
-      
 
-binder\_isLandingGearDeployedCall~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ binder\_isLandingGearDeployedRet~.~mission~.~LandingGearHandlerTakeOffSID~?~isLandingGearDeployed\then  \\ \ \ \circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed\ \
 
-               \circseq \\
-
-  \circif ~ landingGearIsDeployed = \true ~ \circthen ~
+              \circif ~ landingGearIsDeployed = \true ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
+            binder\_stowLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ binder\_stowLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ \Skip
 
-binder\_stowLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ binder\_stowLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ \Skip
+            
+
+
 
 
         \circblockclose
@@ -50,11 +51,13 @@ binder\_stowLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ bi
   \\
   \circelse ~ \lnot landingGearIsDeployed = \true ~ \circthen ~
   \\
-  \t1
-
+\t1 
       \circblockopen
+            binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then  \\ binder\_deployLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then  \\ \Skip
 
-binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then  \\ binder\_deployLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then  \\ \Skip
+            
+
+
 
 
         \circblockclose
@@ -62,6 +65,10 @@ binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID~.~Landing
 
   \\
   \circfi
+
+            
+
+
 
 
         \circblockclose

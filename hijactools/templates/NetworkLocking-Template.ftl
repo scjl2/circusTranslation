@@ -1,19 +1,20 @@
 \begin{zsection}
   \SECTION ~ NetworkLocking ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, MissionIds, \\
-  \t1 ThreadIds, NetworkChannels, ObjectFW, ThreadFW
+  \t1 ThreadIds, ObjectIds, NetworkChannels, ObjectFW, ThreadFW
 \end{zsection}
-
-
-
 %%%%%%%%%%%%%%%%%%THREADS
 %
 \begin{circus}
 \circprocess Threads \circdef  \\
 \circblockopen
-ThreadFW(WriterTID, 10) \\
-\interleave \\
-ThreadFW(ReaderTID, 10) \\
-
+<#if Threads?has_content>
+<#list Threads?keys as thread>
+ThreadFW(${thread}, ${Threads[thread]}) \\
+<#sep>\interleave \\</#sep>
+</#list>
+<#else>
+\Skip
+</#if>
 \circblockclose
 \end{circus}
 %
@@ -22,8 +23,14 @@ ThreadFW(ReaderTID, 10) \\
 \begin{circus}
 \circprocess Objects \circdef \\
 \circblockopen
-ObjectFW(FlatBufferMissionOID) \\
-
+<#if Objects.Objects?has_content>
+<#list Objects.Objects as object>
+ObjectFW(${object}) \\
+<#sep>\interleave \\</#sep>
+</#list>
+<#else>
+\Skip
+</#if>
 
 \circblockclose
 \end{circus}
