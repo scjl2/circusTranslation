@@ -885,6 +885,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				 * the macro.
 				 */
 				/* Question: Is that generally feasible? */
+				//TODO Ensure this is ONLY called if this is a Circus class method call OR check first and provide 'this' or ''
 				return output
 						+ callExprMacro(node, ctxt, "MethodInvocation",
 								node.getMethodSelect(), arguments);
@@ -1517,7 +1518,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			boolean isStillMethodCall = (boolean) timeMachine.get("methodCall");
 			if (isStillMethodCall)
 			{
-
+				//Are 'method calls'here always in the Circus Class?
 				conditionString = "\\circvar loopVar : \\boolean \\circspot loopVar :=~"
 						+ conditionTrans + "\\circseq \\\\";
 
