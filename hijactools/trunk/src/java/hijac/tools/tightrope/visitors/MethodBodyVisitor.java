@@ -99,7 +99,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 	protected final NewSCJApplication CONTEXT;
 	private String varType;
-	private boolean classEnv;
+//	private boolean classEnv;
 	private boolean putSkip = false;
 
 	/**
