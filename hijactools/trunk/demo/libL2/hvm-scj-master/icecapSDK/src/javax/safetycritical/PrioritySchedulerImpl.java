@@ -42,8 +42,8 @@ final class PrioritySchedulerImpl implements vm.Scheduler {
 			vm.ClockInterruptHandler.instance.enable();
 			return scjProcess.process;
 		}
+		terminated();
 		PriorityScheduler.instance().stop(PriorityScheduler.instance().current.process);
-		vm.ClockInterruptHandler.instance.enable();
 		return null;
 	}
 
@@ -111,7 +111,13 @@ final class PrioritySchedulerImpl implements vm.Scheduler {
 	}
 
 	public Monitor getDefaultMonitor() {
-		return null;
+//		devices.Console.println("default null");
+//		return null;
+		return new Monitor(Services.getDefaultCeiling());
+	}
+
+	@Override
+	public void terminated() {
 	}
 
 	//	public static boolean waitForObject(Object target, HighResolutionTime time) {
