@@ -18,6 +18,7 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
+import javax.lang.model.type.TypeKind;
 
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
@@ -37,7 +38,7 @@ public class MethodVisitor
 {
 	private static NewSCJApplication application;
 	private static MethodBodyVisitor franksMethodVisitor;
-	
+
 	private ObjectEnv object;
 	private String idType;
 
@@ -48,9 +49,9 @@ public class MethodVisitor
 		MethodVisitor.application = TightRope.getSCJApplication();
 		MethodVisitor.franksMethodVisitor = new MethodBodyVisitor(application, object);
 		idType = "blankID";
-		
+
 	}
-	
+
 	public MethodVisitor(SCJAnalysis analysis, MissionEnv missionEnv, IDType idType)
 	{
 		this(analysis, missionEnv);
@@ -65,8 +66,26 @@ public class MethodVisitor
 		System.out.println("+++ Method Visitor: " + methodName + " +++");
 		MethodEnv m;
 
-		// return values
-		ArrayList<Name> returnsValues = mt.accept(new ReturnVisitor(), null);
+		ArrayList<Name> returnsValues = new ArrayList<Name>();
+		if (mt.getReturnType() != null)
+		{
+
+			Tree returnTree = mt.getReturnType();
+			if (returnTree.getKind() == Tree.Kind.PRIMITIVE_TYPE)
+			{
+				PrimitiveTypeTree primitiveReturnTree = (PrimitiveTypeTree) returnTree;
+				if (primitiveReturnTree.getPrimitiveTypeKind() != TypeKind.VOID)
+				{
+
+					// return values
+					returnsValues = mt.accept(new ReturnVisitor(), null);
+				}
+			}
+			else
+			{
+				returnsValues = mt.accept(new ReturnVisitor(), null);
+			}
+		}
 
 		Map<Object, Object> parameters = new HashMap<>();
 
@@ -121,12 +140,11 @@ public class MethodVisitor
 		}
 
 		getModifiers(mt, m);
-		assert(idType != null && (!idType.equals("")));
+		assert (idType != null && (!idType.equals("")));
 		m.setLocationType(idType);
-		
-		
-		assert(m.getLocationType() != null);
-//		assert(m.getLocationType().equals(idType));
+
+		assert (m.getLocationType() != null);
+		// assert(m.getLocationType().equals(idType));
 
 		return m;
 	}
@@ -156,11 +174,11 @@ public class MethodVisitor
 			parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
 			parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
 
-			if (! parameter.getType().endsWith("Parameters"))
+			if (!parameter.getType().endsWith("Parameters"))
 			{
 				object.addProcParameter(parameter);
 			}
-			
+
 		}
 	}
 }

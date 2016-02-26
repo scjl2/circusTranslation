@@ -18,6 +18,7 @@ public class ProgramEnv
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private List<MethodEnv> binderMethodEnvs;
+	private List<ChannelEnv> channels;
 
 	private IdEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
@@ -29,11 +30,13 @@ public class ProgramEnv
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
 		this.binderMethodEnvs = new ArrayList<MethodEnv>();
+		channels = new ArrayList<ChannelEnv>();
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
 		threadIds = new ThreadIdsEnv();
 		objectIds = new ObjectIdsEnv();
+		
 	}
 
 	public void addSafelet(Name safelet)
@@ -456,5 +459,15 @@ public class ProgramEnv
 			binderMethodEnvs.add(method);
 		}
 
+	}
+
+	public List<ChannelEnv> getChannels()
+	{
+		return channels;
+	}
+
+	public void addChannel(ChannelEnv channel)
+	{
+		this.channels.add(channel);
 	}
 }
