@@ -18,7 +18,7 @@ public class ProgramEnv
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private List<MethodEnv> binderMethodEnvs;
-	private List<ChannelEnv> channels;
+	private Map<MethodEnv, ChannelEnv> customChannels;
 
 	private IdEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
@@ -30,7 +30,7 @@ public class ProgramEnv
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
 		this.binderMethodEnvs = new ArrayList<MethodEnv>();
-		channels = new ArrayList<ChannelEnv>();
+		customChannels = new HashMap<MethodEnv, ChannelEnv>();
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
@@ -461,13 +461,15 @@ public class ProgramEnv
 
 	}
 
-	public List<ChannelEnv> getChannels()
+	public Map<MethodEnv, ChannelEnv> getCustomChannels()
 	{
-		return channels;
+		return customChannels;
 	}
 
-	public void addChannel(ChannelEnv channel)
+	public void addCustomChannel(MethodEnv method, ChannelEnv channel)
 	{
-		this.channels.add(channel);
+		this.customChannels.put(method, channel);
 	}
+
+	
 }
