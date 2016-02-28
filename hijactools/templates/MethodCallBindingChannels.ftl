@@ -6,7 +6,7 @@
 <#list MethodCallBindings as mcb>
 \begin{circus}
 
-\circchannel binder\_${mcb.Name}Call :  ${mcb.LocType}  \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadID </#if> <#if mcb.Parameters?has_content> \cross
+\circchannel binder\_${mcb.ChannelName}Call :  ${mcb.LocType}  \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadID </#if> <#if mcb.Parameters?has_content> \cross
 <#list mcb.Parameters?values as param>
 ${param}
 <#sep>\cross </#sep>
@@ -14,9 +14,9 @@ ${param}
 </#if>
 \\
 <#if mcb.ReturnType != 'null'>
-\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType} \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadID </#if> \cross ${mcb.ReturnType} \\
+\circchannel binder\_${mcb.ChannelName}Ret : ${mcb.LocType} \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadID </#if> \cross ${mcb.ReturnType} \\
 <#else>
-\circchannel binder\_${mcb.Name}Ret : ${mcb.LocType}  \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadID </#if>  \\
+\circchannel binder\_${mcb.ChannelName}Ret : ${mcb.LocType}  \cross ${mcb.CallerType} <#if mcb.Sync==true> \cross ThreadID </#if>  \\
 </#if>
 \end{circus}
 %
@@ -30,7 +30,7 @@ ${mcb.Name}Callers == \{ <#list mcb.Callers as caller>${caller}<#sep>,</#sep></#
 \begin{circus}
 \circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, \\
 <#list MethodCallBindings as mcb>
-binder\_${mcb.Name}Call, binder\_${mcb.Name}Ret
+binder\_${mcb.ChannelName}Call, binder\_${mcb.ChannelName}Ret
 <#sep>,\\</#sep>
 </#list>
 \rchanset
