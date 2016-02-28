@@ -1,5 +1,9 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.application.TightRope;
+import hijac.tools.tightrope.utils.TightRopeString;
+
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,14 +22,6 @@ public class MethodEnv
 		PUBLIC, PRIVATE, PROTECTED
 	};
 
-	private static final String METHOD_NAME = "MethodName";
-	private static final String RETURN_TYPE = "ReturnType";
-	private static final String RETURN_VALUE = "ReturnValue";
-	private static final String ACCESS = "Access";
-	private static final String BODY = "Body";
-	private static final String PARAMETERS_STR = "Parameters";
-	private static final String EXTERNAL_APPMETH = "ExternalAppmeth";
-	
 	private String methodName = "";
 	private String returnType = "";
 	private Map<String, Type> parameters = new HashMap<String, Type>();
@@ -43,6 +39,7 @@ public class MethodEnv
 	private Set<String> callers;
 	private String locationType = "";
 	private String callerType = "";
+	private ObjectEnv objectLocation;
 
 	public MethodEnv(String name)
 	{
@@ -335,19 +332,24 @@ public class MethodEnv
 
 		String s = getMethodName();
 
-		methodMap.put(METHOD_NAME, s);
-		methodMap.put(RETURN_TYPE, getReturnType());
-		methodMap.put(RETURN_VALUE, getReturnValue());
-		methodMap.put(PARAMETERS_STR, getParameters());
-		methodMap.put(ACCESS, getAccessString());
-		methodMap.put(BODY, getBody());
-		methodMap.put(EXTERNAL_APPMETH, isExternalAppMethod());
-		methodMap.put("LocType", getLocationType());
-//		methodMap.put("LocType", "LocTest");
-		methodMap.put("Locs", getLocations());
-		methodMap.put("Callers", getCallers());
-		methodMap.put("CallerType", getCallerType());
-//		methodMap.put("CallerType", "CallerTest");
+		String chanName = TightRope.getProgramEnv().getCustomChannelName(this);
+		
+		methodMap.put(TightRopeString.Name.METHOD_NAME, s);
+		methodMap.put(TightRopeString.Name.CHANNEL_NAME, chanName);
+		methodMap.put(TightRopeString.Name.RETURN_TYPE, getReturnType());
+		methodMap.put(TightRopeString.Name.RETURN_VALUE, getReturnValue());
+		methodMap.put(TightRopeString.Name.PARAMETERS_STR, getParameters());
+		methodMap.put(TightRopeString.Name.ACCESS, getAccessString());
+		methodMap.put(TightRopeString.Name.BODY, getBody());
+		methodMap.put(TightRopeString.Name.EXTERNAL_APPMETH, isExternalAppMethod());
+		methodMap.put(TightRopeString.Name.LOC_TYPE, getLocationType());
+
+		methodMap.put(TightRopeString.Name.LOCS, getLocations());
+		methodMap.put(TightRopeString.Name.CALLERS_STR, getCallers());
+		methodMap.put(TightRopeString.Name.CALLER_TYPE, getCallerType());
+
+		
+		
 		
 		
 		
@@ -357,6 +359,16 @@ public class MethodEnv
 	public boolean equals(MethodEnv m)
 	{
 		return this.getMethodName().equals(m.getMethodName());
+	}
+
+	public void setMethodLocation(ObjectEnv object)
+	{
+		this.objectLocation = object;		
+	}
+	
+	public ObjectEnv getMethodLocation()
+	{
+		return objectLocation;
 	}
 
 //	public BinderMethodEnv getMethodCallBinding()

@@ -1,11 +1,16 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.application.TightRope;
+
 import java.lang.reflect.Type;
 import hijac.tools.tightrope.environments.FrameworkEnv;
+import hijac.tools.tightrope.utils.TightRopeString;
+import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 
 import java.util.ArrayList;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -212,8 +217,11 @@ public class ProgramEnv
 		for (MethodEnv b : binderMethodEnvs)
 		{
 			Map binderMethodMap = new HashMap();
+			
+			String chanName = TightRope.getProgramEnv().getCustomChannelName(b);
 
 			binderMethodMap.put("Name", b.getMethodName());
+			binderMethodMap.put(TightRopeString.Name.CHANNEL_NAME, chanName);
 			binderMethodMap.put("Locations", b.getLocations());
 			binderMethodMap.put("Callers", b.getCallers());
 			binderMethodMap.put("Return", b.hasReturn());
@@ -467,8 +475,32 @@ public class ProgramEnv
 	}
 
 	public void addCustomChannel(MethodEnv method, ChannelEnv channel)
+	{		
+		for(MethodEnv m : customChannels.keySet())
+		{
+			ChannelEnv c = customChannels.get(m);
+			
+			if(channel.getChannelName().equals(c.getChannelName()))
+			{
+				//Channel Name Conflict, should only happen once..
+											
+				c.setChannelName( c.getChannelName() + LATEX.UNDERSCORE + m.getMethodLocation().getName().toString() ) ;				
+				
+				channel.setChannelName( channel.getChannelName() + LATEX.UNDERSCORE + method.getMethodLocation().getName().toString() ) ;
+			}
+		}
+		
+		customChannels.put(method, channel);
+	}
+
+	public String getCustomChannelName(MethodEnv methodEnv)
 	{
-		this.customChannels.put(method, channel);
+		if(customChannels.containsKey(methodEnv))
+		{
+			return customChannels.get(methodEnv).getChannelName();
+		}
+		
+		return null;
 	}
 
 	
