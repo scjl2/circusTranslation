@@ -4,6 +4,7 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.application.TightRope;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.builders.ParadigmBuilder.IDType;
+import hijac.tools.tightrope.environments.ChannelEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
@@ -145,7 +146,11 @@ public class MethodVisitor
 
 		assert (m.getLocationType() != null);
 		// assert(m.getLocationType().equals(idType));
-
+		m.setMethodLocation(object);
+		
+		ChannelEnv c = new ChannelEnv(methodName.toString(),"");
+		TightRope.getProgramEnv().addCustomChannel(m, c);
+		
 		return m;
 	}
 

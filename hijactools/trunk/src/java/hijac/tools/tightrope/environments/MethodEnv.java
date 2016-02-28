@@ -334,6 +334,8 @@ public class MethodEnv
 
 		String chanName = TightRope.getProgramEnv().getCustomChannelName(this);
 		
+		
+		
 		methodMap.put(TightRopeString.Name.METHOD_NAME, s);
 		methodMap.put(TightRopeString.Name.CHANNEL_NAME, chanName);
 		methodMap.put(TightRopeString.Name.RETURN_TYPE, getReturnType());
@@ -347,11 +349,6 @@ public class MethodEnv
 		methodMap.put(TightRopeString.Name.LOCS, getLocations());
 		methodMap.put(TightRopeString.Name.CALLERS_STR, getCallers());
 		methodMap.put(TightRopeString.Name.CALLER_TYPE, getCallerType());
-
-		
-		
-		
-		
 		
 		return methodMap;
 	}

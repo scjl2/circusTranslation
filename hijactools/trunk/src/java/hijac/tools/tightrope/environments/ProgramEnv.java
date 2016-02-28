@@ -483,10 +483,12 @@ public class ProgramEnv
 			if(channel.getChannelName().equals(c.getChannelName()))
 			{
 				//Channel Name Conflict, should only happen once..
-											
-				c.setChannelName( c.getChannelName() + LATEX.UNDERSCORE + m.getMethodLocation().getName().toString() ) ;				
+				String chanName = c.getChannelName();			
+				String methLoc = m.getMethodLocation().getName().toString();
 				
-				channel.setChannelName( channel.getChannelName() + LATEX.UNDERSCORE + method.getMethodLocation().getName().toString() ) ;
+				c.setChannelName(chanName + LATEX.UNDERSCORE + methLoc);				
+				
+				channel.setChannelName(channel.getChannelName() + LATEX.UNDERSCORE + method.getMethodLocation().getName().toString());
 			}
 		}
 		
@@ -500,7 +502,7 @@ public class ProgramEnv
 			return customChannels.get(methodEnv).getChannelName();
 		}
 		
-		return null;
+		return "NULL";
 	}
 
 	
