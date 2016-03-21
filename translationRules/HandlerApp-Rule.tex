@@ -1,0 +1,41 @@
+\begin{circus}
+\circprocess \lpar PName \rpar App \circdef \lpar PParams \rpar_{params}  \circbegin
+\end{circus}
+
+\input{State-Rule.tex}
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~IdOf(PName) \then \\
+	\lpar HandleAsyncBody \rpar \circseq \\
+    handleAsyncEventRet~.~IdOf(PName) \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+$\lpar AppMeth1 \rpar_{appMeth}$
+
+$\lpar AppMeth2 \rpar_{appMeth}$
+
+\ldots
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+MethName(AppMeth1) \\
+	\extchoice \\
+	MethName(AppMeth2) \\
+	\ldots
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+
+\input{MainAction-Rule.tex} $ \circinterrupt (end\_ \lpar HandlerType IdOf(PName) \rpar \then \Skip)$
+
+
+\begin{circus}
+  \circend
+\end{circus}

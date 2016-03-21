@@ -1,0 +1,53 @@
+\begin{circus}
+\circprocess \lpar PName \rpar_{name}App  \circdef \lpar PParams \rpar_{params} \circbegin
+\end{circus}
+
+\input{State-Rule.tex}
+
+\begin{circusaction}
+InitializeApplication \circdef \\
+\circblockopen
+     initializeApplicationCall \then \\
+
+	  \lpar SInitBody \rpar_{methBody} \\ 
+
+     initializeApplicationRet \then \\
+     \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+GetSequencer \circdef \\
+\circblockopen
+	getSequencerCall \then \\
+	getSequencerRet~!~ IdOf(PName) \then \\
+	\Skip
+\circblockclose
+\end{circusaction}
+
+$\lpar AppMeth1 \rpar_{appMeth}$
+
+$\lpar AppMeth2 \rpar_{appMeth}$
+
+\ldots
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	GetSequencer \\
+	\extchoice  \\
+	InitializeApplication  \\
+	\extchoice \\
+	MethName(AppMeth1) \\
+	\extchoice \\
+	MethName(AppMeth2) \\
+	\ldots
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\input{MainAction-Rule.tex} $\circinterrupt (end\_safelet\_app \then \Skip)$
+
+\begin{circus}
+  \circend
+\end{circus}

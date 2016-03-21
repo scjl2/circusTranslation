@@ -1,0 +1,42 @@
+\begin{circus}
+\circprocess \lpar PName \rpar_{name} App \circdef \lpar PParams \rpar_{params} \circbegin\\
+\end{circus}
+
+\input{State-Rule.tex}
+
+\begin{circusaction}
+GetNextMission \circdef \circvar ret : MissionID \circspot \\
+\circblockopen
+    getNextMissionCall~.~IdOf(PName) \then \\
+	   ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~IdOf(PName)~!~ret  \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+
+$\lpar AppMeth1 \rpar_{appMeth}$
+
+$\lpar AppMeth2 \rpar_{appMeth}$
+
+\ldots
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+	\extchoice \\
+	MethName(AppMeth1) \\
+	\extchoice \\
+	MethName(AppMeth2) \\
+	\ldots 
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+
+\input{MainAction-Rule.tex}  $\circinterrupt (end\_sequencer\_app~.~IdOf(PName)  \then \Skip)$
+
+
+\begin{circus}
+  \circend
+\end{circus}

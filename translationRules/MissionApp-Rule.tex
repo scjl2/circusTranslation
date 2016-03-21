@@ -1,0 +1,60 @@
+\begin{circus}
+\circprocess \lpar PName \rpar App \circdef \lpar PParams \rpar_{params} \circbegin
+\end{circus}
+
+\input{State-Rule.tex}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~IdOf(PName)  \then \\
+
+	\lpar RegisteredSchedulables \rpar
+
+
+	%register~!~${SchedulableID}~!~${ProcessID} \then   \\
+
+
+
+  initializeRet~.~IdOf(PName)  \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+ cleanupMissionCall~.~IdOf(PName)  \then \\
+
+ cleanupMissionRet~.~IdOf(PName) ~!~\true \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+$\lpar AppMeth1 \rpar_{appMeth}$
+
+$\lpar AppMeth2 \rpar_{appMeth}$
+
+\ldots
+
+\begin{circusaction}
+Methods \circdef
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+	\extchoice \\
+	MethName(AppMeth1) \\
+	\extchoice \\
+	MethName(AppMeth2) \\
+	\ldots
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+
+\input{MainAction-Rule.tex} $\circinterrupt (end\_mission\_app~.~IdOf(PName) \then \Skip$ 
+
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,19 @@
+
+\begin{schema}{\circstateignore State}
+
+  \lpar VarName \rpar_{name} : \lpar VarType \rpar_{type}
+
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+
+  \lpar VarName \rpar_{name} ' = \lpar VarInit \rpar_{expression} 
+
+\end{schema}
+
