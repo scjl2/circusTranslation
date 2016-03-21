@@ -32,7 +32,6 @@ import javax.safetycritical.annotate.Level;
 import javax.safetycritical.annotate.SCJAllowed;
 
 import reflect.ObjectInfo;
-import util.StringUtil;
 import vm.Memory;
 
 /**
@@ -295,15 +294,6 @@ public abstract class MemoryArea extends Object {
 		return null;
 	}
 
-	protected static MemoryArea getTopMostArea() {
-		
-		MemoryArea current = MemoryArea.getCurrentMemoryArea();
-		while (current.nextContainedMemory != null) {
-			current = current.nextContainedMemory;
-		}			
-		return current;
-	}
-	
 	private static void print(MemoryArea backingStoreProvider, int indent) {
 		MemoryArea current = backingStoreProvider.headOfContainedMemories;
 
@@ -315,9 +305,8 @@ public abstract class MemoryArea extends Object {
 
 		int bsstart = backingStoreProvider.delegate.getBase() + backingStoreProvider.delegate.getSize();
 
-		devices.Console.print(backingStoreProvider.delegate.getName());
-		devices.Console.print(StringUtil.constructString("[used ", backingStoreProvider.delegate.consumedMemory()));
-		devices.Console.print(StringUtil.constructString(" of ", backingStoreProvider.delegate.getSize()));
+		devices.Console.print(backingStoreProvider.delegate.getName() + "[used "
+				+ backingStoreProvider.delegate.consumedMemory() + " of " + backingStoreProvider.delegate.getSize());
 
 		int bssize = backingStoreProvider.reservedEnd - bsstart;
 
@@ -329,9 +318,7 @@ public abstract class MemoryArea extends Object {
 				consumedBackingStore = 0;
 			}
 
-			devices.Console.print(StringUtil.constructString(", used ", consumedBackingStore));
-			devices.Console.print(StringUtil.constructString(" of ", bssize));
-			devices.Console.println("]");
+			devices.Console.println(", used " + consumedBackingStore + " of " + bssize + "]");
 		} else {
 			devices.Console.println("]");
 		}
@@ -341,4 +328,5 @@ public abstract class MemoryArea extends Object {
 			current = current.nextContainedMemory;
 		}
 	}
+
 }

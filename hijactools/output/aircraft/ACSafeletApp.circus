@@ -2,7 +2,6 @@
   \SECTION ~ ACSafeletApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels 
 
   \t1 
-
 \end{zsection}
 
 %\begin{circus}

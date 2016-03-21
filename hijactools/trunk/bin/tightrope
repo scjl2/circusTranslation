@@ -1,6 +1,0 @@
-#!/bin/sh
-set -e
-
-HIJAC_HOME=$(readlink -f $(dirname $0))/..
-
-$HIJAC_HOME/run TightRope

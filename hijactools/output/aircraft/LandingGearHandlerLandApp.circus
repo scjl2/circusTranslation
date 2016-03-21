@@ -1,7 +1,7 @@
 \begin{zsection}
   \SECTION ~ LandingGearHandlerLandApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
- \t1  ,
+ \t1  , 
 LandMissionMethChan
 , 
 
@@ -9,7 +9,6 @@ ObjectIds
 , 
 
 ThreadIds
-
 
 
 
@@ -30,8 +29,11 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~LandingGearHandlerLandSID \then \\
 	
       \circblockopen
-            binder\_isLandingGearDeployedCall~.~mission~.~LandingGearHandlerLandSID\then  \\ binder\_isLandingGearDeployedRet~.~mission~.~LandingGearHandlerLandSID~?~isLandingGearDeployed\then  \\ \circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed
+            binder\_isLandingGearDeployedCall~.~mission~.~LandingGearHandlerLandSID\then  \\ binder\_isLandingGearDeployedRet~.~mission~.~LandingGearHandlerLandSID~?~isLandingGearDeployed\then  \\ \Skip\circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed
              \circseq \\ 
+
+
+
               \circif ~ landingGearIsDeployed = \true ~ \circthen ~
   \\
 \t1 
@@ -39,6 +41,10 @@ handleAsyncEvent \circdef \\
             binder\_stowLandingGearCall~.~mission~.~LandingGearHandlerLandSID\then  \\ binder\_stowLandingGearRet~.~mission~.~LandingGearHandlerLandSID\then  \\ \Skip
 
             
+
+
+
+
         \circblockclose
 
 
@@ -50,6 +56,10 @@ handleAsyncEvent \circdef \\
             binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerLandSID~.~LandingGearHandlerLandTID\then  \\ binder\_deployLandingGearRet~.~mission~.~LandingGearHandlerLandSID~.~LandingGearHandlerLandTID\then  \\ \Skip
 
             
+
+
+
+
         \circblockclose
 
 
@@ -57,6 +67,10 @@ handleAsyncEvent \circdef \\
   \circfi
 
             
+
+
+
+
         \circblockclose
 
  \circseq \\

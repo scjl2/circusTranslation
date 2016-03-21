@@ -97,7 +97,7 @@ startSyncMeth~.~FlatBufferMissionOID~.~thread \then \\
 lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
       \circblockopen
-            \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot this.bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \Skip \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
+            \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \Skip \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
             
 
 
@@ -125,7 +125,7 @@ startSyncMeth~.~FlatBufferMissionOID~.~thread \then \\
 lockAcquired~.~FlatBufferMissionOID~.~thread \then \\
 
       \circblockopen
-            \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~this.bufferEmpty()\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \Skip \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
+            \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~bufferEmpty()\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \Skip \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
              \circseq \\ 
 
 

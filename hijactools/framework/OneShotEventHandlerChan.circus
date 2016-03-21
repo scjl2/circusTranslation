@@ -7,5 +7,6 @@
 \circchannelset MethodsSync == \lchanset end\_releases, reschedule\_handler, deschedule\_handler \rchanset \\
 \circchannelset ReleaseSync == \lchanset handleAsyncEventCall, reschedule\_handler, end\_releases, stop\_release, release \rchanset\\
 \circchannelset DeadlineSync == \lchanset handleAsyncEventCall, end\_releases, deschedule\_handler, release\_complete \rchanset \\
-\circchannelset OSEHAppSync == \lchanset descheduleCall, descheduleRet, scheduleNextRelease, getNextReleaseTimeCall, getNextReleaseTimeRet, end\_oneShot\_app \rchanset \\
+\circchannelset OSEHSync == \lchanset deschedulCall, deschedulRet, scheduleNextRelease, getNextReleaseTimeCall, getNextReleaseTimeRet, end\_oneShot\_app\rchanset \\
 \end{circus}
+%

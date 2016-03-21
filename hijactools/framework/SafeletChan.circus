@@ -1,8 +1,3 @@
 \begin{zsection}
   \SECTION ~ SafeletChan ~ \parents ~ SafeletFWChan, SafeletMethChan
 \end{zsection}
-%
-\begin{circus}
-\circchannelset SafeletAppSync == \\
-   \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
-\end{circus}

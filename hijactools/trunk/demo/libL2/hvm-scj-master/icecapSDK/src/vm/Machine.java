@@ -9,8 +9,6 @@ public class Machine {
 	public static final byte CR16_C = 3;
 	public static final byte ATMEGA2560 = 4;
 
-	private static MachineFactory mFactory;
-
 	@IcecapCVar
 	public static byte architecture;
 
@@ -22,7 +20,8 @@ public class Machine {
 
 	@IcecapCompileMe
 	public static void setCurrentScheduler(vm.Scheduler sch) {
-		if (currentScheduler == sch) {
+		if (currentScheduler == sch)
+		{
 			/* Hack to force inclusion of the following methods.
 			 * Lines below will never actually be executed */
 			Monitor mon = Monitor.getDefaultMonitor();
@@ -33,13 +32,5 @@ public class Machine {
 			Monitor.unlock(null);
 		}
 		currentScheduler = sch;
-	}
-
-	public static MachineFactory getMachineFactory() {
-		return mFactory;
-	}
-
-	public static void setMachineFactory(MachineFactory mfac) {
-		mFactory = mfac;
 	}
 }

@@ -26,7 +26,6 @@
 package javax.safetycritical;
 
 import javax.realtime.AperiodicParameters;
-import javax.realtime.ConfigurationParameters;
 import javax.realtime.PriorityParameters;
 import javax.safetycritical.annotate.Level;
 import javax.safetycritical.annotate.Phase;
@@ -93,33 +92,28 @@ public abstract class MissionSequencer<MissionType extends Mission> extends Mana
 	 */
 	@SCJAllowed
 	@SCJRestricted(Phase.INITIALIZE)
-	public MissionSequencer(PriorityParameters priority, StorageParameters storage, 
-			ConfigurationParameters config, String name)
+	public MissionSequencer(PriorityParameters priority, StorageParameters storage, String name)
 			throws IllegalStateException {
-		super(priority, new AperiodicParameters(), storage, config);
+		super(priority, new AperiodicParameters(), storage);
 		this.name = name;
 
-//		System.out.println("MissSeq.constr: " + name 
-//			+ "; maxMissionMemory " + storage.maxMissionMemory 
-//			+ "; backingstore: " + this.privateMemory + "; isOuterMost: " + isOuterMostSeq);
-		
+		//		devices.Console.println("MissSeq.constr: " + name 
+		//			+ "; maxMissionMemory " + storage.maxMissionMemory 
+		//			+ "; backingstore: " + this.privateMemory + "; isOuterMost: " + isOuterMostSeq);
 		missionMemory = new MissionMemory((int) storage.maxMissionMemory, // mission memory
 				privateMemory, //backingstore of sequencer
 				name);
-		
+
 		currState = State.START;
 		
-		if(Launcher.level != 0)
-			Services.setCeiling(this, this.priority.getPriority());
+		Services.setCeiling(this, this.priority.getPriority());
 		ManagedEventHandler.handlerBehavior.initMissionSequencer(this);
-		//System.out.println("MissSeq.constr");
 	}
 
 	@SCJAllowed
 	@SCJRestricted(Phase.INITIALIZE)
-	public MissionSequencer(PriorityParameters priority, StorageParameters storage,
-			ConfigurationParameters config) throws IllegalStateException {
-		this(priority, storage, config, "MisMem");
+	public MissionSequencer(PriorityParameters priority, final StorageParameters storage) throws IllegalStateException {
+		this(priority, storage, "MisMem");
 	}
 
 	synchronized void seqWait() {
@@ -232,13 +226,12 @@ public abstract class MissionSequencer<MissionType extends Mission> extends Mana
 	@SCJAllowed(Level.SUPPORT)
 	protected abstract MissionType getNextMission();
 
-//	public final void register() {
-//		super.register();
-//	}
+	public final void register() {
+		super.register();
+	}
 
 	@Override
-	public final void signalTermination() {
-		super.signalTermination(); 
+	public void signalTermination() {
 		ManagedEventHandler.handlerBehavior.missionSequencerSingleTermination(this);
 	}
 
@@ -266,14 +259,7 @@ public abstract class MissionSequencer<MissionType extends Mission> extends Mana
 		return isOuterMostSeq;
 	}
 	
-	// used for JML annotation only (not public)
-	Phase getPhase() {
-		return null;
-	}
-	
 	Monitor getLock() {
 		return lock;
 	}
 }
-
-

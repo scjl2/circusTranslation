@@ -3,7 +3,6 @@
   \SECTION ~ TakeOffMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
   , MethodCallBindingChannels 
   
-
 \end{zsection}
 
 \begin{circus}
@@ -37,6 +36,10 @@
             this~.~abort :=\true
 
             
+
+
+
+
         \circblockclose
 
  
@@ -52,6 +55,10 @@
               ret := controllingMission
 
             
+
+
+
+
         \circblockclose
 
  
@@ -66,6 +73,10 @@
             this~.~this.controllingMission :=controllingMission
 
             
+
+
+
+
         \circblockclose
 
  
@@ -82,6 +93,10 @@
 
 
             
+
+
+
+
         \circblockclose
 
  
@@ -96,6 +111,10 @@
             this~.~landingGearDeployed :=\false
 
             
+
+
+
+
         \circblockclose
 
  
@@ -111,6 +130,10 @@
               ret := landingGearDeployed = \true
 
             
+
+
+
+
         \circblockclose
 
  

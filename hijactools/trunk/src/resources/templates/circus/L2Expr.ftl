@@ -66,7 +66,7 @@
 
 <#macro ConditionalExpression condition true_expression false_expression>
 <@compact>
-  \IF ~ ${TRANS(condition, CTXT)} ~ \THEN ~ ${TRANS(true_expression, CTXT)} ~ \ELSE ~ ${TRANS(false_expression, CTXT)}
+  \IF ~ ${TRANS(condition, CTXT)} ~ \THEN ~ ${TRANS(true_expression, CTXT)} ~ \ELSE ~ ${TRANS(false_expression, CTXT)} 
 </@compact>
 </#macro>
 
@@ -95,10 +95,9 @@
 <#-- MethodInvocation Tree -->
 
 <#-- What about calls to methods with action models? -->
-<#-- Assuming that this is only ever called when it's a Circus class method -->
 
 <#macro MethodInvocation method_select arguments>
-  this.${TRANS(method_select, CTXT)}(<@ParamList arguments/>)
+  ${TRANS(method_select, CTXT)}(<@ParamList arguments/>)  
 </#macro>
 
 <#macro ParamList arguments="">

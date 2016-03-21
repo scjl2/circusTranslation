@@ -48,13 +48,13 @@ import javax.safetycritical.annotate.SCJAllowed;
 public abstract class CyclicExecutive extends Mission {
 	Clock rtClock;
 	AbsoluteTime next;
-	//RelativeTime deltaTime;  HSO: not used
+	RelativeTime deltaTime;
 
 	@SCJAllowed
 	public CyclicExecutive() {
 		this.rtClock = Clock.getRealtimeClock();
 		this.next = rtClock.getTime();
-		//this.deltaTime = new RelativeTime(rtClock);
+		this.deltaTime = new RelativeTime(rtClock);
 	}
 
 	/**
@@ -140,7 +140,7 @@ public abstract class CyclicExecutive extends Mission {
 
 	private void waitForNextFrame(RelativeTime duration) {
 		next.add(duration, next);
-		vm.RealtimeClock.delayUntilTime(next);
+		vm.RealtimeClock.delayNativeUntil(next);
 	}
 
 	// Used in feasible below

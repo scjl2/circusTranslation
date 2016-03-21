@@ -2,8 +2,7 @@
   \SECTION ~ TakeOffMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, TakeOffMissionMethChan \\
  , TakeOffMissionClass, MethodCallBindingChannels 
- , ObjectFWChan, ObjectIds
-
+ 
 \end{zsection}
 
 
@@ -68,11 +67,11 @@ CleanupPhase \circdef  \\
 abortMeth \circdef
 \\
 \circblockopen
-abortCall~.~TakeOffMissionMID ~?~caller
+abortCall~.~TakeOffMissionMID
 \then \\
 this~.~abort()  \circseq  \\
 
-abortRet~.~TakeOffMissionMID~.~caller \then \\
+abortRet~.~TakeOffMissionMID \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -155,6 +154,10 @@ lockAcquired~.~TakeOffMissionOID~.~thread \then \\
             this~.~landingGearDeployed :=\true
 
             
+
+
+
+
         \circblockclose
 
  \circseq  \\

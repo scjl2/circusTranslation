@@ -28,7 +28,6 @@ package javax.safetycritical;
 
 import javax.realtime.PeriodicParameters;
 import javax.realtime.RelativeTime;
-import javax.realtime.TestPortalRT;
 import javax.safetycritical.annotate.Level;
 import javax.safetycritical.annotate.SCJAllowed;
 
@@ -72,9 +71,7 @@ class PriorityFrame {
 			//devices.Console.println("PrFrame.addProcess, periodic " + process + ", index " + process.index);
 
 			PeriodicEventHandler pevh = (PeriodicEventHandler) process.getTarget();
-			
-			//RelativeTime start = ((PeriodicParameters) pevh.release).getStart();
-			RelativeTime start = TestPortalRT.start((PeriodicParameters) pevh.release);
+			RelativeTime start = ((PeriodicParameters) pevh.release).getStart();
 
 			if (start.getMilliseconds() == 0 && start.getNanoseconds() == 0) {
 				process.state = ScjProcess.State.READY;

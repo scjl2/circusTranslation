@@ -24,9 +24,16 @@ public class Process {
 		this.stack = stack;
 		this.isFinished = false;
 		processExecuter = new ProcessExecutor(this);
-		
-		sp = Machine.getMachineFactory().getProcessSP();
-		
+		switch (Machine.architecture) {
+		case Machine.X86_64:
+			sp = new X86_64SP();
+			break;
+		case Machine.CR16_C:
+		case Machine.X86_32:
+		default:
+			sp = new X86_32SP();
+			break;
+		}
 		if (stackAnalyser != null)
 		{
 			stackAnalyser.addStack(stack);
@@ -77,6 +84,42 @@ public class Process {
 		}
 	}
 
+	private static abstract class SP {
+		public abstract int getCSP();
+
+		public abstract int getJSP();
+	}
+
+	private static class X86_32SP extends SP {
+		public int csp;
+		public int jsp;
+
+		@Override
+		public int getCSP() {
+			return csp;
+		}
+
+		@Override
+		public int getJSP() {
+			return jsp;
+		}
+	}
+
+	private static class X86_64SP extends SP {
+		public long csp;
+		public long jsp;
+
+		@Override
+		public int getCSP() {
+			return (int) csp;
+		}
+
+		@Override
+		public int getJSP() {
+			return (int) jsp;
+		}
+	}
+
 	public int[] getStack() {
 		return stack;
 	}
@@ -107,4 +150,5 @@ public class Process {
 			stackAnalyser.reportStackUsage();
 		}
 	}
+	
 }

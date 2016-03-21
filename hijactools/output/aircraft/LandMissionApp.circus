@@ -2,8 +2,7 @@
   \SECTION ~ LandMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, LandMissionMethChan \\
  , LandMissionClass, MethodCallBindingChannels 
- , ObjectFWChan, ObjectIds
-
+ 
 \end{zsection}
 
 
@@ -144,6 +143,10 @@ lockAcquired~.~LandMissionOID~.~thread \then \\
             this~.~landingGearDeployed :=\true
 
             
+
+
+
+
         \circblockclose
 
  \circseq  \\

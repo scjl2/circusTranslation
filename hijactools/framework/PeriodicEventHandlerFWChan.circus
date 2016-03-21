@@ -11,10 +11,6 @@
 \end{circus}
 %
 \begin{circus}
-  \circchannel end\_periodic\_app : SchedulableID 
-\end{circus}
-
-\begin{circus}
 \circchannel get\_periodicTerminating : SchedulableID \cross \boolean \\
 \circchannel set\_periodicTerminating : SchedulableID \cross \boolean \\
 \end{circus}

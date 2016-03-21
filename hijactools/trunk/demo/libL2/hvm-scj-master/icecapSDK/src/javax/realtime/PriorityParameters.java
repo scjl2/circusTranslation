@@ -63,7 +63,7 @@ import javax.safetycritical.annotate.SCJAllowed;
 @SCJAllowed
 public class PriorityParameters extends SchedulingParameters {
 
-	int priority;
+	private int priority;
 
 	/**
 	 * Creates an instance of <code>PriorityParameters</code> 
@@ -93,6 +93,8 @@ public class PriorityParameters extends SchedulingParameters {
 		priority = value;
 	}
 
+	// used for JML annotation only (not public)
+	int getPr() {
+		return priority;
+	}
 }
-
-

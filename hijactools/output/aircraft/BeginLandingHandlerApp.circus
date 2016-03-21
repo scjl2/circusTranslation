@@ -2,7 +2,6 @@
   \SECTION ~ BeginLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
  \t1  
-
 \end{zsection}
 
 \begin{circus}
@@ -19,11 +18,7 @@ handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~BeginLandingHandlerSID \then \\
 	
-      \circblockopen
-            requestTerminationCall~.~controllingMission~.~BeginLandingHandlerSID\then  \\ requestTerminationRet~.~controllingMission~.~BeginLandingHandlerSID~?~requestTermination\then  \\ \Skip
-
-            
-        \circblockclose
+  \Skip
 
  \circseq \\
     handleAsyncEventRet~.~BeginLandingHandlerSID \then \\

@@ -18,7 +18,6 @@ public class ProgramEnv
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private List<MethodEnv> binderMethodEnvs;
-	private Map<MethodEnv, ChannelEnv> customChannels;
 
 	private IdEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
@@ -30,13 +29,11 @@ public class ProgramEnv
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
 		this.binderMethodEnvs = new ArrayList<MethodEnv>();
-		customChannels = new HashMap<MethodEnv, ChannelEnv>();
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
 		threadIds = new ThreadIdsEnv();
 		objectIds = new ObjectIdsEnv();
-		
 	}
 
 	public void addSafelet(Name safelet)
@@ -168,9 +165,12 @@ public class ProgramEnv
 	public Map geNetworkMap()
 	{
 		Map returnMap = structureEnv.getNetworkMap();
-
+		
+		
+		
+		
 		returnMap.put("AppProcNames", getAppProcNamesList());
-
+		
 		returnMap.put("Objects", getObjectIdsMap());
 		returnMap.put("Threads", getThreadIdsMap());
 		returnMap.put("MethodCallBindings", getBinderMethodEnvsMapList());
@@ -183,24 +183,26 @@ public class ProgramEnv
 	{
 		List appProcNames = new ArrayList();
 		String app = "App";
-
-		appProcNames.add(getSafelet().getName() + app);
-
-		for (ParadigmEnv p : getTopLevelMissionSequencers())
+		
+		
+		appProcNames.add(getSafelet().getName()+app);
+		
+		for(ParadigmEnv p : getTopLevelMissionSequencers())
 		{
-			appProcNames.add(p.getName() + app);
+			appProcNames.add(p.getName()+app);
 		}
-
-		for (ParadigmEnv p : getSchedulables())
+		
+		for(ParadigmEnv p : getSchedulables())
 		{
-			appProcNames.add(p.getName() + app);
+			appProcNames.add(p.getName()+app);
 		}
-
-		for (ParadigmEnv p : getMissions())
+		
+		for(ParadigmEnv p : getMissions())
 		{
-			appProcNames.add(p.getName() + app);
+			appProcNames.add(p.getName()+app);
 		}
-
+		
+		
 		return appProcNames;
 	}
 
@@ -223,32 +225,37 @@ public class ProgramEnv
 			binderMethodMap.put("LocType", b.getLocationType());
 			binderMethodMap.put("CallerType", b.getCallerType());
 			binderMethodMap.put("Sync", b.isSynchronised());
+			
+			
+
+			
 
 			binderMethodEnvsMap.add(binderMethodMap);
 		}
-
+		
 		ArrayList<String> tempStrings = new ArrayList<String>();
 		String methChan = "MethChan";
-
-		for (Object o : binderMethodEnvsMap)
+		
+		for(Object o : binderMethodEnvsMap)
 		{
 			Map b = (Map) o;
-
+			
+			
 			Set<String> locs = (Set<String>) b.get("Locations");
-
-			// TODO Will break if the same method is in two locations?
-			for (String l : locs)
-			{
-				String locParentString = l.substring(0, l.length() - 3) + methChan;
-
-				if (!tempStrings.contains(locParentString))
-				{
+			
+			//TODO Will break if the same method is in two locations?
+			for(String l : locs)
+			{			
+				String locParentString = l.substring(0,l.length()-3)+methChan;
+				
+				if(! tempStrings.contains(locParentString))
+				{				
 					b.put("LocParent", locParentString);
 					tempStrings.add(locParentString);
 				}
 			}
 		}
-
+		
 		return binderMethodEnvsMap;
 	}
 
@@ -346,10 +353,10 @@ public class ProgramEnv
 	}
 
 	/**
-	 * Gets the object environment within this program environment that shares
-	 * the same name as the parameter, if it does not exists this method will
-	 * return <code>null</code>. Internally, this method calls
-	 * <code>getObjectEnv(String objectName)</code>.
+	 * Gets the object environment within
+	 * this program environment that shares the same name as the parameter, if
+	 * it does not exists this method will return <code>null</code>. Internally,
+	 * this method calls <code>getObjectEnv(String objectName)</code>.
 	 * 
 	 * @param objectName
 	 *            The name of the object we're looking for
@@ -404,10 +411,10 @@ public class ProgramEnv
 
 	public void setThreadPriority(String threadID, String priority)
 	{
-		// if (getObjectEnv(threadID).hasSyncMeth())
-		// {
-		threadIds.setThreadPriority(threadID, priority);
-		// }
+//		if (getObjectEnv(threadID).hasSyncMeth())
+//		{
+			threadIds.setThreadPriority(threadID, priority);
+//		}
 
 	}
 
@@ -416,36 +423,36 @@ public class ProgramEnv
 		return binderMethodEnvs;
 	}
 
-//	public void addBinderMethodEnv(String name, String location, String caller)
-//	{
-//		addBinderMethodEnv(name, location, caller, null, null);
-//	}
+	public void addBinderMethodEnv(String name, String location, String caller)
+	{
+		addBinderMethodEnv(name, location, caller, null, null);
+	}
 
 	public IdEnv getMissionIdsEnv()
 	{
 		return missionIds;
 	}
 
-//	// not adding anything to the list
-//	@Deprecated
-//	public void addBinderMethodEnv(String name, String location, String caller,
-//			String returnType, Map<String, Type> parameters)
-//	{
-//		String id = "";
-//		boolean existingBME = false;
-//		for (MethodEnv me : binderMethodEnvs)
-//		{
-//			if (me.getMethodName().equals(name))
-//			{
-//				me.addLocation(location + id);
-//				me.addCaller(caller + id);
-//				me.setParameters(parameters);
-//				// me.setLocationType(location);
-//
-//				existingBME = true;
-//			}
-//		}
-//	}
+	// not adding anything to the list
+	@Deprecated
+	public void addBinderMethodEnv(String name, String location, String caller,
+			String returnType, Map<String, Type> parameters)
+	{
+		String id = "";
+		boolean existingBME = false;
+		for (MethodEnv me : binderMethodEnvs)
+		{
+			if (me.getMethodName().equals(name))
+			{
+				me.addLocation(location + id);
+				me.addCaller(caller + id);
+				me.setParameters(parameters);
+				// me.setLocationType(location);
+
+				existingBME = true;
+			}
+		}
+	}
 
 	public void addBinderMethodEnv(MethodEnv method, String location, String caller,
 			String callerType)
@@ -454,22 +461,7 @@ public class ProgramEnv
 		method.addCaller(caller);
 		method.setCallerType(callerType);
 
-		if (!binderMethodEnvs.contains(method))
-		{
-			binderMethodEnvs.add(method);
-		}
+		binderMethodEnvs.add(method);
 
 	}
-
-	public Map<MethodEnv, ChannelEnv> getCustomChannels()
-	{
-		return customChannels;
-	}
-
-	public void addCustomChannel(MethodEnv method, ChannelEnv channel)
-	{
-		this.customChannels.put(method, channel);
-	}
-
-	
 }

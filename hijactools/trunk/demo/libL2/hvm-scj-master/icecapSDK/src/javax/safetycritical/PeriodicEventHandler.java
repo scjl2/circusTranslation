@@ -25,10 +25,8 @@
  *************************************************************************/
 package javax.safetycritical;
 
-import javax.realtime.ConfigurationParameters;
 import javax.realtime.PeriodicParameters;
 import javax.realtime.PriorityParameters;
-import javax.realtime.TestPortalRT;
 import javax.safetycritical.annotate.SCJAllowed;
 
 /**
@@ -49,11 +47,18 @@ import javax.safetycritical.annotate.SCJAllowed;
  *         HREF="mailto:apr@cs.aau.dk">apr@cs.aau.dk</A>, <br>
  *         Hans S&oslash;ndergaard, VIA University College, Denmark, <A
  *         HREF="mailto:hso@viauc.dk">hso@via.dk</A>
- *
+ * 
+ * @scjComment 
+ *   - SCJ issue: One constructor only. <br>
+ *   - SCJ issue: SCJ Draft says: constructor: param storage -> It must not be <code>null</code>. <br>
+ *       An <code>IllegalArgumentException</code> is thrown if storage is null.
+ *       But <code>ManagedEventHandler</code> does not require an 
+ *       <code>IllegalArgumentException</code> thrown if storage is null.
+ *       It only specifies: a non-null maximum storage. This can be satisfied by implementing:
+ *       if storage parameter is null, a default value is given. <br>
  */
 @SCJAllowed
 public abstract class PeriodicEventHandler extends ManagedEventHandler {
-	
 	PeriodicParameters releaseP;
 	
 	/** 
@@ -72,15 +77,27 @@ public abstract class PeriodicEventHandler extends ManagedEventHandler {
 	 * 
 	 * @throws IllegalArgumentException if priority, release or storage is null.
 	 */
-	public PeriodicEventHandler(PriorityParameters priority, PeriodicParameters release, 
-			StorageParameters storage, ConfigurationParameters config) {
-		this(priority, release, storage, config, null);
+	/*@ 
+	  public normal_behavior
+	    requires priority != null && release  != null;
+	    ensures true; 
+	  also
+	  public exceptional_behavior
+	    requires priority == null;
+	    signals (IllegalArgumentException) true;
+	  also
+	  public exceptional_behavior
+	    requires release == null;
+	    signals (IllegalArgumentException) true;         
+	@*/
+
+	public PeriodicEventHandler(PriorityParameters priority, PeriodicParameters release, StorageParameters storage) {
+		this(priority, release, storage, null);
 	}
 
-	public PeriodicEventHandler(PriorityParameters priority, PeriodicParameters release, 
-			StorageParameters storage, ConfigurationParameters config,
+	PeriodicEventHandler(PriorityParameters priority, PeriodicParameters release, StorageParameters storage,
 			String name) {
-		super(priority, release, storage, config, name);
+		super(priority, release, storage, name);
 		releaseP = release;
 	}
 
@@ -89,20 +106,12 @@ public abstract class PeriodicEventHandler extends ManagedEventHandler {
 	}
 	
 	long getStart() {
-		//return releaseP.getStart().getNanoseconds() + releaseP.getStart().getMilliseconds()
-		//		* 1000000;
-		return TestPortalRT.start(releaseP).getNanoseconds() + TestPortalRT.start(releaseP).getMilliseconds()
+		return releaseP.getStart().getNanoseconds() + releaseP.getStart().getMilliseconds()
 				* 1000000;
 	}
 
 	long getPeriod() {
-		//return releaseP.getPeriod().getNanoseconds() + releaseP.getPeriod().getMilliseconds()
-		//		* 1000000;
-		
-		return TestPortalRT.period(releaseP).getNanoseconds() + TestPortalRT.period(releaseP).getMilliseconds()
+		return releaseP.getPeriod().getNanoseconds() + releaseP.getPeriod().getMilliseconds()
 				* 1000000;
 	}
-	
 }
-
-

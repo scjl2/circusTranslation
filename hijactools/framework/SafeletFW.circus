@@ -6,13 +6,13 @@
   \circprocess ~ SafeletFW ~ \circdef ~ \circbegin
 \end{circus}
 %
-\begin{schema}{\circstateignore S\_State}
+\begin{schema}{State}
    globallyRegistered : \finset SchedulableID\\
    topLevelSequencer : SchedulableID
 \end{schema}
 %
-\begin{schema}{S\_Init}
-	S\_State~'\\
+\begin{schema}{Init}
+  State~'\\
   \where
   globallyRegistered' = \emptyset\\
   topLevelSequencer' = nullSequencerId
@@ -20,7 +20,7 @@
 %
 \begin{parser}
 \begin{circusaction}
-	\circstate S\_State
+\circstate State
 \end{circusaction}
 \end{parser}
 %
@@ -99,7 +99,7 @@ Deregister \circdef \\
 \end{circusaction}
 %
 \begin{circusaction}
-	\circspot \circblockopen  \lschexpract S\_Init \rschexpract \circseq InitializeApplication \circseq Execute\circblockclose 
+  \circspot \circblockopen  \lschexpract Init \rschexpract \circseq InitializeApplication \circseq Execute\circblockclose 
 \end{circusaction}
 %
 \begin{circus}

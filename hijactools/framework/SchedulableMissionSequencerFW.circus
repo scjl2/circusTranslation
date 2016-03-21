@@ -4,38 +4,38 @@
 \end{zsection}
 %
 \begin{circus}
-  \circprocess ~ SchedulableMissionSequencerFW ~ \circdef ~ sequencer : SchedulableID \circspot ~ \circbegin
+  \circprocess ~ SchedulableMissionSequencerFW ~ \circdef ~ sequencer : SchedulableID \circspot ~ \circbegin 
 \end{circus}
 %
-\begin{schema}{\circstateignore SMS\_State}
+\begin{schema}{State}
   currentMission : MissionID\\
   continueAbove : \boolean \\
-  continueBelow : \boolean \\
+  continueBelow : \boolean \\  
   controllingMission : MissionID\\
-  applicationTerminating : \boolean
+  applicationTerminating : \boolean  
 \end{schema}
 %
 \begin{parser}
 \begin{circusaction}
-	\circstate SMS\_State
+\circstate State
 \end{circusaction}
 \end{parser}
 %
-\begin{schema}{SMS\_Init}
-	SMS\_State~'
+\begin{schema}{Init}
+  State~'
 \where
   continueAbove' = \true \\
   continueBelow' = \true \\
   applicationTerminating' = \false \\
   currentMission' = nullMissionId \\
-  controllingMission' = nullMissionId
+  controllingMission' = nullMissionId 
 \end{schema}
 %
 \begin{schema}{GetContinue}
-	\Xi SMS\_State\\
+	\Xi State\\
 	continue! : \boolean
-\where
-	continueAbove = \true \land continueBelow = \true \implies continue! = \true
+\where	
+	continueAbove = \true \land continueBelow = \true \implies continue! = \true 
 \end{schema}
 %
 \begin{circusaction}
@@ -47,13 +47,13 @@ Start ~ \circdef ~ \\
 \t1 \extchoice\\
 \t1 \circblockopen
 		done\_toplevel\_sequencer \then \\
-		applicationTerminating := \true \\
+		applicationTerminating := \true \\		
 	\circblockclose \\
 \t1 \extchoice\\
 \t1 \circblockopen
 		activate\_schedulables~?~someMissionID \then \\
 		Start \\
-	\circblockclose
+	\circblockclose 	
 \end{circusaction}
 %
 \begin{circusaction}
@@ -71,7 +71,7 @@ Activate \circdef\\
 \begin{circusaction}
 Execute \circdef \\
 \t1  \circblockopen
-	\circblockopen
+	\circblockopen 
     		\circblockopen
       			RunMission \circseq\\
       			end\_methods~.~sequencer \then \\
@@ -94,22 +94,22 @@ RunMission \circdef \\
 \end{circusaction}
 %
 \begin{circusaction}
-GetNextMission ~ \circdef \\
+GetNextMission ~ \circdef \\ 
 \t1    getNextMissionCall~.~sequencer \then \\
 \t1    getNextMissionRet~.~sequencer~?~next \then \\
-\t1    currentMission := next
+\t1    currentMission := next 
 \end{circusaction}
 %
 \begin{circusaction}
-StartMission ~ \circdef ~\\
+StartMission ~ \circdef ~\\  
 \t1   \circif ~ currentMission \neq nullMissionId ~ \circthen\\
 \t2   \circblockopen
      	start\_mission~.~currentMission~.~sequencer \then\\
-     	initializeRet~.~currentMission \then \\
-     	\circblockopen
+     	initializeRet~.~currentMission \then \\     
+     	\circblockopen      
      		SignalTermination\\
      		\t1 \lpar \emptyset | \lchanset end\_terminations \rchanset | \emptyset \rpar\\
-     		\circblockopen
+     		\circblockopen   
 	    			done\_mission~.~currentMission~?~continueReturn \then \\
 	    			set\_continueBelow~.~sequencer~!~continueReturn \then \\
 	    			end\_terminations~.~sequencer \then \\
@@ -135,28 +135,27 @@ Continue \circdef \\
 \t1 \circblockopen
 	get\_continue~.~sequencer~?~continue\prefixcolon(continue = \false) \then \\
 	\Skip\\
-    \circblockclose
+    \circblockclose 
 \end{circusaction}
 %
 \begin{circusaction}
 SignalTermination ~ \circdef ~\\
-\t1 \circblockopen
+\t1 \circblockopen 
     \circblockopen
     	end\_terminations~.~sequencer \then \\
     	\Skip
     \circblockclose \\
     \extchoice\\
-    \circblockopen
+    \circblockopen 
       signalTerminationCall~.~sequencer \then \\
       set\_continueAbove~.~sequencer~!~\false \then \\
-      requestTerminationCall~.~currentMission~.~sequencer \then\\
-      requestTerminationRet~.~currentMission~.~sequencer~?~isTerminating \then \\
-      signalTerminationRet~.~sequencer \then  \\
+      requestTermination~.~currentMission~.~sequencer \then\\  
+      signalTerminationRet~.~sequencer \then  \\    
       \Skip\\
     \circblockclose  \circseq \\
     end\_terminations~.~sequencer \then \\
     \Skip\\
- \circblockclose
+ \circblockclose 
 \end{circusaction}
 %
 \begin{circusaction}
@@ -167,15 +166,15 @@ Methods ~ \circdef \\
     \circblockclose \\
 \t1  \extchoice \\
 \t1	\circblockopen
-	   end\_methods~.~sequencer \then \\
+	   end\_methods~.~sequencer \then \\ 
 	   \Skip\\
-	\circblockclose
+	\circblockclose 
 \end{circusaction}
 %
 \begin{circusaction}
 SequenceTerminationPending ~ \circdef \\
 \t1	sequenceTerminationPendingCall~.~sequencer \then \\
-\t1	get\_continue~.~sequencer~?~continue \then \\
+\t1	get\_continue~.~sequencer~?~continue \then \\ 
 \t1 	 sequenceTerminationPendingRet~.~sequencer~!~continue \then\\
 \t1	  \Skip
 \end{circusaction}
@@ -200,15 +199,15 @@ ContinueController \circdef \circvar continue : \boolean \circspot \\
 		ContinueController \\
 	\circblockclose \\
 \t1   \extchoice \\
-\t1   \circblockopen
+\t1   \circblockopen 
    	end\_methods~.~sequencer \then \\
    	\Skip\\
-   \circblockclose
-
+   \circblockclose 
+	
 \end{circusaction}
 %
 \begin{circusaction}
-Cleanup ~ \circdef\\
+Cleanup ~ \circdef\\ 
 \t1	 cleanupSchedulableCall~.~sequencer \then \\
 \t1	 cleanupSchedulableRet~.~sequencer \then \\
 \t1	 Finish
@@ -221,15 +220,15 @@ Finish ~ \circdef ~\\
 \end{circusaction}
 %
 \begin{circusaction}
-	\circspot \circblockopen\circmu X \circspot \lschexpract SMS\_Init \rschexpract \circseq Start \circseq\\
+  \circspot \circblockopen\circmu X \circspot \lschexpract Init \rschexpract \circseq Start \circseq\\ 
   	\circblockopen \circif applicationTerminating = \false \circthen \\
-  	 \t2 \circblockopen Execute \circseq Cleanup \circseq X\circblockclose \\
+  	 \t2 \circblockopen Execute \circseq Cleanup \circseq X\circblockclose \\ 
   	 \circelse applicationTerminating = \true \circthen \\
-  	 \t2 \circblockopen
+  	 \t2 \circblockopen  
   	 	end\_sequencer\_app~.~sequencer \then \\
   	 	 \Skip
   	  \circblockclose \\
-  	 \circfi \circblockclose \circblockclose
+  	 \circfi \circblockclose \circblockclose 
 \end{circusaction}
 %
 \begin{circus}

@@ -3,7 +3,6 @@
   \SECTION ~ LandMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
   , MethodCallBindingChannels 
   
-
 \end{zsection}
 
 \begin{circus}
@@ -36,6 +35,10 @@
             this~.~landingGearDeployed :=\false
 
             
+
+
+
+
         \circblockclose
 
  
@@ -51,6 +54,10 @@
               ret := landingGearDeployed = \true
 
             
+
+
+
+
         \circblockclose
 
  
@@ -66,6 +73,10 @@
               ret := controllingMission
 
             
+
+
+
+
         \circblockclose
 
  
@@ -80,6 +91,10 @@
             this~.~abort :=\true
 
             
+
+
+
+
         \circblockclose
 
  
@@ -96,6 +111,10 @@
 
 
             
+
+
+
+
         \circblockclose
 
  

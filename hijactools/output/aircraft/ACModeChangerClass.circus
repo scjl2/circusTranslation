@@ -2,12 +2,11 @@
 \begin{zsection}
   \SECTION ~ ACModeChangerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
   , MethodCallBindingChannels 
-  ,
+  , 
 MissionId
 , 
 
 MissionIds
-
 
 
 
@@ -47,9 +46,16 @@ MissionIds
 
 
              \circseq \\ 
+
+
+
               ret := TakeOffMissionMID
 
             
+
+
+
+
         \circblockclose
 
 
@@ -64,9 +70,16 @@ MissionIds
 
 
              \circseq \\ 
+
+
+
               ret := CruiseMissionMID
 
             
+
+
+
+
         \circblockclose
 
 
@@ -81,9 +94,16 @@ MissionIds
 
 
              \circseq \\ 
+
+
+
               ret := LandMissionMID
 
             
+
+
+
+
         \circblockclose
 
 
@@ -95,6 +115,10 @@ MissionIds
               ret := nullMissionId
 
             
+
+
+
+
         \circblockclose
 
 
@@ -108,6 +132,10 @@ MissionIds
   \circfi
 
             
+
+
+
+
         \circblockclose
 
  

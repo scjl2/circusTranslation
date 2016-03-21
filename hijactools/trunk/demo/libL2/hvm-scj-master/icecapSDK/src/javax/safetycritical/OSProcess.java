@@ -128,6 +128,4 @@ class OSProcess extends Process {
 	static native void setOMMSAffinitySet(int level);
 
 	static native void setAffinity(int size, int[] processorSet);
-	
-	static native int getMaxPriority();
 }

@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ TopLevelMissionSequencerFWChan ~ \parents ~ scj\_prelude, MissionSequencerFWChan, \\
-  \t1 SchedulableId, SchedulableIds
+  \quad SchedulableId, SchedulableIds
 \end{zsection}
 \extracircusvspace
 %
@@ -12,6 +12,6 @@
 \begin{circus}
   \circchannelset CCSync == \lchanset get\_continue, set\_continue \rchanset \\
   \circchannelset ~ TopLevelMissionSequencerFWChan ~ == ~ \\
-\t1                    \lchanset start\_toplevel\_sequencer,  end\_sequencer\_app, end\_methods, \\
-\t1         get\_continue, set\_continue \rchanset
+\quad                    \lchanset start\_toplevel\_sequencer,  end\_sequencer\_app, end\_methods, \\
+\quad         get\_continue, set\_continue \rchanset
 \end{circus}

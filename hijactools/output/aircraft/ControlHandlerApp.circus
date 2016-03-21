@@ -2,7 +2,6 @@
   \SECTION ~ ControlHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
  \t1  
-
 \end{zsection}
 
 \begin{circus}

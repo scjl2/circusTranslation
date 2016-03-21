@@ -3,7 +3,6 @@
   \SECTION ~ CruiseMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
   , MethodCallBindingChannels 
   
-
 \end{zsection}
 
 \begin{circus}
@@ -34,6 +33,10 @@
               ret := controllingMission
 
             
+
+
+
+
         \circblockclose
 
  

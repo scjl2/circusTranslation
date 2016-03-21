@@ -5,11 +5,11 @@ public class ChannelEnv
 	String channelName;
 	String channelType;
 
-//	public ChannelEnv()
-//	{
-//		super();
-//		// TODO Auto-generated constructor stub
-//	}
+	public ChannelEnv()
+	{
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public ChannelEnv(String channelName, String channelType)
 	{

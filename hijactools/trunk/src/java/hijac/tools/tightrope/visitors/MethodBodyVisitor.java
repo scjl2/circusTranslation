@@ -99,7 +99,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 	protected final NewSCJApplication CONTEXT;
 	private String varType;
-//	private boolean classEnv;
+	private boolean classEnv;
 	private boolean putSkip = false;
 
 	/**
@@ -389,7 +389,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			if (st instanceof ExpressionStatementTree)
 
 			{
-				if (!(st.toString().contains("Console") || st.toString().contains(
+				if (!(node.toString().contains("Console") || node.toString().contains(
 						"System")))
 				{
 					String statementString = st.accept(this, ctxt);
@@ -850,10 +850,10 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 				timeMachine.put("methodCall", false);
 
-//				if (putSkip)
-//				{
-//					sb.append(TightRopeString.LATEX.SKIP);
-//				}
+				if (putSkip)
+				{
+					sb.append(TightRopeString.LATEX.SKIP);
+				}
 
 				return sb.toString();
 
@@ -885,7 +885,6 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				 * the macro.
 				 */
 				/* Question: Is that generally feasible? */
-				//TODO Ensure this is ONLY called if this is a Circus class method call OR check first and provide 'this' or ''
 				return output
 						+ callExprMacro(node, ctxt, "MethodInvocation",
 								node.getMethodSelect(), arguments);
@@ -1400,18 +1399,14 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				final MemberSelectTree memberSelectTree = (MemberSelectTree) mit
 						.getMethodSelect();
-//				System.out.println("!// not my method, variable, putting key: "
-//						+ memberSelectTree.getIdentifier().toString() + " value: "
-//						+ node.getName().toString());
+				System.out.println("!// not my method, variable, putting key: "
+						+ memberSelectTree.getIdentifier().toString() + " value: "
+						+ node.getName().toString());
 
 				timeMachine.putIfAbsent(memberSelectTree.getIdentifier().toString(), node
 						.getName().toString());
 
-				String methodCallTrans =  visitMethodInvocation(mit, ctxt);
-				
-				methodCallTrans = methodCallTrans.replace("\\Skip", "");
-				
-				return methodCallTrans + "\\circvar " + node.getName()
+				return visitMethodInvocation(mit, ctxt) + "\\circvar " + node.getName()
 						+ " : " + TightRopeTransUtils.encodeType(node.getType())
 						+ " \\circspot " + node.getName() + " :=~"
 						+ memberSelectTree.getIdentifier().toString();// +
@@ -1522,7 +1517,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			boolean isStillMethodCall = (boolean) timeMachine.get("methodCall");
 			if (isStillMethodCall)
 			{
-				//Are 'method calls'here always in the Circus Class?
+
 				conditionString = "\\circvar loopVar : \\boolean \\circspot loopVar :=~"
 						+ conditionTrans + "\\circseq \\\\";
 

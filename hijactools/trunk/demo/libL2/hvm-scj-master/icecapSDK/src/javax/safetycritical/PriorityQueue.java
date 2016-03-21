@@ -36,7 +36,6 @@
 package javax.safetycritical;
 
 import icecaptools.IcecapCompileMe;
-import util.StringUtil;
 
 import javax.safetycritical.annotate.Level;
 import javax.safetycritical.annotate.SCJAllowed;
@@ -181,7 +180,7 @@ class PriorityQueue {
 	 * For testing only.
 	 */
 	public void print() {
-		devices.Console.println(StringUtil.constructString("readyQueue size = ", heapSize));
+		devices.Console.println("readyQueue size = " + heapSize);
 		//		for (int i = 1; i <= heapSize; i++) {
 		//			devices.Console.println((getScjProcess(tree[i]).toString()));
 		//			//System.out.println (tree[i].toString());
