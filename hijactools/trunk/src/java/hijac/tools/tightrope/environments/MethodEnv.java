@@ -23,6 +23,7 @@ public class MethodEnv
 	};
 
 	private String methodName = "";
+	private String eventName = "";
 	private String returnType = "";
 	private Map<String, Type> parameters = new HashMap<String, Type>();
 	protected ArrayList<Name> returnValues = new ArrayList<Name>();
@@ -44,6 +45,7 @@ public class MethodEnv
 	public MethodEnv(String name)
 	{
 		this.methodName = name;
+		setEventName(name);
 //		this.methodCallBinding = new BinderMethodEnv(name);
 		locations = new HashSet<String>();
 		callers = new HashSet<String>();
@@ -54,6 +56,7 @@ public class MethodEnv
 	public MethodEnv(Name name)
 	{	
 		this.methodName = name.toString();
+		setEventName(name.toString());
 //		this.methodCallBinding = new BinderMethodEnv(name.toString());
 		locations = new HashSet<String>();
 		callers = new HashSet<String>();
@@ -64,6 +67,7 @@ public class MethodEnv
 			Map params)
 	{
 		this.methodName = name.toString();
+		setEventName(name.toString());
 		this.returnType = returnType.toString();
 		this.parameters = params;
 		this.returnValues = returnValues;
@@ -77,6 +81,7 @@ public class MethodEnv
 			Map params, Object body)
 	{
 		this.methodName = name.toString();
+		setEventName(name.toString());
 		this.returnType = returnType.toString();
 		this.parameters = params;
 		this.returnValues = returnValues;
@@ -91,7 +96,7 @@ public class MethodEnv
 			Map params, Object body)
 	{
 		this.methodName = name.toString();
-
+		setEventName(name.toString());
 		this.returnType = returnType;
 		this.parameters = params;
 		this.returnValues = returnValues;
@@ -105,6 +110,7 @@ public class MethodEnv
 	public MethodEnv(Name name, TypeKind returnType, Map params)
 	{
 		this.methodName = name.toString();
+		setEventName(name.toString());
 		this.returnType = returnType.toString();
 		this.parameters = params;
 //		this.methodCallBinding = new BinderMethodEnv(name.toString());
@@ -115,6 +121,7 @@ public class MethodEnv
 	public MethodEnv(String name, String returnType, boolean APIMethod)
 	{
 		methodName = name;
+		setEventName(name.toString());
 		this.returnType = returnType;
 		this.APIMethod = APIMethod;
 //		this.methodCallBinding = new BinderMethodEnv(name);
@@ -331,13 +338,9 @@ public class MethodEnv
 		Map methodMap = new HashMap();
 
 		String s = getMethodName();
-
-		String chanName = TightRope.getProgramEnv().getCustomChannelName(this);
-		
-		
-		
+	
 		methodMap.put(TightRopeString.Name.METHOD_NAME, s);
-		methodMap.put(TightRopeString.Name.CHANNEL_NAME, chanName);
+		methodMap.put(TightRopeString.Name.CHANNEL_NAME, eventName);
 		methodMap.put(TightRopeString.Name.RETURN_TYPE, getReturnType());
 		methodMap.put(TightRopeString.Name.RETURN_VALUE, getReturnValue());
 		methodMap.put(TightRopeString.Name.PARAMETERS_STR, getParameters());
@@ -366,6 +369,16 @@ public class MethodEnv
 	public ObjectEnv getMethodLocation()
 	{
 		return objectLocation;
+	}
+
+	public String getEventName()
+	{
+		return eventName;
+	}
+
+	public void setEventName(String eventName)
+	{
+		this.eventName = eventName;
 	}
 
 //	public BinderMethodEnv getMethodCallBinding()

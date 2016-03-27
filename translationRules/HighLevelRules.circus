@@ -1,0 +1,64 @@
+\begin{zed}
+SCJProg ::= \seq SCJClass
+SCJClass ::= Name \cross Params \cross Vars \cross Methods
+SCJMethod ::= SCJMethSig \cross SCJBlock
+\end{zed}
+
+\begin{zed}
+CircusProg ::= \seq CircProcess
+CircProcess ::= CircName \cross CircParams \cross CircState \cross CircActions
+CircName
+CircParams
+CircState
+CircActions
+\end{zed}
+
+\begin{axdef}
+TransSCJProg : scjProg \pfun CircusProg
+\where
+\forall scjProg : SCJProg | \\
+\quad \exists c : SCJClass, seqC : \seq SCJClass @ scjProg = c \cat seqC | \\
+\quad \exists p : CircusProg @ p = TransClass(c) \cat TransClass(seqC) | TransSCJProg(scjProg) = p
+\end{axdef}
+
+\begin{axdef}
+TransClass : class \pfun CircProcess
+\where
+\forall class: SCJClass | \\
+\quad \exists n : Name, p: \seq Param, v : \seq Var, m : \seq Meth @ class = n \cross p \cross v \cross m | \\
+\quad \exists c : CircProcess @ c = TransName(n) \cross TransParams(p) \cross TransVars(v) \cross TransMeths(m) | \\
+\quad TransClass(n, p, v, m) = c
+\end{axdef}
+
+\begin{axdef}
+TransClasses : classes \pfun CircusProg
+\where
+\forall classes : \seq SCJClass | \\
+\quad \exists c : SCJClass, seqC : \seq SCJClass @ classes = c \cat seqC | \\
+\quad \exists p : CircusProg @ p = TransClass(c) \cat TransClasses(seqC)
+\end{axdef}
+
+\begin{axdef}
+TransMeth : m \pfun Action
+\where
+\forall m : SCJMethod | \\
+\quad \exists ms : SCJMethSig, b : SCJBlock @ m = ms \cross b  |  TransMeth(m) =  TransMethSig(ms) \cross TransBlock(b)
+\end{axdef}
+
+\begin{axdef}
+TransMethSig : ms \pfun ActionSig
+\where
+\forall ms : MethSig | \exists n : Name, p : \seq Param @ ms = n \cross p | TransMethSig(ms) = TransName(n) \cross TransParams(p)
+\end{axdef}
+
+\begin{axdef}
+TransParams : p \pfun \seq CircParam
+\where
+\forall p : \seq SCJParam | \exists param : SCJParam, seqParam : \seq SCJParam @ p = param \cat seqParam | TransParams(p) = TransParam(param) \cat TransParams(seqParams)
+\end{axdef}
+
+\begin{axdef}
+TransBlock : b \pfun CircBlock
+\where
+\forall b : SCJBlock | \exists e : Expr, seqE : \seq Expr @ b = e \cat seqE | TransBlock(b) = TransExpr(e) \cat TransExprs(seqE)
+\end{axdef}

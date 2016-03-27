@@ -147,9 +147,8 @@ public class MethodVisitor
 		assert (m.getLocationType() != null);
 		// assert(m.getLocationType().equals(idType));
 		m.setMethodLocation(object);
-		
-		ChannelEnv c = new ChannelEnv(methodName.toString(),"");
-		TightRope.getProgramEnv().addCustomChannel(m, c);
+			
+		TightRope.getProgramEnv().addGlobalMethod(m);
 		
 		return m;
 	}
