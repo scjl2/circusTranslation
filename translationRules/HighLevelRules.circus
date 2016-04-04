@@ -1,9 +1,9 @@
+\begin{axdef}
+[Var, Expr, Name, Param]
+\end{axdef}
+
 \begin{zed}
-Var == \num \\
-Expr == \num \\
 SCJBlock == \seq Expr \\
-Name == \num \\
-Param == \num \\
 Params == \seq Param \\
 SCJMethSig == Name \cross Params \\
 SCJMethod == SCJMethSig \cross SCJBlock \\
@@ -13,15 +13,14 @@ SCJClass == Name \cross Params \cross Vars \cross Methods \\
 SCJProg == \seq SCJClass \\
 \end{zed}
 
+\begin{axdef}
+[CircAction, CircVar, CircParam, CircName, CircType, CircExpression]
+\end{axdef}
 
 \begin{zed}
-CircAction == \num \\
 CircActions == \seq CircAction \\
-CircVar == \num \\
 CircState == \seq CircVar \\
-CircParam == \num \\
 CircParams == \seq CircParam \\
-CircName == \num \\
 CircProcess == CircName \cross CircParams \cross CircState \cross CircActions \\
 CircusProg == \seq CircProcess \\
 \end{zed}

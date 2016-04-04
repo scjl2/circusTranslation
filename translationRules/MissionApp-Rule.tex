@@ -1,5 +1,5 @@
 \begin{circus}
-\circprocess \lpar PName \rpar App \circdef \lpar PParams \rpar_{params} \circbegin
+\circprocess \lpar Indentifier \rpar App \circdef \lpar \lpar ConstructorDeclaration \rpar_{Method}\rpar_{Parameters} \circbegin
 \end{circus}
 
 \input{State-Rule.tex}
@@ -7,16 +7,10 @@
 \begin{circusaction}
 InitializePhase \circdef \\
 \circblockopen
-  initializeCall~.~IdOf(PName)  \then \\
-
-	\lpar RegisteredSchedulables \rpar
-
-
+  initializeCall~.~IdOf(Indentifier)  \then \\
+	\lpar initialize \rpar_{Registers}
 	%register~!~${SchedulableID}~!~${ProcessID} \then   \\
-
-
-
-  initializeRet~.~IdOf(PName)  \then \\
+  initializeRet~.~IdOf(Indentifier)  \then \\
   \Skip
 \circblockclose
 \end{circusaction}
@@ -24,18 +18,20 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
- cleanupMissionCall~.~IdOf(PName)  \then \\
+ cleanupMissionCall~.~IdOf(Indentifier)  \then \\
 
- cleanupMissionRet~.~IdOf(PName) ~!~\true \then \\
+ cleanupMissionRet~.~IdOf(Indentifier) ~!~\true \then \\
  \Skip
 \circblockclose
 \end{circusaction}
 
-$\lpar AppMeth1 \rpar_{appMeth}$
-
-$\lpar AppMeth2 \rpar_{appMeth}$
-
-\ldots
+\begin{circusaction}
+\lpar AppMeth\_1 \rpar_{Method}
+\end{circusaction}
+\qquad \ldots
+\begin{circusaction}
+\lpar AppMeth\_n \rpar_{Method}
+\end{circusaction}
 
 \begin{circusaction}
 Methods \circdef
@@ -44,16 +40,16 @@ Methods \circdef
 	\extchoice \\
 	CleanupPhase \\
 	\extchoice \\
-	MethName(AppMeth1) \\
+  MethName(AppMeth\_1) \\
 	\extchoice \\
-	MethName(AppMeth2) \\
+	MethName(AppMeth\_n) \\
 	\ldots
 \circblockclose
 \circseq Methods
 \end{circusaction}
 
 
-\input{MainAction-Rule.tex} $\circinterrupt (end\_mission\_app~.~IdOf(PName) \then \Skip$ 
+\input{MainAction-Rule.tex} $\circinterrupt (end\_mission\_app~.~IdOf(Identifier) \then \Skip$
 
 \begin{circus}
   \circend

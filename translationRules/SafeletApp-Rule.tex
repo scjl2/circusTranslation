@@ -1,5 +1,5 @@
 \begin{circus}
-\circprocess \lpar PName \rpar_{name}App  \circdef \lpar PParams \rpar_{params} \circbegin
+\circprocess \lpar Identifier \rpar_{Name}App  \circdef \lpar \lpar ConstructorDeclaration \rpar_{Method}\rpar_{Parameters} \circbegin
 \end{circus}
 
 \input{State-Rule.tex}
@@ -9,7 +9,7 @@ InitializeApplication \circdef \\
 \circblockopen
      initializeApplicationCall \then \\
 
-	  \lpar SInitBody \rpar_{methBody} \\ 
+	  \lpar \lpar InitializeApplication \rpar_{Method} \rpar_{MethBody} \\
 
      initializeApplicationRet \then \\
      \Skip
@@ -20,16 +20,18 @@ InitializeApplication \circdef \\
 GetSequencer \circdef \\
 \circblockopen
 	getSequencerCall \then \\
-	getSequencerRet~!~ IdOf(PName) \then \\
+	getSequencerRet~!~ \lpar GetSequencer \rpar_{Returns} \then \\
 	\Skip
 \circblockclose
 \end{circusaction}
 
-$\lpar AppMeth1 \rpar_{appMeth}$
-
-$\lpar AppMeth2 \rpar_{appMeth}$
-
-\ldots
+\begin{circusaction}
+\lpar AppMeth\_1 \rpar_{Method}
+\end{circusaction}
+\qquad \ldots
+\begin{circusaction}
+\lpar AppMeth\_n \rpar_{Method}
+\end{circusaction}
 
 \begin{circusaction}
 Methods \circdef \\
@@ -38,9 +40,10 @@ Methods \circdef \\
 	\extchoice  \\
 	InitializeApplication  \\
 	\extchoice \\
-	MethName(AppMeth1) \\
+	MethName(AppMeth\_1) \\
 	\extchoice \\
-	MethName(AppMeth2) \\
+  \ldots \\
+	MethName(AppMeth\_n) \\
 	\ldots
 \circblockclose
 \circseq Methods

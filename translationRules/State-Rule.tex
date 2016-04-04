@@ -1,14 +1,14 @@
 %
 \begin{schema}{State}
- 	this : \circref \lpar PName \rpar_{name}
+ 	this : \circref \lpar Identifier \rpar_{name}Class
 \end{schema}
-% 
+%
 \begin{circusaction}
 \circstate State
 \end{circusaction}
 %
 \begin{schema}{Init}
   State~' \\
-  this := \circnew \lpar PName \rpar_{name} Class()
+  this := \circnew \lpar Identifier \rpar_{name}Class()
 \end{schema}
 %
