@@ -42,15 +42,10 @@ ClassTuple == (CircProcess, OhCircusClass, Channels, MCBChans, MCBActions)
 \end{zed}
 
 \begin{axdef}
-
 TransSCJProg : SCJProg \pfun (CircusProg, Framework)
-
 \where
-
 \forall scjProg : SCJProg | \\
-
 \t1 TransSCJProg(scjProg) = ( TransClasses(seqC) , Framework)
-
 \end{axdef}
 
 \begin{zed}
