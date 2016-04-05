@@ -39,56 +39,54 @@ escapeinside={\%*}{*)}          % if you want to add a comment within your code
 
 \section*{Translation Rules}
 
-\subsection*{High-Level}
-\begin{itemize}
+\subsection*{High Level}
 
-\item $\lpar ParmList \rpar_{params}$ : translates a list of method parameters 
-\item $\lpar ParmList \rpar_{vars}$ : translates a list of variables 
-\item $\lpar MethBody \rpar_{block}$ : translates a Java block, for example a method body
-\item $\lpar Method \rpar_{appMeth}$ : translates active application methods into \Circus{} actions
-\item $\lpar Method \rpar_{dataMeth}$ : translates data methods into an \textbf{\textit{Oh}}\Circus{} method
+\input{HighLevelRules.circus}
+
+\subsection*{Low Level}
+\begin{itemize}
+\item $Method : MethodDeclaration \pfun (Name, Params, ReturnType, Body)$ : translates an active application method into a \Circus{} action
+\item $DataMethod : MethodDeclaration \pfun  $ : translates data methods into an \textbf{\textit{Oh}}\Circus{} method
+\item $MethodBody : Block \pfun \seq CircExpression $ : translates a Java block, for example a method body
+\item $Registers : Block \pfun \seq Name $ : extracts the Names of the schedulables registered in a Java block
+\item $Returns : Block \pfun \seq Name $ : extracts the Names of the variables retuned in a Java block
+\item $Variable : (Name, Type, InitExpression) \pfun (CircName, CircType, CircExpression) $ : translates a variable
+\item $Parameters : (Name, Params, ReturnType, Body) \pfun \seq CircParam $ : translates a list of method parameters
 \end{itemize}
 
-\subsection*{Low-Level}
 \begin{itemize}
 \item $\lpar Name \rpar_{name}$ : translates the $name$ to a Z identifier
-\item $\lpar varType \rpar_{type}$ : translates types 
+\item $\lpar varType \rpar_{type}$ : translates types
 \item $\lpar expr \rpar_{expression}$ : translates expressions
 \end{itemize}
 
+\newpage
 \section*{Auxiliary Functions}
 
 \begin{itemize}
 \item $IdOf(name)$: yields the identifier of a component called $name$
-\item $MethName(method)$: yields the method name of $method$
+\item $MethodName(method)$: yields the method name of $method$
 \end{itemize}
 
+\section*{Pattern Matching Rules}
 
 \section*{Safelet}
 \begin{lstlisting}
-public class $PName$ implements Safelet
+public class $Identifier$ implements Safelet
 {
-	$Vars$
-	
-	public $PName$($PParams$)
-	{
-		$VarInits$
-	}
-
-	public void initializeApplication()
-	{
-		$SInitBody$
-	}	
-
-	public MissionSequencer getSequencer()
-	{		
-		return $TLMS$;
-	}	
-	
-	$AppMeth1$
-	
-	$AppMeth2$
+	$FieldDeclaration\_1$
 	...
+	$FieldDeclaration\_n$
+
+	$ConstructorDeclaration$
+
+	$initializeApplication$
+
+	$getSequencer$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
 }
 \end{lstlisting}
 
@@ -99,26 +97,19 @@ public class $PName$ implements Safelet
 \section*{Mission Sequencer}
 
 \begin{lstlisting}
-public class $PName$ extends MissionSequencer
+public class $Identifier$ extends MissionSequencer
 {
-	$Vars$
-
-	public $PName$($PParams$)
-	{
-		$VarInits$
-	}
-	
-	protected Mission getNextMission()
-	{
-		
-		return $MId$;		
-	}
-	
-	$AppMeth1$
-	
-	$AppMeth2$
+	$FieldDeclaration\_1$
 	...
+	$FieldDeclaration\_n$
 
+	$ConstructorDeclaration$
+
+	$getNextMission$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
 }
 \end{lstlisting}
 \input{MissionSequencerApp-Rule.tex}
@@ -130,82 +121,63 @@ public class $PName$ extends MissionSequencer
 \section*{Mission}
 
 \begin{lstlisting}
-public class $PName$ extends Mission
+public class $Identifier$ extends Mission
 {
-	$Vars$
-
-	public $PName$($PParams$)
-	{
-		$VarInits$
-	}
-
-	protected void initialize()
-	{
-		$RegisteredSchedulables$		
-	}
-	
-	public boolean cleanUp()
-	{
-		Console.print("FlatBufferMission Cleanup");
-		return false;
-	}
-	
-	$AppMeth1$
-	
-	$AppMeth2$
+	$FieldDeclaration\_1$
 	...
+	$FieldDeclaration\_n$
+
+	$ConstructorDeclaration$
+
+	$initialize$
+
+	$cleanUp$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
 }
 \end{lstlisting}
 \input{MissionApp-Rule.tex}
-\newpage 
+\newpage
 
 \section*{Handlers}
 
 \begin{lstlisting}
-class $PName$ extends $HandlerType$
+class $Identifier$ extends $HandlerType$
 {
-	$Vars$
-	
-	public $PName$($PParams$)
-	{
-		$VarInits$
-	}
-
-	public void handleAsyncEvent()
-	{
-		$HandleAsyncBody$
-	}
-	
-	$AppMeth1$
-	
-	$AppMeth2$
+	$FieldDeclaration\_1$
 	...
+	$FieldDeclaration\_n$
+
+	$ConstructorDeclaration$
+
+	$handleAsyncEvent$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
 }
 \end{lstlisting}
 \input{HandlerApp-Rule.tex}
-\newpage 
+\newpage
 
 \section*{Managed Thread}
 
 \begin{lstlisting}
-public class $PName$ extends ManagedThread
+public class $Identifier$ extends ManagedThread
 {
-	$Vars$
-	
-	public $PName$($PParams$)
-	{
-		$VarInits$
-	}
-
-	public void run()
-	{
-		$RunBody$
-	}
-	
-	$AppMeth1$
-	
-	$AppMeth2$
+	$FieldDeclaration\_1$
 	...
+	$FieldDeclaration\_n$
+
+	$ConstructorDeclaration$
+
+	$run$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
 }
 \end{lstlisting}
 \input{ManagedThreadApp-Rule.tex}
