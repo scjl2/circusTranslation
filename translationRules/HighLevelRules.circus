@@ -1,5 +1,5 @@
 \begin{axdef}
-[Var, Expr, Name, Param]
+[Expr, Param, Identifier, Field]
 \end{axdef}
 
 \begin{zed}
@@ -8,42 +8,47 @@ Params == \seq Param \\
 SCJMethSig == Name \cross Params \\
 SCJMethod == SCJMethSig \cross SCJBlock \\
 Methods == \seq SCJMethod \\
-Vars == \seq Var \\
-SCJClass == Name \cross Params \cross Vars \cross Methods \\
+Fields == \seq Field \\
+SCJClass == Identifier \cross Fields \cross Methods \\
 SCJProg == \seq SCJClass \\
 \end{zed}
 
 \begin{axdef}
-[CircAction, CircVar, CircParam, CircName, CircType, CircExpression]
+[Action, CircVar, CircParam, CircName, CircType,\\
+\t1 CircExpression, Paragraph,Framework, ChannelDefinition, ChanSetDefinition, ProcDefinition]
 \end{axdef}
 
 \begin{zed}
-CircActions == \seq CircAction \\
+CircActions == \seq Action \\
 CircState == \seq CircVar \\
 CircParams == \seq CircParam \\
 CircProcess == CircName \cross CircParams \cross CircState \cross CircActions \\
-CircusProg == \seq CircProcess \\
+CircParagraph ::= Paragraph | ChannelDefinition | ChanSetDefinition | ProcDefinition \\
+CircusProg == \seq CircParagraph \\
 \end{zed}
 
 \begin{axdef}
-TransSCJProg : SCJProg \pfun CircusProg
+TransSCJProg : SCJProg \pfun (CircusProg, Framework)
 \where
 \forall scjProg : SCJProg | \\
-\t1 \exists c : SCJClass; seqC : \seq SCJClass |\\
-\t1 scjProg = c \cat seqC @ \\
-\t2 \exists p : CircusProg |\\
-\t3 p = TransClass(c) \cat TransClass(seqC) @\\
-\t3 TransSCJProg(scjProg) = p
+\t1 TransSCJProg(scjProg) = ( TransClasses(seqC) , Framework)
 \end{axdef}
 
+\begin{zed}
+ProcChannels == (\seq ChannelDefinition, \seq ChanSetDefinition) \\
+Channels == ProcChannels   \\
+MCBChans == ProcChannels \\
+MCBActions == \seq Action \\
+\end{zed}
+
 \begin{axdef}
-TransClass : SCJClass \pfun CircProcess
+TransClass : SCJClass \pfun (ProcDefinition, ClassDefinition, Channels, MCBChans, MCBActions)
 \where
 \forall class: SCJClass | \\
-\t1 \exists n : Name; p: \seq Param; v : \seq Var; m : \seq Meth |\\
-\t1 class = n \cross p \cross v \cross m @ \\
-\t2 \exists c : CircProcess |\\
-\t3  c = TransName(n) \cross TransParams(p) \cross TransVars(v) \cross TransMeths(m) @ \\
+\t1 \exists class : SCJClass |\\
+\t1 class = @ \\
+\t2 \exists proc:ProcDefinition; class:classDefinition; chans:Channels; mcbChans:MCBChans, mcbActions: MCBActions   |\\
+\t3  c = (TransName(n) , TransParams(p) , TransVars(v) , TransMeths(m) )@ \\
 \t4 TransClass(class) = c
 \end{axdef}
 
