@@ -1,8 +1,7 @@
-\begin{axdef}
-[Expr, Param, Identifier, Field]
-\end{axdef}
+
 
 \begin{zed}
+[Expr, Param, Identifier, Field, Name] \\
 SCJBlock == \seq Expr \\
 Params == \seq Param \\
 SCJMethSig == Name \cross Params \\
@@ -13,63 +12,47 @@ SCJClass == Identifier \cross Fields \cross Methods \\
 SCJProg == \seq SCJClass \\
 \end{zed}
 
-\begin{axdef}
-[Action, CircVar, CircParam, CircName, CircType,\\
-\t1 CircExpression, Paragraph,Framework, ChannelDefinition,\\
-\t1 ChanSetDefinition, ProcDefinition]
-\end{axdef}
+
 
 \begin{zed}
+[Action, CircVar, CircParam, CircName, CircType,\\
+\t1 CircExpression, ClassDefinition,\\
+\t1 Paragraph , ChannelDefinition , ChanSetDefinition \\
+\t1 , ProcDefinition] \\
+
 CircActions == \seq Action \\
-
-CircActions == \seq CircAction \\
-
 CircState == \seq CircVar \\
 CircParams == \seq CircParam \\
-CircProcess == CircName \cross CircParams \cross CircState \cross CircActions \\
-CircParagraph ::= Paragraph | ChannelDefinition | ChanSetDefinition | ProcDefinition \\
+
+
+CircParagraph ::= para \ldata Paragraph \rdata |\\
+\t1 chanDef \ldata ChannelDefinition \rdata | \\
+\t2 chanSetDef \ldata ChanSetDefinition \rdata  |\\
+\t1  procDef \ldata ProcDefinition \rdata \\
 CircusProg == \seq CircParagraph \\
+Framework == \seq CircParagraph \\
 \end{zed}
 
 \begin{zed}
 CircProcess == ProcDefinition \\
 OhCircusClass == ClassDefinition \\
-ChanTuple == (\seq ChannelDefinition, \seq ChanSetDefinition) \\
+ChanTuple == \seq ChannelDefinition \cross \seq ChanSetDefinition \\
 Channels == ChanTuple \\
 MCBChans == ChanTuple \\
 MCBActions == \seq Action\\
-ClassTuple == (CircProcess, OhCircusClass, Channels, MCBChans, MCBActions)
-\end{zed}
-
-\begin{axdef}
-TransSCJProg : SCJProg \pfun (CircusProg, Framework)
-\where
-\forall scjProg : SCJProg | \\
-\t1 TransSCJProg(scjProg) = ( TransClasses(seqC) , Framework)
-\end{axdef}
-
-\begin{zed}
+ClassTuple == (CircProcess, OhCircusClass, Channels, MCBChans, MCBActions) \\
 ProcChannels == (\seq ChannelDefinition, \seq ChanSetDefinition) \\
-Channels == ProcChannels   \\
-MCBChans == ProcChannels \\
-MCBActions == \seq Action \\
+
 \end{zed}
 
-\begin{axdef}
-	TransClasses : \seq SCJClass \pfun \seq ClassTuple
-\where
-\forall classes : \seq SCJClass @ \\
-\t1 \forall class SCJClass @ \\
-\t2 TransClasses(\langle class \rangle) = TransClass(class) \land \\
-\t2 TransClasses(\langle class \rangle \cat classes) = \langle TransClass(c) \rangle \cat TransClasses(classes)
-\end{axdef}
+
 
 \begin{axdef}
-TransClass : SCJClass \pfun ClassTuple
+TransMeth : SCJMethod \pfun Action
 \where
-\forall class: SCJClass| \exists meths : \seq Methods @ meths = MethodsOf(class) @ \\
-\t1 TransClass(class) = \\
-\t2 (TransProc(class), TransOhClass(class) ,TransChans(meths), TransMCBChan(meths), TransMCBAction(meths) )
+\forall m : SCJMethod @ \\
+\t1 \exists ms : SCJMethSig; b : SCJBlock; p : Params @\\
+\t2 TransMeth(m) =  (TransMethSig(ms) , TransBlock(b) , TransParams(p))
 \end{axdef}
 
 \begin{axdef}
@@ -78,17 +61,11 @@ TransClass : SCJClass \pfun ClassTuple
 \forall meths : \seq SCJMethod @ \\
 \t1 \forall meth : SCJMethod @ \\
 \t1 TransMeths(\langle meth \rangle) = TransMeth(meth) \land \\
-\t2 TransMeths\langle meth \rangle \cat meths) = \langle TransMeth(meth) \cat TransMeths(meths) \rangle
+\t2 TransMeths(\langle meth \rangle \cat meths) = \langle TransMeth(meth) \cat TransMeths(meths) \rangle
 \end{axdef}
 
 
-\begin{axdef}
-TransMeth : SCJMethod \pfun Action
-\where
-\forall m : SCJMethod @ \\
-\t1 \exists ms : SCJMethSig; b : SCJBlock; p : Params |\\
-\t2 TransMeth(m) =  (TransMethSig(ms) , TransBlock(b) , TransParams(p))
-\end{axdef}
+
 
 \begin{axdef}
 TransParams : Params \pfun CircParams
@@ -102,7 +79,9 @@ TransParams : Params \pfun CircParams
 \begin{axdef}
   TransParam : Param \pfun CircParam
 \where
-
+\forall p : Param @ \\
+\t1 \exists cParam : CircParam @ \\
+\t1 TransParam(p) =  cParam
 \end{axdef}
 
 \begin{axdef}
@@ -112,4 +91,29 @@ TransBlock : SCJBlock \pfun CircBlock
 \t1 \forall e : Expr @ \\
 \t1 TransBlock(\langle e \rangle) = TransExpr(e) \land \\
 \t2 TransBlock(\langle e \rangle \cat block) = \langle TransExpr(e) \cat TransBlock(block) \rangle
+\end{axdef}
+
+\begin{axdef}
+TransClass : SCJClass \pfun \seq CircParagraph
+\where
+\forall class: SCJClass| \exists meths : \seq Methods @ meths = MethodsOf(class) @ \\
+\t1 TransClass(class) =
+\t2 \langle TransProc(class), TransOhClass(class) ,TransChans(meths), TransMCBChan(meths), TransMCBAction(meths) \rangle
+\end{axdef}
+
+
+\begin{axdef}
+	TransClasses : \seq SCJClass \pfun \seq CircParagraph
+\where
+\forall classes : \seq SCJClass @ \\
+\t1 \forall class : SCJClass @ \\
+\t2 TransClasses(\langle class \rangle) = TransClass(class) \land \\
+\t2 TransClasses(\langle class \rangle \cat classes) = TransClass(class)  \cat TransClasses(classes)
+\end{axdef}
+
+\begin{axdef}
+TransSCJProg : SCJProg \pfun CircusProg  \cross CircusProg
+\where
+\forall scjProg : SCJProg @ \exists f: Framework @ \\
+\t1 TransSCJProg(scjProg) = (TransClasses(scjProg) , f)
 \end{axdef}
