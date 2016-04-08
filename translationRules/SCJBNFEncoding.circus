@@ -20,9 +20,12 @@ HandleAsyncLongEvent ==  MethodBody \\
 EventHandlerClassBody == HandleAsyncEvent \cross \seq ClassBodyDeclaration \\
 OneShotEventHandler == Identifier \cross EventHandlerClassBody \\
 LongEventHandlerClassBody == HandleAsyncLongEvent \cross \seq ClassBodyDeclaration \\
-AperiodicEventHandler ::= apehType \ldata Identifier \cross EventHandlerClassBody \rdata  | aplehType \ldata Identifier \cross LongEventHandlerClassBody \rdata \\
+AperiodicEventHandler ::= apehType \ldata Identifier \cross EventHandlerClassBody \rdata  |\\
+\t1  aplehType \ldata Identifier \cross LongEventHandlerClassBody \rdata \\
 PeriodicEventHandler == Identifier \cross EventHandlerClassBody \\
-EventHandler ::= pehDecl \ldata PeriodicEventHandler \rdata | apehDecl \ldata AperiodicEventHandler \rdata | osehDecl \ldata OneShotEventHandler \rdata \\
+EventHandler ::= pehDecl \ldata PeriodicEventHandler \rdata |\\
+\t1 apehDecl \ldata AperiodicEventHandler \rdata | \\
+\t1 osehDecl \ldata OneShotEventHandler \rdata \\
 \end{zed}
 
 \begin{zed}
@@ -36,7 +39,9 @@ NestedMissionSequencer == MissionSequencer
 \end{zed}
 
 \begin{zed}
-SchedulableObject ::= handler \ldata EventHandler \rdata | apeh \ldata AperiodicEventHandler \rdata | nms \ldata NestedMissionSequencer \rdata \\
+SchedulableObject ::= handler \ldata EventHandler \rdata | \\
+\t1 apeh \ldata AperiodicEventHandler \rdata | \\
+\t1 nms \ldata NestedMissionSequencer \rdata \\
 \end{zed}
 
 \begin{zed}
@@ -58,7 +63,8 @@ TopLevelMissionSequencer == MissionSequencer \\
 ImmortalMemorySize == MethodDeclaration \\
 InitializeApplication == MethodBody \\
 GetSequencer == MethodBody \\
-SafeletClassBody == GetSequencer \cross InitializeApplication \cross ImmortalMemorySize \cross \seq ClassBodyDeclaration \\
+SafeletClassBody == \\
+\t1 GetSequencer \cross InitializeApplication \cross ImmortalMemorySize \cross \seq ClassBodyDeclaration \\
 Safelet == Identifier \cross SafeletClassBody \\
 \end{zed}
 

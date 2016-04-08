@@ -4,24 +4,31 @@
 %%%%Moved CSPActioNExp into Action to resolve parsing problem %%%%%%%
 \begin{zed}
 	[Predicate, N, Expression, Paragraph, Schema_Exp, Declaration] \\
-	%
-	Command ::= type \ldata \seq N \cross Predicate \cross Predicate \rdata | equals \ldata N \cross \seq Expression \rdata | dot \ldata Expression \rdata \\
-	%
-	CParameter ::= shriek \ldata N \rdata | shreikRestrict \ldata N \cross Predicate \rdata | bang \ldata Expression \rdata | dotParam \ldata Expression \rdata \\
-	 %
+	~\\
+	Command ::= type \ldata \seq N \cross Predicate \cross Predicate \rdata | equals \ldata N \cross \seq Expression \rdata | \\
+  \t1 dot \ldata Expression \rdata \\
+	~\\
+	CParameter ::= shriek \ldata N \rdata | shreikRestrict \ldata N \cross Predicate \rdata | bang \ldata Expression \rdata | \\
+  \t1 dotParam \ldata Expression \rdata \\
+	~\\
 	Communication == N \cross \seq CParameter \\
-	%
-	CSExpression ::= emptyCS | cs \ldata \seq N \rdata | csName \ldata N \rdata | union \ldata CSExpression \cross CSExpression \rdata | intersect \ldata CSExpression \cross CSExpression \rdata |
-						subtract \ldata CSExpression \cross CSExpression \rdata \\
-	%
-	Action ::= actSe \ldata Schema_Exp \rdata | com \ldata Command \rdata | skip | stop |chaos | thenExp \ldata Communication \cross Action \rdata | guard \ldata Predicate \cross Action \rdata |
-						seqExp \ldata Action \cross Action \rdata | extChoice \ldata Action \cross Action \rdata | intChoice \ldata Action \cross Action \rdata |
-						actParam \ldata Action \cross CSExpression \cross Action \rdata | actIntr \ldata Action \cross Action \rdata |
-						actHide \ldata Action \cross CSExpression \rdata | itr \ldata N \cross Action \rdata | cspSpot \ldata Declaration \cross Action \rdata |
-						tmp6 \ldata Action \cross \seq Expression \rdata \\
-	 %
-	GuardedAction ::= thenAct \ldata Predicate \cross Action \rdata | thenActComp \ldata Predicate \cross Action \cross GuardedAction \rdata\\
-	%
+	~\\
+	CSExpression ::= emptyCS | cs \ldata \seq N \rdata | csName \ldata N \rdata |\\
+  \t1 union \ldata CSExpression \cross CSExpression \rdata |\\
+  \t1 intersect \ldata CSExpression \cross CSExpression \rdata |\\
+  \t1 subtract \ldata CSExpression \cross CSExpression \rdata \\
+	~\\
+	Action ::= actSe \ldata Schema_Exp \rdata | com \ldata Command \rdata | skip | stop |chaos | \\
+  \t1 thenExp \ldata Communication \cross Action \rdata |\\
+  \t1 guard \ldata Predicate \cross Action \rdata | seqExp \ldata Action \cross Action \rdata |\\
+  \t1 extChoice \ldata Action \cross Action \rdata | intChoice \ldata Action \cross Action \rdata |\\
+	\t1 actParam \ldata Action \cross CSExpression \cross Action \rdata | actIntr \ldata Action \cross Action \rdata |\\
+	\t1					actHide \ldata Action \cross CSExpression \rdata | itr \ldata N \cross Action \rdata | cspSpot \ldata Declaration \cross Action \rdata |\\
+	\t1					tmp6 \ldata Action \cross \seq Expression \rdata \\
+	~\\
+	GuardedAction ::= thenAct \ldata Predicate \cross Action \rdata | \\
+  \t1 thenActComp \ldata Predicate \cross Action \cross GuardedAction \rdata\\
+	~\\
 	%CSPActionExp ::= skip | stop |chaos | thenExp \ldata Communication \cross Action \rdata | guard \ldata Predicate \cross Action \rdata |
 	%					seqExp \ldata Action \cross Action \rdata | extChoice \ldata Action \cross Action \rdata | intChoice \ldata Action \cross Action \rdata |
 	%					actParam \ldata Action \cross CSExpression \cross Action \rdata | actIntr \ldata Action \cross Action \rdata |
@@ -29,26 +36,31 @@
 	%					tmp6 \ldata Action \cross \seq Expression \rdata \\
 	%
 	PParagraph ::= pPar \ldata Paragraph \rdata | def \ldata N \cross Action \rdata \\
-	%
-	Process ::= proc \ldata \seq PParagraph \cross Action \rdata | procName \ldata N \rdata | procSeq \ldata Process \cross Process \rdata |
-						procExtChoice \ldata Process \cross Process \rdata | procIntChoice \ldata Process \cross Process \rdata | procPar \ldata Process \cross CSExpression \cross Process \rdata |
-						procItr \ldata Process \cross Process \rdata | procHide \ldata Process \cross CSExpression \rdata | oSpot \ldata Declaration \cross Process \rdata |
-						tmp1 \ldata Process \cross \seq Expression \rdata | tmp2 \ldata Process \cross \seq N \cross \seq N \rdata | procSpot \ldata Declaration \cross Process \rdata |
-						tmp3 \ldata Process \cross \seq Expression \rdata | tmp4 \ldata \seq N \cross Process \rdata | tmp5 \ldata Process \cross \seq Expression \rdata \\
-	%
+	~\\
+	Process ::= proc \ldata \seq PParagraph \cross Action \rdata | procName \ldata N \rdata | \\
+  \t1 procSeq \ldata Process \cross Process \rdata | procExtChoice \ldata Process \cross Process \rdata |\\
+  \t1 procIntChoice \ldata Process \cross Process \rdata | procPar \ldata Process \cross CSExpression \cross Process \rdata | \\
+  \t1 procItr \ldata Process \cross Process \rdata | procHide \ldata Process \cross CSExpression \rdata | \\
+  \t1 oSpot \ldata Declaration \cross Process \rdata | tmp1 \ldata Process \cross \seq Expression \rdata | \\
+  \t1 tmp2 \ldata Process \cross \seq N \cross \seq N \rdata | procSpot \ldata Declaration \cross Process \rdata |\\
+  \t1 tmp3 \ldata Process \cross \seq Expression \rdata | tmp4 \ldata \seq N \cross Process \rdata |\\
+  \t1 tmp5 \ldata Process \cross \seq Expression \rdata \\
+	~\\
 	ProcDefinition ::= pd \ldata Process \cross N \cross Process \rdata \\
-	%
+	~\\
 	ChanSetDefinition ::= csdName \ldata N \cross CSExpression \rdata \\
-	%
-	SCDeclaration ::= chanName \ldata \seq N \rdata | chanNameWithType \ldata \seq N \cross Expression \rdata | scSe \ldata Schema_Exp \rdata \\
-	%
+	~\\
+	SCDeclaration ::= chanName \ldata \seq N \rdata | chanNameWithType \ldata \seq N \cross Expression \rdata |\\
+  \t1 scSe \ldata Schema_Exp \rdata \\
+	~\\
 	CDeclaration ::= scDecl \ldata SCDeclaration \rdata | multiDecl \ldata SCDeclaration \cross CDeclaration \rdata \\
-	%
+	~\\
 	ChannelDefinition == CDeclaration \\
-	%
-	CircusParagraph ::= para \ldata Paragraph \rdata | chanDef \ldata ChannelDefinition \rdata | chanSetDef \ldata ChanSetDefinition \rdata |
+	~\\
+	CircusParagraph ::= para \ldata Paragraph \rdata | chanDef \ldata ChannelDefinition \rdata | \\
+  \t1 chanSetDef \ldata ChanSetDefinition \rdata |
 						procDef \ldata ProcDefinition \rdata \\
-	%
+	~\\
   	Program == \seq CircusParagraph \\
-  %
+	~\\
 \end{zed}
