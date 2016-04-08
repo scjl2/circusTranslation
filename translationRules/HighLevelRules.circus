@@ -1,51 +1,7 @@
 
-
-\begin{zed}
-[Expr, Param, Identifier, Field, Name] \\
-SCJBlock == \seq Expr \\
-Params == \seq Param \\
-SCJMethSig == Name \cross Params \\
-SCJMethod == SCJMethSig \cross SCJBlock \\
-Methods == \seq SCJMethod \\
-Fields == \seq Field \\
-SCJClass == Identifier \cross Fields \cross Methods \\
-SCJProg == \seq SCJClass \\
-\end{zed}
-
-
-
-\begin{zed}
-[Action, CircVar, CircParam, CircName, CircType,\\
-\t1 CircExpression, ClassDefinition,\\
-\t1 Paragraph , ChannelDefinition , ChanSetDefinition \\
-\t1 , ProcDefinition] \\
-
-CircActions == \seq Action \\
-CircState == \seq CircVar \\
-CircParams == \seq CircParam \\
-
-
-CircParagraph ::= para \ldata Paragraph \rdata |\\
-\t1 chanDef \ldata ChannelDefinition \rdata | \\
-\t2 chanSetDef \ldata ChanSetDefinition \rdata  |\\
-\t1  procDef \ldata ProcDefinition \rdata \\
-CircusProg == \seq CircParagraph \\
-Framework == \seq CircParagraph \\
-\end{zed}
-
-\begin{zed}
-CircProcess == ProcDefinition \\
-OhCircusClass == ClassDefinition \\
-ChanTuple == \seq ChannelDefinition \cross \seq ChanSetDefinition \\
-Channels == ChanTuple \\
-MCBChans == ChanTuple \\
-MCBActions == \seq Action\\
-ClassTuple == (CircProcess, OhCircusClass, Channels, MCBChans, MCBActions) \\
-ProcChannels == (\seq ChannelDefinition, \seq ChanSetDefinition) \\
-
-\end{zed}
-
-
+\begin{zsection}
+  \SECTION HighLevelRules \parents SCJBNFEncoding, CircusBNFEncoding, standard\_toolkit
+\end{zsection}
 
 \begin{axdef}
 TransMeth : SCJMethod \pfun Action
@@ -63,8 +19,6 @@ TransMeth : SCJMethod \pfun Action
 \t1 TransMeths(\langle meth \rangle) = TransMeth(meth) \land \\
 \t2 TransMeths(\langle meth \rangle \cat meths) = \langle TransMeth(meth) \cat TransMeths(meths) \rangle
 \end{axdef}
-
-
 
 
 \begin{axdef}

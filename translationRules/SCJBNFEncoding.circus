@@ -1,0 +1,66 @@
+\begin{zsection}
+  \SECTION SCJBNFEncoding \parents  standard\_toolkit
+\end{zsection}
+
+\begin{zed}
+[MethodBody, ClassBodyDeclaration, Identifier, MethodDeclaration] \\
+\end{zed}
+
+
+\begin{zed}
+Run == MethodBody \\
+ManagedThreadClassBody == Run \cross \seq ClassBodyDeclaration \\
+ManagedThread == Identifier \cross ManagedThreadClassBody \\
+\end{zed}
+
+\begin{zed}
+HandleAsyncEvent ==  MethodBody \\
+HandleAsyncLongEvent ==  MethodBody \\
+EventHandlerClassBody == HandleAsyncEvent \cross \seq ClassBodyDeclaration \\
+OneShotEventHandler == Identifier \cross EventHandlerClassBody \\
+LongEventHandlerClassBody == HandleAsyncLongEvent \cross \seq ClassBodyDeclaration \\
+AperiodicEventHandler ::= apehType \ldata Identifier \cross EventHandlerClassBody \rdata  | aplehType \ldata Identifier \cross LongEventHandlerClassBody \rdata \\
+PeriodicEventHandler == Identifier \cross EventHandlerClassBody \\
+EventHandler ::= pehDecl \ldata PeriodicEventHandler \rdata | apehDecl \ldata AperiodicEventHandler \rdata | osehDecl \ldata OneShotEventHandler \rdata \\
+\end{zed}
+
+\begin{zed}
+GetNextMission ==  MethodBody\\
+MissionSequencerClassBody == GetNextMission \cross \seq ClassBodyDeclaration \\
+MissionSequencer == Identifier \cross MissionSequencerClassBody \\
+\end{zed}
+
+\begin{zed}
+NestedMissionSequencer == MissionSequencer
+\end{zed}
+
+\begin{zed}
+SchedulableObject ::= handler \ldata EventHandler \rdata | apeh \ldata AperiodicEventHandler \rdata | nms \ldata NestedMissionSequencer \rdata \\
+\end{zed}
+
+\begin{zed}
+Cleanup == MethodBody \\
+Initialize == MethodBody \\
+MissionClassBody == Initialize \cross Cleanup \cross \seq ClassBodyDeclaration \\
+Mission == Identifier \cross MissionClassBody\\
+\end{zed}
+
+\begin{zed}
+Tier == Mission \cross \seq SchedulableObject \\
+\end{zed}
+
+\begin{zed}
+TopLevelMissionSequencer == MissionSequencer \\
+\end{zed}
+
+\begin{zed}
+ImmortalMemorySize == MethodDeclaration \\
+InitializeApplication == MethodBody \\
+GetSequencer == MethodBody \\
+SafeletClassBody == GetSequencer \cross InitializeApplication \cross ImmortalMemorySize \cross \seq ClassBodyDeclaration \\
+Safelet == Identifier \cross SafeletClassBody \\
+\end{zed}
+
+\begin{zed}
+SCJProgram == Safelet \cross TopLevelMissionSequencer \cross \seq Tier \\
+\end{zed}
