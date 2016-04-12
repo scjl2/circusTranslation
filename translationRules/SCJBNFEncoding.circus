@@ -4,7 +4,7 @@
 
 
 \begin{zed}
-[MethodBody, ClassBodyDeclaration, Identifier, MethodDeclaration] \\
+[MethodBody, ClassBodyDeclaration, Identifier, MethodDeclaration, Long] \\
 \end{zed}
 
 
@@ -16,7 +16,7 @@ ManagedThread == Identifier \cross ManagedThreadClassBody \\
 
 \begin{zed}
 HandleAsyncEvent ==  MethodBody \\
-HandleAsyncLongEvent ==  MethodBody \\
+HandleAsyncLongEvent ==  Long \cross MethodBody \\
 EventHandlerClassBody == HandleAsyncEvent \cross \seq ClassBodyDeclaration \\
 OneShotEventHandler == Identifier \cross EventHandlerClassBody \\
 LongEventHandlerClassBody == HandleAsyncLongEvent \cross \seq ClassBodyDeclaration \\
@@ -40,7 +40,7 @@ NestedMissionSequencer == MissionSequencer
 
 \begin{zed}
 SchedulableObject ::= handler \ldata EventHandler \rdata | \\
-\t1 apeh \ldata AperiodicEventHandler \rdata | \\
+\t1 mt \ldata ManagedThread \rdata | \\
 \t1 nms \ldata NestedMissionSequencer \rdata \\
 \end{zed}
 
@@ -52,11 +52,12 @@ Mission == Identifier \cross MissionClassBody\\
 \end{zed}
 
 \begin{zed}
-Tier == Mission \cross \seq SchedulableObject \\
+Cluster == Mission \cross \seq SchedulableObject \\
+Tier == \seq Cluster \\
 \end{zed}
 
 \begin{zed}
-TopLevelMissionSequencer == MissionSequencer \\
+TopLevelMissionSequencer ::= NoSequencer | tlms \ldata MissionSequencer \rdata\\
 \end{zed}
 
 \begin{zed}
@@ -64,7 +65,7 @@ ImmortalMemorySize == MethodDeclaration \\
 InitializeApplication == MethodBody \\
 GetSequencer == MethodBody \\
 SafeletClassBody == \\
-\t1 GetSequencer \cross InitializeApplication \cross ImmortalMemorySize \cross \seq ClassBodyDeclaration \\
+\t1 InitializeApplication \cross GetSequencer \cross ImmortalMemorySize \cross \seq ClassBodyDeclaration \\
 Safelet == Identifier \cross SafeletClassBody \\
 \end{zed}
 

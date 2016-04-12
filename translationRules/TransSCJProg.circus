@@ -48,8 +48,8 @@ GenerateLockProc : SCJProgram \pfun Process
 TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \where
 \forall scjProg : SCJProgram; name : Identifier @\\
-\t1 \exists framework: CircusProgram ; app : CircusProgram ; mcb : CircusProgram ; \\
-\t2 locking : CircusProgram ; program : CircusProgram ; n : N ; p : Process ;\\
+\t1 \exists framework: CircusProgram ; app : CircusProgram ;  \\
+\t2 program : CircusProgram ; n : N ; p : Process ;\\
 \t2 appComms : CSExpression ; mcbComms : CSExpression ; lockComms: CSExpression \\
 \t2 fwProc : Process ; appProc : Process ; lockProc : Process; mcbProc : Process | \\
 \t1 app = TransClasses(scjProg) \land \\
@@ -63,7 +63,7 @@ TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \t1 TransSCJProg(name, scjProg) =\\
 \t2 framework \cat \langle procDef(pd(n,fwProc)) \rangle \cat \\
 \t3 app \cat \langle procDef(pd(n,appProc))\rangle \cat\\
-\t3 mcb \cat \langle procDef(pd(n,mcbProc)) \rangle \cat\\
-\t3 locking  \cat \langle procDef(pd(n,lockProc)) \rangle \cat \\
+\t3 \langle procDef(pd(n,mcbProc)) \rangle \cat\\
+\t3 \langle procDef(pd(n,lockProc)) \rangle \cat \\
 \t3 program 
 \end{axdef}
