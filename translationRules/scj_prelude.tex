@@ -1,0 +1,215 @@
+\section{Prelude}
+
+Start of a new section $scj\_prelude$ with $circus\_toolkit$ as its parent.
+%
+\begin{zsection}
+  \SECTION ~ scj\_prelude ~ \parents ~ circus\_toolkit
+\end{zsection}
+
+\subsection{Types}
+
+%%Zword \bool BOOL
+%%Zword \btrue TRUE
+%%Zword \bfalse FALSE
+
+The type $BOOL$ is used for boolean values in Z at the \emph{specification} level.
+%
+\begin{zed}
+  BOOL ::= TRUE | FALSE
+\end{zed}
+%
+We note that at the program level we use the type $boolean$ rather than $BOOL$.
+
+\subsection{Functions}
+
+The unary relation $distinct$ captures that the elements of a sequence are distinct.
+%
+\begin{circusflow}
+\begin{zed}
+  \relation ~ ~ (distinct ~ \_)
+\end{zed}
+%
+\begin{gendef}[X]
+  distinct ~ \_ : \power ~ (\iseq X)
+\end{gendef}
+\end{circusflow}
+%
+This function is used to specify uniqueness of the various identifiers introduced.
+
+\subsection{References}
+
+We do not actually define a semantics for references. Instead, we provide loose definitions of operators that allow us to some extent to type-check specifications that make use of reference types.
+
+%%Zpreword \circreftype reftype
+%%Zpreword \circref ref
+%%Zpreword \circderef deref
+%%Zinword \circrefassign {:=}
+
+We first introduce a generic type $REF$ that acts as the semantic domain for references over a certain value type. This is simply done by identifying $REF$ with the value type itself.% cross some marker type $REFTAG$.
+%
+\begin{circusflow}
+%\begin{zed}
+%  [REFTAG]
+%\end{zed}
+%
+%\begin{zed}
+%  REF[X] ~ == ~ X \cross REFTAG
+%\end{zed}
+\begin{zed}
+  REF[X] ~ == ~ X
+\end{zed}
+\end{circusflow}
+
+\nid We next define a generic function that serves as the type constructor for references.
+%
+\begin{circusflow}
+\begin{zed}
+  \generic ~ ~ (\circreftype \_)
+\end{zed}
+%
+\begin{zed}
+  \circreftype X ~ == ~ REF[X]
+\end{zed}
+\end{circusflow}
+
+\nid The generic referencing and dereferencing operators are loosely specified below.
+%
+\begin{gendef}[X]
+  \circref : X \fun \circreftype X
+  \also
+  \circderef : \circreftype X \fun X
+\end{gendef}
+%
+The fact that we identified $\circreftype X$ directly with $X$ is a design decision; a more strict approach may introduce a type different from $X$ here, such as $X \times REFTAG$ where $REFTAG$ is a new given type to `tag' value types as references. The pros of this tagging is that we get stricter type checking. The cons is that we cannot treat references to schemas nicely, namely when accessing components of the schema by selection. In order to maximise the parts of the model that can be checked by the tools, we opted for the more lenient design.
+
+\subsection{Arrays}
+
+%%Zpreword \circarray array
+
+Arrays are modelled by sequences. For convenience, we introduce a type constructor for them.
+%
+\begin{zed}
+  \circarray[X] ~ == ~ (\lambda T : \power X @ \circreftype~(\seq T))
+\end{zed}
+%
+Note that the result is not the underlying sequence type but the corresponding reference type.
+
+\subsection{{\OhCircus}}
+
+%%Zpreword \circnew new
+
+Below we provide support for the $\circnew$ keyword in {\OhCircus}.
+%
+\begin{gendef}[X]
+  \circnew : \power X \fun \circreftype X
+\end{gendef}
+%
+Again the specification is loose in that we do not define a semantics for the operator.
+
+Special $\circnew$ operators of {\SCJCircus} are just equated with $\circnew$ above for type-checking purposes.
+
+\begin{verbatim}
+%%Zpreword \circnewI new
+%%Zpreword \circnewM new
+%%Zpreword \circnewR new
+%%Zpreword \circnewP new
+\end{verbatim}
+
+%%Zword \circnull null
+
+\nid We furthermore introduce a generic constant for a $\circnull$ reference.
+%
+\begin{gendef}[X]
+  \circnull : \circreftype X
+\end{gendef}
+%
+The {\OhCircus} keyword $\circclass$ is used synonymously for $\circprocess$.
+
+\begin{verbatim}
+%%Zword \circclass \circprocess
+\end{verbatim}
+%
+For a class specification to parse, we note, however, that we have to introduce a main action which, to avoid confusion, should be hidden by a comment block.
+
+The keywords $\circinitial$, $\circpublic$, $\circprotected$, $\circprivate$, $\circlogical$, $\circfunction$ and $\circsync$ are treated as white spaces for the time being. This is until we have a working {\OhCircus} parser and type-checker.
+
+\begin{verbatim}
+%%Zword \circinitial {}
+%%Zword \circpublic {}
+%%Zword \circprotected {}
+%%Zword \circprivate {}
+%%Zword \circlogical {}
+%%Zword \circfunction {}
+%%Zword \circsync {}
+\end{verbatim}
+
+\subsection{{\Circus} Time}
+
+The absolute and relative time domains are introduced below.
+%
+\begin{zed}
+  TIME ~ == ~ \nat
+  \also
+  PERIOD ~ == ~ \nat
+\end{zed}
+
+\nid
+We also provide support for the supplementary {\SCJCircus} deadline operators.
+%
+\begin{verbatim}
+%Zpreword \circdeadlinesync \circdeadline
+%Zpreword \circdeadlineterm \circdeadline
+\end{verbatim}
+
+\nid
+The following channel is used to parse $c~\circat~t \then A$ which is translated into a prefix (hack).
+%
+\begin{circus}
+  \circchannel ~ circat : TIME
+\end{circus}
+%
+\begin{verbatim}
+%%Zword \circat {\then circat~?~}
+\end{verbatim}
+
+\subsection{Special Commands}
+
+The commands \verb"\hidemath" and \verb"\circstateignore" are treated as white spaces.
+%
+\begin{verbatim}
+%%Zword \hidemath {}
+%%Zword \circstateignore {}
+\end{verbatim}
+
+\nid
+We also ignore various commands for colouring text.
+%
+\begin{verbatim}
+%%Zword \red {}
+%%Zword \blue {}
+%%Zword \green {}
+%%Zword \purple {}
+%%Zword \grey {}
+\end{verbatim}
+
+\nid
+The commands \verb"\circblockopen" and \verb"\circblockclose" have the same meaning as normal parentheses but produce a block layout.
+%
+\begin{verbatim}
+%%Zword \circblockopen {(}
+%%Zword \circblockclose {)}
+\end{verbatim}
+
+\nid
+Similarly, \verb"\biglcurly" and \verb"\bigrcurly" have the same meaning as curly brackets around set expressions but again produce a block layout.
+%
+\begin{verbatim}
+%%Zword \biglcurly {\{}
+%%Zword \bigrcurly {\}}
+\end{verbatim}
+
+\nid The `$\dots$' command is treated as $\Skip$.
+
+\begin{verbatim}
+%%Zword \dots \Skip
+\end{verbatim}
