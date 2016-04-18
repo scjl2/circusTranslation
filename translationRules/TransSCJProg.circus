@@ -1,13 +1,13 @@
 \begin{zsection}
-  \SECTION TransSCJProg \parents standard\_toolkit, SCJBNFEncoding, CircusBNFEncoding 
+  \SECTION TransSCJProg \parents scj\_prelude, SCJBNFEncoding, CircusBNFEncoding 
 \end{zsection}
 
 \begin{axdef}
 
 controlTierSync : CSExpression \\
 Tier0 : N \\
-MissionIds
-SchedulableIds
+MissionIds : \seq CircusParagraph \\ 
+SchedulableIds : \seq CircusParagraph \\ 
 \end{axdef} 
 
 \begin{axdef}
@@ -16,32 +16,32 @@ ServicesChan : \seq CircusParagraph \\
   JTime : \seq CircusParagraph \\ 
    PrimitiveTypes : \seq CircusParagraph \\   
  Priority : \seq CircusParagraph \\ 
- PriorityQueue : 
-  FrameworkChan:
+ PriorityQueue : \seq CircusParagraph \\ 
+  FrameworkChan:\seq CircusParagraph \\ 
    MissionId : \seq CircusParagraph \\ 
    SchedulableId : \seq CircusParagraph \\ 
    \end{axdef} 
    
    \begin{axdef}
- ObjectFW : Process \\
+ ObjectFW : CircusParagraph \\
  ObjectChan : \seq CircusParagraph \\ 
  ObjectFWChan : \seq CircusParagraph \\ 
   ObjectMethChan : \seq CircusParagraph \\ 
- ThreadFW : Process \\
+ ThreadFW : CircusParagraph \\
  ThreadChan : \seq CircusParagraph \\ 
   ThreadFWChan :\seq CircusParagraph \\ 
    ThreadMethChan : \seq CircusParagraph \\ 
       \end{axdef} 
    
    \begin{axdef}
- SafeletFW : Process \\
+ SafeletFW : CircusParagraph \\
  SafeletFWChan : \seq CircusParagraph \\ 
   SafeletChan : \seq CircusParagraph \\ 
   SafeletMethChan :  \seq CircusParagraph \\ 
      \end{axdef} 
    
    \begin{axdef}
-TopLevelMissionSequencerFW : Process \\
+TopLevelMissionSequencerFW : CircusParagraph \\
  TopLevelMissionSequencerChan : \seq CircusParagraph \\ 
   TopLevelMissionSequencerFWChan : \seq CircusParagraph \\
      \end{axdef} 
@@ -53,7 +53,7 @@ TopLevelMissionSequencerFW : Process \\
     \end{axdef} 
    
    \begin{axdef}
- MissionFW : Process \\
+ MissionFW : CircusParagraph \\
  MissionChan : \seq CircusParagraph \\ 
   MissionFWChan : \seq CircusParagraph \\ 
    MissionMethChan : \seq CircusParagraph \\ 
@@ -70,33 +70,33 @@ SchedulableChan : \seq CircusParagraph \\
    
    \begin{axdef}
  PeriodicEventHandlerChan : \seq CircusParagraph \\ 
- PeriodicEventHandlerFW : Process \\
+ PeriodicEventHandlerFW : CircusParagraph \\
   PeriodicEventHandlerFWChan : \seq CircusParagraph \\ 
    PeriodicParameters : \seq CircusParagraph \\ 
       \end{axdef} 
    
    \begin{axdef}
  AperiodicEventHandlerChan : \seq CircusParagraph \\ 
- AperiodicEventHandlerFW : Process \\
+ AperiodicEventHandlerFW : CircusParagraph \\
   AperiodicLongEventHandlerMethChan : \seq CircusParagraph \\ 
    AperiodicParameters : \seq CircusParagraph \\ 
       \end{axdef} 
    
    \begin{axdef}
  OneShotEventHandlerChan : \seq CircusParagraph \\ 
- OneShotEventHandlerFW : Process \\
+ OneShotEventHandlerFW : CircusParagraph \\
   OneShotEventHandlerFWChan : \seq CircusParagraph \\ 
    OneShotEventHandlerMethChan : \seq CircusParagraph \\ 
       \end{axdef} 
    
    \begin{axdef}
-SchedulableMissionSequencerFW : Process \\
+SchedulableMissionSequencerFW : CircusParagraph \\
  SchedulableMissionSequencerChan : \seq CircusParagraph \\ 
-  SchedulableMissionSequencerFWChan \\
+  SchedulableMissionSequencerFWChan :  \seq CircusParagraph \\ 
      \end{axdef} 
    
    \begin{axdef}
- ManagedThreadFW : Process \\
+ ManagedThreadFW : CircusParagraph \\
  ManagedThreadChan : \seq CircusParagraph \\ 
   ManagedThreadFWChan :\seq CircusParagraph \\ 
    ManagedThreadMethChan : \seq CircusParagraph \\ 
@@ -106,21 +106,24 @@ SchedulableMissionSequencerFW : Process \\
 \begin{axdef}
 framework : CircusProgram \\
 \where
-framework = ServicesChan \cat GlobalTypes \cat JTime \cat PrimitiveTypes \cat \\
-\t1 Priority \cat PriorityQueue \cat FrameworkChan \cat MissionId \cat SchedulableId \\
-\t1 ObjectFW \cat ObjectChan \cat ObjectFWChan \cat ObjectMethChan \\
-\t1 ThreadFW \cat ThreadChan \cat ThreadFWChan \cat ThreadMethChan \\
-\t1 SafeletFW \cat SafeletFWChan \cat SafeletChan \cat SafeletMethChan \cat \\
-\t1 TopLevelMissionSequencerFW \cat TopLevelMissionSequencerChan \cat TopLevelMissionSequencerFWChan \cat  \\
-\t1 MissionSequencerChan \cat MissionSequencerFWChan \cat MissionSequencerMethChan \\
-\t1 MissionFW \cat MissionChan \cat MissionFWChan \cat MissionMethChan \\
+framework = ServicesChan \cat GlobalTypes \cat JTime \cat PrimitiveTypes \cat Priority \cat \\
+\t1 PriorityQueue \cat FrameworkChan \cat MissionId \cat SchedulableId \cat \langle ObjectFW \rangle \cat \\
+\t1 ObjectChan \cat ObjectFWChan \cat ObjectMethChan \cat \langle ThreadFW \rangle \cat ThreadChan \cat \\
+\t1 ThreadFWChan \cat ThreadMethChan \cat \langle SafeletFW \rangle \cat SafeletFWChan \cat \\
+\t1 SafeletChan \cat SafeletMethChan \cat \langle TopLevelMissionSequencerFW \rangle \cat \\ 
+\t1 TopLevelMissionSequencerChan \cat TopLevelMissionSequencerFWChan \cat \\
+\t1 MissionSequencerChan \cat MissionSequencerFWChan \cat MissionSequencerMethChan \cat \\
+\t1 \langle MissionFW \rangle \cat MissionChan \cat MissionFWChan \cat MissionMethChan \cat \\
 \t1 SchedulableChan \cat SchedulableMethChan  \cat SchedulableFWChan \cat \\
-\t1 HandlerChan \cat HandlerFWChan \cat HandlerMethChan \\
-\t1 PeriodicEventHandlerChan \cat PeriodicEventHandlerFW \cat PeriodicEventHandlerFWChan \cat PeriodicParameters \\
-\t1 AperiodicEventHandlerChan \cat AperiodicEventHandlerFW \cat AperiodicLongEventHandlerMethChan \cat AperiodicParameters \\
-\t1 OneShotEventHandlerChan \cat OneShotEventHandlerFW \cat OneShotEventHandlerFWChan \cat OneShotEventHandlerMethChan \\
-\t1 SchedulableMissionSequencerFW \cat SchedulableMissionSequencerChan \cat SchedulableMissionSequencerFWChan \\
-\t1 ManagedThreadFW \cat ManagedThreadChan \cat ManagedThreadFWChan \cat ManagedThreadMethChan
+\t1 HandlerChan \cat HandlerFWChan \cat HandlerMethChan \cat PeriodicEventHandlerChan \cat \\
+\t1 \langle PeriodicEventHandlerFW \rangle \cat PeriodicEventHandlerFWChan  \cat PeriodicParameters \cat\\
+\t1 AperiodicEventHandlerChan \cat \langle AperiodicEventHandlerFW \rangle \cat \\
+\t1 AperiodicLongEventHandlerMethChan \cat AperiodicParameters \cat \\
+\t1 OneShotEventHandlerChan \cat \langle OneShotEventHandlerFW \rangle \cat \\
+\t1 OneShotEventHandlerFWChan \cat OneShotEventHandlerMethChan \cat \\
+\t1 \langle SchedulableMissionSequencerFW \rangle \cat SchedulableMissionSequencerChan \cat \\
+\t1 SchedulableMissionSequencerFWChan \cat \langle ManagedThreadFW \rangle \cat ManagedThreadChan \cat\\
+\t1 ManagedThreadFWChan \cat ManagedThreadMethChan
 \end{axdef}
 
 \begin{axdef}
@@ -132,12 +135,6 @@ lockProcName : N \pfun N \\
 distinct \langle ran~fwProcName, ran~appProcName, ran~mcbProcName, ran~lockProcName \rangle 
 \end{axdef}
    
-\begin{axdef}
-MakeProcDef : \seq Process \pfun \seq ProcDef \\
-\where
-\forall procs : \seq Process @ \exixsts procDefs : \seq ProcDef @ \\
-\t1 procDefs = \langle ProcDef(head~procs) \rangle \cat MakeProcDef(tail~procs)
-\end{axdef} 
 
 \begin{axdef}
 GenerateTierProcs : \seq Tier \pfun Process 
@@ -150,34 +147,45 @@ GenerateTiers : \seq Tier \pfun \seq Process
 \end{axdef}
 
 \begin{axdef}
-GenerateFWProcs : SCJProgram \pfun \seq Process
+GetEnv : SCJProgram \pfun Safelet \cross TopLevelMissionSequencer \cross \seq Tier
 \where
 \forall scj : SCJProgram @ \\
 \t1 \exists s : Safelet ; tlms : TopLevelMissionSequencer ; tiers : \seq Tier @ \\
-\t1 scj = (s,tlms,tiers) \land\\
+\t1 GetEnv(scj) = (s,tlms,tiers)
+\end{axdef}
+
+\begin{axdef}
+SafeletFWName : N \\
+TopLevelMissionSequencerFWNMame : N
+\end{axdef}
+
+\begin{axdef}
+GenerateFWProcs :  Safelet \cross TopLevelMissionSequencer \cross \seq Tier \pfun \seq Process
+\where
+\forall s : Safelet ; tlms : TopLevelMissionSequencer ; tiers : \seq Tier @ \\
 \t1 \exists fwProc : Process ; controlTierProc: Process ;  tierProc : Process ; tierProcs : \seq Process | \\
 \t2 fwProc = procPar(controlTierProc, controlTierSync, tierProc) \land \\
 \t2 controlTierProc = \\
-\t3 procPar(safeletFW, controlTierSync, topLevelMissionSequencerFW) \land \\
-\t2 tierProc = GenerateTierProc(tiers) \\
+\t3 procPar(procName(SafeletFWName), controlTierSync, procName(TopLevelMissionSequencerFWNMame)) \land \\
+\t2 tierProc = GenerateTierProcs(tiers) \\
 \t2 tierProcs = GenerateTiers(tiers) @ \\
-\t2 GenerateFWProc(scj) = fwProc \cat tierProcs
+\t2 GenerateFWProcs(s, tlms, tiers) = \langle fwProc \rangle \cat tierProcs
 \end{axdef}
 
 \begin{axdef}
-GenerateAppProc : SCJProgram \pfun Process
+GenerateAppProc : Safelet \cross TopLevelMissionSequencer \cross \seq Tier \pfun Process
 \end{axdef}
 
 \begin{axdef}
-GenerateMCBProc : SCJProgram \pfun Process
+GenerateMCBProc : Safelet \cross TopLevelMissionSequencer \cross \seq Tier \pfun Process
 \end{axdef}
 
 \begin{axdef}
-GenerateLockProc : SCJProgram \pfun \seq Process
+GenerateLockProc : Safelet \cross TopLevelMissionSequencer \cross \seq Tier \pfun \seq Process
 \end{axdef}
 
 \begin{axdef}
-	TransClasses : SCJProgram \pfun \seq CircusParagraph
+	TransClasses : Safelet \cross TopLevelMissionSequencer \cross \seq Tier \pfun CircusProgram
 \end{axdef}
 
 \begin{axdef}
@@ -187,19 +195,22 @@ TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \t1 \exists app : CircusProgram ;  \\
 \t2 program : CircusProgram ; n : N ; p : Process ;\\
 \t2 appComms : CSExpression ; mcbComms : CSExpression ; lockComms: CSExpression \\
-\t2 fwProc : Process ; appProc : Process ; lockProc : Process; mcbProc : Process | \\
-\t1 app = TransClasses(scjProg) \land \\
-\t1 fwProc = GenerateFWProc(scjProg) \land \\
-\t1 appProc = GenerateAppProc(scjProg) \land \\
-\t1 mcbProc = GenerateMCBProc(scjProg) \land \\
-\t1 lockProc = GenerateLockProc(scjProg) \land \\
-\t1 program = \langle procDef(pd(n,procHide(procPar(procHide(procPar( procHide(\\
-\t2 procPar(fwProc, appComms, appProc), appComms), mcbComms, mcbProc)\\
-\t2 , mcbComms), lockComms, lockProc), lockComms)  )) \rangle @ \\
+\t2 fwProcs : \seq Process ; appProc : Process ; lockProc : Process; mcbProc : Process | \\
+\t1 app = TransClasses(GetEnv(scjProg)) \land \\
+\t1 fwProcs = GenerateFWProcs(GetEnv(scjProg)) \land \\
+\t1 appProc = GenerateAppProc(GetEnv(scjProg)) \land \\
+\t1 mcbProc = GenerateMCBProc(GetEnv(scjProg)) \land \\
+\t1 lockProc = GenerateLockProc(GetEnv(scjProg)) \land \\
+\t1 program =  procDef(pd(name, \\
+\t2 procHide(procPar( \\
+\t3 procHide(procPar( \\
+\t4 procHide(procPar(fwProcs, appComms, appProc), appComms) \\
+\t3 , mcbComms, mcbProc), mcbComms), \\
+\t2 lockComms, lockProc), lockComms)  ))  @ \\
 \t1 TransSCJProg(name, scjProg) =\\
 \t2 framework \cat \langle procDef(pd(fwProcName(n),fwProc)) \rangle \cat \\
 \t3 app \cat \langle procDef(pd(appProcName(n),appProc))\rangle \cat\\
 \t3 \langle procDef(pd(mcbProcName(n),mcbProc)) \rangle \cat\\
 \t3 \langle procDef(pd(lockProcName(n),lockProc)) \rangle \cat \\
-\t3 program 
+\t3 \langle program \rangle
 \end{axdef}
