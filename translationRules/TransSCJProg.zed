@@ -6,7 +6,6 @@
 [ID]
 \end{zed}
 
-
 \begin{axdef}
 controlTierSync : CSExpression \\
 Tier0 : N \\
@@ -24,7 +23,7 @@ ServicesChan : \seq CircusParagraph \\
  Priority : \seq CircusParagraph \\
  PriorityQueue : \seq CircusParagraph \\
   FrameworkChan:\seq CircusParagraph \\
-   MissionId : \seq CircusParagraph \\ 
+   MissionId : \seq CircusParagraph \\
    SchedulableId : \seq CircusParagraph \\
    \end{axdef}
 
@@ -154,7 +153,7 @@ ProcessID : N \pfun ID
 \end{axdef}
 
 \begin{axdef}
-ClusterEnv == N \cross \seq N \cross \seq N \cross \seq N \cross \seq N \cross \seq N 
+ClusterEnv == N \cross \seq N \cross \seq N \cross \seq N \cross \seq N \cross \seq N
 \end{axdef}
 
 \begin{axdef}
@@ -171,7 +170,7 @@ BuildFWEnv : SCJProgram \pfun FWEnv
 
 \begin{axdef}
 SafeletFWName : N \\
-TopLevelMissionSequencerFWNMame : N 
+TopLevelMissionSequencerFWNMame : N
 \end{axdef}
 
 \begin{axdef}
@@ -200,7 +199,7 @@ GenerateAppProc : AppProcEnv \pfun Process
 \end{zed}
 
 \begin{axdef}
-BinderMethodEnv == N \cross \finset N \cross \finset N \cross Type \cross \seq Type \cross \bool \cross N \cross Type \cross Type  
+BinderMethodEnv == N \cross \finset N \cross \finset N \cross Type \cross \seq Type \cross \bool \cross N \cross Type \cross Type
 \end{axdef}
 
 \begin{axdef}
@@ -232,6 +231,14 @@ GenerateLockProc : LockingEnv \pfun \seq CircusParagraph
 \end{axdef}
 
 \begin{axdef}
+FWName : N \\
+AppName : N \\
+MCBName : N \\
+LockName : N \\
+ProgName : Identifier \pfun N 
+\end{axdef}
+
+\begin{axdef}
 TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \where
 \forall scjProg : SCJProgram; name : Identifier @\\
@@ -244,16 +251,16 @@ TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \t1 appProc = GenerateAppProc(BuildAppProcEnv(scjProg)) \land \\
 \t1 mcbProc = GenerateMCBProc(BuildMCBEnv(scjProg)) \land \\
 \t1 lockProcs = GenerateLockProc(BuildLockEnv(scjProg)) \land \\
-\t1 program =  \langle procDef(pd(name, \\
-\t2 procHide(procPar( \\
-\t3 procHide(procPar( \\
-\t4 procHide(procPar(fwProcs, appComms, appProc), appComms) \\
-\t3 , mcbComms, mcbProc), mcbComms), \\
-\t2 lockComms, lockProc), lockComms)  )) \rangle  @ \\
+\t1 program =  \langle procDef(pd(ProgName(name), \\
+\t2 procHide( procPar( \\
+\t3 procHide( procPar(procName(FWName), appComms, \\
+\t4 procHide( procPar(procName(AppName), mcbComms, procName(MCBName)) , mcbComms) \\
+\t3 ), appComms)
+\t2 , lockComms, procName(LockName))
+\t1 , lockComms) )) \rangle  @ \\
 \t1 TransSCJProg(name, scjProg) =\\
-\t2 framework \cat \langle procDef(pd(fwProcName(n),fwProcs)) \rangle \cat \\
+\t2 framework \cat \langle procDef(pd(fwProcName(n),head~fwProcs)) \rangle \cat \\
 \t3 app \cat \langle procDef(pd(appProcName(n),appProc))\rangle \cat\\
 \t3 \langle procDef(pd(mcbProcName(n),mcbProc)) \rangle \cat\\
-\t3 \langle procDef(pd(lockProcName(n),lockProcs)) \rangle \cat \\
-\t3  program
+\t3 lockProcs \cat program
 \end{axdef}
