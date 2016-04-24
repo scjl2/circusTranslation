@@ -152,12 +152,18 @@ GenerateTierProcs : \seq Tier \pfun Process
 \end{axdef}
 
 \begin{axdef}
-BuildSOEnvs : \seq SchedulableObject \pfun (\seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier)
+SplitSchedulableObjects : \seq SchedulableObject \pfun \seq SchedulableObject \cross  \seq SchedulableObject \cross  \seq SchedulableObject \cross  \seq SchedulableObject \cross  \seq SchedulableObject
+\end{axdef}
+
+
+\begin{axdef}
+BuildSOEnvs : \seq SchedulableObject \pfun \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier
 \where
 \forall s : \seq SchedulableObject @ \\
-\t1 \exists sms : \seq Identifier ; pehs : \seq Identifier; apehs : \seq Identifier; oseh : \seq Identifier; mts: \seq Identifier |\\
-\exists n : NestedMissionSequencer |
-\t1 head~s = nms(n) @
+\t1 \exists so :  SchedulableObject ; sms : \seq Identifier ; pehs : \seq Identifier; apehs : \seq Identifier; oseh : \seq Identifier; mts: \seq Identifier |\\
+\exists n : NestedMissionSequencer @
+\t1 head~s = nms(n)  \implies sms = sms \cat \langle n.1 \rangle @  
+
 BuildSOEnvs(s) = (sms, pehs, apehs, oseh, mts)
 
 \end{axdef}
@@ -215,6 +221,41 @@ AppEnv == N \cross \seq Expression
 
 \begin{axdef}
 AppProcEnv == AppEnv \cross AppEnv \cross \seq \seq AppEnv \cross AppEnv
+\end{axdef}
+
+\begin{axdef}
+IDof : Identifier \pfun N 
+\end{axdef}
+
+\begin{axdef}
+ParamsOf : \seq ClassBodyDeclaration \pfun \seq Expression 
+\end{axdef}
+
+\begin{axdef}
+BuildSOAppEnv : \seq SchedulableObject \pfun \seq AppEnv
+\end{axdef}
+
+\begin{axdef}
+BuildClusterAppEnv : Cluster \pfun AppEnv \cross \seq AppEnv 
+\where
+\forall c: Cluster @ \\
+\t1 \exists m : Mission ; seqSO : \seq SchedulableObject | c = (m, seqSO) @ \\
+\t2 BuildClusterAppEnv(c) = ( (IDof(m.1), ParamsOf(m.2.3)), BuildSOAppEnv(seqSO) )
+\end{axdef}
+
+\begin{axdef}
+BuildTierAppEv : Tier \pfun  \seq (AppEnv \cross \seq AppEnv)
+\where
+\forall t : Tier @ \\
+\t1 \exists c : Cluster ; seqC : \seq Cluster | t = \langle c \rangle \cat seqC @ \\
+\t2  BuildTierAppEv(t) = \langle BuildClusterAppEnv(c) \rangle \cat BuildTierAppEv(seqC)
+\end{axdef}
+
+\begin{axdef}
+BuildTiersAppEnv : \seq Tier \pfun \seq (\seq (AppEnv \cross \seq AppEnv))
+\where
+\forall tiers : \seq Tier @ \\
+\t1 BuildTiersAppEnv(tiers) = \langle BuildTierAppEv(head~tiers) \rangle \cat BuildTiersAppEnv(tail~tiers)
 \end{axdef}
 
 \begin{axdef}
