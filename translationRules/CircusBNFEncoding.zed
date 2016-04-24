@@ -61,9 +61,10 @@ Process ::= proc \ldata \seq PParagraph \cross Action \rdata | procName \ldata N
   \t1 procSeq \ldata Process \cross Process \rdata | procExtChoice \ldata Process \cross Process \rdata |\\
   \t1 procIntChoice \ldata Process \cross Process \rdata | procPar \ldata Process \cross CSExpression \cross Process \rdata | \\
   \t1 procInter \ldata Process \cross Process \rdata | procHide \ldata Process \cross CSExpression \rdata | \\
-  \t1 rename \ldata Process \cross \seq N \cross \seq N \rdata | procParam \ldata Declaration \cross Process \rdata |\\
+  \t1 procRename \ldata Process \cross \seq N \cross \seq N \rdata | procParam \ldata Declaration \cross Process \rdata |\\
   \t1 procInstP \ldata Process \cross \seq Expression \rdata | procGeneric \ldata \seq N \cross Process \rdata |\\
-  \t1 procInstG \ldata Process \cross \seq Expression \rdata \\
+  \t1 procInstG \ldata Process \cross \seq Expression \rdata |\\
+  \t1 procItrInter \ldata Declaration \cross Process \rdata
 \end{zed}
 
 \begin{zed}

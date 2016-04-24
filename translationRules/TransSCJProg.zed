@@ -220,7 +220,28 @@ AppEnv == N \cross \seq Expression
 \end{axdef}
 
 \begin{axdef}
-AppProcEnv == AppEnv \cross AppEnv \cross \seq \seq AppEnv \cross AppEnv
+AppProcEnv == AppEnv \cross AppEnv \cross \seq (\seq (AppEnv \cross \seq AppEnv))
+\end{axdef}
+
+\begin{axdef}
+GetSafeletAppEnv : AppProcEnv \pfun AppEnv
+\where
+\forall a : AppProcEnv @ \\
+\t1 GetSafeletAppEnv(a) = a.1
+\end{axdef}
+
+\begin{axdef}
+GetTLMSAppEnv :  AppProcEnv \pfun AppEnv
+\where
+\forall a : AppProcEnv @ \\
+\t1 GetTLMSAppEnv(a) = a.2
+\end{axdef}
+
+\begin{axdef}
+GetTierAppEnvs :  AppProcEnv \pfun \seq (\seq (AppEnv \cross \seq AppEnv))
+\where
+\forall a : AppProcEnv @ \\
+\t1 GetTierAppEnvs(a) = a.3
 \end{axdef}
 
 \begin{axdef}
@@ -244,26 +265,44 @@ BuildClusterAppEnv : Cluster \pfun AppEnv \cross \seq AppEnv
 \end{axdef}
 
 \begin{axdef}
-BuildTierAppEv : Tier \pfun  \seq (AppEnv \cross \seq AppEnv)
+BuildTierAppEnv : Tier \pfun  \seq (AppEnv \cross \seq AppEnv)
 \where
 \forall t : Tier @ \\
 \t1 \exists c : Cluster ; seqC : \seq Cluster | t = \langle c \rangle \cat seqC @ \\
-\t2  BuildTierAppEv(t) = \langle BuildClusterAppEnv(c) \rangle \cat BuildTierAppEv(seqC)
+\t2  BuildTierAppEnv(t) = \langle BuildClusterAppEnv(c) \rangle \cat BuildTierAppEnv(seqC)
 \end{axdef}
 
 \begin{axdef}
 BuildTiersAppEnv : \seq Tier \pfun \seq (\seq (AppEnv \cross \seq AppEnv))
 \where
 \forall tiers : \seq Tier @ \\
-\t1 BuildTiersAppEnv(tiers) = \langle BuildTierAppEv(head~tiers) \rangle \cat BuildTiersAppEnv(tail~tiers)
+\t1 BuildTiersAppEnv(tiers) = \langle BuildTierAppEnv(head~tiers) \rangle \cat BuildTiersAppEnv(tail~tiers)
 \end{axdef}
 
 \begin{axdef}
 BuildAppProcEnv : SCJProgram \pfun AppProcEnv
+\where
+\forall scjProg : SCJProgram @ \\
+\t1 \exists safelet : Safelet ; topLevelMs : TopLevelMissionSequencer ; tiers : \seq Tier | \\
+\t2 scjProg = (safelet, topLevelMs, tiers) @\\
+\t3 \exists sfEnv : AppEnv ; tlmsEnv : AppEnv ; tiersEnv : \seq (\seq (AppEnv \cross \seq AppEnv)) ; ms : MissionSequencer @ \\
+\t4 sfEnv = (IDof(safelet.1), ParamsOf(safelet.2.4)) \land \\
+\t4 topLevelMs = tlms(ms) \implies tlmsEnv = (IDof(ms.1), ParamsOf(ms.2.2)) \land \\
+\t4 tiersEnv = BuildTiersAppEnv(tiers) \land \\
+\t4 BuildAppProcEnv(scjProg) = (sfEnv ,tlmsEnv ,tiersEnv)
+\end{axdef}
+
+\begin{axdef}
 \end{axdef}
 
 \begin{axdef}
 GenerateAppProc : AppProcEnv \pfun Process
+\where
+\forall appProcEnv : AppProcEnv @ \\
+\t1 \exists sfAppEnv : AppEnv ; tlmsAppEnv : AppEnv | \\
+\t1 sfAppEnv = GetSafeletAppEnv(appProcEnv) \land \\
+\t1 tlmsAppEnv = GetTLMSAppEnv(appProcEnv) @
+ GenerateAppProc(appProcEnv) = procInter(procInstP(procName(sfAppEnv.1),sfAppEnv.2),procInstP(procName(tlmsAppEnv.1), tlmsAppEnv.2) ) 
 \end{axdef}
 
 \begin{zed}
