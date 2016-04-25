@@ -1,0 +1,143 @@
+\begin{zsection}
+  \SECTION Framework \parents scj\_prelude, SCJBNFEncoding, CircusBNFEncoding
+\end{zsection}
+
+
+\begin{zed}
+[ID]
+\end{zed}
+
+\begin{zed}
+[Type] \\
+\end{zed}
+
+\begin{axdef}
+SafeletFWName : N \\
+TopLevelMissionSequencerFWNMame : N
+\end{axdef}
+
+
+\begin{axdef}
+controlTierSync : CSExpression \\
+Tier0 : N \\
+MissionIds : \seq CircusParagraph \\
+SchedulableIds : \seq CircusParagraph \\
+ThreadIds: \seq CircusParagraph \\
+ObjectIds : \seq CircusParagraph \\
+\end{axdef}
+
+\begin{axdef}
+ServicesChan : \seq CircusParagraph \\
+ GlobalTypes : \seq CircusParagraph \\
+  JTime : \seq CircusParagraph \\
+   PrimitiveTypes : \seq CircusParagraph \\
+ Priority : \seq CircusParagraph \\
+ PriorityQueue : \seq CircusParagraph \\
+  FrameworkChan:\seq CircusParagraph \\
+   MissionId : \seq CircusParagraph \\
+   SchedulableId : \seq CircusParagraph \\
+   \end{axdef}
+
+   \begin{axdef}
+ ObjectFW : CircusParagraph \\
+ ObjectChan : \seq CircusParagraph \\
+ ObjectFWChan : \seq CircusParagraph \\
+  ObjectMethChan : \seq CircusParagraph \\
+ ThreadFW : CircusParagraph \\
+ ThreadChan : \seq CircusParagraph \\
+  ThreadFWChan :\seq CircusParagraph \\
+   ThreadMethChan : \seq CircusParagraph \\
+      \end{axdef}
+
+   \begin{axdef}
+ SafeletFW : CircusParagraph \\
+ SafeletFWChan : \seq CircusParagraph \\
+  SafeletChan : \seq CircusParagraph \\
+  SafeletMethChan :  \seq CircusParagraph \\
+     \end{axdef}
+
+   \begin{axdef}
+TopLevelMissionSequencerFW : CircusParagraph \\
+ TopLevelMissionSequencerChan : \seq CircusParagraph \\
+  TopLevelMissionSequencerFWChan : \seq CircusParagraph \\
+     \end{axdef}
+
+   \begin{axdef}
+ MissionSequencerChan : \seq CircusParagraph \\
+ MissionSequencerFWChan : \seq CircusParagraph \\
+ MissionSequencerMethChan : \seq CircusParagraph \\
+    \end{axdef}
+
+   \begin{axdef}
+ MissionFW : CircusParagraph \\
+ MissionChan : \seq CircusParagraph \\
+  MissionFWChan : \seq CircusParagraph \\
+   MissionMethChan : \seq CircusParagraph \\
+      \end{axdef}
+
+   \begin{axdef}
+SchedulableChan : \seq CircusParagraph \\
+ SchedulableMethChan  : \seq CircusParagraph \\
+  SchedulableFWChan : \seq CircusParagraph \\
+ HandlerChan : \seq CircusParagraph \\
+ HandlerFWChan : \seq CircusParagraph \\
+  HandlerMethChan : \seq CircusParagraph \\
+     \end{axdef}
+
+   \begin{axdef}
+ PeriodicEventHandlerChan : \seq CircusParagraph \\
+ PeriodicEventHandlerFW : CircusParagraph \\
+  PeriodicEventHandlerFWChan : \seq CircusParagraph \\
+   PeriodicParameters : \seq CircusParagraph \\
+      \end{axdef}
+
+   \begin{axdef}
+ AperiodicEventHandlerChan : \seq CircusParagraph \\
+ AperiodicEventHandlerFW : CircusParagraph \\
+  AperiodicLongEventHandlerMethChan : \seq CircusParagraph \\
+   AperiodicParameters : \seq CircusParagraph \\
+      \end{axdef}
+
+   \begin{axdef}
+ OneShotEventHandlerChan : \seq CircusParagraph \\
+ OneShotEventHandlerFW : CircusParagraph \\
+  OneShotEventHandlerFWChan : \seq CircusParagraph \\
+   OneShotEventHandlerMethChan : \seq CircusParagraph \\
+      \end{axdef}
+
+   \begin{axdef}
+SchedulableMissionSequencerFW : CircusParagraph \\
+ SchedulableMissionSequencerChan : \seq CircusParagraph \\
+  SchedulableMissionSequencerFWChan :  \seq CircusParagraph \\
+     \end{axdef}
+
+   \begin{axdef}
+ ManagedThreadFW : CircusParagraph \\
+ ManagedThreadChan : \seq CircusParagraph \\
+  ManagedThreadFWChan :\seq CircusParagraph \\
+   ManagedThreadMethChan : \seq CircusParagraph \\
+\end{axdef}
+
+
+\begin{axdef}
+framework : CircusProgram \\
+\where
+framework = ServicesChan \cat GlobalTypes \cat JTime \cat PrimitiveTypes \cat Priority \cat \\
+\t1 PriorityQueue \cat FrameworkChan \cat MissionId \cat SchedulableId \cat \langle ObjectFW \rangle \cat \\
+\t1 ObjectChan \cat ObjectFWChan \cat ObjectMethChan \cat \langle ThreadFW \rangle \cat ThreadChan \cat \\
+\t1 ThreadFWChan \cat ThreadMethChan \cat \langle SafeletFW \rangle \cat SafeletFWChan \cat \\
+\t1 SafeletChan \cat SafeletMethChan \cat \langle TopLevelMissionSequencerFW \rangle \cat \\
+\t1 TopLevelMissionSequencerChan \cat TopLevelMissionSequencerFWChan \cat \\
+\t1 MissionSequencerChan \cat MissionSequencerFWChan \cat MissionSequencerMethChan \cat \\
+\t1 \langle MissionFW \rangle \cat MissionChan \cat MissionFWChan \cat MissionMethChan \cat \\
+\t1 SchedulableChan \cat SchedulableMethChan  \cat SchedulableFWChan \cat \\
+\t1 HandlerChan \cat HandlerFWChan \cat HandlerMethChan \cat PeriodicEventHandlerChan \cat \\
+\t1 \langle PeriodicEventHandlerFW \rangle \cat PeriodicEventHandlerFWChan  \cat PeriodicParameters \cat\\
+\t1 AperiodicEventHandlerChan \cat \langle AperiodicEventHandlerFW \rangle \cat \\
+\t1 AperiodicLongEventHandlerMethChan \cat AperiodicParameters \cat \\
+\t1 OneShotEventHandlerChan \cat \langle OneShotEventHandlerFW \rangle \cat \\
+\t1 OneShotEventHandlerFWChan \cat OneShotEventHandlerMethChan \cat \\
+\t1 \langle SchedulableMissionSequencerFW \rangle \cat SchedulableMissionSequencerChan \cat \\
+\t1 SchedulableMissionSequencerFWChan \cat \langle ManagedThreadFW \rangle \cat ManagedThreadChan \cat\\
+\t1 ManagedThreadFWChan \cat ManagedThreadMethChan
+\end{axdef}
