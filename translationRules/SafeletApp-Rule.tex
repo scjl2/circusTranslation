@@ -1,0 +1,56 @@
+\begin{circus}
+\circprocess \lpar Identifier \rpar_{Name}App  \circdef \lpar \lpar ConstructorDeclaration \rpar_{Method}\rpar_{Parameters} \circbegin
+\end{circus}
+
+\input{State-Rule.tex}
+
+\begin{circusaction}
+InitializeApplication \circdef \\
+\circblockopen
+     initializeApplicationCall \then \\
+
+	  \lpar \lpar InitializeApplication \rpar_{Method} \rpar_{MethBody} \\
+
+     initializeApplicationRet \then \\
+     \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+GetSequencer \circdef \\
+\circblockopen
+	getSequencerCall \then \\
+	getSequencerRet~!~ \lpar GetSequencer \rpar_{Returns} \then \\
+	\Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+\lpar AppMeth\_1 \rpar_{Method}
+\end{circusaction}
+\qquad \ldots
+\begin{circusaction}
+\lpar AppMeth\_n \rpar_{Method}
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	GetSequencer \\
+	\extchoice  \\
+	InitializeApplication  \\
+	\extchoice \\
+	MethName(AppMeth\_1) \\
+	\extchoice \\
+  \ldots \\
+	MethName(AppMeth\_n) \\
+	\ldots
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\input{MainAction-Rule.tex} $\circinterrupt (end\_safelet\_app \then \Skip)$
+
+\begin{circus}
+  \circend
+\end{circus}

@@ -2,6 +2,7 @@ package hijac.tools.tightrope.environments;
 
 public class ChannelEnv
 {
+<<<<<<< HEAD
 	String channelName;
 	String channelType;
 
@@ -10,6 +11,10 @@ public class ChannelEnv
 		super();
 		// TODO Auto-generated constructor stub
 	}
+=======
+	private String channelName;
+	private String channelType;
+>>>>>>> RULES
 
 	public ChannelEnv(String channelName, String channelType)
 	{
@@ -37,5 +42,4 @@ public class ChannelEnv
 	{
 		this.channelType = channelType;
 	}
-
 }

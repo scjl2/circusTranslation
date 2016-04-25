@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.utils;
 
+import hijac.tools.modelgen.circus.utils.LaTeX;
+
 public final class TightRopeString
 {
 	public static class LATEX
@@ -8,7 +10,7 @@ public final class TightRopeString
 		public static final String SHRIEK = "~!~";
 		public static final String THEN = "\\then ";
 		public static final String SKIP = "\\Skip";
-		public static final String NEW_LINE = " \\\\ ";
+		public static final String NEW_LINE = LaTeX.NEWLINE;
 		public static final String RET_FALSE = "ret := \\false";
 		public static final String RET_TRUE = "ret := \\true";
 		public static final String ASSIGN = " :=";
@@ -17,6 +19,7 @@ public final class TightRopeString
 		public static final String LPAR = "\\lpar ";
 		public static final String LCHANSET = "\\lchanset ";
 		public static final String INTERLEAVE = "\\interleave";
+		public static final String UNDERSCORE = "\\_";
 		
 	}
 	
@@ -32,7 +35,19 @@ public final class TightRopeString
 		public static final String MISSION_ID = "MissionId";
 		public static final String NULL_S_ID = "nullSchedulableId";
 		public static final String NULL_M_ID = "nullMissionId";
-		public static final String BINDER = "binder\\_";
+		public static final String BINDER = "binder"+LATEX.UNDERSCORE;
+		public static final String CALLERS_STR = "Callers";
+		public static final String CALLER_TYPE = "CallerType";
+		public static final String LOCS = "Locs";
+		public static final String LOC_TYPE = "LocType";
+		public static final String CHANNEL_NAME = "ChannelName";
+		public static final String METHOD_NAME = "MethodName";
+		public static final String RETURN_TYPE = "ReturnType";
+		public static final String RETURN_VALUE = "ReturnValue";
+		public static final String ACCESS = "Access";
+		public static final String BODY = "Body";
+		public static final String PARAMETERS_STR = "Parameters";
+		public static final String EXTERNAL_APPMETH = "ExternalAppmeth";
 		
 	}
 	

@@ -1,20 +1,9 @@
 \begin{zsection}
-  \SECTION ~ MyAppApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan   \\
-
-  \t1 
+  \SECTION ~ MyAppApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  
 \end{zsection}
-%\begin{circus}
-%\circchannelset MyAppAppSync \circdef \\
-%   \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
-%\end{circus}
-
-%\begin{circus}
-%\circchannelset MyAppChanSet \circdef \\
-%  \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
-%\end{circus}
 
 \begin{circus}
-\circprocess MyAppApp  \circdef  \circbegin
+\circprocess MyAppApp  \defs  \circbegin
 \end{circus}
 
 
@@ -78,11 +67,7 @@ Methods \circdef \\
 \circseq Methods
 \end{circusaction}
 
-\begin{circusaction}
-\circspot ( Methods) 
- \circinterrupt (end\_safelet\_app \then \Skip)
-\end{circusaction}
-
 \begin{circus}
-  \circend
+@  Methods ; end\_safelet\_app \then \Skip
+ \\   \circend
 \end{circus}

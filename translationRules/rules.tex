@@ -1,0 +1,203 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\usepackage{xcolor}
+
+\usepackage{circus}
+\usepackage{hijac}
+\usepackage{czt}
+
+
+\usepackage{listings}
+\lstset{ %
+mathescape,
+language=Java,                % choose the language of the code
+basicstyle=\footnotesize,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\footnotesize,      % the size of the fonts that are used for the line-numbers
+stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=5pt,                  % how far the line-numbers are from the code
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=none,           % adds a frame around the code
+tabsize=2,          % sets default tabsize to 2 spaces
+captionpos=b,           % sets the caption-position to bottom
+breaklines=true,        % sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)}          % if you want to add a comment within your code
+}
+
+\usepackage[left=40mm,right=15mm,top=15mm,bottom=15mm]{geometry}
+\author{Matt Luckcuck}
+\begin{document}
+
+\section*{Translation Rules}
+
+\subsection*{High Level}
+
+\input{CircusBNFEncoding.zed}
+\newpage
+\input{SCJBNFEncoding.zed}
+\newpage
+\input{Framework.zed}
+\newpage
+\input{BuildPhase.zed}
+\newpage
+\input{GeneratePhase.zed}
+\newpage
+\input{TransSCJProg.zed}
+
+ \newpage
+\subsection*{Low Level}
+\begin{itemize}
+\item $Method : MethodDeclaration \pfun (Name, Params, ReturnType, Body)$ : translates an active application method into a \Circus{} action
+\item $DataMethod : MethodDeclaration \pfun  $ : translates data methods into an \textbf{\textit{Oh}}\Circus{} method
+\item $MethodBody : Block \pfun \seq CircExpression $ : translates a Java block, for example a method body
+\item $Registers : Block \pfun \seq Name $ : extracts the Names of the schedulables registered in a Java block
+\item $Returns : Block \pfun \seq Name $ : extracts the Names of the variables retuned in a Java block
+\item $Variable : (Name, Type, InitExpression) \pfun (CircName, CircType, CircExpression) $ : translates a variable
+\item $Parameters : (Name, Params, ReturnType, Body) \pfun \seq CircParam $ : translates a list of method parameters
+\end{itemize}
+
+\begin{itemize}
+\item $\lpar Name \rpar_{name}$ : translates the $name$ to a Z identifier
+\item $\lpar varType \rpar_{type}$ : translates types
+\item $\lpar expr \rpar_{expression}$ : translates expressions
+\end{itemize}
+
+\newpage
+\section*{Auxiliary Functions}
+
+\begin{itemize}
+\item $IdOf(name)$: yields the identifier of a component called $name$
+\item $ObjectIdOf(name)$: yields the identifier of the $Object$ process of a component called $name$
+\item $ThreadIdOf(name)$: yields the identifier of the $Thread$ process of a component called $name$
+\item $MethodName(method)$: yields the method name of $method$
+\item $MethodsOf(name)$ : yeilds a sequence of methods from the class $name$
+\end{itemize}
+\newpage
+\section*{Pattern Matching Rules}
+
+\section*{Safelet}
+\begin{lstlisting}
+public class $Identifier$ implements Safelet
+{
+	$FieldDeclaration\_1$
+	...
+	$FieldDeclaration\_n$
+
+	$ConstructorDeclaration$
+
+	$initializeApplication$
+
+	$getSequencer$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
+}
+\end{lstlisting}
+
+\input{SafeletApp-Rule.tex}
+
+\newpage
+
+\section*{Mission Sequencer}
+
+\begin{lstlisting}
+public class $Identifier$ extends MissionSequencer
+{
+	$FieldDeclaration\_1$
+	...
+	$FieldDeclaration\_n$
+
+	$ConstructorDeclaration$
+
+	$getNextMission$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
+}
+\end{lstlisting}
+\input{MissionSequencerApp-Rule.tex}
+
+%TODO MSAPP Class
+
+\newpage
+
+\section*{Mission}
+
+\begin{lstlisting}
+public class $Identifier$ extends Mission
+{
+	$FieldDeclaration\_1$
+	...
+	$FieldDeclaration\_n$
+
+	$ConstructorDeclaration$
+
+	$initialize$
+
+	$cleanUp$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
+}
+\end{lstlisting}
+\input{MissionApp-Rule.tex}
+\newpage
+
+\section*{Handlers}
+
+\begin{lstlisting}
+class $Identifier$ extends $HandlerType$
+{
+	$FieldDeclaration\_1$
+	...
+	$FieldDeclaration\_n$
+
+	$ConstructorDeclaration$
+
+	$handleAsyncEvent$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
+}
+\end{lstlisting}
+\input{HandlerApp-Rule.tex}
+\newpage
+
+\section*{Managed Thread}
+
+\begin{lstlisting}
+public class $Identifier$ extends ManagedThread
+{
+	$FieldDeclaration\_1$
+	...
+	$FieldDeclaration\_n$
+
+	$ConstructorDeclaration$
+
+	$run$
+
+	$AppMeth\_1$
+	...
+	$AppMeth\_n$
+}
+\end{lstlisting}
+\input{ManagedThreadApp-Rule.tex}
+
+\section*{Data Class}
+
+\input{Class-Rule.tex}
+
+\end{document}

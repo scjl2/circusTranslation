@@ -1,0 +1,73 @@
+
+\begin{zsection}
+  \SECTION HighLevelRules \parents SCJBNFEncoding, CircusBNFEncoding, standard\_toolkit
+\end{zsection}
+
+\begin{axdef}
+TransMeth : SCJMethod \pfun Action
+\where
+\forall m : SCJMethod @ \\
+\t1 \exists ms : SCJMethSig; b : SCJBlock; p : Params @\\
+\t2 TransMeth(m) =  (TransMethSig(ms) , TransBlock(b) , TransParams(p))
+\end{axdef}
+
+\begin{axdef}
+	TransMeths : \seq SCJMethod \pfun \seq Action
+\where
+\forall meths : \seq SCJMethod @ \\
+\t1 \forall meth : SCJMethod @ \\
+\t1 TransMeths(\langle meth \rangle) = TransMeth(meth) \land \\
+\t2 TransMeths(\langle meth \rangle \cat meths) = \langle TransMeth(meth) \cat TransMeths(meths) \rangle
+\end{axdef}
+
+
+\begin{axdef}
+TransParams : Params \pfun CircParams
+\where
+\forall params : Params @ \\
+\t1 \forall param : Param @ \\
+\t1 TransParams(\langle param \rangle) = TransParam(param) \\
+\t2 TransParams(\langle param \rangle \cat params) = \langle TransParam(param) \cat TransParams(params) \rangle
+\end{axdef}
+
+\begin{axdef}
+  TransParam : Param \pfun CircParam
+\where
+\forall p : Param @ \\
+\t1 \exists cParam : CircParam @ \\
+\t1 TransParam(p) =  cParam
+\end{axdef}
+
+\begin{axdef}
+TransBlock : SCJBlock \pfun CircBlock
+\where
+\forall block : SCJBlock @ \\
+\t1 \forall e : Expr @ \\
+\t1 TransBlock(\langle e \rangle) = TransExpr(e) \land \\
+\t2 TransBlock(\langle e \rangle \cat block) = \langle TransExpr(e) \cat TransBlock(block) \rangle
+\end{axdef}
+
+\begin{axdef}
+TransClass : SCJClass \pfun \seq CircParagraph
+\where
+\forall class: SCJClass| \exists meths : \seq Methods @ meths = MethodsOf(class) @ \\
+\t1 TransClass(class) =
+\t2 \langle TransProc(class), TransOhClass(class) ,TransChans(meths), TransMCBChan(meths), TransMCBAction(meths) \rangle
+\end{axdef}
+
+
+\begin{axdef}
+	TransClasses : \seq SCJClass \pfun \seq CircParagraph
+\where
+\forall classes : \seq SCJClass @ \\
+\t1 \forall class : SCJClass @ \\
+\t2 TransClasses(\langle class \rangle) = TransClass(class) \land \\
+\t2 TransClasses(\langle class \rangle \cat classes) = TransClass(class)  \cat TransClasses(classes)
+\end{axdef}
+
+\begin{axdef}
+TransSCJProg : SCJProg \pfun CircusProg  \cross CircusProg
+\where
+\forall scjProg : SCJProg @ \exists f: Framework @ \\
+\t1 TransSCJProg(scjProg) = (TransClasses(scjProg) , f)
+\end{axdef}

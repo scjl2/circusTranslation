@@ -1,11 +1,16 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.application.TightRope;
+
 import java.lang.reflect.Type;
 import hijac.tools.tightrope.environments.FrameworkEnv;
+import hijac.tools.tightrope.utils.TightRopeString;
+import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 
 import java.util.ArrayList;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +23,10 @@ public class ProgramEnv
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private List<MethodEnv> binderMethodEnvs;
+<<<<<<< HEAD
+=======
+	private List<MethodEnv> globalMethods;
+>>>>>>> RULES
 
 	private IdEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
@@ -29,6 +38,10 @@ public class ProgramEnv
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
 		this.binderMethodEnvs = new ArrayList<MethodEnv>();
+<<<<<<< HEAD
+=======
+		globalMethods = new ArrayList<MethodEnv>();
+>>>>>>> RULES
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
@@ -214,8 +227,10 @@ public class ProgramEnv
 		for (MethodEnv b : binderMethodEnvs)
 		{
 			Map binderMethodMap = new HashMap();
+			
 
 			binderMethodMap.put("Name", b.getMethodName());
+			binderMethodMap.put(TightRopeString.Name.CHANNEL_NAME, b.getEventName());
 			binderMethodMap.put("Locations", b.getLocations());
 			binderMethodMap.put("Callers", b.getCallers());
 			binderMethodMap.put("Return", b.hasReturn());
@@ -464,4 +479,58 @@ public class ProgramEnv
 		binderMethodEnvs.add(method);
 
 	}
+<<<<<<< HEAD
+=======
+
+	public List<MethodEnv> getCustomChannels()
+	{
+		return globalMethods;
+	}
+
+	public void addGlobalMethod(MethodEnv method)
+	{			
+//		for(MethodEnv m : globalMethods.keySet())
+//		{
+//			ChannelEnv c = globalMethods.get(m);
+//			
+//			System.out.println("//channel="+channel.getChannelName() + " c="+c.getChannelName() + " equal? = "+channel.getChannelName().equals(c.getChannelName()));
+//			
+//			if(channel.getChannelName().equals(c.getChannelName()))
+//			{
+//				//Channel Name Conflict, should only happen once..
+//				String chanName = c.getChannelName();			
+//				String methLoc = m.getMethodLocation().getName().toString();
+//				
+//				c.setChannelName(chanName + LATEX.UNDERSCORE + methLoc);				
+//				
+//				channel.setChannelName(channel.getChannelName() + LATEX.UNDERSCORE + method.getMethodLocation().getName().toString());
+//			}
+//		}
+//		
+//	
+//		globalMethods.put(method, channel);
+		
+		for(MethodEnv m : globalMethods)
+		{
+			if(m.getMethodName().equals(method.getMethodName()))
+			{
+				method.setEventName(method.getEventName()  + LATEX.UNDERSCORE + method.getMethodLocation().getName().toString());
+				
+				m.setEventName(m.getEventName() + LATEX.UNDERSCORE + m.getMethodLocation().getName().toString());
+			}
+		}
+	}
+
+//	public String getCustomChannelName(MethodEnv methodEnv)
+//	{
+//		if(globalMethods.containsKey(methodEnv))
+//		{
+//			return globalMethods.get(methodEnv).getChannelName();
+//		}
+//		
+//		return "NULL";
+//	}
+
+	
+>>>>>>> RULES
 }

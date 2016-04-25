@@ -1,0 +1,44 @@
+\begin{zsection}
+  \SECTION GeneratePhase \parents scj\_prelude, Framework, BuildPhase
+\end{zsection}
+
+\begin{axdef}
+GenerateTierProcs : \seq Tier \pfun Process
+\end{axdef}
+
+\begin{axdef}
+GenerateFWProcs :  FWEnv \pfun \seq Process
+\end{axdef}
+
+\begin{axdef}
+GenerateAppTierProcs : TierAppEnv \pfun Process
+\end{axdef}
+
+\begin{axdef}
+GenerateAppProc : AppProcEnv \pfun Process
+\where
+\forall appProcEnv : AppProcEnv @ \\
+\t1 \exists sfAppEnv : AppEnv ; tlmsAppEnv : AppEnv ; tiersAppEnvs : TierAppEnv | \\
+\t1 sfAppEnv = GetSafeletAppEnv(appProcEnv) \land \\
+\t1 tlmsAppEnv = GetTLMSAppEnv(appProcEnv) @ \\
+\t1 GenerateAppProc(appProcEnv) = \\
+\t2 procInter( \\
+\t3 procInter(\\
+\t4 procInstP(procName(sfAppEnv.1), sfAppEnv.2),\\
+\t4 procInstP(procName(tlmsAppEnv.1), tlmsAppEnv.2)\\
+\t3 ),\\
+\t3 GenerateAppTierProcs(tiersAppEnvs)\\
+\t2 ) 
+\end{axdef}
+
+
+
+
+
+\begin{axdef}
+GenerateMCBProc : \seq BinderMethodEnv \pfun Process
+\end{axdef}
+
+\begin{axdef}
+GenerateLockProc : LockingEnv \pfun \seq CircusParagraph
+\end{axdef}

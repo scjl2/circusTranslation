@@ -1,0 +1,44 @@
+\begin{circus}
+\circprocess \lpar PName \rpar App \circdef \lpar \lpar ConstructorDeclaration \rpar_{Method}\rpar_{Parameters}  \circbegin
+\end{circus}
+
+\input{State-Rule.tex}
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~IdOf(PName) \then \\
+	\lpar \lpar HandleAsyncBody \rpar_{Method} \rpar_{MethBody}\circseq \\
+  handleAsyncEventRet~.~IdOf(PName) \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+\lpar AppMeth\_1 \rpar_{Method}
+\end{circusaction}
+\qquad \ldots
+\begin{circusaction}
+\lpar AppMeth\_n \rpar_{Method}
+\end{circusaction}
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+	\extchoice \\
+	MethName(AppMeth\_1) \\
+	\extchoice \\
+	MethName(AppMeth\_n) \\
+	\ldots
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+
+\input{MainAction-Rule.tex} $ \circinterrupt (end\_ \lpar HandlerType IdOf(PName) \rpar \then \Skip)$
+
+
+\begin{circus}
+  \circend
+\end{circus}

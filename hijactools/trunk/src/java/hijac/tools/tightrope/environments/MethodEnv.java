@@ -1,5 +1,9 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.application.TightRope;
+import hijac.tools.tightrope.utils.TightRopeString;
+
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,15 +22,8 @@ public class MethodEnv
 		PUBLIC, PRIVATE, PROTECTED
 	};
 
-	private static final String METHOD_NAME = "MethodName";
-	private static final String RETURN_TYPE = "ReturnType";
-	private static final String RETURN_VALUE = "ReturnValue";
-	private static final String ACCESS = "Access";
-	private static final String BODY = "Body";
-	private static final String PARAMETERS_STR = "Parameters";
-	private static final String EXTERNAL_APPMETH = "ExternalAppmeth";
-	
 	private String methodName = "";
+	private String eventName = "";
 	private String returnType = "";
 	private Map<String, Type> parameters = new HashMap<String, Type>();
 	protected ArrayList<Name> returnValues = new ArrayList<Name>();
@@ -43,10 +40,12 @@ public class MethodEnv
 	private Set<String> callers;
 	private String locationType = "";
 	private String callerType = "";
+	private ObjectEnv objectLocation;
 
 	public MethodEnv(String name)
 	{
 		this.methodName = name;
+		setEventName(name);
 //		this.methodCallBinding = new BinderMethodEnv(name);
 		locations = new HashSet<String>();
 		callers = new HashSet<String>();
@@ -57,6 +56,7 @@ public class MethodEnv
 	public MethodEnv(Name name)
 	{	
 		this.methodName = name.toString();
+		setEventName(name.toString());
 //		this.methodCallBinding = new BinderMethodEnv(name.toString());
 		locations = new HashSet<String>();
 		callers = new HashSet<String>();
@@ -67,6 +67,7 @@ public class MethodEnv
 			Map params)
 	{
 		this.methodName = name.toString();
+		setEventName(name.toString());
 		this.returnType = returnType.toString();
 		this.parameters = params;
 		this.returnValues = returnValues;
@@ -80,6 +81,7 @@ public class MethodEnv
 			Map params, Object body)
 	{
 		this.methodName = name.toString();
+		setEventName(name.toString());
 		this.returnType = returnType.toString();
 		this.parameters = params;
 		this.returnValues = returnValues;
@@ -94,7 +96,7 @@ public class MethodEnv
 			Map params, Object body)
 	{
 		this.methodName = name.toString();
-
+		setEventName(name.toString());
 		this.returnType = returnType;
 		this.parameters = params;
 		this.returnValues = returnValues;
@@ -108,6 +110,7 @@ public class MethodEnv
 	public MethodEnv(Name name, TypeKind returnType, Map params)
 	{
 		this.methodName = name.toString();
+		setEventName(name.toString());
 		this.returnType = returnType.toString();
 		this.parameters = params;
 //		this.methodCallBinding = new BinderMethodEnv(name.toString());
@@ -118,6 +121,7 @@ public class MethodEnv
 	public MethodEnv(String name, String returnType, boolean APIMethod)
 	{
 		methodName = name;
+		setEventName(name.toString());
 		this.returnType = returnType;
 		this.APIMethod = APIMethod;
 //		this.methodCallBinding = new BinderMethodEnv(name);
@@ -334,24 +338,42 @@ public class MethodEnv
 		Map methodMap = new HashMap();
 
 		String s = getMethodName();
+	
+		methodMap.put(TightRopeString.Name.METHOD_NAME, s);
+		methodMap.put(TightRopeString.Name.CHANNEL_NAME, eventName);
+		methodMap.put(TightRopeString.Name.RETURN_TYPE, getReturnType());
+		methodMap.put(TightRopeString.Name.RETURN_VALUE, getReturnValue());
+		methodMap.put(TightRopeString.Name.PARAMETERS_STR, getParameters());
+		methodMap.put(TightRopeString.Name.ACCESS, getAccessString());
+		methodMap.put(TightRopeString.Name.BODY, getBody());
+		methodMap.put(TightRopeString.Name.EXTERNAL_APPMETH, isExternalAppMethod());
+		methodMap.put(TightRopeString.Name.LOC_TYPE, getLocationType());
 
-		methodMap.put(METHOD_NAME, s);
-		methodMap.put(RETURN_TYPE, getReturnType());
-		methodMap.put(RETURN_VALUE, getReturnValue());
-		methodMap.put(PARAMETERS_STR, getParameters());
-		methodMap.put(ACCESS, getAccessString());
-		methodMap.put(BODY, getBody());
-		methodMap.put(EXTERNAL_APPMETH, isExternalAppMethod());
-		methodMap.put("LocType", getLocationType());
-//		methodMap.put("LocType", "LocTest");
-		methodMap.put("Locs", getLocations());
-		methodMap.put("Callers", getCallers());
-		methodMap.put("CallerType", getCallerType());
-//		methodMap.put("CallerType", "CallerTest");
-		
-		
+		methodMap.put(TightRopeString.Name.LOCS, getLocations());
+		methodMap.put(TightRopeString.Name.CALLERS_STR, getCallers());
+		methodMap.put(TightRopeString.Name.CALLER_TYPE, getCallerType());
 		
 		return methodMap;
+	}
+
+	public void setMethodLocation(ObjectEnv object)
+	{
+		this.objectLocation = object;		
+	}
+	
+	public ObjectEnv getMethodLocation()
+	{
+		return objectLocation;
+	}
+
+	public String getEventName()
+	{
+		return eventName;
+	}
+
+	public void setEventName(String eventName)
+	{
+		this.eventName = eventName;
 	}
 
 //	public BinderMethodEnv getMethodCallBinding()

@@ -1,0 +1,184 @@
+\begin{zsection}
+  \SECTION BuildPhase \parents scj\_prelude, SCJBNFEncoding, CircusBNFEncoding, Framework
+\end{zsection}
+
+\begin{axdef}
+AppEnv == N \cross \seq Expression
+\end{axdef}
+
+\begin{axdef}
+TierAppEnv == \seq (\seq (AppEnv \cross \seq AppEnv))
+\end{axdef}
+
+\begin{axdef}
+AppProcEnv == AppEnv \cross AppEnv \cross TierAppEnv
+\end{axdef}
+
+\begin{axdef}
+GetSafeletAppEnv : AppProcEnv \pfun AppEnv
+\where
+\forall a : AppProcEnv @ \\
+\t1 GetSafeletAppEnv(a) = a.1
+\end{axdef}
+
+\begin{axdef}
+GetTLMSAppEnv :  AppProcEnv \pfun AppEnv
+\where
+\forall a : AppProcEnv @ \\
+\t1 GetTLMSAppEnv(a) = a.2
+\end{axdef}
+
+\begin{axdef}
+GetTierAppEnvs :  AppProcEnv \pfun TierAppEnv
+\where
+\forall a : AppProcEnv @ \\
+\t1 GetTierAppEnvs(a) = a.3
+\end{axdef}
+
+\begin{axdef}
+IDof : Identifier \pfun N 
+\end{axdef}
+
+\begin{axdef}
+ParamsOf : \seq ClassBodyDeclaration \pfun \seq Expression 
+\end{axdef}
+
+\begin{axdef}
+BuildSOAppEnv : \seq SchedulableObject \pfun \seq AppEnv
+\end{axdef}
+
+\begin{axdef}
+BuildClusterAppEnv : Cluster \pfun AppEnv \cross \seq AppEnv 
+\where
+\forall c: Cluster @ \\
+\t1 \exists m : Mission ; seqSO : \seq SchedulableObject | c = (m, seqSO) @ \\
+\t2 BuildClusterAppEnv(c) = \\
+\t3 ((IDof(m.1), ParamsOf(m.2.3)), BuildSOAppEnv(seqSO) )
+\end{axdef}
+
+\begin{axdef}
+BuildTierAppEnv : Tier \pfun  \seq (AppEnv \cross \seq AppEnv)
+\where
+\forall t : Tier @ \\
+\t1 \exists c : Cluster ; seqC : \seq Cluster | t = \langle c \rangle \cat seqC @ \\
+\t2  BuildTierAppEnv(t) = \\
+\t3 \langle BuildClusterAppEnv(c) \rangle \cat BuildTierAppEnv(seqC)
+\end{axdef}
+
+\begin{axdef}
+BuildTiersAppEnv : \seq Tier \pfun TierAppEnv
+\where
+\forall tiers : \seq Tier @ \\
+\t1 BuildTiersAppEnv(tiers) = \\
+\t2 \langle BuildTierAppEnv(head~tiers) \rangle \cat BuildTiersAppEnv(tail~tiers)
+\end{axdef}
+
+\begin{axdef}
+BuildAppProcEnv : SCJProgram \pfun AppProcEnv
+\where
+\forall scjProg : SCJProgram @ \\
+\t1 \exists safelet : Safelet ; topLevelMs : TopLevelMissionSequencer ; tiers : \seq Tier | \\
+\t2 scjProg = (safelet, topLevelMs, tiers) @\\
+\t3 \exists sfEnv : AppEnv ; tlmsEnv : AppEnv ; \\
+\t4 tiersEnv : TierAppEnv ; ms : MissionSequencer @ \\
+\t5 sfEnv = (IDof(safelet.1), ParamsOf(safelet.2.4)) \land \\
+\t5 topLevelMs = tlms(ms) \implies \\
+\t6 tlmsEnv = (IDof(ms.1), ParamsOf(ms.2.2)) \land \\
+\t5 tiersEnv = BuildTiersAppEnv(tiers) \land \\
+\t5 BuildAppProcEnv(scjProg) = (sfEnv ,tlmsEnv ,tiersEnv)
+\end{axdef}
+
+\begin{axdef}
+LockingEnv == \seq ThreadIds \cross \seq ObjectIds
+\end{axdef}
+
+\begin{axdef}
+BuildLockEnv : SCJProgram \pfun LockingEnv
+\end{axdef}
+
+
+\begin{axdef}
+SplitSchedulableObjects : \seq SchedulableObject \pfun \\
+\t1 \seq SchedulableObject \cross  \seq SchedulableObject \cross  \seq SchedulableObject \cross\\
+\t1 \seq SchedulableObject \cross  \seq SchedulableObject
+\end{axdef}
+
+
+\begin{axdef}
+BuildSOEnvs : \seq SchedulableObject \pfun \\
+\t1 \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \\
+\t1 \seq Identifier \cross \seq Identifier
+\where
+\forall s : \seq SchedulableObject @ \\
+\t1 \exists so :  SchedulableObject ; sms : \seq Identifier ; pehs : \seq Identifier; \\
+\t2 apehs : \seq Identifier; oseh : \seq Identifier; mts: \seq Identifier |\\
+\t1 \exists n : NestedMissionSequencer @ \\
+\t1 head~s = nms(n)  \implies sms = sms \cat \langle n.1 \rangle @  \\
+\t1 BuildSOEnvs(s) = (sms, pehs, apehs, oseh, mts)
+
+\end{axdef}
+
+\begin{axdef}
+ClusterEnv == \\
+\t1 Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier
+\end{axdef}
+
+\begin{axdef}
+TierEnv == \seq ClusterEnv \\
+\end{axdef}
+
+\begin{axdef}
+FWEnv == Identifier \cross \seq TierEnv
+\end{axdef}
+
+\begin{axdef}
+BuildClusterEnv : Cluster \pfun ClusterEnv \\
+\where
+\forall c : Cluster @ \\
+\t1 \exists missionName : Identifier ; sms : \seq Identifier ; pehs : \seq Identifier; \\
+\t2 apehs : \seq Identifier; oseh : \seq Identifier; mts: \seq Identifier |\\
+\t1 missionName = c.1.1 \land \\
+\t1 (sms, pehs, apehs, oseh, mts) = BuildSOEnvs(c.2) @ \\
+\t1 BuildClusterEnv(c) = (missionName, sms, pehs, apehs, oseh, mts)
+\end{axdef}
+
+\begin{axdef}
+  BuildTierEnv : Tier \pfun TierEnv
+\where
+  \forall t : \seq Cluster @ \\
+  \t1 BuildTierEnv(t) = \langle BuildClusterEnv(head~t) \rangle \cat BuildTierEnv(tail~t)
+\end{axdef}
+
+
+\begin{axdef}
+BuildTierEnvs : \seq Tier \pfun \seq TierEnv
+\where 
+\forall tiers : \seq Tier @ \\
+\t1 BuildTierEnvs(tiers) = \langle BuildTierEnv(head~tiers) \rangle \cat BuildTierEnvs(tail~tiers)
+\end{axdef}
+
+\begin{axdef}
+BuildFWEnv : SCJProgram \pfun FWEnv
+\where
+\forall scjProg : SCJProgram @ \\
+\t1 \exists tlms : MissionSequencer ; tlmsID : Identifier ;  tlmsBody : MissionSequencerClassBody ; \\
+\t2 tiers : \seq Tier | \\
+\t3 scjProg.2 \neq NoSequencer \implies tlms = (tlmsID, tlmsBody) \\
+\t3 \land tiers = scjProg.3 @ \\
+\t3 BuildFWEnv(scjProg) = (tlms.1  , BuildTierEnvs(tiers))
+
+\end{axdef}
+
+\begin{axdef}
+%               MethodNme , Locs , Callers, ReturnType , Params , Synchrinised , LocParam , LocType , CallerType
+BinderMethodEnv == N \cross \finset N \cross \finset N \cross Type \cross \seq Type \cross \bool \cross N \cross Type \cross Type
+\end{axdef}
+
+\begin{axdef}
+MCBEnv == \seq BinderMethodEnv
+\end{axdef}
+
+\begin{axdef}
+BuildMCBEnv : SCJProgram \pfun \seq BinderMethodEnv
+
+\end{axdef}
