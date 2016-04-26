@@ -96,25 +96,39 @@ LockingEnv == \seq ThreadIds \cross \seq ObjectIds
 BuildLockEnv : SCJProgram \pfun LockingEnv
 \end{axdef}
 
-
 \begin{axdef}
-SplitSchedulableObjects : \seq SchedulableObject \pfun \\
-\t1 \seq SchedulableObject \cross  \seq SchedulableObject \cross  \seq SchedulableObject \cross\\
-\t1 \seq SchedulableObject \cross  \seq SchedulableObject
+GetIdentifiers : \seq SchedulableObject \pfun \seq Identifier
+\where
+\forall scheds : \seq SchedulableObject \\
+\t1 | scheds \neq \langle \rangle \\
+\t1 @ \exists ident : Identifier ; manT : ManagedThread ; nestMS : NestedMissionSequencer ; eh : EventHandler \\
+\t2 perEH : PeriodicEventHandler ; aperEH : AperiodicEventHandler ; oneEH : OneShotEventHandler ; \\
+\t2 apehShort : Identifier \cross EventHandlerClassBody ; apehLong :  Identifier \cross LongEventHandlerClassBody
+\t2 | head~scheds = mt(manT) \implies ident = manT.1 \\
+\t2 \land head~scheds = nms(nestMS) \implies ident = nestMS.1 \\
+\t2 \land head~scheds = handler(pehDecl(perEH))  \implies ident = perEH.1 \\
+\t2 \land head~scheds = handler(apehDecl(apehType(apehShort))) \implies ident = apehShort.1 \\
+\t2 \land head~scheds = handler(apehDecl(aplehType(apehLong))) \implies ident = apehLong.1 \\
+\t2 \land head~scheds = handler(osehDecl(oneEH))  \implies ident = oneEH.1 \\
+\t3 @ \# scheds = 1 \implies GetIdentifiers(scheds) = \langle ident \rangle \\
+\t3 \land \# scheds \geq 1 \implies GetIdentifiers(scheds) = \langle ident \rangle \cat GetIdentifiers(tail~scheds)
 \end{axdef}
-
 
 \begin{axdef}
 BuildSOEnvs : \seq SchedulableObject \pfun \\
 \t1 \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \\
 \t1 \seq Identifier \cross \seq Identifier
 \where
-\forall s : \seq SchedulableObject @ \\
-\t1 \exists so :  SchedulableObject ; sms : \seq Identifier ; pehs : \seq Identifier; \\
-\t2 apehs : \seq Identifier; oseh : \seq Identifier; mts: \seq Identifier |\\
-\t1 \exists n : NestedMissionSequencer @ \\
-\t1 head~s = nms(n)  \implies sms = sms \cat \langle n.1 \rangle @  \\
-\t1 BuildSOEnvs(s) = (sms, pehs, apehs, oseh, mts)
+\forall s : \seq SchedulableObject \\
+\t1 @ \exists sms : \seq Identifier ; pehs : \seq Identifier; \\
+\t3 apehs : \seq Identifier; osehs : \seq Identifier; mts: \seq Identifier \\
+\t2 | mts = GetIdentifiers(s \filter \{ m : ManagedThread @ mt(m) \}) \\
+\t2 \land sms = GetIdentifiers(s \filter \{ n : NestedMissionSequencer @ nms(n) \}) \\
+\t2 \land pehs = GetIdentifiers(s \filter \{ p : PeriodicEventHandler @ handler(pehDecl(p)) \}) \\
+\t2 \land apehs = GetIdentifiers(s \filter \{ a :  Identifier \cross EventHandlerClassBody @ handler(apehDecl(apehType(a))) \}) \\
+\t2 \land apehs = GetIdentifiers(s \filter \{ a :  Identifier \cross LongEventHandlerClassBody @ handler(apehDecl(aplehType(a))) \}) \\
+\t2 \land osehs = GetIdentifiers(s \filter \{ o : OneShotEventHandler @ handler(osehDecl(o)) \}) \\
+\t1 @BuildSOEnvs(s) = (sms, pehs, apehs, osehs, mts)
 
 \end{axdef}
 
@@ -140,7 +154,7 @@ BuildClusterEnv : Cluster \pfun ClusterEnv \\
 \t1 missionName = c.1.1 \land \\
 \t1 (sms, pehs, apehs, oseh, mts) = BuildSOEnvs(c.2) @ \\
 \t1 BuildClusterEnv(c) = (missionName, sms, pehs, apehs, oseh, mts)
-\end{axdef}
+\end{axdef}head
 
 \begin{axdef}
   BuildTierEnv : Tier \pfun TierEnv
