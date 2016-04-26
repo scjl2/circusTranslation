@@ -7,32 +7,40 @@ AppEnv == N \cross \seq Expression
 \end{axdef}
 
 \begin{axdef}
-TierAppEnv == \seq (\seq (AppEnv \cross \seq AppEnv))
+ClusterAppEnv == AppEnv \cross \seq AppEnv
 \end{axdef}
 
 \begin{axdef}
-AppProcEnv == AppEnv \cross AppEnv \cross TierAppEnv
+TierAppEnv == \seq ClusterAppEnv
 \end{axdef}
 
 \begin{axdef}
-GetSafeletAppEnv : AppProcEnv \pfun AppEnv
+TiersAppEnv == \seq TierAppEnv
+\end{axdef}
+
+\begin{axdef}
+AppProcEnv == AppEnv \cross AppEnv \cross TiersAppEnv
+\end{axdef}
+
+\begin{axdef}
+GetSafeletAppEnv : AppProcEnv \fun AppEnv
 \where
 \forall a : AppProcEnv @ \\
 \t1 GetSafeletAppEnv(a) = a.1
 \end{axdef}
 
 \begin{axdef}
-GetTLMSAppEnv :  AppProcEnv \pfun AppEnv
+GetTLMSAppEnv :  AppProcEnv \fun AppEnv
 \where
 \forall a : AppProcEnv @ \\
 \t1 GetTLMSAppEnv(a) = a.2
 \end{axdef}
 
 \begin{axdef}
-GetTierAppEnvs :  AppProcEnv \pfun TierAppEnv
+GetTiersAppEnv :  AppProcEnv \fun TiersAppEnv
 \where
 \forall a : AppProcEnv @ \\
-\t1 GetTierAppEnvs(a) = a.3
+\t1 GetTiersAppEnv(a) = a.3
 \end{axdef}
 
 \begin{axdef}
@@ -50,26 +58,31 @@ BuildSOAppEnv : \seq SchedulableObject \pfun \seq AppEnv
 \begin{axdef}
 BuildClusterAppEnv : Cluster \pfun AppEnv \cross \seq AppEnv 
 \where
-\forall c: Cluster @ \\
-\t1 \exists m : Mission ; seqSO : \seq SchedulableObject | c = (m, seqSO) @ \\
-\t2 BuildClusterAppEnv(c) = \\
+\forall c: Cluster \\
+\t1 | c.2 \neq \langle \rangle \\
+\t1 @ \exists m : Mission ; seqSO : \seq SchedulableObject \\
+\t2 | c = (m, seqSO)  \\
+\t2 @ BuildClusterAppEnv(c) = \\
 \t3 ((IDof(m.1), ParamsOf(m.2.3)), BuildSOAppEnv(seqSO) )
 \end{axdef}
 
 \begin{axdef}
-BuildTierAppEnv : Tier \pfun  \seq (AppEnv \cross \seq AppEnv)
+BuildTierAppEnv : Tier \pfun  TierAppEnv
 \where
-\forall t : Tier @ \\
-\t1 \exists c : Cluster ; seqC : \seq Cluster | t = \langle c \rangle \cat seqC @ \\
-\t2  BuildTierAppEnv(t) = \\
-\t3 \langle BuildClusterAppEnv(c) \rangle \cat BuildTierAppEnv(seqC)
+\forall t : Tier \\
+\t1 | t \neq \langle \rangle \\
+\t1 @ \# t = 1 \implies  BuildTierAppEnv(t) = \langle BuildClusterAppEnv(head~t) \rangle \\
+\t1 \land \# t \geq 1 \implies BuildTierAppEnv(t) = \\
+\t2 \langle BuildClusterAppEnv(head~t) \rangle \cat BuildTierAppEnv(tail~t)
 \end{axdef}
 
 \begin{axdef}
-BuildTiersAppEnv : \seq Tier \pfun TierAppEnv
+BuildTiersAppEnv : \seq Tier \pfun TiersAppEnv
 \where
-\forall tiers : \seq Tier @ \\
-\t1 BuildTiersAppEnv(tiers) = \\
+\forall tiers : \seq Tier \\
+\t1 | tiers \neq \langle \rangle \\
+\t1 @ \# tiers = 1 \implies BuildTiersAppEnv(tiers) = \langle BuildTierAppEnv(head~tiers) \rangle \\
+\t1 \land \# tiers \geq 1 \implies BuildTiersAppEnv(tiers) = \\
 \t2 \langle BuildTierAppEnv(head~tiers) \rangle \cat BuildTiersAppEnv(tail~tiers)
 \end{axdef}
 
@@ -77,13 +90,12 @@ BuildTiersAppEnv : \seq Tier \pfun TierAppEnv
 BuildAppProcEnv : SCJProgram \pfun AppProcEnv
 \where
 \forall scjProg : SCJProgram @ \\
-\t1 \exists safelet : Safelet ; topLevelMs : TopLevelMissionSequencer ; tiers : \seq Tier | \\
-\t2 scjProg = (safelet, topLevelMs, tiers) @\\
+\t1 \exists safelet : Safelet ; tiers : \seq Tier ; ms : MissionSequencer \\
+\t2 | scjProg = (safelet, tlms(ms), tiers) @\\
 \t3 \exists sfEnv : AppEnv ; tlmsEnv : AppEnv ; \\
-\t4 tiersEnv : TierAppEnv ; ms : MissionSequencer @ \\
+\t4 tiersEnv : TiersAppEnv  @ \\
 \t5 sfEnv = (IDof(safelet.1), ParamsOf(safelet.2.4)) \land \\
-\t5 topLevelMs = tlms(ms) \implies \\
-\t6 tlmsEnv = (IDof(ms.1), ParamsOf(ms.2.2)) \land \\
+\t5 tlmsEnv = (IDof(ms.1), ParamsOf(ms.2.2)) \land \\
 \t5 tiersEnv = BuildTiersAppEnv(tiers) \land \\
 \t5 BuildAppProcEnv(scjProg) = (sfEnv ,tlmsEnv ,tiersEnv)
 \end{axdef}
@@ -120,6 +132,7 @@ BuildSOEnvs : \seq SchedulableObject \pfun \\
 \t1 \seq Identifier \cross \seq Identifier
 \where
 \forall s : \seq SchedulableObject \\
+\t1 | s \neq \langle \rangle \\
 \t1 @ \exists sms : \seq Identifier ; pehs : \seq Identifier; \\
 \t3 apehs : \seq Identifier; osehs : \seq Identifier; mts: \seq Identifier \\
 \t2 | mts = GetIdentifiers(s \filter \{ m : ManagedThread @ mt(m) \}) \\
@@ -148,13 +161,14 @@ FWEnv == Identifier \cross \seq TierEnv
 \begin{axdef}
 BuildClusterEnv : Cluster \pfun ClusterEnv \\
 \where
-\forall c : Cluster @ \\
-\t1 \exists missionName : Identifier ; sms : \seq Identifier ; pehs : \seq Identifier; \\
-\t2 apehs : \seq Identifier; oseh : \seq Identifier; mts: \seq Identifier |\\
-\t1 missionName = c.1.1 \land \\
-\t1 (sms, pehs, apehs, oseh, mts) = BuildSOEnvs(c.2) @ \\
-\t1 BuildClusterEnv(c) = (missionName, sms, pehs, apehs, oseh, mts)
-\end{axdef}head
+\forall c : Cluster \\
+\t1 | c.2 \neq \langle \rangle \\
+\t1 @ \exists missionName : Identifier ; sms : \seq Identifier ; pehs : \seq Identifier; \\
+\t2 apehs : \seq Identifier; oseh : \seq Identifier; mts: \seq Identifier \\
+\t1 | missionName = c.1.1  \\
+\t1 \land (sms, pehs, apehs, oseh, mts) = BuildSOEnvs(c.2) \\
+\t1 @ BuildClusterEnv(c) = (missionName, sms, pehs, apehs, oseh, mts)
+\end{axdef}
 
 \begin{axdef}
   BuildTierEnv : Tier \pfun TierEnv

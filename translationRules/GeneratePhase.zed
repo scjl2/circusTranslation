@@ -11,22 +11,23 @@ GenerateFWProcs :  FWEnv \pfun \seq Process
 \end{axdef}
 
 \begin{axdef}
-GenerateAppTierProcs : TierAppEnv \pfun Process
+GenerateAppTierProcs : TiersAppEnv \pfun Process
 \end{axdef}
 
 \begin{axdef}
 GenerateAppProc : AppProcEnv \pfun Process
 \where
-\forall appProcEnv : AppProcEnv @ \\
-\t1 \exists sfAppEnv : AppEnv ; tlmsAppEnv : AppEnv ; tiersAppEnvs : TierAppEnv | \\
-\t1 sfAppEnv = GetSafeletAppEnv(appProcEnv) \land \\
-\t1 tlmsAppEnv = GetTLMSAppEnv(appProcEnv) @ \\
-\t1 GenerateAppProc(appProcEnv) = \\
-\t2 procInter( \\
-\t3 procInter(\\
-\t4 procInstP(procName(sfAppEnv.1), sfAppEnv.2),\\
-\t4 procInstP(procName(tlmsAppEnv.1), tlmsAppEnv.2)\\
-\t3 ),\\
+\forall appProcEnv : AppProcEnv  \\
+\t1 @ \exists sfAppEnv : AppEnv ; tlmsAppEnv : AppEnv ; tiersAppEnvs : TiersAppEnv \\
+\t2 |sfAppEnv = GetSafeletAppEnv(appProcEnv) \\
+\t2 \land  tlmsAppEnv = GetTLMSAppEnv(appProcEnv)  \\
+\t2 \land tiersAppEnvs = GetTiersAppEnv(appProcEnv) \\
+\t2 @ GenerateAppProc(appProcEnv) = \\
+\t3 procInter( \\
+\t4 procInter(\\
+\t5 procInstP(procName(sfAppEnv.1), sfAppEnv.2),\\
+\t5 procInstP(procName(tlmsAppEnv.1), tlmsAppEnv.2)\\
+\t4 ),\\
 \t3 GenerateAppTierProcs(tiersAppEnvs)\\
 \t2 ) 
 \end{axdef}

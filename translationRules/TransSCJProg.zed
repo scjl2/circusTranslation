@@ -23,7 +23,7 @@ TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \where
 \forall scjProg : SCJProgram; name : Identifier @\\
 \t1 \exists app : CircusProgram ;  \\
-\t2 program : CircusProgram ; n : N ; p : Process ;\\
+\t2 program : CircusProgram ; \\
 \t2 appComms : CSExpression ; mcbComms : CSExpression ; lockComms: CSExpression \\
 \t2 fwProcs : \seq Process ; appProc : Process ; lockProcs : \seq CircusParagraph; \\
 \t2 mcbProc : Process | \\
