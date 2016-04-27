@@ -53,6 +53,24 @@ ParamsOf : \seq ClassBodyDeclaration \pfun \seq Expression
 
 \begin{axdef}
 BuildSOAppEnv : \seq SchedulableObject \pfun \seq AppEnv
+\where
+\forall scheds : \seq SchedulableObject \\
+\t1 | scheds \neq \langle \rangle \\
+\t1 @ \exists manT : ManagedThread ; nestMS : NestedMissionSequencer ; eh : EventHandler \\
+\t2 perEH : PeriodicEventHandler ; oneEH : OneShotEventHandler ; \\
+\t2 apehShort : Identifier \cross EventHandlerClassBody ; apehLong :  Identifier \cross LongEventHandlerClassBody\\
+\t2 @ head~scheds = mt(manT) \implies \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(manT.1), ParamsOf(manT.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t2 \land head~scheds = nms(nestMS) \implies \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(nestMS.1), ParamsOf(nestMS.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t2 \land head~scheds = handler(pehDecl(perEH)) \implies \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(perEH.1), ParamsOf(perEH.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t2 \land head~scheds = handler(osehDecl(oneEH)) \implies \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(oneEH.1), ParamsOf(oneEH.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t2 \land head~scheds = handler(apehDecl(apehType(apehShort))) \implies \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(apehShort.1), ParamsOf(apehShort.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t2 \land head~scheds = handler(apehDecl(aplehType(apehLong))) \implies \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(apehLong.1), ParamsOf(apehLong.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
 \end{axdef}
 
 \begin{axdef}
@@ -114,7 +132,7 @@ GetIdentifiers : \seq SchedulableObject \pfun \seq Identifier
 \forall scheds : \seq SchedulableObject \\
 \t1 | scheds \neq \langle \rangle \\
 \t1 @ \exists ident : Identifier ; manT : ManagedThread ; nestMS : NestedMissionSequencer ; eh : EventHandler \\
-\t2 perEH : PeriodicEventHandler ; aperEH : AperiodicEventHandler ; oneEH : OneShotEventHandler ; \\
+\t2 perEH : PeriodicEventHandler ; oneEH : OneShotEventHandler ; \\
 \t2 apehShort : Identifier \cross EventHandlerClassBody ; apehLong :  Identifier \cross LongEventHandlerClassBody
 \t2 | head~scheds = mt(manT) \implies ident = manT.1 \\
 \t2 \land head~scheds = nms(nestMS) \implies ident = nestMS.1 \\
