@@ -3,11 +3,78 @@
 \end{zsection}
 
 \begin{axdef}
-GenerateTierProcs : \seq Tier \pfun Process
+procNameOf : Process \fun N
+\end{axdef}
+
+\begin{axdef}
+TierSync : CSExpression \\
+ControLTierSync : CSExpression \\
+MissionSync : CSExpression  \\
+SchedulablesSync : CSExpression
+\end{axdef}
+
+\begin{axdef}
+GetMissionID :  ClusterEnv \pfun N
+\end{axdef}
+
+\begin{axdef}
+GetSOIDs : ClusterEnv \pfun \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier
+\end{axdef}
+
+\begin{axdef}
+GenerateTiersFWProc : \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \pfun Process
+\end{axdef}
+
+\begin{axdef}
+GenerateClusterFWProcs : TierEnv \pfun Process 
+\where
+\forall tier : TierEnv \\
+\t1 | tier \neq \langle \rangle \\
+\t1 @ \# tier = 1 \\
+\t2 \implies GenerateClusterFWProcs(tier) = procPar(procName(GetMissionID(head~tier)), MissionSync, GenerateTiersFWProc(GetSOIDs(head~tier) ) ) \\
+\t1 \land \# tier \geq 1 \\
+\t2 \implies GenerateClusterFWProcs(tier) =  procPar(\\ 
+\t3 procPar( procName( GetMissionID(head~tier) ), MissionSync, GenerateTiersFWProc( GetSOIDs(head~tier) ) ),\\
+\t3 SchedulablesSync,
+\t3 GenerateClusterFWProcs(tail~tier) \\
+\t2 )
+\end{axdef}
+
+\begin{axdef}
+GenerateTierFWProcs : \seq TierEnv \pfun \seq Process
+\where
+\forall tiers : \seq TierEnv \\
+\t1 | tiers \neq \langle \rangle \\
+\t1 @ \# tiers = 1 \implies  GenerateTierFWProcs(tiers) = \langle GenerateClusterFWProcs(head~tiers) \rangle \\
+\t1 \land \# tiers \geq 1 \implies  \\
+\t2 GenerateTierFWProcs(tiers) = \langle GenerateClusterFWProcs(head~tiers) \rangle \cat  GenerateTierFWProcs(tail~tiers)
+\end{axdef}
+
+\begin{axdef}
+GenerateTierFWProc : \seq TierEnv \pfun Process
+\end{axdef}
+
+\begin{axdef}
+ControlTier : N \\
+ControlTierSync : CSExpression \\
+TopLevelMissionSequencerFWName : N
+\end{axdef}
+
+\begin{axdef}
+GetParams : Identifier \pfun \seq Expression
 \end{axdef}
 
 \begin{axdef}
 GenerateFWProcs :  FWEnv \pfun \seq Process
+\where
+\forall env : FWEnv \\
+\t1 | env.2 \neq \langle \rangle \\
+\t1 @ \exists fwProc : Process ; controlTierProc : Process ; tierProcs : \seq Process \\
+\t2 | fwProc = procPar(procName(ControlTier), TierSync, GenerateTierFWProc(env.2)) \\
+\t2 \land controlTierProc = procPar(procName(SafeletFWName), ControlTierSync, 
+\\ \t3 procInstP(procName(TopLevelMissionSequencerFWName), GetParams(env.1) )) \\
+\t2 \land tierProcs = GenerateTierFWProcs(env.2) \\
+\t2 @ GenerateFWProcs(env) = \langle fwProc \rangle \cat \langle controlTierProc \rangle \cat tierProcs
 \end{axdef}
 
 \begin{axdef}
@@ -31,8 +98,6 @@ GenerateAppProc : AppProcEnv \pfun Process
 \t3 GenerateAppTierProcs(tiersAppEnvs)\\
 \t2 ) 
 \end{axdef}
-
-
 
 
 

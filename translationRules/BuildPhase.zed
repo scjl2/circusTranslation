@@ -119,7 +119,7 @@ BuildAppProcEnv : SCJProgram \pfun AppProcEnv
 \end{axdef}
 
 \begin{axdef}
-LockingEnv == \seq ThreadIds \cross \seq ObjectIds
+LockingEnv == \seq (ThreadIds \cross Priority) \cross \seq ObjectIds
 \end{axdef}
 
 \begin{axdef}
@@ -156,8 +156,8 @@ BuildSOEnvs : \seq SchedulableObject \pfun \\
 \t2 | mts = GetIdentifiers(s \filter \{ m : ManagedThread @ mt(m) \}) \\
 \t2 \land sms = GetIdentifiers(s \filter \{ n : NestedMissionSequencer @ nms(n) \}) \\
 \t2 \land pehs = GetIdentifiers(s \filter \{ p : PeriodicEventHandler @ handler(pehDecl(p)) \}) \\
-\t2 \land apehs = GetIdentifiers(s \filter \{ a :  Identifier \cross EventHandlerClassBody @ handler(apehDecl(apehType(a))) \}) \\
-\t2 \land apehs = GetIdentifiers(s \filter \{ a :  Identifier \cross LongEventHandlerClassBody @ handler(apehDecl(aplehType(a))) \}) \\
+\t2 \land apehs = \\ \t3 GetIdentifiers(s \filter \{ a :  Identifier \cross EventHandlerClassBody @ handler(apehDecl(apehType(a))) \}) \\
+\t2 \land apehs = \\ \t3 GetIdentifiers(s \filter \{ a :  Identifier \cross LongEventHandlerClassBody @ handler(apehDecl(aplehType(a))) \}) \\
 \t2 \land osehs = GetIdentifiers(s \filter \{ o : OneShotEventHandler @ handler(osehDecl(o)) \}) \\
 \t1 @BuildSOEnvs(s) = (sms, pehs, apehs, osehs, mts)
 
@@ -175,6 +175,14 @@ TierEnv == \seq ClusterEnv \\
 \begin{axdef}
 FWEnv == Identifier \cross \seq TierEnv
 \end{axdef}
+
+\begin{axdef}
+GetTierFWEnvs : FWEnv \fun \seq TierEnv
+\where
+\forall env : FWEnv \\
+\t1 @ GetTierFWEnvs(env) = env.2 
+\end{axdef}
+
 
 \begin{axdef}
 BuildClusterEnv : Cluster \pfun ClusterEnv \\
