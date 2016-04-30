@@ -99,12 +99,41 @@ GenerateAppProc : AppProcEnv \pfun Process
 \t2 ) 
 \end{axdef}
 
-
+\begin{axdef}
+Locking : N \\
+Threads : N \\
+ThreadSync : CSExpression \\
+Objects : N
+\end{axdef}
 
 \begin{axdef}
 GenerateMCBProc : \seq BinderMethodEnv \pfun Process
 \end{axdef}
 
 \begin{axdef}
+GenerateThreadProc :  \seq (ThreadIds \cross Priority) \pfun Process \\
+
+\end{axdef} 
+
+\begin{axdef}
+GenerateObjectProc : \seq ObjectIds \pfun Process
+\end{axdef} 
+
+%LockingEnv == \seq (ThreadIds \cross Priority) \cross \seq ObjectIds
+\begin{axdef}
 GenerateLockProc : LockingEnv \pfun \seq CircusParagraph
+\where
+\forall lEnv : LockingEnv \\
+\t1 | lEnv.1 \neq \langle \rangle \land lEnv.2 \neq \langle \rangle \\
+\t1 @ GenerateLockProc(lEnv) = \\
+\t2 \langle procDef(pd(Locking, procPar(procName(Threads), ThreadSync, procName(Objects)))), \\
+\t2 procDef(pd(Threads, GenerateThreadProc(lEnv.1))), 
+\t2 procDef(pd(Objects, GenerateObjectProc(lEnv.2) )) \rangle 
 \end{axdef}
+
+
+
+
+
+
+
