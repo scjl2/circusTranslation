@@ -36,7 +36,7 @@ Action ::= actSe \ldata SchemaExp \rdata | com \ldata Command \rdata | skip | st
   \t1 extChoice \ldata Action \cross Action \rdata | intChoice \ldata Action \cross Action \rdata |\\
   \t1 actPar \ldata Action \cross CSExpression \cross Action \rdata | actInter \ldata Action \cross Action \rdata |\\
   \t1 actHide \ldata Action \cross CSExpression \rdata | mu \ldata N \cross Action \rdata | actParam \ldata Declaration \cross Action \rdata |\\
-  \t1 actInst \ldata Action \cross \seq Expression \rdata | actName \ldata N \rdata \\
+  \t1 actInst \ldata Action \cross \seq Expression \rdata | actName \ldata N \rdata | actInterupt \ldata Action \cross Action \rdata \\
 \end{zed}
 
 \begin{zed}
@@ -53,11 +53,11 @@ Action ::= actSe \ldata SchemaExp \rdata | com \ldata Command \rdata | skip | st
 	%					actHide \ldata Action \cross CSExpression \rdata | itr \ldata N \cross Action \rdata | cspSpot \ldata Declaration \cross Action \rdata |
 	%					tmp6 \ldata Action \cross \seq Expression \rdata \\
 	%
-	PParagraph ::= pPar \ldata Paragraph \rdata | def \ldata N \cross Action \rdata \\
+	PParagraph ::= pPar \ldata Paragraph \rdata | actDef \ldata N \cross Action \rdata \\
 \end{zed}
 
 \begin{zed}
-Process ::= proc \ldata \seq PParagraph \cross Action \rdata | procName \ldata N \rdata | \\
+Process ::= proc \ldata \seq PParagraph \cross SchemaExp \cross \seq PParagraph \cross Action \rdata | procName \ldata N \rdata | \\
   \t1 procSeq \ldata Process \cross Process \rdata | procExtChoice \ldata Process \cross Process \rdata |\\
   \t1 procIntChoice \ldata Process \cross Process \rdata | procPar \ldata Process \cross CSExpression \cross Process \rdata | \\
   \t1 procInter \ldata Process \cross Process \rdata | procHide \ldata Process \cross CSExpression \rdata | \\

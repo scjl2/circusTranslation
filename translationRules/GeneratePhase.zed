@@ -127,10 +127,10 @@ MCBParams : \seq Type \pfun Expression
 \end{axdef}
 
 \begin{axdef}
-GenerateMCBChans : BinderMethodEnv \fun CircusParagraph
+GenerateMCBChan : BinderMethodEnv \fun CircusParagraph
 \where
 \forall bme : BinderMethodEnv \\
-\t1 @ GenerateMCBChans(bme) = chanDef(\\
+\t1 @ GenerateMCBChan(bme) = chanDef(\\
 \t2 multiDecl(chanNameWithType(BinderCallChan(bme.1), MCBParams(bme.5) ), \\
 \t2 multiDecl(chanNameWithType(NaturalCallChan(bme.1), MCBParams(bme.5) ), \\
 \t2 multiDecl(chanNameWithType(NaturalRetChan(bme.1), MCBParams(bme.5) ),\\
@@ -139,23 +139,103 @@ GenerateMCBChans : BinderMethodEnv \fun CircusParagraph
 \end{axdef}
 
 \begin{axdef}
+MethodCallBinderSync : N \\
+GenerateMethodCallBinderSync : \seq  BinderMethodEnv \pfun CircusParagraph
+\end{axdef}
+
+\begin{axdef}
+GenerateMCBChans : \seq  BinderMethodEnv \fun \seq CircusParagraph
+\where
+\forall bEnvs : \seq BinderMethodEnv \\
+\t1 | bEnvs \neq \langle \rangle \\
+\t1 @ \# bEnvs = 1 \implies \\
+\t2 GenerateMCBChans(bEnvs) = \langle GenerateMCBChan(head~bEnvs) \rangle \\
+\t1 \land \# bEnvs \geq 1 \implies \\
+\t2 GenerateMCBChans(bEnvs) = \langle GenerateMCBChan(head~bEnvs) \rangle \\
+\t3 \cat GenerateMCBChans(tail~bEnvs)
+\end{axdef}
+
+\begin{axdef}
+BinderCallComm : N \pfun  N 
+\end{axdef}
+
+\begin{axdef}
+NaturalCallComm : N \pfun  N 
+\end{axdef}
+
+\begin{axdef}
+NaturalRetComm : N \pfun  N 
+\end{axdef}
+
+\begin{axdef}
+BindeRetComm : N \pfun  N 
+\end{axdef}
+
+\begin{axdef}
 GenerateMCBName : N \pfun N 
+\end{axdef}
+
+\begin{axdef}
+BinderCallParams : \seq Type \fun \seq CParameter 
+\end{axdef}
+
+\begin{axdef}
+NaturalCallParams : \seq Type \fun \seq CParameter 
+\end{axdef}
+
+\begin{axdef}
+NaturalRetParams : \seq Type \fun \seq CParameter 
+\end{axdef}
+
+\begin{axdef}
+BinderRetParams : \seq Type \fun \seq CParameter 
+\end{axdef}
+
+\begin{axdef}
+BinderActions : N \\
+DoneTLS : Communication \\
+NoState : SchemaExp \\
+MethodCallBinder : N
 \end{axdef}
 
 
 
-
 \begin{axdef}
-GenerateMCBProc : BinderMethodEnv \fun CircusParagraph
+GenerateMCBAction : BinderMethodEnv \fun PParagraph
 \where
 \forall bme : BinderMethodEnv \\
-\t1 @ GenerateMCBProc(bme) = procDef(pd(GenerateMCBName(bme.1), proc(\langle \rangle, \\
-\t2 prefixExp( (BinderCallChan(bme.1), BinderCallParams(bme.5)), \\
-\t3 prefixExp ( (NaturalCallChan(bme.1), NaturalCallParams(bme.5) ), \\
-\t4 prefixExp (( NaturalRetChan(bme.1), NaturalRetChan(bme.5) ),\\
-\t5 prefixExp (( BinderRetChan(bme.1), BinderRetChan(bme.5) ), \\
-\t6 actName(GenerateMCBName(bme.1)) \\
-\t1 )))))))
+\t1 @ GenerateMCBAction(bme) = actDef(GenerateMCBName(bme.1), \\
+\t2 prefixExp( (BinderCallComm(bme.1), BinderCallParams(bme.5)), \\
+\t3 prefixExp( (BinderCallComm(bme.1), BinderCallParams(bme.5)), \\
+\t4 prefixExp( (BinderCallComm(bme.1), BinderCallParams(bme.5)), \\
+\t5 prefixExp( (BinderCallComm(bme.1), BinderCallParams(bme.5)), \\
+\t6 actName( GenerateMCBName(bme.1)) \\
+\t5 ) \\
+\t4 ) \\
+\t3 ) \\
+\t2 ) \\
+\t1 ) \\
+\end{axdef}
+
+\begin{axdef}
+GenerateMCBActions : \seq BinderMethodEnv \pfun \seq PParagraph
+\where
+\forall bEnvs : \seq BinderMethodEnv \\
+\t1 | bEnvs \neq \langle \rangle \\
+\t1 @ \# bEnvs = 1 \implies \\
+\t2 GenerateMCBActions(bEnvs) = \langle GenerateMCBAction(head~bEnvs) \rangle \\
+\t1 \land \# bEnvs \geq 1 \implies \\
+\t2 GenerateMCBActions(bEnvs) = \langle GenerateMCBAction(head~bEnvs) \rangle \\
+\t3 \cat GenerateMCBActions(tail~bEnvs)
+\end{axdef}
+
+\begin{axdef}
+GenerateMCBProc : \seq BinderMethodEnv \pfun CircusParagraph
+\where
+\forall bmes : \seq BinderMethodEnv \\
+\t1 | bmes \neq \langle \rangle \\
+\t1 @ GenerateMCBProc(bmes) = procDef(pd(MethodCallBinder, \\
+\t2 proc (\langle \rangle, NoState , GenerateMCBActions(bmes) , actInterupt(actName(BinderActions), prefixExp(DoneTLS, skip)) )))
 \end{axdef}
 
 \begin{axdef}
@@ -163,14 +243,11 @@ GenerateMCBModel : \seq BinderMethodEnv \pfun \seq CircusParagraph
 \where
 \forall bEnvs : \seq BinderMethodEnv \\
 \t1 | bEnvs \neq \langle \rangle \\
-\t1 @ \# bEnvs = 1 \implies GenerateMCBModel(bEnvs) = \langle GenerateMCBChans(head~bEnvs) , GenerateMCBProc(head~bEnvs) \rangle \\
-\t1 \land \# bEnvs \geq 1 \implies GenerateMCBModel(bEnvs) = \langle GenerateMCBChans(head~bEnvs) , GenerateMCBProc(head~bEnvs) \rangle \\
-\t2 \cat GenerateMCBModel(tail~bEnvs)
+\t1 @ GenerateMCBModel(bEnvs) =   GenerateMCBChans(bEnvs) \cat \langle GenerateMethodCallBinderSync(bEnvs), GenerateMCBProc(bEnvs) \rangle 
 \end{axdef}
 
 \begin{axdef}
 GenerateThreadProc :  \seq (ThreadIds \cross Priority) \pfun Process \\
-
 \end{axdef} 
 
 \begin{axdef}
@@ -188,10 +265,3 @@ GenerateLockModel: LockingEnv \pfun \seq CircusParagraph
 \t2 procDef(pd(Threads, GenerateThreadProc(lEnv.1))), 
 \t2 procDef(pd(Objects, GenerateObjectProc(lEnv.2) )) \rangle 
 \end{axdef}
-
-
-
-
-
-
-
