@@ -233,6 +233,39 @@ MCBEnv == \seq BinderMethodEnv
 \end{axdef}
 
 \begin{axdef}
-BuildMCBEnv : SCJProgram \pfun \seq BinderMethodEnv
+GetSFMethods : Safelet \fun \seq ClassBodyDeclaration
+\where
+\forall sf : Safelet \\
+\t1 @ GetSFMethods(sf) = sf.2.4
+\end{axdef}
 
+\begin{axdef}
+GetTLMSMethods : MissionSequencer \fun \seq ClassBodyDeclaration
+\where
+\forall tlms : MissionSequencer \\
+\t1 @ GetTLMSMethods(tlms) = tlms.2.2
+\end{axdef}
+
+\begin{axdef}
+BuildSFMCBEnv : \seq ClassBodyDeclaration \fun BinderMethodEnv
+\end{axdef}
+
+\begin{axdef}
+BuildTLMSMCBEnv : \seq ClassBodyDeclaration \fun BinderMethodEnv
+\end{axdef}
+
+\begin{axdef}
+BuildTierMCBEnvs : \seq Tier \fun \seq BinderMethodEnv
+\end{axdef}
+
+\begin{axdef}
+BuildMCBEnv : SCJProgram \pfun \seq BinderMethodEnv
+\where
+\forall scjProg : SCJProgram \\
+\t1 |  scjProg.2 \neq NoSequencer \\
+\t1 @ \exists sf : Safelet ; tlms : MissionSequencer ; tiers : \seq Tier  \\
+\t3 | sf = scjProg.1 \\
+\t3 \land tiers = scjProg.3  \\
+\t3 @ BuildMCBEnv(scjProg) = \langle BuildSFMCBEnv(GetSFMethods(sf)), BuildTLMSMCBEnv(GetTLMSMethods(tlms))  \rangle \\
+\t4 \cat BuildTierMCBEnvs(tiers)
 \end{axdef}

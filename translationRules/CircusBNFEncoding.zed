@@ -36,7 +36,7 @@ Action ::= actSe \ldata SchemaExp \rdata | com \ldata Command \rdata | skip | st
   \t1 extChoice \ldata Action \cross Action \rdata | intChoice \ldata Action \cross Action \rdata |\\
   \t1 actPar \ldata Action \cross CSExpression \cross Action \rdata | actInter \ldata Action \cross Action \rdata |\\
   \t1 actHide \ldata Action \cross CSExpression \rdata | mu \ldata N \cross Action \rdata | actParam \ldata Declaration \cross Action \rdata |\\
-  \t1 actInst \ldata Action \cross \seq Expression \rdata \\
+  \t1 actInst \ldata Action \cross \seq Expression \rdata | actName \ldata N \rdata \\
 \end{zed}
 
 \begin{zed}
@@ -75,6 +75,7 @@ Process ::= proc \ldata \seq PParagraph \cross Action \rdata | procName \ldata N
 	ChanSetDefinition ::= csdName \ldata N \cross CSExpression \rdata \\
 \end{zed}
 
+%seq N here? Representing N+ in the BNF, where N is the 'valid Z identifiers'
 \begin{zed}
 	SCDeclaration ::= chanName \ldata \seq N \rdata | chanNameWithType \ldata \seq N \cross Expression \rdata |\\
   \t1 scSe \ldata SchemaExp \rdata \\
@@ -92,8 +93,8 @@ Process ::= proc \ldata \seq PParagraph \cross Action \rdata | procName \ldata N
 	CircusParagraph ::= para \ldata Paragraph \rdata | chanDef \ldata ChannelDefinition \rdata | \\
   \t1 chanSetDef \ldata ChanSetDefinition \rdata |
 						procDef \ldata ProcDefinition \rdata \\
-          \end{zed}
+\end{zed}
 
-          \begin{zed}
+\begin{zed}
   	CircusProgram == \seq CircusParagraph \\
   \end{zed}

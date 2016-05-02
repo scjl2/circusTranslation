@@ -107,7 +107,65 @@ Objects : N
 \end{axdef}
 
 \begin{axdef}
-GenerateMCBProc : \seq BinderMethodEnv \pfun Process
+BinderCallChan : N \pfun \seq N 
+\end{axdef}
+
+\begin{axdef}
+NaturalCallChan : N \pfun \seq N 
+\end{axdef}
+
+\begin{axdef}
+NaturalRetChan : N \pfun \seq N 
+\end{axdef}
+
+\begin{axdef}
+BindeRetChan : N \pfun \seq N 
+\end{axdef}
+
+\begin{axdef}
+MCBParams : \seq Type \pfun Expression
+\end{axdef}
+
+\begin{axdef}
+GenerateMCBChans : BinderMethodEnv \fun CircusParagraph
+\where
+\forall bme : BinderMethodEnv \\
+\t1 @ GenerateMCBChans(bme) = chanDef(\\
+\t2 multiDecl(chanNameWithType(BinderCallChan(bme.1), MCBParams(bme.5) ), \\
+\t2 multiDecl(chanNameWithType(NaturalCallChan(bme.1), MCBParams(bme.5) ), \\
+\t2 multiDecl(chanNameWithType(NaturalRetChan(bme.1), MCBParams(bme.5) ),\\
+\t2 scDecl(chanNameWithType(BindeRetChan(bme.1), MCBParams(bme.5) ) ) )))\\
+\t1 )
+\end{axdef}
+
+\begin{axdef}
+GenerateMCBName : N \pfun N 
+\end{axdef}
+
+
+
+
+\begin{axdef}
+GenerateMCBProc : BinderMethodEnv \fun CircusParagraph
+\where
+\forall bme : BinderMethodEnv \\
+\t1 @ GenerateMCBProc(bme) = procDef(pd(GenerateMCBName(bme.1), proc(\langle \rangle, \\
+\t2 prefixExp( (BinderCallChan(bme.1), BinderCallParams(bme.5)), \\
+\t3 prefixExp ( (NaturalCallChan(bme.1), NaturalCallParams(bme.5) ), \\
+\t4 prefixExp (( NaturalRetChan(bme.1), NaturalRetChan(bme.5) ),\\
+\t5 prefixExp (( BinderRetChan(bme.1), BinderRetChan(bme.5) ), \\
+\t6 actName(GenerateMCBName(bme.1)) \\
+\t1 )))))))
+\end{axdef}
+
+\begin{axdef}
+GenerateMCBModel : \seq BinderMethodEnv \pfun \seq CircusParagraph
+\where
+\forall bEnvs : \seq BinderMethodEnv \\
+\t1 | bEnvs \neq \langle \rangle \\
+\t1 @ \# bEnvs = 1 \implies GenerateMCBModel(bEnvs) = \langle GenerateMCBChans(head~bEnvs) , GenerateMCBProc(head~bEnvs) \rangle \\
+\t1 \land \# bEnvs \geq 1 \implies GenerateMCBModel(bEnvs) = \langle GenerateMCBChans(head~bEnvs) , GenerateMCBProc(head~bEnvs) \rangle \\
+\t2 \cat GenerateMCBModel(tail~bEnvs)
 \end{axdef}
 
 \begin{axdef}
@@ -121,11 +179,11 @@ GenerateObjectProc : \seq ObjectIds \pfun Process
 
 %LockingEnv == \seq (ThreadIds \cross Priority) \cross \seq ObjectIds
 \begin{axdef}
-GenerateLockProc : LockingEnv \pfun \seq CircusParagraph
+GenerateLockModel: LockingEnv \pfun \seq CircusParagraph
 \where
 \forall lEnv : LockingEnv \\
 \t1 | lEnv.1 \neq \langle \rangle \land lEnv.2 \neq \langle \rangle \\
-\t1 @ GenerateLockProc(lEnv) = \\
+\t1 @ GenerateLockModel(lEnv) = \\
 \t2 \langle procDef(pd(Locking, procPar(procName(Threads), ThreadSync, procName(Objects)))), \\
 \t2 procDef(pd(Threads, GenerateThreadProc(lEnv.1))), 
 \t2 procDef(pd(Objects, GenerateObjectProc(lEnv.2) )) \rangle 
