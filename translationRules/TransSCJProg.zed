@@ -19,19 +19,24 @@ ProgName : Identifier \pfun N
 \end{axdef}
 
 \begin{axdef}
+appComms : CSExpression \\
+mcbComms : CSExpression \\
+lockComms: CSExpression 
+\end{axdef}
+
+\begin{axdef}
 TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \where
 \forall scjProg : SCJProgram; name : Identifier @\\
 \t1 \exists app : CircusProgram ;  \\
 \t2 program : CircusProgram ; \\
-\t2 appComms : CSExpression ; mcbComms : CSExpression ; lockComms: CSExpression \\
-\t2 fwProcs : \seq Process ; appProc : Process ; lockProcs : \seq CircusParagraph; \\
-\t2 mcbProc : Process | \\
+\t2 fwProcs : \seq Process ; appProc : Process ; lockModel : \seq CircusParagraph; \\
+\t2 mcbModel : \seq CircusParagraph | \\
 \t3 app = TransClasses(scjProg) \land \\
 \t3 fwProcs = GenerateFWProcs(BuildFWEnv(scjProg)) \land \\
 \t3 appProc = GenerateAppProc(BuildAppProcEnv(scjProg)) \land \\
-\t3 mcbProc = GenerateMCBProc(BuildMCBEnv(scjProg)) \land \\
-\t3 lockProcs = GenerateLockProc(BuildLockEnv(scjProg)) \land \\
+\t3 mcbModel = GenerateMCBModel(BuildMCBEnv(scjProg)) \land \\
+\t3 lockModel = GenerateLockModel(BuildLockEnv(scjProg)) \land \\
 \t3 program =  \langle procDef(pd(ProgName(name), \\
 \t3 procHide( procPar( \\
 \t4 procHide( \\
@@ -50,6 +55,7 @@ TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \t3 TransSCJProg(name, scjProg) =\\
 \t4 framework \cat \langle procDef(pd(FWName,head~fwProcs)) \rangle \cat \\
 \t5 app \cat \langle procDef(pd(AppName,appProc))\rangle \cat\\
-\t5 \langle procDef(pd(MCBName,mcbProc)) \rangle \cat\\
-\t5 lockProcs \cat program
+\t5 mcbModel \cat\\
+\t5 lockModel \cat\\
+\t5 program
 \end{axdef}

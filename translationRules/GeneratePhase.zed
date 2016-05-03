@@ -6,11 +6,14 @@
 procNameOf : Process \fun N
 \end{axdef}
 
-\begin{axdef}
-TierSync : CSExpression \\
-ControLTierSync : CSExpression \\
+\begin{axdef} 
+ControlTierSync : CSExpression \\
 MissionSync : CSExpression  \\
 SchedulablesSync : CSExpression
+\end{axdef}
+
+\begin{axdef}
+TierSync : TierEnv  \fun CSExpression \\
 \end{axdef}
 
 \begin{axdef}
@@ -18,11 +21,12 @@ GetMissionID :  ClusterEnv \pfun N
 \end{axdef}
 
 \begin{axdef}
-GetSOIDs : ClusterEnv \pfun \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier
+GetSOIDs : ClusterEnv \pfun \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \\ \t1 \seq Identifier \cross \seq Identifier
 \end{axdef}
 
 \begin{axdef}
-GenerateTiersFWProc : \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \pfun Process
+GenerateTiersFWProc : \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \\
+\t1 \seq Identifier \cross \seq Identifier \pfun Process
 \end{axdef}
 
 \begin{axdef}
@@ -31,13 +35,22 @@ GenerateClusterFWProcs : TierEnv \pfun Process
 \forall tier : TierEnv \\
 \t1 | tier \neq \langle \rangle \\
 \t1 @ \# tier = 1 \\
-\t2 \implies GenerateClusterFWProcs(tier) = procPar(procName(GetMissionID(head~tier)), MissionSync, GenerateTiersFWProc(GetSOIDs(head~tier) ) ) \\
+\t2 \implies GenerateClusterFWProcs(tier) = \\
+\t3 procPar(\\
+\t4 procName(GetMissionID(head~tier)), \\
+\t4 MissionSync, \\
+\t4 GenerateTiersFWProc(GetSOIDs(head~tier) ) \\
+\t3) \\
 \t1 \land \# tier \geq 1 \\
-\t2 \implies GenerateClusterFWProcs(tier) =  procPar(\\ 
-\t3 procPar( procName( GetMissionID(head~tier) ), MissionSync, GenerateTiersFWProc( GetSOIDs(head~tier) ) ),\\
-\t3 SchedulablesSync,
-\t3 GenerateClusterFWProcs(tail~tier) \\
-\t2 )
+\t2 \implies GenerateClusterFWProcs(tier) =  \\
+\t3 procPar(\\ 
+\t4 procPar( \\
+\t5 procName( GetMissionID(head~tier) ), \\
+\t5 MissionSync, \\
+\t5 GenerateTiersFWProc( GetSOIDs(head~tier) ) ),\\
+\t4 SchedulablesSync,
+\t4 GenerateClusterFWProcs(tail~tier) \\
+\t3 )
 \end{axdef}
 
 \begin{axdef}
@@ -47,7 +60,9 @@ GenerateTierFWProcs : \seq TierEnv \pfun \seq Process
 \t1 | tiers \neq \langle \rangle \\
 \t1 @ \# tiers = 1 \implies  GenerateTierFWProcs(tiers) = \langle GenerateClusterFWProcs(head~tiers) \rangle \\
 \t1 \land \# tiers \geq 1 \implies  \\
-\t2 GenerateTierFWProcs(tiers) = \langle GenerateClusterFWProcs(head~tiers) \rangle \cat  GenerateTierFWProcs(tail~tiers)
+\t2 GenerateTierFWProcs(tiers) = \\
+\t3 \langle GenerateClusterFWProcs(head~tiers) \rangle \\
+\t3 \cat  GenerateTierFWProcs(tail~tiers)
 \end{axdef}
 
 \begin{axdef}
@@ -56,7 +71,6 @@ GenerateTierFWProc : \seq TierEnv \pfun Process
 
 \begin{axdef}
 ControlTier : N \\
-ControlTierSync : CSExpression \\
 TopLevelMissionSequencerFWName : N
 \end{axdef}
 
@@ -70,7 +84,7 @@ GenerateFWProcs :  FWEnv \pfun \seq Process
 \forall env : FWEnv \\
 \t1 | env.2 \neq \langle \rangle \\
 \t1 @ \exists fwProc : Process ; controlTierProc : Process ; tierProcs : \seq Process \\
-\t2 | fwProc = procPar(procName(ControlTier), TierSync, GenerateTierFWProc(env.2)) \\
+\t2 | fwProc = procPar(procName(ControlTier), TierSync(head~env.2), GenerateTierFWProc(env.2)) \\
 \t2 \land controlTierProc = procPar(procName(SafeletFWName), ControlTierSync, 
 \\ \t3 procInstP(procName(TopLevelMissionSequencerFWName), GetParams(env.1) )) \\
 \t2 \land tierProcs = GenerateTierFWProcs(env.2) \\
@@ -206,9 +220,9 @@ GenerateMCBAction : BinderMethodEnv \fun PParagraph
 \forall bme : BinderMethodEnv \\
 \t1 @ GenerateMCBAction(bme) = actDef(GenerateMCBName(bme.1), \\
 \t2 prefixExp( (BinderCallComm(bme.1), BinderCallParams(bme.5)), \\
-\t3 prefixExp( (BinderCallComm(bme.1), BinderCallParams(bme.5)), \\
-\t4 prefixExp( (BinderCallComm(bme.1), BinderCallParams(bme.5)), \\
-\t5 prefixExp( (BinderCallComm(bme.1), BinderCallParams(bme.5)), \\
+\t3 prefixExp( (NaturalCallComm(bme.1), BinderCallParams(bme.5)), \\
+\t4 prefixExp( (NaturalRetComm(bme.1), BinderCallParams(bme.5)), \\
+\t5 prefixExp( (BindeRetComm(bme.1), BinderCallParams(bme.5)), \\
 \t6 actName( GenerateMCBName(bme.1)) \\
 \t5 ) \\
 \t4 ) \\
@@ -234,8 +248,15 @@ GenerateMCBProc : \seq BinderMethodEnv \pfun CircusParagraph
 \where
 \forall bmes : \seq BinderMethodEnv \\
 \t1 | bmes \neq \langle \rangle \\
-\t1 @ GenerateMCBProc(bmes) = procDef(pd(MethodCallBinder, \\
-\t2 proc (\langle \rangle, NoState , GenerateMCBActions(bmes) , actInterupt(actName(BinderActions), prefixExp(DoneTLS, skip)) )))
+\t1 @ GenerateMCBProc(bmes) = \\
+\t2 procDef(pd(MethodCallBinder, \\
+\t3 proc (\\
+\t4 \langle \rangle, \\
+\t4 NoState ,\\
+\t4 GenerateMCBActions(bmes) ,\\
+\t4 actInterupt(actName(BinderActions), prefixExp(DoneTLS, skip)) \\
+\t3 ) \\
+\t2 ))
 \end{axdef}
 
 \begin{axdef}
@@ -243,7 +264,8 @@ GenerateMCBModel : \seq BinderMethodEnv \pfun \seq CircusParagraph
 \where
 \forall bEnvs : \seq BinderMethodEnv \\
 \t1 | bEnvs \neq \langle \rangle \\
-\t1 @ GenerateMCBModel(bEnvs) =   GenerateMCBChans(bEnvs) \cat \langle GenerateMethodCallBinderSync(bEnvs), GenerateMCBProc(bEnvs) \rangle 
+\t1 @ GenerateMCBModel(bEnvs) =   GenerateMCBChans(bEnvs) \cat \\
+\t2 \langle GenerateMethodCallBinderSync(bEnvs), GenerateMCBProc(bEnvs) \rangle 
 \end{axdef}
 
 \begin{axdef}
@@ -261,7 +283,12 @@ GenerateLockModel: LockingEnv \pfun \seq CircusParagraph
 \forall lEnv : LockingEnv \\
 \t1 | lEnv.1 \neq \langle \rangle \land lEnv.2 \neq \langle \rangle \\
 \t1 @ GenerateLockModel(lEnv) = \\
-\t2 \langle procDef(pd(Locking, procPar(procName(Threads), ThreadSync, procName(Objects)))), \\
-\t2 procDef(pd(Threads, GenerateThreadProc(lEnv.1))), 
-\t2 procDef(pd(Objects, GenerateObjectProc(lEnv.2) )) \rangle 
+\t2 \langle\\
+\t3 procDef(pd(Locking, procPar(procName(Threads), \\
+\t4 ThreadSync, \\
+\t4 procName(Objects)))\\
+\t3 ), \\
+\t3 procDef(pd(Threads, GenerateThreadProc(lEnv.1))), \\
+\t3 procDef(pd(Objects, GenerateObjectProc(lEnv.2) )) \\
+\t2\rangle 
 \end{axdef}

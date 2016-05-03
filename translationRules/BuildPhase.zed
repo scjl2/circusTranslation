@@ -58,19 +58,26 @@ BuildSOAppEnv : \seq SchedulableObject \pfun \seq AppEnv
 \t1 | scheds \neq \langle \rangle \\
 \t1 @ \exists manT : ManagedThread ; nestMS : NestedMissionSequencer ; eh : EventHandler \\
 \t2 perEH : PeriodicEventHandler ; oneEH : OneShotEventHandler ; \\
-\t2 apehShort : Identifier \cross EventHandlerClassBody ; apehLong :  Identifier \cross LongEventHandlerClassBody\\
+\t2 apehShort : Identifier \cross EventHandlerClassBody ; \\
+\t2 apehLong :  Identifier \cross LongEventHandlerClassBody\\
 \t2 @ head~scheds = mt(manT) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(manT.1), ParamsOf(manT.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(manT.1), ParamsOf(manT.2.2)) \rangle \\
+\t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = nms(nestMS) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(nestMS.1), ParamsOf(nestMS.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(nestMS.1), ParamsOf(nestMS.2.2)) \rangle \\
+\t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = handler(pehDecl(perEH)) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(perEH.1), ParamsOf(perEH.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(perEH.1), ParamsOf(perEH.2.2)) \rangle \\
+\t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = handler(osehDecl(oneEH)) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(oneEH.1), ParamsOf(oneEH.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(oneEH.1), ParamsOf(oneEH.2.2)) \rangle \\
+\t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = handler(apehDecl(apehType(apehShort))) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(apehShort.1), ParamsOf(apehShort.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(apehShort.1), ParamsOf(apehShort.2.2)) \rangle\\ 
+\t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = handler(apehDecl(aplehType(apehLong))) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(apehLong.1), ParamsOf(apehLong.2.2)) \rangle \cat BuildSOAppEnv(tail~scheds) \\
+\t3 BuildSOAppEnv(scheds) = \langle (IDof(apehLong.1), ParamsOf(apehLong.2.2)) \rangle\\
+\t4 \cat BuildSOAppEnv(tail~scheds) \\
 \end{axdef}
 
 \begin{axdef}
@@ -131,9 +138,11 @@ GetIdentifiers : \seq SchedulableObject \pfun \seq Identifier
 \where
 \forall scheds : \seq SchedulableObject \\
 \t1 | scheds \neq \langle \rangle \\
-\t1 @ \exists ident : Identifier ; manT : ManagedThread ; nestMS : NestedMissionSequencer ; eh : EventHandler \\
+\t1 @ \exists ident : Identifier ; manT : ManagedThread ; \\
+\t2 nestMS : NestedMissionSequencer ; eh : EventHandler \\
 \t2 perEH : PeriodicEventHandler ; oneEH : OneShotEventHandler ; \\
-\t2 apehShort : Identifier \cross EventHandlerClassBody ; apehLong :  Identifier \cross LongEventHandlerClassBody
+\t2 apehShort : Identifier \cross EventHandlerClassBody ; \\
+\t2 apehLong :  Identifier \cross LongEventHandlerClassBody \\
 \t2 | head~scheds = mt(manT) \implies ident = manT.1 \\
 \t2 \land head~scheds = nms(nestMS) \implies ident = nestMS.1 \\
 \t2 \land head~scheds = handler(pehDecl(perEH))  \implies ident = perEH.1 \\
@@ -156,9 +165,9 @@ BuildSOEnvs : \seq SchedulableObject \pfun \\
 \t2 | mts = GetIdentifiers(s \filter \{ m : ManagedThread @ mt(m) \}) \\
 \t2 \land sms = GetIdentifiers(s \filter \{ n : NestedMissionSequencer @ nms(n) \}) \\
 \t2 \land pehs = GetIdentifiers(s \filter \{ p : PeriodicEventHandler @ handler(pehDecl(p)) \}) \\
-\t2 \land apehs = \\ \t3 GetIdentifiers(s \filter \{ a :  Identifier \cross EventHandlerClassBody @ handler(apehDecl(apehType(a))) \}) \\
-\t2 \land apehs = \\ \t3 GetIdentifiers(s \filter \{ a :  Identifier \cross LongEventHandlerClassBody @ handler(apehDecl(aplehType(a))) \}) \\
-\t2 \land osehs = GetIdentifiers(s \filter \{ o : OneShotEventHandler @ handler(osehDecl(o)) \}) \\
+\t2 \land apehs = GetIdentifiers(s \filter \{ a :  Identifier \cross EventHandlerClassBody \\ \t4  @ handler(apehDecl(apehType(a))) \}) \\
+\t2 \land apehs =  GetIdentifiers(s \filter \{ a :  Identifier \cross LongEventHandlerClassBody \\ \t4 @ handler(apehDecl(aplehType(a))) \}) \\
+\t2 \land osehs = GetIdentifiers(s \filter \{ o : OneShotEventHandler \\ \t4 @ handler(osehDecl(o)) \}) \\
 \t1 @BuildSOEnvs(s) = (sms, pehs, apehs, osehs, mts)
 
 \end{axdef}
@@ -266,6 +275,8 @@ BuildMCBEnv : SCJProgram \pfun \seq BinderMethodEnv
 \t1 @ \exists sf : Safelet ; tlms : MissionSequencer ; tiers : \seq Tier  \\
 \t3 | sf = scjProg.1 \\
 \t3 \land tiers = scjProg.3  \\
-\t3 @ BuildMCBEnv(scjProg) = \langle BuildSFMCBEnv(GetSFMethods(sf)), BuildTLMSMCBEnv(GetTLMSMethods(tlms))  \rangle \\
+\t3 @ BuildMCBEnv(scjProg) = \\
+\t4 \langle BuildSFMCBEnv(GetSFMethods(sf)), \\
+\t4 BuildTLMSMCBEnv(GetTLMSMethods(tlms))  \rangle \\
 \t4 \cat BuildTierMCBEnvs(tiers)
 \end{axdef}
