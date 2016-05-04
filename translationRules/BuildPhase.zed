@@ -2,45 +2,46 @@
   \SECTION BuildPhase \parents scj\_prelude, SCJBNFEncoding, CircusBNFEncoding, Framework
 \end{zsection}
 
-\begin{axdef}
-AppEnv == N \cross \seq Expression
-\end{axdef}
+\begin{schema}{AppEnv}
+Name : N \\
+Parameters : \seq Expression
+\end{schema}
 
-\begin{axdef}
-ClusterAppEnv == AppEnv \cross \seq AppEnv
-\end{axdef}
+\begin{schema}{ClusterAppEnv}
+Mission : AppEnv \\
+Schedulables : \finset AppEnv
+\end{schema}
 
-\begin{axdef}
-TierAppEnv == \seq ClusterAppEnv
-\end{axdef}
+\begin{schema}{TierAppEnv}
+Clustesr : \seq ClusterAppEnv
+\end{schema}
 
-\begin{axdef}
-TiersAppEnv == \seq TierAppEnv
-\end{axdef}
 
-\begin{axdef}
-AppProcEnv == AppEnv \cross AppEnv \cross TiersAppEnv
-\end{axdef}
+\begin{schema}{AppProcEnv}
+Safelet : AppEnv \\
+TopLevelMS : AppEnv \\
+Tiers:  \seq TierAppEnv\\
+\end{schema}
 
 \begin{axdef}
 GetSafeletAppEnv : AppProcEnv \fun AppEnv
 \where
 \forall a : AppProcEnv @ \\
-\t1 GetSafeletAppEnv(a) = a.1
+\t1 GetSafeletAppEnv(a) = a.Safelet
 \end{axdef}
 
 \begin{axdef}
 GetTLMSAppEnv :  AppProcEnv \fun AppEnv
 \where
 \forall a : AppProcEnv @ \\
-\t1 GetTLMSAppEnv(a) = a.2
+\t1 GetTLMSAppEnv(a) = a.TopLevelMS
 \end{axdef}
 
 \begin{axdef}
-GetTiersAppEnv :  AppProcEnv \fun TiersAppEnv
+GetTiersAppEnv :  AppProcEnv \fun \seq TierAppEnv
 \where
 \forall a : AppProcEnv @ \\
-\t1 GetTiersAppEnv(a) = a.3
+\t1 GetTiersAppEnv(a) = a.Tiers
 \end{axdef}
 
 \begin{axdef}
@@ -61,48 +62,51 @@ BuildSOAppEnv : \seq SchedulableObject \pfun \seq AppEnv
 \t2 apehShort : Identifier \cross EventHandlerClassBody ; \\
 \t2 apehLong :  Identifier \cross LongEventHandlerClassBody\\
 \t2 @ head~scheds = mt(manT) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(manT.1), ParamsOf(manT.2.2)) \rangle \\
+\t3 BuildSOAppEnv(scheds) = \lblot Name == Dof(manT.1), Parameters == ParamsOf(manT.2.2) \rblot  \\
 \t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = nms(nestMS) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(nestMS.1), ParamsOf(nestMS.2.2)) \rangle \\
+\t3 BuildSOAppEnv(scheds) = \lblot Name ==IDof(nestMS.1), Parameters == ParamsOf(nestMS.2.2) \rblot \\
 \t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = handler(pehDecl(perEH)) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(perEH.1), ParamsOf(perEH.2.2)) \rangle \\
+\t3 BuildSOAppEnv(scheds) = \lblot Name == IDof(perEH.1),  Parameters == ParamsOf(perEH.2.2)\rblot \\
 \t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = handler(osehDecl(oneEH)) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(oneEH.1), ParamsOf(oneEH.2.2)) \rangle \\
+\t3 BuildSOAppEnv(scheds) = \lblot Name == IDof(oneEH.1),  Parameters == ParamsOf(oneEH.2.2)\rblot \\
 \t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = handler(apehDecl(apehType(apehShort))) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(apehShort.1), ParamsOf(apehShort.2.2)) \rangle\\ 
+\t3 BuildSOAppEnv(scheds) = \lblot Name == IDof(apehShort.1),  Parameters == ParamsOf(apehShort.2.2)\rblot\\ 
 \t4 \cat BuildSOAppEnv(tail~scheds) \\
 \t2 \land head~scheds = handler(apehDecl(aplehType(apehLong))) \implies \\
-\t3 BuildSOAppEnv(scheds) = \langle (IDof(apehLong.1), ParamsOf(apehLong.2.2)) \rangle\\
+\t3 BuildSOAppEnv(scheds) = \lblot Name == IDof(apehLong.1),  Parameters == ParamsOf(apehLong.2.2)\rblot\\
 \t4 \cat BuildSOAppEnv(tail~scheds) \\
 \end{axdef}
 
 \begin{axdef}
-BuildClusterAppEnv : Cluster \pfun AppEnv \cross \seq AppEnv 
+BuildClusterAppEnv : Cluster \pfun ClusterAppEnv
 \where
 \forall c: Cluster \\
 \t1 | c.2 \neq \langle \rangle \\
 \t1 @ \exists m : Mission ; seqSO : \seq SchedulableObject \\
 \t2 | c = (m, seqSO)  \\
 \t2 @ BuildClusterAppEnv(c) = \\
-\t3 ((IDof(m.1), ParamsOf(m.2.3)), BuildSOAppEnv(seqSO) )
+\t3 \lblot Mission == \lblot Name == IDof(m.1), Parameters == ParamsOf(m.2.3)\rblot , Schedulables == BuildSOAppEnv(seqSO) \rblot
+\end{axdef}
+
+\begin{axdef}
+BuildClusterAppEnvs : \seq Cluster \pfun \seq ClusterAppEnv
+
 \end{axdef}
 
 \begin{axdef}
 BuildTierAppEnv : Tier \pfun  TierAppEnv
 \where
-\forall t : Tier \\
-\t1 | t \neq \langle \rangle \\
-\t1 @ \# t = 1 \implies  BuildTierAppEnv(t) = \langle BuildClusterAppEnv(head~t) \rangle \\
-\t1 \land \# t \geq 1 \implies BuildTierAppEnv(t) = \\
-\t2 \langle BuildClusterAppEnv(head~t) \rangle \cat BuildTierAppEnv(tail~t)
+\forall tier : \seq Cluster \\
+\t1 | tier \neq \langle \rangle \\
+\t1 @ BuildTierAppEnv(tier) = \lblot Clusters ==  BuildClusterAppEnvs(tier) \rblot 
 \end{axdef}
 
 \begin{axdef}
-BuildTiersAppEnv : \seq Tier \pfun TiersAppEnv
+BuildTiersAppEnv : \seq Tier \pfun  \seq TierAppEnv
 \where
 \forall tiers : \seq Tier \\
 \t1 | tiers \neq \langle \rangle \\
@@ -118,11 +122,11 @@ BuildAppProcEnv : SCJProgram \pfun AppProcEnv
 \t1 \exists safelet : Safelet ; tiers : \seq Tier ; ms : MissionSequencer \\
 \t2 | scjProg = (safelet, tlms(ms), tiers) @\\
 \t3 \exists sfEnv : AppEnv ; tlmsEnv : AppEnv ; \\
-\t4 tiersEnv : TiersAppEnv  @ \\
-\t5 sfEnv = (IDof(safelet.1), ParamsOf(safelet.2.4)) \land \\
-\t5 tlmsEnv = (IDof(ms.1), ParamsOf(ms.2.2)) \land \\
+\t4 tiersEnv : \seq TierAppEnv  @ \\
+\t5 sfEnv = \lblot Name == IDof(safelet.1), Parameters == ParamsOf(safelet.2.4) \rblot \land \\
+\t5 tlmsEnv = \lblot Name == IDof(ms.1), Parameters == ParamsOf(ms.2.2) \rblot \land \\
 \t5 tiersEnv = BuildTiersAppEnv(tiers) \land \\
-\t5 BuildAppProcEnv(scjProg) = (sfEnv ,tlmsEnv ,tiersEnv)
+\t5 BuildAppProcEnv(scjProg) = \lblot Safelet == sfEnv , TopLevelMS == tlmsEnv , Tiers == tiersEnv \rblot
 \end{axdef}
 
 \begin{axdef}
