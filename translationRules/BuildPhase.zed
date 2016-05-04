@@ -133,8 +133,46 @@ LockingEnv == \seq (ThreadIds \cross Priority) \cross \seq ObjectIds
 BuildLockEnv : SCJProgram \pfun LockingEnv
 \end{axdef}
 
+
+
+
+
+\begin{schema}{ClusterEnv}
+Mission : Identifier \\
+NestedMissionSequencers : \finset Identifier \\
+ManagedThreads: \finset Identifier \\
+PeriodicEventHandlers : \finset Identifier \\
+AperiodicEventHandlers :  \finset Identifier \\
+OneShotEventHandlers :  \finset Identifier\\
+\where
+disjoint \langle NestedMissionSequencers, ManagedThreads, PeriodicEventHandlers, \\
+\t1 AperiodicEventHandlers, OneShotEventHandlers \rangle \\
+\land \bigcup \{NestedMissionSequencers, ManagedThreads, PeriodicEventHandlers, \\
+\t1 AperiodicEventHandlers, OneShotEventHandlers \} \neq \emptyset
+\end{schema}
+
+\begin{schema}{TierEnv}
+Clusters : \seq ClusterEnv 
+\where
+Clusters \neq \langle \rangle
+\end{schema}
+
+\begin{schema}{FWEnv}
+TopLevelMS : Identifier \\
+Tiers : \seq TierEnv
+\where
+Tiers \neq \langle \rangle
+\end{schema}
+
 \begin{axdef}
-GetIdentifiers : \seq SchedulableObject \pfun \seq Identifier
+GetTierFWEnvs : FWEnv \fun \seq TierEnv
+\where
+\forall env : FWEnv \\
+\t1 @ GetTierFWEnvs(env) = env.Tiers 
+\end{axdef}
+
+\begin{axdef}
+GetIdentifiers : \seq SchedulableObject \pfun \finset Identifier
 \where
 \forall scheds : \seq SchedulableObject \\
 \t1 | scheds \neq \langle \rangle \\
@@ -149,67 +187,57 @@ GetIdentifiers : \seq SchedulableObject \pfun \seq Identifier
 \t2 \land head~scheds = handler(apehDecl(apehType(apehShort))) \implies ident = apehShort.1 \\
 \t2 \land head~scheds = handler(apehDecl(aplehType(apehLong))) \implies ident = apehLong.1 \\
 \t2 \land head~scheds = handler(osehDecl(oneEH))  \implies ident = oneEH.1 \\
-\t3 @ \# scheds = 1 \implies GetIdentifiers(scheds) = \langle ident \rangle \\
-\t3 \land \# scheds \geq 1 \implies GetIdentifiers(scheds) = \langle ident \rangle \cat GetIdentifiers(tail~scheds)
+\t3 @ \# scheds = 1 \implies GetIdentifiers(scheds) = \{ ident \} \\
+\t3 \land \# scheds \geq 1 \implies GetIdentifiers(scheds) = \{ ident \} \cup GetIdentifiers(tail~scheds)
 \end{axdef}
 
 \begin{axdef}
 BuildSOEnvs : \seq SchedulableObject \pfun \\
-\t1 \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \\
-\t1 \seq Identifier \cross \seq Identifier
+\t1 \finset Identifier \cross \finset Identifier \cross \finset Identifier \cross \\
+\t1 \finset Identifier \cross \finset Identifier
 \where
 \forall s : \seq SchedulableObject \\
 \t1 | s \neq \langle \rangle \\
-\t1 @ \exists sms : \seq Identifier ; pehs : \seq Identifier; \\
-\t3 apehs : \seq Identifier; osehs : \seq Identifier; mts: \seq Identifier \\
+\t1 @ \exists sms : \finset Identifier ; pehs : \finset Identifier; \\
+\t3 apehs : \finset Identifier; osehs : \finset Identifier; mts: \finset Identifier \\
 \t2 | mts = GetIdentifiers(s \filter \{ m : ManagedThread @ mt(m) \}) \\
 \t2 \land sms = GetIdentifiers(s \filter \{ n : NestedMissionSequencer @ nms(n) \}) \\
 \t2 \land pehs = GetIdentifiers(s \filter \{ p : PeriodicEventHandler @ handler(pehDecl(p)) \}) \\
 \t2 \land apehs = GetIdentifiers(s \filter \{ a :  Identifier \cross EventHandlerClassBody \\ \t4  @ handler(apehDecl(apehType(a))) \}) \\
 \t2 \land apehs =  GetIdentifiers(s \filter \{ a :  Identifier \cross LongEventHandlerClassBody \\ \t4 @ handler(apehDecl(aplehType(a))) \}) \\
 \t2 \land osehs = GetIdentifiers(s \filter \{ o : OneShotEventHandler \\ \t4 @ handler(osehDecl(o)) \}) \\
-\t1 @BuildSOEnvs(s) = (sms, pehs, apehs, osehs, mts)
+\t1 @ BuildSOEnvs(s) = (sms, pehs, apehs, osehs, mts)
 
 \end{axdef}
-
-\begin{axdef}
-ClusterEnv == \\
-\t1 Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier \cross \seq Identifier
-\end{axdef}
-
-\begin{axdef}
-TierEnv == \seq ClusterEnv \\
-\end{axdef}
-
-\begin{axdef}
-FWEnv == Identifier \cross \seq TierEnv
-\end{axdef}
-
-\begin{axdef}
-GetTierFWEnvs : FWEnv \fun \seq TierEnv
-\where
-\forall env : FWEnv \\
-\t1 @ GetTierFWEnvs(env) = env.2 
-\end{axdef}
-
 
 \begin{axdef}
 BuildClusterEnv : Cluster \pfun ClusterEnv \\
 \where
 \forall c : Cluster \\
 \t1 | c.2 \neq \langle \rangle \\
-\t1 @ \exists missionName : Identifier ; sms : \seq Identifier ; pehs : \seq Identifier; \\
-\t2 apehs : \seq Identifier; oseh : \seq Identifier; mts: \seq Identifier \\
+\t1 @ \exists missionName : Identifier ; sms : \finset Identifier ; pehs : \finset Identifier; \\
+\t2 apehs : \finset Identifier; oseh :\finset Identifier; mts: \finset Identifier; cluster : ClusterEnv \\
 \t1 | missionName = c.1.1  \\
 \t1 \land (sms, pehs, apehs, oseh, mts) = BuildSOEnvs(c.2) \\
-\t1 @ BuildClusterEnv(c) = (missionName, sms, pehs, apehs, oseh, mts)
+\t1 @ BuildClusterEnv(c) =  \lblot Mission == missionName, NestedMissionSequencers == sms,  PeriodicEventHandlers == pehs, \\
+\t2 AperiodicEventHandlers == apehs, OneShotEventHandlers == oseh, ManagedThreads == mts \rblot
+\end{axdef}
+
+\begin{axdef}
+BuildClusterEnvs : \seq Cluster \pfun \seq ClusterEnv
+\where
+dom~BuildClusterEnvs = \{ s : \seq Cluster | s \neq \langle \rangle \} \\
+\forall c : \seq Cluster \\
+\t1 | c \neq \langle \rangle \\
+\t1 @ \# c = 1 \implies BuildClusterEnvs(c) = \langle BuildClusterEnv(head~c) \rangle \\
+\t1 \land \# c \geq 1 \implies BuildClusterEnvs(c) = \langle BuildClusterEnv(head~c) \rangle \cat BuildClusterEnvs(tail~c)
 \end{axdef}
 
 \begin{axdef}
   BuildTierEnv : Tier \pfun TierEnv
 \where
-  \forall t : \seq Cluster @ \\
-  \t1 BuildTierEnv(t) = \langle BuildClusterEnv(head~t) \rangle \cat BuildTierEnv(tail~t)
+  \forall tier : \seq Cluster \\
+  \t1 @ BuildTierEnv(tier) = \lblot Clusters ==  BuildClusterEnvs(tier) \rblot 
 \end{axdef}
 
 
@@ -228,7 +256,7 @@ BuildFWEnv : SCJProgram \pfun FWEnv
 \t2 tiers : \seq Tier | \\
 \t3 scjProg.2 \neq NoSequencer \implies tlms = (tlmsID, tlmsBody) \\
 \t3 \land tiers = scjProg.3 @ \\
-\t3 BuildFWEnv(scjProg) = (tlms.1  , BuildTierEnvs(tiers))
+\t3 BuildFWEnv(scjProg) = \lblot TopLevelMS == tlms.1, Tiers == BuildTierEnvs(tiers) \rblot 
 
 \end{axdef}
 
