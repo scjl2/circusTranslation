@@ -14,6 +14,11 @@ SchedulablesSync : CSExpression
 
 \begin{axdef}
 TierSync : TierEnv  \fun CSExpression \\
+\where
+\forall t : TierEnv 
+\t1 @ \exists m : \{ s : \num \ffun N | \exists i:\num @ dom~s = 1..i \land \forall cluster : t @ \exists name : N @ name \mapsto cluster.1 \in s \} \\
+%\t2 | m = \{ s : \num \ffun N | \exists i:\num @ dom~s = 1..i \land \forall cluster : t @ name \mapsto cluster.1 \in s \} \\
+\t2 @ TierSync(t) = cs(m)
 \end{axdef}
 
 \begin{axdef}

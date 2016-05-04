@@ -256,11 +256,21 @@ GetTLMSMethods : MissionSequencer \fun \seq ClassBodyDeclaration
 \end{axdef}
 
 \begin{axdef}
-BuildSFMCBEnv : \seq ClassBodyDeclaration \fun BinderMethodEnv
+BuildBME : N \cross N \cross MethodDeclaration \fun BinderMethodEnv
 \end{axdef}
 
 \begin{axdef}
-BuildTLMSMCBEnv : \seq ClassBodyDeclaration \fun BinderMethodEnv
+BuildSFMCBEnv : \seq ClassBodyDeclaration \fun \seq BinderMethodEnv
+\where
+dom~BuildSFMCBEnv = \{ b: \seq ClassBodyDeclaration | b \neq \langle \rangle \} \\
+
+\forall body : \seq ClassBodyDeclaration \\
+\t1 | body \neq \langle \rangle \\
+\t1 @ BuildSFMCBEnv(body) = \langle \rangle
+\end{axdef}
+
+\begin{axdef}
+BuildTLMSMCBEnv : \seq ClassBodyDeclaration \fun \seq BinderMethodEnv
 \end{axdef}
 
 \begin{axdef}
@@ -276,7 +286,7 @@ BuildMCBEnv : SCJProgram \pfun \seq BinderMethodEnv
 \t3 | sf = scjProg.1 \\
 \t3 \land tiers = scjProg.3  \\
 \t3 @ BuildMCBEnv(scjProg) = \\
-\t4 \langle BuildSFMCBEnv(GetSFMethods(sf)), \\
-\t4 BuildTLMSMCBEnv(GetTLMSMethods(tlms))  \rangle \\
+\t4 BuildSFMCBEnv(GetSFMethods(sf)) \\
+\t4 \cat BuildTLMSMCBEnv(GetTLMSMethods(tlms))  \\
 \t4 \cat BuildTierMCBEnvs(tiers)
 \end{axdef}
