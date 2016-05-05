@@ -13,7 +13,7 @@ Schedulables : \finset AppEnv
 \end{schema}
 
 \begin{schema}{TierAppEnv}
-Clustesr : \seq ClusterAppEnv
+Clusters : \seq ClusterAppEnv
 \end{schema}
 
 
@@ -53,40 +53,40 @@ ParamsOf : \seq ClassBodyDeclaration \pfun \seq Expression
 \end{axdef}
 
 \begin{axdef}
-BuildSOAppEnv : \seq SchedulableObject \pfun \seq AppEnv
+BuildSOAppEnv : \finset SchedulableObject \pfun \finset AppEnv
 \where
-\forall scheds : \seq SchedulableObject \\
-\t1 | scheds \neq \langle \rangle \\
+\forall scheds : \finset SchedulableObject \\
+\t1 | scheds \neq \emptyset \\
 \t1 @ \exists manT : ManagedThread ; nestMS : NestedMissionSequencer ; eh : EventHandler \\
 \t2 perEH : PeriodicEventHandler ; oneEH : OneShotEventHandler ; \\
 \t2 apehShort : Identifier \cross EventHandlerClassBody ; \\
 \t2 apehLong :  Identifier \cross LongEventHandlerClassBody\\
-\t2 @ head~scheds = mt(manT) \implies \\
-\t3 BuildSOAppEnv(scheds) = \lblot Name == Dof(manT.1), Parameters == ParamsOf(manT.2.2) \rblot  \\
-\t4 \cat BuildSOAppEnv(tail~scheds) \\
-\t2 \land head~scheds = nms(nestMS) \implies \\
-\t3 BuildSOAppEnv(scheds) = \lblot Name ==IDof(nestMS.1), Parameters == ParamsOf(nestMS.2.2) \rblot \\
-\t4 \cat BuildSOAppEnv(tail~scheds) \\
-\t2 \land head~scheds = handler(pehDecl(perEH)) \implies \\
-\t3 BuildSOAppEnv(scheds) = \lblot Name == IDof(perEH.1),  Parameters == ParamsOf(perEH.2.2)\rblot \\
-\t4 \cat BuildSOAppEnv(tail~scheds) \\
-\t2 \land head~scheds = handler(osehDecl(oneEH)) \implies \\
-\t3 BuildSOAppEnv(scheds) = \lblot Name == IDof(oneEH.1),  Parameters == ParamsOf(oneEH.2.2)\rblot \\
-\t4 \cat BuildSOAppEnv(tail~scheds) \\
-\t2 \land head~scheds = handler(apehDecl(apehType(apehShort))) \implies \\
-\t3 BuildSOAppEnv(scheds) = \lblot Name == IDof(apehShort.1),  Parameters == ParamsOf(apehShort.2.2)\rblot\\ 
-\t4 \cat BuildSOAppEnv(tail~scheds) \\
-\t2 \land head~scheds = handler(apehDecl(aplehType(apehLong))) \implies \\
-\t3 BuildSOAppEnv(scheds) = \lblot Name == IDof(apehLong.1),  Parameters == ParamsOf(apehLong.2.2)\rblot\\
-\t4 \cat BuildSOAppEnv(tail~scheds) \\
+\t2 @ BuildSOAppEnv(scheds) = \{ a : AppEnv \\
+\t3 | \forall so : scheds @ \exists name : N ; params : \seq Expression \\
+\t4 | so = mt(manT) \implies \\ 
+\t5 name = IDof(manT.1) \land params = ParamsOf(manT.2.2) \\
+\t4 \land so = nms(nestMS) \implies \\ 
+\t5 name = IDof(nestMS.1) \land params = ParamsOf(nestMS.2.2) \\
+\t4 \land so = handler(pehDecl(perEH)) \implies \\
+\t5 name = IDof(perEH.1) \land params = ParamsOf(perEH.2.2) \\
+\t4 \land so = handler(osehDecl(oneEH)) \implies \\
+\t5 name = IDof(oneEH.1) \land params = ParamsOf(oneEH.2.2) \\
+\t4 \land so = handler(apehDecl(apehType(apehShort))) \implies \\
+\t5 name = IDof(apehShort.1) \land params = ParamsOf(apehShort.2.2) \\
+\t4 \land so = handler(apehDecl(aplehType(apehLong)))\implies \\
+\t5 name = IDof(apehLong.1) \land params = ParamsOf(apehLong.2.2) \\
+\t1 @ a = \lblot Name == name , Parameters == params \rblot 
+\}
+
+
 \end{axdef}
 
 \begin{axdef}
 BuildClusterAppEnv : Cluster \pfun ClusterAppEnv
 \where
 \forall c: Cluster \\
-\t1 | c.2 \neq \langle \rangle \\
-\t1 @ \exists m : Mission ; seqSO : \seq SchedulableObject \\
+\t1 | c.2 \neq \emptyset \\
+\t1 @ \exists m : Mission ; seqSO : \finset SchedulableObject \\
 \t2 | c = (m, seqSO)  \\
 \t2 @ BuildClusterAppEnv(c) = \\
 \t3 \lblot Mission == \lblot Name == IDof(m.1), Parameters == ParamsOf(m.2.3)\rblot , Schedulables == BuildSOAppEnv(seqSO) \rblot
@@ -176,10 +176,10 @@ GetTierFWEnvs : FWEnv \fun \seq TierEnv
 \end{axdef}
 
 \begin{axdef}
-GetIdentifiers : \seq SchedulableObject \pfun \finset Identifier
+GetIdentifiers : \finset SchedulableObject \pfun \finset Identifier
 \where
-\forall scheds : \seq SchedulableObject \\
-\t1 | scheds \neq \langle \rangle \\
+\forall scheds : \finset SchedulableObject \\
+\t1 | scheds \neq \emptyset \\
 \t1 @ \exists ident : Identifier ; manT : ManagedThread ; \\
 \t2 nestMS : NestedMissionSequencer ; eh : EventHandler \\
 \t2 perEH : PeriodicEventHandler ; oneEH : OneShotEventHandler ; \\
@@ -196,20 +196,20 @@ GetIdentifiers : \seq SchedulableObject \pfun \finset Identifier
 \end{axdef}
 
 \begin{axdef}
-BuildSOEnvs : \seq SchedulableObject \pfun \\
+BuildSOEnvs : \finset SchedulableObject \pfun \\
 \t1 \finset Identifier \cross \finset Identifier \cross \finset Identifier \cross \\
 \t1 \finset Identifier \cross \finset Identifier
 \where
-\forall s : \seq SchedulableObject \\
-\t1 | s \neq \langle \rangle \\
+\forall s : \finset SchedulableObject \\
+\t1 | s \neq \emptyset \\
 \t1 @ \exists sms : \finset Identifier ; pehs : \finset Identifier; \\
 \t3 apehs : \finset Identifier; osehs : \finset Identifier; mts: \finset Identifier \\
-\t2 | mts = GetIdentifiers(s \filter \{ m : ManagedThread @ mt(m) \}) \\
-\t2 \land sms = GetIdentifiers(s \filter \{ n : NestedMissionSequencer @ nms(n) \}) \\
-\t2 \land pehs = GetIdentifiers(s \filter \{ p : PeriodicEventHandler @ handler(pehDecl(p)) \}) \\
-\t2 \land apehs = GetIdentifiers(s \filter \{ a :  Identifier \cross EventHandlerClassBody \\ \t4  @ handler(apehDecl(apehType(a))) \}) \\
-\t2 \land apehs =  GetIdentifiers(s \filter \{ a :  Identifier \cross LongEventHandlerClassBody \\ \t4 @ handler(apehDecl(aplehType(a))) \}) \\
-\t2 \land osehs = GetIdentifiers(s \filter \{ o : OneShotEventHandler \\ \t4 @ handler(osehDecl(o)) \}) \\
+\t2 | mts = GetIdentifiers(\{ mtSched : s | \exists m : ManagedThread @ mtSched = mt(m) \}) \\
+\t2 \land sms = GetIdentifiers(\{ nmsSched : s | \exists n : NestedMissionSequencer @ nmsSched = nms(n) \}) \\
+\t2 \land pehs = GetIdentifiers(\{ pehSched : s | \exists p : PeriodicEventHandler @ pehSched = handler(pehDecl(p)) \}) \\
+\t2 \land apehs = GetIdentifiers(\{ apehSched : s | \exists  a :  Identifier \cross EventHandlerClassBody \\ \t4  @ apehSched =handler(apehDecl(apehType(a))) \}) \\
+\t2 \land apehs =  GetIdentifiers(\{apehLSched : s | \exists a :  Identifier \cross LongEventHandlerClassBody \\ \t4 @ apehLSched = handler(apehDecl(aplehType(a))) \}) \\
+\t2 \land osehs = GetIdentifiers(\{osehSched : s | \exists o : OneShotEventHandler \\ \t4 @ osehSched = handler(osehDecl(o)) \}) \\
 \t1 @ BuildSOEnvs(s) = (sms, pehs, apehs, osehs, mts)
 
 \end{axdef}
@@ -218,7 +218,7 @@ BuildSOEnvs : \seq SchedulableObject \pfun \\
 BuildClusterEnv : Cluster \pfun ClusterEnv \\
 \where
 \forall c : Cluster \\
-\t1 | c.2 \neq \langle \rangle \\
+\t1 | c.2 \neq \emptyset \\
 \t1 @ \exists missionName : Identifier ; sms : \finset Identifier ; pehs : \finset Identifier; \\
 \t2 apehs : \finset Identifier; oseh :\finset Identifier; mts: \finset Identifier; cluster : ClusterEnv \\
 \t1 | missionName = c.1.1  \\
@@ -230,7 +230,7 @@ BuildClusterEnv : Cluster \pfun ClusterEnv \\
 \begin{axdef}
 BuildClusterEnvs : \seq Cluster \pfun \seq ClusterEnv
 \where
-dom~BuildClusterEnvs = \{ s : \seq Cluster | s \neq \langle \rangle \} \\
+dom~BuildClusterEnvs = \{ s : \seq Cluster | s \neq \langle \rangle  \} \\
 \forall c : \seq Cluster \\
 \t1 | c \neq \langle \rangle \\
 \t1 @ \# c = 1 \implies BuildClusterEnvs(c) = \langle BuildClusterEnv(head~c) \rangle \\
