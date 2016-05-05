@@ -180,19 +180,22 @@ GetIdentifiers : \finset SchedulableObject \pfun \finset Identifier
 \where
 \forall scheds : \finset SchedulableObject \\
 \t1 | scheds \neq \emptyset \\
-\t1 @ \exists ident : Identifier ; manT : ManagedThread ; \\
-\t2 nestMS : NestedMissionSequencer ; eh : EventHandler \\
+\t1 @ \exists manT : ManagedThread ; nestMS : NestedMissionSequencer ;\\
 \t2 perEH : PeriodicEventHandler ; oneEH : OneShotEventHandler ; \\
+\t2  eh : EventHandler ; \\
 \t2 apehShort : Identifier \cross EventHandlerClassBody ; \\
 \t2 apehLong :  Identifier \cross LongEventHandlerClassBody \\
-\t2 | head~scheds = mt(manT) \implies ident = manT.1 \\
-\t2 \land head~scheds = nms(nestMS) \implies ident = nestMS.1 \\
-\t2 \land head~scheds = handler(pehDecl(perEH))  \implies ident = perEH.1 \\
-\t2 \land head~scheds = handler(apehDecl(apehType(apehShort))) \implies ident = apehShort.1 \\
-\t2 \land head~scheds = handler(apehDecl(aplehType(apehLong))) \implies ident = apehLong.1 \\
-\t2 \land head~scheds = handler(osehDecl(oneEH))  \implies ident = oneEH.1 \\
-\t3 @ \# scheds = 1 \implies GetIdentifiers(scheds) = \{ ident \} \\
-\t3 \land \# scheds \geq 1 \implies GetIdentifiers(scheds) = \{ ident \} \cup GetIdentifiers(tail~scheds)
+\t3 @ GetIdentifiers(scheds) = \{ i : Identifier \\
+\t4 | \forall s : scheds \\
+\t4 | scheds \neq \emptyset \\
+\t5 @ s = mt(manT) \implies i = manT.1 \\
+\t5 \land s  = nms(nestMS) \implies i = nestMS.1 \\
+\t5 \land s = handler(pehDecl(perEH))  \implies i = perEH.1 \\
+\t5 \land s = handler(apehDecl(apehType(apehShort)))  \implies i = apehShort.1 \\
+\t5 \land s = handler(apehDecl(aplehType(apehLong)))  \implies i = apehLong.1 \\
+\t5 \land s = handler(osehDecl(oneEH))   \implies i = oneEH.1 \\
+ \}
+
 \end{axdef}
 
 \begin{axdef}
@@ -204,14 +207,25 @@ BuildSOEnvs : \finset SchedulableObject \pfun \\
 \t1 | s \neq \emptyset \\
 \t1 @ \exists sms : \finset Identifier ; pehs : \finset Identifier; \\
 \t3 apehs : \finset Identifier; osehs : \finset Identifier; mts: \finset Identifier \\
-\t2 | mts = GetIdentifiers(\{ mtSched : s | \exists m : ManagedThread @ mtSched = mt(m) \}) \\
-\t2 \land sms = GetIdentifiers(\{ nmsSched : s | \exists n : NestedMissionSequencer @ nmsSched = nms(n) \}) \\
-\t2 \land pehs = GetIdentifiers(\{ pehSched : s | \exists p : PeriodicEventHandler @ pehSched = handler(pehDecl(p)) \}) \\
-\t2 \land apehs = GetIdentifiers(\{ apehSched : s | \exists  a :  Identifier \cross EventHandlerClassBody \\ \t4  @ apehSched =handler(apehDecl(apehType(a))) \}) \\
-\t2 \land apehs =  GetIdentifiers(\{apehLSched : s | \exists a :  Identifier \cross LongEventHandlerClassBody \\ \t4 @ apehLSched = handler(apehDecl(aplehType(a))) \}) \\
-\t2 \land osehs = GetIdentifiers(\{osehSched : s | \exists o : OneShotEventHandler \\ \t4 @ osehSched = handler(osehDecl(o)) \}) \\
+\t2 | mts = GetIdentifiers(\{ mtSched : s \\
+\t3 | \exists m : ManagedThread \\
+\t3 @ mtSched = mt(m) \}) \\
+\t2 \land sms = GetIdentifiers(\{ nmsSched : s \\
+\t3 | \exists n : NestedMissionSequencer \\
+\t3 @ nmsSched = nms(n) \}) \\
+\t2 \land pehs = GetIdentifiers(\{ pehSched : s \\
+\t3 | \exists p : PeriodicEventHandler \\
+\t3 @ pehSched = handler(pehDecl(p)) \}) \\
+\t2 \land apehs = GetIdentifiers(\{ apehSched : s \\
+\t3 | \exists  a :  Identifier \cross EventHandlerClassBody \\ 
+\t3  @ apehSched =handler(apehDecl(apehType(a))) \}) \\
+\t2 \land apehs =  GetIdentifiers(\{apehLSched : s \\
+\t3 | \exists a :  Identifier \cross LongEventHandlerClassBody \\ 
+\t3 @ apehLSched = handler(apehDecl(aplehType(a))) \}) \\
+\t2 \land osehs = GetIdentifiers(\{osehSched : s \\
+\t3 | \exists o : OneShotEventHandler \\ 
+\t3 @ osehSched = handler(osehDecl(o)) \}) \\
 \t1 @ BuildSOEnvs(s) = (sms, pehs, apehs, osehs, mts)
-
 \end{axdef}
 
 \begin{axdef}
