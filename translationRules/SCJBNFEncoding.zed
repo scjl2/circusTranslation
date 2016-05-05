@@ -75,3 +75,24 @@ Safelet == Identifier \cross SafeletClassBody \\
 \begin{zed}
 SCJProgram == Safelet \cross TopLevelMissionSequencer \cross \seq Tier \\
 \end{zed}
+
+\begin{axdef}
+ProgSafelet : SCJProgram \fun Safelet
+\where
+\forall s : SCJProgram \\
+\t1 @ ProgSafelet(s) = s.1
+\end{axdef}
+
+\begin{axdef}
+ProgTLMS : SCJProgram \fun TopLevelMissionSequencer
+\where
+\forall s : SCJProgram \\
+\t1 @ ProgTLMS(s) = s.2
+\end{axdef}
+
+\begin{axdef}
+ProgTiers: SCJProgram \fun \seq Tier
+\where
+\forall s : SCJProgram \\
+\t1 @ ProgTiers(s) = s.3
+\end{axdef}

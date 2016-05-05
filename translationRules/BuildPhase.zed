@@ -3,9 +3,27 @@
 \end{zsection}
 
 \begin{axdef}
+  TranslatableTiers : \power Tier
+\where
+ TranslatableTiers \subset Tier
+\end{axdef}
+
+
+\begin{axdef}
 TranslatablePrograms : \power SCJProgram 
 \where
 TranslatablePrograms \subset SCJProgram \\
+\forall s : SCJProgram \\
+\t1 @ s \in TranslatablePrograms \\
+\t2 \iff ProgTLMS(s) \neq NoSequencer \\
+\t2 \land ProgTiers(s) \neq \langle \rangle \\
+%This should be something  about each cluster in each tier not being empty and each cluster in each tier haveing 1 or more Sos
+\t2 \land \forall c : Cluster \\
+\t3 | \exists t : Tier ; tiers : \seq Tier \\
+\t4 @ c \in ran~t \\
+\t4 \land tiers =  ProgTiers(s) \\
+\t4 \land t \in ran~tiers \\
+\t2 @ c.2 \neq \emptyset
 \end{axdef}
 
 \begin{schema}{AppEnv}
