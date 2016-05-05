@@ -2,6 +2,12 @@
   \SECTION BuildPhase \parents scj\_prelude, SCJBNFEncoding, CircusBNFEncoding, Framework
 \end{zsection}
 
+\begin{axdef}
+TranslatablePrograms : \power SCJProgram 
+\where
+TranslatablePrograms \subset SCJProgram \\
+\end{axdef}
+
 \begin{schema}{AppEnv}
 Name : N \\
 Parameters : \seq Expression
@@ -118,8 +124,9 @@ BuildTiersAppEnv : \seq Tier \pfun  \seq TierAppEnv
 \begin{axdef}
 BuildAppProcEnv : SCJProgram \pfun AppProcEnv
 \where
-\forall scjProg : SCJProgram @ \\
-\t1 \exists safelet : Safelet ; tiers : \seq Tier ; ms : MissionSequencer \\
+\forall scjProg : dom~BuildAppProcEnv\\
+\t1 | scjProg \in TranslatablePrograms\\
+\t1 @ \exists safelet : Safelet ; tiers : \seq Tier ; ms : MissionSequencer \\
 \t2 | scjProg = (safelet, tlms(ms), tiers) @\\
 \t3 \exists sfEnv : AppEnv ; tlmsEnv : AppEnv ; \\
 \t4 tiersEnv : \seq TierAppEnv  @ \\
@@ -135,10 +142,12 @@ LockingEnv == \seq (ThreadIds \cross Priority) \cross \seq ObjectIds
 
 \begin{axdef}
 BuildLockEnv : SCJProgram \pfun LockingEnv
+\where
+\forall scjProg : dom~BuildLockEnv \\
+\t1 | scjProg \in TranslatablePrograms \\
+\t1 @ \exists lockEnv : LockingEnv \\
+\t2 @ BuildLockEnv(scjProg) = lockEnv
 \end{axdef}
-
-
-
 
 
 \begin{schema}{ClusterEnv}
@@ -269,8 +278,9 @@ BuildTierEnvs : \seq Tier \pfun \seq TierEnv
 \begin{axdef}
 BuildFWEnv : SCJProgram \pfun FWEnv
 \where
-\forall scjProg : SCJProgram @ \\
-\t1 \exists tlms : MissionSequencer ; tlmsID : Identifier ;  tlmsBody : MissionSequencerClassBody ; \\
+\forall scjProg : dom~BuildFWEnv \\
+\t1 | scjProg \in TranslatablePrograms\\
+\t1 @ \exists tlms : MissionSequencer ; tlmsID : Identifier ;  tlmsBody : MissionSequencerClassBody ; \\
 \t2 tiers : \seq Tier | \\
 \t3 scjProg.2 \neq NoSequencer \implies tlms = (tlmsID, tlmsBody) \\
 \t3 \land tiers = scjProg.3 @ \\
@@ -326,8 +336,8 @@ BuildTierMCBEnvs : \seq Tier \fun \seq BinderMethodEnv
 \begin{axdef}
 BuildMCBEnv : SCJProgram \pfun \seq BinderMethodEnv
 \where
-\forall scjProg : SCJProgram \\
-\t1 |  scjProg.2 \neq NoSequencer \\
+\forall scjProg : dom~BuildMCBEnv  \\
+\t1 |  scjProg \in TranslatablePrograms \\
 \t1 @ \exists sf : Safelet ; tlms : MissionSequencer ; tiers : \seq Tier  \\
 \t3 | sf = scjProg.1 \\
 \t3 \land tiers = scjProg.3  \\
