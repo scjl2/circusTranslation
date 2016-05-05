@@ -55,7 +55,7 @@ Mission == Identifier \cross MissionClassBody\\
 \end{zed}
 
 \begin{zed}
-Cluster == Mission \cross \seq SchedulableObject \\
+Cluster == Mission \cross \finset SchedulableObject \\
 Tier == \seq Cluster \\
 \end{zed}
 
