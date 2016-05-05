@@ -23,9 +23,12 @@ LongEventHandlerClassBody == HandleAsyncLongEvent \cross \seq ClassBodyDeclarati
 AperiodicEventHandler ::= apehType \ldata Identifier \cross EventHandlerClassBody \rdata  |\\
 \t1  aplehType \ldata Identifier \cross LongEventHandlerClassBody \rdata \\
 PeriodicEventHandler == Identifier \cross EventHandlerClassBody \\
-EventHandler ::= pehDecl \ldata PeriodicEventHandler \rdata |\\
-\t1 apehDecl \ldata AperiodicEventHandler \rdata | \\
-\t1 osehDecl \ldata OneShotEventHandler \rdata \\
+\end{zed}
+
+\begin{zed}
+EventHandler ::= pehDecl \ldata PeriodicEventHandler \rdata \\
+\t1 | apehDecl \ldata AperiodicEventHandler \rdata \\
+\t1 | osehDecl \ldata OneShotEventHandler \rdata \\
 \end{zed}
 
 \begin{zed}
@@ -39,9 +42,9 @@ NestedMissionSequencer == MissionSequencer
 \end{zed}
 
 \begin{zed}
-SchedulableObject ::= handler \ldata EventHandler \rdata | \\
-\t1 mt \ldata ManagedThread \rdata | \\
-\t1 nms \ldata NestedMissionSequencer \rdata \\
+SchedulableObject ::= handler \ldata EventHandler \rdata  \\
+\t1 | mt \ldata ManagedThread \rdata  \\
+\t1 | nms \ldata NestedMissionSequencer \rdata \\
 \end{zed}
 
 \begin{zed}
@@ -57,7 +60,7 @@ Tier == \seq Cluster \\
 \end{zed}
 
 \begin{zed}
-TopLevelMissionSequencer ::= NoSequencer | tlms \ldata MissionSequencer \rdata\\
+TopLevelMissionSequencer ::= NoSequencer | tlms \ldata MissionSequencer \rdata \\
 \end{zed}
 
 \begin{zed}
