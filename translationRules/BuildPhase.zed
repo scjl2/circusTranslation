@@ -3,13 +3,6 @@
 \end{zsection}
 
 \begin{axdef}
-  TranslatableTiers : \power Tier
-\where
- TranslatableTiers \subset Tier
-\end{axdef}
-
-
-\begin{axdef}
 TranslatablePrograms : \power SCJProgram 
 \where
 TranslatablePrograms \subset SCJProgram \\
@@ -20,9 +13,9 @@ TranslatablePrograms \subset SCJProgram \\
 %This should be something  about each cluster in each tier not being empty and each cluster in each tier haveing 1 or more Sos
 \t2 \land \forall c : Cluster \\
 \t3 | \exists t : Tier ; tiers : \seq Tier \\
-\t4 @ c \in ran~t \\
-\t4 \land tiers =  ProgTiers(s) \\
+\t4 @ tiers =  ProgTiers(s) \\
 \t4 \land t \in ran~tiers \\
+\t4 \land  c \in ran~t \\
 \t2 @ c.2 \neq \emptyset
 \end{axdef}
 
@@ -79,7 +72,7 @@ ParamsOf : \seq ClassBodyDeclaration \pfun \seq Expression
 \begin{axdef}
 BuildSOAppEnv : \finset SchedulableObject \pfun \finset AppEnv
 \where
-\forall scheds : \finset SchedulableObject \\
+\forall scheds : dom~BuildSOAppEnv\\
 \t1 | scheds \neq \emptyset \\
 \t1 @ \exists manT : ManagedThread ; nestMS : NestedMissionSequencer ; eh : EventHandler \\
 \t2 perEH : PeriodicEventHandler ; oneEH : OneShotEventHandler ; \\
@@ -101,14 +94,12 @@ BuildSOAppEnv : \finset SchedulableObject \pfun \finset AppEnv
 \t5 name = IDof(apehLong.1) \land params = ParamsOf(apehLong.2.2) \\
 \t1 @ a = \lblot Name == name , Parameters == params \rblot 
 \}
-
-
 \end{axdef}
 
 \begin{axdef}
 BuildClusterAppEnv : Cluster \pfun ClusterAppEnv
 \where
-\forall c: Cluster \\
+\forall c: dom~BuildClusterAppEnv \\
 \t1 | c.2 \neq \emptyset \\
 \t1 @ \exists m : Mission ; seqSO : \finset SchedulableObject \\
 \t2 | c = (m, seqSO)  \\
@@ -124,7 +115,7 @@ BuildClusterAppEnvs : \seq Cluster \pfun \seq ClusterAppEnv
 \begin{axdef}
 BuildTierAppEnv : Tier \pfun  TierAppEnv
 \where
-\forall tier : \seq Cluster \\
+\forall tier : dom~BuildTierAppEnv \\
 \t1 | tier \neq \langle \rangle \\
 \t1 @ BuildTierAppEnv(tier) = \lblot Clusters ==  BuildClusterAppEnvs(tier) \rblot 
 \end{axdef}
@@ -132,7 +123,7 @@ BuildTierAppEnv : Tier \pfun  TierAppEnv
 \begin{axdef}
 BuildTiersAppEnv : \seq Tier \pfun  \seq TierAppEnv
 \where
-\forall tiers : \seq Tier \\
+\forall tiers : dom~BuildTiersAppEnv \\
 \t1 | tiers \neq \langle \rangle \\
 \t1 @ \# tiers = 1 \implies BuildTiersAppEnv(tiers) = \langle BuildTierAppEnv(head~tiers) \rangle \\
 \t1 \land \# tiers \geq 1 \implies BuildTiersAppEnv(tiers) = \\
@@ -145,18 +136,25 @@ BuildAppProcEnv : SCJProgram \pfun AppProcEnv
 \forall scjProg : dom~BuildAppProcEnv\\
 \t1 | scjProg \in TranslatablePrograms\\
 \t1 @ \exists safelet : Safelet ; tiers : \seq Tier ; ms : MissionSequencer \\
-\t2 | scjProg = (safelet, tlms(ms), tiers) @\\
-\t3 \exists sfEnv : AppEnv ; tlmsEnv : AppEnv ; \\
-\t4 tiersEnv : \seq TierAppEnv  @ \\
-\t5 sfEnv = \lblot Name == IDof(safelet.1), Parameters == ParamsOf(safelet.2.4) \rblot \land \\
-\t5 tlmsEnv = \lblot Name == IDof(ms.1), Parameters == ParamsOf(ms.2.2) \rblot \land \\
-\t5 tiersEnv = BuildTiersAppEnv(tiers) \land \\
-\t5 BuildAppProcEnv(scjProg) = \lblot Safelet == sfEnv , TopLevelMS == tlmsEnv , Tiers == tiersEnv \rblot
+\t2 | scjProg = (safelet, tlms(ms), tiers) \\
+\t3 @\exists sfEnv : AppEnv ; tlmsEnv : AppEnv ; \\
+\t4 tiersEnv : \seq TierAppEnv   \\
+\t5 @ sfEnv = \lblot Name == IDof(safelet.1), \\
+\t6 Parameters == ParamsOf(safelet.2.4) \rblot  \\
+\t5 \land tlmsEnv = \lblot Name == IDof(ms.1), \\
+\t6 Parameters == ParamsOf(ms.2.2) \rblot \\
+\t5 \land tiersEnv = BuildTiersAppEnv(tiers) \\
+\t5 \land BuildAppProcEnv(scjProg) = \lblot Safelet == sfEnv , \\
+\t6 TopLevelMS == tlmsEnv , Tiers == tiersEnv \rblot
 \end{axdef}
 
-\begin{axdef}
-LockingEnv == \seq (ThreadIds \cross Priority) \cross \seq ObjectIds
-\end{axdef}
+\begin{schema}{LockingEnv}
+Threads : \seq (ThreadIds \cross Priority) \\
+Objects : \seq ObjectIds \\
+\where
+Threads \neq \langle \rangle \\
+Objects \neq \langle \rangle \\
+\end{schema}
 
 \begin{axdef}
 BuildLockEnv : SCJProgram \pfun LockingEnv
@@ -205,7 +203,7 @@ GetTierFWEnvs : FWEnv \fun \seq TierEnv
 \begin{axdef}
 GetIdentifiers : \finset SchedulableObject \pfun \finset Identifier
 \where
-\forall scheds : \finset SchedulableObject \\
+\forall scheds : dom~GetIdentifiers \\
 \t1 | scheds \neq \emptyset \\
 \t1 @ \exists manT : ManagedThread ; nestMS : NestedMissionSequencer ;\\
 \t2 perEH : PeriodicEventHandler ; oneEH : OneShotEventHandler ; \\
@@ -215,13 +213,13 @@ GetIdentifiers : \finset SchedulableObject \pfun \finset Identifier
 \t3 @ GetIdentifiers(scheds) = \{ i : Identifier \\
 \t4 | \forall s : scheds \\
 \t4 | scheds \neq \emptyset \\
-\t5 @ s = mt(manT) \implies i = manT.1 \\
-\t5 \land s  = nms(nestMS) \implies i = nestMS.1 \\
-\t5 \land s = handler(pehDecl(perEH))  \implies i = perEH.1 \\
-\t5 \land s = handler(apehDecl(apehType(apehShort)))  \implies i = apehShort.1 \\
-\t5 \land s = handler(apehDecl(aplehType(apehLong)))  \implies i = apehLong.1 \\
-\t5 \land s = handler(osehDecl(oneEH))   \implies i = oneEH.1 \\
- \}
+\t4 @ s = mt(manT) \implies i = manT.1 \\
+\t4 \land s  = nms(nestMS) \implies i = nestMS.1 \\
+\t4 \land s = handler(pehDecl(perEH))  \implies i = perEH.1 \\
+\t4 \land s = handler(apehDecl(apehType(apehShort)))  \implies i = apehShort.1 \\
+\t4 \land s = handler(apehDecl(aplehType(apehLong)))  \implies i = apehLong.1 \\
+\t4 \land s = handler(osehDecl(oneEH))   \implies i = oneEH.1 \\
+\t3 \}
 
 \end{axdef}
 
@@ -230,7 +228,7 @@ BuildSOEnvs : \finset SchedulableObject \pfun \\
 \t1 \finset Identifier \cross \finset Identifier \cross \finset Identifier \cross \\
 \t1 \finset Identifier \cross \finset Identifier
 \where
-\forall s : \finset SchedulableObject \\
+\forall s : dom~BuildSOEnvs \\
 \t1 | s \neq \emptyset \\
 \t1 @ \exists sms : \finset Identifier ; pehs : \finset Identifier; \\
 \t3 apehs : \finset Identifier; osehs : \finset Identifier; mts: \finset Identifier \\
@@ -258,7 +256,7 @@ BuildSOEnvs : \finset SchedulableObject \pfun \\
 \begin{axdef}
 BuildClusterEnv : Cluster \pfun ClusterEnv \\
 \where
-\forall c : Cluster \\
+\forall c : dom~BuildClusterEnv \\
 \t1 | c.2 \neq \emptyset \\
 \t1 @ \exists missionName : Identifier ; sms : \finset Identifier ; pehs : \finset Identifier; \\
 \t2 apehs : \finset Identifier; oseh :\finset Identifier; mts: \finset Identifier; cluster : ClusterEnv \\
@@ -271,9 +269,8 @@ BuildClusterEnv : Cluster \pfun ClusterEnv \\
 \begin{axdef}
 BuildClusterEnvs : \seq Cluster \pfun \seq ClusterEnv
 \where
-dom~BuildClusterEnvs = \{ s : \seq Cluster | s \neq \langle \rangle  \} \\
-\forall c : \seq Cluster \\
-\t1 | c \neq \langle \rangle \\
+\forall c : dom~BuildClusterEnvs \\
+\t1 | c \neq \langle \rangle \land \forall s : \seq Cluster @ s \neq \langle \rangle \\
 \t1 @ \# c = 1 \implies BuildClusterEnvs(c) = \langle BuildClusterEnv(head~c) \rangle \\
 \t1 \land \# c \geq 1 \implies BuildClusterEnvs(c) = \langle BuildClusterEnv(head~c) \rangle \cat BuildClusterEnvs(tail~c)
 \end{axdef}
@@ -284,7 +281,6 @@ dom~BuildClusterEnvs = \{ s : \seq Cluster | s \neq \langle \rangle  \} \\
   \forall tier : \seq Cluster \\
   \t1 @ BuildTierEnv(tier) = \lblot Clusters ==  BuildClusterEnvs(tier) \rblot 
 \end{axdef}
-
 
 \begin{axdef}
 BuildTierEnvs : \seq Tier \pfun \seq TierEnv
@@ -306,14 +302,24 @@ BuildFWEnv : SCJProgram \pfun FWEnv
 
 \end{axdef}
 
-\begin{axdef}
-%               MethodNme , Locs , Callers, ReturnType , Params , Synchrinised , LocParam , LocType , CallerType
-BinderMethodEnv == N \cross \finset N \cross \finset N \cross Type \cross \seq Type \cross \bool \cross N \cross Type \cross Type
-\end{axdef}
+\begin{schema}{BinderMethodEnv}
+%                ,  , ,  ,  ,  ,  ,  , 
+MethodName: N \\
+Locs: \finset N \\
+Callers: \finset N \\
+ReturnType: Type \\
+Params : \seq Type \\
+Synchrinised : \bool \\
+LocParam : N \\
+LocType : Type \\
+CallerType :  Type\\
+\end{schema}
 
-\begin{axdef}
-MCBEnv == \seq BinderMethodEnv
-\end{axdef}
+\begin{schema}{MCBEnv}
+BinderMethods : \seq BinderMethodEnv
+\where
+BinderMethods \neq \langle \rangle
+\end{schema}
 
 \begin{axdef}
 GetSFMethods : Safelet \fun \seq ClassBodyDeclaration
@@ -336,10 +342,8 @@ BuildBME : N \cross N \cross MethodDeclaration \fun BinderMethodEnv
 \begin{axdef}
 BuildSFMCBEnv : \seq ClassBodyDeclaration \fun \seq BinderMethodEnv
 \where
-dom~BuildSFMCBEnv = \{ b: \seq ClassBodyDeclaration | b \neq \langle \rangle \} \\
-
-\forall body : \seq ClassBodyDeclaration \\
-\t1 | body \neq \langle \rangle \\
+\forall body : dom~BuildSFMCBEnv \\
+\t1 | body \neq \langle \rangle \land \forall b: \seq ClassBodyDeclaration @ b \neq \langle \rangle \\
 \t1 @ BuildSFMCBEnv(body) = \langle \rangle
 \end{axdef}
 
