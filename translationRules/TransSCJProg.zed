@@ -32,8 +32,8 @@ TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \t1 | (name, scjProg) \in dom~TransSCJProg @\\
 \t1 \exists app : CircusProgram ; program : CircusProgram ; \\
 \t2 \t2 fwProcs : \seq Process ; appProc : Process ; lockModel : \seq CircusParagraph; \\
-\t2 mcbModel : \seq CircusParagraph ;\\
-\t2 fwEnv : FWEnv ; appEnv : AppProcEnv ; mcbEnv : MCBEnv ; lockEnv : LockingEnv | \\
+\t2 mcbModel : \seq CircusParagraph ;  fwEnv : FWEnv ;\\
+\t2 appEnv : AppProcEnv ; mcbEnv : MCBEnv ; lockEnv : LockingEnv | \\
 \t3 fwEnv = BuildFWEnv(scjProg) \\
 \t3 appEnv = BuildAppProcEnv(scjProg) \\
 \t3 mcbEnv = BuildMCBEnv(scjProg) \\
