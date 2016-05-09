@@ -23,10 +23,9 @@ public class ProgramEnv
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private List<MethodEnv> binderMethodEnvs;
-<<<<<<< HEAD
-=======
+
 	private List<MethodEnv> globalMethods;
->>>>>>> RULES
+
 
 	private IdEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
@@ -38,10 +37,9 @@ public class ProgramEnv
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
 		this.binderMethodEnvs = new ArrayList<MethodEnv>();
-<<<<<<< HEAD
-=======
+
 		globalMethods = new ArrayList<MethodEnv>();
->>>>>>> RULES
+
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
@@ -479,8 +477,7 @@ public class ProgramEnv
 		binderMethodEnvs.add(method);
 
 	}
-<<<<<<< HEAD
-=======
+
 
 	public List<MethodEnv> getCustomChannels()
 	{
@@ -532,5 +529,5 @@ public class ProgramEnv
 //	}
 
 	
->>>>>>> RULES
+
 }

@@ -124,21 +124,14 @@ public class MethodVisitor
 		getModifiers(mt, m);
 		assert(idType != null && (!idType.equals("")));
 		m.setLocationType(idType);
-<<<<<<< HEAD
-		
-		
-		assert(m.getLocationType() != null);
-//		assert(m.getLocationType().equals(idType));
 
-=======
 
 		assert (m.getLocationType() != null);
 		// assert(m.getLocationType().equals(idType));
 		m.setMethodLocation(object);
 			
 		TightRope.getProgramEnv().addGlobalMethod(m);
-		
->>>>>>> RULES
+
 		return m;
 	}
 
