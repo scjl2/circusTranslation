@@ -4,7 +4,7 @@
  *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.PriorityParameters;
 import javax.safetycritical.Mission;
@@ -29,7 +29,7 @@ public class MainMissionSequencer extends MissionSequencer<Mission>
 	public MainMissionSequencer(PriorityParameters priority,
 			StorageParameters storage)
 	{
-		super(priority, storage);
+		super(priority, storage, null);
 		returnedMission = false;
 	}
 

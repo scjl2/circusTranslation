@@ -36,7 +36,9 @@ import javax.lang.model.util.Elements;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
@@ -104,6 +106,10 @@ public class EnvironmentBuilder
 	private ProgramEnv programEnv;
 
 	private String packagePrefix;
+	
+	Map<String, List<String>> classTypeMap;
+	
+	Map<String, List<String>> methodLocationMap;
 
 	public EnvironmentBuilder(SCJAnalysis analysis)
 	{
@@ -115,6 +121,8 @@ public class EnvironmentBuilder
 		type_elements = analysis.getTypeElements();
 		elems = analysis.ELEMENTS;
 		deferredParamsList = new ArrayList<DeferredParamter>();
+		classTypeMap = new HashMap<String, List<String>>();
+		methodLocationMap = new HashMap<String, List<String>>();
 
 	}
 
@@ -179,6 +187,8 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println("+++ Building Environments +++");
 		System.out.println();
+		
+		preprocess();
 
 		TypeElement safeletType = findSafelet();
 		ArrayList<Name> topLevelMissionSequners = buildSafelet(safeletType);
@@ -192,6 +202,116 @@ public class EnvironmentBuilder
 		findParameters();
 
 		return programEnv;
+	}
+
+	private void preprocess()
+	{
+		buildClassTypeMap();	
+		
+		buildMethodLocationMap();
+		
+		System.out.println("*** Pre Processing***");
+		System.out.println(classTypeMap.toString());
+		System.out.println();
+		System.out.println(methodLocationMap.toString());
+	}
+
+	private void buildMethodLocationMap()
+	{		
+		for (TypeElement elem : type_elements)
+		{
+			String className = elem.getSimpleName().toString();
+			ClassTree ct = analysis.TREES.getTree(elem);
+			
+			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+			Iterator<StatementTree> i = members.iterator();
+			
+			while (i.hasNext())
+			{
+				Object obj = i.next();
+
+				if (obj instanceof MethodTree)
+				{
+					MethodTree mt = (MethodTree) obj;
+
+					String methodName = mt.getName().toString();
+					
+					if(! methodLocationMap.containsKey(methodName))
+					{
+						List<String> locations = new ArrayList<String>();
+						locations.add(className);
+						methodLocationMap.put(methodName, locations);
+					}
+					else
+					{
+						List<String> currentLocations = methodLocationMap.get(methodName);
+						
+						List<String> classSuperTypes = classTypeMap.get(className);
+						
+						boolean sameMethod = false;
+						
+						for(String s : currentLocations)
+						{
+							List<String> otherClassSuperTypes =  classTypeMap.get(s);
+							
+							if(classSuperTypes.equals(otherClassSuperTypes))
+							{
+								sameMethod = true;
+							}
+						}
+						
+						if(sameMethod)
+						{
+							currentLocations.add(className);
+							
+							methodLocationMap.put(methodName, currentLocations);
+						}
+						else
+						{
+							methodLocationMap.remove(methodName);
+							
+							String mangledMethName = className.concat(methodName);							
+							
+							List<String> locations = new ArrayList<String>();
+							locations.add(className);
+							
+							methodLocationMap.put( mangledMethName, locations);
+							
+							//Because there should only be one here
+							assert(currentLocations.size() == 1);
+							String otherClassName =currentLocations.get(0);
+							methodLocationMap.put(otherClassName.concat(methodName), currentLocations);
+							
+							
+						}
+					}
+				}
+			}
+		}
+		
+	}
+
+	/**
+	 * Builds a map of Class names to their super types. For use in MCB generation
+	 */
+	private void buildClassTypeMap()
+	{		
+		for (TypeElement elem : type_elements)
+		{
+			String superClass = elem.getSuperclass().toString();
+			List<String> superInterfaces = new ArrayList<String>();
+			
+			for (TypeMirror tm : elem.getInterfaces())
+			{
+				superInterfaces.add(tm.toString());
+			}
+			
+			List<String> superTypes = new ArrayList<String>();
+			superTypes.addAll(superInterfaces);
+			superTypes.add(superClass);
+			
+			classTypeMap.put(elem.getSimpleName().toString(), superTypes);
+		}
 	}
 
 	private TypeElement findSafelet()

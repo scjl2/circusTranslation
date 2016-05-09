@@ -2,7 +2,8 @@
   \SECTION ~ TakeOffMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, TakeOffMissionMethChan \\
  , TakeOffMissionClass, MethodCallBindingChannels 
- 
+ , ObjectFWChan, ObjectIds
+
 \end{zsection}
 
 

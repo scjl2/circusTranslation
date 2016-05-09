@@ -1,7 +1,7 @@
 \begin{zsection}
   \SECTION ~ LandingGearHandlerTakeOffApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
- \t1  , 
+ \t1  ,
 TakeOffMissionMethChan
 , 
 
@@ -9,6 +9,7 @@ ObjectIds
 , 
 
 ThreadIds
+
 
 
 
@@ -29,7 +30,7 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~LandingGearHandlerTakeOffSID \then \\
 	
       \circblockopen
-            binder\_isLandingGearDeployedCall~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ binder\_isLandingGearDeployedRet~.~mission~.~LandingGearHandlerTakeOffSID~?~isLandingGearDeployed\then  \\ \Skip\circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed
+            binder\_isLandingGearDeployedCall~.~mission~.~LandingGearHandlerTakeOffSID\then \\binder\_isLandingGearDeployedRet~.~mission~.~LandingGearHandlerTakeOffSID~?~isLandingGearDeployed\then \\\Skip\circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed
              \circseq \\ 
 
 
@@ -38,7 +39,7 @@ handleAsyncEvent \circdef \\
   \\
 \t1 
       \circblockopen
-            binder\_stowLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ binder\_stowLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID\then  \\ \Skip
+            binder\_stowLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID\then \\binder\_stowLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID\then \\\Skip
 
             
 
@@ -53,7 +54,7 @@ handleAsyncEvent \circdef \\
   \\
 \t1 
       \circblockopen
-            binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then  \\ binder\_deployLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then  \\ \Skip
+            binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then \\binder\_deployLandingGearRet~.~mission~.~LandingGearHandlerTakeOffSID~.~LandingGearHandlerTakeOffTID\then \\\Skip
 
             
 

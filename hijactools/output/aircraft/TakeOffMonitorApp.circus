@@ -1,8 +1,9 @@
 \begin{zsection}
   \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
- \t1  , 
+ \t1  ,
 MainMissionMethChan
+
 
 
 
@@ -29,7 +30,7 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~TakeOffMonitorSID \then \\
 	
       \circblockopen
-            binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then  \\ binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then  \\ \Skip\circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
+            binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then \\\Skip\circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
              \circseq \\ 
 
 

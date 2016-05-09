@@ -4,7 +4,7 @@
  * 
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.safetycritical.LaunchLevel2;
 

@@ -8,7 +8,7 @@
  *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.AperiodicParameters;
 import javax.realtime.PriorityParameters;
@@ -42,7 +42,7 @@ public class SafeLandingHandler extends AperiodicEventHandler
 			AperiodicParameters release, StorageParameters storage,
 			String name, MainMission mainMission, Double threshold)
 	{
-		super(priority, release, storage, name);
+		super(priority, release, storage, null);
 		this.mainMission = mainMission;
 		this.threshold = threshold;
 	}

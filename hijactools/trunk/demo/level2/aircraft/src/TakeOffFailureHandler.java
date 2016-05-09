@@ -7,7 +7,7 @@
  *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.AperiodicParameters;
 import javax.realtime.PriorityParameters;
@@ -42,7 +42,7 @@ public class TakeOffFailureHandler extends AperiodicEventHandler
 			AperiodicParameters release, StorageParameters storage,
 			String name, MainMission mainMission, TakeOffMission takeoffMission, Double threshold)
 	{
-		super(priority, release, storage, name);
+		super(priority, release, storage, null);
 		this.takeoffMission = takeoffMission;
 		this.mainMission = mainMission;
 		this.threshold = threshold;

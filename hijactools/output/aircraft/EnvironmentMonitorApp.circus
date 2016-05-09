@@ -2,6 +2,7 @@
   \SECTION ~ EnvironmentMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
  \t1  
+
 \end{zsection}
 
 \begin{circus}

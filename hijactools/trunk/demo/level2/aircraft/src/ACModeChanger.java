@@ -5,15 +5,12 @@
  *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.PriorityParameters;
 import javax.safetycritical.MissionSequencer;
 import javax.safetycritical.StorageParameters;
 import javax.safetycritical.Mission;
-
-import scjlevel2examples.modechange.Mode;
-import scjlevel2examples.modechange.ModeChanger;
 
 import devices.Console;
 
@@ -25,7 +22,7 @@ public class ACModeChanger extends MissionSequencer<Mission>
 	public ACModeChanger(PriorityParameters priority,
 			StorageParameters storage, MainMission controllingMission)
 	{
-		super(priority, storage);
+		super(priority, storage, null);
 		this.controllingMission = controllingMission;
 	}
 
@@ -49,7 +46,7 @@ public class ACModeChanger extends MissionSequencer<Mission>
 	 */
 	public ACModeChanger(PriorityParameters priority, StorageParameters storage)
 	{
-		super(priority, storage);
+		super(priority, storage, null);
 	//	launchMode = (Mode) new TakeOffMission(controllingMission);
 	//	cruiseMode = (Mode) new CruiseMission(controllingMission);
 	//	landMode = (Mode) new LandMission(controllingMission);

@@ -4,7 +4,7 @@
  *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.AperiodicParameters;
 import javax.realtime.PeriodicParameters;
@@ -41,7 +41,6 @@ public class LandMission extends Mission //implements LandingGearUser
 
 		StorageParameters storageParametersSchedulable = new StorageParameters(
 				Const.PRIVATE_MEM_DEFAULT - 30 * 1000,
-				new long[] { Const.HANDLER_STACK_SIZE },
 				Const.PRIVATE_MEM_DEFAULT - 30 * 1000,
 				Const.IMMORTAL_MEM_DEFAULT - 50 * 1000,
 				Const.MISSION_MEM_DEFAULT - 100 * 1000);

@@ -1,8 +1,9 @@
 \begin{zsection}
   \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
- \t1  , 
+ \t1  ,
 MainMissionMethChan
+
 
 
 
@@ -27,7 +28,7 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~TakeOffFailureHandlerSID \then \\
 	
       \circblockopen
-            binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then  \\ binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then  \\ \Skip\circvar currentSpeed : \power \arithmos \circspot currentSpeed :=~getAirSpeed
+            binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then \\binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then \\\Skip\circvar currentSpeed : \power \arithmos \circspot currentSpeed :=~getAirSpeed
              \circseq \\ 
 
 

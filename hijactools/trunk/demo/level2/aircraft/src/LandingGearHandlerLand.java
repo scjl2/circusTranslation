@@ -6,7 +6,7 @@
  *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.AperiodicParameters;
 import javax.realtime.PriorityParameters;
@@ -39,7 +39,7 @@ public class LandingGearHandlerLand extends AperiodicEventHandler
  			AperiodicParameters release, StorageParameters storage,
  			String name, LandMission mission)
  	{
- 		super(priority, release, storage, name);
+ 		super(priority, release, storage, null);
 
  		this.mission = mission;
  	}

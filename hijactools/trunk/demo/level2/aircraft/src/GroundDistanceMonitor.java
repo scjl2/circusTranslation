@@ -4,7 +4,7 @@
  *
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.PeriodicParameters;
 import javax.realtime.PriorityParameters;
@@ -39,7 +39,7 @@ public class GroundDistanceMonitor extends PeriodicEventHandler
 			PeriodicParameters periodic, StorageParameters storage,
 			MainMission mainMission)
 	{
-		super(priority, periodic, storage);
+		super(priority, periodic, storage, null);
 
 		this.mainMission = mainMission;
 		this.readingOnGround = mainMission.ALTITUDE_READING_ON_GROUND;

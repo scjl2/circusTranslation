@@ -4,7 +4,7 @@
 
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.AperiodicParameters;
 import javax.realtime.PriorityParameters;
@@ -28,7 +28,7 @@ public class ControlHandler extends AperiodicEventHandler
 	public ControlHandler(PriorityParameters priority,
 			AperiodicParameters release, StorageParameters storage, String name)
 	{
-		super(priority, release, storage, name);
+		super(priority, release, storage, null);
 	}
 
 	/**

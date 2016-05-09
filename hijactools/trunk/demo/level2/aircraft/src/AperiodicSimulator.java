@@ -5,7 +5,7 @@
  * 
  * @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.*;
 import javax.safetycritical.AperiodicEventHandler;
@@ -35,7 +35,7 @@ public class AperiodicSimulator extends PeriodicEventHandler
 			PeriodicParameters periodic, StorageParameters storage,
 			AperiodicEventHandler aperiodicEvent)
 	{
-		super(priority, periodic, storage);
+		super(priority, periodic, storage, null);
 		event = aperiodicEvent;
 	}
 

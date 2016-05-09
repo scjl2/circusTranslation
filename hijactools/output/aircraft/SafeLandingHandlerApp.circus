@@ -1,8 +1,9 @@
 \begin{zsection}
   \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
- \t1  , 
+ \t1  ,
 MainMissionMethChan
+
 
 
 
@@ -25,7 +26,7 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~SafeLandingHandlerSID \then \\
 	
       \circblockopen
-            binder\_getAltitudeCall~.~mainMission~.~SafeLandingHandlerSID\then  \\ binder\_getAltitudeRet~.~mainMission~.~SafeLandingHandlerSID~?~getAltitude\then  \\ \Skip\circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
+            binder\_getAltitudeCall~.~mainMission~.~SafeLandingHandlerSID\then \\binder\_getAltitudeRet~.~mainMission~.~SafeLandingHandlerSID~?~getAltitude\then \\\Skip\circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
              \circseq \\ 
 
 

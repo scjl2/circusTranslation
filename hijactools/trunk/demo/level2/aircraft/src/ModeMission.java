@@ -1,4 +1,4 @@
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.safetycritical.Mission;
 

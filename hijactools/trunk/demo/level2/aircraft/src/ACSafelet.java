@@ -4,7 +4,7 @@
  * 
  *   @author Matt Luckcuck <ml881@york.ac.uk>
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 import javax.realtime.PriorityParameters;
 import javax.safetycritical.Mission;
@@ -19,7 +19,6 @@ public class ACSafelet implements Safelet<Mission>
 	public MissionSequencer<Mission> getSequencer()
 	{
 		StorageParameters storageParameters = new StorageParameters(150 * 1000,
-				new long[] { Const.HANDLER_STACK_SIZE },
 				Const.PRIVATE_MEM_DEFAULT - 25 * 1000,
 				Const.IMMORTAL_MEM_DEFAULT - 50 * 1000,
 				Const.MISSION_MEM_DEFAULT - 100 * 1000);

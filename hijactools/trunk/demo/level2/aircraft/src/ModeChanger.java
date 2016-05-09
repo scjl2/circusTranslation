@@ -1,4 +1,4 @@
-package scjlevel2examples.modechange;
+package aircraft;
 
 
 //This marker interface shows that a particular class is a ModeChanger and says it must implement the changeTo method

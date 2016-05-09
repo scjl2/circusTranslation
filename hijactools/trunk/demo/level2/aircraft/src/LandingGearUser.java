@@ -2,7 +2,7 @@
  *  
  * 	Marker interface for missions that use the LandingGearHandler 
  */
-package scjlevel2examples.aircraft;
+package aircraft;
 
 public interface LandingGearUser
 {
