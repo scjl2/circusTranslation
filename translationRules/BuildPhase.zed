@@ -27,10 +27,13 @@ Parameters : \seq Expression
 \begin{schema}{ClusterAppEnv}
 Mission : AppEnv \\
 Schedulables : \finset AppEnv
+\where
+Schedulables \neq \emptyset
 \end{schema}
 
 \begin{schema}{TierAppEnv}
 Clusters : \seq ClusterAppEnv
+\where Clusters \neq \langle \rangle
 \end{schema}
 
 
@@ -38,6 +41,8 @@ Clusters : \seq ClusterAppEnv
 Safelet : AppEnv \\
 TopLevelMS : AppEnv \\
 Tiers:  \seq TierAppEnv\\
+\where 
+Tiers \neq \langle \rangle
 \end{schema}
 
 \begin{axdef}
@@ -92,7 +97,7 @@ BuildSOAppEnv : \finset SchedulableObject \pfun \finset AppEnv
 \t5 name = IDof(apehShort.1) \land params = ParamsOf(apehShort.2.2) \\
 \t4 \land so = handler(apehDecl(aplehType(apehLong)))\implies \\
 \t5 name = IDof(apehLong.1) \land params = ParamsOf(apehLong.2.2) \\
-\t1 @ a = \lblot Name == name , Parameters == params \rblot 
+\t2 @ a = \lblot Name == name , Parameters == params \rblot 
 \}
 \end{axdef}
 
@@ -104,7 +109,8 @@ BuildClusterAppEnv : Cluster \pfun ClusterAppEnv
 \t1 @ \exists m : Mission ; seqSO : \finset SchedulableObject \\
 \t2 | c = (m, seqSO)  \\
 \t2 @ BuildClusterAppEnv(c) = \\
-\t3 \lblot Mission == \lblot Name == IDof(m.1), Parameters == ParamsOf(m.2.3)\rblot , Schedulables == BuildSOAppEnv(seqSO) \rblot
+\t3 \lblot Mission == \lblot Name == IDof(m.1), Parameters == ParamsOf(m.2.3)\rblot ,\\
+\t4  Schedulables == BuildSOAppEnv(seqSO) \rblot
 \end{axdef}
 
 \begin{axdef}
@@ -176,7 +182,7 @@ OneShotEventHandlers :  \finset Identifier\\
 \where
 disjoint \langle NestedMissionSequencers, ManagedThreads, PeriodicEventHandlers, \\
 \t1 AperiodicEventHandlers, OneShotEventHandlers \rangle \\
-\land \bigcup \{NestedMissionSequencers, ManagedThreads, PeriodicEventHandlers, \\
+\t1 \bigcup \{NestedMissionSequencers, ManagedThreads, PeriodicEventHandlers, \\
 \t1 AperiodicEventHandlers, OneShotEventHandlers \} \neq \emptyset
 \end{schema}
 
@@ -262,7 +268,8 @@ BuildClusterEnv : Cluster \pfun ClusterEnv \\
 \t2 apehs : \finset Identifier; oseh :\finset Identifier; mts: \finset Identifier; cluster : ClusterEnv \\
 \t1 | missionName = c.1.1  \\
 \t1 \land (sms, pehs, apehs, oseh, mts) = BuildSOEnvs(c.2) \\
-\t1 @ BuildClusterEnv(c) =  \lblot Mission == missionName, NestedMissionSequencers == sms,  PeriodicEventHandlers == pehs, \\
+\t1 @ BuildClusterEnv(c) =  \\
+\t2 \lblot Mission == missionName, NestedMissionSequencers == sms,  PeriodicEventHandlers == pehs, \\
 \t2 AperiodicEventHandlers == apehs, OneShotEventHandlers == oseh, ManagedThreads == mts \rblot
 \end{axdef}
 
@@ -298,7 +305,8 @@ BuildFWEnv : SCJProgram \pfun FWEnv
 \t2 tiers : \seq Tier | \\
 \t3 scjProg.2 \neq NoSequencer \implies tlms = (tlmsID, tlmsBody) \\
 \t3 \land tiers = scjProg.3 @ \\
-\t3 BuildFWEnv(scjProg) = \lblot TopLevelMS == tlms.1, Tiers == BuildTierEnvs(tiers) \rblot 
+\t3 BuildFWEnv(scjProg) = \\ 
+\t4 \lblot TopLevelMS == tlms.1, Tiers == BuildTierEnvs(tiers) \rblot 
 
 \end{axdef}
 
