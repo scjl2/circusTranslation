@@ -38,12 +38,14 @@ TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \t3 appEnv = BuildAppProcEnv(scjProg) \\
 \t3 mcbEnv = BuildMCBEnv(scjProg) \\
 \t3 lockEnv = BuildLockEnv(scjProg) \\
-\t3 app = TransClasses(scjProg) \land \\
-\t3 fwProcs = GenerateFWProcs(fwEnv) \land \\
-\t3 appProc = GenerateAppProc(appEnv) \land \\
-\t3 mcbModel = GenerateMCBModel(mcbEnv) \land \\
-\t3 lockModel = GenerateLockModel(lockEnv) \land \\
-\t3 program =  \langle procDef(pd(ProgName(name), \\
+\t3 app = TransClasses(scjProg) \\
+\t3 \land fwProcs = GenerateFWProcs(fwEnv)  \\
+\t3 \land appProc = GenerateAppProc(appEnv)  \\
+\t3 \land mcbEnv.BinderMethods \neq \langle \rangle \implies mcbModel = GenerateMCBModel(mcbEnv) \\
+\t3 \land mcbEnv.BinderMethods = \langle \rangle \implies mcbModel = \langle \rangle \\
+\t3 \land lockEnv.Empty = \false \implies lockModel = GenerateLockModel(lockEnv)\\
+\t3 \land lockEnv.Empty = \true \implies lockModel = \langle \rangle\\
+\t3  \land program =  \langle procDef(pd(ProgName(name), \\
 \t3 procHide( procPar( \\
 \t4 procHide( \\
 \t5 procPar(\\

@@ -364,9 +364,9 @@ BuildMCBEnv : SCJProgram \pfun MCBEnv
 \begin{schema}{LockingEnv}
 Threads : \seq (ThreadIds \cross Priority) \\
 Objects : \seq ObjectIds \\
+Empty : \boolean
 \where
-Threads \neq \langle \rangle \\
-Objects \neq \langle \rangle \\
+Empty = \true \iff Threads \neq \langle \rangle \land Objects \neq \langle \rangle
 \end{schema}
 
 \begin{axdef}
