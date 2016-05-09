@@ -356,7 +356,7 @@ BuildTierMCBEnvs : \seq Tier \fun \seq BinderMethodEnv
 \end{axdef}
 
 \begin{axdef}
-BuildMCBEnv : SCJProgram \pfun \seq BinderMethodEnv
+BuildMCBEnv : SCJProgram \pfun MCBEnv
 \where
 \forall scjProg : dom~BuildMCBEnv  \\
 \t1 |  scjProg \in TranslatablePrograms \\
@@ -364,7 +364,7 @@ BuildMCBEnv : SCJProgram \pfun \seq BinderMethodEnv
 \t3 | sf = scjProg.1 \\
 \t3 \land tiers = scjProg.3  \\
 \t3 @ BuildMCBEnv(scjProg) = \\
-\t4 BuildSFMCBEnv(GetSFMethods(sf)) \\
+\t4 \lblot BinderMethods == BuildSFMCBEnv(GetSFMethods(sf)) \\
 \t4 \cat BuildTLMSMCBEnv(GetTLMSMethods(tlms))  \\
-\t4 \cat BuildTierMCBEnvs(tiers)
+\t4 \cat BuildTierMCBEnvs(tiers) \rblot
 \end{axdef}

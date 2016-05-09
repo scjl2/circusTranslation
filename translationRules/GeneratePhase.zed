@@ -261,12 +261,11 @@ GenerateMCBProc : \seq BinderMethodEnv \pfun CircusParagraph
 \end{axdef}
 
 \begin{axdef}
-GenerateMCBModel : \seq BinderMethodEnv \pfun \seq CircusParagraph
+GenerateMCBModel : MCBEnv \pfun \seq CircusParagraph
 \where
-\forall bEnvs : \seq BinderMethodEnv \\
-\t1 | bEnvs \neq \langle \rangle \\
-\t1 @ GenerateMCBModel(bEnvs) =   GenerateMCBChans(bEnvs) \cat \\
-\t2 \langle GenerateMethodCallBinderSync(bEnvs), GenerateMCBProc(bEnvs) \rangle 
+\forall bEnv : MCBEnv \\
+\t1 @ GenerateMCBModel(bEnv) =   GenerateMCBChans(bEnv.BinderMethods) \cat \\
+\t2 \langle GenerateMethodCallBinderSync(bEnv.BinderMethods), GenerateMCBProc(bEnv.BinderMethods) \rangle 
 \end{axdef}
 
 \begin{axdef}

@@ -1,5 +1,6 @@
 \begin{zsection}
-  \SECTION TransSCJProg \parents scj\_prelude, SCJBNFEncoding, CircusBNFEncoding, BuildPhase, GeneratePhase, Framework
+  \SECTION TransSCJProg \parents scj\_prelude, SCJBNFEncoding, CircusBNFEncoding, \\
+  \t1 BuildPhase, GeneratePhase, Framework
 \end{zsection}
 
 \begin{axdef}
@@ -27,16 +28,21 @@ lockComms: CSExpression
 \begin{axdef}
 TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \where
-\forall scjProg : SCJProgram; name : Identifier @\\
-\t1 \exists app : CircusProgram ;  \\
-\t2 program : CircusProgram ; \\
-\t2 fwProcs : \seq Process ; appProc : Process ; lockModel : \seq CircusParagraph; \\
-\t2 mcbModel : \seq CircusParagraph | \\
+\forall name : Identifier; scjProg : SCJProgram \\
+\t1 | (name, scjProg) \in dom~TransSCJProg @\\
+\t1 \exists app : CircusProgram ; program : CircusProgram ; \\
+\t2 \t2 fwProcs : \seq Process ; appProc : Process ; lockModel : \seq CircusParagraph; \\
+\t2 mcbModel : \seq CircusParagraph ;\\
+\t2 fwEnv : FWEnv ; appEnv : AppProcEnv ; mcbEnv : MCBEnv ; lockEnv : LockingEnv | \\
+\t3 fwEnv = BuildFWEnv(scjProg) \\
+\t3 appEnv = BuildAppProcEnv(scjProg) \\
+\t3 mcbEnv = BuildMCBEnv(scjProg) \\
+\t3 lockEnv = BuildLockEnv(scjProg) \\
 \t3 app = TransClasses(scjProg) \land \\
-\t3 fwProcs = GenerateFWProcs(BuildFWEnv(scjProg)) \land \\
-\t3 appProc = GenerateAppProc(BuildAppProcEnv(scjProg)) \land \\
-\t3 mcbModel = GenerateMCBModel(BuildMCBEnv(scjProg)) \land \\
-\t3 lockModel = GenerateLockModel(BuildLockEnv(scjProg)) \land \\
+\t3 fwProcs = GenerateFWProcs(fwEnv) \land \\
+\t3 appProc = GenerateAppProc(appEnv) \land \\
+\t3 mcbModel = GenerateMCBModel(mcbEnv) \land \\
+\t3 lockModel = GenerateLockModel(lockEnv) \land \\
 \t3 program =  \langle procDef(pd(ProgName(name), \\
 \t3 procHide( procPar( \\
 \t4 procHide( \\
@@ -52,7 +58,8 @@ TransSCJProg : Identifier \cross SCJProgram \pfun CircusProgram
 \t4 lockComms, \\
 \t4 procName(LockName)), \\
 \t3 lockComms) )) \rangle  @ \\
-\t3 TransSCJProg(name, scjProg) =\\
+%\t3 fwEnv = \langle \rangle \lor appEnv = \langle \rangle \implies TransSCJProg(name, scjProg) = \langle \rangle
+\t3 TransSCJProg(name, scjProg) = \\
 \t4 framework \cat \langle procDef(pd(FWName,head~fwProcs)) \rangle \cat \\
 \t5 app \cat \langle procDef(pd(AppName,appProc))\rangle \cat\\
 \t5 mcbModel \cat\\
