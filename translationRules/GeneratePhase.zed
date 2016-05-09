@@ -49,7 +49,7 @@ GenerateClusterFWProcs : \seq ClusterEnv \pfun Process
 \t5 procName( GetMissionID(head~clusters) ), \\
 \t5 MissionSync, \\
 \t5 GenerateTiersFWProc( head~clusters ) ),\\
-\t4 SchedulablesSync,
+\t4 SchedulablesSync, \\
 \t4 GenerateClusterFWProcs(tail~clusters) \\
 \t3 )
 \end{axdef}
@@ -59,7 +59,8 @@ GenerateTierFWProcs : \seq TierEnv \pfun \seq Process
 \where
 \forall tiers : \seq TierEnv \\
 \t1 | tiers \neq \langle \rangle \\
-\t1 @ \# tiers = 1 \implies  GenerateTierFWProcs(tiers) = \langle GenerateClusterFWProcs( (head~tiers).Clusters) \rangle \\
+\t1 @ \# tiers = 1 \implies  \\
+\t2 GenerateTierFWProcs(tiers) = \langle GenerateClusterFWProcs( (head~tiers).Clusters) \rangle \\
 \t1 \land \# tiers \geq 1 \implies  \\
 \t2 GenerateTierFWProcs(tiers) = \\
 \t3 \langle GenerateClusterFWProcs( (head~tiers).Clusters) \rangle \\
@@ -85,9 +86,16 @@ GenerateFWProcs :  FWEnv \pfun \seq Process
 \forall env : FWEnv \\
 \t1 | env.Tiers \neq \langle \rangle \\
 \t1 @ \exists fwProc : Process ; controlTierProc : Process ; tierProcs : \seq Process \\
-\t2 | fwProc = procPar(procName(ControlTier), TierSync(head~env.Tiers), GenerateTierFWProc(env.Tiers)) \\
-\t2 \land controlTierProc = procPar(procName(SafeletFWName), ControlTierSync, 
-\\ \t3 procInstP(procName(TopLevelMissionSequencerFWName), GetParams(env.TopLevelMS) )) \\
+\t2 | fwProc = procPar(\\
+\t3 procName(ControlTier), \\
+\t3 TierSync(head~env.Tiers), \\
+\t3 GenerateTierFWProc(env.Tiers)\\
+\t2 ) \\
+\t2 \land controlTierProc = procPar(\\
+\t3 procName(SafeletFWName), \\
+\t3 ControlTierSync, \\
+\t3 procInstP(procName(TopLevelMissionSequencerFWName), GetParams(env.TopLevelMS) )\\
+\t2 ) \\
 \t2 \land tierProcs = GenerateTierFWProcs(env.Tiers) \\
 \t2 @ GenerateFWProcs(env) = \langle fwProc \rangle \cat \langle controlTierProc \rangle \cat tierProcs
 \end{axdef}
@@ -146,10 +154,10 @@ GenerateMCBChan : BinderMethodEnv \fun CircusParagraph
 \where
 \forall bme : BinderMethodEnv \\
 \t1 @ GenerateMCBChan(bme) = chanDef(\\
-\t2 multiDecl(chanNameWithType(BinderCallChan(bme.MethodName), MCBParams(bme.Params) ), \\
-\t2 multiDecl(chanNameWithType(NaturalCallChan(bme.MethodName), MCBParams(bme.Params) ), \\
-\t2 multiDecl(chanNameWithType(NaturalRetChan(bme.MethodName), MCBParams(bme.Params) ),\\
-\t2 scDecl(chanNameWithType(BindeRetChan(bme.MethodName), MCBParams(bme.Params) ) ) )))\\
+\t2 multiDecl(chanNameWithType(NaturalCallChan(bme.MethodName), \\
+\t3 MCBParams(bme.Params) ), \\
+\t2 scDecl(chanNameWithType(NaturalRetChan(bme.MethodName), \\
+\t3 MCBParams(bme.Params) ) ))\\
 \t1 )
 \end{axdef}
 
@@ -220,10 +228,14 @@ GenerateMCBAction : BinderMethodEnv \fun PParagraph
 \where
 \forall bme : BinderMethodEnv \\
 \t1 @ GenerateMCBAction(bme) = actDef(GenerateMCBName(bme.MethodName), \\
-\t2 prefixExp( (BinderCallComm(bme.MethodName), BinderCallParams(bme.Params)), \\
-\t3 prefixExp( (NaturalCallComm(bme.MethodName), BinderCallParams(bme.Params)), \\
-\t4 prefixExp( (NaturalRetComm(bme.MethodName), BinderCallParams(bme.Params)), \\
-\t5 prefixExp( (BindeRetComm(bme.MethodName), BinderCallParams(bme.Params)), \\
+\t2 prefixExp( (BinderCallComm(bme.MethodName), \\
+\t4 BinderCallParams(bme.Params)), \\
+\t3 prefixExp( (NaturalCallComm(bme.MethodName), \\
+\t5 BinderCallParams(bme.Params)), \\
+\t4 prefixExp( (NaturalRetComm(bme.MethodName), \\
+\t6 BinderCallParams(bme.Params)), \\
+\t5 prefixExp( (BindeRetComm(bme.MethodName), \\
+\t7 BinderCallParams(bme.Params)), \\
 \t6 actName( GenerateMCBName(bme.MethodName)) \\
 \t5 ) \\
 \t4 ) \\
