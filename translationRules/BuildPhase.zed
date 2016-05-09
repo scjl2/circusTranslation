@@ -154,22 +154,7 @@ BuildAppProcEnv : SCJProgram \pfun AppProcEnv
 \t6 TopLevelMS == tlmsEnv , Tiers == tiersEnv \rblot
 \end{axdef}
 
-\begin{schema}{LockingEnv}
-Threads : \seq (ThreadIds \cross Priority) \\
-Objects : \seq ObjectIds \\
-\where
-Threads \neq \langle \rangle \\
-Objects \neq \langle \rangle \\
-\end{schema}
 
-\begin{axdef}
-BuildLockEnv : SCJProgram \pfun LockingEnv
-\where
-\forall scjProg : dom~BuildLockEnv \\
-\t1 | scjProg \in TranslatablePrograms \\
-\t1 @ \exists lockEnv : LockingEnv \\
-\t2 @ BuildLockEnv(scjProg) = lockEnv
-\end{axdef}
 
 
 \begin{schema}{ClusterEnv}
@@ -318,16 +303,19 @@ Callers: \finset N \\
 ReturnType: Type \\
 Params : \seq Type \\
 Synchrinised : \bool \\
-LocParam : N \\
+LocParam : N \\	
 LocType : Type \\
 CallerType :  Type\\
 \end{schema}
 
 \begin{schema}{MCBEnv}
 BinderMethods : \seq BinderMethodEnv
-\where
-BinderMethods \neq \langle \rangle
 \end{schema}
+
+\begin{axdef}
+BuildBinderMethodName : N \fun N
+\end{axdef}
+
 
 \begin{axdef}
 GetSFMethods : Safelet \fun \seq ClassBodyDeclaration
@@ -341,10 +329,6 @@ GetTLMSMethods : MissionSequencer \fun \seq ClassBodyDeclaration
 \where
 \forall tlms : MissionSequencer \\
 \t1 @ GetTLMSMethods(tlms) = tlms.2.2
-\end{axdef}
-
-\begin{axdef}
-BuildBME : N \cross N \cross MethodDeclaration \fun BinderMethodEnv
 \end{axdef}
 
 \begin{axdef}
@@ -375,4 +359,21 @@ BuildMCBEnv : SCJProgram \pfun MCBEnv
 \t4 \lblot BinderMethods == BuildSFMCBEnv(GetSFMethods(sf)) \\
 \t4 \cat BuildTLMSMCBEnv(GetTLMSMethods(tlms))  \\
 \t4 \cat BuildTierMCBEnvs(tiers) \rblot
+\end{axdef}
+
+\begin{schema}{LockingEnv}
+Threads : \seq (ThreadIds \cross Priority) \\
+Objects : \seq ObjectIds \\
+\where
+Threads \neq \langle \rangle \\
+Objects \neq \langle \rangle \\
+\end{schema}
+
+\begin{axdef}
+BuildLockEnv : SCJProgram \pfun LockingEnv
+\where
+\forall scjProg : dom~BuildLockEnv \\
+\t1 | scjProg \in TranslatablePrograms \\
+\t1 @ \exists lockEnv : LockingEnv \\
+\t2 @ BuildLockEnv(scjProg) = lockEnv
 \end{axdef}

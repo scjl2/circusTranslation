@@ -295,8 +295,10 @@ GenerateObjectProc : \seq ObjectIds \pfun Process
 GenerateLockModel: LockingEnv \pfun \seq CircusParagraph
 \where
 \forall lEnv : dom~GenerateLockModel \\
-\t1 | lEnv.Threads \neq \langle \rangle \land lEnv.Objects \neq \langle \rangle \\
-\t1 @ GenerateLockModel(lEnv) = \\
+\t1 @ lEnv.Threads = \langle \rangle \land lEnv.Objects = \langle \rangle \\
+\t2 \implies GenerateLockModel(lEnv) = \langle \rangle \\
+\t1 \land lEnv.Threads \neq \langle \rangle \land lEnv.Objects \neq \langle \rangle \\
+\t2 \implies GenerateLockModel(lEnv) = \\
 \t2 \langle\\
 \t3 procDef(pd(Locking, procPar(procName(Threads), \\
 \t4 ThreadSync, \\
