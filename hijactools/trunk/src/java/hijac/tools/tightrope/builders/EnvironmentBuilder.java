@@ -211,11 +211,19 @@ public class EnvironmentBuilder
 		buildMethodLocationMap();
 		
 		System.out.println("*** Pre Processing***");
-		System.out.println(classTypeMap.toString());
+		for(String s : classTypeMap.keySet())
+		{
+			System.out.println(s + " = " + classTypeMap.get(s));
+		}
 		System.out.println();
-		System.out.println(methodLocationMap.toString());
+		
+		for(String s : methodLocationMap.keySet())
+		{
+			System.out.println(s + " = " + methodLocationMap.get(s));
+		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void buildMethodLocationMap()
 	{		
 		for (TypeElement elem : type_elements)
@@ -233,8 +241,23 @@ public class EnvironmentBuilder
 				if (obj instanceof MethodTree)
 				{
 					MethodTree mt = (MethodTree) obj;
+					final String mtName = mt.getName().toString();
+					final boolean notIgnoredMethod = ! ( (mtName.endsWith("<init>") )
+							|| (mtName.contains("handleAsyncEvent"))
+							|| (mtName.contains("run")) 
+							|| (mtName.contains("initialize")) 							
+							|| (mtName.contains("missionMemorySize")) 
+							|| (mtName.contains("main")) 
+							|| (mtName.contains("initializeApplication")) 
+							|| (mtName.contains("cleanup")) 
+							);
+					
+					
+					if(notIgnoredMethod)
+					{
+					
 
-					String methodName = mt.getName().toString();
+					String methodName = mtName;
 					
 					if(! methodLocationMap.containsKey(methodName))
 					{
@@ -256,7 +279,32 @@ public class EnvironmentBuilder
 							
 							if(classSuperTypes.equals(otherClassSuperTypes))
 							{
-								sameMethod = true;
+								//TODO IF THE METHOD BELONGS TO THIS SUPER CLASS...
+								try
+								{
+									String mtDecalringClass = ct.getClass().getMethod("mtName").getDeclaringClass().toString();
+									
+									for(String superClassName : classSuperTypes)
+									{
+										if(mtDecalringClass.contains(superClassName))
+										{
+											sameMethod = true;
+										}
+									}
+									
+									
+								}
+								catch (NoSuchMethodException e)
+								{
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								catch (SecurityException e)
+								{
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
 							}
 						}
 						
@@ -278,13 +326,14 @@ public class EnvironmentBuilder
 							methodLocationMap.put( mangledMethName, locations);
 							
 							//Because there should only be one here
-							assert(currentLocations.size() == 1);
+//							assert(currentLocations.size() == 1);
 							String otherClassName =currentLocations.get(0);
 							methodLocationMap.put(otherClassName.concat(methodName), currentLocations);
 							
 							
 						}
 					}
+				}
 				}
 			}
 		}
