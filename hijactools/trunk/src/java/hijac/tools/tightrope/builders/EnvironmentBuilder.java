@@ -249,7 +249,11 @@ public class EnvironmentBuilder
 							|| (mtName.contains("missionMemorySize")) 
 							|| (mtName.contains("main")) 
 							|| (mtName.contains("initializeApplication")) 
-							|| (mtName.contains("cleanup")) 
+							|| (mtName.contains("cleanUp")) 
+							|| (mtName.contains("immortalMemorySize")) 
+							|| (mtName.contains("getSequencer")) 		
+							|| (mtName.contains("getNextMission")) 
+							
 							);
 					
 					
@@ -258,6 +262,21 @@ public class EnvironmentBuilder
 					
 
 					String methodName = mtName;
+					Class classWeAreOn = ct.getClass();
+					
+					String mtDecalringClass = "nope";
+					try
+					{
+						mtDecalringClass = classWeAreOn.getMethod(mtName).getDeclaringClass().getName();
+					}
+					catch (NoSuchMethodException | SecurityException e1)
+					{
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					System.out.println("Class Name = " + ct.getSimpleName() +
+								" Method Name = " +mtName + 
+								" declaring class = " + mtDecalringClass);					
 					
 					if(! methodLocationMap.containsKey(methodName))
 					{
@@ -282,7 +301,8 @@ public class EnvironmentBuilder
 								//TODO IF THE METHOD BELONGS TO THIS SUPER CLASS...
 								try
 								{
-									String mtDecalringClass = ct.getClass().getMethod("mtName").getDeclaringClass().toString();
+									mtDecalringClass = ct.getClass().getMethod(mtName).getDeclaringClass().toString();
+//									System.out.println("Class Name = " + className +" Method Name = " +mt + " declaring class = " + mtDecalringClass);
 									
 									for(String superClassName : classSuperTypes)
 									{

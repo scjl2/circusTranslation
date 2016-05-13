@@ -15,7 +15,7 @@ import javax.scj.util.Const;
 import javax.realtime.PeriodicParameters;
 import javax.safetycritical.Mission;
 
-public class TakeOffMission extends Mission //implements LandingGearUser
+public class TakeOffMission extends Mission implements LandingGearUser
 {
 	final double SAFE_AIRSPEED_THRESHOLD = 10.00;
 	final double TAKEOFF_ALTITUDE = 10.00;

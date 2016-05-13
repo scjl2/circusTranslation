@@ -6,12 +6,6 @@ package aircraft;
 
 public interface LandingGearUser
 {
-
-	/**
-	 * Is the landing gear deployed?
-	 */
-	boolean landingGearDeployed = false;
-
 	public void deployLandingGear();
 
 	public void stowLandingGear();
