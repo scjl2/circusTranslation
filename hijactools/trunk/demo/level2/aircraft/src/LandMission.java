@@ -14,7 +14,7 @@ import javax.safetycritical.StorageParameters;
 import javax.scj.util.Const;
 import javax.safetycritical.Mission;
 
-public class LandMission extends Mission //implements LandingGearUser
+public class LandMission extends Mission implements LandingGearUser
 {
 	private final MainMission controllingMission;
 

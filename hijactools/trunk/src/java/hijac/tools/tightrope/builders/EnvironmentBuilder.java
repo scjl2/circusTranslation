@@ -23,6 +23,7 @@ import hijac.tools.tightrope.visitors.VariableVisitor;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -106,9 +107,9 @@ public class EnvironmentBuilder
 	private ProgramEnv programEnv;
 
 	private String packagePrefix;
-	
+
 	Map<String, List<String>> classTypeMap;
-	
+
 	Map<String, List<String>> methodLocationMap;
 
 	public EnvironmentBuilder(SCJAnalysis analysis)
@@ -187,7 +188,7 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println("+++ Building Environments +++");
 		System.out.println();
-		
+
 		preprocess();
 
 		TypeElement safeletType = findSafelet();
@@ -206,34 +207,51 @@ public class EnvironmentBuilder
 
 	private void preprocess()
 	{
-		buildClassTypeMap();	
-		
+		System.out.println();
+		System.out.println("+++ Pre Processing +++");
+		System.out.println();
+
+		buildClassTypeMap();
+
 		buildMethodLocationMap();
-		
-		System.out.println("*** Pre Processing***");
-		for(String s : classTypeMap.keySet())
+
+		System.out.println("Class Type Map");
+		for (String s : classTypeMap.keySet())
 		{
 			System.out.println(s + " = " + classTypeMap.get(s));
 		}
 		System.out.println();
-		
-		for(String s : methodLocationMap.keySet())
+
+		System.out.println("Method Location Map");
+		for (String s : methodLocationMap.keySet())
 		{
 			System.out.println(s + " = " + methodLocationMap.get(s));
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void buildMethodLocationMap()
-	{		
+	{
+		Map<String, List<String>> duplicates;
+
+		duplicates = firstPassMethodLocationMap();
+
+		secondPassMethodLocationMap(duplicates);
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, List<String>> firstPassMethodLocationMap()
+	{
+		Map<String, List<String>> duplicates = new HashMap<String, List<String>>();
+		Set<String> flagged = new HashSet<String>();
+
 		for (TypeElement elem : type_elements)
 		{
 			String className = elem.getSimpleName().toString();
 			ClassTree ct = analysis.TREES.getTree(elem);
-			
+
 			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 			Iterator<StatementTree> i = members.iterator();
-			
+
 			while (i.hasNext())
 			{
 				Object obj = i.next();
@@ -241,144 +259,180 @@ public class EnvironmentBuilder
 				if (obj instanceof MethodTree)
 				{
 					MethodTree mt = (MethodTree) obj;
-					final String mtName = mt.getName().toString();
-					final boolean notIgnoredMethod = ! ( (mtName.endsWith("<init>") )
-							|| (mtName.contains("handleAsyncEvent"))
-							|| (mtName.contains("run")) 
-							|| (mtName.contains("initialize")) 							
-							|| (mtName.contains("missionMemorySize")) 
-							|| (mtName.contains("main")) 
-							|| (mtName.contains("initializeApplication")) 
-							|| (mtName.contains("cleanUp")) 
-							|| (mtName.contains("immortalMemorySize")) 
-							|| (mtName.contains("getSequencer")) 		
-							|| (mtName.contains("getNextMission")) 
-							
-							);
-					
-					
-					if(notIgnoredMethod)
-					{
-					
+					final String methodName = mt.getName().toString();
+					final boolean notIgnoredMethod = !((methodName.endsWith("<init>"))
+							|| (methodName.contains("handleAsyncEvent"))
+							|| (methodName.contains("run"))
+							|| (methodName.contains("initialize"))
+							|| (methodName.contains("missionMemorySize"))
+							|| (methodName.contains("main"))
+							|| (methodName.contains("initializeApplication"))
+							|| (methodName.contains("cleanUp"))
+							|| (methodName.contains("immortalMemorySize"))
+							|| (methodName.contains("getSequencer")) || (methodName
+							.contains("getNextMission"))
 
-					String methodName = mtName;
-					Class classWeAreOn = ct.getClass();
-					
-					String mtDecalringClass = "nope";
-					try
+					);
+
+					if (notIgnoredMethod)
 					{
-						mtDecalringClass = classWeAreOn.getMethod(mtName).getDeclaringClass().getName();
-					}
-					catch (NoSuchMethodException | SecurityException e1)
-					{
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					System.out.println("Class Name = " + ct.getSimpleName() +
-								" Method Name = " +mtName + 
-								" declaring class = " + mtDecalringClass);					
-					
-					if(! methodLocationMap.containsKey(methodName))
-					{
-						List<String> locations = new ArrayList<String>();
-						locations.add(className);
-						methodLocationMap.put(methodName, locations);
-					}
-					else
-					{
-						List<String> currentLocations = methodLocationMap.get(methodName);
-						
-						List<String> classSuperTypes = classTypeMap.get(className);
-						
-						boolean sameMethod = false;
-						
-						for(String s : currentLocations)
+						if (methodLocationMap.containsKey(methodName))
 						{
-							List<String> otherClassSuperTypes =  classTypeMap.get(s);
-							
-							if(classSuperTypes.equals(otherClassSuperTypes))
-							{
-								//TODO IF THE METHOD BELONGS TO THIS SUPER CLASS...
-								try
-								{
-									mtDecalringClass = ct.getClass().getMethod(mtName).getDeclaringClass().toString();
-//									System.out.println("Class Name = " + className +" Method Name = " +mt + " declaring class = " + mtDecalringClass);
-									
-									for(String superClassName : classSuperTypes)
-									{
-										if(mtDecalringClass.contains(superClassName))
-										{
-											sameMethod = true;
-										}
-									}
-									
-									
-								}
-								catch (NoSuchMethodException e)
-								{
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								catch (SecurityException e)
-								{
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								
-							}
-						}
-						
-						if(sameMethod)
-						{
+
+							// This method name is already in the
+							// methodLocationMap, so add it and it's location
+							// list
+							// to the duplicates list for the Second Pass to
+							// deal with.
+
+							flagged.add(methodName);
+							List<String> currentLocations = methodLocationMap
+									.get(methodName);
+
 							currentLocations.add(className);
-							
+
 							methodLocationMap.put(methodName, currentLocations);
+
 						}
 						else
 						{
-							methodLocationMap.remove(methodName);
-							
-							String mangledMethName = className.concat(methodName);							
-							
+							// This method name is new, add it to the
+							// methodLocationMap
 							List<String> locations = new ArrayList<String>();
 							locations.add(className);
-							
-							methodLocationMap.put( mangledMethName, locations);
-							
-							//Because there should only be one here
-//							assert(currentLocations.size() == 1);
-							String otherClassName =currentLocations.get(0);
-							methodLocationMap.put(otherClassName.concat(methodName), currentLocations);
-							
-							
+
+							methodLocationMap.put(methodName, locations);
 						}
 					}
-				}
+
 				}
 			}
 		}
+
+		for (String flaggedMethod : flagged)
+		{
+			List<String> currentLocations = methodLocationMap.get(flaggedMethod);
+
+			methodLocationMap.remove(flaggedMethod);
+
+			duplicates.put(flaggedMethod, currentLocations);
+
+		}
+
+		return duplicates;
+	}
+
+	private void secondPassMethodLocationMap(Map<String, List<String>> duplicates)
+	{
+		System.out.println("** Duplicates **");
+		for (String s : duplicates.keySet())
+		{
+			System.out.println(s + " = " + duplicates.get(s));
+		}
+		System.out.println();
+		System.out.println();
+
+		Set<String> toRemove = new HashSet<String>();
 		
+		for (String methodName : duplicates.keySet())
+		{
+			// inheritedMethod = false;
+			List<String> sources = duplicates.get(methodName);
+
+			for (String source : sources)
+			{
+				List<String> sourceSuperTypes = classTypeMap.get(source);
+
+				for (String superType : sourceSuperTypes)
+				{
+					String strippedSuperType = superType;
+					int lastIndexOfDot = superType.lastIndexOf('.');
+					if(lastIndexOfDot != -1)
+					{
+						lastIndexOfDot ++;
+						strippedSuperType = superType.substring(lastIndexOfDot);
+					}
+					System.out.println("*** trying to strip: " + superType + " and got: " + strippedSuperType);
+					
+					if (sources.contains(strippedSuperType))
+					{
+						
+								// Then the supertype is in the method sources
+
+								// This is an inherited method, so just add it
+								// to the
+								// methodLocationMap
+						
+						//Assumes that this is true for all the sources here...
+
+								System.out.println("*** Inherited, putting + "
+										+ methodName + " = " + sources);
+								methodLocationMap.put(methodName, sources);
+								toRemove.add(methodName);
+							
+					}
+
+				}
+			}
+
+		}
+		
+		
+		for(String s : toRemove)
+		{
+			duplicates.remove(s);
+		}
+
+		// This is a duplicate method name, so mangle the method name
+		// with the class name and
+		// add the, with only the single class as the location, to the
+		// methodLocationMap
+
+		String mangledName = "";
+
+		for (String duplicateName : duplicates.keySet())
+		{
+			System.out.println("*** Not Inherited, + " + duplicateName);
+			for (String sourceName : duplicates.get(duplicateName))
+			{
+
+				mangledName = duplicateName.concat(sourceName);
+				List<String> newSources = new ArrayList<String>();
+				newSources.add(sourceName);
+				System.out.println("\t... putting " + duplicateName + " = " + newSources);
+				methodLocationMap.put(mangledName, newSources);
+
+			}
+		}
+
+		// Then remove all the duplicates from the methodLocationMap
+		// for(String duplicate : duplicates.keySet())
+		// {
+		// methodLocationMap.remove(duplicate);
+		// }
+
 	}
 
 	/**
-	 * Builds a map of Class names to their super types. For use in MCB generation
+	 * Builds a map of Class names to their super types. For use in MCB
+	 * generation
 	 */
 	private void buildClassTypeMap()
-	{		
+	{
 		for (TypeElement elem : type_elements)
 		{
 			String superClass = elem.getSuperclass().toString();
 			List<String> superInterfaces = new ArrayList<String>();
-			
+
 			for (TypeMirror tm : elem.getInterfaces())
 			{
 				superInterfaces.add(tm.toString());
 			}
-			
+
 			List<String> superTypes = new ArrayList<String>();
 			superTypes.addAll(superInterfaces);
 			superTypes.add(superClass);
-			
+
 			classTypeMap.put(elem.getSimpleName().toString(), superTypes);
 		}
 	}
@@ -442,24 +496,25 @@ public class EnvironmentBuilder
 		System.out.println();
 		System.out.println(BUILDING_TOP_LEVEL_SEQUENCER);
 		System.out.println();
-		
-		String tlmsStr = ""+ Character.toUpperCase(tlms.charAt(0)) + tlms.subSequence(1, tlms.length());
-		
-		System.out.println("packagePrefix="+packagePrefix + " and tlms="+tlmsStr);
-		
-		TypeElement tlmsElement = null;// = analysis.getTypeElement(packagePrefix + tlms);
-		
-		for(TypeElement te : type_elements)
+
+		String tlmsStr = "" + Character.toUpperCase(tlms.charAt(0))
+				+ tlms.subSequence(1, tlms.length());
+
+		System.out.println("packagePrefix=" + packagePrefix + " and tlms=" + tlmsStr);
+
+		TypeElement tlmsElement = null;// =
+										// analysis.getTypeElement(packagePrefix
+										// + tlms);
+
+		for (TypeElement te : type_elements)
 		{
 			System.out.println(te.toString() + " and " + tlmsStr);
-			if(te.toString().contains(tlmsStr))
+			if (te.toString().contains(tlmsStr))
 			{
 				System.out.println("found");
 				tlmsElement = te;
 			}
 		}
-		
-		
 
 		TopLevelMissionSequencerEnv topLevelMissionSequencer = programEnv
 				.getTopLevelMissionSequencer(tlms);
@@ -467,12 +522,12 @@ public class EnvironmentBuilder
 		tlmsClassEnv.setName(tlms);
 		topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
-		ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(
-				programEnv, topLevelMissionSequencer, analysis, this);
+		ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(programEnv,
+				topLevelMissionSequencer, analysis, this);
 
 		// msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
 
-		System.out.println("tlmselement="+tlmsElement);
+		System.out.println("tlmselement=" + tlmsElement);
 		ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
 
 		topLevelMissionSequencer.addVariable(THIS, CIRCREFTYPE + tlms.toString() + CLASS,
@@ -516,8 +571,8 @@ public class EnvironmentBuilder
 
 		String fullName = packagePrefix + n;
 
-//		 System.out.println("+++ Building Mission: Full Name = " + fullName
-//		 + END_PLUSES);
+		// System.out.println("+++ Building Mission: Full Name = " + fullName
+		// + END_PLUSES);
 
 		TypeElement missionTypeElem = elems.getTypeElement(fullName);
 
@@ -597,9 +652,7 @@ public class EnvironmentBuilder
 
 		new SchedulableObjectBuilder(analysis, programEnv, schedulableEnv, this)
 				.build(schedulableType);
-		
-		
-		
+
 	}
 
 	private void buildSchedulableMissionSequencer(ArrayList<Name> nestedSequencers)
@@ -624,8 +677,8 @@ public class EnvironmentBuilder
 
 			System.out.println("nestedMissionSequencer = " + nestedMissionSequencer);
 
-			ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(
-					programEnv, nestedMissionSequencer, analysis, this);
+			ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(programEnv,
+					nestedMissionSequencer, analysis, this);
 
 			// msl2Visitor.setVarMap(getVariables(tlmsElement,
 			// nestedMissionSequencer));
@@ -722,7 +775,7 @@ public class EnvironmentBuilder
 
 			Tree tree = deferred.tree;
 			String nameOfClassBeingTranslated = "";
-			System.out.println("Tree kind = "+ tree.getKind());
+			System.out.println("Tree kind = " + tree.getKind());
 			if (tree instanceof VariableTree)
 			{
 				System.out.println("Tree: " + tree + " instance of VairableTree ");
@@ -761,12 +814,15 @@ public class EnvironmentBuilder
 				System.out.println("Tree: " + tree + " instance of ExpressionStatement ");
 
 				ExpressionTree et = ((ExpressionStatementTree) tree).getExpression();
-				
+
 				System.out.println("et kind = " + et.getKind());
-				
+
 				if (et instanceof NewClassTree)
 				{
-					System.out.println("Tree: " + tree + " instance of ExpressionStatement->Expression->NewClassTree ");
+					System.out
+							.println("Tree: "
+									+ tree
+									+ " instance of ExpressionStatement->Expression->NewClassTree ");
 
 					args = ((NewClassTree) tree).getArguments();
 
@@ -779,7 +835,7 @@ public class EnvironmentBuilder
 					nameOfClassBeingTranslated = ((NewClassTree) tree).getIdentifier()
 							.toString();
 				}
-				
+
 			}
 
 			System.out.println("args = " + args.toString());
