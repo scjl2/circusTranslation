@@ -4,7 +4,7 @@
 
 
 \begin{zed}
-[MethodBody, ClassBodyDeclaration, Identifier, MethodDeclaration, Long] \\
+[MethodBody, ClassBodyDeclaration, Identifier, MethodDeclaration, Long, ClassDeclaration] \\
 \end{zed}
 
 

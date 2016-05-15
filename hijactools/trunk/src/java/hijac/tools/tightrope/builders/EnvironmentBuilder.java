@@ -229,6 +229,30 @@ public class EnvironmentBuilder
 		}
 	}
 
+	/**
+	 * Builds a map of Class names to their super types. For use in MCB
+	 * generation
+	 */
+	private void buildClassTypeMap()
+	{
+		for (TypeElement elem : type_elements)
+		{
+			String superClass = elem.getSuperclass().toString();
+			List<String> superInterfaces = new ArrayList<String>();
+	
+			for (TypeMirror tm : elem.getInterfaces())
+			{
+				superInterfaces.add(tm.toString());
+			}
+	
+			List<String> superTypes = new ArrayList<String>();
+			superTypes.addAll(superInterfaces);
+			superTypes.add(superClass);
+	
+			classTypeMap.put(elem.getSimpleName().toString(), superTypes);
+		}
+	}
+
 	private void buildMethodLocationMap()
 	{
 		Map<String, List<String>> duplicates;
@@ -411,30 +435,6 @@ public class EnvironmentBuilder
 		// methodLocationMap.remove(duplicate);
 		// }
 
-	}
-
-	/**
-	 * Builds a map of Class names to their super types. For use in MCB
-	 * generation
-	 */
-	private void buildClassTypeMap()
-	{
-		for (TypeElement elem : type_elements)
-		{
-			String superClass = elem.getSuperclass().toString();
-			List<String> superInterfaces = new ArrayList<String>();
-
-			for (TypeMirror tm : elem.getInterfaces())
-			{
-				superInterfaces.add(tm.toString());
-			}
-
-			List<String> superTypes = new ArrayList<String>();
-			superTypes.addAll(superInterfaces);
-			superTypes.add(superClass);
-
-			classTypeMap.put(elem.getSimpleName().toString(), superTypes);
-		}
 	}
 
 	private TypeElement findSafelet()

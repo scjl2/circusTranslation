@@ -1,0 +1,36 @@
+\begin{zsection}
+  \SECTION MCB \parents scj\_prelude, SCJBNFEncoding, CircusBNFEncoding, Framework, BuildPhase
+\end{zsection}
+
+\begin{axdef}
+SuperInterfacesOf : ClassDeclaration \pfun \finset N \\
+SuperClassOf : ClassDeclaration \pfun N  \\
+ProgramClasses : \finset ClassDeclaration \\
+ClassName : ClassDeclaration \fun N \\
+\end{axdef}
+
+\begin{axdef}
+ClassSuperTypes : N \fun \finset N
+\where
+\forall c : ClassDeclaration \\
+\t1 | c \in ProgramClasses \\
+\t1 @ ClassSuperTypes(ClassName(c)) = SuperInterfacesOf(c) \cup \{ SuperClassOf(c) \}  
+\end{axdef}
+
+\begin{axdef}
+MethodsOf : ClassDeclaration \fun \finset MethodDeclaration \\
+MethodName : MethodDeclaration \fun N 
+
+\end{axdef}
+
+%First Pass
+\begin{axdef}
+MethodLocations : N \fun \finset N
+\where
+\forall c : ClassDeclaration \\
+\t1 | c \in ProgramClasses \\
+\t1 @ \forall m : MethodDeclaration \\
+\t2 | m \in MethodsOf(c) \\
+\t2 @ MethodName(m) \notin dom~MethodLocations \implies MethodLocations(MethodName(m)) = \{ ClassName(c) \} \\
+\t2 \land MethodName(m) \in dom~MethodLocations \implies MethodLocations(MethodName(m)) =  MethodLocations(MethodName(m)) \cup \{ClassName(c)\}  
+\end{axdef}
