@@ -688,12 +688,26 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				MethodEnv method = getMethodEnvBeingCalled(methodSelect);
 				method.setExternalAppMethod(true);
 
+//				final String methodName = mt.getName().toString();
 				// assert(false);
 				// ((MemberSelectTree)
 				// node.getMethodSelect()).getExpression().toString();
-				boolean notIgnoredMethod = ((!identifier.contentEquals("release"))
-						&& (!identifier.contentEquals("requestTermination")) && (!identifier
-						.contentEquals("terminationPending")));
+//				boolean notIgnoredMethod = ((!identifier.contentEquals("release"))
+//						&& (!identifier.contentEquals("requestTermination")) && (!identifier
+//						.contentEquals("terminationPending")));
+				
+				final boolean notIgnoredMethod = !((identifier.contentEquals("<init>"))
+						|| (identifier.contentEquals("handleAsyncEvent"))
+						|| (identifier.contentEquals("run"))
+						|| (identifier.contentEquals("initialize"))
+						|| (identifier.contentEquals("missionMemorySize"))
+						|| (identifier.contentEquals("main"))
+						|| (identifier.contentEquals("initializeApplication"))
+						|| (identifier.contentEquals("cleanUp"))
+						|| (identifier.contentEquals("immortalMemorySize"))
+						|| (identifier.contentEquals("getSequencer")) 
+						|| (identifier.contentEquals("getNextMission"))
+				);
 
 				System.out.println("/*/*NotIg Id=" + identifier + "  notIg="
 						+ notIgnoredMethod);

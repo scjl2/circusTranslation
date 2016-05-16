@@ -23,6 +23,8 @@ import com.sun.source.tree.Tree;
 public class TightRopeTransUtils extends TransUtils
 {
 	public static final String FAILED_RESULT = "\\invalid";
+	
+	
 
 	public static String encodeName(String name)
 	{
@@ -159,4 +161,5 @@ public class TightRopeTransUtils extends TransUtils
 		return "";
 	}
 
+	
 }

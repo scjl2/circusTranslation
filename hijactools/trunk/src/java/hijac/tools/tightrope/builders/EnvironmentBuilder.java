@@ -110,7 +110,7 @@ public class EnvironmentBuilder
 
 	Map<String, List<String>> classTypeMap;
 
-	Map<String, List<String>> methodLocationMap;
+	Map<String, List<String>> classMethodsMap;
 
 	public EnvironmentBuilder(SCJAnalysis analysis)
 	{
@@ -123,7 +123,7 @@ public class EnvironmentBuilder
 		elems = analysis.ELEMENTS;
 		deferredParamsList = new ArrayList<DeferredParamter>();
 		classTypeMap = new HashMap<String, List<String>>();
-		methodLocationMap = new HashMap<String, List<String>>();
+		classMethodsMap = new HashMap<String, List<String>>();
 
 	}
 
@@ -208,14 +208,24 @@ public class EnvironmentBuilder
 	private void preprocess()
 	{
 		System.out.println();
-		System.out.println("+++ Pre Processing +++");
+		System.out.println("+++ Build Pre Processing +++");
 		System.out.println();
 
-		buildClassTypeMap();
+		for (TypeElement elem : type_elements)
+		{					
+			String className = elem.getSimpleName().toString();
+			
+			grabSuperTypes(elem, className);
+			
+			
+			ClassTree ct = analysis.TREES.getTree(elem);
+			
+			grabClassMethods(className, ct);
+			
+			
+		}
 
-		buildMethodLocationMap();
-
-		System.out.println("Class Type Map");
+		System.out.println("Class Super Type Map");
 		for (String s : classTypeMap.keySet())
 		{
 			System.out.println(s + " = " + classTypeMap.get(s));
@@ -223,9 +233,9 @@ public class EnvironmentBuilder
 		System.out.println();
 
 		System.out.println("Method Location Map");
-		for (String s : methodLocationMap.keySet())
+		for (String s : classMethodsMap.keySet())
 		{
-			System.out.println(s + " = " + methodLocationMap.get(s));
+			System.out.println(s + " = " + classMethodsMap.get(s));
 		}
 	}
 
@@ -233,208 +243,66 @@ public class EnvironmentBuilder
 	 * Builds a map of Class names to their super types. For use in MCB
 	 * generation
 	 */
-	private void buildClassTypeMap()
+	private void grabSuperTypes(TypeElement elem, String className)
 	{
-		for (TypeElement elem : type_elements)
+		String superClass = elem.getSuperclass().toString();
+		List<String> superInterfaces = new ArrayList<String>();
+	
+		for (TypeMirror tm : elem.getInterfaces())
 		{
-			String superClass = elem.getSuperclass().toString();
-			List<String> superInterfaces = new ArrayList<String>();
-	
-			for (TypeMirror tm : elem.getInterfaces())
-			{
-				superInterfaces.add(tm.toString());
-			}
-	
-			List<String> superTypes = new ArrayList<String>();
-			superTypes.addAll(superInterfaces);
-			superTypes.add(superClass);
-	
-			classTypeMap.put(elem.getSimpleName().toString(), superTypes);
+			superInterfaces.add(tm.toString());
 		}
-	}
-
-	private void buildMethodLocationMap()
-	{
-		Map<String, List<String>> duplicates;
-
-		duplicates = firstPassMethodLocationMap();
-
-		secondPassMethodLocationMap(duplicates);
+	
+		List<String> superTypes = new ArrayList<String>();
+		superTypes.addAll(superInterfaces);
+		superTypes.add(superClass);
+	
+		classTypeMap.put(className, superTypes);
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, List<String>> firstPassMethodLocationMap()
+	private void grabClassMethods(String className, ClassTree ct)
 	{
-		Map<String, List<String>> duplicates = new HashMap<String, List<String>>();
-		Set<String> flagged = new HashSet<String>();
-
-		for (TypeElement elem : type_elements)
-		{
-			String className = elem.getSimpleName().toString();
-			ClassTree ct = analysis.TREES.getTree(elem);
-
-			List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-			Iterator<StatementTree> i = members.iterator();
-
-			while (i.hasNext())
-			{
-				Object obj = i.next();
-
-				if (obj instanceof MethodTree)
-				{
-					MethodTree mt = (MethodTree) obj;
-					final String methodName = mt.getName().toString();
-					final boolean notIgnoredMethod = !((methodName.endsWith("<init>"))
-							|| (methodName.contains("handleAsyncEvent"))
-							|| (methodName.contains("run"))
-							|| (methodName.contains("initialize"))
-							|| (methodName.contains("missionMemorySize"))
-							|| (methodName.contains("main"))
-							|| (methodName.contains("initializeApplication"))
-							|| (methodName.contains("cleanUp"))
-							|| (methodName.contains("immortalMemorySize"))
-							|| (methodName.contains("getSequencer")) || (methodName
-							.contains("getNextMission"))
-
-					);
-
-					if (notIgnoredMethod)
-					{
-						if (methodLocationMap.containsKey(methodName))
-						{
-
-							// This method name is already in the
-							// methodLocationMap, so add it and it's location
-							// list
-							// to the duplicates list for the Second Pass to
-							// deal with.
-
-							flagged.add(methodName);
-							List<String> currentLocations = methodLocationMap
-									.get(methodName);
-
-							currentLocations.add(className);
-
-							methodLocationMap.put(methodName, currentLocations);
-
-						}
-						else
-						{
-							// This method name is new, add it to the
-							// methodLocationMap
-							List<String> locations = new ArrayList<String>();
-							locations.add(className);
-
-							methodLocationMap.put(methodName, locations);
-						}
-					}
-
-				}
-			}
-		}
-
-		for (String flaggedMethod : flagged)
-		{
-			List<String> currentLocations = methodLocationMap.get(flaggedMethod);
-
-			methodLocationMap.remove(flaggedMethod);
-
-			duplicates.put(flaggedMethod, currentLocations);
-
-		}
-
-		return duplicates;
-	}
-
-	private void secondPassMethodLocationMap(Map<String, List<String>> duplicates)
-	{
-		System.out.println("** Duplicates **");
-		for (String s : duplicates.keySet())
-		{
-			System.out.println(s + " = " + duplicates.get(s));
-		}
-		System.out.println();
-		System.out.println();
-
-		Set<String> toRemove = new HashSet<String>();
+		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+		Iterator<StatementTree> i = members.iterator();
+		ArrayList<String> locs = new ArrayList<String>();
 		
-		for (String methodName : duplicates.keySet())
+		while (i.hasNext())
 		{
-			// inheritedMethod = false;
-			List<String> sources = duplicates.get(methodName);
+			Object obj = i.next();
 
-			for (String source : sources)
+			if (obj instanceof MethodTree)
 			{
-				List<String> sourceSuperTypes = classTypeMap.get(source);
+				MethodTree mt = (MethodTree) obj;
+				final String methodName = mt.getName().toString();
+				final boolean notIgnoredMethod = !((methodName.endsWith("<init>"))
+						|| (methodName.contains("handleAsyncEvent"))
+						|| (methodName.contains("run"))
+						|| (methodName.contains("initialize"))
+						|| (methodName.contains("missionMemorySize"))
+						|| (methodName.contains("main"))
+						|| (methodName.contains("initializeApplication"))
+						|| (methodName.contains("cleanUp"))
+						|| (methodName.contains("immortalMemorySize"))
+						|| (methodName.contains("getSequencer")) || (methodName
+						.contains("getNextMission"))
 
-				for (String superType : sourceSuperTypes)
+				);
+
+				
+				if (notIgnoredMethod)
 				{
-					String strippedSuperType = superType;
-					int lastIndexOfDot = superType.lastIndexOf('.');
-					if(lastIndexOfDot != -1)
-					{
-						lastIndexOfDot ++;
-						strippedSuperType = superType.substring(lastIndexOfDot);
-					}
-					System.out.println("*** trying to strip: " + superType + " and got: " + strippedSuperType);
+					locs.add(mt.getName().toString());
 					
-					if (sources.contains(strippedSuperType))
-					{
-						
-								// Then the supertype is in the method sources
-
-								// This is an inherited method, so just add it
-								// to the
-								// methodLocationMap
-						
-						//Assumes that this is true for all the sources here...
-
-								System.out.println("*** Inherited, putting + "
-										+ methodName + " = " + sources);
-								methodLocationMap.put(methodName, sources);
-								toRemove.add(methodName);
-							
-					}
-
 				}
 			}
-
+			
 		}
 		
-		
-		for(String s : toRemove)
+		if(! locs.isEmpty())
 		{
-			duplicates.remove(s);
+			classMethodsMap.put(className, locs);
 		}
-
-		// This is a duplicate method name, so mangle the method name
-		// with the class name and
-		// add the, with only the single class as the location, to the
-		// methodLocationMap
-
-		String mangledName = "";
-
-		for (String duplicateName : duplicates.keySet())
-		{
-			System.out.println("*** Not Inherited, + " + duplicateName);
-			for (String sourceName : duplicates.get(duplicateName))
-			{
-
-				mangledName = duplicateName.concat(sourceName);
-				List<String> newSources = new ArrayList<String>();
-				newSources.add(sourceName);
-				System.out.println("\t... putting " + duplicateName + " = " + newSources);
-				methodLocationMap.put(mangledName, newSources);
-
-			}
-		}
-
-		// Then remove all the duplicates from the methodLocationMap
-		// for(String duplicate : duplicates.keySet())
-		// {
-		// methodLocationMap.remove(duplicate);
-		// }
-
 	}
 
 	private TypeElement findSafelet()
