@@ -1,0 +1,3 @@
+[submodule "hijactools/trunk/inputPrograms/exampleApplications"]
+	path = hijactools/trunk/inputPrograms/exampleApplications
+	url = https://github.com/scjl2/exampleApplications.git
