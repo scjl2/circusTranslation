@@ -177,7 +177,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 							}
 
 							body.append("this~.~");
-							body.append(m2.getMethodName());
+							body.append(m2.getName());
 							body.append("(");
 							body.append(parametersString.toString());
 							body.append(")");

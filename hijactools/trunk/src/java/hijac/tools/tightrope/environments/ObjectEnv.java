@@ -416,7 +416,7 @@ public class ObjectEnv
 
 	public void addMeth(MethodEnv me)
 	{
-		System.out.println("Adding Meth " + me.getMethodName());
+		System.out.println("Adding Meth " + me.getName());
 		me.setSynchronised(false);
 		meths.add(me);
 	}
@@ -609,7 +609,7 @@ public class ObjectEnv
 	{
 		for (MethodEnv me : getMeths())
 		{
-			if (me.getMethodName().equals("<init>"))
+			if (me.getName().equals("<init>"))
 			{
 				return me;
 			}

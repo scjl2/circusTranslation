@@ -714,9 +714,11 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 				if (notIgnoredMethod)
 				{
-
+//TODO I think here is where I need to check the class methods map for the *actual* location of the method I'm calling...I think
 					TightRope.getProgramEnv().addBinderMethodEnv(method,
 							varType.toString(), object.getId(), object.getIdType());
+					
+					
 				}
 
 				if (method.isAPIMethod())
@@ -775,7 +777,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
 				
-				if ( (!method.isAPIMethod()) || (method.getMethodName().contains("requestTermination")))
+				if ( (!method.isAPIMethod()) || (method.getName().contains("requestTermination")))
 
 				{
 					sb.append(LATEX.DOT);
@@ -824,7 +826,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
 				
-				if ( (!method.isAPIMethod()) || (method.getMethodName().contains("requestTermination")))
+				if ( (!method.isAPIMethod()) || (method.getName().contains("requestTermination")))
 				{
 					sb.append(LATEX.DOT);
 					// sb.append(objectID.toString());
@@ -985,10 +987,10 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 		for (MethodEnv me : APIMethods)
 		{
-			if (me.getMethodName().contains(methodName))
+			if (me.getName().contains(methodName))
 			{
 				System.out.println("getMethodEnv returning method env for "
-						+ me.getMethodName());
+						+ me.getName());
 				return me;
 			}
 		}
@@ -1295,8 +1297,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		// TODO This falls over for API methods...
 		for (MethodEnv mEnv : methods)
 		{
-			System.out.println("/// mEnv.getMethodName = " + mEnv.getMethodName());
-			if (mEnv.getMethodName().contentEquals(identifier))
+			System.out.println("/// mEnv.getMethodName = " + mEnv.getName());
+			if (mEnv.getName().contentEquals(identifier))
 			{
 				// Then get the method env of the method we're
 				// calling.

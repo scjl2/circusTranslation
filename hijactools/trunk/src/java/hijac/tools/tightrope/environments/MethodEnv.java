@@ -129,7 +129,7 @@ public class MethodEnv
 		callers = new HashSet<String>();
 	}
 
-	public String getMethodName()
+	public String getName()
 	{
 		return methodName;
 	}
@@ -337,7 +337,7 @@ public class MethodEnv
 	{
 		Map methodMap = new HashMap();
 
-		String s = getMethodName();
+		String s = getName();
 	
 		methodMap.put(TightRopeString.Name.METHOD_NAME, s);
 		methodMap.put(TightRopeString.Name.CHANNEL_NAME, eventName);

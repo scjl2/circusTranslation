@@ -1119,7 +1119,7 @@ public class FrameworkEnv
 					params = parameterMap.toString();
 				}
 
-				output += "\t\t\t" + me.getReturnType() + ":" + me.getMethodName() + "("
+				output += "\t\t\t" + me.getReturnType() + ":" + me.getName() + "("
 						+ params + ")";
 				output += LINE_SEPARATOR;
 			}

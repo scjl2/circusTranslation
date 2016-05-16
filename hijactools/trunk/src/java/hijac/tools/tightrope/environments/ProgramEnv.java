@@ -22,7 +22,7 @@ public class ProgramEnv
 {
 	private FrameworkEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
-	private List<MethodEnv> binderMethodEnvs;
+	private Map<String, MethodEnv> binderMethodEnvs;
 
 	private List<MethodEnv> globalMethods;
 
@@ -36,7 +36,7 @@ public class ProgramEnv
 	{
 		this.structureEnv = new FrameworkEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
-		this.binderMethodEnvs = new ArrayList<MethodEnv>();
+		this.binderMethodEnvs = new HashMap<String, MethodEnv>();
 
 		globalMethods = new ArrayList<MethodEnv>();
 
@@ -222,12 +222,12 @@ public class ProgramEnv
 	{
 		List binderMethodEnvsMap = new ArrayList();
 
-		for (MethodEnv b : binderMethodEnvs)
+		for (MethodEnv b : binderMethodEnvs.values())
 		{
 			Map binderMethodMap = new HashMap();
 			
 
-			binderMethodMap.put("Name", b.getMethodName());
+			binderMethodMap.put("Name", b.getName());
 			binderMethodMap.put(TightRopeString.Name.CHANNEL_NAME, b.getEventName());
 			binderMethodMap.put("Locations", b.getLocations());
 			binderMethodMap.put("Callers", b.getCallers());
@@ -431,7 +431,7 @@ public class ProgramEnv
 
 	}
 
-	public List<MethodEnv> getBinderMethodEnvs()
+	public Map<String, MethodEnv> getBinderMethodEnvs()
 	{
 		return binderMethodEnvs;
 	}
@@ -453,9 +453,9 @@ public class ProgramEnv
 	{
 		String id = "";
 		boolean existingBME = false;
-		for (MethodEnv me : binderMethodEnvs)
+		for (MethodEnv me : binderMethodEnvs.values())
 		{
-			if (me.getMethodName().equals(name))
+			if (me.getName().equals(name))
 			{
 				me.addLocation(location + id);
 				me.addCaller(caller + id);
@@ -470,11 +470,31 @@ public class ProgramEnv
 	public void addBinderMethodEnv(MethodEnv method, String location, String caller,
 			String callerType)
 	{
-		method.addLocation(location);
-		method.addCaller(caller);
-		method.setCallerType(callerType);
+		String name = method.getName();
+		
+		
 
-		binderMethodEnvs.add(method);
+		if(binderMethodEnvs.containsKey(name))
+		{
+			MethodEnv existingmethod = binderMethodEnvs.get(name);
+			
+			existingmethod.addLocation(location);
+			existingmethod.addCaller(caller);
+			existingmethod.setCallerType(callerType);
+
+			binderMethodEnvs.put(name, existingmethod);
+			
+		}
+		else
+		{
+			method.addLocation(location);
+			method.addCaller(caller);
+			method.setCallerType(callerType);
+			
+			binderMethodEnvs.put(name, method);
+		}
+		
+		
 
 	}
 
@@ -509,7 +529,7 @@ public class ProgramEnv
 		
 		for(MethodEnv m : globalMethods)
 		{
-			if(m.getMethodName().equals(method.getMethodName()))
+			if(m.getName().equals(method.getName()))
 			{
 				method.setEventName(method.getEventName()  + LATEX.UNDERSCORE + method.getMethodLocation().getName().toString());
 				
