@@ -25,7 +25,7 @@ import hijac.tools.tightrope.generators.NewSCJApplication;
 
 public class TightRope
 {
-	private static final String VERSION = "v0.65";
+	private static final String VERSION = "v0.66";
 	private static final boolean QUIET_LATEX_OUTPUT = true;
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
