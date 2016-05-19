@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeString;
 
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class ThreadIdsEnv extends IdEnv
 
 	public void setThreadPriority(String threadName, String priority)
 	{
-		System.out.println("putting " + threadName + " -> " + priority);
+		Debugger.log("putting " + threadName + " -> " + priority);
 		
 			threadMap.put(threadName+TightRopeString.Name.Thread_ID, priority);	
 		

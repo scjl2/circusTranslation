@@ -29,14 +29,13 @@ import com.sun.source.util.Trees;
 public class MissionLevel2Builder extends ParadigmBuilder
 {
 	private static SCJAnalysis analysis;
-//	private static RegistersVisitor registersVisitor;
+
 	private static Trees trees;
 
 	private MissionEnv missionEnv;
 	private ArrayList<Name> schedulables;
 	private ProgramEnv programEnv;
 
-//	private MethodVisitor methodVisitor;
 
 	public MissionLevel2Builder(ProgramEnv programEnv, MissionEnv missionEnv,
 			SCJAnalysis analysis, EnvironmentBuilder environmentBuilder)
@@ -51,8 +50,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 		analysis.getTypeElements();
 
 		schedulables = new ArrayList<Name>();
-//		registersVisitor = new RegistersVisitor(missionEnv, analysis);
-//		methodVisitor = new MethodVisitor(analysis, missionEnv, IDType.MissionID);
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -76,18 +74,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 			Debugger.log("Mission Visistor: mission member tree = "
 					+ missionMemberTree.getKind());
 
-			// getParameters(missionMemberTree);
 
-			// //TODO This doesn't work
-			// if (missionMemberTree instanceof VariableTree )
-			// {
-			// VariableTree vt = (VariableTree) missionMemberTree;
-
-			// programEnv.getObjectEnv(vt.getName())
-
-			// }
-
-			// else
 			if (missionMemberTree instanceof MethodTree)
 			{
 				// capture the method
@@ -211,11 +198,9 @@ public class MissionLevel2Builder extends ParadigmBuilder
 			{
 				methodStatementTree = methodStatementsIterator.next();
 
-				// getParameters(methodStatementTree);
-
 				HashMap<Name, Tree> m = (HashMap<Name, Tree>) methodStatementTree.accept(
 						varVisitor, false);
-				// assert (m != null);
+
 				if (m != null)
 				{
 

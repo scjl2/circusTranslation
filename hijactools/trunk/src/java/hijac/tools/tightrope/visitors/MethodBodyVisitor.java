@@ -1177,8 +1177,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 								}
 								else
 								{
-									System.out
-											.println("/// vt not equal to the expression. vt = "
+									Debugger.log("/// vt not equal to the expression. vt = "
 													+ vt
 													+ " and expresison = "
 													+ identifier);

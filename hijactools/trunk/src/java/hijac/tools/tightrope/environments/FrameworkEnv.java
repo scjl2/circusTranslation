@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 
 import java.util.ArrayList;
@@ -749,7 +750,6 @@ public class FrameworkEnv
 	{
 		currentCluster = new ClusterEnv(sequencer);
 
-		// System.out.println("Current Tier " + currentTier);
 
 		currentTier.addCluster(currentCluster);
 	}
@@ -892,7 +892,6 @@ public class FrameworkEnv
 	// Bit hacky
 	public void addMissionSequencerMission(Name missionSequencerName, Name missionName)
 	{
-		// System.out.println("*** Adding " + n + " to " + tlms + " ***");
 		if (controlTier.topLevelMissionSequencerEnv.getName() == missionSequencerName)
 		{
 			controlTier.topLevelMissionSequencerEnv.addMission(missionName);
@@ -908,8 +907,7 @@ public class FrameworkEnv
 					{
 						if (p.getName() == missionSequencerName)
 						{
-							System.out
-									.println("Trting to Add Mission to Nested Sequencer");
+							Debugger.log("Trting to Add Mission to Nested Sequencer");
 							p.addMission(missionName);
 						}
 					}

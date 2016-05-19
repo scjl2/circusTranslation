@@ -21,7 +21,6 @@ public class ProgramEnv
 
 	private List<MethodEnv> globalMethods;
 
-
 	private IdEnv missionIds;
 	private SchedulableIdsEnv schedulableIds;
 	private ThreadIdsEnv threadIds;
@@ -34,7 +33,6 @@ public class ProgramEnv
 		this.binderMethodEnvs = new HashMap<String, MethodEnv>();
 
 		globalMethods = new ArrayList<MethodEnv>();
-
 
 		missionIds = new MissionIdsEnv();
 		schedulableIds = new SchedulableIdsEnv();
@@ -171,12 +169,9 @@ public class ProgramEnv
 	public Map geNetworkMap()
 	{
 		Map returnMap = structureEnv.getNetworkMap();
-		
-		
-		
-		
+
 		returnMap.put("AppProcNames", getAppProcNamesList());
-		
+
 		returnMap.put("Objects", getObjectIdsMap());
 		returnMap.put("Threads", getThreadIdsMap());
 		returnMap.put("MethodCallBindings", getBinderMethodEnvsMapList());
@@ -189,26 +184,24 @@ public class ProgramEnv
 	{
 		List appProcNames = new ArrayList();
 		String app = "App";
-		
-		
-		appProcNames.add(getSafelet().getName()+app);
-		
-		for(ParadigmEnv p : getTopLevelMissionSequencers())
+
+		appProcNames.add(getSafelet().getName() + app);
+
+		for (ParadigmEnv p : getTopLevelMissionSequencers())
 		{
-			appProcNames.add(p.getName()+app);
+			appProcNames.add(p.getName() + app);
 		}
-		
-		for(ParadigmEnv p : getSchedulables())
+
+		for (ParadigmEnv p : getSchedulables())
 		{
-			appProcNames.add(p.getName()+app);
+			appProcNames.add(p.getName() + app);
 		}
-		
-		for(ParadigmEnv p : getMissions())
+
+		for (ParadigmEnv p : getMissions())
 		{
-			appProcNames.add(p.getName()+app);
+			appProcNames.add(p.getName() + app);
 		}
-		
-		
+
 		return appProcNames;
 	}
 
@@ -220,7 +213,6 @@ public class ProgramEnv
 		for (MethodEnv b : binderMethodEnvs.values())
 		{
 			Map binderMethodMap = new HashMap();
-			
 
 			binderMethodMap.put("Name", b.getName());
 			binderMethodMap.put(TightRopeString.Name.CHANNEL_NAME, b.getEventName());
@@ -233,37 +225,32 @@ public class ProgramEnv
 			binderMethodMap.put("LocType", b.getLocationType());
 			binderMethodMap.put("CallerType", b.getCallerType());
 			binderMethodMap.put("Sync", b.isSynchronised());
-			
-			
-
-			
 
 			binderMethodEnvsMap.add(binderMethodMap);
 		}
-		
+
 		ArrayList<String> tempStrings = new ArrayList<String>();
 		String methChan = "MethChan";
-		
-		for(Object o : binderMethodEnvsMap)
+
+		for (Object o : binderMethodEnvsMap)
 		{
 			Map b = (Map) o;
-			
-			
+
 			Set<String> locs = (Set<String>) b.get("Locations");
-			
-			//TODO Will break if the same method is in two locations?
-			for(String l : locs)
-			{			
-				String locParentString = l.substring(0,l.length()-3)+methChan;
-				
-				if(! tempStrings.contains(locParentString))
-				{				
+
+			// TODO Will break if the same method is in two locations?
+			for (String l : locs)
+			{
+				String locParentString = l.substring(0, l.length() - 3) + methChan;
+
+				if (!tempStrings.contains(locParentString))
+				{
 					b.put("LocParent", locParentString);
 					tempStrings.add(locParentString);
 				}
 			}
 		}
-		
+
 		return binderMethodEnvsMap;
 	}
 
@@ -361,10 +348,10 @@ public class ProgramEnv
 	}
 
 	/**
-	 * Gets the object environment within
-	 * this program environment that shares the same name as the parameter, if
-	 * it does not exists this method will return <code>null</code>. Internally,
-	 * this method calls <code>getObjectEnv(String objectName)</code>.
+	 * Gets the object environment within this program environment that shares
+	 * the same name as the parameter, if it does not exists this method will
+	 * return <code>null</code>. Internally, this method calls
+	 * <code>getObjectEnv(String objectName)</code>.
 	 * 
 	 * @param objectName
 	 *            The name of the object we're looking for
@@ -419,10 +406,10 @@ public class ProgramEnv
 
 	public void setThreadPriority(String threadID, String priority)
 	{
-//		if (getObjectEnv(threadID).hasSyncMeth())
-//		{
-			threadIds.setThreadPriority(threadID, priority);
-//		}
+		// if (getObjectEnv(threadID).hasSyncMeth())
+		// {
+		threadIds.setThreadPriority(threadID, priority);
+		// }
 
 	}
 
@@ -467,33 +454,26 @@ public class ProgramEnv
 			String callerType)
 	{
 		String name = method.getName();
-		
-		
 
-		if(binderMethodEnvs.containsKey(name))
+		if (binderMethodEnvs.containsKey(name))
 		{
 			MethodEnv existingmethod = binderMethodEnvs.get(name);
-			
+
 			existingmethod.addLocation(location);
 			existingmethod.addCaller(caller);
 			existingmethod.setCallerType(callerType);
 
 			binderMethodEnvs.put(name, existingmethod);
-			
 		}
 		else
 		{
 			method.addLocation(location);
 			method.addCaller(caller);
 			method.setCallerType(callerType);
-			
+
 			binderMethodEnvs.put(name, method);
 		}
-		
-		
-
 	}
-
 
 	public List<MethodEnv> getCustomChannels()
 	{
@@ -501,49 +481,20 @@ public class ProgramEnv
 	}
 
 	public void addGlobalMethod(MethodEnv method)
-	{			
-//		for(MethodEnv m : globalMethods.keySet())
-//		{
-//			ChannelEnv c = globalMethods.get(m);
-//			
-//			System.out.println("//channel="+channel.getChannelName() + " c="+c.getChannelName() + " equal? = "+channel.getChannelName().equals(c.getChannelName()));
-//			
-//			if(channel.getChannelName().equals(c.getChannelName()))
-//			{
-//				//Channel Name Conflict, should only happen once..
-//				String chanName = c.getChannelName();			
-//				String methLoc = m.getMethodLocation().getName().toString();
-//				
-//				c.setChannelName(chanName + LATEX.UNDERSCORE + methLoc);				
-//				
-//				channel.setChannelName(channel.getChannelName() + LATEX.UNDERSCORE + method.getMethodLocation().getName().toString());
-//			}
-//		}
-//		
-//	
-//		globalMethods.put(method, channel);
-		
-		for(MethodEnv m : globalMethods)
+	{
+
+		for (MethodEnv m : globalMethods)
 		{
-			if(m.getName().equals(method.getName()))
+			if (m.getName().equals(method.getName()))
 			{
-				method.setEventName(method.getEventName()  + LATEX.UNDERSCORE + method.getMethodLocation().getName().toString());
-				
-				m.setEventName(m.getEventName() + LATEX.UNDERSCORE + m.getMethodLocation().getName().toString());
+				method.setEventName(method.getEventName() + LATEX.UNDERSCORE
+						+ method.getMethodLocation().getName().toString());
+
+				m.setEventName(m.getEventName() + LATEX.UNDERSCORE
+						+ m.getMethodLocation().getName().toString());
 			}
 		}
 	}
 
-//	public String getCustomChannelName(MethodEnv methodEnv)
-//	{
-//		if(globalMethods.containsKey(methodEnv))
-//		{
-//			return globalMethods.get(methodEnv).getChannelName();
-//		}
-//		
-//		return "NULL";
-//	}
-
-	
 
 }

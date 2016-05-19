@@ -155,32 +155,31 @@ public class CircusGenerator
 	 *            The name of the template
 	 * @param fileName
 	 *            The file name to output the translated file to
-	 */
-//	@SuppressWarnings("rawtypes")
-//	private void translateCommon(Map root, String template, String fileName)
-//	{
-//		/* Get the template (uses cache internally) */
-//		freemarker.template.Template temp = null;
-//		try
-//		{
-//			temp = cfg.getTemplate(template);
-//		}
-//		catch (IOException e)
-//		{
-//			e.printStackTrace();
-//		}
-//
-//		/* Variables for writing output to a file */
-//		new File(OUTPUT_DIRECTORY + programName).mkdirs();
-//
-//		File file = new File(OUTPUT_DIRECTORY + programName + FILE_DELIMITER + fileName);
-//
-//		FileOutputStream fop = null;
-//		try
-//		{
-//			fop = new FileOutputStream(file);
-//		}
-//		catch (FileNotFoundException e)
+	 */	@SuppressWarnings("rawtypes")
+	private void translateCommon(Map root, String template, String fileName)
+	{
+		/* Get the template (uses cache internally) */
+		freemarker.template.Template temp = null;
+		try
+		{
+			temp = cfg.getTemplate(template);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		/* Variables for writing output to a file */
+		new File(OUTPUT_DIRECTORY + programName).mkdirs();
+
+		File file = new File(OUTPUT_DIRECTORY + programName + FILE_DELIMITER + fileName);
+
+		FileOutputStream fop = null;
+		try
+		{
+			fop = new FileOutputStream(file);
+		}
+		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}

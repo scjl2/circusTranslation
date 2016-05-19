@@ -27,8 +27,8 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
 /**
- * @author Frank Zeyda
- * @version $Revision: 230 $
+ * @author Frank Zeyda, Matt Luckcuck
+ * @version $Revision: 231 $
  */
 public class SCJCompilationTask extends JavacTask {
    protected final JavaCompiler
@@ -141,7 +141,5 @@ public class SCJCompilationTask extends JavacTask {
 
    public JavacDiagnostics getDiagnostics() {
       return DIAGNOSTICS;
-   }
-
-
+   } 
 }

@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.compiler.SCJCompilationTask;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
@@ -110,6 +111,8 @@ public class EnvironmentBuilder
 	Map<String, List<String>> classTypeMap;
 
 	Map<String, List<String>> classMethodsMap;
+
+	private String programName;
 
 	public EnvironmentBuilder(SCJAnalysis analysis)
 	{
@@ -326,6 +329,7 @@ public class EnvironmentBuilder
 				programEnv.addSafelet(safeletName);
 
 				// getVariables(elem, programEnv.getSafelet());
+			
 
 				return elem;
 			}
@@ -579,7 +583,13 @@ public class EnvironmentBuilder
 		packagePrefix = elem.getQualifiedName().toString();
 		int firstIndex = packagePrefix.indexOf(elem.getSimpleName().toString());
 		packagePrefix = packagePrefix.substring(0, firstIndex);
+		setProgramName(packagePrefix);
 		return packagePrefix;
+	}
+
+	private void setProgramName(String packagePrefix)
+	{
+		programName = packagePrefix.substring(0, packagePrefix.length()-1);
 	}
 
 	private HashMap<Name, Tree> getVariables(TypeElement arg0, ObjectEnv objectEnv)
@@ -880,5 +890,11 @@ public class EnvironmentBuilder
 		d.varMap = varMap;
 
 		deferredParamsList.add(d);
+	}
+
+	public String getProgramName()
+	{
+		// TODO Auto-generated method stub
+		return programName;
 	}
 }

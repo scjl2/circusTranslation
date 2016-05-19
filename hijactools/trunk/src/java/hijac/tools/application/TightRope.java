@@ -1,14 +1,16 @@
 package hijac.tools.application;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import hijac.tools.analysis.SCJAnalysis;
-import static java.nio.file.StandardCopyOption.*;
 import hijac.tools.compiler.SCJCompilationConfig;
 import hijac.tools.compiler.SCJCompilationException;
 import hijac.tools.compiler.SCJCompilationTask;
-import hijac.tools.config.Config;
 import hijac.tools.config.Statics;
-
-import hijac.tools.application.UncaughtExceptionHandler;
+import hijac.tools.tightrope.builders.EnvironmentBuilder;
+import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.generators.CircusGenerator;
+import hijac.tools.tightrope.generators.NewSCJApplication;
+import hijac.tools.tightrope.utils.Debugger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,27 +20,22 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import hijac.tools.tightrope.builders.EnvironmentBuilder;
-import hijac.tools.tightrope.environments.ProgramEnv;
-import hijac.tools.tightrope.generators.CircusGenerator;
-import hijac.tools.tightrope.generators.NewSCJApplication;
-import hijac.tools.tightrope.utils.Debugger;
 
 public class TightRope
 {
-	private static final String VERSION = "v0.66";
+	private static final String VERSION = "v0.7";
 	private static final boolean QUIET_LATEX_OUTPUT = true;
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
 	private static final boolean USE_ANNOTATIONS = false;
-	private static final boolean DEBUG_OUTPUT = true;
+	private static final boolean DEBUG_OUTPUT = false;
 
 	public static SCJAnalysis ANALYSIS;
 	private static EnvironmentBuilder environmentBuilder = null;
 	private static ProgramEnv programEnv;
 	private static NewSCJApplication scjApplication;
 
-	private static String customName = "";
+	private static String programName = "";
 
 	static
 	{
@@ -61,8 +58,6 @@ public class TightRope
 		System.out.println();
 
 		setUncaughtExceptionHandler();
-
-		setCustomName();
 		
 		System.out.println("+++++++++++++++++++++");
 		System.out.println("+++ Compile Phase +++");
@@ -71,8 +66,8 @@ public class TightRope
 		SCJCompilationConfig config = SCJCompilationConfig.getDefault();
 
 		SCJCompilationTask compiler = new SCJCompilationTask(config);
-
-		
+	
+	
 
 		try
 		{
@@ -93,9 +88,13 @@ public class TightRope
 		environmentBuilder = new EnvironmentBuilder(ANALYSIS);
 
 		programEnv = environmentBuilder.explore();
-
+		
+		setProgramName(environmentBuilder.getProgramName());
+	
 		System.out.println();
 		System.out.println("+++ Structure +++ ");
+		System.out.println();
+		System.out.println("+++ Program Name: " + programName + " +++");
 		programEnv.output();
 
 		System.out.println("Network = " + programEnv.geNetworkMap());
@@ -110,7 +109,7 @@ public class TightRope
 
 		if (RUN_LATEX)
 		{
-			runLatex(customName);
+			runLatex(programName);
 		}
 
 		final long duration = System.nanoTime() - startTime;
@@ -127,25 +126,13 @@ public class TightRope
 	private static void runFreemarker() throws IOException,
 			FileNotFoundException
 	{
-		CircusGenerator circGen = new CircusGenerator(customName, programEnv);
+		CircusGenerator circGen = new CircusGenerator(programName, programEnv);
 		circGen.translate();
 	}
 
-	private static void setCustomName()
+	private static void setProgramName(String programName)
 	{
-		String[] source = Config.getSCJSrc();
-		String sourceString = "";
-		if (source.length == 1)
-		{
-			String[] srouceSplit = source[0].split("/");
-			sourceString = srouceSplit[srouceSplit.length - 2];
-		}
-		else
-		{
-			System.out.println("*** CircusGenerator: multiple sources ***");
-		}
-
-		customName = sourceString;
+		TightRope.programName = programName;
 	}
 
 	/**

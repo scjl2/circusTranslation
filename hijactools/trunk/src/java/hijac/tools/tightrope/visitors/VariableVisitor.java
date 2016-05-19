@@ -15,8 +15,6 @@ import java.util.Map;
 
 import javax.lang.model.element.Name;
 
-
-
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -199,15 +197,14 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			{
 				Debugger.log("Adding Var Init: name=" + varName + " init="
 						+ expressionTree.toString());
-			
+
 				String expressionString = expressionTree.toString();
 				if (expression instanceof LiteralTree)
 				{
-					expressionString = TightRopeTransUtils.encodeLiteral((LiteralTree) expression);
+					expressionString = TightRopeTransUtils
+							.encodeLiteral((LiteralTree) expression);
 				}
-				classEnv.addVariableInit(varName.toString(),expressionString ,true);
-
-				
+				classEnv.addVariableInit(varName.toString(), expressionString, true);
 
 			}
 		}
@@ -236,25 +233,25 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		while (i.hasNext())
 		{
 			StatementTree st = i.next();
-		
+
 			Map<Name, Tree> statementReturn = st.accept(this, addToEnv);
 
 			if (statementReturn != null)
 			{
 
-//				Set<Name> returnMapKeys = returnMap.keySet();
+				// Set<Name> returnMapKeys = returnMap.keySet();
 
 				for (Name n : statementReturn.keySet())
 				{
-					Debugger.log("Block adding " + n + "->"
-							+ statementReturn.get(n) + " to returnMap");
+					Debugger.log("Block adding " + n + "->" + statementReturn.get(n)
+							+ " to returnMap");
 
 					returnMap.put(n, statementReturn.get(n));
 
 				}
 
 			}
-		
+
 		}
 
 		return returnMap;
@@ -465,14 +462,10 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		if (arg0.getName().contentEquals("<init>"))
 		{
-			// System.out
-			// .println("+++ Var Visitor : Method Visitor found <init> +++");
 			return arg0.getBody().accept(this, true);
 		}
 		else
 		{
-			// System.out
-			// .println("+++ Var Visitor : Method Visitor found method +++");
 			return arg0.getBody().accept(this, false);
 		}
 
@@ -505,7 +498,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	{
 		Debugger.log("*** VarVisitor: New Class Tree");
 
-//		List<? extends ExpressionTree> args = arg0.getArguments();
+		// List<? extends ExpressionTree> args = arg0.getArguments();
 
 		// TODO WHAT TO DO?
 
@@ -641,7 +634,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 						TightRopeTransUtils.encodeType(varType), init, true);
 				v.setProgramType(init);
 				classEnv.addVariable(v);
-				
+
 			}
 			else if ((!(objectEnv.getName().toString().contains(varType.toString()))))
 			{
@@ -657,7 +650,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 					if (GENERIC_PARADIGM_TYPES.contains(varTypeString))
 					{
-//						String varTypefromName = WordUtils.capitalize(encodedName) + "ID";
+						// String varTypefromName =
+						// WordUtils.capitalize(encodedName) + "ID";
 					}
 					else
 					{
@@ -673,16 +667,16 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 						boolean stillAddToEnv = true;
 						for (VariableEnv v : objectEnv.getProcParameters())
 						{
-							if(v.getName().equals(encodedName))
+							if (v.getName().equals(encodedName))
 							{
-								stillAddToEnv=false;							
+								stillAddToEnv = false;
 							}
 						}
 
 						if (stillAddToEnv)
 						{
-							VariableEnv v = new VariableEnv(encodedName ,
-									varTypeString, init, false);
+							VariableEnv v = new VariableEnv(encodedName, varTypeString,
+									init, false);
 							v.setProgramType(TightRopeTransUtils.encodeType(varType));
 
 							classEnv.addVariable(v);

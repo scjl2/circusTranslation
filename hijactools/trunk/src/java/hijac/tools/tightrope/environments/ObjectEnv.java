@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.Debugger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,11 +144,11 @@ public class ObjectEnv
 	 */
 	public VariableEnv getVariable(String name)
 	{
-		System.out.println(this.name + ".getVariable:" + name);
-		System.out.println("All the Variables = " + variables.toString());
+		Debugger.log(this.name + ".getVariable:" + name);
+		Debugger.log("All the Variables = " + variables.toString());
 		for (VariableEnv v : variables)
 		{
-			System.out.println("variable name = " + v.getName());
+			Debugger.log("variable name = " + v.getName());
 
 			String vName = v.getName();
 			if (vName.contains("\\"))
@@ -161,18 +163,18 @@ public class ObjectEnv
 				}
 				vName = sb.toString();
 
-				System.out.println("\t Var After Split = " + vName);
+				Debugger.log("\t Var After Split = " + vName);
 			}
 
-			System.out.println("name = " + name);
-			System.out.println("vName = " + vName);
+			Debugger.log("name = " + name);
+			Debugger.log("vName = " + vName);
 			if (vName.equals(name))
 			{
-				System.out.println("Returning " + v.toString());
+				Debugger.log("Returning " + v.toString());
 				return v;
 			}
 		}
-		System.out.println("retruning Null");
+		Debugger.log("retruning Null");
 		return null;
 	}
 
@@ -183,13 +185,13 @@ public class ObjectEnv
 
 	public void addVariableInit(String varName, Tree init)
 	{
-		System.out.println("addVariableInit(" + varName + "," + init);
+		Debugger.log("addVariableInit(" + varName + "," + init);
 		for (VariableEnv varEnv : getVariables())
 		{
-			System.out.println("\tvarEnv.getName=" + varEnv.getName());
+			Debugger.log("\tvarEnv.getName=" + varEnv.getName());
 			if (varEnv.getName().contentEquals(varName))
 			{
-				System.out.println("Setting Var Init: name=" + varName + " init=" + init);
+				Debugger.log("Setting Var Init: name=" + varName + " init=" + init);
 				varEnv.setInit(init);
 			}
 		}
@@ -292,7 +294,7 @@ public class ObjectEnv
 
 	public void addProcParameter(VariableEnv parameter)
 	{
-		System.out.println("adding " + parameter.toString());
+		Debugger.log("adding " + parameter.toString());
 		procParameters.add(parameter);
 	}
 
@@ -398,24 +400,17 @@ public class ObjectEnv
 
 	}
 
-//	@SuppressWarnings("rawtypes")
-//	public void addSyncMeth(Name methName, TypeKind returnType,
-//			ArrayList<Name> returnValues, Map params)
-//	{
-//		syncMeths.add(new MethodEnv(methName, returnType, returnValues, params));
-//		objectID = name + hijac.tools.tightrope.utils.TightRopeString.Name.OBJ_ID;
-//	}
 
 	public void addMeth(MethodEnv me)
 	{
-		System.out.println("Adding Meth " + me.getName());
+		Debugger.log("Adding Meth " + me.getName());
 		me.setSynchronised(false);
 		meths.add(me);
 	}
 
 	public void addSyncMeth(MethodEnv me)
 	{
-		System.out.println("Adding Sync Meth " + me.toString());
+		Debugger.log("Adding Sync Meth " + me.toString());
 		me.setSynchronised(true);
 		setHasSyncMeth(true);
 		

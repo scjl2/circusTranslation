@@ -414,8 +414,7 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 								if (mt.getModifiers().getFlags()
 										.contains(Modifier.SYNCHRONIZED))
 								{
-									System.out
-											.println("*** and it's synchronised *** ");
+									Debugger.log("*** and it's synchronised *** ");
 									tmp.add(methodName);
 
 								}
