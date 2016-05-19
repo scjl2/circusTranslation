@@ -4,6 +4,7 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.RegistersVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
@@ -57,7 +58,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 	@SuppressWarnings("unchecked")
 	public ArrayList<Name> build(TypeElement missionTypeElement)
 	{
-		System.out.println("missionTypeElem="+missionTypeElement.toString());
+		Debugger.log("missionTypeElem="+missionTypeElement.toString());
 		ClassTree missionClassTree = trees.getTree(missionTypeElement);
 
 		getVariables(missionTypeElement, missionEnv);
@@ -69,10 +70,10 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 		while (missionMembersIterator.hasNext())
 		{
-			System.out.println("Mission Visitor: Mission Members Iterator");
+			Debugger.log("Mission Visitor: Mission Members Iterator");
 
 			Tree missionMemberTree = missionMembersIterator.next();
-			System.out.println("Mission Visistor: mission member tree = "
+			Debugger.log("Mission Visistor: mission member tree = "
 					+ missionMemberTree.getKind());
 
 			// getParameters(missionMemberTree);
@@ -106,10 +107,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 				if (currentMethodIsConstructor)
 				{
-					// System.out.println("mission method tree: " +
-					// missionMethodTree.toString());
-					// System.out.println("mission method tree params: " +
-					// missionMethodTree.getParameters().toString());
+					
 					extractProcessParameters(missionMethodTree, missionEnv);
 				}
 				else if (currentMethodIsInitialize)
@@ -134,7 +132,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 						
 						programEnv.addObjectIdName(missionName);
 
-						System.out.println("/// method params =" + m.getParameters());
+						Debugger.log("/// method params =" + m.getParameters());
 					}
 					else
 					{
@@ -152,9 +150,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 							MethodEnv m2 = methodVisitor.visitMethod(missionMethodTree,	false);
 
-//							System.out.println("/// method params 2 ="
-//									+ m2.getParameters());
-//							System.out.println("/// m2 sync? = " + m2.isSynchronised());
+//						
 							StringBuilder body;
 
 							if (m2.getReturnType() == "null")
@@ -193,12 +189,13 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private void buildMissionInitialise(MethodTree missionMethodTree)
 	{
 		{
-			System.out.println("+++ Mission Initialise +++");
+			Debugger.log("+++ Mission Initialise +++");
 
-			System.out.println("Mission Visitor: methodStatementIterator");
+			Debugger.log("Mission Visitor: methodStatementIterator");
 			List<StatementTree> methodStatements = (List<StatementTree>) missionMethodTree
 					.getBody().getStatements();
 
@@ -226,10 +223,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 
 					for (Name n : m.keySet())
 					{
-						// System.out.println("\t*** Name = " + n +
-						// " Type = "
-						// + m.get(n) + " Kind = " +
-						// m.get(n).getKind());
+					
 						varMap.putIfAbsent(n, m.get(n));
 					}
 				}
@@ -251,7 +245,7 @@ public class MissionLevel2Builder extends ParadigmBuilder
 			StatementTree methodStatementTree, HashMap<Name, Tree> varMap)
 	{
 
-		System.out.println("Mission Visistor: methodStatementTree = "
+		Debugger.log("Mission Visistor: methodStatementTree = "
 				+ methodStatementTree.getKind());
 
 		Name schedulableName = methodStatementTree.accept(new RegistersVisitor(

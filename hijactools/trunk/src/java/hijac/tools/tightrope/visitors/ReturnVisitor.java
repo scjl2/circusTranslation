@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.visitors;
 
+import hijac.tools.tightrope.utils.Debugger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -66,12 +68,7 @@ import com.sun.source.tree.WildcardTree;
 
 public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 {
-
-	// private Tree save;
 	private ArrayList<Name> returns = new ArrayList<Name>();
-	// private ClassTree tree;
-	// private Iterator<StatementTree> i ;
-	// private ProgramEnv programEnv;
 
 	private Map<Name, Tree> varMap;
 
@@ -91,7 +88,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitBlock(BlockTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Visitor: Visiting Block Tree");
+		Debugger.log("Return Visitor: Visiting Block Tree");
 
 		List<? extends StatementTree> s = arg0.getStatements();
 
@@ -114,7 +111,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	public ArrayList<Name> visitIdentifier(IdentifierTree arg0, Boolean returnExpression)
 	{
 
-		System.out.println("Return Visitor: visiting Identifier Tree: " + arg0.getName()
+		Debugger.log("Return Visitor: visiting Identifier Tree: " + arg0.getName()
 				+ " arg kind= " + arg0.getKind());
 
 		// This adds a mission to returns
@@ -124,20 +121,19 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		{
 			Name t = ((IdentifierTree) varMap.get(arg0.getName())).getName();
 
-			// returns.add(t);
+			
 			idReturn.add(t);
 			return idReturn;
 		}
 		else
 		{
-			// ArrayList<Name> ids = new ArrayList<Name>();
+			
 
-			System.out.println("visitID varMap=" + this.varMap.toString());
-			// assert(false);
+			Debugger.log("visitID varMap=" + this.varMap.toString());
+		
 			Name n = arg0.getName();
 			Tree t = varMap.get(n);
 
-//			System.out.println("Tree in varMap=" + t + " kind=" + t.getKind());
 			if(t != null)
 			{
 
@@ -170,8 +166,8 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitIf(IfTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Visistor: visiting if tree " + arg0.getCondition());
-		System.out.println("+++ Size of Returns = " + returns.size() + " +++");
+		Debugger.log("Return Visistor: visiting if tree " + arg0.getCondition());
+		Debugger.log("+++ Size of Returns = " + returns.size() + " +++");
 		ArrayList<StatementTree> branches = new ArrayList<StatementTree>();
 
 		branches.add(arg0.getThenStatement());
@@ -185,24 +181,24 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 
 		for (StatementTree s : branches)
 		{
-			System.out.println("Visiting " + s.getKind() + " branch");
+			Debugger.log("Visiting " + s.getKind() + " branch");
 			// this may trigger a mission being added to returns (eg above) so
 			// we get the same one twice...but it might not happen.
 			ArrayList<Name> names = s.accept(this, false);
 
 			if (names != null)
 			{
-				System.out.println("+++ size of names = " + names.size() + " +++");
+				Debugger.log("+++ size of names = " + names.size() + " +++");
 				for (Name n : names)
 				{
-					System.out.println("+++ names returned = " + n + " +++");
+					Debugger.log("+++ names returned = " + n + " +++");
 				}
 
 				ifRetunrn.addAll(names);
 			}
 			else
 			{
-				System.out.println("+++ twas a null return +++ ");
+				Debugger.log("+++ twas a null return +++ ");
 			}
 
 		}
@@ -213,7 +209,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitMethod(MethodTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Tree: Visintg method tree");
+		Debugger.log("Return Tree: Visintg method tree");
 
 		List<? extends StatementTree> s = arg0.getBody().getStatements();
 
@@ -226,51 +222,45 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		{
 			tempReturns = new ArrayList<Name>();
 			StatementTree st = j.next();
-			System.out.println("Return Visitor: " + st + " is a " + st.getKind());
+			Debugger.log("Return Visitor: " + st + " is a " + st.getKind());
 
 			if (st instanceof ExpressionStatementTree)
 			{
-				System.out.println("Expression Statement");
+				Debugger.log("Expression Statement");
 				st.accept(this, false);
 			}
 
 			if (st instanceof ReturnTree)
 			{
-				System.out.println("Founds Return Tree");
+				Debugger.log("Founds Return Tree");
 				tempReturns = st.accept(this, false);
 
 			}
 
 			if (st instanceof IfTree)
 			{
-				System.out.println("Found If Tree");
+				Debugger.log("Found If Tree");
 				tempReturns = st.accept(this, false);
 
 			}
 
 			if (st instanceof VariableTree)
 			{
-				System.out.println("Found Variable Tree");
+				Debugger.log("Found Variable Tree");
 
 				st.accept(this, false);
 			}
-			//
-
-			// if( st instanceof ExpressionStatementTree)
-			// {
-			// System.out.println("Found Expression Statement");
-			// return st.accept(this, false);
-			// }
+			
 		}
 
 		if (tempReturns != null)
 		{
-			System.out.println("\t \t+++ Temp Returns = " + tempReturns);
+			Debugger.log("\t \t+++ Temp Returns = " + tempReturns);
 			methodReturns.addAll(tempReturns);
-			System.out.println("\t \t+++ Method Returns Now = " + methodReturns);
+			Debugger.log("\t \t+++ Method Returns Now = " + methodReturns);
 		}
 
-		System.out.println("\t \t+++ Final Method Returns = " + methodReturns);
+		Debugger.log("\t \t+++ Final Method Returns = " + methodReturns);
 		return methodReturns;
 	}
 
@@ -278,10 +268,9 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	public ArrayList<Name> visitNewClass(NewClassTree arg0, Boolean returnExpression)
 	{
 
-		// ((IdentifierTree) ((NewClassTree) ((ReturnTree)
-		// arg0).getExpression()).getIdentifier()).getName() ;
-		System.out.println("Return Visitor: New Clss Tree");
-		System.out.println(arg0);
+		
+		Debugger.log("Return Visitor: New Clss Tree");
+		Debugger.log(arg0);
 		if (returnExpression)
 		{
 			return arg0.getIdentifier().accept(this, true);
@@ -295,47 +284,46 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitReturn(ReturnTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Visitor: visiting return tree " + arg0);
-		System.out.println("-> " + arg0.getExpression().getKind());
+		Debugger.log("Return Visitor: visiting return tree " + arg0);
+		Debugger.log("-> " + arg0.getExpression().getKind());
 		return arg0.getExpression().accept(this, true);
 	}
 
 	@Override
 	public ArrayList<Name> visitTypeCast(TypeCastTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Visitor: Type Cast Tree " + arg0);
-		System.out.println("-> Expression= " + arg0.getExpression());
-		System.out.println("-> Expression.getKind = " + arg0.getExpression().getKind());
-		System.out.println("-> Expression..getName = "
+		Debugger.log("Return Visitor: Type Cast Tree " + arg0);
+		Debugger.log("-> Expression= " + arg0.getExpression());
+		Debugger.log("-> Expression.getKind = " + arg0.getExpression().getKind());
+		Debugger.log("-> Expression..getName = "
 				+ ((IdentifierTree) arg0.getExpression()).getName());
 
 		Name n = ((IdentifierTree) arg0.getExpression()).getName();
 
-		System.out.println("-> n = " + n);
+		Debugger.log("-> n = " + n);
 
 		if (varMap != null)
 		{
-			System.out.println("visitTypeCast varmap = " + varMap.toString());
-			System.out.println("-> getVariable = " + varMap.get(n));
+			Debugger.log("visitTypeCast varmap = " + varMap.toString());
+			Debugger.log("-> getVariable = " + varMap.get(n));
 			Tree t = (varMap.get(n));
 
-			System.out.println("-> t = " + t);
+			Debugger.log("-> t = " + t);
 
 			ArrayList<Name> tcReturns = new ArrayList<Name>();
 
 			if (n != null)
 			{
-				System.out.println("T type= " + t.getKind());
+				Debugger.log("T type= " + t.getKind());
 				IdentifierTree id = (IdentifierTree) t;
-				// returns.add(id.getName());
+			
 				tcReturns.add(id.getName());
 			}
-			// return arg0.getExpression().accept(this, arg1);
 			return tcReturns;
 		}
 		else
 		{
-			System.out.println("Return Visitor Returning Null");
+			Debugger.log("Return Visitor Returning Null");
 			return null;
 		}
 
@@ -344,15 +332,14 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitVariable(VariableTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Visitor: Variable Tree");
-		// programEnv.addVariable(arg0.getName(), arg0.getType());
+		Debugger.log("Return Visitor: Variable Tree");
 		Name n = arg0.getName();
 		Tree t = arg0.getType();
 
 		varMap.size();
 
 		varMap.put(n, t);
-		System.out.println("visitVariable varMap=" + varMap.toString());
+		Debugger.log("visitVariable varMap=" + varMap.toString());
 
 		return null;
 	}
@@ -360,7 +347,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitMethodInvocation(MethodInvocationTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Visitor: method Invocation Found : " + arg0);
+		Debugger.log("Return Visitor: method Invocation Found : " + arg0);
 
 		return null;
 	}
@@ -368,7 +355,7 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	@Override
 	public ArrayList<Name> visitAssignment(AssignmentTree arg0, Boolean arg1)
 	{
-		System.out.println("Return Visitor: Assignment " + arg0);
+		Debugger.log("Return Visitor: Assignment " + arg0);
 		return null;
 	}
 

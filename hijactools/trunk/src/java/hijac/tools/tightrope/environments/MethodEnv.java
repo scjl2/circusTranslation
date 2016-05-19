@@ -1,8 +1,6 @@
 package hijac.tools.tightrope.environments;
 
-import hijac.tools.application.TightRope;
 import hijac.tools.tightrope.utils.TightRopeString;
-
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -260,31 +258,26 @@ public class MethodEnv
 		
 		if(isExternalAppMethod())
 		{
-//			methodCallBinding = new BinderMethodEnv(methodName);
 		}
 	}
 
 	public Set<String> getLocations()
 	{
-//		return methodCallBinding.getLocations();
 		return locations;
 	}
 
 	public Set<String> getCallers()
 	{
-//		return methodCallBinding.getCallers();
 		return callers;
 	}
 
 	public void addLocation(String loc)
 	{
-//		methodCallBinding.addLocation(loc);
 		locations.add(loc);
 	}
 
 	public void addCaller(String caller)
 	{
-//		methodCallBinding.addCaller(caller);
 		callers.add(caller);
 	}
 
@@ -293,42 +286,26 @@ public class MethodEnv
 	{
 		return returnValues.isEmpty();
 		
-//		if (getReturnValue().equals("null") )//|| getReturnValue() != null)
-//		{
-//			return false;
-//		}
-//		else
-//		{
-//			return true;
-//		}
 
 	}
 
 	public String getLocationType()
 	{		
-//		return methodCallBinding.getLocationType();
 		return locationType;
 	}
 	
 	public void setLocationType(String locType)
-	{
-//		assert(locType != null);
-//		methodCallBinding.setLocationType(locType);
-//		assert(methodCallBinding.getLocationType().equals(locType));
-//		assert(getLocationType().equals(locType));
-		
+	{		
 		locationType = locType;
 	}
 
 	public String getCallerType()
 	{		
-//		return methodCallBinding.getCallerType();
 		return callerType;
 	}
 
 	public void setCallerType(String callerType)
 	{
-//		methodCallBinding.setCallerType(callerType);
 		this.callerType = callerType;
 	}
 	
@@ -376,8 +353,4 @@ public class MethodEnv
 		this.eventName = eventName;
 	}
 
-//	public BinderMethodEnv getMethodCallBinding()
-//	{
-//		return methodCallBinding;
-//	}
 }

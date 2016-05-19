@@ -68,13 +68,7 @@ public class AperiodicEventHandlerEnv extends EventHandlerEnv
 	{
 		List<Map> apehMethodsList = super.methsList();
 
-		// for (MethodEnv me : EVENT_HANDLER_API_METHODS)
-		// {
-		// Map methodMap = methodToMap(me);
-		//
-		// apehMethodsList.add(methodMap);
-		// }
-
+		
 		return apehMethodsList;
 	}
 

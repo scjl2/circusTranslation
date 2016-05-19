@@ -4,12 +4,12 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.application.TightRope;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.builders.ParadigmBuilder.IDType;
-import hijac.tools.tightrope.environments.ChannelEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.generators.NewSCJApplication;
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class MethodVisitor
 		// get name
 		Name methodName = mt.getName();
 
-		System.out.println("+++ Method Visitor: " + methodName + " +++");
+		Debugger.log("+++ Method Visitor: " + methodName + " +++");
 		MethodEnv m;
 
 		// return values
@@ -75,16 +75,7 @@ public class MethodVisitor
 		{
 			getConstructorParameters(mt);
 
-			// VariableVisitor varVis = new
-			// VariableVisitor(TightRope.getProgramEnv(), object);
-			// Map<Name, Tree> newVarMap = mt.accept(varVis, false);
-			//
-			// for(Name name : newVarMap.keySet())
-			// {
-			// object.addVariableInit(name.toString(), newVarMap.get(name));
-			// }
-
-			// System.out.println("New Var Map = " + newVarMap.toString());
+			
 		}
 		else
 		{

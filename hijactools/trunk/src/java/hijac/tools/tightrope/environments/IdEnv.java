@@ -30,9 +30,5 @@ public abstract class IdEnv
 
 	public abstract void addIdNames(String idName);
 
-//	public boolean contains(String id)
-//	{
-//		return idNames
-//	}
 
 }

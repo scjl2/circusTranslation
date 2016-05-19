@@ -14,19 +14,24 @@ public class ApplicationEnv
 	
 	ArrayList<ApplicationTierEnv> tiers;
 	
+	@SuppressWarnings("unused")
 	private class ApplicationTierEnv
 	{
+		
 		ArrayList<ApplicationClusterEnv> clusters;
 	}
 	
+	@SuppressWarnings("unused")
 	private class ApplicationClusterEnv
 	{
+		
 		Set<String> interfaceSync;
 		String mission;
 		Set<String> missionSync;
 		ArrayList<String> schedulables; 
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
 		Map returnmap = new HashMap();

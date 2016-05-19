@@ -6,6 +6,7 @@ import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.application.TightRope;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.Debugger;
 
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
@@ -70,8 +71,6 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 {
 	private MissionEnv missionEnv;
 	private HashMap<Name, Tree> initVarMap;
-
-	// private static SCJAnalysis analysis;
 
 	public RegistersVisitor(MissionEnv missionEnv, SCJAnalysis analysis)
 	{
@@ -230,33 +229,7 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	public Name visitExpressionStatement(ExpressionStatementTree arg0, Void arg1)
 	{
 		return arg0.getExpression().accept(this, null);
-		// if(((ExpressionStatementTree) st).getExpression() instanceof
-		// MethodInvocationTree)
-		// {
-		// System.out.println("Mission Visitor: Found Method Invocation");
-		// MethodInvocationTree mit = (MethodInvocationTree)
-		// ((ExpressionStatementTree) st).getExpression();
-		//
-		// System.out.println(mit.getMethodSelect());
-		// System.out.println(mit.getMethodSelect().getKind());
-		//
-		// if (mit.getMethodSelect() instanceof MemberSelectTree)
-		// {
-		// MemberSelectTree mst = (MemberSelectTree) mit.getMethodSelect();
-		//
-		// if(mst.getIdentifier().contentEquals("register"))
-		// {
-		// // schedulables
-		//
-		//
-		// schedulables.add( (Name) variables.get(((MethodTree)
-		// mst.getExpression()).getName()) );
-		//
-		// }
-		// //get identifier
-		// //if register then add
-		// }
-		// }
+		
 	}
 
 	@Override
@@ -338,21 +311,19 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 		final Name memberSelected = arg0.getIdentifier();
 		if (memberSelected.contentEquals("register"))
 		{
-			System.out.println("Rgisters Visitor: " + arg0);
+			Debugger.log("Rgisters Visitor: " + arg0);
 			final ExpressionTree expression = arg0.getExpression();
-			System.out.println("Rgisters Visitor: Expression " + expression);
-			System.out
-					.println("Rgisters Visitor: Identifier " + memberSelected);
+			Debugger.log("Rgisters Visitor: Expression " + expression);
+			Debugger.log("Rgisters Visitor: Identifier " + memberSelected);
 
 			if (expression instanceof IdentifierTree)
 			{
 
 				IdentifierTree expressionIdentifierTree = (IdentifierTree) expression;
-				System.out
-						.println("Registers Visitor: getExpression().getName() "
+				Debugger.log("Registers Visitor: getExpression().getName() "
 								+ (expressionIdentifierTree.getName()));
 
-				System.out.println("Registers Visitor: Returning "
+				Debugger.log("Registers Visitor: Returning "
 						+ missionEnv.getVariable(expressionIdentifierTree
 								.getName()));
 				// ArrayList<Name> a = new ArrayList<Name>();
@@ -372,7 +343,7 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 
 					if (initVarMap.containsKey(identifirerName))
 					{
-						System.out.println("*** initVarMap returns " +initVarMap.get(identifirerName));
+						Debugger.log("*** initVarMap returns " +initVarMap.get(identifirerName));
 						
 						
 						
@@ -398,22 +369,17 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 			{
 				NewClassTree newClass = (NewClassTree) expression;
 
-				System.out
-						.println("Registers Visitor: getExpression().getName() "
+				Debugger.log("Registers Visitor: getExpression().getName() "
 								+ (((IdentifierTree) newClass.getIdentifier())
 										.getName()));
 
-				System.out.println("Registers Visitor: Returning "
+				Debugger.log("Registers Visitor: Returning "
 						+ missionEnv.getVariable(((IdentifierTree) newClass
 								.getIdentifier()).getName()));
 
 				name = (((IdentifierTree) newClass.getIdentifier()).getName());
 
-				// ((IdentifierTree) programEnv.getVariable(((IdentifierTree)
-				// newClass.getIdentifier()).getName())).getName();
-
-				// ALSO need to check for variables in this method
-
+				
 				return name;
 			}
 
@@ -424,69 +390,10 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	@Override
 	public Name visitMethod(MethodTree arg0, Void arg1)
 	{
-		System.out.println("Registers Visitor: Method Tree");
+		Debugger.log("Registers Visitor: Method Tree");
 
-		// MethodTree o = arg0;
-		// System.out.println(o.getName());
-		//
-		// if (o.getName().contentEquals("initialize"))
-		// {
-		// System.out.println("Mission Visitor: J iterator");
-		// List<StatementTree> s = (List<StatementTree>) o.getBody()
-		// .getStatements();
-		//
-		// Iterator<StatementTree> j = s.iterator();
-		//
-		// // iterate through the statements in the Init method
-		// while (j.hasNext())
-		// {
-		// StatementTree st = j.next();
-		//
-		// System.out.println("Register Visistor: j = " + st.getKind());
-		//
-		// // ArrayList<Name> name =
-		// st.accept(this, null);
-		//
-		// // if(name != null)
-		// // {
-		// // schedulables.add(name);
-		// // }
-		// //
-		// // if (st instanceof ExpressionStatementTree)
-		// // {
-		// // if(((ExpressionStatementTree) st).getExpression() instanceof
-		// // MethodInvocationTree)
-		// // {
-		// // System.out.println("Mission Visitor: Found Method Invocation");
-		// // MethodInvocationTree mit = (MethodInvocationTree)
-		// // ((ExpressionStatementTree) st).getExpression();
-		// //
-		// // System.out.println(mit.getMethodSelect());
-		// // System.out.println(mit.getMethodSelect().getKind());
-		// //
-		// // if (mit.getMethodSelect() instanceof MemberSelectTree)
-		// // {
-		// // MemberSelectTree mst = (MemberSelectTree)
-		// // mit.getMethodSelect();
-		// //
-		// // if(mst.getIdentifier().contentEquals("register"))
-		// // {
-		// // // schedulables
-		// //
-		// //
-		// // schedulables.add( (Name) variables.get(((MethodTree)
-		// // mst.getExpression()).getName()) );
-		// //
-		// // }
-		// // //get identifier
-		// // //if register then add
-		// // }
-		// // }
-		// // }
-		//
-		// }
-		//
-		// }
+		
+	
 		return null;
 	}
 
@@ -494,31 +401,10 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	public Name visitMethodInvocation(MethodInvocationTree arg0, Void arg1)
 	{
 
-		System.out.println("Registers Visitor: Method Invocation Tree");
+		Debugger.log("Registers Visitor: Method Invocation Tree");
 
 		return arg0.getMethodSelect().accept(this, null);
-		// MethodInvocationTree mit = (MethodInvocationTree)
-		// ((ExpressionStatementTree) st).getExpression();
-		//
-		// System.out.println(mit.getMethodSelect());
-		// System.out.println(mit.getMethodSelect().getKind());
-		//
-		// if (mit.getMethodSelect() instanceof MemberSelectTree)
-		// {
-		// MemberSelectTree mst = (MemberSelectTree) mit.getMethodSelect();
-		//
-		// if(mst.getIdentifier().contentEquals("register"))
-		// {
-		// // schedulables
-		//
-		//
-		// schedulables.add( (Name) variables.get(((MethodTree)
-		// mst.getExpression()).getName()) );
-		//
-		// }
-		// //get identifier
-		// //if register then add
-		// }
+		
 	}
 
 	@Override
@@ -636,7 +522,7 @@ public class RegistersVisitor implements TreeVisitor<Name, Void>
 	@Override
 	public Name visitVariable(VariableTree arg0, Void arg1)
 	{
-		System.out.println("Registers Visitor: Variable Tree Found");
+		Debugger.log("Registers Visitor: Variable Tree Found");
 		// missionEnv.addVariable(arg0.getName().toString(),
 		// arg0.getType().toString(), "");
 

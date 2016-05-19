@@ -4,6 +4,7 @@ import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 
 import java.util.ArrayList;
@@ -11,11 +12,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.lang.model.element.Name;
 
-import org.apache.commons.lang3.text.WordUtils;
+
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
@@ -38,7 +38,6 @@ import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ErroneousTree;
 import com.sun.source.tree.ExpressionStatementTree;
-
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
@@ -137,7 +136,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitAssignment(AssignmentTree arg0, Boolean addToEnv)
 	{
-		System.out.println("+++ Var Visitor: Assignment-> " + arg0);
+		Debugger.log("+++ Var Visitor: Assignment-> " + arg0);
 
 		Map<Name, Tree> returnMap = null;
 
@@ -194,15 +193,13 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		if (varName != null & expressionTree != null)
 		{
-			// System.out.println("Adding to Var Map");
 			returnMap = new HashMap<Name, Tree>();
 			returnMap.put(varName, expressionTree);
 			if (objectEnv != null && addToEnv == true)
 			{
-				System.out.println("Adding Var Init: name=" + varName + " init="
+				Debugger.log("Adding Var Init: name=" + varName + " init="
 						+ expressionTree.toString());
-				// classEnv.addVariable(NewTransUtils.encodeName(varName),"type",
-				// expressionTree, false);
+			
 				String expressionString = expressionTree.toString();
 				if (expression instanceof LiteralTree)
 				{
@@ -210,8 +207,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 				}
 				classEnv.addVariableInit(varName.toString(),expressionString ,true);
 
-				// objectEnv.addVariableInit(varName.toString(),
-				// "?"+varName.toString()+"In");
+				
 
 			}
 		}
@@ -231,8 +227,6 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitBlock(BlockTree arg0, Boolean addToEnv)
 	{
 
-		// System.out.println("Var Visitor: Block");
-		// System.out.println(arg0);
 		HashMap<Name, Tree> returnMap = new HashMap<Name, Tree>();
 
 		List<? extends StatementTree> statements = arg0.getStatements();
@@ -242,20 +236,17 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		while (i.hasNext())
 		{
 			StatementTree st = i.next();
-			// System.out.println("Var Visitor Block: st kind = " +
-			// st.getKind());
+		
 			Map<Name, Tree> statementReturn = st.accept(this, addToEnv);
 
 			if (statementReturn != null)
 			{
-				// System.out.println("Var Visitor: Block: Returned Adding");
-				// returnMap.putAll(statementReturn);
 
-				Set<Name> returnMapKeys = returnMap.keySet();
+//				Set<Name> returnMapKeys = returnMap.keySet();
 
 				for (Name n : statementReturn.keySet())
 				{
-					System.out.println("Block adding " + n + "->"
+					Debugger.log("Block adding " + n + "->"
 							+ statementReturn.get(n) + " to returnMap");
 
 					returnMap.put(n, statementReturn.get(n));
@@ -263,10 +254,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 				}
 
 			}
-			// else
-			// {
-			// System.out.println("Var Visitor: Block: Returned Null");
-			// }
+		
 		}
 
 		return returnMap;
@@ -363,8 +351,6 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitExpressionStatement(ExpressionStatementTree arg0,
 			Boolean addToEnv)
 	{
-
-		// System.out.println("Var Visitor: Expression Statement Tree");
 		return arg0.getExpression().accept(this, addToEnv);
 
 	}
@@ -517,9 +503,9 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitNewClass(NewClassTree arg0, Boolean addToEnv)
 	{
-		System.out.println("*** VarVisitor: New Class Tree");
+		Debugger.log("*** VarVisitor: New Class Tree");
 
-		List<? extends ExpressionTree> args = arg0.getArguments();
+//		List<? extends ExpressionTree> args = arg0.getArguments();
 
 		// TODO WHAT TO DO?
 
@@ -622,11 +608,11 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	public Map<Name, Tree> visitVariable(VariableTree arg0, Boolean addToEnv)
 	{
 
-		System.out.println("Var Visitor: Variable for " + arg0);
+		Debugger.log("Var Visitor: Variable for " + arg0);
 
 		HashMap<Name, Tree> returnMap = new HashMap<Name, Tree>();
 
-		System.out.println("-> Name = " + arg0.getName() + " Type = " + arg0.getType()
+		Debugger.log("-> Name = " + arg0.getName() + " Type = " + arg0.getType()
 				+ " Init = " + arg0.getInitializer());
 
 		Name varName = arg0.getName();
@@ -637,7 +623,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 		if (arg0.getInitializer() != null)
 		{
 			Map<Name, Tree> initialiser = arg0.getInitializer().accept(this, addToEnv);
-			System.out.println("/*/* Init of " + arg0.getName() + " is = " + initialiser);
+			Debugger.log("/*/* Init of " + arg0.getName() + " is = " + initialiser);
 			init = arg0.getInitializer().toString();
 		}
 
@@ -647,10 +633,10 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 		if (classEnv != null && addToEnv == true)
 		{
-			System.out.println("var Visitor If");
+			Debugger.log("var Visitor If");
 			if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
 			{
-				System.out.println("var Visitor Primitive Type");
+				Debugger.log("var Visitor Primitive Type");
 				VariableEnv v = new VariableEnv(TightRopeTransUtils.encodeName(varName),
 						TightRopeTransUtils.encodeType(varType), init, true);
 				v.setProgramType(init);
@@ -659,9 +645,9 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			}
 			else if ((!(objectEnv.getName().toString().contains(varType.toString()))))
 			{
-				System.out.println("var Visitor var type not this Object'ss name");
+				Debugger.log("var Visitor var type not this Object'ss name");
 				{
-					System.out.println("*/*/ New Parameter for " + classEnv.getName()
+					Debugger.log("*/*/ New Parameter for " + classEnv.getName()
 							+ " with name= " + TightRopeTransUtils.encodeName(varName)
 							+ " type = " + varType.toString() + " programType = "
 							+ varType.toString() + " and primitve = " + false);
@@ -671,7 +657,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 					if (GENERIC_PARADIGM_TYPES.contains(varTypeString))
 					{
-						String varTypefromName = WordUtils.capitalize(encodedName) + "ID";
+//						String varTypefromName = WordUtils.capitalize(encodedName) + "ID";
 					}
 					else
 					{
@@ -680,7 +666,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 					if (addToEnv)
 					{
-						System.out.println("*/*/ Adding Parameter " + encodedName
+						Debugger.log("*/*/ Adding Parameter " + encodedName
 								+ " to ObjectEnv " + objectEnv.getName() + " of type "
 								+ objectEnv.getClass().getCanonicalName());
 
@@ -708,11 +694,11 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 			}
 			else if (programEnv.getSchedulable(varName) != null)
 			{
-				System.out.println("Var Visitor var name is a schedulable");
+				Debugger.log("Var Visitor var name is a schedulable");
 			}
 			else
 			{
-				System.out.println("var Visitor add var to Object Env");
+				Debugger.log("var Visitor add var to Object Env");
 
 				classEnv.addVariable("\\circreftype " + varName.toString() + "Class",
 						varType.toString() + "Class", "\\circnew " + varType.toString()

@@ -22,6 +22,7 @@ import hijac.tools.tightrope.builders.EnvironmentBuilder;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.generators.CircusGenerator;
 import hijac.tools.tightrope.generators.NewSCJApplication;
+import hijac.tools.tightrope.utils.Debugger;
 
 public class TightRope
 {
@@ -30,6 +31,7 @@ public class TightRope
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
 	private static final boolean USE_ANNOTATIONS = false;
+	private static final boolean DEBUG = true;
 
 	public static SCJAnalysis ANALYSIS;
 	private static EnvironmentBuilder environmentBuilder = null;
@@ -47,6 +49,8 @@ public class TightRope
 	{
 
 		final long startTime = System.nanoTime();
+		
+		Debugger.setEnabled(DEBUG);
 
 		System.out.println();
 		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");

@@ -14,11 +14,9 @@ public class BinderMethodEnv //extends MethodEnv
 
 	public BinderMethodEnv(String name)
 	{
-		//super(name);
 		locations = new HashSet<String>();
 		callers = new HashSet<String>();
-		
-		//setReturnType("");
+
 	}
 
 	public BinderMethodEnv(String name, String location, String caller)
@@ -49,22 +47,6 @@ public class BinderMethodEnv //extends MethodEnv
 		callers.add(caller);
 	}
 
-//	@Deprecated
-//	public boolean hasReturn()
-//	{
-//		return returnValues.isEmpty();
-//		
-////		if (getReturnValue().equals("null") )//|| getReturnValue() != null)
-////		{
-////			return false;
-////		}
-////		else
-////		{
-////			return true;
-////		}
-//
-//	}
-
 	public String getLocationType()
 	{		
 		assert(this.locationType!= null );
@@ -88,6 +70,7 @@ public class BinderMethodEnv //extends MethodEnv
 		this.callerType = callerType;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Map toMap()
 	{
 		Map returnMap = new HashMap();

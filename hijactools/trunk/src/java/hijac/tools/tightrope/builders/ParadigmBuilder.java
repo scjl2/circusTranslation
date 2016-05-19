@@ -1,11 +1,9 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
-import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
@@ -56,7 +54,6 @@ public abstract class ParadigmBuilder
 
 		varVisitor = new VariableVisitor(programEnv, objectEnv);
 
-		// System.out.println("arg=" + arg0);
 		ClassTree ct = analysis.TREES.getTree(arg0);
 		List<? extends Tree> members = ct.getMembers();
 		Iterator<? extends Tree> i = members.iterator();
@@ -66,20 +63,15 @@ public abstract class ParadigmBuilder
 			Tree s = i.next();
 			// TODO if this is only ever going to return one value at a time
 			// then it shouldn't be a map
-			// System.out.println("s=" + s + "s.kind=" + s.getKind());
 			HashMap<Name, Tree> m = (HashMap<Name, Tree>) s.accept(varVisitor, true);
 
 			// TODO this is a bit of a hack...
 			for (Name n : m.keySet())
 			{
-				// System.out.println("\t*** Name = " + n + " Type = " +
-				// m.get(n)
-				// + " Kind = " + m.get(n).getKind());
-//				varMap.putIfAbsent(n, m.get(n));
+			
 				 varMap.put(n, m.get(n));
 			}
 		}
-//		System.out.println("getVariables varMap = " + varMap);
 		
 		return varMap;
 

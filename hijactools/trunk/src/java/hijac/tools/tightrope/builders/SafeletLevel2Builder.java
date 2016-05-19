@@ -52,13 +52,10 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 	@SuppressWarnings("unchecked")
 	public ArrayList<Name> build(TypeElement e)
 	{
-		// System.out.println(e);
 		MethodVisitor methodVisitor = new MethodVisitor(analysis, safeletEnv);
 		ClassTree ct = trees.getTree(e);
 
 		HashMap<Name, Tree> varMap = getVariables(e, safeletEnv);
-		// programEnv.getSafelet().setClassTree(ct);
-		
 
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 		Iterator<StatementTree> i = members.iterator();

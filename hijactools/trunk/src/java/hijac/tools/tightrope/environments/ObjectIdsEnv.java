@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Matt Luckcuck
  */
 
-// This currently over optimistically takes eveything
+// TODO This currently over optimistically takes eveything
 // This outputs object ids that might not be needed.
 public class ObjectIdsEnv extends IdEnv
 {
@@ -23,7 +23,6 @@ public class ObjectIdsEnv extends IdEnv
 	{
 		HashMap map = new HashMap();
 
-		// ArrayList<String> list = new ArrayList<String>();
 
 		map.put(OBJECT_STR, idNames);
 
@@ -40,11 +39,6 @@ public class ObjectIdsEnv extends IdEnv
 		}
 	}
 
-	// @Override
-	// public boolean contains(String id)
-	// {
-	//
-	// return false;
-	// }
+
 
 }

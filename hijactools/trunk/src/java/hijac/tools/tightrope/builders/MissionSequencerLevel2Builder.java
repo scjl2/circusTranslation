@@ -6,6 +6,7 @@ import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.ReturnVisitor;
 
@@ -55,9 +56,9 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 	@SuppressWarnings("unchecked")
 	public ArrayList<Name> build(TypeElement arg0)
 	{
-		System.out.println();
-		System.out.println("+++ Mission Sequencer Variables +++");
-		System.out.println();
+		Debugger.log("");
+		Debugger.log("+++ Mission Sequencer Variables +++");
+		Debugger.log("");
 
 		assert (sequencerEnv != null);
 		
@@ -69,7 +70,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 
 		for (Name n : varMap.keySet())
 		{
-			System.out.println("+++ Variable " + n + " = " + varMap.get(n));
+			Debugger.log("+++ Variable " + n + " = " + varMap.get(n));
 		}
 
 		ArrayList<Name> missions = new ArrayList<Name>();
@@ -90,13 +91,13 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 
 			if (tlst instanceof VariableTree)
 			{
-				System.out.println("MS VIsitor: Variable Tree Found");
+				Debugger.log("MS VIsitor: Variable Tree Found");
 
 				VariableTree vt = (VariableTree) tlst;
 
-				System.out.println("-> " + vt.toString());
-				System.out.println("-> Name:" + vt.getName());
-				System.out.println("-> Type: " + vt.getType());
+				Debugger.log("-> " + vt.toString());
+				Debugger.log("-> Name:" + vt.getName());
+				Debugger.log("-> Type: " + vt.getType());
 
 			}
 
@@ -106,7 +107,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 				MethodTree o = (MethodTree) tlst;
 
 				Name methodName = o.getName();
-				System.out.println("MS Visitor Method Tree = " + methodName);
+				Debugger.log("MS Visitor Method Tree = " + methodName);
 
 				List<StatementTree> methodStatements = (List<StatementTree>) o.getBody()
 						.getStatements();
@@ -115,7 +116,7 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 
 				if (methodName.contentEquals("<init>"))
 				{
-					System.out.println("Release the Visitor!");
+					Debugger.log("Release the Visitor!");
 
 					methodVisitor.visitMethod(o, true);
 

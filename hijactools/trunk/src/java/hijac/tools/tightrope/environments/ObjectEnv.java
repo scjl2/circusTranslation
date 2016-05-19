@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.element.Name;
-import javax.lang.model.type.TypeKind;
+
 
 import com.sun.source.tree.Tree;
 
@@ -28,7 +28,8 @@ public class ObjectEnv
 
 	protected static final String PARENTS_STR = "Parents";
 	protected static final String ID = "ID";
-	// ClassTree classTree;
+
+
 	/**
 	 * The name of the entity this environment represents
 	 */
@@ -200,15 +201,6 @@ public class ObjectEnv
 
 	}
 
-//	public void addVariable(String variableName, String variableType,
-//			Object variableInit, String variableInput, boolean primitive)
-//
-//	{
-//
-//		addVariable(new VariableEnv(variableName, variableType, variableInit,
-//				variableInput, primitive));
-//
-//	}
 
 	public void addVariableInit(String varName, String init, boolean variableInput)
 	{

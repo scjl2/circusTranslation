@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.tools.javah.Mangle;
 
 public abstract class ParadigmEnv extends ObjectEnv
 {
@@ -24,7 +23,6 @@ public abstract class ParadigmEnv extends ObjectEnv
 	{
 		super();
 
-		// classEnv = new ClassEnv();
 		classEnv = null;
 
 	}

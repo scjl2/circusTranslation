@@ -1,16 +1,11 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.application.TightRope;
-
-import java.lang.reflect.Type;
-import hijac.tools.tightrope.environments.FrameworkEnv;
 import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -436,6 +431,7 @@ public class ProgramEnv
 		return binderMethodEnvs;
 	}
 
+	@Deprecated
 	public void addBinderMethodEnv(String name, String location, String caller)
 	{
 		addBinderMethodEnv(name, location, caller, null, null);

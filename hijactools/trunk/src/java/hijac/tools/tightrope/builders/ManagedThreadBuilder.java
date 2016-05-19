@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.utils.Debugger;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
@@ -89,8 +90,8 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 		this.variables = vars;
 		this.packagePrefix = packagePrefix;
 
-		System.out.println("*** Variables ***");
-		System.out.println(variables);
+		Debugger.log("*** Variables ***");
+		Debugger.log(variables);
 	}
 
 	@Override
@@ -145,12 +146,12 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 	@Override
 	public ArrayList<Name> visitBlock(BlockTree arg0, Void arg1)
 	{
-		System.out.println("*** mtVisitor block *** ");
+		Debugger.log("*** mtVisitor block *** ");
 		ArrayList<Name> blockReturns = new ArrayList<Name>();
 
 		for (StatementTree st : arg0.getStatements())
 		{
-			System.out.println("*** st type = " + st.getKind() + " *** ");
+			Debugger.log("*** st type = " + st.getKind() + " *** ");
 			ArrayList<Name> tmp = st.accept(this, arg1);
 			if (tmp != null)
 			{
@@ -254,7 +255,7 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 	public ArrayList<Name> visitExpressionStatement(
 			ExpressionStatementTree arg0, Void arg1)
 	{
-		System.out.println(" *** mtVisitor expression");
+		Debugger.log(" *** mtVisitor expression");
 		return arg0.getExpression().accept(this, arg1);
 	}
 
@@ -342,7 +343,7 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 	@Override
 	public ArrayList<Name> visitMethod(MethodTree arg0, Void arg1)
 	{
-		System.out.println("*** mtVisitor method ***");
+		Debugger.log("*** mtVisitor method ***");
 		ArrayList<Name> methReturns = new ArrayList<Name>();
 
 		for (StatementTree st : arg0.getBody().getStatements())
@@ -361,7 +362,7 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 	public ArrayList<Name> visitMethodInvocation(MethodInvocationTree arg0,
 			Void arg1)
 	{
-		System.out.println("+++ Method Invocation: "
+		Debugger.log("+++ Method Invocation: "
 				+ arg0.getMethodSelect().toString());
 
 		if (arg0.getMethodSelect().getKind() == Kind.MEMBER_SELECT)
@@ -405,11 +406,11 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 					{
 						if (t instanceof MethodTree)
 						{
-							System.out.println("*** methodTree *** ");
+							Debugger.log("*** methodTree *** ");
 							MethodTree mt = (MethodTree) t;
 							if (mt.getName().contentEquals(methodName))
 							{
-								System.out.println("*** found the method *** ");
+								Debugger.log("*** found the method *** ");
 								if (mt.getModifiers().getFlags()
 										.contains(Modifier.SYNCHRONIZED))
 								{
@@ -511,7 +512,7 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 	@Override
 	public ArrayList<Name> visitTry(TryTree arg0, Void arg1)
 	{
-		System.out.println("*** mtVisitor try *** ");
+		Debugger.log("*** mtVisitor try *** ");
 
 		return arg0.getBlock().accept(this, arg1);
 	}
@@ -547,7 +548,7 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 	@Override
 	public ArrayList<Name> visitVariable(VariableTree arg0, Void arg1)
 	{
-		System.out.println("*** mtVisitor variable ***");
+		Debugger.log("*** mtVisitor variable ***");
 		if (arg0.getInitializer() != null)
 		{
 			return arg0.getInitializer().accept(this, arg1);
@@ -561,7 +562,7 @@ public class ManagedThreadBuilder implements TreeVisitor<ArrayList<Name>, Void>
 	@Override
 	public ArrayList<Name> visitWhileLoop(WhileLoopTree arg0, Void arg1)
 	{
-		System.out.println("*** mtVisitor while *** ");
+		Debugger.log("*** mtVisitor while *** ");
 		return arg0.getStatement().accept(this, arg1);
 	}
 

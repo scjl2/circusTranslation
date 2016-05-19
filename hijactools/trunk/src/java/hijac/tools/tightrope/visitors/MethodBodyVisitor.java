@@ -18,6 +18,7 @@ import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.utils.TightRopeString.LATEX;
@@ -99,7 +100,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 	protected final NewSCJApplication CONTEXT;
 	private String varType;
-	private boolean classEnv;
+//	private boolean classEnv;
 	private boolean putSkip = false;
 
 	/**
@@ -237,7 +238,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		CircusTemplates templates = CONTEXT.TEMPLATES;
 
 		CircusTemplateFactory factory = templates.FACTORY;
-		System.out.println("doMacroCall node = " + node);
+		Debugger.log("doMacroCall node = " + node);
 		return factory.doMacroCall(ctxt.MACRO_MODEL, file, name, args);
 	}
 
@@ -287,9 +288,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	public String visitAssignment(AssignmentTree node, MethodVisitorContext ctxt)
 	{
 		/* Should we check that we are not inside an expression? */
-		System.out.println("/// AssignmentTree node = " + node);
-		System.out.println("/// AssignmentTree variable = " + node.getVariable());
-		System.out.println("/// AssignmentTree expression = " + node.getExpression());
+		Debugger.log("/// AssignmentTree node = " + node);
+		Debugger.log("/// AssignmentTree variable = " + node.getVariable());
+		Debugger.log("/// AssignmentTree expression = " + node.getExpression());
 
 		final String nodeVariableString = node.getVariable().toString();
 
@@ -337,7 +338,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				ParadigmEnv p = (ParadigmEnv) object;
 				ClassEnv cE = p.getClassEnv();
-				System.out.println(cE);
+				Debugger.log(cE);
 				if (cE.getVariable(nodeVariableString) != null)
 				{
 
@@ -385,7 +386,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 
 			
-			System.out.println("/// st=" + st.toString() + " st.kind="+st.getKind());
+			Debugger.log("/// st=" + st.toString() + " st.kind="+st.getKind());
 			if (st instanceof ExpressionStatementTree)
 
 			{
@@ -429,7 +430,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	public String visitCompoundAssignment(CompoundAssignmentTree node,
 			MethodVisitorContext ctxt)
 	{
-		// System.out.println("/// CompoundAssignmentTree node = " + node);
+		// Debugger.log("/// CompoundAssignmentTree node = " + node);
 
 		/* Should we check that we are not inside an expression? */
 		return callStmtMacro(node, ctxt, "CompoundAssignment", node.getVariable(),
@@ -465,7 +466,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		// TODO HACKERY!
 		if (node.toString().contains("Console") || node.toString().contains("System"))
 		{
-			System.out.println("*** Console so ignoring *** ");
+			Debugger.log("*** Console so ignoring *** ");
 			return "";
 		}
 		else
@@ -493,7 +494,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		if (o != null)
 		{
 			id = o.getId();
-			System.out.println(id);
+			Debugger.log(id);
 			assert (false);
 			return callExprMacro(node, ctxt, "Identifier", id);
 		}
@@ -541,14 +542,14 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				}
 				else
 				{
-					System.out.println("/// String is null");
+					Debugger.log("/// String is null");
 					return TightRopeTransUtils.encodeLiteral(node);
 				}
 			}
 			else
 			{
 
-				System.out.println("///  kind is not new class or identifier");
+				Debugger.log("///  kind is not new class or identifier");
 				return TightRopeTransUtils.encodeLiteral(node);
 			}
 
@@ -556,7 +557,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		else
 		{
 
-			System.out.println("/// methodEnv is null ");
+			Debugger.log("/// methodEnv is null ");
 			return TightRopeTransUtils.encodeLiteral(node);
 		}
 	}
@@ -580,20 +581,20 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	public String visitMethodInvocation(MethodInvocationTree node,
 			MethodVisitorContext ctxt)
 	{
-		System.out.println("/// methodInvocation node = " + node);
+		Debugger.log("/// methodInvocation node = " + node);
 
 		ExpressionTree methodSelect = node.getMethodSelect();
 
 		String output = "";
 		Name identifier = null;
-		System.out.println("methodSelect = " + methodSelect + " and type = "
+		Debugger.log("methodSelect = " + methodSelect + " and type = "
 				+ methodSelect.getKind());
 
 		if (methodSelect instanceof MemberSelectTree)
 		{
 			ExpressionTree expresison = ((MemberSelectTree) methodSelect).getExpression();
 
-			System.out.println("expression = " + expresison + " and type = "
+			Debugger.log("expression = " + expresison + " and type = "
 					+ expresison.getKind());
 			if (expresison instanceof MethodInvocationTree)
 			{
@@ -601,13 +602,13 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				output = visitMethodInvocation((MethodInvocationTree) expresison, ctxt);
 				output += "\\\\ ";
 
-				System.out.println("Output = " + output);
+				Debugger.log("Output = " + output);
 
 				methodSelect = ((MethodInvocationTree) expresison).getMethodSelect();
 
 				identifier = ((MemberSelectTree) methodSelect).getIdentifier();
 
-				System.out.println("/*/* methodSelect = " + methodSelect);
+				Debugger.log("/*/* methodSelect = " + methodSelect);
 			}
 		}
 
@@ -630,7 +631,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			identifier = it.getName();
 		}
 
-		String objectID = object.getObjectId();
+//		String objectID = object.getObjectId();
 		StringBuilder sb = new StringBuilder();
 
 		if (identifier != null)
@@ -709,7 +710,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 						|| (identifier.contentEquals("getNextMission"))
 				);
 
-				System.out.println("/*/*NotIg Id=" + identifier + "  notIg="
+				Debugger.log("/*/*NotIg Id=" + identifier + "  notIg="
 						+ notIgnoredMethod);
 
 				if (notIgnoredMethod)
@@ -724,14 +725,14 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				if (method.isAPIMethod())
 				{
 					ObjectEnv oEnv = getObjectEnvOfMethod(methodSelect);
-					System.out.println(oEnv);
+					Debugger.log(oEnv);
 
 					Name nodeName = oEnv.getName();
 
 					for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 					{
-						System.out.println(t.getSimpleName());
-						System.out.println(nodeName);
+						Debugger.log(t.getSimpleName());
+						Debugger.log(nodeName);
 						if (t.getSimpleName().contentEquals(nodeName))
 						{
 							String name = t.getSuperclass().toString();
@@ -759,9 +760,6 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 					}
 				}
 
-				// System.out.println("!// method being called (returned) = "
-				// +
-				// method.getMethodName());
 
 				String returnString = method.getReturnType();
 				List<? extends ExpressionTree> parameters = node.getArguments();
@@ -839,16 +837,16 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 					sb.append(threadId);
 				}
 
-				System.out.println("!// !returnString.contains('null') =  "
+				Debugger.log("!// !returnString.contains('null') =  "
 						+ (!returnString.contains("null")));
-				System.out.println("!// returnString =  " + returnString);
+				Debugger.log("!// returnString =  " + returnString);
 				if (!returnString.contains("null"))
 				{
 
 					sb.append("~?~");
 					final Object identifierString = timeMachine
 							.get(identifier.toString());
-					System.out.println("!// return string not 'null', getting key: "
+					Debugger.log("!// return string not 'null', getting key: "
 							+ identifier.toString() + " value: " + identifierString);
 
 					sb.append(identifier.toString());
@@ -909,7 +907,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		}
 		else
 		{
-			System.out.println("*** Identifier was null, returning empty string***");
+			Debugger.log("*** Identifier was null, returning empty string***");
 			return "";
 		}
 
@@ -936,19 +934,19 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			}
 			else
 			{
-				System.out.println("/// not my method, it's from " + expressionString);
+				Debugger.log("/// not my method, it's from " + expressionString);
 				return true;
 			}
 
 		}
 		else if (methodSelect instanceof IdentifierTree)
 		{
-			System.out.println("// I can just call it, so it's my method");
+			Debugger.log("// I can just call it, so it's my method");
 			return false;
 		}
 		else
 		{
-			System.out.println("/// not sure if it's my method");
+			Debugger.log("/// not sure if it's my method");
 			return false;
 		}
 
@@ -989,7 +987,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			if (me.getName().contains(methodName))
 			{
-				System.out.println("getMethodEnv returning method env for "
+				Debugger.log("getMethodEnv returning method env for "
 						+ me.getName());
 				return me;
 			}
@@ -1000,17 +998,17 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 			MemberSelectTree mst = (MemberSelectTree) methodSelect;
 
-			System.out.println("/// node.getMethodSelect = " + mst.toString());
+			Debugger.log("/// node.getMethodSelect = " + mst.toString());
 
-			System.out.println("/// node...getExpression = "
+			Debugger.log("/// node...getExpression = "
 					+ mst.getExpression().toString());
 
-			System.out.println("/// node...getIdenitifer = "
+			Debugger.log("/// node...getIdenitifer = "
 					+ mst.getIdentifier().toString());
 
 			identifier = mst.getIdentifier();
 
-			System.out.println("/// identifier = " + identifier);
+			Debugger.log("/// identifier = " + identifier);
 
 			// if (isAPIMethod(node, methodSelect))
 			// {
@@ -1019,8 +1017,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			// else
 			{
 				ObjectEnv o = getObjectEnvOfMethod(methodSelect);
-				System.out.println("methodSelect = " + methodSelect);
-				System.out.println("/// o is " + o.getName());
+				Debugger.log("methodSelect = " + methodSelect);
+				Debugger.log("/// o is " + o.getName());
 
 				return getMethodEnvFromObject(identifier, o);
 			}
@@ -1056,7 +1054,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 			while (identifier == null)
 			{
-				System.out.println("/// Expression = " + expression + " its kind = "
+				Debugger.log("/// Expression = " + expression + " its kind = "
 						+ expression.getKind());
 
 				if (expression instanceof MemberSelectTree)
@@ -1077,15 +1075,15 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			Name varType = null;
 			String IDString = "";
 			final boolean objectNotNull = object != null;
-			System.out.println("/// objectNotNull = " + objectNotNull);
+			Debugger.log("/// objectNotNull = " + objectNotNull);
 			if (objectNotNull)
 			{
-				System.out.println("/// object name = " + object.getName());
+				Debugger.log("/// object name = " + object.getName());
 
 				// For all the type elements in the program...
 				for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 				{
-					System.out.println("///** t.getSimpleName() = " + t.getSimpleName());
+					Debugger.log("///** t.getSimpleName() = " + t.getSimpleName());
 
 					// ...if the name of the type equals the name of the object
 					// we're in...
@@ -1107,7 +1105,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 							{
 								VariableTree vt = (VariableTree) tree;
 
-								System.out.println("/// vt.getName = " + vt.getName());
+								Debugger.log("/// vt.getName = " + vt.getName());
 
 								// / ... to find the variable with the same name
 								// as the expression in our method call
@@ -1117,7 +1115,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 									Tree typeTree = vt.getType();
 
-									System.out.println("/// typeTree = " + typeTree);
+									Debugger.log("/// typeTree = " + typeTree);
 
 									if (typeTree instanceof IdentifierTree)
 									{
@@ -1191,25 +1189,25 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				}
 
 				this.varType = varType + IDString;
-				System.out.println("/// varType = " + varType);
+				Debugger.log("/// varType = " + varType);
 
 				// Then we get the Type Element of the variable we're calling
 				// the method on
 				if (varIsGenericParadigm(varType))
 				{
-					System.out.println("var is Generic Paradigm");
+					Debugger.log("var is Generic Paradigm");
 					returnObject = genericParadigm(varType);
-					System.out.println("returnObject = " + returnObject);
+					Debugger.log("returnObject = " + returnObject);
 				}
 				else
 				{
 					for (TypeElement t : CONTEXT.getAnalysis().getTypeElements())
 					{
-						System.out.println("!// t = " + t.getSimpleName());
+						Debugger.log("!// t = " + t.getSimpleName());
 
 						final Name simpleName = t.getSimpleName();
 
-						System.out.println("/// t simpleName = " + simpleName);
+						Debugger.log("/// t simpleName = " + simpleName);
 						if (simpleName.contentEquals(varType))
 						{
 							// Get the object env of the class, that represents
@@ -1224,48 +1222,48 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			}
 		}
 
-		System.out.println("returning returnObject = " + returnObject);
+		Debugger.log("returning returnObject = " + returnObject);
 		return returnObject;
 	}
 
 	private ObjectEnv genericParadigm(Name varType)
 	{
-		System.out.println("In genericParadigm, varType = " + varType);
+		Debugger.log("In genericParadigm, varType = " + varType);
 		ObjectEnv returnObject;
 
 		switch (varType.toString())
 		{
 			case "Safelet":
-				System.out.println("Triggered Safelet");
+				Debugger.log("Triggered Safelet");
 				returnObject = new SafeletEnv();
 
 				break;
 			case "Mission":
-				System.out.println("Triggered Mission");
+				Debugger.log("Triggered Mission");
 				returnObject = new MissionEnv();
 				break;
 			case "MissionSequencer":
-				System.out.println("Triggered MissionSequencer");
+				Debugger.log("Triggered MissionSequencer");
 				returnObject = new MissionSequencerEnv();
 				break;
 			case "AperiodicEventHandler":
-				System.out.println("Triggered AperiodicEventHandler");
+				Debugger.log("Triggered AperiodicEventHandler");
 				returnObject = new AperiodicEventHandlerEnv();
 				break;
 			case "OneShotEventHandler":
-				System.out.println("Triggered OneShotEventHandler");
+				Debugger.log("Triggered OneShotEventHandler");
 				returnObject = new OneShotEventHandlerEnv();
 				break;
 			case "PeriodicEventHandler":
-				System.out.println("Triggered PeriodicEventHandler");
+				Debugger.log("Triggered PeriodicEventHandler");
 				returnObject = new PeriodicEventHandlerEnv();
 				break;
 			case "ManagedThread":
-				System.out.println("Triggered ManagedThread");
+				Debugger.log("Triggered ManagedThread");
 				returnObject = new ManagedThreadEnv();
 				break;
 			default:
-				System.out.println("Triggered null");
+				Debugger.log("Triggered null");
 				returnObject = null;
 				break;
 		}
@@ -1297,7 +1295,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		// TODO This falls over for API methods...
 		for (MethodEnv mEnv : methods)
 		{
-			System.out.println("/// mEnv.getMethodName = " + mEnv.getName());
+			Debugger.log("/// mEnv.getMethodName = " + mEnv.getName());
 			if (mEnv.getName().contentEquals(identifier))
 			{
 				// Then get the method env of the method we're
@@ -1404,7 +1402,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	@Override
 	public String visitVariable(VariableTree node, MethodVisitorContext ctxt)
 	{
-		System.out.println("/// VariableTree node = " + node);
+		Debugger.log("/// VariableTree node = " + node);
 		ExpressionTree initializer = node.getInitializer();
 
 		if (initializer instanceof MethodInvocationTree)
@@ -1415,7 +1413,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				final MemberSelectTree memberSelectTree = (MemberSelectTree) mit
 						.getMethodSelect();
-				System.out.println("!// not my method, variable, putting key: "
+				Debugger.log("!// not my method, variable, putting key: "
 						+ memberSelectTree.getIdentifier().toString() + " value: "
 						+ node.getName().toString());
 
@@ -1518,7 +1516,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	public String visitWhileLoop(WhileLoopTree node, MethodVisitorContext ctxt)
 	{
 		ExpressionTree condition = node.getCondition();
-		System.out.println("/// WHile Loop condition = " + condition.toString()
+		Debugger.log("/// WHile Loop condition = " + condition.toString()
 				+ " kind = " + condition.getKind());
 
 		// TODO HACKY, just checks for a ( to get if it's a method invocation.
@@ -1528,7 +1526,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			conditionTrans = conditionTrans.replace("\\Skip", "");
 					
 			String conditionString = "";
-			System.out.println("/// conditionTrans = " + conditionTrans);
+			Debugger.log("/// conditionTrans = " + conditionTrans);
 
 			boolean isStillMethodCall = (boolean) timeMachine.get("methodCall");
 			if (isStillMethodCall)
@@ -1544,7 +1542,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			{
 				// TODO SUPER HACKY! But I've now forgotten what it does.
 				conditionTrans = conditionTrans.substring(1, conditionTrans.length() - 1);
-				// System.out.println("/// conditionTrans sub = " +
+				// Debugger.log("/// conditionTrans sub = " +
 				// conditionTrans);
 
 				boolean negative = conditionTrans.startsWith("\\lnot");

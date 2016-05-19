@@ -5,6 +5,7 @@ import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 
 import java.util.HashMap;
@@ -91,11 +92,9 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	@Override
 	public VariableEnv visitVariable(VariableTree arg0, VariableEnv param)
 	{
-		System.out.println("Params Visitor: Variable " + arg0.toString());
+		Debugger.log("Params Visitor: Variable " + arg0.toString());
 		for (TypeElement et : TightRope.ANALYSIS.getTypeElements())
 		{
-//			System.out.println("et.simpleName = " + et.getSimpleName()
-//					+ "\t\t arg0.name = " + arg0.getName());
 			if (et.getSimpleName().toString().equals(arg0.getType().toString()))
 			{
 				ExpressionTree initialiser = arg0.getInitializer();
@@ -115,10 +114,8 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	@Override
 	public VariableEnv visitNewClass(NewClassTree arg0, VariableEnv arg1)
 	{
-		System.out.println("Params Visitor: New Class " + arg0.toString());
-		// ArrayList<VariableEnv> returnList = new ArrayList<VariableEnv>();
-
-		// List<? extends VariableTree> initParams = null;
+		Debugger.log("Params Visitor: New Class " + arg0.toString());
+		
 
 		ExpressionTree identifierTree = arg0.getIdentifier();
 		String identifiterTree = identifierTree.toString();
@@ -131,48 +128,31 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			assert (args.size() == 1);
 
 			ExpressionTree arg = args.get(0);
-//			System.out.println("arg " + arg.toString() + " in PriParams is "
-//					+ arg.getKind());
 
-			// System.out.println(programEnv.getObjectEnv(originClass).getVariables().toString());
-			// System.out.println(((ParadigmEnv)
-			// programEnv.getObjectEnv(originClass)).getClassEnv().getVariables().toString());
 
 			// TODO This doesn't work. As a limitation of the tool, it only
 			// works if you have a param that is a literal
 			if (arg instanceof IdentifierTree)
 			{
-				// if (varMap.get(((IdentifierTree) arg).getName()) != null)
-				// {
-				// Tree varThing = varMap
-				// .get(((IdentifierTree) arg).getName());
-				//
-				// v.setProgramType(varThing.toString());
-				// }
-				// else
-				// {
+				
 				VariableEnv vTemp = arg.accept(this, null);
-				System.out.println("vTemp = " + vTemp.toString());
+				Debugger.log("vTemp = " + vTemp.toString());
 				
 				//TODO FOx this, attempted to only set the thread priority if 'needsThread' is true, 
 				//which should be set when the MethodBodyVisitor finds a call to wait or notify.
-//				if (objectEnv.needsThread())
-//				{
+//				
 					programEnv.setThreadPriority(nameOfClass, vTemp.getProgramType());
-//				}
-				// }
+//			
 			}
 			else if (arg instanceof LiteralTree)
 			{
-				// v.setProgramType(arg.toString());
-//				System.out.println("arg.toString = " + arg.toString());
+				
 				
 				//TODO FOx this, attempted to only set the thread priority if 'needsThread' is true, 
 				//which should be set when the MethodBodyVisitor finds a call to wait or notify.
-//				if (objectEnv.needsThread())
-//				{
+
 					programEnv.setThreadPriority(nameOfClass, arg.toString());
-//				}
+
 			}
 
 			return null;
@@ -379,8 +359,6 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	@Override
 	public VariableEnv visitIdentifier(IdentifierTree arg0, VariableEnv arg1)
 	{
-//		System.out.println("Param Visitor: Identifier->" + arg0.toString());
-
 		{
 			VariableEnv v = new VariableEnv();
 			String idString = arg0.getName().toString();
@@ -390,7 +368,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				v.setType("ID");
 
 				v.setProgramType(originClass + "ID");
-				// return null;
+				
 			}
 			else
 			{
@@ -399,9 +377,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				ObjectEnv originObject = programEnv.getObjectEnv(originClass);
 
 				Tree varTree = varMap.get(varName);
-//				System.out.println(varName);
-//				System.out.println(varMap);
-//				System.out.println(varTree);
+
 
 				if (varTree != null)
 				{
@@ -409,7 +385,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 					if (varTreeString.equals("StorageParameters"))
 					{
-//						System.out.println("Ignored Arg " + varName);
+						
 						return null;
 					}
 
@@ -438,25 +414,16 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				}
 				else
 				{
-//					System.out.println("VAR TREE NULL");
-//					System.out.println("originObject = " + originObject.getName());
-
-//					System.out.println("Getting var " + varName + " from origin object");
 					VariableEnv theVar = originObject.getVariable(varName);
 
 					if (theVar == null)
 					{
-//						System.out.println("Getting from classEnv");
+						
 						theVar = ((ParadigmEnv) originObject).getClassEnv().getVariable(
 								varName);
 					}
 
-//					System.out.println("originObject = " + originObject.getName());
-//
-//					System.out.println(theVar);
-					// System.out.println(theVar.getInit().toString());
-					// theVar.setProgramType(theVar.getInit().toString());
-					
+				
 					v = theVar;
 				}
 			}
@@ -469,7 +436,6 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	@Override
 	public VariableEnv visitLiteral(LiteralTree arg0, VariableEnv arg1)
 	{
-//		System.out.println("Param Visitor : Literal");
 
 		if (arg0 != null)
 		{
@@ -492,7 +458,6 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					String varType = (objVar.getType());
 					if (varType.equals("StorageParameters"))
 					{
-//						System.out.println("Ignored Arg " + varType);
 
 					}
 					else
@@ -503,13 +468,11 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 
 				v.setInit(arg0.getValue());
 
-//				System.out.println("Returning " + v.toString() + " from literal");
 				return v;
 
 			}
 		}
 
-//		System.out.println("Returning null form Literal");
 		return null;
 	}
 

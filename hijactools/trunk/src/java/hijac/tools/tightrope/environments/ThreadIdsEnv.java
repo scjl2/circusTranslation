@@ -1,7 +1,6 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.tightrope.utils.TightRopeString;
-import hijac.tools.tightrope.utils.TightRopeString.Name;
 
 import java.util.HashMap;
 import java.util.Map;

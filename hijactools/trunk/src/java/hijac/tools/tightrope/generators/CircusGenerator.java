@@ -14,6 +14,7 @@ import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
+import hijac.tools.tightrope.utils.Debugger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -355,7 +356,7 @@ public class CircusGenerator
 
 		for (MissionEnv mEnv : programEnv.getMissions())
 		{
-			System.out.println(mEnv.getName());
+			Debugger.log(mEnv.getName());
 
 			/* Create a data-model */
 			missionMap = mEnv.toMap();
@@ -425,7 +426,7 @@ public class CircusGenerator
 		{
 			/* Create a data-model */
 			mtMap = mtEnv.toMap();
-			System.out.println("!// managed threads parents = "
+			Debugger.log("!// managed threads parents = "
 					+ mtEnv.getParents().toString());
 			procName = mtEnv.getName().toString();
 			translateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName + APP_CIRCUS);
