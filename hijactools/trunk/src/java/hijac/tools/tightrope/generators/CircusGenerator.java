@@ -6,6 +6,7 @@ import hijac.tools.application.TightRope;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
@@ -24,6 +25,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -154,31 +156,31 @@ public class CircusGenerator
 	 * @param fileName
 	 *            The file name to output the translated file to
 	 */
-	@SuppressWarnings("rawtypes")
-	private void translateCommon(Map root, String template, String fileName)
-	{
-		/* Get the template (uses cache internally) */
-		freemarker.template.Template temp = null;
-		try
-		{
-			temp = cfg.getTemplate(template);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-
-		/* Variables for writing output to a file */
-		new File(OUTPUT_DIRECTORY + programName).mkdirs();
-
-		File file = new File(OUTPUT_DIRECTORY + programName + FILE_DELIMITER + fileName);
-
-		FileOutputStream fop = null;
-		try
-		{
-			fop = new FileOutputStream(file);
-		}
-		catch (FileNotFoundException e)
+//	@SuppressWarnings("rawtypes")
+//	private void translateCommon(Map root, String template, String fileName)
+//	{
+//		/* Get the template (uses cache internally) */
+//		freemarker.template.Template temp = null;
+//		try
+//		{
+//			temp = cfg.getTemplate(template);
+//		}
+//		catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		}
+//
+//		/* Variables for writing output to a file */
+//		new File(OUTPUT_DIRECTORY + programName).mkdirs();
+//
+//		File file = new File(OUTPUT_DIRECTORY + programName + FILE_DELIMITER + fileName);
+//
+//		FileOutputStream fop = null;
+//		try
+//		{
+//			fop = new FileOutputStream(file);
+//		}
+//		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
 		}
@@ -275,6 +277,8 @@ public class CircusGenerator
 		
 		System.out.println("+++ Translating Method Call Binder +++");	
 		translateCommon(root, NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL, NETWORK_METHOD_CALL_BINDER);
+		
+		Debugger.log (root.get("MethodCallBindings").toString());
 		
 		translateCommon(root, "MethodCallBindingChannels.ftl", "MethodCallBindingChannels.circus");
 		

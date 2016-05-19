@@ -31,7 +31,7 @@ public class TightRope
 	private static final boolean RUN_LATEX = true;
 	private static final boolean RUN_FREEMARKER = true;
 	private static final boolean USE_ANNOTATIONS = false;
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG_OUTPUT = true;
 
 	public static SCJAnalysis ANALYSIS;
 	private static EnvironmentBuilder environmentBuilder = null;
@@ -50,7 +50,7 @@ public class TightRope
 
 		final long startTime = System.nanoTime();
 		
-		Debugger.setEnabled(DEBUG);
+		Debugger.setEnabled(DEBUG_OUTPUT);
 
 		System.out.println();
 		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++");
