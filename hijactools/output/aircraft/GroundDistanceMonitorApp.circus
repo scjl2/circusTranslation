@@ -1,0 +1,77 @@
+\begin{zsection}
+  \SECTION ~ GroundDistanceMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
+ \t1  ,
+MainMissionMethChan
+
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess GroundDistanceMonitorApp \circdef \\ \t1
+  mainMission : MissionID
+
+\circspot
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~GroundDistanceMonitorSID \then \\
+	
+      \circblockopen
+            binder\_getAltitudeCall~.~mainMission~.~GroundDistanceMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~GroundDistanceMonitorSID~?~getAltitude\then \\\Skip\circvar distance : \power \arithmos \circspot distance :=~getAltitude
+             \circseq \\ 
+
+
+
+              \circif ~ (distance = readingOnGround) ~ \circthen ~
+  \\
+\t1 
+  \Skip
+
+
+  \\
+  \circelse ~ \lnot (distance = readingOnGround) \circthen \Skip
+  \\
+  \circfi \\
+
+            
+
+
+
+
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~GroundDistanceMonitorSID \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_periodic\_app~.~GroundDistanceMonitorSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

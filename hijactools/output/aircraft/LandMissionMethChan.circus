@@ -1,0 +1,25 @@
+\begin{zsection}
+  \SECTION ~ LandMissionMethChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, SchedulableId
+\end{zsection}
+%
+\begin{circus}
+\t1 \circchannel stowLandingGearCall : MissionID  \cross   \\
+\t1 \circchannel stowLandingGearRet : MissionID  \cross   \\
+\end{circus}
+%
+\begin{circus}
+\t1 \circchannel isLandingGearDeployedCall : MissionID  \cross   \\
+\t1 \circchannel isLandingGearDeployedRet : MissionID  \cross   \cross \boolean \\
+\end{circus}
+%
+\begin{circus}
+\t1 \circchannel cleanUpCall : MissionID  \\
+\t1 \circchannel cleanUpRet : MissionID  \cross \boolean \\
+\end{circus}
+%
+%
+\begin{circus}
+\t1 \circchannel deployLandingGearCall : MissionID   \cross   \cross ThreadID   \\
+\t1 \circchannel deployLandingGearRet : MissionID   \cross   \cross ThreadID \\
+\end{circus}
+%
