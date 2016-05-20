@@ -1,0 +1,112 @@
+\begin{zsection}
+	\SECTION ~ MethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels\\  ,MainMissionMethChan ,LandMissionMethChan     
+\end{zsection}
+%
+\begin{circus}
+\circprocess  MethodCallBinder \circdef \circbegin \\
+\end{circus}
+%
+%
+\begin{circusaction}
+getAltitude\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_getAltitudeCall~?~loc\prefixcolon(loc \in getAltitudeLocs)~?~caller\prefixcolon(caller \in getAltitudeCallers)  \then \\
+	getAltitudeCall~.~loc~.~caller  \then \\
+	getAltitudeRet~.~loc~.~caller~?~ret \then \\
+	binder\_getAltitudeRet~.~loc~.~caller  ~ !~ret  \then \\
+	getAltitude\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+stowLandingGear\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_stowLandingGearCall~?~loc\prefixcolon(loc \in stowLandingGearLocs)~?~caller\prefixcolon(caller \in stowLandingGearCallers)  \then \\
+	stowLandingGearCall~.~loc~.~caller  \then \\
+	stowLandingGearRet~.~loc~.~caller \then \\
+	binder\_stowLandingGearRet~.~loc~.~caller  ~   \then \\
+	stowLandingGear\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+getHeading\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_getHeadingCall~?~loc\prefixcolon(loc \in getHeadingLocs)~?~caller\prefixcolon(caller \in getHeadingCallers)  \then \\
+	getHeadingCall~.~loc~.~caller  \then \\
+	getHeadingRet~.~loc~.~caller~?~ret \then \\
+	binder\_getHeadingRet~.~loc~.~caller  ~ !~ret  \then \\
+	getHeading\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+getAirSpeed\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_getAirSpeedCall~?~loc\prefixcolon(loc \in getAirSpeedLocs)~?~caller\prefixcolon(caller \in getAirSpeedCallers)  \then \\
+	getAirSpeedCall~.~loc~.~caller  \then \\
+	getAirSpeedRet~.~loc~.~caller~?~ret \then \\
+	binder\_getAirSpeedRet~.~loc~.~caller  ~ !~ret  \then \\
+	getAirSpeed\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+deployLandingGear\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_deployLandingGearCall~?~loc\prefixcolon(loc \in deployLandingGearLocs)~?~caller\prefixcolon(caller \in deployLandingGearCallers)~?~callingThread   \then \\
+	deployLandingGearCall~.~loc~.~caller~.~callingThread   \then \\
+	deployLandingGearRet~.~loc~.~caller~.~callingThread  \then \\
+	binder\_deployLandingGearRet~.~loc~.~caller  ~.~callingThread ~   \then \\
+	deployLandingGear\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+isLandingGearDeployed\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_isLandingGearDeployedCall~?~loc\prefixcolon(loc \in isLandingGearDeployedLocs)~?~caller\prefixcolon(caller \in isLandingGearDeployedCallers)  \then \\
+	isLandingGearDeployedCall~.~loc~.~caller  \then \\
+	isLandingGearDeployedRet~.~loc~.~caller~?~ret \then \\
+	binder\_isLandingGearDeployedRet~.~loc~.~caller  ~ !~ret  \then \\
+	isLandingGearDeployed\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+BinderActions \circdef \\
+\circblockopen 
+	getAltitude\_MethodBinder
+	\\ \interleave \\
+
+	stowLandingGear\_MethodBinder
+	\\ \interleave \\
+
+	getHeading\_MethodBinder
+	\\ \interleave \\
+
+	getAirSpeed\_MethodBinder
+	\\ \interleave \\
+
+	deployLandingGear\_MethodBinder
+	\\ \interleave \\
+
+	isLandingGearDeployed\_MethodBinder
+	
+\circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot BinderActions \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+\circend
+\end{circus}
