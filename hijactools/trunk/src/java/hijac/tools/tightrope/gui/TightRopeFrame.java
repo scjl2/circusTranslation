@@ -1,11 +1,14 @@
 package hijac.tools.tightrope.gui;
 
 import hijac.tools.application.TightRope;
+import hijac.tools.application.TightRopeGUI;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -64,6 +67,7 @@ public class TightRopeFrame extends JFrame
 		
 		settingsPanel.add(rtsjLib);
 		JButton rtsjBrowse = new JButton("Browse");
+//		rtsjBrowse.setName("rtsjBrowse");
 		rtsjBrowse.addActionListener(new BrowseAction(this, rtsjLib));
 		settingsPanel.add(rtsjBrowse);
 
@@ -71,6 +75,7 @@ public class TightRopeFrame extends JFrame
 		
 		settingsPanel.add(scjLib);
 		JButton scjBrowse = new JButton("Browse");
+//		scjBrowse.setName("scjBrowse");
 		scjBrowse.addActionListener(new BrowseAction(this, scjLib));
 		settingsPanel.add(scjBrowse);
 
@@ -78,6 +83,7 @@ public class TightRopeFrame extends JFrame
 		
 		settingsPanel.add(programSource);
 		JButton programBrowse = new JButton("Browse");
+//		programBrowse.setName("programBroswe");
 		programBrowse.addActionListener(new BrowseAction(this, programSource));
 		settingsPanel.add(programBrowse);
 
@@ -105,7 +111,20 @@ public class TightRopeFrame extends JFrame
 
 	protected void generate()
 	{
-
+		try
+		{
+			TightRopeGUI.generateButton();
+		}
+		catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		JOptionPane.showMessageDialog(TightRopeFrame.this, "GENERATE");
 
 	}

@@ -13,13 +13,16 @@ import hijac.tools.tightrope.gui.TightRopeFrame;
 
 public class TightRopeGUI
 {
+	private static TightRopeFrame gui;
+	private static SCJCompilationConfig config ;
+	
 	public static void main(String[] args) throws IOException 
 	{
 		 TightRope.init();
 		 
-		 TightRopeFrame gui = new TightRopeFrame();
+		 gui = new TightRopeFrame();
 			
-			SCJCompilationConfig config = TightRope.intiConfig();
+		 config= TightRope.intiConfig();
 			
 			String[] scjSrcList = Config.getSCJSrc();
 			//Assuming there is only one...
@@ -29,28 +32,7 @@ public class TightRopeGUI
 			gui.displayFrame();
 			
 			
-			List<File> classpath = new ArrayList<File>();
-			String text = gui.getRtsjLibText();
-			if(! text.isEmpty())
-			{
-				classpath.add(new File(text));
-			}
-			
-			text = gui.getScjLibText();
-			
-			if (! text.isEmpty())
-			{
-				classpath.add(new File(text));
-			}
-			
-			List<File> sourcepath = new ArrayList<File>();
-			sourcepath.add(new File(gui.getProgramSourceText()));			
-			
-			config = new  SCJCompilationConfig(classpath, sourcepath);
-			
-			
-			
-			translate(config);
+		
 
 //			TightRope.exit();
 		
@@ -68,5 +50,30 @@ public class TightRopeGUI
 		TightRope.buildPhase();
 
 		TightRope.generatePhase();
+	}
+	
+	public static void generateButton() throws FileNotFoundException, IOException
+	{
+		List<File> classpath = new ArrayList<File>();
+		String text = gui.getRtsjLibText();
+		if(! text.isEmpty())
+		{
+			classpath.add(new File(text));
+		}
+		
+		text = gui.getScjLibText();
+		
+		if (! text.isEmpty())
+		{
+			classpath.add(new File(text));
+		}
+		
+		List<File> sourcepath = new ArrayList<File>();
+		sourcepath.add(new File(gui.getProgramSourceText()));			
+		
+		config = new  SCJCompilationConfig(classpath, sourcepath);
+		
+					
+		translate(config);
 	}
 }
