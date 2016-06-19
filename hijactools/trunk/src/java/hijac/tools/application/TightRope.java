@@ -36,16 +36,38 @@ public class TightRope
 	private static NewSCJApplication scjApplication;
 
 	private static String programName = "";
+	private static long startTime;
 
 	static
 	{
 		Statics.kickstart();
 	}
 
+	/**
+	 * Main, for the command line version. Simply accepts the locations in the config file and generates
+	 * 
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException
 	{
 
-		final long startTime = System.nanoTime();
+		 init();
+		
+		SCJCompilationConfig config = intiConfig();
+		
+		compilePhase(config);
+
+		buildPhase();
+
+		generatePhase();
+
+		exit();
+	}
+
+	public static void init()
+	{
+		startTime = System.nanoTime();
 		
 		Debugger.setEnabled(DEBUG_OUTPUT);
 
@@ -58,17 +80,21 @@ public class TightRope
 		System.out.println();
 
 		setUncaughtExceptionHandler();
-		
+	}
+
+	public static SCJCompilationConfig intiConfig()
+	{		
+		return SCJCompilationConfig.getDefault();
+	}
+
+	public static void compilePhase(SCJCompilationConfig config) throws IOException
+	{
 		System.out.println("+++++++++++++++++++++");
 		System.out.println("+++ Compile Phase +++");
 		System.out.println("+++++++++++++++++++++");
-
-		SCJCompilationConfig config = SCJCompilationConfig.getDefault();
-
-		SCJCompilationTask compiler = new SCJCompilationTask(config);
+		
+		SCJCompilationTask compiler = new SCJCompilationTask(config);	
 	
-	
-
 		try
 		{
 			ANALYSIS = SCJAnalysis.create(compiler);
@@ -79,14 +105,17 @@ public class TightRope
 			e.getDiagnostics().print(System.out);
 			System.exit(-1);
 		}
+	}
 
+	public static void buildPhase()
+	{
 		System.out.println("+++++++++++++++++++");
 		System.out.println("+++ Build Phase +++");
 		System.out.println("+++++++++++++++++++");
 		
 		scjApplication = new NewSCJApplication(ANALYSIS);
 		environmentBuilder = new EnvironmentBuilder(ANALYSIS);
-
+	
 		programEnv = environmentBuilder.explore();
 		
 		setProgramName(environmentBuilder.getProgramName());
@@ -96,9 +125,12 @@ public class TightRope
 		System.out.println();
 		System.out.println("+++ Program Name: " + programName + " +++");
 		programEnv.output();
-
+	
 		System.out.println("Network = " + programEnv.geNetworkMap());
+	}
 
+	public static void generatePhase() throws IOException, FileNotFoundException
+	{
 		if (RUN_FREEMARKER)
 		{
 			System.out.println("++++++++++++++++++++++");
@@ -106,20 +138,25 @@ public class TightRope
 			System.out.println("++++++++++++++++++++++");
 			runFreemarker();
 		}
-
+	
 		if (RUN_LATEX)
 		{
 			runLatex(programName);
 		}
-
+		
 		final long duration = System.nanoTime() - startTime;
-
+		
 		System.out.println();
 		System.out.println("+++ Finished +++");
 		System.out.println("Total Time: " + duration / 1000000000 + "."
 				+ (duration % 1000000000) + " seconds ");
 		System.out.println(duration + " nanoseconds");
+	}
 
+	public static void exit()
+	{
+		
+	
 		System.exit(0);
 	}
 

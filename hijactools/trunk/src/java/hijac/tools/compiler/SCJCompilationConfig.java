@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This class seems to coerce the relevant properties from Config and hold them under SCJ-specific names for the compilation 
+ * 
  * @author Frank Zeyda
  * @version $Revision: 206 $
  */

@@ -11,6 +11,8 @@ import java.util.Properties;
  * @author Frank Zeyda
  * @version $Revision: 206 $
  * 
+ * This class seems to handle parsing the properties file and holding the result
+ * 
  * @updated 23/03/2015
  * @updateAuthor Matt Luckcuck
  */

@@ -22,6 +22,11 @@ public class TightRopeFrame extends JFrame
 	 * Default Serial Id
 	 */
 	private static final long serialVersionUID = -5887203895415977539L;
+	
+	private final JTextField rtsjLib = new JTextField();
+	private final JTextField scjLib = new JTextField();
+	private final JTextField programSource = new JTextField();
+	
 
 	public TightRopeFrame()
 	{
@@ -56,27 +61,27 @@ public class TightRopeFrame extends JFrame
 
 		JPanel settingsPanel = new JPanel(settingsGrid);
 		settingsPanel.add(new JLabel("RTSJ Library:", SwingConstants.RIGHT));
-		final JTextField rtsjLib = new JTextField();
+		
 		settingsPanel.add(rtsjLib);
 		JButton rtsjBrowse = new JButton("Browse");
 		rtsjBrowse.addActionListener(new BrowseAction(this, rtsjLib));
 		settingsPanel.add(rtsjBrowse);
 
 		settingsPanel.add(new JLabel("SCJ Library:", SwingConstants.RIGHT));
-		JTextField scjLib = new JTextField();
+		
 		settingsPanel.add(scjLib);
 		JButton scjBrowse = new JButton("Browse");
 		scjBrowse.addActionListener(new BrowseAction(this, scjLib));
 		settingsPanel.add(scjBrowse);
 
 		settingsPanel.add(new JLabel("Program Source:", SwingConstants.RIGHT));
-		JTextField programSource = new JTextField();
+		
 		settingsPanel.add(programSource);
 		JButton programBrowse = new JButton("Browse");
 		programBrowse.addActionListener(new BrowseAction(this, programSource));
 		settingsPanel.add(programBrowse);
 
-		populateTextFeilds(rtsjLib, scjLib, programSource);
+//		populateTextFeilds("rtsj Location","scj Location","program Location");
 
 		// ***************************
 		// Add Components To Window
@@ -105,14 +110,14 @@ public class TightRopeFrame extends JFrame
 
 	}
 
-	private void populateTextFeilds(JTextField rtsjLib, JTextField scjLib,
-			JTextField programSource)
+	public void populateTextFeilds(String rtsjLibText, String scjLibText,
+			String programSourceText)
 	{
-		rtsjLib.setText("rtsj Location");
+		rtsjLib.setText(rtsjLibText);
 
-		scjLib.setText("scj Location");
+		scjLib.setText(scjLibText);
 
-		programSource.setText("program Location");
+		programSource.setText(programSourceText);
 
 	}
 
@@ -121,5 +126,19 @@ public class TightRopeFrame extends JFrame
 		pack();
 		setVisible(true);
 	}
-
+	
+	public String getRtsjLibText()
+	{
+		return rtsjLib.getText();
+	}
+	
+	public String getScjLibText()
+	{
+		return scjLib.getText();
+	}
+	
+	public String getProgramSourceText()
+	{
+		return programSource.getText();
+	}
 }
