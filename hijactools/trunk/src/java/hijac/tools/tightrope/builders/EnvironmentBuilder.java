@@ -18,6 +18,7 @@ import hijac.tools.tightrope.environments.SchedulableTypeE;
 import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.utils.Debugger;
+import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.visitors.ParametersVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
@@ -222,9 +223,7 @@ public class EnvironmentBuilder
 			
 			ClassTree ct = analysis.TREES.getTree(elem);
 			
-			grabClassMethods(className, ct);
-			
-			
+			grabClassMethods(className, ct);			
 		}
 
 		Debugger.log("Class Super Type Map");
@@ -239,6 +238,40 @@ public class EnvironmentBuilder
 		{
 			Debugger.log(s + " = " + classMethodsMap.get(s));
 		}
+		
+		exploreNonParadigmObjects(grabNonParadigmObjects());
+	}
+
+	private void exploreNonParadigmObjects(List<TypeElement> grabNonParadigmObjects)
+	{
+		// TODO Makes this build the envs for this list.
+		
+	}
+
+	private List<TypeElement> grabNonParadigmObjects()
+	{
+		List<TypeElement> nonParadigmObjects = new ArrayList<TypeElement>();
+		
+		for (TypeElement elem : type_elements)
+		{
+			
+			boolean notParadigm = (! (elem.getInterfaces().toString().contains(TightRopeString.ParadigmName.SAFELET))) &&
+				(!(elem.getSuperclass().toString().contains(TightRopeString.ParadigmName.MISSION_SEQUENCER))) &&
+				(!(elem.getSuperclass().toString().contains(TightRopeString.ParadigmName.MISSION))) &&
+				(!(elem.getSuperclass().toString().contains(TightRopeString.ParadigmName.PERIODIC_EVENT_HANDLER))) &&
+				(!(elem.getSuperclass().toString().contains(TightRopeString.ParadigmName.APERIODIC_EVENT_HANDLER))) &&
+				(!(elem.getSuperclass().toString().contains(TightRopeString.ParadigmName.ONE_SHOT_EVENT_HANDLER))) &&
+				(!(elem.getSuperclass().toString().contains(TightRopeString.ParadigmName.MANAGED_THREAD))) ;
+			
+			
+			
+			if (notParadigm)
+			{
+				Debugger.log(elem.toString() + " is not paradigm");
+				nonParadigmObjects.add(elem);
+			}
+		}
+		return nonParadigmObjects;
 	}
 
 	/**
@@ -318,7 +351,7 @@ public class EnvironmentBuilder
 		{
 			// TODO needs to be made safer. I think this might fall over if
 			// presented with multiple interfaces
-			if (elem.getInterfaces().toString().contains("Safelet"))
+			if (elem.getInterfaces().toString().contains(TightRopeString.ParadigmName.SAFELET))
 			{
 				final Name safeletName = elem.getSimpleName();
 

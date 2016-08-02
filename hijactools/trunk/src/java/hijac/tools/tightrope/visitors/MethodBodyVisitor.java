@@ -100,7 +100,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 	protected final NewSCJApplication CONTEXT;
 	private String varType;
-//	private boolean classEnv;
+	// private boolean classEnv;
 	private boolean putSkip = false;
 
 	/**
@@ -384,9 +384,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			st = iter.next();
 
-
-			
-			Debugger.log("/// st=" + st.toString() + " st.kind="+st.getKind());
+			Debugger.log("/// st=" + st.toString() + " st.kind=" + st.getKind());
 			if (st instanceof ExpressionStatementTree)
 
 			{
@@ -631,7 +629,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			identifier = it.getName();
 		}
 
-//		String objectID = object.getObjectId();
+		// String objectID = object.getObjectId();
 		StringBuilder sb = new StringBuilder();
 
 		if (identifier != null)
@@ -648,7 +646,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(object.getObjectId());
 				sb.append(LATEX.SHRIEK + "thread " + LATEX.THEN);
 				sb.append(LATEX.NEW_LINE);
-				 sb.append(LATEX.SKIP);
+				sb.append(LATEX.SKIP);
 
 				timeMachine.put("methodCall", false);
 
@@ -674,7 +672,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(object.getObjectId());
 				sb.append(LATEX.DOT + "thread " + LATEX.THEN);
 				sb.append(LATEX.NEW_LINE);
-				 sb.append(LATEX.SKIP);
+				sb.append(LATEX.SKIP);
 
 				timeMachine.put("methodCall", false);
 
@@ -689,14 +687,16 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				MethodEnv method = getMethodEnvBeingCalled(methodSelect);
 				method.setExternalAppMethod(true);
 
-//				final String methodName = mt.getName().toString();
+				// final String methodName = mt.getName().toString();
 				// assert(false);
 				// ((MemberSelectTree)
 				// node.getMethodSelect()).getExpression().toString();
-//				boolean notIgnoredMethod = ((!identifier.contentEquals("release"))
-//						&& (!identifier.contentEquals("requestTermination")) && (!identifier
-//						.contentEquals("terminationPending")));
-				
+				// boolean notIgnoredMethod =
+				// ((!identifier.contentEquals("release"))
+				// && (!identifier.contentEquals("requestTermination")) &&
+				// (!identifier
+				// .contentEquals("terminationPending")));
+
 				final boolean notIgnoredMethod = !((identifier.contentEquals("<init>"))
 						|| (identifier.contentEquals("handleAsyncEvent"))
 						|| (identifier.contentEquals("run"))
@@ -706,20 +706,19 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 						|| (identifier.contentEquals("initializeApplication"))
 						|| (identifier.contentEquals("cleanUp"))
 						|| (identifier.contentEquals("immortalMemorySize"))
-						|| (identifier.contentEquals("getSequencer")) 
-						|| (identifier.contentEquals("getNextMission"))
-				);
+						|| (identifier.contentEquals("getSequencer")) || (identifier
+						.contentEquals("getNextMission")));
 
-				Debugger.log("/*/*NotIg Id=" + identifier + "  notIg="
-						+ notIgnoredMethod);
+				Debugger.log("/*/*NotIg Id=" + identifier + "  notIg=" + notIgnoredMethod);
 
 				if (notIgnoredMethod)
 				{
-//TODO I think here is where I need to check the class methods map for the *actual* location of the method I'm calling...I think
+					// TODO I think here is where I need to check the class
+					// methods map for the *actual* location of the method I'm
+					// calling...I think
 					TightRope.getProgramEnv().addBinderMethodEnv(method,
 							varType.toString(), object.getId(), object.getIdType());
-					
-					
+
 				}
 
 				if (method.isAPIMethod())
@@ -760,7 +759,6 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 					}
 				}
 
-
 				String returnString = method.getReturnType();
 				List<? extends ExpressionTree> parameters = node.getArguments();
 
@@ -774,15 +772,16 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(LATEX.DOT);
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
-				
-				if ( (!method.isAPIMethod()) || (method.getName().contains("requestTermination")))
+
+				if ((!method.isAPIMethod())
+						|| (method.getName().contains("requestTermination")))
 
 				{
 					sb.append(LATEX.DOT);
 					// sb.append("TESTE"+objectID.toString());
 					sb.append(object.getId());
 				}
-				
+
 				final String threadId = object.getThreadId();
 				if (method.isSynchronised())
 				{
@@ -823,8 +822,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				sb.append(LATEX.DOT);
 				sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
 						.toString());
-				
-				if ( (!method.isAPIMethod()) || (method.getName().contains("requestTermination")))
+
+				if ((!method.isAPIMethod())
+						|| (method.getName().contains("requestTermination")))
 				{
 					sb.append(LATEX.DOT);
 					// sb.append(objectID.toString());
@@ -987,8 +987,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		{
 			if (me.getName().contains(methodName))
 			{
-				Debugger.log("getMethodEnv returning method env for "
-						+ me.getName());
+				Debugger.log("getMethodEnv returning method env for " + me.getName());
 				return me;
 			}
 		}
@@ -1000,11 +999,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 			Debugger.log("/// node.getMethodSelect = " + mst.toString());
 
-			Debugger.log("/// node...getExpression = "
-					+ mst.getExpression().toString());
+			Debugger.log("/// node...getExpression = " + mst.getExpression().toString());
 
-			Debugger.log("/// node...getIdenitifer = "
-					+ mst.getIdentifier().toString());
+			Debugger.log("/// node...getIdenitifer = " + mst.getIdentifier().toString());
 
 			identifier = mst.getIdentifier();
 
@@ -1131,35 +1128,43 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 														.getAnalysis().TREES
 														.getTree(typeElem);
 
-												if (classTree
-														.getExtendsClause()
-														.toString()
-														.contains(
-																TightRopeString.ParadigmName.MISSION))
+												assert (classTree != null);
+
+												final Tree classTreeExtendsClause = classTree
+														.getExtendsClause();
+											
+												if (classTreeExtendsClause != null)
 												{
-													IDString = TightRopeString.Name.MID;
-												}
-												else if ((classTree.getExtendsClause()
-														.toString()
-														.contains(TightRopeString.ParadigmName.MANAGED_THREAD))
-														|| ct.getExtendsClause()
-																.toString()
-																.contains(
-																		TightRopeString.ParadigmName.APERIODIC_EVENT_HANDLER)
-														|| ct.getExtendsClause()
-																.toString()
-																.contains(
-																		TightRopeString.ParadigmName.PERIODIC_EVENT_HANDLER)
-														|| ct.getExtendsClause()
-																.toString()
-																.contains(
-																		TightRopeString.ParadigmName.ONE_SHOT_EVENT_HANDLER)
-														|| ct.getExtendsClause()
-																.toString()
-																.contains(
-																		TightRopeString.ParadigmName.MISSION_SEQUENCER))
-												{
-													IDString = TightRopeString.Name.SID;
+
+													if (classTreeExtendsClause
+															.toString()
+															.contains(
+																	TightRopeString.ParadigmName.MISSION))
+													{
+														IDString = TightRopeString.Name.MID;
+													}
+													else if ((classTreeExtendsClause
+															.toString()
+															.contains(TightRopeString.ParadigmName.MANAGED_THREAD))
+															|| ct.getExtendsClause()
+																	.toString()
+																	.contains(
+																			TightRopeString.ParadigmName.APERIODIC_EVENT_HANDLER)
+															|| ct.getExtendsClause()
+																	.toString()
+																	.contains(
+																			TightRopeString.ParadigmName.PERIODIC_EVENT_HANDLER)
+															|| ct.getExtendsClause()
+																	.toString()
+																	.contains(
+																			TightRopeString.ParadigmName.ONE_SHOT_EVENT_HANDLER)
+															|| ct.getExtendsClause()
+																	.toString()
+																	.contains(
+																			TightRopeString.ParadigmName.MISSION_SEQUENCER))
+													{
+														IDString = TightRopeString.Name.SID;
+													}
 												}
 											}
 										}
@@ -1178,9 +1183,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 								else
 								{
 									Debugger.log("/// vt not equal to the expression. vt = "
-													+ vt
-													+ " and expresison = "
-													+ identifier);
+											+ vt + " and expresison = " + identifier);
 								}
 							}
 						}
@@ -1212,6 +1215,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 							// Get the object env of the class, that represents
 							// the
 							// variable we're calling the method on
+							Debugger.log("getting Object Env of " + simpleName);
 							ObjectEnv o = TightRope.getProgramEnv().getObjectEnv(
 									simpleName);
 							returnObject = o;
@@ -1515,15 +1519,15 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	public String visitWhileLoop(WhileLoopTree node, MethodVisitorContext ctxt)
 	{
 		ExpressionTree condition = node.getCondition();
-		Debugger.log("/// WHile Loop condition = " + condition.toString()
-				+ " kind = " + condition.getKind());
+		Debugger.log("/// WHile Loop condition = " + condition.toString() + " kind = "
+				+ condition.getKind());
 
 		// TODO HACKY, just checks for a ( to get if it's a method invocation.
 		if (condition.toString().contains("("))
 		{
 			String conditionTrans = visit(condition, ctxt);
 			conditionTrans = conditionTrans.replace("\\Skip", "");
-					
+
 			String conditionString = "";
 			Debugger.log("/// conditionTrans = " + conditionTrans);
 
@@ -1550,17 +1554,17 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				{
 					conditionTrans = conditionTrans.substring(5);
 
-					conditionString = conditionTrans 
-							
-							+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
+					conditionString = conditionTrans
+
+					+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
 							+ " (\\lnot " + timeMachine.get("variableIdentifier")
 							+ ") \\circseq \\\\";
 				}
 				else
 				{
 					conditionString = conditionTrans
-							
-							+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
+
+					+ " \\circvar loopVar : \\boolean \\circspot loopVar :=~"
 							+ timeMachine.get("variableIdentifier") + "\\circseq \\\\";
 				}
 
