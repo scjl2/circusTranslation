@@ -88,7 +88,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	{
 		this.programEnv = programEnv;
 		this.objectEnv = objectEnv;
-		classEnv = ((ParadigmEnv) objectEnv).getClassEnv();
+		classEnv = ((ObjectEnv) objectEnv).getClassEnv();
 	}
 
 	public VariableVisitor(ProgramEnv programEnv)

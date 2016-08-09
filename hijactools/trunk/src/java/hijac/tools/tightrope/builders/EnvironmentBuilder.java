@@ -8,9 +8,9 @@ import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
+import hijac.tools.tightrope.environments.NonParadigmEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
-import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
@@ -19,7 +19,10 @@ import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeString;
+import hijac.tools.tightrope.utils.TightRopeTransUtils;
+import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.ParametersVisitor;
+import hijac.tools.tightrope.visitors.ReturnVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
 import java.lang.reflect.Type;
@@ -30,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -40,11 +44,15 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.PrimitiveTypeTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.Trees;
 
-public class EnvironmentBuilder
+//TODO This is BADISIMO, Refacter it out
+public class EnvironmentBuilder extends ParadigmBuilder
 {
 	private static final String FINDING_PROCESS_PARAMETERS = "+++ Finding Process Parameters +++";
 
@@ -117,6 +125,8 @@ public class EnvironmentBuilder
 
 	public EnvironmentBuilder(SCJAnalysis analysis)
 	{
+	  super();
+//	  super(analysis, programEnv, environmentBuilder);
 		EnvironmentBuilder.analysis = analysis;
 		this.programEnv = new ProgramEnv(analysis);
 
@@ -245,6 +255,88 @@ public class EnvironmentBuilder
 	private void exploreNonParadigmObjects(List<TypeElement> grabNonParadigmObjects)
 	{
 		// TODO Makes this build the envs for this list.
+	  List<NonParadigmEnv> nonParadigmEnvs = new ArrayList<NonParadigmEnv>();
+	  Trees trees = analysis.TREES;
+	 
+	  
+	  
+		for (TypeElement te : grabNonParadigmObjects)
+		{
+//		  if(te.getSimpleName().toString().contains("LaunchLevel2") || 
+//		      te.getSimpleName().toString().contains("LaunchLevel1") ||
+//		      te.getSimpleName().toString().contains("LaunchLevel0"))
+//		  {continue; }
+		  
+		  NonParadigmEnv nonParaEnv = new NonParadigmEnv();
+		  nonParaEnv.setName(te.getSimpleName());
+		  
+		  MethodVisitor methodVisitor = new MethodVisitor(analysis, nonParaEnv);
+	    ClassTree ct = trees.getTree(te);
+
+	    HashMap<Name, Tree> varMap = getVariables(te, nonParaEnv);
+
+	    List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+	    Iterator<StatementTree> i = members.iterator();
+	
+	    while (i.hasNext())
+	    {
+	      Object obj = i.next();
+
+	      if (obj instanceof MethodTree)
+	      {
+	        MethodTree mt = (MethodTree) obj;
+
+	        Tree returnType = mt.getReturnType();
+	        
+	        final boolean isSyncMethod = mt.getModifiers().getFlags()
+	            .contains(Modifier.SYNCHRONIZED);
+	        
+
+	        if (returnType instanceof PrimitiveTypeTree)
+	        {
+	          ((PrimitiveTypeTree) mt.getReturnType()).getPrimitiveTypeKind();
+	        }
+	        // ArrayList<Name> returns =
+	        
+	        mt.accept(new ReturnVisitor(varMap), null);
+
+	        @SuppressWarnings("rawtypes")
+	        Map paramMap = new HashMap();
+	        for (VariableTree vt : mt.getParameters())
+	        {
+	          paramMap.put(vt.getName().toString(), vt.getType());
+	        }
+
+	        if (mt.getName().contentEquals("<init>"))
+	        {
+	          extractProcessParameters(mt, nonParaEnv);
+	        }
+	        else if (mt.getName().contentEquals("main"))
+	        {
+	          
+	        }
+	        else if (isSyncMethod)
+	        {
+	          nonParaEnv.setObjectId(nonParaEnv.getName().toString());
+	          MethodEnv m = methodVisitor.visitMethod(mt, false);
+	          setMethodAccess(m, mt);
+	        
+	          nonParaEnv.addSyncMeth(m);
+	        }
+	        else //if (notIgnoredMethod)
+	        {
+	          MethodEnv m = methodVisitor.visitMethod(mt, false);
+	          setMethodAccess(m, mt);
+	          nonParaEnv.addMeth(m);
+	        }
+
+	        
+	      }
+	    }	 
+	    
+	    programEnv.addNonParadigmObjectEnv(nonParaEnv); 
+		}
+		
 		
 	}
 
@@ -264,8 +356,8 @@ public class EnvironmentBuilder
 				(!(elem.getSuperclass().toString().contains(TightRopeString.ParadigmName.MANAGED_THREAD))) ;
 			
 			
-			
-			if (notParadigm)
+			//TODO Pretty bad to hard code this way of making the launchers not appear
+			if (notParadigm && (!elem.getSimpleName().toString().contains("Launch")))
 			{
 				Debugger.log(elem.toString() + " is not paradigm");
 				nonParadigmObjects.add(elem);
@@ -380,7 +472,7 @@ public class EnvironmentBuilder
 		ArrayList<Name> topLevelMissionSequencers = null;
 
 		// init Safelet visitor
-		SafeletLevel2Builder safeletLevel2Visitor = new SafeletLevel2Builder(programEnv,
+		ParadigmBuilder safeletLevel2Visitor = new SafeletLevel2Builder(programEnv,
 				analysis, this);
 
 		// get TLMS list from visitor
@@ -549,7 +641,7 @@ public class EnvironmentBuilder
 
 		TypeElement schedulableType = elems.getTypeElement(fullName);
 
-		ParadigmEnv schedulableEnv = programEnv.getSchedulable(s);
+		ObjectEnv schedulableEnv = programEnv.getSchedulable(s);
 		schedulableEnv.addClassEnv(classEnv);
 
 		new SchedulableObjectBuilder(analysis, programEnv, schedulableEnv, this)
@@ -625,7 +717,7 @@ public class EnvironmentBuilder
 		programName = packagePrefix.substring(0, packagePrefix.length()-1);
 	}
 
-	private HashMap<Name, Tree> getVariables(TypeElement arg0, ObjectEnv objectEnv)
+	protected HashMap<Name, Tree> getVariables(TypeElement arg0, ObjectEnv objectEnv)
 	{
 		HashMap<Name, Tree> varMap = new HashMap<Name, Tree>();
 
@@ -930,4 +1022,40 @@ public class EnvironmentBuilder
 		// TODO Auto-generated method stub
 		return programName;
 	}
+
+  @Override
+  public ArrayList<Name> build(TypeElement paradigmTypeElement)
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public void addParents()
+  {
+    // TODO Auto-generated method stub
+    
+  }
+
+  protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
+  {
+  	for (VariableTree vt : methodTree.getParameters())
+  	{
+  
+  		VariableEnv parameter = new VariableEnv();
+  
+  		parameter.setName(vt.getName().toString());
+  		parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
+  		parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
+  
+  		final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
+  				|| parameter.getType().equals("String");
+  
+  		if (!ignoredParameter)
+  		{
+  			object.addProcParameter(parameter);
+  		}
+  
+  	}
+  }
 }

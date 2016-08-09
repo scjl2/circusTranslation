@@ -14,17 +14,13 @@ public abstract class ParadigmEnv extends ObjectEnv
 	private static final String APP_PARAMETERS = "AppParameters";
 	private static final String FW_PARAMETERS = "FWParameters";
 
-	protected static final String HAS_CLASS = "HasClass";
-	protected ClassEnv classEnv;
-
 	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = new ArrayList<String>();
 
 	public ParadigmEnv()
 	{
 		super();
 
-		classEnv = null;
-
+		
 	}
 
 	private static void initGenericParadigmTypes()
@@ -36,17 +32,6 @@ public abstract class ParadigmEnv extends ObjectEnv
 		GENERIC_PARADIGM_TYPES.add("OneShotEventHandler");
 		GENERIC_PARADIGM_TYPES.add("PeriodicEventHandler");
 		GENERIC_PARADIGM_TYPES.add("ManagedThread");
-	}
-
-	public void addClassEnv(ClassEnv classEnv)
-	{
-		this.classEnv = classEnv;
-		// this.setHasClass(true);
-	}
-
-	public ClassEnv getClassEnv()
-	{
-		return classEnv;
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -72,18 +57,6 @@ public abstract class ParadigmEnv extends ObjectEnv
 		map.put(HAS_CLASS, hasClass());
 
 		return map;
-	}
-
-	public boolean hasClass()
-	{
-		if (classEnv != null)
-		{
-			if (!classEnv.getMeths().isEmpty() || !classEnv.getSyncMeths().isEmpty())
-			{
-				return true;
-			}
-		}
-		return false;
 	}
 
 	public static ArrayList<String> getGenericParadigmTypes()

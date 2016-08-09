@@ -336,7 +336,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 			if (object instanceof ParadigmEnv)
 			{
-				ParadigmEnv p = (ParadigmEnv) object;
+				ObjectEnv p = (ObjectEnv) object;
 				ClassEnv cE = p.getClassEnv();
 				Debugger.log(cE);
 				if (cE.getVariable(nodeVariableString) != null)
@@ -1298,7 +1298,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		// TODO This falls over for API methods...
 		for (MethodEnv mEnv : methods)
 		{
-			Debugger.log("/// mEnv.getMethodName = " + mEnv.getName());
+			Debugger.log("/// mEnv.getMethodName = " + mEnv.getName() + " and identifier = " + identifier);
 			if (mEnv.getName().contentEquals(identifier))
 			{
 				// Then get the method env of the method we're
@@ -1454,7 +1454,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
 			if (object instanceof ParadigmEnv)
 			{
-				ClassEnv classEnv = ((ParadigmEnv) object).getClassEnv();
+				ClassEnv classEnv = ((ObjectEnv) object).getClassEnv();
 				if (classEnv.getVariable(initializer.toString()) != null)
 				{
 					return "\\circvar " + node.getName() + " : "

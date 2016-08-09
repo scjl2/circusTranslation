@@ -1,25 +1,26 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
-import hijac.tools.tightrope.environments.VariableEnv;
-import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
 
 public abstract class ParadigmBuilder
 {
@@ -31,6 +32,11 @@ public abstract class ParadigmBuilder
 	{
 		MissionID, SchedulableID
 	};
+	
+	protected ParadigmBuilder()
+	{
+	  
+	}
 
 	public ParadigmBuilder(SCJAnalysis analysis, ProgramEnv programEnv,
 			EnvironmentBuilder environmentBuilder)
@@ -93,27 +99,26 @@ public abstract class ParadigmBuilder
 		}
 	}
 
-	protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
-	{
-		for (VariableTree vt : methodTree.getParameters())
-		{
-
-			VariableEnv parameter = new VariableEnv();
-
-			parameter.setName(vt.getName().toString());
-			parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
-			parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
-
-			final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
-					|| parameter.getType().equals("String");
-
-			if (!ignoredParameter)
-			{
-				object.addProcParameter(parameter);
-			}
-
-		}
-	}
+	protected  void setMethodAccess(MethodEnv m, MethodTree o)
+  {
+  	ModifiersTree modTree = o.getModifiers();
+  	Set<Modifier> flags = modTree.getFlags();
+  
+  	// m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
+  
+  	if (flags.contains(Modifier.PUBLIC))
+  	{
+  		m.setAccess(MethodEnv.AccessMod.PUBLIC);
+  	}
+  	else if (flags.contains(Modifier.PRIVATE))
+  	{
+  		m.setAccess(MethodEnv.AccessMod.PRIVATE);
+  	}
+  	else if (flags.contains(Modifier.PROTECTED))
+  	{
+  		m.setAccess(MethodEnv.AccessMod.PROTECTED);
+  	}
+  }
 
 	
 }

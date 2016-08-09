@@ -30,6 +30,20 @@
 \input{SchedulableIds.circus}
 \newpage
 
+\subsection{Non-Paradigm Objects}
+<#list NPE as npe >
+\IfFileExists{${npe.Name}App.circus}{\newpage
+\input{${npe.Name}App.circus}}{}
+
+\IfFileExists{${npe.Name}Class.circus}{\newpage
+\input{${npe.Name}Class.circus}}{}
+\newpage
+\IfFileExists{${Safelet.Name}MethChan.circus}{\newpage
+\input{${Safelet.Name}MethChan.circus}}{}
+
+</#list>
+\newpage
+
 \subsection{ThreadIds}
 \input{ThreadIds.circus}
 \newpage

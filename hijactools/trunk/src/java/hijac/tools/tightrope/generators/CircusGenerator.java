@@ -9,8 +9,9 @@ import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
+import hijac.tools.tightrope.environments.NonParadigmEnv;
+import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
-import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
@@ -57,6 +58,7 @@ public class CircusGenerator
 	private static final String REPORT_TEMPLATE_FTL = "Report-Template.ftl";
 	private static final String NETWORK_CIRCUS = "Network.circus";
 	private static final String NETWORK_TEMPLATE_FTL = "Network-Template.ftl";
+	private static final String NON_PARADIGM_APP_TEMPLATE_FTL = "NonParadigmApp-Template.ftl";
 	private static final String SAFELET_APP_TEMPLATE_FTL = "SafeletApp-Template.ftl";
 	private static final String MISSION_APP_TEMPLATE_FTL = "MissionApp-Template.ftl";
 	private static final String MISSION_SEQUENCER_APP_TEMPLATE_FTL = "MissionSequencerApp-Template.ftl";
@@ -123,6 +125,8 @@ public class CircusGenerator
 		System.out.println();
 			
 		translateNetwork();
+		
+		translateNonParadigmObjects();
 
 		translateSafelet();
 
@@ -218,7 +222,7 @@ public class CircusGenerator
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void translateCustomChannels(Map chanMap, ParadigmEnv objEnv)
+	private void translateCustomChannels(Map chanMap, ObjectEnv objEnv)
 	{
 		if (!objEnv.getMeths().isEmpty() && !objEnv.getSyncMeths().isEmpty())
 		{
@@ -291,7 +295,43 @@ public class CircusGenerator
 		translateCommon(root, NETWORK_TEMPLATE_FTL, NETWORK_CIRCUS);
 	}
 
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings("rawtypes")
+  private void translateNonParadigmObjects()
+  {
+	  System.out.println("+++ Translating Non-Paradigm Objects +++ ");
+    /* Create a data-model */
+   for (NonParadigmEnv npe : programEnv.getNonParadigmObjectEnvs())
+   {     
+     Map npeMap = npe.toMap();
+     
+     procName = (String) npeMap.get(PROCESS_Name);
+     
+     translateCommon(npeMap, NON_PARADIGM_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
+     
+     translateCustomChannels(npeMap, npe);
+     
+     ClassEnv classEnv = npe.getClassEnv();
+     translateClass(classEnv);
+   }
+  
+
+      
+
+    // Custom Channels
+    // if (!safelet.getMeths().isEmpty() ||
+    // !safelet.getSyncMeths().isEmpty())
+    // {
+    // root.put("IDType", "");
+    // translateCommon(root, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+    // + "MethChan.circus");
+    // }
+    
+
+   
+    
+  }
+
+  @SuppressWarnings({ "rawtypes" })
 	private void translateSafelet()
 	{
 		System.out.println("+++ Translating Safelet +++ ");

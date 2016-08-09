@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 
@@ -80,6 +81,14 @@ public class ProgramEnv
 	{
 		return nonParadigmObjectEnvs;
 	}
+	
+	public void addNonParadigmObjectEnv(NonParadigmEnv npe)
+	{
+	  if(npe != null)
+	  {
+	    nonParadigmObjectEnvs.add(npe);
+	  }
+	}
 
 	public SafeletEnv getSafelet()
 	{
@@ -95,12 +104,48 @@ public class ProgramEnv
 		System.out.println("_____________________");
 		System.out.println(structureEnv.toString());
 		System.out.println("----------------------");
-		System.out.println("Non-Framework Environments");
+		System.out.println("Non-Paradigms Environments");
 		System.out.println("___________________________");
-		System.out.println(nonParadigmObjectEnvs.toString());
+		System.out.println(stringNonParadigmEnvs());
 		System.out.println("--------------------------------");
 		System.out.println("Variables");
 
+	}
+	
+	public String stringNonParadigmEnvs()
+	{
+	  String npeString = "";
+	  final String LINE_SEPARATOR = System.getProperty("line.separator");
+	  
+	  for(NonParadigmEnv npe : nonParadigmObjectEnvs)
+	  {
+	    npeString += "Name: " + npe.getName();
+	    npeString += (LINE_SEPARATOR);
+	    npeString += "Variables:";
+	     npeString += (LINE_SEPARATOR);
+	    for(VariableEnv v : npe.getVariables())
+	    {
+	      npeString+= "\tName: "+ v.getName() + " Type: " + v.getType();
+	      npeString += (LINE_SEPARATOR);
+	    }
+	    npeString += "Methods:";
+	     npeString += (LINE_SEPARATOR);
+	    for(MethodEnv m : npe.getMeths())
+	    {
+	      npeString+="\tName: " + m.getName();
+	      npeString += (LINE_SEPARATOR);
+	    }
+	    npeString += "Synchronised Methods:";
+	     npeString += (LINE_SEPARATOR);
+      for(MethodEnv m : npe.getSyncMeths())
+      {
+        npeString+="\tName: " + m.getName();
+        npeString += (LINE_SEPARATOR);
+      }
+      npeString += (LINE_SEPARATOR);
+	  }
+	  
+	  return npeString;
 	}
 
 	public void addSchedulable(SchedulableTypeE type, Name name)
@@ -169,6 +214,7 @@ public class ProgramEnv
 	public Map geNetworkMap()
 	{
 		Map returnMap = structureEnv.getNetworkMap();
+		returnMap.put("NPE", getNonParadigmEnvList());
 
 		returnMap.put("AppProcNames", getAppProcNamesList());
 
@@ -180,6 +226,22 @@ public class ProgramEnv
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
+  private List getNonParadigmEnvList()
+  {
+    List npeList = new ArrayList();
+    
+    for(NonParadigmEnv npe : getNonParadigmObjectEnvs())
+    {
+      Map npeMap = new HashMap();
+      
+      npeMap.put("Name", npe.getName());
+//      npeMap.put();
+    }
+    
+    return npeList;
+  }
+
+  @SuppressWarnings({ "rawtypes", "unchecked" })
 	private List getAppProcNamesList()
 	{
 		List appProcNames = new ArrayList();
@@ -187,17 +249,17 @@ public class ProgramEnv
 
 		appProcNames.add(getSafelet().getName() + app);
 
-		for (ParadigmEnv p : getTopLevelMissionSequencers())
+		for (ObjectEnv p : getTopLevelMissionSequencers())
 		{
 			appProcNames.add(p.getName() + app);
 		}
 
-		for (ParadigmEnv p : getSchedulables())
+		for (ObjectEnv p : getSchedulables())
 		{
 			appProcNames.add(p.getName() + app);
 		}
 
-		for (ParadigmEnv p : getMissions())
+		for (ObjectEnv p : getMissions())
 		{
 			appProcNames.add(p.getName() + app);
 		}
@@ -309,9 +371,9 @@ public class ProgramEnv
 	 * @return The <code>ParadigmEnv</code> we're looking for, or
 	 *         <code>null</code>
 	 */
-	public ParadigmEnv getSchedulable(Name name)
+	public ObjectEnv getSchedulable(Name name)
 	{
-		for (ParadigmEnv obj : getSchedulables())
+		for (ObjectEnv obj : getSchedulables())
 		{
 			if (obj.getName().contentEquals(name))
 			{
@@ -380,9 +442,11 @@ public class ProgramEnv
 		objects.addAll(getTopLevelMissionSequencers());
 		objects.addAll(getNestedMissionSequencers());
 		objects.addAll(getSchedulables());
+		objects.addAll(nonParadigmObjectEnvs);
 
 		for (ObjectEnv o : objects)
 		{
+		  Debugger.log("Object Name = " +o.getName());
 			if (o.getName().contentEquals(objectName))
 			{
 				return o;

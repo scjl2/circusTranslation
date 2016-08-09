@@ -1049,10 +1049,14 @@ public class FrameworkEnv
 	{
 		for(ObjectEnv o : getAllObjectEnvs())
 		{
+		  Debugger.log("o.getName="+o.getName());
+		  if(o.getName() != null)
+		  {
 			if(o.getName().equals(nameOfObject))
 			{
 				return o;
 			}
+		  }
 		}
 		return null;
 	}

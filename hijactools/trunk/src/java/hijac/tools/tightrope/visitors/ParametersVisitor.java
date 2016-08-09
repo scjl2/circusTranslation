@@ -419,7 +419,7 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 					if (theVar == null)
 					{
 						
-						theVar = ((ParadigmEnv) originObject).getClassEnv().getVariable(
+						theVar = ((ObjectEnv) originObject).getClassEnv().getVariable(
 								varName);
 					}
 

@@ -3,8 +3,11 @@ package hijac.tools.tightrope.builders;
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
+import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.utils.Debugger;
+import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.RegistersVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
@@ -24,6 +27,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
 public class MissionLevel2Builder extends ParadigmBuilder
@@ -268,5 +272,27 @@ public class MissionLevel2Builder extends ParadigmBuilder
 	{
 		// TODO Auto-generated method stub
 		
-	}	
+	}
+
+  protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
+  {
+  	for (VariableTree vt : methodTree.getParameters())
+  	{
+  
+  		VariableEnv parameter = new VariableEnv();
+  
+  		parameter.setName(vt.getName().toString());
+  		parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
+  		parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
+  
+  		final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
+  				|| parameter.getType().equals("String");
+  
+  		if (!ignoredParameter)
+  		{
+  			object.addProcParameter(parameter);
+  		}
+  
+  	}
+  }	
 }

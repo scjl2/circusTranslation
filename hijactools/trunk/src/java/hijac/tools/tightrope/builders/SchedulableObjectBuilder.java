@@ -11,6 +11,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
@@ -18,17 +19,18 @@ import hijac.tools.tightrope.environments.EventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
-import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 
 public class SchedulableObjectBuilder extends ParadigmBuilder
 {
 
-	private ParadigmEnv schedulableEnv;
+	private ObjectEnv schedulableEnv;
 
 	public SchedulableObjectBuilder(SCJAnalysis analysis,
-			ProgramEnv programEnv, ParadigmEnv schedulableEnv,
+			ProgramEnv programEnv, ObjectEnv schedulableEnv,
 			EnvironmentBuilder environmentBuilder)
 	{
 		super(analysis, programEnv, environmentBuilder);
@@ -121,5 +123,27 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
 		// TODO Auto-generated method stub
 		
 	}
+
+  protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
+  {
+  	for (VariableTree vt : methodTree.getParameters())
+  	{
+  
+  		VariableEnv parameter = new VariableEnv();
+  
+  		parameter.setName(vt.getName().toString());
+  		parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
+  		parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
+  
+  		final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
+  				|| parameter.getType().equals("String");
+  
+  		if (!ignoredParameter)
+  		{
+  			object.addProcParameter(parameter);
+  		}
+  
+  	}
+  }
 
 }

@@ -30,6 +30,7 @@ public class ObjectEnv
 
 	protected static final String PARENTS_STR = "Parents";
 	protected static final String ID = "ID";
+  protected static final String HAS_CLASS = "HasClass";
 
 
 	/**
@@ -70,6 +71,7 @@ public class ObjectEnv
 	
 	private boolean hasSyncMeth = false;
 	private boolean needsThread = false;
+  protected ClassEnv classEnv;
 
 	/**
 	 * The standard constructor, which simply instantiates the lists
@@ -89,6 +91,10 @@ public class ObjectEnv
 
 		newChannels = new ArrayList<ChannelEnv>();
 		parents = new ArrayList<String>();
+		
+		//classEnv = null;
+		
+
 	}
 
 	public String getIdType()
@@ -701,5 +707,28 @@ public class ObjectEnv
 	{
 		return needsThread;
 	}
+
+  public void addClassEnv(ClassEnv classEnv)
+  {
+  	this.classEnv = classEnv;
+  	// this.setHasClass(true);
+  }
+
+  public ClassEnv getClassEnv()
+  {
+  	return classEnv;
+  }
+
+  public boolean hasClass()
+  {
+  	if (classEnv != null)
+  	{
+  		if (!classEnv.getMeths().isEmpty() || !classEnv.getSyncMeths().isEmpty())
+  		{
+  			return true;
+  		}
+  	}
+  	return false;
+  }
 
 }

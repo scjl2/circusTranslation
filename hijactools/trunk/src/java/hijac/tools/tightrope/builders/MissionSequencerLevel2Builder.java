@@ -6,7 +6,9 @@ import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionSequencerEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.utils.Debugger;
+import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.ReturnVisitor;
 
@@ -176,26 +178,26 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 		return missions;
 	}
 
-	private void setMethodAccess(MethodEnv m, MethodTree o)
-	{
-		ModifiersTree modTree = o.getModifiers();
-		Set<Modifier> flags = modTree.getFlags();
-
-		// m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
-
-		if (flags.contains(Modifier.PUBLIC))
-		{
-			m.setAccess(MethodEnv.AccessMod.PUBLIC);
-		}
-		else if (flags.contains(Modifier.PRIVATE))
-		{
-			m.setAccess(MethodEnv.AccessMod.PRIVATE);
-		}
-		else if (flags.contains(Modifier.PROTECTED))
-		{
-			m.setAccess(MethodEnv.AccessMod.PROTECTED);
-		}
-	}
+//	private void setMethodAccess(MethodEnv m, MethodTree o)
+//	{
+//		ModifiersTree modTree = o.getModifiers();
+//		Set<Modifier> flags = modTree.getFlags();
+//
+//		// m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
+//
+//		if (flags.contains(Modifier.PUBLIC))
+//		{
+//			m.setAccess(MethodEnv.AccessMod.PUBLIC);
+//		}
+//		else if (flags.contains(Modifier.PRIVATE))
+//		{
+//			m.setAccess(MethodEnv.AccessMod.PRIVATE);
+//		}
+//		else if (flags.contains(Modifier.PROTECTED))
+//		{
+//			m.setAccess(MethodEnv.AccessMod.PROTECTED);
+//		}
+//	}
 	
 	public void addParents()
 	{
@@ -203,4 +205,26 @@ public class MissionSequencerLevel2Builder extends ParadigmBuilder
 		msClassEnv.addParent(hijac.tools.tightrope.utils.TightRopeString.Name.MISSION_ID);
 		msClassEnv.addParent(hijac.tools.tightrope.utils.TightRopeString.Name.MISSION_IDS);
 	}
+
+  protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
+  {
+  	for (VariableTree vt : methodTree.getParameters())
+  	{
+  
+  		VariableEnv parameter = new VariableEnv();
+  
+  		parameter.setName(vt.getName().toString());
+  		parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
+  		parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
+  
+  		final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
+  				|| parameter.getType().equals("String");
+  
+  		if (!ignoredParameter)
+  		{
+  			object.addProcParameter(parameter);
+  		}
+  
+  	}
+  }
 }
