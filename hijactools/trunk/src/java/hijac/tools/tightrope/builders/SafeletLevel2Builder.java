@@ -151,6 +151,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 	{		
 	}
 
+	//TODO merge this with MethodVisitor.getConstructorParameters()
   protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
   {
   	for (VariableTree vt : methodTree.getParameters())

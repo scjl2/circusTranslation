@@ -289,6 +289,8 @@ public class CircusGenerator
 		translateCommon(root, NETWORK_LOCKING_TEMPLATE_FTL, NETWORK_LOCKING);
 		
 		System.out.println("+++ Translating Program +++");	
+		//TODO Make this output the PEH params in the right order, currently the start time and period seem to be switched
+		//TODO Make this output the APEH 'type' param, i.e. is it a normal or long apeh? Currently missing
 		translateCommon(root, NETWORK_PROGRAM_TEMPLATE_FTL, NETWORK_PROGRAM);
 		
 

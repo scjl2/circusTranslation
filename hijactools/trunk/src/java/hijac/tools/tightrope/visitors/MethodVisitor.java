@@ -141,6 +141,7 @@ public class MethodVisitor
 		}
 	}
 
+	//TODO Merge this with SafeletBuilder.extractProcessParameters()
 	private void getConstructorParameters(MethodTree mt)
 	{
 		for (VariableTree vt : mt.getParameters())

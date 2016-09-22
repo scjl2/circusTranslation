@@ -67,7 +67,7 @@ GetSequencer == MethodBody \\
 SafeletClassBody == \\
 \t1 InitializeApplication \cross GetSequencer \cross ImmortalMemorySize \cross \seq ClassBodyDeclaration \\
 Safelet == Identifier \cross SafeletClassBody \\
-\end{zed}
+\end{zed} 
 
 \begin{zed}
 SCJProgram == Safelet \cross TopLevelMissionSequencer \cross \seq Tier \\

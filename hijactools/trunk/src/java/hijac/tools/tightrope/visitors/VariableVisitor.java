@@ -459,13 +459,20 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	@Override
 	public Map<Name, Tree> visitMethod(MethodTree arg0, Boolean addToEnv)
 	{
-
+	  Debugger.log("Method Tree = " + arg0 + " and it's body is " + arg0.getBody());
 		if (arg0.getName().contentEquals("<init>"))
 		{
 			return arg0.getBody().accept(this, true);
 		}
+		if(arg0.getBody() == null)
+		{
+		  //Assume it's an abstract or an interface method
+		  return new HashMap<Name, Tree>();
+		}
+		
 		else
 		{
+		  
 			return arg0.getBody().accept(this, false);
 		}
 

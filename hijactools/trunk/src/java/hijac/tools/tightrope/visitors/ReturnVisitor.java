@@ -210,7 +210,14 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	public ArrayList<Name> visitMethod(MethodTree arg0, Boolean arg1)
 	{
 		Debugger.log("Return Tree: Visintg method tree");
-
+		
+		if(arg0.getBody() == null)
+		{
+		  //assume it's an abstract or interface method
+		  return new ArrayList<Name>();
+		}
+		
+		
 		List<? extends StatementTree> s = arg0.getBody().getStatements();
 
 		Iterator<? extends StatementTree> j = s.iterator();

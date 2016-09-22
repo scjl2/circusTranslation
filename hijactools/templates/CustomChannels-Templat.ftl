@@ -18,7 +18,7 @@ ${param}
 </#if>
 \end{circus}
 %
-</#list>
+</#list> 
 %
 <#list SyncMethods as meth>
 \begin{circus}

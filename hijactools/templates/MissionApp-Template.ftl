@@ -39,6 +39,7 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
+\circvar \boolean : ret @
  cleanupMissionCall~.~${ProcessID} \then \\
 
  cleanupMissionRet~.~${ProcessID}~!~\true \then \\
