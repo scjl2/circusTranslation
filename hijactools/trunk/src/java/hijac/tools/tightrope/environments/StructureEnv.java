@@ -14,7 +14,7 @@ import java.util.Set;
 
 import javax.lang.model.element.Name;
 
-public class FrameworkEnv
+public class StructureEnv
 {
 	private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
@@ -706,7 +706,7 @@ public class FrameworkEnv
 		}
 	}
 
-	public FrameworkEnv()
+	public StructureEnv()
 	{
 		super();
 		this.controlTier = new ControlTierEnv();

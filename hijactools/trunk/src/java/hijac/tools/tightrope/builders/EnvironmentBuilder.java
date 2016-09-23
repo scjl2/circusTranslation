@@ -122,7 +122,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
   Map<String, List<String>> classMethodsMap;
 
   private String programName;
-  
+
   private TypeElement safeletType = null;
 
   public EnvironmentBuilder(SCJAnalysis analysis)
@@ -228,7 +228,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
       String className = elem.getSimpleName().toString();
 
       grabSuperTypes(elem, className);
-      
+
       if (elem.getInterfaces().toString().contains(TightRopeString.ParadigmName.SAFELET))
       {
         final Name safeletName = elem.getSimpleName();
@@ -243,7 +243,6 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
         safeletType = elem;
       }
-      
 
       ClassTree ct = analysis.TREES.getTree(elem);
 
@@ -264,7 +263,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
     }
 
     exploreNonParadigmObjects(grabNonParadigmObjects());
-    
+
     return safeletType;
   }
 
@@ -392,22 +391,18 @@ public class EnvironmentBuilder extends ParadigmBuilder
   {
     String superClass = elem.getSuperclass().toString();
     List<String> superInterfaces = new ArrayList<String>();
-    
-    
+
     for (TypeMirror tm : elem.getInterfaces())
     {
       superInterfaces.add(tm.toString());
     }
-
-    
 
     List<String> superTypes = new ArrayList<String>();
     superTypes.addAll(superInterfaces);
     superTypes.add(superClass);
 
     classTypeMap.put(className, superTypes);
-    
-   
+
   }
 
   @SuppressWarnings("unchecked")
@@ -462,7 +457,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
     // TypeElement safelet = null;
     for (TypeElement elem : type_elements)
     {
-     
+
       if (elem.getInterfaces().toString().contains(TightRopeString.ParadigmName.SAFELET))
       {
         final Name safeletName = elem.getSimpleName();
@@ -578,7 +573,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
     programEnv.addMission(n);
 
-    MissionEnv missionEnv = programEnv.getFrameworkEnv().getMission(n);
+    MissionEnv missionEnv = programEnv.getStructureEnv().getMission(n);
 
     ClassEnv missionClassEnv = new ClassEnv();
     missionClassEnv.setName(n);

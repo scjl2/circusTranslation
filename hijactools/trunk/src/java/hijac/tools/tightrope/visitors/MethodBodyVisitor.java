@@ -6,7 +6,6 @@ import hijac.tools.modelgen.circus.templates.CircusTemplates;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ClassEnv;
-import hijac.tools.tightrope.environments.FrameworkEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
@@ -16,6 +15,7 @@ import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
+import hijac.tools.tightrope.environments.StructureEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.Debugger;
@@ -485,7 +485,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	{
 		Name nodeName = node.getName();
 
-		FrameworkEnv framework = TightRope.getProgramEnv().getFrameworkEnv();
+		StructureEnv framework = TightRope.getProgramEnv().getStructureEnv();
 
 		ObjectEnv o = framework.getObjectEnv(nodeName.toString());
 		String id = "";

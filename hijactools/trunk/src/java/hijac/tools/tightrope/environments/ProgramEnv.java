@@ -16,7 +16,7 @@ import javax.lang.model.element.Name;
 
 public class ProgramEnv
 {
-	private FrameworkEnv structureEnv;
+	private StructureEnv structureEnv;
 	private List<NonParadigmEnv> nonParadigmObjectEnvs;
 	private Map<String, MethodEnv> binderMethodEnvs;
 
@@ -29,7 +29,7 @@ public class ProgramEnv
 
 	public ProgramEnv(SCJAnalysis context)
 	{
-		this.structureEnv = new FrameworkEnv();
+		this.structureEnv = new StructureEnv();
 		this.nonParadigmObjectEnvs = new ArrayList<NonParadigmEnv>();
 		this.binderMethodEnvs = new HashMap<String, MethodEnv>();
 
@@ -72,7 +72,7 @@ public class ProgramEnv
 		threadIds.addIdNames(name);
 	}
 
-	public FrameworkEnv getFrameworkEnv()
+	public StructureEnv getStructureEnv()
 	{
 		return structureEnv;
 	}

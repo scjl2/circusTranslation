@@ -138,6 +138,7 @@ public class SafeletLevel2Builder extends ParadigmBuilder
 
 				if (st instanceof ReturnTree)
 				{
+				  //TODO Doesn't handle the safelet returning multiple sequencers
 					return st.accept(returnVisitor, null);
 				}
 			}
