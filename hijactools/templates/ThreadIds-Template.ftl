@@ -4,12 +4,16 @@
 \extracircusvspace
 %
 \begin{axdef}
+	SafeletTId  : ThreadID \\
+	nullThreadId  : ThreadID \\
 <#list Threads?keys as thread>
 	${thread} : ThreadID \\
 </#list>
 
 \where
-  distinct \langle SafeletTId, nullThreadId, \\
+  distinct \langle SafeletTId, nullThreadId
+<#if Threads?has_content>  
+  , \\
   <#list Threads?keys as thread>
 	${thread}
 	<sep>
@@ -20,5 +24,6 @@
 	</#if>
 	</#sep>
 </#list>
+</#if>
   \rangle
 \end{axdef}
