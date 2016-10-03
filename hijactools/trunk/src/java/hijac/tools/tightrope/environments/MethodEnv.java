@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.tightrope.utils.TightRopeString;
+import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class MethodEnv
 	private String returnType = "";
 	private Map<String, Type> parameters = new HashMap<String, Type>();
 	protected ArrayList<Name> returnValues = new ArrayList<Name>();
-	private Object body = "";
+	private Object body = LATEX.SKIP;
 	private boolean synchronised = false;
 	private AccessMod accesMod = null;
 	private boolean APIMethod;
