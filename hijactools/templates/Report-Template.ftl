@@ -56,15 +56,17 @@
 \subsection{Network Channel Sets}
 \input{NetworkChan.circus}
 
-\newpage
 
 
-
+\IfFileExists{NetworkMethodCallBinder.circus}{\newpage
 \subsection{MethodCallBinder}
 
 \input{MethodCallBindingChannels.circus}
 
-\input{NetworkMethodCallBinder.circus}
+\input{NetworkMethodCallBinder.circus}}
+{}
+
+
 
 \newpage
 

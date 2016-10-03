@@ -1,5 +1,13 @@
-
-%
+<#if MethodCallBindings?has_content>
 \begin{circus}
-\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar ApplicationB \circblockclose \lpar LockingSync \rpar Locking
+\circprocess Bound\_Application \circdef  Application \lpar MethodCallBinderSync \rpar MethodCallBinder \\
+
+\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar Bound\_Application \circblockclose \lpar LockingSync \rpar Locking
 \end{circus}
+<#else>
+\begin{circus}
+\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar Application \circblockclose \lpar LockingSync \rpar Locking
+\end{circus}
+</#if>
+%
+
