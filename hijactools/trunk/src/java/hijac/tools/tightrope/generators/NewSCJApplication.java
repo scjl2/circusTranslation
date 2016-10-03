@@ -10,6 +10,7 @@ import hijac.tools.modelgen.circus.templates.CircusTemplates;
  * in the context of the <i>Circus</i> translator.
  * 
  * @author Frank Zeyda
+ * Copied for TightRope by Matt Luckcuck
  * @version $Revision: 213 $
  */
 public class NewSCJApplication extends

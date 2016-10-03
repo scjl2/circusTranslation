@@ -13,6 +13,7 @@ import freemarker.template.TemplateModelException;
 
 /**
  * @author Frank Zeyda
+ * Copied for TightRope by Matt Luckcuck
  * @version $Revision: 213 $
  */
 public class NewCircusTemplates extends CircusTemplates

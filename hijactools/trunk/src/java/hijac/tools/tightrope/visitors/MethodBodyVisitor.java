@@ -385,18 +385,19 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 			st = iter.next();
 
 			Debugger.log("/// st=" + st.toString() + " st.kind=" + st.getKind());
-			if (st instanceof ExpressionStatementTree)
-
-			{
-				if (!(node.toString().contains("Console") || node.toString().contains(
-						"System")))
-				{
-					String statementString = st.accept(this, ctxt);
-
-					processedBlockStatements.add(statementString);
-				}
-			}
-			else
+			// This seemed to block whole blocks that contain a 'Console' from being captured.
+//			if (st instanceof ExpressionStatementTree)
+//
+//			{
+//				if (!(node.toString().contains("Console") || node.toString().contains(
+//						"System")))
+//				{
+//					String statementString = st.accept(this, ctxt);
+//
+//					processedBlockStatements.add(statementString);
+//				}
+//			}
+//			else
 			{
 
 				String statementString = st.accept(this, ctxt);
@@ -461,6 +462,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	{
 		/* Are those nodes permissible? Do a bit more investigation here. */
 
+	  Debugger.log("Expression Statement, node = " + node);
+	  
 		// TODO HACKERY!
 		if (node.toString().contains("Console") || node.toString().contains("System"))
 		{
@@ -563,7 +566,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 	@Override
 	public String visitMemberSelect(MemberSelectTree node, MethodVisitorContext ctxt)
 	{
-
+	  Debugger.log("/// member Select, node = " +node );
+	 
+	    
 		/* Are MemberSelect nodes also used for selecting methods too? */
 		return callExprMacro(node, ctxt, "MemberSelect", node.getExpression(),
 				node.getIdentifier());
@@ -591,7 +596,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 		if (methodSelect instanceof MemberSelectTree)
 		{
 			ExpressionTree expresison = ((MemberSelectTree) methodSelect).getExpression();
-
+			
+		
 			Debugger.log("expression = " + expresison + " and type = "
 					+ expresison.getKind());
 			if (expresison instanceof MethodInvocationTree)
@@ -682,6 +688,28 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 				}
 				return sb.toString();
 			}
+			else if (identifier.contentEquals("release"))
+			{
+			  sb.append(identifier);
+        sb.append("Call");
+
+        sb.append(LATEX.DOT);
+        sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression()
+            .toString());
+
+       
+        {
+          sb.append(LATEX.DOT);
+          // sb.append("TESTE"+objectID.toString());
+          sb.append(object.getId());
+        }
+        sb.append(LATEX.THEN);
+        sb.append(LATEX.NEW_LINE);
+        sb.append(LATEX.SKIP);
+        
+        return sb.toString();
+			}
+			
 			else if (isNotMyMethod(methodSelect))
 			{
 				MethodEnv method = getMethodEnvBeingCalled(methodSelect);
@@ -706,8 +734,11 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 						|| (identifier.contentEquals("initializeApplication"))
 						|| (identifier.contentEquals("cleanUp"))
 						|| (identifier.contentEquals("immortalMemorySize"))
-						|| (identifier.contentEquals("getSequencer")) || (identifier
-						.contentEquals("getNextMission")));
+						|| (identifier.contentEquals("getSequencer")) 
+						|| (identifier.contentEquals("getNextMission"))
+						|| (identifier.contentEquals("release"))
+				    || (identifier.contentEquals("requestTermination"))
+				    );
 
 				Debugger.log("/*/*NotIg Id=" + identifier + "  notIg=" + notIgnoredMethod);
 

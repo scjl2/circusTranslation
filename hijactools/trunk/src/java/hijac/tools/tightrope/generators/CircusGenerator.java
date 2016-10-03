@@ -119,32 +119,32 @@ public class CircusGenerator
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	public void translate() throws IOException, FileNotFoundException
+	public void generate() throws IOException, FileNotFoundException
 	{
 		System.out.println("+++ Translating +++");
 		System.out.println();
 			
-		translateNetwork();
+		generateNetwork();
 		
-		translateNonParadigmObjects();
+		generateNonParadigmObjects();
 
-		translateSafelet();
+		generateSafelet();
 
-		translateTopLevelMissionSequencers();
+		generateTopLevelMissionSequencers();
 
-		translateMissions();
+		generateMissions();
 
-		translateManagedThreads();
+		generateManagedThreads();
 
-		translateNestedMissionSequencers();
+		generateNestedMissionSequencers();
 
-		translateOneShotEventHandlers();
+		generateOneShotEventHandlers();
 
-		translateAperiodicEventHandlers();
+		generateAperiodicEventHandlers();
 
-		translatePeriodicEventHandlers();
+		generatePeriodicEventHandlers();
 
-		translateIDFiles();
+		generateIDFiles();
 
 		generateReport();
 	}
@@ -160,7 +160,7 @@ public class CircusGenerator
 	 * @param fileName
 	 *            The file name to output the translated file to
 	 */	@SuppressWarnings("rawtypes")
-	private void translateCommon(Map root, String template, String fileName)
+	private void generateCommon(Map root, String template, String fileName)
 	{
 		/* Get the template (uses cache internally) */
 		freemarker.template.Template temp = null;
@@ -207,7 +207,7 @@ public class CircusGenerator
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void translateClass(ClassEnv classEnv)
+	private void generateClass(ClassEnv classEnv)
 	{
 		Map classMap;
 		if (classEnv != null)
@@ -216,45 +216,45 @@ public class CircusGenerator
 			{
 				classMap = classEnv.toMap();
 
-				translateCommon(classMap, CLASS_TEMPLATE_FTL, procName + CLASS_CIRCUS);
+				generateCommon(classMap, CLASS_TEMPLATE_FTL, procName + CLASS_CIRCUS);
 			}
 		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void translateCustomChannels(Map chanMap, ObjectEnv objEnv)
+	private void generateCustomChannels(Map chanMap, ObjectEnv objEnv)
 	{
 		if (!objEnv.getMeths().isEmpty() && !objEnv.getSyncMeths().isEmpty())
 		{
 			objEnv.getMeths().remove("handleAsyncEvent");
 			//TODO Calculate ID TYPE
 			chanMap.put(ID_TYPE, "SchedulableID");
-			translateCommon(chanMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
+			generateCommon(chanMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 					+ "MethChan.circus");
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void translateIDFiles()
+	private void generateIDFiles()
 	{
 		System.out.println("+++ Generating ID Files +++");
 		// Ian Duncan Smith?
 		Map iDs = programEnv.getMissionIdsMap();
 
-		translateCommon(iDs, MISSION_IDS_TEMPLATE_FTL, MISSION_IDS_CIRCUS);
+		generateCommon(iDs, MISSION_IDS_TEMPLATE_FTL, MISSION_IDS_CIRCUS);
 
 		iDs = programEnv.getSchedulableIdsMap();
 
-		translateCommon(iDs, SCHEDULABLE_IDS_TEMPLATE_FTL, SCHEDULABLE_IDS_CIRCUS);
+		generateCommon(iDs, SCHEDULABLE_IDS_TEMPLATE_FTL, SCHEDULABLE_IDS_CIRCUS);
 
 		iDs = new HashMap();
 		iDs.put("Threads", programEnv.getThreadIdsMap());
 
-		translateCommon(iDs, THREAD_IDS_TEMPLATE_FTL, THREAD_IDS_CIRCUS);
+		generateCommon(iDs, THREAD_IDS_TEMPLATE_FTL, THREAD_IDS_CIRCUS);
 
 		iDs = programEnv.getObjectIdsMap();
 
-		translateCommon(iDs, OBJECT_IDS_TEMPLATE_FTL, OBJECT_IDS_CIRCUS);
+		generateCommon(iDs, OBJECT_IDS_TEMPLATE_FTL, OBJECT_IDS_CIRCUS);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -265,40 +265,40 @@ public class CircusGenerator
 		root.put("ProgramName", programName);
 		root.put("Version", TightRope.getVersion());
 
-		translateCommon(root, REPORT_TEMPLATE_FTL, programName + REPORT_TEX);
+		generateCommon(root, REPORT_TEMPLATE_FTL, programName + REPORT_TEX);
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void translateNetwork()
+	private void generateNetwork()
 	{
 		System.out.println("+++ Translating Network +++ ");
 		/* Create a data-model */
 		Map root = programEnv.geNetworkMap();
 		
 		System.out.println("+++ Translating Network Channels +++");
-		translateCommon(root, NETWORK_CHAN_TEMPLATE_FTL, NETWORK_CHAN);
+		generateCommon(root, NETWORK_CHAN_TEMPLATE_FTL, NETWORK_CHAN);
 		
 		System.out.println("+++ Translating Method Call Binder +++");	
-		translateCommon(root, NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL, NETWORK_METHOD_CALL_BINDER);
+		generateCommon(root, NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL, NETWORK_METHOD_CALL_BINDER);
 		
 		Debugger.log (root.get("MethodCallBindings").toString());
 		
-		translateCommon(root, "MethodCallBindingChannels.ftl", "MethodCallBindingChannels.circus");
+		generateCommon(root, "MethodCallBindingChannels.ftl", "MethodCallBindingChannels.circus");
 		
 		System.out.println("+++ Translating Locking +++");	
-		translateCommon(root, NETWORK_LOCKING_TEMPLATE_FTL, NETWORK_LOCKING);
+		generateCommon(root, NETWORK_LOCKING_TEMPLATE_FTL, NETWORK_LOCKING);
 		
 		System.out.println("+++ Translating Program +++");	
 		//TODO Make this output the PEH params in the right order, currently the start time and period seem to be switched
 		//TODO Make this output the APEH 'type' param, i.e. is it a normal or long apeh? Currently missing
-		translateCommon(root, NETWORK_PROGRAM_TEMPLATE_FTL, NETWORK_PROGRAM);
+		generateCommon(root, NETWORK_PROGRAM_TEMPLATE_FTL, NETWORK_PROGRAM);
 		
 
-		translateCommon(root, NETWORK_TEMPLATE_FTL, NETWORK_CIRCUS);
+		generateCommon(root, NETWORK_TEMPLATE_FTL, NETWORK_CIRCUS);
 	}
 
 	@SuppressWarnings("rawtypes")
-  private void translateNonParadigmObjects()
+  private void generateNonParadigmObjects()
   {
 	  System.out.println("+++ Translating Non-Paradigm Objects +++ ");
     /* Create a data-model */
@@ -308,12 +308,12 @@ public class CircusGenerator
      
      procName = (String) npeMap.get(PROCESS_Name);
      
-     translateCommon(npeMap, NON_PARADIGM_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
+     generateCommon(npeMap, NON_PARADIGM_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
      
-     translateCustomChannels(npeMap, npe);
+     generateCustomChannels(npeMap, npe);
      
      ClassEnv classEnv = npe.getClassEnv();
-     translateClass(classEnv);
+     generateClass(classEnv);
    }
   
 
@@ -334,7 +334,7 @@ public class CircusGenerator
   }
 
   @SuppressWarnings({ "rawtypes" })
-	private void translateSafelet()
+	private void generateSafelet()
 	{
 		System.out.println("+++ Translating Safelet +++ ");
 		/* Create a data-model */
@@ -344,7 +344,7 @@ public class CircusGenerator
 
 		procName = (String) sMap.get(PROCESS_Name);
 
-		translateCommon(sMap, SAFELET_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
+		generateCommon(sMap, SAFELET_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 		// Custom Channels
 		// if (!safelet.getMeths().isEmpty() ||
@@ -354,14 +354,14 @@ public class CircusGenerator
 		// translateCommon(root, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 		// + "MethChan.circus");
 		// }
-		translateCustomChannels(sMap, safelet);
+		generateCustomChannels(sMap, safelet);
 
 		ClassEnv classEnv = safelet.getClassEnv();
-		translateClass(classEnv);
+		generateClass(classEnv);
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	private void translateTopLevelMissionSequencers()
+	private void generateTopLevelMissionSequencers()
 	{
 		System.out.println("+++ Translating Top Level Mission Sequencers +++");
 
@@ -375,7 +375,7 @@ public class CircusGenerator
 
 			procName = (String) tlmsMap.get(PROCESS_Name);
 
-			translateCommon(tlmsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
+			generateCommon(tlmsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
 
 			// Custom Channels
@@ -386,15 +386,15 @@ public class CircusGenerator
 			// translateCommon(tlms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 			// + "MethChan.circus");
 			// }
-			translateCustomChannels(tlmsMap, tlmsEnv);
+			generateCustomChannels(tlmsMap, tlmsEnv);
 
 			ClassEnv classEnv = tlmsEnv.getClassEnv();
-			translateClass(classEnv);
+			generateClass(classEnv);
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	private void translateMissions()
+	private void generateMissions()
 	{
 		System.out.println("+++ Translating Missions +++");
 		Map missionMap;
@@ -409,7 +409,7 @@ public class CircusGenerator
 			procName = (String) missionMap.get(PROCESS_Name);
 
 			// Application Process
-			translateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
+			generateCommon(missionMap, MISSION_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels
 			// if (!mEnv.getMeths().isEmpty() || !mEnv.getSyncMeths().isEmpty())
@@ -418,17 +418,17 @@ public class CircusGenerator
 			// translateCommon(missionMap, CUSTOM_CHANNELS_TEMPLATE_FTL,
 			// procName + "MethChan.circus");
 			// }
-			translateCustomChannels(missionMap, mEnv);
+			generateCustomChannels(missionMap, mEnv);
 
 			// Class
 			ClassEnv classEnv = mEnv.getClassEnv();
-			translateClass(classEnv);
+			generateClass(classEnv);
 
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	private void translateNestedMissionSequencers()
+	private void generateNestedMissionSequencers()
 	{
 		System.out.println("+++ Translating Nested Mission Sequencers +++");
 
@@ -441,7 +441,7 @@ public class CircusGenerator
 
 			procName = (String) smsMap.get(PROCESS_Name);
 
-			translateCommon(smsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
+			generateCommon(smsMap, MISSION_SEQUENCER_APP_TEMPLATE_FTL, procName
 					+ APP_CIRCUS);
 
 			// Custom Channels
@@ -452,15 +452,15 @@ public class CircusGenerator
 			// translateCommon(sms, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 			// + "MethChan.circus");
 			// }
-			translateCustomChannels(smsMap, smsEnv);
+			generateCustomChannels(smsMap, smsEnv);
 
 			ClassEnv classEnv = smsEnv.getClassEnv();
-			translateClass(classEnv);
+			generateClass(classEnv);
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	private void translateManagedThreads()
+	private void generateManagedThreads()
 	{
 		System.out.println("+++ Translating Managed Threads +++ ");
 
@@ -474,7 +474,7 @@ public class CircusGenerator
 			Debugger.log("!// managed threads parents = "
 					+ mtEnv.getParents().toString());
 			procName = mtEnv.getName().toString();
-			translateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName + APP_CIRCUS);
+			generateCommon(mtMap, "ManagedThreadApp-Template.ftl", procName + APP_CIRCUS);
 
 			// Custom Channels
 			// if (!mtEnv.getMeths().isEmpty() ||
@@ -485,7 +485,7 @@ public class CircusGenerator
 			// translateCommon(mtMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 			// + "MethChan.circus");
 			// }
-			translateCustomChannels(mtMap, mtEnv);
+			generateCustomChannels(mtMap, mtEnv);
 
 			ClassEnv classEnv = mtEnv.getClassEnv();
 			// if (classEnv != null)
@@ -498,13 +498,13 @@ public class CircusGenerator
 			// + CLASS_CIRCUS);
 			// }
 			// }
-			translateClass(classEnv);
+			generateClass(classEnv);
 
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	private void translateOneShotEventHandlers()
+	private void generateOneShotEventHandlers()
 	{
 		System.out.println("+++ Translating One Shot Event Handlers +++");
 
@@ -516,7 +516,7 @@ public class CircusGenerator
 			osehMap = osehEnv.toMap();
 
 			procName = (String) osehMap.get(PROCESS_Name);
-			translateCommon(osehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
+			generateCommon(osehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels
 			// if (!osehEnv.getMeths().isEmpty()
@@ -527,15 +527,15 @@ public class CircusGenerator
 			// translateCommon(osehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 			// + "MethChan.circus");
 			// }
-			translateCustomChannels(osehMap, osehEnv);
+			generateCustomChannels(osehMap, osehEnv);
 
 			ClassEnv classEnv = osehEnv.getClassEnv();
-			translateClass(classEnv);
+			generateClass(classEnv);
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	private void translatePeriodicEventHandlers()
+	private void generatePeriodicEventHandlers()
 	{
 		System.out.println("+++ Translating Periodic Event Handlers +++");
 
@@ -547,7 +547,7 @@ public class CircusGenerator
 			pehMap = pehEnv.toMap();
 
 			procName = (String) pehMap.get(PROCESS_Name);
-			translateCommon(pehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
+			generateCommon(pehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels
 			// if (!pehEnv.getMeths().isEmpty()
@@ -558,15 +558,15 @@ public class CircusGenerator
 			// translateCommon(pehMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName
 			// + "MethChan.circus");
 			// }
-			translateCustomChannels(pehMap, pehEnv);
+			generateCustomChannels(pehMap, pehEnv);
 
 			ClassEnv classEnv = pehEnv.getClassEnv();
-			translateClass(classEnv);
+			generateClass(classEnv);
 		}
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	private void translateAperiodicEventHandlers()
+	private void generateAperiodicEventHandlers()
 	{
 		System.out.println("+++ Translating Aperiodic Event Handlers +++");
 
@@ -578,13 +578,13 @@ public class CircusGenerator
 			apehMap = apehEnv.toMap();
 
 			procName = (String) apehMap.get(PROCESS_Name);
-			translateCommon(apehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
+			generateCommon(apehMap, HANDLER_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 
 			// Custom Channels
-			translateCustomChannels(apehMap, apehEnv);
+			generateCustomChannels(apehMap, apehEnv);
 
 			ClassEnv classEnv = apehEnv.getClassEnv();
-			translateClass(classEnv);
+			generateClass(classEnv);
 		}
 	}
 

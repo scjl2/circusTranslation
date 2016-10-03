@@ -164,7 +164,7 @@ public class TightRope
 			FileNotFoundException
 	{
 		CircusGenerator circGen = new CircusGenerator(programName, programEnv);
-		circGen.translate();
+		circGen.generate();
 	}
 
 	private static void setProgramName(String programName)

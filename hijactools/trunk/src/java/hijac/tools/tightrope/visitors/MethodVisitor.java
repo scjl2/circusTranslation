@@ -93,6 +93,7 @@ public class MethodVisitor
 
 		String body = null;
 
+		Debugger.log("*** Getting Body ***");
 		if (returnType instanceof PrimitiveTypeTree)
 		{
 			body = mt.accept(franksMethodVisitor, new MethodVisitorContext());

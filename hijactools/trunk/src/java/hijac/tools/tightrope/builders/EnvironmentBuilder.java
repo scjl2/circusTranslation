@@ -1027,6 +1027,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
     return programName;
   }
 
+  @Deprecated
   @Override
   public ArrayList<Name> build(TypeElement paradigmTypeElement)
   {
