@@ -136,7 +136,8 @@ public class SchedulableObjectBuilder extends ParadigmBuilder
   		parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
   
   		final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
-  				|| parameter.getType().equals("String");
+  				|| parameter.getType().equals("String")
+  				|| parameter.getType().equals("RelativeTime");
   
   		if (!ignoredParameter)
   		{

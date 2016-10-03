@@ -946,7 +946,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
                 }
                 else if (objectWithParams instanceof OneShotEventHandlerEnv)
                 {
-                  if (type.equals("AperiodicParameters") || type.equals("JTime")
+                  if (type.equals("AperiodicParameters") || type.equals("JTime") || type.equals("RelativeTime") ||type.equals("AbsoluteTime")
                       || type.equals("SchedulableID"))
                   {
                     objectWithParams.addFWdParameter(returns);

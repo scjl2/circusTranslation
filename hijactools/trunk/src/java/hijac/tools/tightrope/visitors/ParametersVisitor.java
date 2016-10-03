@@ -116,10 +116,13 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 	{
 		Debugger.log("Params Visitor: New Class " + arg0.toString());
 		
+		
 
 		ExpressionTree identifierTree = arg0.getIdentifier();
 		String identifiterTree = identifierTree.toString();
 
+		Debugger.log("IdentifierTree = " + identifiterTree );
+		
 		List<? extends ExpressionTree> args = arg0.getArguments();
 
 		VariableEnv v = new VariableEnv();
@@ -156,6 +159,23 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 			}
 
 			return null;
+		}
+		else if (identifiterTree.equals("RelativeTime"))
+		{
+		  Debugger.log("Gets to the Relative Time Branch");
+		  String time = "" ;
+
+		  List<? extends ExpressionTree> timeParams = ((NewClassTree) arg0)
+          .getArguments();
+
+      if (timeParams.size() >= 2)
+      {
+        time = "time(" + timeParams.get(0) + "," + timeParams.get(1)
+            + ")";
+      }
+      
+      v.setType("RelativeTime");
+      v.setProgramType("(" + time + ")");
 		}
 		else if (identifiterTree.equals("PeriodicParameters"))
 		{
