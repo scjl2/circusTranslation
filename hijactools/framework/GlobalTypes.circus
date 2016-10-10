@@ -3,11 +3,11 @@
 \end{zsection}
 %
 \begin{zed}
-	[appID]
+	[ThreadID]
 \end{zed}
 %
 \begin{zed}
-	[ThreadID]
+	[NonParadigmID]
 \end{zed}
 %
 \begin{axdef}
@@ -29,7 +29,7 @@ ThreadMap == ThreadID \pfun \nat_1
 %
 \begin{zed}
 ExceptionType ::= interruptedException | illegalMonitorStateException | illegalArgumentException | \\
-  \t1 illegalThreadStateException | illegalStateException | ceilingViolationException
+  \t1  illegalThreadStateException | illegalStateException | ceilingViolationException
 \end{zed}
 %
 \begin{zed}

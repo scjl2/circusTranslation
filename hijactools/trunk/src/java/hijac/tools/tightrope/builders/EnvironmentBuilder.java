@@ -194,7 +194,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
    * <code>SCJAnalysis</code> supplied to this class's constructor. It begins by
    * getting the Safelet and building it, and continues from there down the
    * tiers.
-   * 
+   *
    * @return <code>ProgramEnv</code> the program environment for this program
    */
   public ProgramEnv explore()
@@ -375,7 +375,8 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
       // TODO Pretty bad to hard code this way of making the launchers not
       // appear
-      if (notParadigm && (!elem.getSimpleName().toString().contains("Launch")))
+      if (notParadigm && (!elem.getSimpleName().toString().contains("Launch"))
+            && (!elem.getSimpleName().toString().contains("Executer")))
       {
         Debugger.log(elem.toString() + " is not paradigm");
         nonParadigmObjects.add(elem);
@@ -486,7 +487,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
     ArrayList<Name> topLevelMissionSequencers = null;
 
     // init Safelet visitor
-    ParadigmBuilder safeletLevel2Visitor = new SafeletLevel2Builder(programEnv, analysis,
+    ParadigmBuilder safeletLevel2Visitor = new SafeletBuilder(programEnv, analysis,
         this);
 
     // get TLMS list from visitor
@@ -532,7 +533,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
     tlmsClassEnv.setName(tlms);
     topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
-    ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(programEnv,
+    ParadigmBuilder msl2Visitor = new MissionSequencerBuilder(programEnv,
         topLevelMissionSequencer, analysis, this);
 
     // msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
@@ -589,7 +590,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
     missionEnv.addVariable(THIS, CIRCREFTYPE + n.toString() + CLASS,
         CIRCNEW + n.toString() + CLASS_BRACKETS, true);
 
-    ArrayList<Name> schedulables = new MissionLevel2Builder(programEnv, missionEnv,
+    ArrayList<Name> schedulables = new MissionBuilder(programEnv, missionEnv,
         analysis, this).build(missionTypeElem);
 
     assert (schedulables != null);
@@ -657,7 +658,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
     ObjectEnv schedulableEnv = programEnv.getSchedulable(s);
     schedulableEnv.addClassEnv(classEnv);
 
-    new SchedulableObjectBuilder(analysis, programEnv, schedulableEnv, this)
+    new SchedulableBuilder(analysis, programEnv, schedulableEnv, this)
         .build(schedulableType);
 
   }
@@ -684,7 +685,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
       Debugger.log("nestedMissionSequencer = " + nestedMissionSequencer);
 
-      ParadigmBuilder msl2Visitor = new MissionSequencerLevel2Builder(programEnv,
+      ParadigmBuilder msl2Visitor = new MissionSequencerBuilder(programEnv,
           nestedMissionSequencer, analysis, this);
 
       // msl2Visitor.setVarMap(getVariables(tlmsElement,

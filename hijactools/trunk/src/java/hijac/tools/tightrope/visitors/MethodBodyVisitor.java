@@ -333,18 +333,26 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       {
         ObjectEnv p = (ObjectEnv) object;
         ClassEnv cE = p.getClassEnv();
-        Debugger.log(cE);
-        if (cE.getVariable(nodeVariableString) != null)
+        if (cE != null)
         {
-
-          if (node.getExpression() instanceof LiteralTree)
+          Debugger.log(cE);
+          if (cE.getVariable(nodeVariableString) != null)
           {
-            expression = TightRopeTransUtils.encodeLiteral((LiteralTree) node
-                .getExpression());
-          }
 
-          return "this~.~" + nodeVariableString + LATEX.ASSIGN + expression;
+            if (node.getExpression() instanceof LiteralTree)
+            {
+              expression = TightRopeTransUtils.encodeLiteral((LiteralTree) node
+                  .getExpression());
+            }
+
+            return "this~.~" + nodeVariableString + LATEX.ASSIGN + expression;
+          }
         }
+        else
+        {
+          Debugger.log("cE was null");
+        }
+
       }
 
       if (object.getVariable(nodeVariableString) == null)
@@ -372,7 +380,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     List<String> processedBlockStatements = new ArrayList<String>();
     // processedBlockStatements.addAll(node.getStatements());
     if (node.getStatements().size() == 1)
-    { 
+    {
       if ((node.toString().contains("Console") || node.toString().contains("System")))
       {
         // Fudging Needs refactoring but I'm too tired

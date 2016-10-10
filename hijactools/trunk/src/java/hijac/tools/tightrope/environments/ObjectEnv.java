@@ -71,7 +71,7 @@ public class ObjectEnv
 	
 	private boolean hasSyncMeth = false;
 	private boolean needsThread = false;
-  protected ClassEnv classEnv;
+  protected ClassEnv classEnv ;
 
 	/**
 	 * The standard constructor, which simply instantiates the lists
