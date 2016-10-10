@@ -73,5 +73,26 @@ public final class TightRopeString
 		
 	}
 	
+	public static class ObjectString
+	{
+
+    public static final String VAR_INPUT = "VarInput";
+    public static final String VAR_INIT = "VarInit";
+    public static final String VAR_TYPE = "VarType";
+    public static final String VAR_NAME = "VarName";
+    public static final String VARIABLES_STR = "Variables";
+    public static final String INITED_VARIABLES = "InitedVariables";
+    public static final String SYNC_METHODS = "SyncMethods";
+    public static final String METHODS = "Methods";
+    public static final String PROCESS_ID = "ProcessID";
+    public static final String PROCESS_NAME = "ProcessName";
+    public static final String IMPORT_NAME = "ImportName";
+    public static final String HANDLER_TYPE = "HandlerType";
+    public static final String PARENTS_STR = "Parents";
+    public static final String ID = "ID";
+    public static final String HAS_CLASS = "HasClass";
+	  
+	}
+	
 	
 }

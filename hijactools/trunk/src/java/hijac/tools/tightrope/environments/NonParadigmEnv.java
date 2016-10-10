@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString.ObjectString;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,10 +48,10 @@ public class NonParadigmEnv extends ObjectEnv
   public Map toMap()
   {
 	  Map map = new HashMap();
-    map.put(PROCESS_NAME, getName().toString());
+    map.put(ObjectString.PROCESS_NAME, getName().toString());
     
     
-    map.put(PROCESS_ID, getId());
+    map.put(ObjectString.PROCESS_ID, getId());
     map.put("ProcObjectID", getObjectId());
     
 
@@ -57,12 +59,12 @@ public class NonParadigmEnv extends ObjectEnv
 //    map.put(APP_PARAMETERS, appParamsList());
 //    map.put(PROC_PARAMETERS, procParamsList());
 
-    map.put(VARIABLES_STR, varsList());
-    map.put(PARENTS_STR, getParents());
-    map.put(METHODS, methsList());
-    map.put(SYNC_METHODS, syncMethsList());
+    map.put(ObjectString.VARIABLES_STR, varsList());
+    map.put(ObjectString.PARENTS_STR, getParents());
+    map.put(ObjectString.METHODS, methsList());
+    map.put(ObjectString.SYNC_METHODS, syncMethsList());
 
-    map.put(HAS_CLASS, hasClass());
+    map.put(ObjectString.HAS_CLASS, hasClass());
 
     
 

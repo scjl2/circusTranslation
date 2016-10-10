@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.environments;
 
 import hijac.tools.tightrope.utils.TightRopeString.Name;
+import hijac.tools.tightrope.utils.TightRopeString.ObjectString;
 
 import java.util.Map;
 
@@ -20,8 +21,8 @@ public abstract class EventHandlerEnv extends ParadigmEnv
 	{
 		Map map = super.toMap();
 
-		map.put(HANDLER_TYPE, getHandlerType());
-		map.put(IMPORT_NAME, getImportName());
+		map.put(ObjectString.HANDLER_TYPE, getHandlerType());
+		map.put(ObjectString.IMPORT_NAME, getImportName());
 
 		Map handleAsyncMap = handleAsync.toMap();
 		map.put(HANDLE_ASYNC, handleAsyncMap);

@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.visitors;
 
+import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -79,7 +80,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
 	private final ProgramEnv programEnv;
 	private ObjectEnv objectEnv;
-	private ObjectEnv classEnv;
+	private ClassEnv classEnv;
 
 	private final static ArrayList<String> GENERIC_PARADIGM_TYPES = ParadigmEnv
 			.getGenericParadigmTypes();
@@ -88,7 +89,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 	{
 		this.programEnv = programEnv;
 		this.objectEnv = objectEnv;
-		classEnv = ((ObjectEnv) objectEnv).getClassEnv();
+		classEnv = objectEnv.getClassEnv();
 	}
 
 	public VariableVisitor(ProgramEnv programEnv)

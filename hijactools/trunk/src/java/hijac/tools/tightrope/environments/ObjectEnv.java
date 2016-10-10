@@ -14,25 +14,6 @@ import com.sun.source.tree.Tree;
 
 public class ObjectEnv
 {
-	private static final String VAR_INPUT = "VarInput";
-	private static final String VAR_INIT = "VarInit";
-	private static final String VAR_TYPE = "VarType";
-	private static final String VAR_NAME = "VarName";
-	protected static final String VARIABLES_STR = "Variables";
-	protected static final String INITED_VARIABLES = "InitedVariables";
-	protected static final String SYNC_METHODS = "SyncMethods";
-	protected static final String METHODS = "Methods";
-	protected static final String PROCESS_ID = "ProcessID";
-	protected static final String PROCESS_NAME = "ProcessName";
-
-	protected static final String IMPORT_NAME = "ImportName";
-	protected static final String HANDLER_TYPE = "HandlerType";
-
-	protected static final String PARENTS_STR = "Parents";
-	protected static final String ID = "ID";
-  protected static final String HAS_CLASS = "HasClass";
-
-
 	/**
 	 * The name of the entity this environment represents
 	 */
@@ -433,13 +414,13 @@ public class ObjectEnv
 		{
 			Map varMap = new HashMap();
 
-			varMap.put(VAR_NAME, v.getName().toString());
-			varMap.put(VAR_TYPE, v.getType());
+			varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_NAME, v.getName().toString());
+			varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_TYPE, v.getType());
 			if (v.getInit() != null)
 			{
-				varMap.put(VAR_INIT, v.getInit().toString());
+				varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_INIT, v.getInit().toString());
 			}
-			varMap.put(VAR_INPUT, v.getInput());
+			varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_INPUT, v.getInput());
 
 			returnList.add(varMap);
 		}
@@ -459,10 +440,10 @@ public class ObjectEnv
 				if (v.getInit().toString() != "")
 				{
 					Map varMap = new HashMap();
-					varMap.put(VAR_NAME, v.getName().toString());
-					varMap.put(VAR_TYPE, v.getType());
-					varMap.put(VAR_INIT, v.getInit().toString());
-					varMap.put(VAR_INPUT, v.getInput());
+					varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_NAME, v.getName().toString());
+					varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_TYPE, v.getType());
+					varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_INIT, v.getInit().toString());
+					varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_INPUT, v.getInput());
 
 					returnList.add(varMap);
 				}
@@ -501,8 +482,8 @@ public class ObjectEnv
 		for (VariableEnv v : params)
 		{
 			Map varMap = new HashMap();
-			varMap.put(VAR_NAME, v.getName().toString());
-			varMap.put(VAR_TYPE, v.getType());
+			varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_NAME, v.getName().toString());
+			varMap.put(hijac.tools.tightrope.utils.TightRopeString.ObjectString.VAR_TYPE, v.getType());
 
 			varMap.put("ProgramType", v.getProgramType());
 
