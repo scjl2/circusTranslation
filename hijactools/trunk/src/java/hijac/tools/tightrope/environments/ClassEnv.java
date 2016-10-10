@@ -12,7 +12,6 @@ import javax.lang.model.element.Name;
 public class ClassEnv // extends ParadigmEnv
 {
   private ObjectEnv objectEnv = new ObjectEnv();
-  private static ParadigmEnv paradignEnv;
 
   public ClassEnv()
   {
@@ -116,7 +115,7 @@ public class ClassEnv // extends ParadigmEnv
   {
     objectEnv.addMeth(m);
   }
-  
+
   public void addParent(String missionId)
   {
     objectEnv.addParent(missionId);
