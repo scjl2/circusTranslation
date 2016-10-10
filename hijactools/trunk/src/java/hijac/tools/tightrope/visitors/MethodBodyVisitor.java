@@ -377,17 +377,12 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   @Override
   public String visitBlock(BlockTree node, MethodVisitorContext ctxt)
   {
+    Debugger.log("Visit Block, node= " + node.toString() + " and num of statements = " + node.getStatements().size() );
+    
     List<String> processedBlockStatements = new ArrayList<String>();
     // processedBlockStatements.addAll(node.getStatements());
-    if (node.getStatements().size() == 1)
-    {
-      if ((node.toString().contains("Console") || node.toString().contains("System")))
-      {
-        // Fudging Needs refactoring but I'm too tired
-      }
-    }
-    else
-    {
+  
+    
 
       Iterator<? extends StatementTree> iter = node.getStatements().iterator();
       StatementTree st = null;
@@ -420,7 +415,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         }
 
       }
-    }
+    
 
     return callStmtMacro(node, ctxt, "Block", processedBlockStatements);
   }

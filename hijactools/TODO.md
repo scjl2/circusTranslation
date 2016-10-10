@@ -1,11 +1,10 @@
 TODO 
 =======
 
-* Alter Builder Names to Match Thesis, Also Envs
 
 * Fix: the output of getNextMission ids.
 * Fix: adds startTime to OSEH apps
-* Fix: Capturing the getNextMission method and (eg) returnedMission init (Excpet that nestedMission1.MainMissionSequencer works)
+
 
 * Make the Damn Thing Translate Both Examples!
 	- Threads not working

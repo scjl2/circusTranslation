@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.lang.model.element.Name;
 
-//TODO this is terrible. Need to refactor so that this is not extending ParadigmEnv
+
 public class ClassEnv // extends ParadigmEnv
 {
   private ObjectEnv objectEnv = new ObjectEnv();
@@ -16,8 +16,8 @@ public class ClassEnv // extends ParadigmEnv
   public ClassEnv()
   {
     super();
-  }
 
+  }
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public Map toMap()
   {
