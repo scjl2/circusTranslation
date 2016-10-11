@@ -432,7 +432,7 @@ public class StructureEnv
 				case PEH:
 					for (ObjectEnv p : periodEventHandlerEnvs)
 					{
-						Map sMap = makeSchedulableMap(p);
+						Map sMap = makeSchedulableMap(type,p);
 
 						schedulablesList.add(sMap);
 					}
@@ -441,7 +441,7 @@ public class StructureEnv
 				case APEH:
 					for (ObjectEnv p : aperiodicEventHandlerEnvs)
 					{
-						Map sMap = makeSchedulableMap(p);
+						Map sMap = makeSchedulableMap(type,p);
 
 						schedulablesList.add(sMap);
 					}
@@ -450,7 +450,7 @@ public class StructureEnv
 				case OSEH:
 					for (ObjectEnv p : oneShotEventHandlerEnvs)
 					{
-						Map sMap = makeSchedulableMap(p);
+						Map sMap = makeSchedulableMap(type,p);
 
 						schedulablesList.add(sMap);
 					}
@@ -459,7 +459,7 @@ public class StructureEnv
 				case SMS:
 					for (ObjectEnv p : schedulableMissionSequencerEnvs)
 					{
-						Map sMap = makeSchedulableMap(p);
+						Map sMap = makeSchedulableMap(type,p);
 
 						schedulablesList.add(sMap);
 					}
@@ -468,7 +468,7 @@ public class StructureEnv
 				case MT:
 					for (ObjectEnv p : managedThreadEnvs)
 					{
-						Map sMap = makeSchedulableMap(p);
+						Map sMap = makeSchedulableMap(type,p);
 
 						schedulablesList.add(sMap);
 					}
@@ -478,9 +478,10 @@ public class StructureEnv
 		}
 
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		private Map makeSchedulableMap(ObjectEnv p)
+		private Map makeSchedulableMap(SchedulableTypeE s, ObjectEnv p)
 		{
 			Map sMap = new HashMap();
+			sMap.put("SchedType", s.toString());
 			sMap.put("Name", p.getName());
 
 			ArrayList<String> params = new ArrayList<String>();

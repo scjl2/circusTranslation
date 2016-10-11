@@ -60,27 +60,27 @@ TopLevelMissionSequencerFW(${TopLevelSequencer.Name})
 	MissionFW(${cluster.Mission.Name}ID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
-		
+
 		<#list 	schedulables as sched>
-		
-		<#if sched?counter	 lte cluster.Schedulables.Threads?size>
-			ManagedThreadFW(${sched.Name}ID)\\	
-		<#elseif sched?counter	 gte cluster.Schedulables.Threads?size && sched?index lte cluster.Schedulables.Oneshots?size>
+
+		<#if sched.SchedType == "MT" >
+			ManagedThreadFW(${sched.Name}ID)\\
+		<#elseif sched.SchedType == "OSEH" >
 			OneShotEventHandlerFW(${sched.Name}ID <#if sched.FWParameters?size != 0>,<#list sched.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>)\\
-		<#elseif sched?counter	 gte cluster.Schedulables.Oneshots?size && sched?index lte cluster.Schedulables.NestedSequencers?size>
+		<#elseif sched.SchedType ==  "SMS" >
 			SchedulableMissionSequencerFW(${sched.Name}ID)\\
-		<#elseif sched?counter	 gte cluster.Schedulables.NestedSequencers?size && sched?index lte cluster.Schedulables.Aperiodics?size>		
+		<#elseif sched.SchedType == "APEH" >
 			AperiodicEventHandlerFW(${sched.Name}ID <#if sched.FWParameters?size != 0>,<#list sched.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>)\\
-		<#elseif sched?counter	 gte cluster.Schedulables.Aperiodics?size && sched?index lte cluster.Schedulables.Periodics?size>	
+		<#elseif sched.SchedType == "PEH" >
 			PeriodicEventHandlerFW(${sched.Name}ID <#if sched.FWParameters?size != 0>,<#list sched.FWParameters as param>${param} <#sep>,</#sep>  </#list></#if>)\\
 		</#if>
 
-		<#sep>	\t1 \lpar SchedulablesSync \rpar\\</#sep>	
-		
-		</#list>
-		
+		<#sep>	\t1 \lpar SchedulablesSync \rpar\\</#sep>
 
-	
+		</#list>
+
+
+
 
 		\circblockclose
 \circblockclose

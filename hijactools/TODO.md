@@ -5,6 +5,11 @@ TODO
 * Fix: the output of getNextMission ids.
 * Fix: adds startTime to OSEH apps
 
+* Make this output the PEH params in the right order, currently the 
+    // start time and period seem to be switched
+* Make this output the APEH 'type' param, i.e. is it a normal or long
+    // apeh? Currently missing
+
 
 * Make the Damn Thing Translate Both Examples!
 	- Threads not working
