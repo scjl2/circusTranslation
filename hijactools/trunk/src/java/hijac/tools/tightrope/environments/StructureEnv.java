@@ -486,6 +486,11 @@ public class StructureEnv
 
 			ArrayList<String> params = new ArrayList<String>();
 		
+			if(s == SchedulableTypeE.APEH)
+      {
+        params.add(((AperiodicEventHandlerEnv) p).getHandlerType() );
+      }
+			
 			for (VariableEnv v : p.getFWParameters())
 			{
 				// This adds the type from the program E.G. FlatBufferMission
@@ -493,7 +498,8 @@ public class StructureEnv
 				// params.add(v.getVariableName());
 				params.add(v.getProgramType());
 			}
-
+			
+	
 			sMap.put("FWParameters", params);
 
 			params = new ArrayList<String>();

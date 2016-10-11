@@ -264,7 +264,6 @@ public class CircusGenerator
     Map root = programEnv.geNetworkMap();
     root.put("ProgramName", programName);
     root.put("Version", TightRope.getVersion());
-
     generateCommon(root, REPORT_TEMPLATE_FTL, programName + REPORT_TEX);
   }
 

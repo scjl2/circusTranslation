@@ -32,7 +32,7 @@
 
 \subsection{Non-Paradigm Objects}
 <#list NPE as npe >
-\IfFileExists{${npe.Name}App.circus}{\newpage
+\IfFileExists{${npe.Name}App.circus}{
 \input{${npe.Name}App.circus}}{}
 
 \IfFileExists{${npe.Name}Class.circus}{\newpage

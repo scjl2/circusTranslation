@@ -270,7 +270,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
   private void exploreNonParadigmObjects(List<TypeElement> grabNonParadigmObjects)
   {
     // TODO Makes this build the envs for this list.
-    List<NonParadigmEnv> nonParadigmEnvs = new ArrayList<NonParadigmEnv>();
+//    List<NonParadigmEnv> nonParadigmEnvs = new ArrayList<NonParadigmEnv>();
     Trees trees = analysis.TREES;
 
     for (TypeElement te : grabNonParadigmObjects)
@@ -345,7 +345,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
         }
       }
-
+      Debugger.log("Adding Non-P Obj: " + nonParaEnv.getName());
       programEnv.addNonParadigmObjectEnv(nonParaEnv);
     }
 

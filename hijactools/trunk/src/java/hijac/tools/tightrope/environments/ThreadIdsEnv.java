@@ -29,6 +29,8 @@ public class ThreadIdsEnv extends IdEnv
 			String threadID = id ;
 			String priority = threadMap.get(id); 			
 			
+			Debugger.log("Adding Thread : " + threadID + " with priority " + priority );
+			
 			map.put(threadID, priority);
 		}
 

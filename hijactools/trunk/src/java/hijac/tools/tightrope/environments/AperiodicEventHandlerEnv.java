@@ -34,15 +34,16 @@ public class AperiodicEventHandlerEnv extends EventHandlerEnv
 	@Override
 	public String getHandlerType()
 	{
-		if (handlerType == HandlerType.aperiodic)
-		{
-			return APERIODIC_HANDLER_TYPE;
-		}
-		else if (handlerType == HandlerType.aperiodicLong)
-		{
-			return APERIODIC_LONG_HANDLER_TYPE;
-		}
-		return null;
+//		if (handlerType == HandlerType.aperiodic)
+//		{
+//			return APERIODIC_HANDLER_TYPE;
+//		}
+//		else if (handlerType == HandlerType.aperiodicLong)
+//		{
+//			return APERIODIC_LONG_HANDLER_TYPE;
+//		}
+		
+		return handlerType.toString();
 	}
 
 	@Override

@@ -215,6 +215,7 @@ public class ProgramEnv
 	{
 		Map returnMap = structureEnv.getNetworkMap();
 		returnMap.put("NPE", getNonParadigmEnvList());
+		Debugger.log("getNetworkMap says NPE = " + returnMap.get("NPE").toString());
 
 		returnMap.put("AppProcNames", getAppProcNamesList());
 
@@ -233,9 +234,10 @@ public class ProgramEnv
     for(NonParadigmEnv npe : getNonParadigmObjectEnvs())
     {
       Map npeMap = new HashMap();
-      
+      Debugger.log("NonP " + npe.getName() +" into map");
       npeMap.put("Name", npe.getName());
 //      npeMap.put();
+      npeList.add(npeMap);
     }
     
     return npeList;
