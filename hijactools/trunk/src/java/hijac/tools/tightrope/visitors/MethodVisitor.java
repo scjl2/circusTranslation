@@ -73,9 +73,7 @@ public class MethodVisitor
 
 		if (isConstructor)
 		{
-			getConstructorParameters(mt);
-
-			
+			getConstructorParameters(mt);			
 		}
 		else
 		{
@@ -132,9 +130,15 @@ public class MethodVisitor
 		ModifiersTree modifiers = mt.getModifiers();
 		Set<Modifier> modifierFlags = modifiers.getFlags();
 
-		if (modifierFlags.contains(Modifier.SYNCHRONIZED))
+		final boolean isMethodSynchronised = modifierFlags.contains(Modifier.SYNCHRONIZED);
+    if (isMethodSynchronised)
 		{
 			m.setSynchronised(true);
+			
+			if(object != null)
+			{
+			  TightRope.getProgramEnv().addObjectIdName(object.getName().toString());
+			}
 		}
 		else
 		{

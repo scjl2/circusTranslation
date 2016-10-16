@@ -78,7 +78,9 @@ public class SchedulableBuilder extends ParadigmBuilder
 						.contains(Modifier.SYNCHRONIZED))
 				{
 
-					schedulableEnv.setObjectId(schedulableEnv.getName().toString());
+					final String schedulableEnvName = schedulableEnv.getName().toString();
+          schedulableEnv.setObjectId(schedulableEnvName);
+					
 					
 					MethodEnv m = methodVisitor.visitMethod(mt, false);
 				

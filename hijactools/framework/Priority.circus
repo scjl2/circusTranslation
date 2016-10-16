@@ -6,12 +6,13 @@
 MinPriority : \nat_1 \\
 MaxPriority : \nat_1 \\
 \where
-MaxPriority - MinPriority \geq 2 \\
+MaxPriority - MinPriority \geq 28 \\
 \end{axdef}
 %
 \begin{zed}
 PriorityLevel == MinPriority \upto MaxPriority
 \end{zed}
 %
-
-
+\begin{axdef}
+NormPriority : PriorityLevel
+\end{axdef}

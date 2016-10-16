@@ -8,7 +8,7 @@ TODO
 
 
 * Make the Damn Thing Translate Both Examples!
-	- Threads not working (This neends setThreadPriority to be called in the right place)
+	
 
 	- Non paradigm objects need IDs producing (Urg, this needs a template and everything)
 

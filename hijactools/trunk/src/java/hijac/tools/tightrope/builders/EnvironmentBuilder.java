@@ -42,6 +42,8 @@ import javax.lang.model.util.Elements;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PrimitiveTypeTree;
@@ -194,7 +196,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
    * <code>SCJAnalysis</code> supplied to this class's constructor. It begins by
    * getting the Safelet and building it, and continues from there down the
    * tiers.
-   *
+   * 
    * @return <code>ProgramEnv</code> the program environment for this program
    */
   public ProgramEnv explore()
@@ -270,7 +272,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
   private void exploreNonParadigmObjects(List<TypeElement> grabNonParadigmObjects)
   {
     // TODO Makes this build the envs for this list.
-//    List<NonParadigmEnv> nonParadigmEnvs = new ArrayList<NonParadigmEnv>();
+    // List<NonParadigmEnv> nonParadigmEnvs = new ArrayList<NonParadigmEnv>();
     Trees trees = analysis.TREES;
 
     for (TypeElement te : grabNonParadigmObjects)
@@ -376,7 +378,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
       // TODO Pretty bad to hard code this way of making the launchers not
       // appear
       if (notParadigm && (!elem.getSimpleName().toString().contains("Launch"))
-            && (!elem.getSimpleName().toString().contains("Executer")))
+          && (!elem.getSimpleName().toString().contains("Executer")))
       {
         Debugger.log(elem.toString() + " is not paradigm");
         nonParadigmObjects.add(elem);
@@ -487,8 +489,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
     ArrayList<Name> topLevelMissionSequencers = null;
 
     // init Safelet visitor
-    ParadigmBuilder safeletLevel2Visitor = new SafeletBuilder(programEnv, analysis,
-        this);
+    ParadigmBuilder safeletLevel2Visitor = new SafeletBuilder(programEnv, analysis, this);
 
     // get TLMS list from visitor
     topLevelMissionSequencers = safeletLevel2Visitor.build(safelet);
@@ -590,8 +591,8 @@ public class EnvironmentBuilder extends ParadigmBuilder
     missionEnv.addVariable(THIS, CIRCREFTYPE + n.toString() + CLASS,
         CIRCNEW + n.toString() + CLASS_BRACKETS, true);
 
-    ArrayList<Name> schedulables = new MissionBuilder(programEnv, missionEnv,
-        analysis, this).build(missionTypeElem);
+    ArrayList<Name> schedulables = new MissionBuilder(programEnv, missionEnv, analysis,
+        this).build(missionTypeElem);
 
     assert (schedulables != null);
     if (schedulables.isEmpty())
@@ -774,6 +775,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
   private void findParameters()
   {
+    // TODO THIS SHOULD BE A FREAKING VISITOR!
     System.out.println();
     System.out.println(FINDING_PROCESS_PARAMETERS);
     System.out.println();
@@ -829,9 +831,40 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
         Debugger.log("et kind = " + et.getKind());
 
+        if (et instanceof MethodInvocationTree)
+        {
+          Debugger.log("et is Method Invoation Tree");
+          MethodInvocationTree mit = (MethodInvocationTree) et;
+
+          Debugger.log("mit.getMethodSelect() = " + mit.getMethodSelect()
+              + " and kind = " + mit.getMethodSelect().getKind());
+          if (mit.getMethodSelect() instanceof MemberSelectTree)
+          {
+            Debugger.log("mit.getMethodSelect() is MemberSelectTree");
+            MemberSelectTree mst = (MemberSelectTree) mit.getMethodSelect();
+
+            if (mst.getExpression() instanceof NewClassTree)
+            {
+              Debugger.log("mit's method select is New Class Tree");
+              NewClassTree classTree = (NewClassTree) mst.getExpression();
+
+              args = classTree.getArguments();
+
+              ExpressionTree identifierTree = classTree.getIdentifier();
+              //
+              Debugger.log("trying to get objectEnv for " + identifierTree);
+
+              objectWithParams = programEnv.getObjectEnv(identifierTree.toString());
+
+              nameOfClassBeingTranslated = classTree.getIdentifier().toString();
+
+            }
+          }
+        }
+
         if (et instanceof NewClassTree)
         {
-          System.out.println("Tree: " + tree
+          Debugger.log("Tree: " + tree
               + " instance of ExpressionStatement->Expression->NewClassTree ");
 
           args = ((NewClassTree) tree).getArguments();
@@ -947,7 +980,8 @@ public class EnvironmentBuilder extends ParadigmBuilder
                 }
                 else if (objectWithParams instanceof OneShotEventHandlerEnv)
                 {
-                  if (type.equals("AperiodicParameters") || type.equals("JTime") || type.equals("RelativeTime") ||type.equals("AbsoluteTime")
+                  if (type.equals("AperiodicParameters") || type.equals("JTime")
+                      || type.equals("RelativeTime") || type.equals("AbsoluteTime")
                       || type.equals("SchedulableID"))
                   {
                     objectWithParams.addFWdParameter(returns);

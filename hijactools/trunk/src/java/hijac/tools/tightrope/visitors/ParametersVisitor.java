@@ -130,6 +130,8 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 		{
 			assert (args.size() == 1);
 
+			 Debugger.log("PriorityParameters = " + identifiterTree );
+			
 			ExpressionTree arg = args.get(0);
 
 

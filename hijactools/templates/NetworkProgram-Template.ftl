@@ -135,9 +135,12 @@ ${ControlTierSync} \\
 		<#sep>\interleave \\</#sep>
 	</#list>
 </#list>
+<#if NPE?has_content>
+\interleave \\
 <#list NPE as npe >
 ${npe.Name}App<#if npe.AppParameters?size != 0> (<#list npe.AppParameters as param> ${param} <#sep>,</#sep>  </#list>) </#if>\\
 <#sep>\interleave \\</#sep>
 </#list>
+</#if>
 \circblockclose
 \end{circus}

@@ -59,7 +59,7 @@ public class ProgramEnv
 		structureEnv.addMission(mission);
 		final String missionString = mission.toString();
 		missionIds.addIdNames(missionString);
-		// objectIds.addIdNames(missionString);
+
 	}
 
 	public void addObjectIdName(String name)
@@ -215,7 +215,7 @@ public class ProgramEnv
 	{
 		Map returnMap = structureEnv.getNetworkMap();
 		returnMap.put("NPE", getNonParadigmEnvList());
-		Debugger.log("getNetworkMap says NPE = " + returnMap.get("NPE").toString());
+		
 
 		returnMap.put("AppProcNames", getAppProcNamesList());
 

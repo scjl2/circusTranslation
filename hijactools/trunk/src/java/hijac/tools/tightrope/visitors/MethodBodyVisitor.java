@@ -605,7 +605,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       Debugger.log("expression = " + expresison + " and type = " + expresison.getKind());
       if (expresison instanceof MethodInvocationTree)
       {
-        // This is for is the method call is: o.meth1().meth2();
+        // This is for if the method call is: o.meth1().meth2();
         output = visitMethodInvocation((MethodInvocationTree) expresison, ctxt);
         output += "\\\\ ";
 
@@ -742,6 +742,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
         Debugger.log("/*/*NotIg Id=" + identifier + "  notIg=" + notIgnoredMethod);
 
+
+        
         if (notIgnoredMethod)
         {
           // TODO I think here is where I need to check the class
@@ -776,8 +778,13 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
           {
             object.addParent("ObjectIds");
             object.addParent("ThreadIds");
+            
+            if(object != null)
+            {
+              TightRope.getProgramEnv().addThreadIdName(object.getName().toString());
+            }
           }
-
+//TODO Priorities!
         }
         else
         {
@@ -787,6 +794,11 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
           {
             object.addParent("ObjectIds");
             object.addParent("ThreadIds");
+            
+            if(object != null)
+            {
+              TightRope.getProgramEnv().addThreadIdName(object.getName().toString());
+            }
           }
         }
 

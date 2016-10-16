@@ -121,7 +121,7 @@ public class MissionBuilder extends ParadigmBuilder
 						missionEnv.addSyncMeth(m);
 					
 						
-						programEnv.addObjectIdName(missionName);
+//						programEnv.addObjectIdName(missionName);
 
 						Debugger.log("/// method params =" + m.getParameters());
 					}
