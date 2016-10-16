@@ -264,14 +264,14 @@ public class EnvironmentBuilder extends ParadigmBuilder
       Debugger.log(s + " = " + classMethodsMap.get(s));
     }
 
-    exploreNonParadigmObjects(grabNonParadigmObjects());
+    buildNonParadigmObjects(grabNonParadigmObjects());
 
     return safeletType;
   }
 
-  private void exploreNonParadigmObjects(List<TypeElement> grabNonParadigmObjects)
+  private void buildNonParadigmObjects(List<TypeElement> grabNonParadigmObjects)
   {
-    // TODO Makes this build the envs for this list.
+    
     // List<NonParadigmEnv> nonParadigmEnvs = new ArrayList<NonParadigmEnv>();
     Trees trees = analysis.TREES;
 
@@ -347,7 +347,9 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
         }
       }
-      Debugger.log("Adding Non-P Obj: " + nonParaEnv.getName());
+      nonParaEnv.setId(nonParaEnv.getName().toString()+TightRopeString.Name.ID_STR);
+      Debugger.log("Adding Non-P Obj: " + nonParaEnv.getName() + " with ID = " + nonParaEnv.getId() );
+      
       programEnv.addNonParadigmObjectEnv(nonParaEnv);
     }
 

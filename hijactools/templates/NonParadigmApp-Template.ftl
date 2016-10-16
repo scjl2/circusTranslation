@@ -8,6 +8,10 @@
 %  \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
 %\end{circus}
 
+\begin{axdef}
+	${ProcessName}ID : NonParadigmID \\
+\end{axdef}
+
 \begin{circus}
 \circprocess ${ProcessName}App  \circdef <#include "Params-Template.ftl"> \circbegin
 \end{circus}

@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeString.ObjectString;
 
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class NonParadigmEnv extends ObjectEnv
     
     
     map.put(ObjectString.PROCESS_ID, getId());
+    Debugger.log("NON P toMap() for " + getId());
     map.put("ProcObjectID", getObjectId());
     
 

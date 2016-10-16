@@ -11,6 +11,7 @@ TODO
 	
 
 	- Non paradigm objects need IDs producing (Urg, this needs a template and everything)
+		WHAT? The NONP (eg Buffer) doens't have it's ProcessID in the methods...But it does output (see 'NON P toMap()')
 
 * Remove limitation that getNextMission must return ovject of the right type. I.E. returning a `Mission` makes TightRope crash, but returning a `MissionA` works.
 

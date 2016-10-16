@@ -87,6 +87,7 @@ public class ProgramEnv
 	  if(npe != null)
 	  {
 	    nonParadigmObjectEnvs.add(npe);
+	  
 	  }
 	}
 
