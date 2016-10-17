@@ -274,86 +274,13 @@ public class EnvironmentBuilder extends ParadigmBuilder
   {
     
     // List<NonParadigmEnv> nonParadigmEnvs = new ArrayList<NonParadigmEnv>();
-    Trees trees = analysis.TREES;
+    
 
     for (TypeElement te : grabNonParadigmObjects)
-    {
-      // if(te.getSimpleName().toString().contains("LaunchLevel2") ||
-      // te.getSimpleName().toString().contains("LaunchLevel1") ||
-      // te.getSimpleName().toString().contains("LaunchLevel0"))
-      // {continue; }
-
-      NonParadigmEnv nonParaEnv = new NonParadigmEnv();
-      nonParaEnv.setName(te.getSimpleName());
-
-      MethodVisitor methodVisitor = new MethodVisitor(analysis, nonParaEnv);
-      ClassTree ct = trees.getTree(te);
-
-      HashMap<Name, Tree> varMap = getVariables(te, nonParaEnv);
-
-      List<StatementTree> members = (List<StatementTree>) ct.getMembers();
-      Iterator<StatementTree> i = members.iterator();
-
-      while (i.hasNext())
-      {
-        Object obj = i.next();
-
-        if (obj instanceof MethodTree)
-        {
-          MethodTree mt = (MethodTree) obj;
-
-          Tree returnType = mt.getReturnType();
-
-          final boolean isSyncMethod = mt.getModifiers().getFlags()
-              .contains(Modifier.SYNCHRONIZED);
-
-          if (returnType instanceof PrimitiveTypeTree)
-          {
-            ((PrimitiveTypeTree) mt.getReturnType()).getPrimitiveTypeKind();
-          }
-          // ArrayList<Name> returns =
-
-          mt.accept(new ReturnVisitor(varMap), null);
-
-          @SuppressWarnings("rawtypes")
-          Map paramMap = new HashMap();
-          for (VariableTree vt : mt.getParameters())
-          {
-            paramMap.put(vt.getName().toString(), vt.getType());
-          }
-
-          if (mt.getName().contentEquals("<init>"))
-          {
-            extractNonParadigmProcessParameters(mt, nonParaEnv);
-          }
-          else if (mt.getName().contentEquals("main"))
-          {
-
-          }
-          else if (isSyncMethod)
-          {
-            nonParaEnv.setObjectId(nonParaEnv.getName().toString());
-            MethodEnv m = methodVisitor.visitMethod(mt, false);
-            setMethodAccess(m, mt);
-
-            nonParaEnv.addSyncMeth(m);
-          }
-          else
-          // if (notIgnoredMethod)
-          {
-            MethodEnv m = methodVisitor.visitMethod(mt, false);
-            setMethodAccess(m, mt);
-            
-            //TODO Needs osme logic to check where to put it. Bufer is wrong, eg.i
-            nonParaEnv.addMeth(m);
-          }
-
-        }
-      }
-      nonParaEnv.setId(nonParaEnv.getName().toString()+TightRopeString.Name.ID_STR);
-//      Debugger.log("Adding Non-P Obj: " + nonParaEnv.getName() + " with ID = " + nonParaEnv.getId() );
-      
-      programEnv.addNonParadigmObjectEnv(nonParaEnv);
+    {     
+    
+       new NonParadigmBuilder(analysis, programEnv, this).build(te); 
+          
     }
 
   }
@@ -1080,28 +1007,5 @@ public class EnvironmentBuilder extends ParadigmBuilder
   {
     // TODO Auto-generated method stub
 
-  }
-
-  protected void extractNonParadigmProcessParameters(MethodTree methodTree, ObjectEnv object)
-  {
-    for (VariableTree vt : methodTree.getParameters())
-    {
-
-      VariableEnv parameter = new VariableEnv();
-
-      parameter.setName(vt.getName().toString());
-      parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
-      parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
-
-      final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
-          || parameter.getType().equals("String")
-          || parameter.getType().endsWith("Time");
-
-      if (!ignoredParameter)
-      {
-        object.addProcParameter(parameter);
-      }
-
-    }
   }
 }
