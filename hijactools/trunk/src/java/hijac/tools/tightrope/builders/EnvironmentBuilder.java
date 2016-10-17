@@ -269,6 +269,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
     return safeletType;
   }
 
+  @SuppressWarnings("unchecked")
   private void buildNonParadigmObjects(List<TypeElement> grabNonParadigmObjects)
   {
     
@@ -323,7 +324,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
           if (mt.getName().contentEquals("<init>"))
           {
-            extractProcessParameters(mt, nonParaEnv);
+            extractNonParadigmProcessParameters(mt, nonParaEnv);
           }
           else if (mt.getName().contentEquals("main"))
           {
@@ -342,13 +343,15 @@ public class EnvironmentBuilder extends ParadigmBuilder
           {
             MethodEnv m = methodVisitor.visitMethod(mt, false);
             setMethodAccess(m, mt);
+            
+            //TODO Needs osme logic to check where to put it. Bufer is wrong, eg.i
             nonParaEnv.addMeth(m);
           }
 
         }
       }
       nonParaEnv.setId(nonParaEnv.getName().toString()+TightRopeString.Name.ID_STR);
-      Debugger.log("Adding Non-P Obj: " + nonParaEnv.getName() + " with ID = " + nonParaEnv.getId() );
+//      Debugger.log("Adding Non-P Obj: " + nonParaEnv.getName() + " with ID = " + nonParaEnv.getId() );
       
       programEnv.addNonParadigmObjectEnv(nonParaEnv);
     }
@@ -1079,7 +1082,7 @@ public class EnvironmentBuilder extends ParadigmBuilder
 
   }
 
-  protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
+  protected void extractNonParadigmProcessParameters(MethodTree methodTree, ObjectEnv object)
   {
     for (VariableTree vt : methodTree.getParameters())
     {
@@ -1091,7 +1094,8 @@ public class EnvironmentBuilder extends ParadigmBuilder
       parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
 
       final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
-          || parameter.getType().equals("String");
+          || parameter.getType().equals("String")
+          || parameter.getType().endsWith("Time");
 
       if (!ignoredParameter)
       {

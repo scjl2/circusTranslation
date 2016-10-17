@@ -312,6 +312,8 @@ public class CircusGenerator
       Map npeMap = npe.toMap();
 
       procName = (String) npeMap.get(PROCESS_Name);
+//      Debugger.log("NON P has Id: " + npe.getId() + " and in the map its: " + npeMap.get("ProcessID"));
+      
 
       generateCommon(npeMap, NON_PARADIGM_APP_TEMPLATE_FTL, procName + APP_CIRCUS);
 

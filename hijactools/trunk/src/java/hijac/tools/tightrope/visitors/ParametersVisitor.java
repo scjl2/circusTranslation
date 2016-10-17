@@ -362,6 +362,11 @@ public class ParametersVisitor implements TreeVisitor<VariableEnv, VariableEnv>
 				}
 				ExpressionTree deadlineMisHandlerTree = args.get(1);
 				deadlineMissHandler = deadlineMisHandlerTree.toString();
+				
+				if (deadlineMissHandler.equals("null"))
+        {
+          deadlineMissHandler = "nullSchedulableId";
+        }
 
 			}
 

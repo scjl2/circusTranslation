@@ -139,7 +139,7 @@ public class SchedulableBuilder extends ParadigmBuilder
   
   		final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
   				|| parameter.getType().equals("String")
-  				|| parameter.getType().equals("RelativeTime");
+  				|| parameter.getType().endsWith("Time");
   
   		if (!ignoredParameter)
   		{
