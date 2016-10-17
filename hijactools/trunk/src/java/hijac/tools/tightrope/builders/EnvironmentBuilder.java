@@ -1,14 +1,12 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
-import hijac.tools.compiler.SCJCompilationTask;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.NestedMissionSequencerEnv;
-import hijac.tools.tightrope.environments.NonParadigmEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
@@ -19,10 +17,9 @@ import hijac.tools.tightrope.environments.TopLevelMissionSequencerEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeString;
-import hijac.tools.tightrope.utils.TightRopeTransUtils;
-import hijac.tools.tightrope.visitors.MethodVisitor;
+import hijac.tools.tightrope.utils.TightRopeString.LATEX;
+import hijac.tools.tightrope.utils.TightRopeString.ProgramOutput;
 import hijac.tools.tightrope.visitors.ParametersVisitor;
-import hijac.tools.tightrope.visitors.ReturnVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
 
 import java.lang.reflect.Type;
@@ -33,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -46,54 +42,13 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.PrimitiveTypeTree;
-import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.source.util.Trees;
 
-//TODO This is BADISIMO, Refacter it out
-public class EnvironmentBuilder //extends ParadigmBuilder
+
+public class EnvironmentBuilder 
 {
-  private static final String FINDING_PROCESS_PARAMETERS = "+++ Finding Process Parameters +++";
-
-  private static final String BUILDING_TOP_LEVEL_SEQUENCER = "+++ Building Top Level Sequencer +++";
-
-  private static final String BUILD_MISSION = "+++ Build Mission: ";
-
-  private static final String NO_MISSIONS = "+++ No Missions +++";
-
-  private static final String BUILDING_SCHEDULABLE_MISSION_SEQUENCERS = "+++ Building Schedulable Mission Sequencers +++";
-
-  private static final String BUILDING_SCHEDULABLE = "+++ Building Schedulable ";
-
-  private static final String NO_SCHEDULABLES = "Has No Schedulables +++";
-
-  private static final String CIRCNEW = "\\circnew ";
-
-  private static final String CLASS = "Class";
-
-  private static final String CLASS_BRACKETS = "Class()";
-
-  private static final String CIRCREFTYPE = "\\circreftype ";
-
-  private static final String THIS = "this";
-
-  private static final String BUILDING_MISSION = "+++ Building Mission ";
-
-  private static final String END_PLUSES = " +++";
-
-  private static final String ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME = "javax.safetycritical.OneShotEventHandler";
-
-  private static final String APERIODIC_EVENT_HANDLER_QUALIFIED_NAME = "javax.safetycritical.AperiodicEventHandler";
-
-  private static final String PERIODIC_EVENT_HANDLER_QUALIFIED_NAME = "javax.safetycritical.PeriodicEventHandler";
-
-  private static final String MISSION_SEQUENCER_QUALIFIED_NAME = "javax.safetycritical.MissionSequencer";
-
-  private static final String MANAGED_THREAD_QUALIFIED_NAME = "javax.safetycritical.ManagedThread";
-
   public static SCJAnalysis analysis;
 
   private List<DeferredParamter> deferredParamsList;
@@ -110,8 +65,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
     }
   }
 
-  // private Trees trees;
-  // private Set<CompilationUnitTree> units;
+  
   private Set<TypeElement> type_elements;
   private Elements elems;
 
@@ -159,27 +113,27 @@ public class EnvironmentBuilder //extends ParadigmBuilder
       {
         TypeMirror superclass = elem.getSuperclass();
 
-        if (superclass.toString().contains(MANAGED_THREAD_QUALIFIED_NAME))
+        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.MANAGED_THREAD_QUALIFIED_NAME))
         {
           return SchedulableTypeE.MT;
         }
 
-        if (superclass.toString().contains(MISSION_SEQUENCER_QUALIFIED_NAME))
+        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.MISSION_SEQUENCER_QUALIFIED_NAME))
         {
           return SchedulableTypeE.SMS;
         }
 
-        if (superclass.toString().contains(PERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
+        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.PERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
         {
           return SchedulableTypeE.PEH;
         }
 
-        if (superclass.toString().contains(APERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
+        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.APERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
         {
           return SchedulableTypeE.APEH;
         }
 
-        if (superclass.toString().contains(ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME))
+        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME))
         {
           return SchedulableTypeE.OSEH;
         }
@@ -235,7 +189,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
       {
         final Name safeletName = elem.getSimpleName();
 
-        System.out.println("+++ Found Safelet " + safeletName + END_PLUSES);
+        System.out.println("+++ Found Safelet " + safeletName + ProgramOutput.END_PLUSES);
 
         packagePrefix = findPackagePrefix(elem);
 
@@ -397,7 +351,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
       {
         final Name safeletName = elem.getSimpleName();
 
-        System.out.println("+++ Found Safelet " + safeletName + END_PLUSES);
+        System.out.println("+++ Found Safelet " + safeletName + ProgramOutput.END_PLUSES);
 
         packagePrefix = findPackagePrefix(elem);
 
@@ -438,7 +392,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
   private void buildTopLevelMissionSequencer(Name tlms)
   {
     System.out.println();
-    System.out.println(BUILDING_TOP_LEVEL_SEQUENCER);
+    System.out.println(ProgramOutput.BUILDING_TOP_LEVEL_SEQUENCER);
     System.out.println();
 
     String tlmsStr = "" + Character.toUpperCase(tlms.charAt(0))
@@ -474,13 +428,13 @@ public class EnvironmentBuilder //extends ParadigmBuilder
     Debugger.log("tlmselement=" + tlmsElement);
     ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
 
-    topLevelMissionSequencer.addVariable(THIS, CIRCREFTYPE + tlms.toString() + CLASS,
-        CIRCNEW + tlms.toString() + CLASS_BRACKETS, false);
+    topLevelMissionSequencer.addVariable(hijac.tools.tightrope.utils.TightRopeString.Name.THIS, LATEX.CIRCREFTYPE + tlms.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS,
+        LATEX.CIRCNEW + tlms.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS_BRACKETS, false);
 
     assert (missions != null);
     if (missions.isEmpty())
     {
-      System.out.println(NO_MISSIONS);
+      System.out.println(ProgramOutput.NO_MISSIONS);
     }
     else
     {
@@ -491,7 +445,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
       {
         programEnv.newCluster(tlms);
 
-        System.out.println(output + n + END_PLUSES);
+        System.out.println(output + n + ProgramOutput.END_PLUSES);
         topLevelMissionSequencer.addMission(n);
 
         buildMission(n);
@@ -502,7 +456,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
   private void buildMission(Name n)
   {
     System.out.println();
-    System.out.println(BUILDING_MISSION + n + END_PLUSES);
+    System.out.println(ProgramOutput.BUILDING_MISSION + n + ProgramOutput.END_PLUSES);
     System.out.println();
 
     programEnv.addMission(n);
@@ -520,8 +474,8 @@ public class EnvironmentBuilder //extends ParadigmBuilder
     // HashMap<Name, Tree> variables =
     // getVariables(missionTypeElem, missionClassEnv);
 
-    missionEnv.addVariable(THIS, CIRCREFTYPE + n.toString() + CLASS,
-        CIRCNEW + n.toString() + CLASS_BRACKETS, true);
+    missionEnv.addVariable(hijac.tools.tightrope.utils.TightRopeString.Name.THIS, LATEX.CIRCREFTYPE + n.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS,
+        LATEX.CIRCNEW + n.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS_BRACKETS, true);
 
     ArrayList<Name> schedulables = new MissionBuilder(programEnv, missionEnv, analysis,
         this).build(missionTypeElem);
@@ -529,7 +483,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
     assert (schedulables != null);
     if (schedulables.isEmpty())
     {
-      System.out.println("+++ Mission " + n + NO_SCHEDULABLES);
+      System.out.println("+++ Mission " + n + ProgramOutput.NO_SCHEDULABLES);
     }
     else
     {
@@ -577,7 +531,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
   private void buildShedulable(Name s)
   {
     System.out.println();
-    System.out.println(BUILDING_SCHEDULABLE + s + END_PLUSES);
+    System.out.println(ProgramOutput.BUILDING_SCHEDULABLE + s + ProgramOutput.END_PLUSES);
     System.out.println();
 
     ClassEnv classEnv = new ClassEnv();
@@ -599,7 +553,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
   private void buildSchedulableMissionSequencer(ArrayList<Name> nestedSequencers)
   {
     System.out.println();
-    System.out.println(BUILDING_SCHEDULABLE_MISSION_SEQUENCERS);
+    System.out.println(ProgramOutput.BUILDING_SCHEDULABLE_MISSION_SEQUENCERS);
     System.out.println();
 
     TypeElement tlmsElement;
@@ -629,7 +583,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
       assert (missions != null);
       if (missions.isEmpty())
       {
-        System.out.println(NO_MISSIONS);
+        System.out.println(ProgramOutput.NO_MISSIONS);
       }
       else
       {
@@ -641,7 +595,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
           programEnv.newCluster(sequencer);
 
           nestedMissionSequencer.addMission(n);
-          System.out.println(BUILD_MISSION + n + END_PLUSES);
+          System.out.println(ProgramOutput.BUILD_MISSION + n + ProgramOutput.END_PLUSES);
           buildMission(n);
         }
       }
@@ -709,7 +663,7 @@ public class EnvironmentBuilder //extends ParadigmBuilder
   {
     // TODO THIS SHOULD BE A FREAKING VISITOR!
     System.out.println();
-    System.out.println(FINDING_PROCESS_PARAMETERS);
+    System.out.println(ProgramOutput.FINDING_PROCESS_PARAMETERS);
     System.out.println();
 
     Debugger.log("Deferred Params = " + deferredParamsList.toString());
