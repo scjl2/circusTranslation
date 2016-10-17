@@ -54,7 +54,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.Trees;
 
 //TODO This is BADISIMO, Refacter it out
-public class EnvironmentBuilder extends ParadigmBuilder
+public class EnvironmentBuilder //extends ParadigmBuilder
 {
   private static final String FINDING_PROCESS_PARAMETERS = "+++ Finding Process Parameters +++";
 
@@ -994,18 +994,5 @@ public class EnvironmentBuilder extends ParadigmBuilder
     return programName;
   }
 
-  @Deprecated
-  @Override
-  public ArrayList<Name> build(TypeElement paradigmTypeElement)
-  {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public void addParents()
-  {
-    // TODO Auto-generated method stub
-
-  }
+  
 }
