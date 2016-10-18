@@ -86,7 +86,7 @@ public class NonParadigmBuilder extends ParadigmBuilder
 
         if (mt.getName().contentEquals("<init>"))
         {
-          extractNonParadigmProcessParameters(mt, nonParaEnv);
+          extractProcessParameters(mt, nonParaEnv);
         }
         else if (mt.getName().contentEquals("main"))
         {
@@ -123,13 +123,9 @@ public class NonParadigmBuilder extends ParadigmBuilder
   }
 
   @Override
-  public void addParents()
-  {
-    // TODO Auto-generated method stub
-    
-  }
+  public void addParents() {  }
 
-  protected void extractNonParadigmProcessParameters(MethodTree methodTree, ObjectEnv object)
+  protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
   {
     for (VariableTree vt : methodTree.getParameters())
     {

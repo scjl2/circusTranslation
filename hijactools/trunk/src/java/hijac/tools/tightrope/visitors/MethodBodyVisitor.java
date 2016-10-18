@@ -377,45 +377,43 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   @Override
   public String visitBlock(BlockTree node, MethodVisitorContext ctxt)
   {
-    Debugger.log("Visit Block, node= " + node.toString() + " and num of statements = " + node.getStatements().size() );
-    
+    Debugger.log("Visit Block, node= " + node.toString() + " and num of statements = "
+        + node.getStatements().size());
+
     List<String> processedBlockStatements = new ArrayList<String>();
     // processedBlockStatements.addAll(node.getStatements());
-  
-    
 
-      Iterator<? extends StatementTree> iter = node.getStatements().iterator();
-      StatementTree st = null;
+    Iterator<? extends StatementTree> iter = node.getStatements().iterator();
+    StatementTree st = null;
 
-      while (iter.hasNext())
+    while (iter.hasNext())
+    {
+      st = iter.next();
+
+      Debugger.log("/// st=" + st.toString() + " st.kind=" + st.getKind());
+      // This seemed to block whole blocks that contain a 'Console' from being
+      // captured.
+      // if (st instanceof ExpressionStatementTree)
+      //
+      // {
+      // if (!(node.toString().contains("Console") ||
+      // node.toString().contains(
+      // "System")))
+      // {
+      // String statementString = st.accept(this, ctxt);
+      //
+      // processedBlockStatements.add(statementString);
+      // }
+      // }
+      // else
       {
-        st = iter.next();
 
-        Debugger.log("/// st=" + st.toString() + " st.kind=" + st.getKind());
-        // This seemed to block whole blocks that contain a 'Console' from being
-        // captured.
-        // if (st instanceof ExpressionStatementTree)
-        //
-        // {
-        // if (!(node.toString().contains("Console") ||
-        // node.toString().contains(
-        // "System")))
-        // {
-        // String statementString = st.accept(this, ctxt);
-        //
-        // processedBlockStatements.add(statementString);
-        // }
-        // }
-        // else
-        {
+        String statementString = st.accept(this, ctxt);
 
-          String statementString = st.accept(this, ctxt);
-
-          processedBlockStatements.add(statementString);
-        }
-
+        processedBlockStatements.add(statementString);
       }
-    
+
+    }
 
     return callStmtMacro(node, ctxt, "Block", processedBlockStatements);
   }
@@ -742,16 +740,20 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
         Debugger.log("/*/*NotIg Id=" + identifier + "  notIg=" + notIgnoredMethod);
 
-
-        
         if (notIgnoredMethod)
         {
           // TODO I think here is where I need to check the class
           // methods map for the *actual* location of the method I'm
           // calling...I think
-          TightRope.getProgramEnv().addBinderMethodEnv(method, varType.toString(),
-              object.getId(), object.getIdType());
+          String loc = varType.toString();
 
+          if (TightRope.getProgramEnv().containsNonParadigmObject(loc))
+          {
+            loc += "ID";
+          }
+
+          TightRope.getProgramEnv().addBinderMethodEnv(method, loc, object.getId(),
+              object.getIdType());
         }
 
         if (method.isAPIMethod())
@@ -778,13 +780,13 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
           {
             object.addParent("ObjectIds");
             object.addParent("ThreadIds");
-            
-            if(object != null)
+
+            if (object != null)
             {
               TightRope.getProgramEnv().addThreadIdName(object.getName().toString());
             }
           }
-//TODO Priorities!
+          // TODO Priorities!
         }
         else
         {
@@ -794,8 +796,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
           {
             object.addParent("ObjectIds");
             object.addParent("ThreadIds");
-            
-            if(object != null)
+
+            if (object != null)
             {
               TightRope.getProgramEnv().addThreadIdName(object.getName().toString());
             }
