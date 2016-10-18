@@ -566,7 +566,7 @@ public class ProgramEnv
   {
     for (NonParadigmEnv npe : nonParadigmObjectEnvs)
     {
-      if (npe.getName().toString().equals(name))
+      if (npe.getName().toString().equalsIgnoreCase(name))
       {
         return true;
       }

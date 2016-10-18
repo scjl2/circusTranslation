@@ -786,7 +786,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
               TightRope.getProgramEnv().addThreadIdName(object.getName().toString());
             }
           }
-          // TODO Priorities!
+        
         }
         else
         {
@@ -815,8 +815,19 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         sb.append("Call");
 
         sb.append(LATEX.DOT);
-        sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression().toString());
-
+        
+        String methodSelectExpr = ((MemberSelectTree) node.getMethodSelect()).getExpression().toString();
+        Debugger.log("MemberSelect Expression " + methodSelectExpr);
+        if(TightRope.getProgramEnv().containsNonParadigmObject(methodSelectExpr))
+        {
+          sb.append(methodSelectExpr+"ID");
+        }
+        else
+        {
+          sb.append(methodSelectExpr);
+        }
+        
+       
         if ((!method.isAPIMethod()) || (method.getName().contains("requestTermination")))
 
         {
@@ -863,7 +874,19 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         sb.append(identifier);
         sb.append("Ret");
         sb.append(LATEX.DOT);
-        sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression().toString());
+        
+        //String methodSelectExpr = ((MemberSelectTree) node.getMethodSelect()).getExpression().toString();
+        Debugger.log("MemberSelect Expression " + methodSelectExpr);
+        if(TightRope.getProgramEnv().containsNonParadigmObject(methodSelectExpr))
+        {
+          sb.append(methodSelectExpr+"ID");
+        }
+        else
+        {
+          sb.append(methodSelectExpr);
+        }
+        
+        
 
         if ((!method.isAPIMethod()) || (method.getName().contains("requestTermination")))
         {
