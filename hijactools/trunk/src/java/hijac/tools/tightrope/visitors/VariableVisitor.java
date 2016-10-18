@@ -619,27 +619,27 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
     if (arg0.getInitializer() != null)
     {
       Map<Name, Tree> initialiser = arg0.getInitializer().accept(this, addToEnv);
-      Debugger.log("/*/* Init of " + arg0.getName() + " is = " + initialiser);
+//      Debugger.log("/*/* Init of " + arg0.getName() + " is = " + initialiser);
       init = arg0.getInitializer().toString();
-      Debugger.log("/*/* Init of " + arg0.getName() + " is now = " + init);
+//      Debugger.log("/*/* Init of " + arg0.getName() + " is now = " + init);
     }
 
     returnMap.put(varName, varType);
 
     assert (varName != null);
 
-    if (classEnv != null && addToEnv == true
-        && (!TightRope.getProgramEnv().containsNonParadigmObject(varName.toString())))
+    if (classEnv != null && addToEnv == true)
+       // && (!TightRope.getProgramEnv().containsNonParadigmObject(varName.toString())))
     {
       Debugger.log("var Visitor If");
       if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
       {
-        Debugger.log("var Visitor Primitive Type and init = " + init);
+//        Debugger.log("var Visitor Primitive Type and init = " + init);
         VariableEnv v = new VariableEnv(TightRopeTransUtils.encodeName(varName),
             TightRopeTransUtils.encodeType(varType), init, true);
         v.setProgramType(init);
         v.setInit(init);
-        Debugger.log("Adding v: " + v.toString());
+//        Debugger.log("Adding v: " + v.toString());
         classEnv.addVariable(v);
 
         if (objectEnv.getVariables().isEmpty())
