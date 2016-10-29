@@ -416,6 +416,10 @@ public class EnvironmentBuilder
 
     TopLevelMissionSequencerEnv topLevelMissionSequencer = programEnv
         .getTopLevelMissionSequencer(tlms);
+    
+    topLevelMissionSequencer.addVariable(hijac.tools.tightrope.utils.TightRopeString.Name.THIS, LATEX.CIRCREFTYPE + tlms.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS,
+        LATEX.CIRCNEW + tlms.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS_BRACKETS, false);
+
     ClassEnv tlmsClassEnv = new ClassEnv();
     tlmsClassEnv.setName(tlms);
     topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
@@ -428,9 +432,7 @@ public class EnvironmentBuilder
     Debugger.log("tlmselement=" + tlmsElement);
     ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
 
-    topLevelMissionSequencer.addVariable(hijac.tools.tightrope.utils.TightRopeString.Name.THIS, LATEX.CIRCREFTYPE + tlms.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS,
-        LATEX.CIRCNEW + tlms.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS_BRACKETS, false);
-
+   
     assert (missions != null);
     if (missions.isEmpty())
     {

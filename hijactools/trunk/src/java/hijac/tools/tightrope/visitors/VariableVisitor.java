@@ -1,12 +1,13 @@
 package hijac.tools.tightrope.visitors;
 
-import hijac.tools.application.TightRope;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.utils.Debugger;
+import hijac.tools.tightrope.utils.TightRopeString;
+import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 
 import java.util.ArrayList;
@@ -644,8 +645,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
         if (objectEnv.getVariables().isEmpty())
         {
-          objectEnv.addVariable("this", objectEnv.getName() + "Class", "\\circnew "
-              + objectEnv.getName() + "Class()", false);
+          objectEnv.addVariable(TightRopeString.Name.THIS, LATEX.CIRCREFTYPE +objectEnv.getName() + TightRopeString.Name.CLASS,
+              LATEX.CIRCNEW  + objectEnv.getName() + TightRopeString.Name.CLASS_BRACKETS, false);
         }
 
       }
