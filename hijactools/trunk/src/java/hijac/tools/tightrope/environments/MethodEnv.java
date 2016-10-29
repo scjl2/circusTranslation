@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.MethodDestinationE;
 import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 
@@ -15,8 +16,7 @@ import javax.lang.model.type.TypeKind;
 
 public class MethodEnv
 {
-
-	public static enum AccessMod
+ 	public static enum AccessModifier
 	{
 		PUBLIC, PRIVATE, PROTECTED
 	};
@@ -28,8 +28,9 @@ public class MethodEnv
 	protected ArrayList<Name> returnValues = new ArrayList<Name>();
 	private Object body = LATEX.SKIP;
 	private boolean synchronised = false;
-	private AccessMod accesMod = null;
+	private AccessModifier accesMod = null;
 	private boolean APIMethod;
+	private MethodDestinationE methodDestination;
 	
 	private boolean externalAppMethod = false;
 //	private BinderMethodEnv methodCallBinding = null;
@@ -201,7 +202,7 @@ public class MethodEnv
 		return synchronised;
 	}
 
-	public void setAccess(AccessMod access)
+	public void setAccess(AccessModifier access)
 	{
 		accesMod = access;
 	}
@@ -353,5 +354,17 @@ public class MethodEnv
 	{
 		this.eventName = eventName;
 	}
+
+  public MethodDestinationE getMethodDestination()
+  {
+    return methodDestination;
+  }
+
+  public void setMethodDestination(MethodDestinationE methodDestination)
+  {
+    this.methodDestination = methodDestination;
+  }
+
+
 
 }

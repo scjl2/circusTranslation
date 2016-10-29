@@ -1,13 +1,17 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.application.TightRope;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.NonParadigmEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.Debugger;
+import hijac.tools.tightrope.utils.MethodDestinationE;
 import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
+import hijac.tools.tightrope.visitors.MethodLocationVisitor;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.ReturnVisitor;
 
@@ -31,20 +35,20 @@ import com.sun.source.util.Trees;
 
 public class NonParadigmBuilder extends ParadigmBuilder
 {
+  
 
- 
+
   public NonParadigmBuilder(SCJAnalysis analysis, ProgramEnv programEnv,
       EnvironmentBuilder environmentBuilder)
   {
     super(analysis, programEnv, environmentBuilder);
-    // TODO Auto-generated constructor stub
   }
 
   @Override
   public ArrayList<Name> build(TypeElement te)
   {
     Trees trees = analysis.TREES;
-    
+
     NonParadigmEnv nonParaEnv = new NonParadigmEnv();
     nonParaEnv.setName(te.getSimpleName());
 
@@ -105,47 +109,64 @@ public class NonParadigmBuilder extends ParadigmBuilder
         {
           MethodEnv m = methodVisitor.visitMethod(mt, false);
           setMethodAccess(m, mt);
+//          methodVisitor.setNonPBuilder(this);
+
           
-          //TODO Needs osme logic to check where to put it. Bufer is wrong, eg.i
-          nonParaEnv.addMeth(m);
+          // TODO Needs some logic to check where to put it. Bufer is wrong,
+//          Debugger.log("NonP Meth: " + m.getName() + " isCalledOutside="+isCalledOutside() +" and isAccessesVariable=" + isAccessesVariable());
+          MethodDestinationE methodDestination = new MethodLocationVisitor(varMap).visitMethod(mt, null);
+          Debugger.log("Non P Method: " + m.getName() + " destination is " + methodDestination );
+          if (methodDestination == MethodDestinationE.PROCESS)
+          {
+            nonParaEnv.addMeth(m);
+          }
+          else if(methodDestination == MethodDestinationE.CLASS)
+          {
+            nonParaEnv.getClassEnv().addMeth(m);
+          }
+          
         }
 
       }
     }
-    
+
     //
-    nonParaEnv.setId(nonParaEnv.getName().toString()+TightRopeString.Name.ID_STR);
-//    Debugger.log("Adding Non-P Obj: " + nonParaEnv.getName() + " with ID = " + nonParaEnv.getId() );
-    
+    nonParaEnv.setId(nonParaEnv.getName().toString() + TightRopeString.Name.ID_STR);
+    // Debugger.log("Adding Non-P Obj: " + nonParaEnv.getName() + " with ID = "
+    // + nonParaEnv.getId() );
+
     programEnv.addNonParadigmObjectEnv(nonParaEnv);
-    
+
     return null;
   }
 
   @Override
-  public void addParents() {  }
+  public void addParents()
+  {
+  }
 
   protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
   {
     for (VariableTree vt : methodTree.getParameters())
     {
-  
+
       VariableEnv parameter = new VariableEnv();
-  
+
       parameter.setName(vt.getName().toString());
       parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
       parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
-  
+
       final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
-          || parameter.getType().equals("String")
-          || parameter.getType().endsWith("Time");
-  
+          || parameter.getType().equals("String") || parameter.getType().endsWith("Time");
+
       if (!ignoredParameter)
       {
         object.addProcParameter(parameter);
       }
-  
+
     }
   }
-  
+
+
+
 }

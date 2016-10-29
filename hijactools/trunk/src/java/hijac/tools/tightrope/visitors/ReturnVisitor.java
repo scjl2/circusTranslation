@@ -1,5 +1,6 @@
 package hijac.tools.tightrope.visitors;
 
+import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.utils.Debugger;
 
 import java.util.ArrayList;
@@ -71,6 +72,8 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 	private ArrayList<Name> returns = new ArrayList<Name>();
 
 	private Map<Name, Tree> varMap;
+	
+	private MethodEnv methodEnv = null;
 
 	public ReturnVisitor(Map<Name, Tree> varMap)
 	{
@@ -78,6 +81,11 @@ public class ReturnVisitor implements TreeVisitor<ArrayList<Name>, Boolean>
 		assert (varMap != null);
 		this.varMap = varMap;
 
+	}
+	
+	public ReturnVisitor(Map<Name, Tree> varMap, MethodEnv methodEnv)
+	{
+	  this.methodEnv = methodEnv;
 	}
 
 	public ReturnVisitor()

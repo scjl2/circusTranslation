@@ -4,6 +4,7 @@ import hijac.tools.application.TightRope;
 import hijac.tools.modelgen.circus.templates.CircusTemplateFactory;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
+import hijac.tools.tightrope.builders.NonParadigmBuilder;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
@@ -102,6 +103,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   private String varType;
   // private boolean classEnv;
   private boolean putSkip = false;
+
+  // private NonParadigmBuilder nonParadigmBuilder;
 
   /**
    * Constructor for the Method Body Visitor
@@ -288,10 +291,13 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     Debugger.log("/// AssignmentTree variable = " + node.getVariable());
     Debugger.log("/// AssignmentTree expression = " + node.getExpression());
 
+    // methodAccessesVariable();
+
     final String nodeVariableString = node.getVariable().toString();
 
     if (node.getExpression() instanceof MethodInvocationTree)
     {
+      Debugger.log("visitAssignment node = " + node);
       MethodInvocationTree mit = (MethodInvocationTree) node.getExpression();
 
       if (isSyncMethod(mit))
@@ -506,6 +512,11 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       assert (false);
       return callExprMacro(node, ctxt, "Identifier", id);
     }
+
+    // if(object.getVariable(nodeName) != null)
+    // {
+    // methodAccessesVariable();
+    // }
 
     return callExprMacro(node, ctxt, "Identifier", nodeName);
 
@@ -786,7 +797,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
               TightRope.getProgramEnv().addThreadIdName(object.getName().toString());
             }
           }
-        
+
         }
         else
         {
@@ -815,19 +826,19 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         sb.append("Call");
 
         sb.append(LATEX.DOT);
-        
-        String methodSelectExpr = ((MemberSelectTree) node.getMethodSelect()).getExpression().toString();
+
+        String methodSelectExpr = ((MemberSelectTree) node.getMethodSelect())
+            .getExpression().toString();
         Debugger.log("MemberSelect Expression " + methodSelectExpr);
-        if(TightRope.getProgramEnv().containsNonParadigmObject(methodSelectExpr))
+        if (TightRope.getProgramEnv().containsNonParadigmObject(methodSelectExpr))
         {
-          sb.append(methodSelectExpr+"ID");
+          sb.append(methodSelectExpr + "ID");
         }
         else
         {
           sb.append(methodSelectExpr);
         }
-        
-       
+
         if ((!method.isAPIMethod()) || (method.getName().contains("requestTermination")))
 
         {
@@ -874,19 +885,18 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         sb.append(identifier);
         sb.append("Ret");
         sb.append(LATEX.DOT);
-        
-        //String methodSelectExpr = ((MemberSelectTree) node.getMethodSelect()).getExpression().toString();
+
+        // String methodSelectExpr = ((MemberSelectTree)
+        // node.getMethodSelect()).getExpression().toString();
         Debugger.log("MemberSelect Expression " + methodSelectExpr);
-        if(TightRope.getProgramEnv().containsNonParadigmObject(methodSelectExpr))
+        if (TightRope.getProgramEnv().containsNonParadigmObject(methodSelectExpr))
         {
-          sb.append(methodSelectExpr+"ID");
+          sb.append(methodSelectExpr + "ID");
         }
         else
         {
           sb.append(methodSelectExpr);
         }
-        
-        
 
         if ((!method.isAPIMethod()) || (method.getName().contains("requestTermination")))
         {
@@ -1017,7 +1027,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
   private boolean isSyncMethod(MethodInvocationTree node)
   {
-    if (getMethodEnvBeingCalled(node.getMethodSelect()).isSynchronised())
+    MethodEnv m = getMethodEnvBeingCalled(node.getMethodSelect());
+    
+    if (m != null && m.isSynchronised())
     {
       return true;
     }
@@ -1025,6 +1037,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     {
       return false;
     }
+
   }
 
   private MethodEnv getMethodEnvBeingCalled(ExpressionTree methodSelect)
@@ -1635,4 +1648,19 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       return callStmtMacro(node, ctxt, "WhileLoop", condition, node.getStatement());
     }
   }
+
+  // public void setNonPBuilder(NonParadigmBuilder nonParadigmBuilder)
+  // {
+  // this.nonParadigmBuilder = nonParadigmBuilder;
+  // }
+
+  // public void methodAccessesVariable()
+  // {
+  // Debugger.log("Method Accesses Variable");
+  // if(nonParadigmBuilder != null)
+  // {
+  // Debugger.log("nonPBuilder not null");
+  // // nonParadigmBuilder.setAccessesVariable(true);
+  // }
+  // }
 }

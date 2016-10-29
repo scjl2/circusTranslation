@@ -110,15 +110,15 @@ public abstract class ParadigmBuilder
   
   	if (flags.contains(Modifier.PUBLIC))
   	{
-  		m.setAccess(MethodEnv.AccessMod.PUBLIC);
+  		m.setAccess(MethodEnv.AccessModifier.PUBLIC);
   	}
   	else if (flags.contains(Modifier.PRIVATE))
   	{
-  		m.setAccess(MethodEnv.AccessMod.PRIVATE);
+  		m.setAccess(MethodEnv.AccessModifier.PRIVATE);
   	}
   	else if (flags.contains(Modifier.PROTECTED))
   	{
-  		m.setAccess(MethodEnv.AccessMod.PROTECTED);
+  		m.setAccess(MethodEnv.AccessModifier.PROTECTED);
   	}
   }
 

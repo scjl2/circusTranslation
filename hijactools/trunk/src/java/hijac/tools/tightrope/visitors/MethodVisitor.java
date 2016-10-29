@@ -3,6 +3,7 @@ package hijac.tools.tightrope.visitors;
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.application.TightRope;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
+import hijac.tools.tightrope.builders.NonParadigmBuilder;
 import hijac.tools.tightrope.builders.ParadigmBuilder.IDType;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
@@ -41,6 +42,7 @@ public class MethodVisitor
 	
 	private ObjectEnv object;
 	private String idType;
+//  private NonParadigmBuilder nonParadigmBuilder = null;
 
 	public MethodVisitor(SCJAnalysis analysis, ObjectEnv object)
 	{
@@ -48,11 +50,20 @@ public class MethodVisitor
 		this.object = object;
 		MethodVisitor.application = TightRope.getSCJApplication();
 		MethodVisitor.franksMethodVisitor = new MethodBodyVisitor(application, object);
+//		propagateNonPBuilder();
 		idType = "blankID";
 		
 	}
 	
-	public MethodVisitor(SCJAnalysis analysis, MissionEnv missionEnv, IDType idType)
+//	private void propagateNonPBuilder()
+//  {
+//    if(nonParadigmBuilder != null )
+//    {
+////      franksMethodVisitor.setNonPBuilder(nonParadigmBuilder);
+//    }    
+//  }
+
+  public MethodVisitor(SCJAnalysis analysis, MissionEnv missionEnv, IDType idType)
 	{
 		this(analysis, missionEnv);
 		this.idType = idType.toString();
@@ -105,6 +116,7 @@ public class MethodVisitor
 					returnsValues, parameters, "");
 
 			franksMethodVisitor = new MethodBodyVisitor(application, object, m);
+//			propagateNonPBuilder();
 
 			body = mt.accept(franksMethodVisitor, new MethodVisitorContext());
 
@@ -164,4 +176,10 @@ public class MethodVisitor
 			
 		}
 	}
+
+//  public void setNonPBuilder(NonParadigmBuilder nonParadigmBuilder)
+//  {
+//    this.nonParadigmBuilder = nonParadigmBuilder;
+//    
+//  }
 }
