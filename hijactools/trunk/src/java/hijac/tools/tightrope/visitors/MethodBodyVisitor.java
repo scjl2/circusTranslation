@@ -4,7 +4,6 @@ import hijac.tools.application.TightRope;
 import hijac.tools.modelgen.circus.templates.CircusTemplateFactory;
 import hijac.tools.modelgen.circus.templates.CircusTemplates;
 import hijac.tools.modelgen.circus.visitors.MethodVisitorContext;
-import hijac.tools.tightrope.builders.NonParadigmBuilder;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
@@ -309,6 +308,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         // TODO fix this, it's outputting " " which is BADNESS 90000
         // return "this~.~" + node.getVariable().toString() + " :="
         // + node.getExpression() ;
+        Debugger.log("node.getExpression: " + node.getExpression());
         if (node.getExpression().toString().contains("~?~"))
         {
           return visitMethodInvocation(mit, ctxt) + LATEX.NEW_LINE + nodeVariableString
@@ -316,6 +316,19 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         }
         else
         {
+          // This was trying to add `this' to bufferEmpty
+          if(object.hasClass() )
+          {
+            for(MethodEnv me : object.getClassEnv().getMeths())
+            {
+              if(me.getName().toString().equals(mit))
+              {
+                return "this~.~"+callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
+                    node.getExpression());
+              }
+            }
+          }
+          
           return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
               node.getExpression());
         }

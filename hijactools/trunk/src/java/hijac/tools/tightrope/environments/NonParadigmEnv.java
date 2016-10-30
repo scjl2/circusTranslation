@@ -29,7 +29,8 @@ public class NonParadigmEnv extends ObjectEnv
 		nonPMeths = new ArrayList<Name>();
 	}
 
-	public void setname(Name objectName)
+	@Override
+	public void setName(Name objectName)
 	{
 	  super.setName(objectName);
 	  classEnv.setName(objectName);
