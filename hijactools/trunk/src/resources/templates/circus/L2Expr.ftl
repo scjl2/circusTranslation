@@ -66,7 +66,7 @@
 
 <#macro ConditionalExpression condition true_expression false_expression>
 <@compact>
-  \IF ~ ${TRANS(condition, CTXT)} ~ \THEN ~ ${TRANS(true_expression, CTXT)} ~ \ELSE ~ ${TRANS(false_expression, CTXT)} 
+  \IF ~ ${TRANS(condition, CTXT)} ~ \THEN ~ ${TRANS(true_expression, CTXT)} ~ \ELSE ~ ${TRANS(false_expression, CTXT)}
 </@compact>
 </#macro>
 
@@ -97,7 +97,7 @@
 <#-- What about calls to methods with action models? -->
 
 <#macro MethodInvocation method_select arguments>
-  ${TRANS(method_select, CTXT)}(<@ParamList arguments/>)  
+  ${TRANS(method_select, CTXT)}(<@ParamList arguments/>)
 </#macro>
 
 <#macro ParamList arguments="">

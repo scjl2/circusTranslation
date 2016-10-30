@@ -316,19 +316,27 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         }
         else
         {
-          // This was trying to add `this' to bufferEmpty
-          if(object.hasClass() )
-          {
-            for(MethodEnv me : object.getClassEnv().getMeths())
-            {
-              if(me.getName().toString().equals(mit))
-              {
-                return "this~.~"+callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
-                    node.getExpression());
-              }
-            }
-          }
-          
+//          // This was trying to add `this' to bufferEmpty
+//          if (object.hasClass())
+//          {
+//
+//            for (MethodEnv me : object.getClassEnv().getMeths())
+//            {
+//
+//              if (mit.toString().contains(me.getName().toString()))
+//              // if(me.getName().toString().contains(mit.toString()))
+//              {
+//
+//                // return "wrong~.~"+callStmtMacro(node, ctxt, "Assignment",
+//                // node.getVariable(),
+//                // node.getExpression());
+//
+//                return node.getVariable().toString() + LATEX.ASSIGN + "this~.~"
+//                    + node.getExpression().accept(this, ctxt);
+//              }
+//            }
+//          }
+
           return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
               node.getExpression());
         }
@@ -985,6 +993,20 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
          * macro.
          */
         /* Question: Is that generally feasible? */
+        if(object.hasClass())
+        {
+          for (MethodEnv me : object.getClassEnv().getMeths())
+          {
+
+            if (node.getMethodSelect().toString().contains(me.getName().toString()))
+            {
+              return output + "this~.~" + callExprMacro(node, ctxt, "MethodInvocation", node.getMethodSelect(),
+                  arguments);
+            }
+          }
+        }
+                
+        
         return output
             + callExprMacro(node, ctxt, "MethodInvocation", node.getMethodSelect(),
                 arguments);
@@ -1041,7 +1063,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   private boolean isSyncMethod(MethodInvocationTree node)
   {
     MethodEnv m = getMethodEnvBeingCalled(node.getMethodSelect());
-    
+
     if (m != null && m.isSynchronised())
     {
       return true;
@@ -1516,6 +1538,25 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       }
       else
       {
+
+//        if (object.hasClass())
+//        {
+//          for (MethodEnv me : object.getClassEnv().getMeths())
+//          {
+//            if (mit.toString().contains(me.getName().toString()))
+//            {
+//              final MemberSelectTree memberSelectTree = (MemberSelectTree) mit.getMethodSelect();
+//              
+//              return visitMethodInvocation(mit, ctxt) + "\\circvar " + node.getName()
+//                  + " : " + TightRopeTransUtils.encodeType(node.getType())
+//                  + " \\circspot " + node.getName() + " := this~.~"
+//                  + memberSelectTree.getIdentifier().toString();
+//            }
+//          }
+//        }
+
+        Debugger.log("initializer: " + initializer + " -kind: " + initializer.getKind());
+        
         return callStmtMacro(node, ctxt, "Variable", node.getName(),
             TightRopeTransUtils.encodeType(node.getType()), initializer);
       }
