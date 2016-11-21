@@ -8,7 +8,7 @@ TODO
 * Make the Damn Thing Translate Both Examples!
 	
 
-	- Non paradigm objects are wrong. Weird no-name class...
+	
 	- `Buffer' in MCB should be BufferId, and in Consumer/Producer (eg)
            So, it's broadly that the Non-P variables are sometimes not needed, and when they are they're not the right type.
 

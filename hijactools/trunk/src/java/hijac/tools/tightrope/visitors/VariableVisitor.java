@@ -123,7 +123,11 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
   @Override
   public Map<Name, Tree> visitArrayType(ArrayTypeTree arg0, Boolean addToEnv)
   {
-    // TODO Auto-generated method stub
+//    Map<Name, Tree> returnMap = new HashMap<Name, Tree>();
+//    
+//    returnMap.put(arg0., "Array Place Holder");
+//    
+//    return returnMap ;
     return null;
   }
 
@@ -155,6 +159,8 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
       varName = ((MemberSelectTree) variable).getIdentifier();
     }
 
+    
+    
     if (expression instanceof NewClassTree)
     {
       expressionTree = ((NewClassTree) expression).getIdentifier();
@@ -171,10 +177,16 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
         {
           expressionTree = expression;
         }
+//        else if()
+//        {
+//          
+//        }
+        // What? If the object's name is the same as the expression?
         else if (!(objectEnv.getName().toString().contains(expression.toString())))
         {
           // TODO HACKY! need to get what kind of ID here!
           final String variableInitAndInput = "?" + varName.toString() + "In";
+//          String variableInitAndInput = "Blargs"; 
           //
           // objectEnv.addVariable(varName.toString(),
           // "MissionID",
@@ -615,6 +627,11 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
     Name varName = arg0.getName();
 
     Tree varType = arg0.getType();
+    
+//    if(varType instanceof ArrayTypeTree)
+//    {
+//      varType = 
+//    }
 
     String init = "";
     if (arg0.getInitializer() != null)
@@ -661,15 +678,15 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
           String encodedName = TightRopeTransUtils.encodeName(varName);
           String varTypeString = varType.toString();
 
-          if (GENERIC_PARADIGM_TYPES.contains(varTypeString))
-          {
-            // String varTypefromName =
-            // WordUtils.capitalize(encodedName) + "ID";
-          }
-          else
-          {
-
-          }
+//          if (GENERIC_PARADIGM_TYPES.contains(varTypeString))
+//          {
+//            // String varTypefromName =
+//            // WordUtils.capitalize(encodedName) + "ID";
+//          }
+//          else
+//          {
+//
+//          }
 
           if (addToEnv)
           {

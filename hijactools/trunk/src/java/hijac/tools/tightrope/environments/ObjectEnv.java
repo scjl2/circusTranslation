@@ -712,4 +712,21 @@ public class ObjectEnv
   	return false;
   }
 
+  public boolean containsVariable(String string)
+  {
+      VariableEnv varEnv = getVariable(string);
+      if (varEnv != null)
+      {
+        return true; 
+      }
+      else if (classEnv != null && classEnv.getVariable(string) != null )
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+  }
+
 }
