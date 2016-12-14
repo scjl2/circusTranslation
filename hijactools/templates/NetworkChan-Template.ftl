@@ -49,7 +49,7 @@
 %
 \begin{circus}
 \circchannelset MissionAppSync == \\
-	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
+	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset	
 \end{circus}
 %
 \begin{circus}

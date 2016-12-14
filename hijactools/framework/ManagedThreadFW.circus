@@ -58,7 +58,7 @@ Activate \circdef\\
 \end{circusaction}
 % 
 \begin{circusaction}
-   Execute ~ \circdef ~ Run  \lpar \emptyset | \lchanset runRet \rchanset | \emptyset \rpar Methods
+   Execute ~ \circdef ~ Run  \lpar \emptyset | \lchanset done\_schedulable \rchanset | \emptyset \rpar Methods
 \end{circusaction}
 %
 \begin{circusaction}
@@ -71,7 +71,7 @@ Run \circdef\\
 %
 \begin{circusaction}
 Methods \circdef \\
-	\circblockopen SignalTerminationMeth \circseq Methods\circblockclose  \extchoice runRet~.~schedulable \then \Skip  
+	\circblockopen SignalTerminationMeth \circseq Methods\circblockclose  \extchoice done\_schedulable~.~schedulable \then \Skip  
 
 \end{circusaction}
 %
