@@ -59,6 +59,7 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
+\circvar \boolean : ret @
  cleanupMissionCall~.~LandMissionMID \then \\
 
  cleanupMissionRet~.~LandMissionMID~!~\true \then \\
@@ -116,7 +117,7 @@ startSyncMeth~.~LandMissionOID~.~thread \then \\
 lockAcquired~.~LandMissionOID~.~thread \then \\
 
       \circblockopen
-            this~.~landingGearDeployed :=\true
+            this~.~landingGearDeployed := \true
 
             
 

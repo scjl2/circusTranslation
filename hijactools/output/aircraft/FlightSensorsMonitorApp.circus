@@ -1,7 +1,11 @@
 \begin{zsection}
   \SECTION ~ FlightSensorsMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
- \t1  
+ \t1  ,
+MainMissionMethChan
+
+
+
 
 \end{zsection}
 
@@ -13,13 +17,51 @@
   \circbegin
 \end{circus}
 
+\begin{schema}{State}
+  this : FlightSensorsMonitorClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew FlightSensorsMonitorClass()\\ 
+\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~FlightSensorsMonitorSID \then \\
 	
-  \Skip
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+            binder\_setAirSpeedCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then \\binder\_setAirSpeedRet~.~controllingMission~.~FlightSensorsMonitorSID\then \\\Skip
+
+             \circseq \\ 
+
+
+
+            binder\_setAltitudeCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then \\binder\_setAltitudeRet~.~controllingMission~.~FlightSensorsMonitorSID\then \\\Skip
+
+             \circseq \\ 
+
+
+
+            binder\_setHeadingCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then \\binder\_setHeadingRet~.~controllingMission~.~FlightSensorsMonitorSID\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
 
  \circseq \\
     handleAsyncEventRet~.~FlightSensorsMonitorSID \then \\
@@ -42,7 +84,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
   \circinterrupt (end\_periodic\_app~.~FlightSensorsMonitorSID \then \Skip)
 \end{circusaction}
 

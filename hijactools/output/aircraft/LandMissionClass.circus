@@ -24,6 +24,8 @@
 \begin{schema}{\circinitial Init}
   State~'
 \where
+  SAFE\_LANDING\_ALTITUDE' = 10.0\\ 
+  abort' = false\\ 
 \end{schema}
 
 
@@ -33,7 +35,7 @@
 
 
       \circblockopen
-            this~.~landingGearDeployed :=\false
+            this~.~landingGearDeployed := \false
 
             
 
@@ -71,6 +73,11 @@
 
 
       \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
               ret := \false
 
             

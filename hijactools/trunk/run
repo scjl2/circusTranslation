@@ -25,4 +25,6 @@ JAVA_OPTS=-enableassertions
 
 $JAVA -version
 
-$JAVA $JAVA_OPTS -classpath $CLASSPATH hijac.tools.application.$1
+$JAVA $JAVA_OPTS -classpath $CLASSPATH hijac.tools.application.$1 $2
+
+

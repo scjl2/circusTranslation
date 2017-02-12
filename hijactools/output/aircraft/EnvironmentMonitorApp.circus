@@ -1,7 +1,11 @@
 \begin{zsection}
   \SECTION ~ EnvironmentMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
  \\
- \t1  
+ \t1  ,
+MainMissionMethChan
+
+
+
 
 \end{zsection}
 
@@ -13,13 +17,51 @@
   \circbegin
 \end{circus}
 
+\begin{schema}{State}
+  this : EnvironmentMonitorClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew EnvironmentMonitorClass()\\ 
+\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~EnvironmentMonitorSID \then \\
 	
-  \Skip
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+            binder\_setCabinPressureCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then \\binder\_setCabinPressureRet~.~controllingMission~.~EnvironmentMonitorSID\then \\\Skip
+
+             \circseq \\ 
+
+
+
+            binder\_setEmergencyOxygenCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then \\binder\_setEmergencyOxygenRet~.~controllingMission~.~EnvironmentMonitorSID\then \\\Skip
+
+             \circseq \\ 
+
+
+
+            binder\_setFuelRemainingCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then \\binder\_setFuelRemainingRet~.~controllingMission~.~EnvironmentMonitorSID\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
 
  \circseq \\
     handleAsyncEventRet~.~EnvironmentMonitorSID \then \\
@@ -42,7 +84,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
   \circinterrupt (end\_periodic\_app~.~EnvironmentMonitorSID \then \Skip)
 \end{circusaction}
 

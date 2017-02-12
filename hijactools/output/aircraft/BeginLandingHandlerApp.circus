@@ -19,7 +19,20 @@ handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~BeginLandingHandlerSID \then \\
 	
-  \Skip
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+            requestTerminationCall~.~controllingMission~.~BeginLandingHandlerSID\then \\requestTerminationRet~.~controllingMission~.~BeginLandingHandlerSID~?~requestTermination\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
 
  \circseq \\
     handleAsyncEventRet~.~BeginLandingHandlerSID \then \\

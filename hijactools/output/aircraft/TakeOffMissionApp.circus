@@ -11,7 +11,7 @@
 %\circchannelset TakeOffMissionAppChanSet == \\
 % \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
 
-%    register~.~LandingGearHandlerTakeOffSID~.~TakeOffMissionMID
+%    register~.~LandingGearHandlerSID~.~TakeOffMissionMID
 %    register~.~TakeOffMonitorSID~.~TakeOffMissionMID
 %    register~.~TakeOffFailureHandlerSID~.~TakeOffMissionMID
 %\rchanset
@@ -44,7 +44,7 @@ InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~TakeOffMissionMID \then \\
 
-	register~!~LandingGearHandlerTakeOffSID~!~TakeOffMissionMID \then   \\
+	register~!~LandingGearHandlerSID~!~TakeOffMissionMID \then   \\
 	register~!~TakeOffMonitorSID~!~TakeOffMissionMID \then   \\
 	register~!~TakeOffFailureHandlerSID~!~TakeOffMissionMID \then   \\
 
@@ -57,6 +57,7 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
+\circvar \boolean : ret @
  cleanupMissionCall~.~TakeOffMissionMID \then \\
 
  cleanupMissionRet~.~TakeOffMissionMID~!~\true \then \\
@@ -68,11 +69,11 @@ CleanupPhase \circdef  \\
 takeOffAbortMeth \circdef
 \\
 \circblockopen
-takeOffAbortCall~.~TakeOffMissionMID
+takeOffAbortCall~.~TakeOffMissionMID ~?~caller
 \then \\
 this~.~takeOffAbort()  \circseq  \\
 
-takeOffAbortRet~.~TakeOffMissionMID \then \\
+takeOffAbortRet~.~TakeOffMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
@@ -126,7 +127,7 @@ startSyncMeth~.~TakeOffMissionOID~.~thread \then \\
 lockAcquired~.~TakeOffMissionOID~.~thread \then \\
 
       \circblockopen
-            this~.~landingGearDeployed :=\true
+            this~.~landingGearDeployed := \true
 
             
 

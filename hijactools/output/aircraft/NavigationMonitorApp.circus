@@ -24,17 +24,17 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~NavigationMonitorSID \then \\
 	
       \circblockopen
-            binder\_getHeadingCall~.~mainMission~.~NavigationMonitorSID\then \\binder\_getHeadingRet~.~mainMission~.~NavigationMonitorSID~?~getHeading\then \\\Skip\circvar heading : \power \arithmos \circspot heading :=~getHeading
+            binder\_getHeadingCall~.~mainMission~.~NavigationMonitorSID\then \\binder\_getHeadingRet~.~mainMission~.~NavigationMonitorSID~?~getHeading\then \\\Skip\circseq \circvar heading : \power \arithmos \circspot heading :=~getHeading
              \circseq \\ 
 
 
 
-            binder\_getAirSpeedCall~.~mainMission~.~NavigationMonitorSID\then \\binder\_getAirSpeedRet~.~mainMission~.~NavigationMonitorSID~?~getAirSpeed\then \\\Skip\circvar airSpeed : \power \arithmos \circspot airSpeed :=~getAirSpeed
+            binder\_getAirSpeedCall~.~mainMission~.~NavigationMonitorSID\then \\binder\_getAirSpeedRet~.~mainMission~.~NavigationMonitorSID~?~getAirSpeed\then \\\Skip\circseq \circvar airSpeed : \power \arithmos \circspot airSpeed :=~getAirSpeed
              \circseq \\ 
 
 
 
-            binder\_getAltitudeCall~.~mainMission~.~NavigationMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~NavigationMonitorSID~?~getAltitude\then \\\Skip\circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
+            binder\_getAltitudeCall~.~mainMission~.~NavigationMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~NavigationMonitorSID~?~getAltitude\then \\\Skip\circseq \circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
             
 
 

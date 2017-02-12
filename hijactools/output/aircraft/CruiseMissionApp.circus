@@ -55,6 +55,7 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
+\circvar \boolean : ret @
  cleanupMissionCall~.~CruiseMissionMID \then \\
 
  cleanupMissionRet~.~CruiseMissionMID~!~\true \then \\

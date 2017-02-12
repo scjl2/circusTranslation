@@ -25,6 +25,9 @@
 \begin{schema}{\circinitial Init}
   State~'
 \where
+  SAFE\_AIRSPEED\_THRESHOLD' = 10.0\\ 
+  TAKEOFF\_ALTITUDE' = 10.0\\ 
+  abort' = false\\ 
 \end{schema}
 
 
@@ -34,7 +37,7 @@
 
 
       \circblockopen
-            this~.~abort :=\true
+            this~.~abort := \true
 
             
 
@@ -53,6 +56,11 @@
 
 
       \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
               ret :=   (\lnot abort = \true)
 
 
@@ -72,7 +80,7 @@
 
 
       \circblockopen
-            this~.~landingGearDeployed :=\false
+            this~.~landingGearDeployed := \false
 
             
 

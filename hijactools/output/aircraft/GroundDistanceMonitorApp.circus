@@ -17,6 +17,19 @@ MainMissionMethChan
   \circbegin
 \end{circus}
 
+\begin{schema}{State}
+  this : \circreftype GroundDistanceMonitorClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew GroundDistanceMonitorClass()\\ 
+\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
@@ -24,7 +37,12 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~GroundDistanceMonitorSID \then \\
 	
       \circblockopen
-            binder\_getAltitudeCall~.~mainMission~.~GroundDistanceMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~GroundDistanceMonitorSID~?~getAltitude\then \\\Skip\circvar distance : \power \arithmos \circspot distance :=~getAltitude
+            \Skip
+             \circseq \\ 
+
+
+
+            binder\_getAltitudeCall~.~mainMission~.~GroundDistanceMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~GroundDistanceMonitorSID~?~getAltitude\then \\\Skip\circseq \circvar distance : \power \arithmos \circspot distance :=~getAltitude
              \circseq \\ 
 
 
@@ -32,7 +50,20 @@ handleAsyncEvent \circdef \\
               \circif ~ (distance = readingOnGround) ~ \circthen ~
   \\
 \t1 
-  \Skip
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+            requestTerminationCall~.~mainMission~.~GroundDistanceMonitorSID\then \\requestTerminationRet~.~mainMission~.~GroundDistanceMonitorSID~?~requestTermination\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
 
 
   \\
@@ -68,7 +99,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
   \circinterrupt (end\_periodic\_app~.~GroundDistanceMonitorSID \then \Skip)
 \end{circusaction}
 

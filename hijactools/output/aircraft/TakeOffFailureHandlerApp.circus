@@ -3,6 +3,9 @@
  \\
  \t1  ,
 MainMissionMethChan
+, 
+
+TakeOffMissionMethChan
 
 
 
@@ -21,6 +24,19 @@ MainMissionMethChan
   \circbegin
 \end{circus}
 
+\begin{schema}{State}
+  this : \circreftype TakeOffFailureHandlerClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew TakeOffFailureHandlerClass()\\ 
+\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
@@ -28,7 +44,7 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~TakeOffFailureHandlerSID \then \\
 	
       \circblockopen
-            binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then \\binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then \\\Skip\circvar currentSpeed : \power \arithmos \circspot currentSpeed :=~getAirSpeed
+            binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then \\binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then \\\Skip\circseq \circvar currentSpeed : \power \arithmos \circspot currentSpeed :=~getAirSpeed
              \circseq \\ 
 
 
@@ -36,14 +52,40 @@ handleAsyncEvent \circdef \\
               \circif ~ (currentSpeed < threshold) ~ \circthen ~
   \\
 \t1 
-  \Skip
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+            binder\_takeOffAbortCall~.~takeoffMission~.~TakeOffFailureHandlerSID\then \\binder\_takeOffAbortRet~.~takeoffMission~.~TakeOffFailureHandlerSID\then \\\Skip
+
+             \circseq \\ 
+
+
+
+            requestTerminationCall~.~takeoffMission~.~TakeOffFailureHandlerSID\then \\requestTerminationRet~.~takeoffMission~.~TakeOffFailureHandlerSID~?~requestTermination\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
 
 
   \\
   \circelse ~ \lnot (currentSpeed < threshold) ~ \circthen ~
   \\
 \t1 
-  \Skip
+      \circblockopen
+            \Skip
+            
+
+
+
+
+        \circblockclose
 
 
   \\
@@ -77,7 +119,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
   \circinterrupt (end\_aperiodic\_app~.~TakeOffFailureHandlerSID \then \Skip)
 \end{circusaction}
 

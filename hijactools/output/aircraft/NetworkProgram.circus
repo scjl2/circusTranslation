@@ -11,7 +11,7 @@
 
 MainMissionApp,
 
-ACModeChangerApp
+ACModeChanger2App
 	,
 ControlHandlerApp
 	,
@@ -21,15 +21,13 @@ CommunicationsHandlerApp
 EnvironmentMonitorApp
 	,
 FlightSensorsMonitorApp
-	,
-\\ \t1
-AperiodicSimulatorApp
 	
+\\ \t1
 	
 	,
 TakeOffMissionApp,
 
-LandingGearHandlerTakeOffApp
+LandingGearHandlerApp
 	,
 TakeOffFailureHandlerApp
 	,
@@ -73,42 +71,39 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 \begin{circus}
 \circprocess Tier0 \circdef \\
-
 \circblockopen
 	MissionFW(MainMissionID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
+			SchedulableMissionSequencerFW(ACModeChanger2ID)\\
 
-
-
-
-
-
-
-			SchedulableMissionSequencerFW(ACModeChangerID)\\
-\t1 \lpar SchedulablesSync \rpar\\
-
-
-\circblockopen
-			AperiodicEventHandlerFW(ControlHandlerID ,(time(10,0),null)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(CommunicationsHandlerID ,(NULL,nullSchedulableId)   )\\
-\circblockclose \\
 
 
-\t1 \lpar SchedulablesSync \rpar\\
+			AperiodicEventHandlerFW(ControlHandlerID ,aperiodic ,  (time(10,0),nullSchedulableId)   )\\
+
+			\t1 \lpar SchedulablesSync \rpar\\
 
 
+			AperiodicEventHandlerFW(CommunicationsHandlerID ,aperiodic ,  (NULL,nullSchedulableId)   )\\
 
-\circblockopen
+			\t1 \lpar SchedulablesSync \rpar\\
+
+
 			PeriodicEventHandlerFW(EnvironmentMonitorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
+
 			\t1 \lpar SchedulablesSync \rpar\\
+
+
 			PeriodicEventHandlerFW(FlightSensorsMonitorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
-			\t1 \lpar SchedulablesSync \rpar\\
-			PeriodicEventHandlerFW(AperiodicSimulatorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
-\circblockclose \\
+
+		
+
+
+
+
 
 		\circblockclose
 \circblockclose
@@ -116,92 +111,83 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 %
 \begin{circus}
 \circprocess Tier1 \circdef \\
-
 \circblockopen
 	MissionFW(TakeOffMissionID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
+			AperiodicEventHandlerFW(LandingGearHandlerID ,aperiodic ,  (NULL,nullSchedulableId)   )\\
 
-
-
-
-
-
-
-
-\circblockopen
-			AperiodicEventHandlerFW(LandingGearHandlerTakeOffID ,(NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(TakeOffFailureHandlerID ,(NULL,nullSchedulableId)   )\\
-\circblockclose \\
 
 
-\t1 \lpar SchedulablesSync \rpar\\
+			AperiodicEventHandlerFW(TakeOffFailureHandlerID ,aperiodic ,  (NULL,nullSchedulableId)   )\\
 
+			\t1 \lpar SchedulablesSync \rpar\\
 
 
 			PeriodicEventHandlerFW(TakeOffMonitorID ,(time(0,0),time(500,0),NULL,nullSchedulableId)   )\\
+
+		
+
+
+
+
+
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
-
 \circblockopen
 	MissionFW(CruiseMissionID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
+			AperiodicEventHandlerFW(BeginLandingHandlerID ,aperiodic ,  (NULL,nullSchedulableId)   )\\
 
-
-
-
-
-
-
-
-			AperiodicEventHandlerFW(BeginLandingHandlerID ,(NULL,nullSchedulableId)   )\\
-
-\t1 \lpar SchedulablesSync \rpar\\
-
+			\t1 \lpar SchedulablesSync \rpar\\
 
 
 			PeriodicEventHandlerFW(NavigationMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
+
+		
+
+
+
+
+
 		\circblockclose
 \circblockclose
 	\\ \t1 \lpar ClusterSync \rpar \\
-
 \circblockopen
 	MissionFW(LandMissionID)\\
 		\t1 	\lpar MissionSync \rpar \\
 		\circblockopen
 
 
+			AperiodicEventHandlerFW(LandingGearHandlerLandID ,aperiodic ,  (NULL,nullSchedulableId)   )\\
 
-
-
-
-
-
-
-
-\circblockopen
-			AperiodicEventHandlerFW(LandingGearHandlerLandID ,(NULL,nullSchedulableId)   )\\
 			\t1 \lpar SchedulablesSync \rpar\\
-			AperiodicEventHandlerFW(SafeLandingHandlerID ,(NULL,nullSchedulableId)   )\\
-\circblockclose \\
 
 
-\t1 \lpar SchedulablesSync \rpar\\
+			AperiodicEventHandlerFW(SafeLandingHandlerID ,aperiodic ,  (NULL,nullSchedulableId)   )\\
+
+			\t1 \lpar SchedulablesSync \rpar\\
 
 
-
-\circblockopen
 			PeriodicEventHandlerFW(GroundDistanceMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
+
 			\t1 \lpar SchedulablesSync \rpar\\
+
+
 			PeriodicEventHandlerFW(InstrumentLandingSystemMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
-\circblockclose \\
+
+		
+
+
+
+
 
 		\circblockclose
 \circblockclose
@@ -234,7 +220,7 @@ MainMissionSequencerApp\\
 \interleave \\
 		MainMissionApp\\
 		\interleave \\
-			ACModeChangerApp ( MainMissionID  ) \\
+			ACModeChanger2App ( MainMissionID  ) \\
 			\interleave \\
 			ControlHandlerApp\\
 			\interleave \\
@@ -243,14 +229,12 @@ MainMissionSequencerApp\\
 			EnvironmentMonitorApp ( MainMissionID  ) \\
 			\interleave \\
 			FlightSensorsMonitorApp ( MainMissionID  ) \\
-			\interleave \\
-			AperiodicSimulatorApp ( controlHandlerID  ) \\
 			
 		
 		\interleave \\
 		TakeOffMissionApp\\
 		\interleave \\
-			LandingGearHandlerTakeOffApp ( TakeOffMissionID  ) \\
+			LandingGearHandlerApp ( TakeOffMissionID  ) \\
 			\interleave \\
 			TakeOffFailureHandlerApp ( MissionID ,  TakeOffMissionID ,  10.0  ) \\
 			\interleave \\

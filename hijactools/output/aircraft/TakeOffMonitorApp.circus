@@ -23,6 +23,19 @@ MainMissionMethChan
   \circbegin
 \end{circus}
 
+\begin{schema}{State}
+  this : TakeOffMonitorClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew TakeOffMonitorClass()\\ 
+\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
@@ -30,7 +43,12 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~TakeOffMonitorSID \then \\
 	
       \circblockopen
-            binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then \\\Skip\circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
+            \Skip
+             \circseq \\ 
+
+
+
+            binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then \\\Skip\circseq \circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
              \circseq \\ 
 
 
@@ -38,7 +56,26 @@ handleAsyncEvent \circdef \\
               \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
   \\
 \t1 
-  \Skip
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+            releaseCall~.~landingGearHandler~.~TakeOffMonitorSID\then \\\Skip
+
+             \circseq \\ 
+
+
+
+            requestTerminationCall~.~takeoffMission~.~TakeOffMonitorSID\then \\requestTerminationRet~.~takeoffMission~.~TakeOffMonitorSID~?~requestTermination\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
 
 
   \\
@@ -74,7 +111,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
   \circinterrupt (end\_periodic\_app~.~TakeOffMonitorSID \then \Skip)
 \end{circusaction}
 

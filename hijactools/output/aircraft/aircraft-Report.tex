@@ -13,7 +13,7 @@
 
 \title{aircraft}
 
-\author{Tight Rope v0.7}
+\author{Tight Rope v0.75}
 
 \date{\today}
 
@@ -30,6 +30,9 @@
 \input{SchedulableIds.circus}
 \newpage
 
+\subsection{Non-Paradigm Objects}
+\newpage
+
 \subsection{ThreadIds}
 \input{ThreadIds.circus}
 \newpage
@@ -42,15 +45,17 @@
 \subsection{Network Channel Sets}
 \input{NetworkChan.circus}
 
-\newpage
 
 
-
+\IfFileExists{NetworkMethodCallBinder.circus}{\newpage
 \subsection{MethodCallBinder}
 
 \input{MethodCallBindingChannels.circus}
 
-\input{NetworkMethodCallBinder.circus}
+\input{NetworkMethodCallBinder.circus}}
+{}
+
+
 
 \newpage
 
@@ -98,12 +103,12 @@
 
 \subsection{Schedulables of MainMission}
 
-\input{ACModeChangerApp.circus}
-\IfFileExists{ACModeChangerClass.circus}{\newpage
-\input{ACModeChangerClass.circus}}{}
+\input{ACModeChanger2App.circus}
+\IfFileExists{ACModeChanger2Class.circus}{\newpage
+\input{ACModeChanger2Class.circus}}{}
 \newpage
-\IfFileExists{ACModeChangerMethChan.circus}{\newpage
-\input{ACModeChangerMethChan.circus}}{}
+\IfFileExists{ACModeChanger2MethChan.circus}{\newpage
+\input{ACModeChanger2MethChan.circus}}{}
 
 \newpage
 
@@ -141,15 +146,6 @@
 \IfFileExists{FlightSensorsMonitorMethChan.circus}{\newpage
 \input{FlightSensorsMonitorMethChan.circus}}{}
 
-\newpage
-
-\input{AperiodicSimulatorApp.circus}
-\IfFileExists{AperiodicSimulatorClass.circus}{\newpage
-\input{AperiodicSimulatorClass.circus}}{}
-\newpage
-\IfFileExists{AperiodicSimulatorMethChan.circus}{\newpage
-\input{AperiodicSimulatorMethChan.circus}}{}
-
 
 \subsection{TakeOffMission}
 \input{TakeOffMissionApp.circus}
@@ -162,12 +158,12 @@
 
 \subsection{Schedulables of TakeOffMission}
 
-\input{LandingGearHandlerTakeOffApp.circus}
-\IfFileExists{LandingGearHandlerTakeOffClass.circus}{\newpage
-\input{LandingGearHandlerTakeOffClass.circus}}{}
+\input{LandingGearHandlerApp.circus}
+\IfFileExists{LandingGearHandlerClass.circus}{\newpage
+\input{LandingGearHandlerClass.circus}}{}
 \newpage
-\IfFileExists{LandingGearHandlerTakeOffMethChan.circus}{\newpage
-\input{LandingGearHandlerTakeOffMethChan.circus}}{}
+\IfFileExists{LandingGearHandlerMethChan.circus}{\newpage
+\input{LandingGearHandlerMethChan.circus}}{}
 
 \newpage
 

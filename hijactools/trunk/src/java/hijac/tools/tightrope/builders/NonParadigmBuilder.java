@@ -115,7 +115,9 @@ public class NonParadigmBuilder extends ParadigmBuilder
           // TODO Needs some logic to check where to put it. Bufer is wrong,
 //          Debugger.log("NonP Meth: " + m.getName() + " isCalledOutside="+isCalledOutside() +" and isAccessesVariable=" + isAccessesVariable());
           MethodDestinationE methodDestination = new MethodLocationVisitor(varMap).visitMethod(mt, null);
+          
           Debugger.log("Non P Method: " + m.getName() + " destination is " + methodDestination );
+          
           if (methodDestination == MethodDestinationE.PROCESS)
           {
             nonParaEnv.addMeth(m);

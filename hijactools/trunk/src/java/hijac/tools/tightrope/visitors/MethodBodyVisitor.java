@@ -502,7 +502,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     if (node.toString().contains("Console") || node.toString().contains("System"))
     {
       Debugger.log("*** Console so ignoring *** ");
-      return "";
+      return LATEX.SKIP;
     }
     else
     {
@@ -1531,7 +1531,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         timeMachine.putIfAbsent(memberSelectTree.getIdentifier().toString(), node
             .getName().toString());
 
-        return visitMethodInvocation(mit, ctxt) + "\\circvar " + node.getName() + " : "
+        return visitMethodInvocation(mit, ctxt) + "\\circseq \\circvar " + node.getName() + " : "
             + TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
             + node.getName() + " :=~" + memberSelectTree.getIdentifier().toString();// +
         // "\\circseq ";

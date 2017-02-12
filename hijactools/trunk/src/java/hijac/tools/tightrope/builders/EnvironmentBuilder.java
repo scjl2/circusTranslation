@@ -232,8 +232,11 @@ public class EnvironmentBuilder
 
     for (TypeElement te : grabNonParadigmObjects)
     {     
-    
-       new NonParadigmBuilder(analysis, programEnv, this).build(te); 
+      //No Interfaces
+      if(!te.getKind().isInterface())
+      {
+        new NonParadigmBuilder(analysis, programEnv, this).build(te);
+      }
           
     }
 

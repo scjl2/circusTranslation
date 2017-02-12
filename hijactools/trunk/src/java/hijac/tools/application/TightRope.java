@@ -61,8 +61,14 @@ public class TightRope
 		buildPhase();
 
 		generatePhase();
+		
+		//Start of cli interface. Should maybe fix it to the right folder structure? 
+		//System.out.println("$2 = " + args[0]);
+		System.out.println("Converted Path = " + config.getSourcePath());
 
 		exit();
+		
+		
 	}
 
 	public static void init()

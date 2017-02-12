@@ -1,6 +1,6 @@
 \begin{zsection}
   \SECTION ~ NetworkLocking ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, MissionIds, \\
-  \t1 ThreadIds, NetworkChannels, ObjectFW, ThreadFW
+  \t1 ThreadIds, NetworkChannels, ObjectFW, ThreadFW, Priority
 \end{zsection}
 
 
@@ -10,35 +10,9 @@
 \begin{circus}
 \circprocess Threads \circdef  \\
 \circblockopen
-ThreadFW(InstrumentLandingSystemMonitorTID, 5) \\
-\interleave \\
-ThreadFW(SafeLandingHandlerTID, 5) \\
-\interleave \\
-ThreadFW(GroundDistanceMonitorTID, 5) \\
-\interleave \\
-ThreadFW(CommunicationsHandlerTID, 5) \\
-\interleave \\
-ThreadFW(ControlHandlerTID, 5) \\
-\interleave \\
-ThreadFW(AperiodicSimulatorTID, 5) \\
-\interleave \\
-ThreadFW(TakeOffFailureHandlerTID, 5) \\
-\interleave \\
 ThreadFW(LandingGearHandlerLandTID, 5) \\
 \interleave \\
-ThreadFW(EnvironmentMonitorTID, 5) \\
-\interleave \\
-ThreadFW(FlightSensorsMonitorTID, 5) \\
-\interleave \\
-ThreadFW(NavigationMonitorTID, 5) \\
-\interleave \\
-ThreadFW(ACModeChangerTID, 5) \\
-\interleave \\
-ThreadFW(BeginLandingHandlerTID, 5) \\
-\interleave \\
-ThreadFW(LandingGearHandlerTakeOffTID, 5) \\
-\interleave \\
-ThreadFW(TakeOffMonitorTID, 5) \\
+ThreadFW(LandingGearHandlerTID, 5) \\
 
 \circblockclose
 \end{circus}
