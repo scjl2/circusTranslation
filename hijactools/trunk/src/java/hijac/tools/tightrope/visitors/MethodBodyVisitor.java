@@ -724,16 +724,12 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       else if (identifier.contentEquals("release"))
       {
         sb.append(identifier);
-        sb.append("Call");
+       
 
         sb.append(LATEX.DOT);
         sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression().toString());
 
-        {
-          sb.append(LATEX.DOT);
-          // sb.append("TESTE"+objectID.toString());
-          sb.append(visitingObject.getId());
-        }
+      
         sb.append(LATEX.THEN);
         sb.append(LATEX.NEW_LINE);
         sb.append(LATEX.SKIP);
@@ -767,8 +763,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
             || (identifier.contentEquals("immortalMemorySize"))
             || (identifier.contentEquals("getSequencer"))
             || (identifier.contentEquals("getNextMission"))
-            || (identifier.contentEquals("release")) || (identifier
-            .contentEquals("requestTermination")));
+            || (identifier.contentEquals("release")) 
+            || (identifier.contentEquals("requestTermination")));
 
         Debugger.log("/*/*NotIg Id=" + identifier + "  notIg=" + notIgnoredMethod);
 
