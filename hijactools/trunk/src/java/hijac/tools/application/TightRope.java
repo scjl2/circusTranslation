@@ -196,6 +196,7 @@ public class TightRope
 			 */
 			System.out.println("+++ Generating PDF +++");
 
+			//TODO Make latexLocation changable!!1
 			String latexLocation = "/usr/bin/pdflatex";
 			String outputDirectory = "../output/" + customName + "/";
 			String reportLocation = "../output/" + customName + "/"
