@@ -27,126 +27,116 @@ import hijac.tools.tightrope.visitors.MethodVisitor;
 public class SchedulableBuilder extends ParadigmBuilder
 {
 
-	private ObjectEnv schedulableEnv;
+  private ObjectEnv schedulableEnv;
 
-	public SchedulableBuilder(SCJAnalysis analysis,
-			ProgramEnv programEnv, ObjectEnv schedulableEnv,
-			EnvironmentBuilder environmentBuilder)
-	{
-		super(analysis, programEnv, environmentBuilder);
-		this.schedulableEnv = schedulableEnv;
-	}
+  public SchedulableBuilder(SCJAnalysis analysis, ProgramEnv programEnv,
+      ObjectEnv schedulableEnv, EnvironmentBuilder environmentBuilder)
+  {
+    super(analysis, programEnv, environmentBuilder);
+    this.schedulableEnv = schedulableEnv;
+  }
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public ArrayList<Name> build(TypeElement paradigmTypeElement)
-	{
+  @SuppressWarnings("unchecked")
+  @Override
+  public ArrayList<Name> build(TypeElement paradigmTypeElement)
+  {
 
-		ClassTree ct = analysis.TREES.getTree(paradigmTypeElement);
+    ClassTree ct = analysis.TREES.getTree(paradigmTypeElement);
 
-		
-		if (schedulableEnv instanceof AperiodicEventHandlerEnv)
-		{
-			String extendsClause = ct.getExtendsClause().toString();
-			AperiodicEventHandlerEnv apehEnv = (AperiodicEventHandlerEnv) schedulableEnv;
-			if (extendsClause.equals("AperiodicEventHandler"))
-			{
-				apehEnv.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodic);
+    if (schedulableEnv instanceof AperiodicEventHandlerEnv)
+    {
+      String extendsClause = ct.getExtendsClause().toString();
+      AperiodicEventHandlerEnv apehEnv = (AperiodicEventHandlerEnv) schedulableEnv;
+      if (extendsClause.equals("AperiodicEventHandler"))
+      {
+        apehEnv.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodic);
 
-			}
-			else if (extendsClause.equals("AperiodicLongEventHandler"))
-			{
-				apehEnv.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodicLong);
-			}
-		}
+      }
+      else if (extendsClause.equals("AperiodicLongEventHandler"))
+      {
+        apehEnv.setHandlerType(AperiodicEventHandlerEnv.HandlerType.aperiodicLong);
+      }
+    }
 
-		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
+    List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 
-		Iterator<StatementTree> i = members.iterator();		
+    Iterator<StatementTree> i = members.iterator();
 
-		while (i.hasNext())
-		{
-			Tree tlst = i.next();
+    while (i.hasNext())
+    {
+      Tree tlst = i.next();
 
-			if (tlst instanceof MethodTree)
-			{
-				MethodTree mt = (MethodTree) tlst;
+      if (tlst instanceof MethodTree)
+      {
+        MethodTree mt = (MethodTree) tlst;
 
-				MethodVisitor methodVisitor = new MethodVisitor(analysis,
-						schedulableEnv);
-				if (mt.getModifiers().getFlags()
-						.contains(Modifier.SYNCHRONIZED))
-				{
+        MethodVisitor methodVisitor = new MethodVisitor(analysis, schedulableEnv);
+        if (mt.getModifiers().getFlags().contains(Modifier.SYNCHRONIZED))
+        {
 
-					final String schedulableEnvName = schedulableEnv.getName().toString();
+          final String schedulableEnvName = schedulableEnv.getName().toString();
           schedulableEnv.setObjectId(schedulableEnvName);
-					
-					
-					MethodEnv m = methodVisitor.visitMethod(mt, false);
-				
-					
-					schedulableEnv.getClassEnv().addSyncMeth(m);
 
-				}
-				else if ((mt.getName().contentEquals("<init>")))
-				{
-					extractProcessParameters(mt, (ObjectEnv) schedulableEnv);
-				}
-				else
-				{
-					if ((mt.getName().contentEquals("run")))
-					{
-						((ManagedThreadEnv) schedulableEnv)
-								.addRunMethod(methodVisitor.visitMethod(mt,
-										false));
-					}
-					else if ((mt.getName().contentEquals("handleAsyncEvent")))
-					{
-						((EventHandlerEnv) schedulableEnv)
-								.addHandleAsyncMethod(methodVisitor
-										.visitMethod(mt, false));
-					}
-					else
-					{
-						schedulableEnv.addMeth(methodVisitor.visitMethod(mt,
-								false));
-					}
-				}
-			}
-		}
-		
-		getVariables(paradigmTypeElement, schedulableEnv);
-		return null;
-	}
+          MethodEnv m = methodVisitor.visitMethod(mt, false);
 
-	@Override
-	public void addParents()
-	{
-		// TODO Auto-generated method stub
-		
-	}
+          schedulableEnv.getClassEnv().addSyncMeth(m);
+
+        }
+        else if ((mt.getName().contentEquals("<init>")))
+        {
+          extractProcessParameters(mt, (ObjectEnv) schedulableEnv);
+        }
+        else
+        {
+          if ((mt.getName().contentEquals("run")))
+          {
+            ((ManagedThreadEnv) schedulableEnv).addRunMethod(methodVisitor.visitMethod(
+                mt, false));
+          }
+          else if ((mt.getName().contentEquals("handleAsyncEvent")))
+          {
+            ((EventHandlerEnv) schedulableEnv).addHandleAsyncMethod(methodVisitor
+                .visitMethod(mt, false));
+          }
+          else
+          {
+            schedulableEnv.addMeth(methodVisitor.visitMethod(mt, false));
+          }
+        }
+      }
+    }
+
+    getVariables(paradigmTypeElement, schedulableEnv);
+    return null;
+  }
+
+  @Override
+  public void addParents()
+  {
+    // TODO Auto-generated method stub
+
+  }
 
   protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)
   {
-  	for (VariableTree vt : methodTree.getParameters())
-  	{
-  
-  		VariableEnv parameter = new VariableEnv();
-  
-  		parameter.setName(vt.getName().toString());
-  		parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
-  		parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
-  
-  		final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
-  				|| parameter.getType().equals("String")
-  				|| parameter.getType().endsWith("Time");
-  
-  		if (!ignoredParameter)
-  		{
-  			object.addProcParameter(parameter);
-  		}
-  
-  	}
+    for (VariableTree vt : methodTree.getParameters())
+    {
+
+      VariableEnv parameter = new VariableEnv();
+
+      parameter.setName(vt.getName().toString());
+      parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
+      parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
+
+      final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
+          || parameter.getType().equals("String") || parameter.getType().endsWith("Time");
+
+      if (!ignoredParameter)
+      {
+        object.addProcParameter(parameter);
+      }
+
+    }
   }
 
 }

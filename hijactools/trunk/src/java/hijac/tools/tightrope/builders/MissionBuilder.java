@@ -97,8 +97,7 @@ public class MissionBuilder extends ParadigmBuilder
 						.contentEquals("<init>");
 
 				if (currentMethodIsConstructor)
-				{
-					
+				{					
 					extractProcessParameters(missionMethodTree, missionEnv);
 				}
 				else if (currentMethodIsInitialize)

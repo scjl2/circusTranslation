@@ -66,7 +66,6 @@ public class MissionSequencerBuilder extends ParadigmBuilder
 		
 		addParents();
 		
-	
 
 		varMap = getVariables(arg0, sequencerEnv);
 
@@ -118,12 +117,9 @@ public class MissionSequencerBuilder extends ParadigmBuilder
 
 				if (methodName.contentEquals("<init>"))
 				{
-					Debugger.log("Release the Visitor!");
-
-					methodVisitor.visitMethod(o, true);
-
-					o.accept(returnVisitor, false);
-
+					//methodVisitor.visitMethod(o, true);
+				//	o.accept(returnVisitor, false);
+				  extractProcessParameters(o, sequencerEnv);
 				}
 				else
 				{
@@ -177,27 +173,6 @@ public class MissionSequencerBuilder extends ParadigmBuilder
 
 		return missions;
 	}
-
-//	private void setMethodAccess(MethodEnv m, MethodTree o)
-//	{
-//		ModifiersTree modTree = o.getModifiers();
-//		Set<Modifier> flags = modTree.getFlags();
-//
-//		// m.setSynchronised(flags.contains(Modifier.SYNCHRONIZED));
-//
-//		if (flags.contains(Modifier.PUBLIC))
-//		{
-//			m.setAccess(MethodEnv.AccessMod.PUBLIC);
-//		}
-//		else if (flags.contains(Modifier.PRIVATE))
-//		{
-//			m.setAccess(MethodEnv.AccessMod.PRIVATE);
-//		}
-//		else if (flags.contains(Modifier.PROTECTED))
-//		{
-//			m.setAccess(MethodEnv.AccessMod.PROTECTED);
-//		}
-//	}
 	
 	public void addParents()
 	{
@@ -215,16 +190,18 @@ public class MissionSequencerBuilder extends ParadigmBuilder
   
   		parameter.setName(vt.getName().toString());
   		parameter.setType(TightRopeTransUtils.encodeType(vt.getType()));
-  		parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
+   		parameter.setProgramType(TightRopeTransUtils.encodeType(vt.getType()));
   
-  		final boolean ignoredParameter = parameter.getType().endsWith("Parameters")
-  				|| parameter.getType().equals("String");
+  		final boolean ignoredParameter = 
+  		    parameter.getType().endsWith("Parameters")
+  				|| parameter.getType().contains("String");
   
+  		 System.out.println("!!! paramerter name, type, ignored = " + parameter.getName() + ", " + parameter.getType() + ", " + ignoredParameter);
+  		
   		if (!ignoredParameter)
   		{
   			object.addProcParameter(parameter);
-  		}
-  
+  		}  
   	}
   }
 }
