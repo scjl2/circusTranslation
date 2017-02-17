@@ -221,7 +221,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
     if (methodEnv != null)
     {
-      ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT, visitingObject, methodEnv));
+      ctxt.MACRO_MODEL.put("TRANS", new NewActionMethodModel(CONTEXT, visitingObject,
+          methodEnv));
     }
     else
     {
@@ -316,26 +317,26 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         }
         else
         {
-//          // This was trying to add `this' to bufferEmpty
-//          if (object.hasClass())
-//          {
-//
-//            for (MethodEnv me : object.getClassEnv().getMeths())
-//            {
-//
-//              if (mit.toString().contains(me.getName().toString()))
-//              // if(me.getName().toString().contains(mit.toString()))
-//              {
-//
-//                // return "wrong~.~"+callStmtMacro(node, ctxt, "Assignment",
-//                // node.getVariable(),
-//                // node.getExpression());
-//
-//                return node.getVariable().toString() + LATEX.ASSIGN + "this~.~"
-//                    + node.getExpression().accept(this, ctxt);
-//              }
-//            }
-//          }
+          // // This was trying to add `this' to bufferEmpty
+          // if (object.hasClass())
+          // {
+          //
+          // for (MethodEnv me : object.getClassEnv().getMeths())
+          // {
+          //
+          // if (mit.toString().contains(me.getName().toString()))
+          // // if(me.getName().toString().contains(mit.toString()))
+          // {
+          //
+          // // return "wrong~.~"+callStmtMacro(node, ctxt, "Assignment",
+          // // node.getVariable(),
+          // // node.getExpression());
+          //
+          // return node.getVariable().toString() + LATEX.ASSIGN + "this~.~"
+          // + node.getExpression().accept(this, ctxt);
+          // }
+          // }
+          // }
 
           return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
               node.getExpression());
@@ -362,7 +363,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         ClassEnv cE = p.getClassEnv();
         if (cE != null)
         {
-          Debugger.log(cE);
+          Debugger.log("AA" +  cE);
           if (cE.getVariable(nodeVariableString) != null)
           {
 
@@ -372,7 +373,14 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
                   .getExpression());
             }
 
-            return "this~.~" + nodeVariableString + LATEX.ASSIGN + expression;
+            if (visitingObject.getVariable(nodeVariableString) == null)
+            {
+              return nodeVariableString + LATEX.ASSIGN + expression;
+            }
+            else
+            {
+              return "this~.~" + nodeVariableString + LATEX.ASSIGN + expression;
+            }
           }
         }
         else
@@ -724,12 +732,10 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       else if (identifier.contentEquals("release"))
       {
         sb.append(identifier);
-       
 
         sb.append(LATEX.DOT);
         sb.append(((MemberSelectTree) node.getMethodSelect()).getExpression().toString());
 
-      
         sb.append(LATEX.THEN);
         sb.append(LATEX.NEW_LINE);
         sb.append(LATEX.SKIP);
@@ -763,8 +769,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
             || (identifier.contentEquals("immortalMemorySize"))
             || (identifier.contentEquals("getSequencer"))
             || (identifier.contentEquals("getNextMission"))
-            || (identifier.contentEquals("release")) 
-            || (identifier.contentEquals("requestTermination")));
+            || (identifier.contentEquals("release")) || (identifier
+            .contentEquals("requestTermination")));
 
         Debugger.log("/*/*NotIg Id=" + identifier + "  notIg=" + notIgnoredMethod);
 
@@ -780,8 +786,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
             loc += "ID";
           }
 
-          TightRope.getProgramEnv().addBinderMethodEnv(method, loc, visitingObject.getId(),
-              visitingObject.getIdType());
+          TightRope.getProgramEnv().addBinderMethodEnv(method, loc,
+              visitingObject.getId(), visitingObject.getIdType());
         }
 
         if (method.isAPIMethod())
@@ -811,15 +817,16 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
             if (visitingObject != null)
             {
-              TightRope.getProgramEnv().addThreadIdName(visitingObject.getName().toString());
+              TightRope.getProgramEnv().addThreadIdName(
+                  visitingObject.getName().toString());
             }
           }
 
         }
         else
         {
-          visitingObject.addParent(getObjectEnvOfMethod(methodSelect).getName().toString()
-              + "MethChan");
+          visitingObject.addParent(getObjectEnvOfMethod(methodSelect).getName()
+              .toString() + "MethChan");
           if (method.isSynchronised())
           {
             visitingObject.addParent("ObjectIds");
@@ -827,7 +834,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
             if (visitingObject != null)
             {
-              TightRope.getProgramEnv().addThreadIdName(visitingObject.getName().toString());
+              TightRope.getProgramEnv().addThreadIdName(
+                  visitingObject.getName().toString());
             }
           }
         }
@@ -989,20 +997,21 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
          * macro.
          */
         /* Question: Is that generally feasible? */
-        if(visitingObject.hasClass())
+        if (visitingObject.hasClass())
         {
           for (MethodEnv me : visitingObject.getClassEnv().getMeths())
           {
 
             if (node.getMethodSelect().toString().contains(me.getName().toString()))
             {
-              return output + "this~.~" + callExprMacro(node, ctxt, "MethodInvocation", node.getMethodSelect(),
-                  arguments);
+              return output
+                  + "this~.~"
+                  + callExprMacro(node, ctxt, "MethodInvocation", node.getMethodSelect(),
+                      arguments);
             }
           }
         }
-                
-        
+
         return output
             + callExprMacro(node, ctxt, "MethodInvocation", node.getMethodSelect(),
                 arguments);
@@ -1509,7 +1518,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   @Override
   public String visitVariable(VariableTree node, MethodVisitorContext ctxt)
   {
-    Debugger.log("/// VariableTree node = " + node + " and init kind is: " + node.getInitializer().getKind());
+    Debugger.log("/// VariableTree node = " + node + " and init kind is: "
+        + node.getInitializer().getKind());
     ExpressionTree initializer = node.getInitializer();
 
     if (initializer instanceof MethodInvocationTree)
@@ -1527,32 +1537,34 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         timeMachine.putIfAbsent(memberSelectTree.getIdentifier().toString(), node
             .getName().toString());
 
-        return visitMethodInvocation(mit, ctxt) + "\\circseq \\circvar " + node.getName() + " : "
-            + TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
+        return visitMethodInvocation(mit, ctxt) + "\\circseq \\circvar " + node.getName()
+            + " : " + TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
             + node.getName() + " :=~" + memberSelectTree.getIdentifier().toString();// +
         // "\\circseq ";
       }
       else
       {
 
-//        if (object.hasClass())
-//        {
-//          for (MethodEnv me : object.getClassEnv().getMeths())
-//          {
-//            if (mit.toString().contains(me.getName().toString()))
-//            {
-//              final MemberSelectTree memberSelectTree = (MemberSelectTree) mit.getMethodSelect();
-//              
-//              return visitMethodInvocation(mit, ctxt) + "\\circvar " + node.getName()
-//                  + " : " + TightRopeTransUtils.encodeType(node.getType())
-//                  + " \\circspot " + node.getName() + " := this~.~"
-//                  + memberSelectTree.getIdentifier().toString();
-//            }
-//          }
-//        }
+        // if (object.hasClass())
+        // {
+        // for (MethodEnv me : object.getClassEnv().getMeths())
+        // {
+        // if (mit.toString().contains(me.getName().toString()))
+        // {
+        // final MemberSelectTree memberSelectTree = (MemberSelectTree)
+        // mit.getMethodSelect();
+        //
+        // return visitMethodInvocation(mit, ctxt) + "\\circvar " +
+        // node.getName()
+        // + " : " + TightRopeTransUtils.encodeType(node.getType())
+        // + " \\circspot " + node.getName() + " := this~.~"
+        // + memberSelectTree.getIdentifier().toString();
+        // }
+        // }
+        // }
 
         Debugger.log("initializer: " + initializer + " -kind: " + initializer.getKind());
-        
+
         return callStmtMacro(node, ctxt, "Variable", node.getName(),
             TightRopeTransUtils.encodeType(node.getType()), initializer);
       }
@@ -1573,7 +1585,6 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     }
     else
     {
-
       if (visitingObject instanceof ParadigmEnv)
       {
         ClassEnv classEnv = ((ObjectEnv) visitingObject).getClassEnv();
@@ -1581,25 +1592,26 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         {
           return "\\circvar " + node.getName() + " : "
               + TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
-              + node.getName() + " := this~.~" + initializer.toString();// +
-                                                                        // "\\circseq ";
+              + node.getName() + " := this~.~" + initializer.toString();
         }
-        return "\\circvar " + node.getName() + " : "
-            + TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
-            + node.getName() + " := this~.~" + initializer.toString();// +
-        // "\\circseq ";
+        else
+        {
+          return "\\circvar " + node.getName() + " : "
+              + TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
+              + node.getName() + " := this~.~" + initializer.toString();
+        }        
       }
-      else if (visitingObject.containsVariable(initializer.toString() ))
+      else if (visitingObject.containsVariable(initializer.toString()))
       {
         return "\\circvar " + node.getName() + " : "
             + TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
             + node.getName() + " := this~.~" + initializer.toString();// +
         // "\\circseq ";
-       
+
       }
       else
       {
-        
+
         return callStmtMacro(node, ctxt, "Variable", node.getName(),
             TightRopeTransUtils.encodeType(node.getType()), initializer);
       }
