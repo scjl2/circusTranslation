@@ -61,9 +61,9 @@ public class ClassEnv // extends ParadigmEnv
         + " variables=" + objectEnv.variables.toString();
   }
 
-  public List<MethodEnv> getMeths()
+  public List<MethodEnv> getAllMeths()
   {
-    return objectEnv.getMeths();
+    return objectEnv.getAllMeths();
   }
 
   public List<MethodEnv> getSyncMeths()
@@ -120,5 +120,16 @@ public class ClassEnv // extends ParadigmEnv
   {
     objectEnv.addParent(missionId);
 
+  }
+  public boolean containsMethod(String methodName)
+  {
+    for(MethodEnv me : getAllMeths())
+    {
+      if(me.getName().equals(methodName))
+      {
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -10,10 +10,7 @@
 \begin{circus}
 \circprocess Threads \circdef  \\
 \circblockopen
-ThreadFW(LandingGearHandlerLandTID, 5) \\
-\interleave \\
-ThreadFW(LandingGearHandlerTID, 5) \\
-
+\Skip
 \circblockclose
 \end{circus}
 %
@@ -22,10 +19,7 @@ ThreadFW(LandingGearHandlerTID, 5) \\
 \begin{circus}
 \circprocess Objects \circdef \\
 \circblockopen
-ObjectFW(TakeOffMissionOID) \\
-\interleave \\
-ObjectFW(LandMissionOID) \\
-
+\Skip
 
 \circblockclose
 \end{circus}

@@ -131,7 +131,7 @@ public class ProgramEnv
       }
       npeString += "Methods:";
       npeString += (LINE_SEPARATOR);
-      for (MethodEnv m : npe.getMeths())
+      for (MethodEnv m : npe.getAllMeths())
       {
         npeString += "\tName: " + m.getName();
         npeString += (LINE_SEPARATOR);

@@ -44,6 +44,7 @@ public class NonParadigmBuilder extends ParadigmBuilder
     super(analysis, programEnv, environmentBuilder);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public ArrayList<Name> build(TypeElement te)
   {
@@ -77,8 +78,7 @@ public class NonParadigmBuilder extends ParadigmBuilder
         {
           ((PrimitiveTypeTree) mt.getReturnType()).getPrimitiveTypeKind();
         }
-        // ArrayList<Name> returns =
-
+       
         mt.accept(new ReturnVisitor(varMap), null);
 
         @SuppressWarnings("rawtypes")

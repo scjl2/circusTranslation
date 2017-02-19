@@ -29,11 +29,11 @@ public class MissionEnv extends ParadigmEnv
 	}
 
 	@Override
-	public List<MethodEnv> getMeths()
+	public List<MethodEnv> getAllMeths()
 	{
 		List<MethodEnv> missionMeths = new ArrayList<MethodEnv>();
 
-		missionMeths.addAll(super.getMeths());
+		missionMeths.addAll(super.getAllMeths());
 		missionMeths.addAll(MISSION_API_METHODS);
 
 		return missionMeths;

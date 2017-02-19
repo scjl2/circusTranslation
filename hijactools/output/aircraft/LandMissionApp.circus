@@ -2,7 +2,7 @@
   \SECTION ~ LandMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, LandMissionMethChan \\
  , LandMissionClass, MethodCallBindingChannels 
- , ObjectFWChan, ObjectIds
+ 
 
 \end{zsection}
 
@@ -68,6 +68,18 @@ CleanupPhase \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
+deployLandingGearMeth \circdef
+\\
+\circblockopen
+deployLandingGearCall~.~LandMissionMID ~?~caller
+\then \\
+this~.~deployLandingGear()  \circseq  \\
+
+deployLandingGearRet~.~LandMissionMID~.~caller \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
 stowLandingGearMeth \circdef
 \\
 \circblockopen
@@ -106,34 +118,6 @@ cleanUpRet~.~LandMissionMID~!~ret \then \\
 \circblockclose
 \end{circusaction}
 %
-\begin{circusaction}
-deployLandingGearSyncMeth \circdef
-\\
-\circblockopen
-deployLandingGearCall~.~LandMissionMID~?~caller~?~thread
- \then \\
-\circblockopen
-startSyncMeth~.~LandMissionOID~.~thread \then \\
-lockAcquired~.~LandMissionOID~.~thread \then \\
-
-      \circblockopen
-            this~.~landingGearDeployed := \true
-
-            
-
-
-
-
-        \circblockclose
-
- \circseq  \\
-endSyncMeth~.~LandMissionOID~.~thread \then  \\
-
-deployLandingGearRet~.~LandMissionMID~.~caller~.~thread \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}
 %
 
 \begin{circusaction}
@@ -144,14 +128,14 @@ Methods \circdef
 	CleanupPhase \\
 %
 \extchoice \\
+	deployLandingGearMeth \\ 
+\extchoice \\
 	stowLandingGearMeth \\ 
 \extchoice \\
 	isLandingGearDeployedMeth \\ 
 \extchoice \\
 	cleanUpMeth \\ 
 %
-	\extchoice \\
-	deployLandingGearSyncMeth \\	
 %
 \circblockclose
 \circseq Methods

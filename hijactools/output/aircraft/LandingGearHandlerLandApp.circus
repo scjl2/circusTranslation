@@ -3,12 +3,6 @@
  \\
  \t1  ,
 LandMissionMethChan
-, 
-
-ObjectIds
-, 
-
-ThreadIds
 
 
 
@@ -59,7 +53,7 @@ handleAsyncEvent \circdef \\
   \\
 \t1 
       \circblockopen
-            binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerLandSID~.~LandingGearHandlerLandTID\then \\binder\_deployLandingGearRet~.~mission~.~LandingGearHandlerLandSID~.~LandingGearHandlerLandTID\then \\\Skip
+            binder\_deployLandingGearCall~.~mission~.~LandingGearHandlerLandSID\then \\binder\_deployLandingGearRet~.~mission~.~LandingGearHandlerLandSID\then \\\Skip
 
             
 

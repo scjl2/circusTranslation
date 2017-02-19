@@ -225,9 +225,9 @@ public class CircusGenerator
   @SuppressWarnings({ "unchecked", "rawtypes" })
   private void generateCustomChannels(Map chanMap, ObjectEnv objEnv)
   {
-    if (!objEnv.getMeths().isEmpty() && !objEnv.getSyncMeths().isEmpty())
+    if (!objEnv.getAllMeths().isEmpty() && !objEnv.getSyncMeths().isEmpty())
     {
-      objEnv.getMeths().remove("handleAsyncEvent");
+      objEnv.getAllMeths().remove("handleAsyncEvent");
       // TODO Calculate ID TYPE
       chanMap.put(ID_TYPE, "SchedulableID");
       generateCommon(chanMap, CUSTOM_CHANNELS_TEMPLATE_FTL, procName + "MethChan.circus");

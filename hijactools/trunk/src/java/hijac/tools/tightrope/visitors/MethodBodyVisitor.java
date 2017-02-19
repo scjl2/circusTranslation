@@ -14,6 +14,7 @@ import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
+import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.environments.StructureEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
@@ -366,7 +367,6 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
           Debugger.log("AA" +  cE);
           if (cE.getVariable(nodeVariableString) != null)
           {
-
             if (node.getExpression() instanceof LiteralTree)
             {
               expression = TightRopeTransUtils.encodeLiteral((LiteralTree) node
@@ -999,7 +999,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         /* Question: Is that generally feasible? */
         if (visitingObject.hasClass())
         {
-          for (MethodEnv me : visitingObject.getClassEnv().getMeths())
+          for (MethodEnv me : visitingObject.getClassEnv().getAllMeths())
           {
 
             if (node.getMethodSelect().toString().contains(me.getName().toString()))
@@ -1403,7 +1403,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   {
     List<MethodEnv> methods = new ArrayList<MethodEnv>();
     methods.addAll(o.getSyncMeths());
-    methods.addAll(o.getMeths());
+    methods.addAll(o.getAllMeths());
     // methods.addAll(MISSION_API_METHODS);
     // methods.addAll(EVENT_HANDLER_API_METHODS);
 
@@ -1655,8 +1655,14 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     ExpressionTree condition = node.getCondition();
     Debugger.log("/// WHile Loop condition = " + condition.toString() + " kind = "
         + condition.getKind());
-
-    // TODO HACKY, just checks for a ( to get if it's a method invocation.
+//
+//    if(visitingObject.hasClass() && visitingObject.getClassEnv().containsMethod(condition.toString()))
+//    {
+//      return callStmtMacro(node, ctxt, "WhileLoop", condition, node.getStatement());
+//    }
+//    else
+//    //if(  )
+//    // TODO HACKY, just checks for a ( to get if it's a method invocation.
     if (condition.toString().contains("("))
     {
       String conditionTrans = visit(condition, ctxt);
@@ -1703,11 +1709,11 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
       }
 
-      return callStmtMacro(node, ctxt, "WhileLoopMethCond", conditionString,
-          node.getStatement());
+      return callStmtMacro(node, ctxt, "WhileLoopMethCond", conditionString, node.getStatement());
     }
     else
     {
+      
       return callStmtMacro(node, ctxt, "WhileLoop", condition, node.getStatement());
     }
   }

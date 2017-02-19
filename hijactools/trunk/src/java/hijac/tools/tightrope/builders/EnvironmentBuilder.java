@@ -64,7 +64,6 @@ public class EnvironmentBuilder
       return "Origin: " + originClass + " Tree:" + tree;
     }
   }
-
   
   private Set<TypeElement> type_elements;
   private Elements elems;

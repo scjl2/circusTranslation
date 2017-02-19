@@ -32,11 +32,11 @@ public class OneShotEventHandlerEnv extends EventHandlerEnv
 	}
 
 	@Override
-	public List<MethodEnv> getMeths()
+	public List<MethodEnv> getAllMeths()
 	{
 		List<MethodEnv> osehMeths = new ArrayList<MethodEnv>();						
 				
-		osehMeths.addAll(super.getMeths());
+		osehMeths.addAll(super.getAllMeths());
 		osehMeths.addAll(EVENT_HANDLER_API_METHODS);
 
 		return osehMeths;

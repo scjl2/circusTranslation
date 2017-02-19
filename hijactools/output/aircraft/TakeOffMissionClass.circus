@@ -37,7 +37,25 @@
 
 
       \circblockopen
-            this~.~abort := \true
+            abort := \true
+
+            
+
+
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ deployLandingGear ~ \circdef
+\\
+
+
+      \circblockopen
+            landingGearDeployed := \true
 
             
 
@@ -80,7 +98,7 @@
 
 
       \circblockopen
-            this~.~landingGearDeployed := \false
+            landingGearDeployed := \false
 
             
 

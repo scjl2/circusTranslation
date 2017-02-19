@@ -574,14 +574,14 @@ public class ObjectEnv
 	 * 
 	 * @return List of Maps representing the methods.
 	 */
-	public List<MethodEnv> getMeths()
+	public List<MethodEnv> getAllMeths()
 	{
 		return meths;
 	}
 
 	public MethodEnv getConstructor()
 	{
-		for (MethodEnv me : getMeths())
+		for (MethodEnv me : getAllMeths())
 		{
 			if (me.getName().equals("<init>"))
 			{
@@ -704,7 +704,7 @@ public class ObjectEnv
   {
   	if (classEnv != null)
   	{
-  		if (!classEnv.getMeths().isEmpty() || !classEnv.getSyncMeths().isEmpty())
+  		if (!classEnv.getAllMeths().isEmpty() || !classEnv.getSyncMeths().isEmpty())
   		{
   			return true;
   		}
@@ -712,14 +712,14 @@ public class ObjectEnv
   	return false;
   }
 
-  public boolean containsVariable(String string)
+  public boolean containsVariable(String varName)
   {
-      VariableEnv varEnv = getVariable(string);
+      VariableEnv varEnv = getVariable(varName);
       if (varEnv != null)
       {
         return true; 
       }
-      else if (classEnv != null && classEnv.getVariable(string) != null )
+      else if (classEnv != null && classEnv.getVariable(varName) != null )
       {
         return true;
       }
@@ -727,6 +727,18 @@ public class ObjectEnv
       {
         return false;
       }
+  }
+
+  public boolean containsMethod(String methodName)
+  {
+      for(MethodEnv me : getAllMeths())
+      {
+        if(me.getName().equals(methodName))
+        {
+          return true;
+        }
+      }
+     return false;
   }
 
 }

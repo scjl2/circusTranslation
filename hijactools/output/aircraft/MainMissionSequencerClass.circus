@@ -43,7 +43,7 @@ MissionIds
   \\
 \t1 
       \circblockopen
-            this~.~returnedMission := \true
+            returnedMission := \true
 
              \circseq \\ 
 

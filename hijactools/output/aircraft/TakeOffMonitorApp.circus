@@ -62,7 +62,7 @@ handleAsyncEvent \circdef \\
 
 
 
-            releaseCall~.~landingGearHandler~.~TakeOffMonitorSID\then \\\Skip
+            release~.~landingGearHandler\then \\\Skip
 
              \circseq \\ 
 

@@ -4,14 +4,9 @@
 \extracircusvspace
 %
 \begin{axdef}
-	TakeOffMissionOID : ObjectID \\
-	LandMissionOID : ObjectID \\
  
 \where
   distinct \langle 
-	TakeOffMissionOID
-	,
-	LandMissionOID
   \rangle
 \end{axdef}
 

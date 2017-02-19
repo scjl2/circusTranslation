@@ -116,8 +116,8 @@ getAirSpeedCallers == \{ NavigationMonitorSID,TakeOffFailureHandlerSID \}
 %
 \begin{circus}
 
-\circchannel binder\_deployLandingGearCall :  MissionID  \cross SchedulableID  \cross ThreadID  \\
-\circchannel binder\_deployLandingGearRet : MissionID  \cross SchedulableID  \cross ThreadID   \\
+\circchannel binder\_deployLandingGearCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_deployLandingGearRet : MissionID  \cross SchedulableID   \\
 \end{circus}
 %
 \begin{zed}

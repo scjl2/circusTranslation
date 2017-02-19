@@ -30,12 +30,30 @@
 
 
 \begin{circusaction}
+\circpublic ~ deployLandingGear ~ \circdef
+\\
+
+
+      \circblockopen
+            landingGearDeployed := \true
+
+            
+
+
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
 \circpublic ~ stowLandingGear ~ \circdef
 \\
 
 
       \circblockopen
-            this~.~landingGearDeployed := \false
+            landingGearDeployed := \false
 
             
 

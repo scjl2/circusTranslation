@@ -2,7 +2,7 @@
   \SECTION ~ TakeOffMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, TakeOffMissionMethChan \\
  , TakeOffMissionClass, MethodCallBindingChannels 
- , ObjectFWChan, ObjectIds
+ 
 
 \end{zsection}
 
@@ -78,6 +78,18 @@ takeOffAbortRet~.~TakeOffMissionMID~.~caller \then \\
 \circblockclose
 \end{circusaction}
 \begin{circusaction}
+deployLandingGearMeth \circdef
+\\
+\circblockopen
+deployLandingGearCall~.~TakeOffMissionMID ~?~caller
+\then \\
+this~.~deployLandingGear()  \circseq  \\
+
+deployLandingGearRet~.~TakeOffMissionMID~.~caller \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
 cleanUpMeth \circdef
 \circvar ret : \boolean \circspot
 \\
@@ -116,34 +128,6 @@ isLandingGearDeployedRet~.~TakeOffMissionMID~.~caller~!~ret \then \\
 \circblockclose
 \end{circusaction}
 %
-\begin{circusaction}
-deployLandingGearSyncMeth \circdef
-\\
-\circblockopen
-deployLandingGearCall~.~TakeOffMissionMID~?~caller~?~thread
- \then \\
-\circblockopen
-startSyncMeth~.~TakeOffMissionOID~.~thread \then \\
-lockAcquired~.~TakeOffMissionOID~.~thread \then \\
-
-      \circblockopen
-            this~.~landingGearDeployed := \true
-
-            
-
-
-
-
-        \circblockclose
-
- \circseq  \\
-endSyncMeth~.~TakeOffMissionOID~.~thread \then  \\
-
-deployLandingGearRet~.~TakeOffMissionMID~.~caller~.~thread \then \\
-\Skip
-\circblockclose
-\circblockclose
-\end{circusaction}
 %
 
 \begin{circusaction}
@@ -156,14 +140,14 @@ Methods \circdef
 \extchoice \\
 	takeOffAbortMeth \\ 
 \extchoice \\
+	deployLandingGearMeth \\ 
+\extchoice \\
 	cleanUpMeth \\ 
 \extchoice \\
 	stowLandingGearMeth \\ 
 \extchoice \\
 	isLandingGearDeployedMeth \\ 
 %
-	\extchoice \\
-	deployLandingGearSyncMeth \\	
 %
 \circblockclose
 \circseq Methods

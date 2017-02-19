@@ -6,14 +6,8 @@
 \begin{axdef}
 	SafeletTId  : ThreadID \\
 	nullThreadId  : ThreadID \\
-	LandingGearHandlerLandTID : ThreadID \\
-	LandingGearHandlerTID : ThreadID \\
 
 \where
   distinct \langle SafeletTId, nullThreadId
-  , \\
-	LandingGearHandlerLandTID
-	,
-	LandingGearHandlerTID
   \rangle
 \end{axdef}

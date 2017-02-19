@@ -53,11 +53,11 @@ public class AperiodicEventHandlerEnv extends EventHandlerEnv
 	}
 
 	@Override
-	public List<MethodEnv> getMeths()
+	public List<MethodEnv> getAllMeths()
 	{
 		List<MethodEnv> apehMeths = new ArrayList<MethodEnv>();
 
-		apehMeths.addAll(super.getMeths());
+		apehMeths.addAll(super.getAllMeths());
 		apehMeths.addAll(EVENT_HANDLER_API_METHODS);
 
 		return apehMeths;

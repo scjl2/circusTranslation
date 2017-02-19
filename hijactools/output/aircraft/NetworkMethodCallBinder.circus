@@ -119,10 +119,10 @@ getAirSpeed\_MethodBinder \circdef \\
 \begin{circusaction}
 deployLandingGear\_MethodBinder \circdef \\
 	\t1 \circblockopen
-	binder\_deployLandingGearCall~?~loc\prefixcolon(loc \in deployLandingGearLocs)~?~caller\prefixcolon(caller \in deployLandingGearCallers)~?~callingThread   \then \\
-	deployLandingGearCall~.~loc~.~caller~.~callingThread   \then \\
-	deployLandingGearRet~.~loc~.~caller~.~callingThread  \then \\
-	binder\_deployLandingGearRet~.~loc~.~caller  ~.~callingThread ~   \then \\
+	binder\_deployLandingGearCall~?~loc\prefixcolon(loc \in deployLandingGearLocs)~?~caller\prefixcolon(caller \in deployLandingGearCallers)  \then \\
+	deployLandingGearCall~.~loc~.~caller  \then \\
+	deployLandingGearRet~.~loc~.~caller \then \\
+	binder\_deployLandingGearRet~.~loc~.~caller  ~   \then \\
 	deployLandingGear\_MethodBinder
 	\circblockclose
 \end{circusaction}

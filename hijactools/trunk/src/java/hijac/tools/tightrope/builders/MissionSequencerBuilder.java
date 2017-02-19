@@ -196,8 +196,6 @@ public class MissionSequencerBuilder extends ParadigmBuilder
   		    parameter.getType().endsWith("Parameters")
   				|| parameter.getType().contains("String");
   
-  		 System.out.println("!!! paramerter name, type, ignored = " + parameter.getName() + ", " + parameter.getType() + ", " + ignoredParameter);
-  		
   		if (!ignoredParameter)
   		{
   			object.addProcParameter(parameter);

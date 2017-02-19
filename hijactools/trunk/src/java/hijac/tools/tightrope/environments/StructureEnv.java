@@ -92,7 +92,7 @@ public class StructureEnv
       output += LINE_SEPARATOR;
       output += "\t Safelet Methods:";
       output += LINE_SEPARATOR;
-      List<MethodEnv> methods = safeletEnv.getMeths();
+      List<MethodEnv> methods = safeletEnv.getAllMeths();
       // TODO Output sync meths?
       output = outputMethods(output, methods);
 
@@ -103,7 +103,7 @@ public class StructureEnv
       output += "\t Top Level Sequencer Methods:";
       output += LINE_SEPARATOR;
 
-      methods = topLevelMissionSequencerEnv.getMeths();
+      methods = topLevelMissionSequencerEnv.getAllMeths();
       output = outputMethods(output, methods);
 
       return output;
@@ -364,7 +364,7 @@ public class StructureEnv
       output += "\t\t Mission Methods:";
       output += LINE_SEPARATOR;
       List<MethodEnv> methods = new ArrayList<MethodEnv>();
-      methods.addAll(missionEnv.getMeths());
+      methods.addAll(missionEnv.getAllMeths());
       methods.addAll(missionEnv.getSyncMeths());
       output = outputMethods(output, methods);
 
