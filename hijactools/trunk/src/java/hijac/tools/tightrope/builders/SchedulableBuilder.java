@@ -69,18 +69,15 @@ public class SchedulableBuilder extends ParadigmBuilder
       if (tlst instanceof MethodTree)
       {
         MethodTree mt = (MethodTree) tlst;
-
         MethodVisitor methodVisitor = new MethodVisitor(analysis, schedulableEnv);
+
         if (mt.getModifiers().getFlags().contains(Modifier.SYNCHRONIZED))
         {
 
           final String schedulableEnvName = schedulableEnv.getName().toString();
           schedulableEnv.setObjectId(schedulableEnvName);
-
           MethodEnv m = methodVisitor.visitMethod(mt, false);
-
           schedulableEnv.getClassEnv().addSyncMeth(m);
-
         }
         else if ((mt.getName().contentEquals("<init>")))
         {

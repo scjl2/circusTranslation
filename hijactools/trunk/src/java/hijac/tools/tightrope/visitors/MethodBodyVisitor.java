@@ -504,7 +504,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   {
     /* Are those nodes permissible? Do a bit more investigation here. */
 
-    Debugger.log("Expression Statement, node = " + node);
+    Debugger.log("Expression Statement, node = " + node + " kind = " + node.getKind() );
 
     // TODO HACKERY!
     if (node.toString().contains("Console") || node.toString().contains("System"))
@@ -528,10 +528,13 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   @Override
   public String visitIdentifier(IdentifierTree node, MethodVisitorContext ctxt)
   {
+    Debugger.log("/// Identifier node = " + node);
+    
     Name nodeName = node.getName();
 
     StructureEnv framework = TightRope.getProgramEnv().getStructureEnv();
 
+    //Check if the Identifier is an ObjectEnv in the program
     ObjectEnv o = framework.getObjectEnv(nodeName.toString());
     String id = "";
     if (o != null)
@@ -546,6 +549,20 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     // {
     // methodAccessesVariable();
     // }
+    
+    if(visitingObject.getVariable(nodeName) != null)
+    {
+      Debugger.log("/// visiting object has this identifier as variable");
+    }
+    
+    if(visitingObject.hasClass() )
+    {
+       ClassEnv ce = visitingObject.getClassEnv();
+       if(ce.getVariable(nodeName) != null)
+       {
+         Debugger.log("/// this identifier is a variable in the ClassEnv");
+       }
+    }
 
     return callExprMacro(node, ctxt, "Identifier", nodeName);
 
@@ -569,6 +586,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   {
     /* Should we do the translation in a template macro here too? */
 
+     Debugger.log("/// Literal Tree = " + node + " kind = " + node.getKind());
+    
     // This is supposed to cater for null id values, but is a bit hacky...
 
     if (methodEnv != null)
@@ -1512,6 +1531,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   public String visitUnary(UnaryTree node, MethodVisitorContext ctxt)
   {
     /* What if the operand is boolean? Equality raises issues. */
+    Debugger.log("/// Unary node = " + node + " expression kind = " + node.getExpression().getKind());
+    
     return callExprMacro(node, ctxt, "Unary", node.getExpression());
   }
 

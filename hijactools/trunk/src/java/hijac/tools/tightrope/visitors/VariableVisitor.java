@@ -657,7 +657,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
             TightRopeTransUtils.encodeType(varType), init, true);
         v.setProgramType(init);
         v.setInit(init);
-//        Debugger.log("Adding v: " + v.toString());
+        Debugger.log("Adding v: " + v.toString());
         classEnv.addVariable(v);
 
         if (objectEnv.getVariables().isEmpty())

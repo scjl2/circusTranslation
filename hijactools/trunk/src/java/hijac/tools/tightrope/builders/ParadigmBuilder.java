@@ -75,14 +75,11 @@ public abstract class ParadigmBuilder
 
 			// TODO this is a bit of a hack...
 			for (Name n : m.keySet())
-			{
-			
+			{			
 				 varMap.put(n, m.get(n));
 			}
-		}
-		
+		}		
 		return varMap;
-
 	}
 
 	protected void addDeferredParameters(List<StatementTree> methodStatements,
