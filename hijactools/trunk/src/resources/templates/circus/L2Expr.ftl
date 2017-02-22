@@ -72,12 +72,14 @@
 
 <#-- Identifier Tree -->
 
-<#-- Is this identifier wihtin an expression? -->
+<#-- Is this identifier within an expression? -->
 
 <#macro Identifier name>
 <@compact>
 <#if NODE.type="boolean" && CTXT.isInsideExpression()>
-  <@BooleanToLogic>${name}</@BooleanToLogic>
+
+  ${name}
+
 <#else>
   ${name}
 </#if>

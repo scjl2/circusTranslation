@@ -43,6 +43,8 @@ public class SchedulableBuilder extends ParadigmBuilder
 
     ClassTree ct = analysis.TREES.getTree(paradigmTypeElement);
 
+    getVariables(paradigmTypeElement, schedulableEnv);
+    
     if (schedulableEnv instanceof AperiodicEventHandlerEnv)
     {
       String extendsClause = ct.getExtendsClause().toString();
@@ -103,15 +105,14 @@ public class SchedulableBuilder extends ParadigmBuilder
       }
     }
 
-    getVariables(paradigmTypeElement, schedulableEnv);
+    
     return null;
   }
 
   @Override
   public void addParents()
   {
-    // TODO Auto-generated method stub
-
+    
   }
 
   protected void extractProcessParameters(MethodTree methodTree, ObjectEnv object)

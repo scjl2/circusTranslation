@@ -123,11 +123,11 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
   @Override
   public Map<Name, Tree> visitArrayType(ArrayTypeTree arg0, Boolean addToEnv)
   {
-//    Map<Name, Tree> returnMap = new HashMap<Name, Tree>();
-//    
-//    returnMap.put(arg0., "Array Place Holder");
-//    
-//    return returnMap ;
+    // Map<Name, Tree> returnMap = new HashMap<Name, Tree>();
+    //
+    // returnMap.put(arg0., "Array Place Holder");
+    //
+    // return returnMap ;
     return null;
   }
 
@@ -159,8 +159,6 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
       varName = ((MemberSelectTree) variable).getIdentifier();
     }
 
-    
-    
     if (expression instanceof NewClassTree)
     {
       expressionTree = ((NewClassTree) expression).getIdentifier();
@@ -177,16 +175,16 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
         {
           expressionTree = expression;
         }
-//        else if()
-//        {
-//          
-//        }
+        // else if()
+        // {
+        //
+        // }
         // What? If the object's name is the same as the expression?
         else if (!(objectEnv.getName().toString().contains(expression.toString())))
         {
           // TODO HACKY! need to get what kind of ID here!
           final String variableInitAndInput = "?" + varName.toString() + "In";
-//          String variableInitAndInput = "Blargs"; 
+          // String variableInitAndInput = "Blargs";
           //
           // objectEnv.addVariable(varName.toString(),
           // "MissionID",
@@ -627,19 +625,16 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
     Name varName = arg0.getName();
 
     Tree varType = arg0.getType();
-    
-//    if(varType instanceof ArrayTypeTree)
-//    {
-//      varType = 
-//    }
+
 
     String init = "";
     if (arg0.getInitializer() != null)
     {
       Map<Name, Tree> initialiser = arg0.getInitializer().accept(this, addToEnv);
-//      Debugger.log("/*/* Init of " + arg0.getName() + " is = " + initialiser);
+      // Debugger.log("/*/* Init of " + arg0.getName() + " is = " +
+      // initialiser);
       init = arg0.getInitializer().toString();
-//      Debugger.log("/*/* Init of " + arg0.getName() + " is now = " + init);
+      // Debugger.log("/*/* Init of " + arg0.getName() + " is now = " + init);
     }
 
     returnMap.put(varName, varType);
@@ -647,23 +642,33 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
     assert (varName != null);
 
     if (classEnv != null && addToEnv == true)
-       // && (!TightRope.getProgramEnv().containsNonParadigmObject(varName.toString())))
     {
       Debugger.log("var Visitor If");
       if (varType.getKind() == Tree.Kind.PRIMITIVE_TYPE)
       {
-//        Debugger.log("var Visitor Primitive Type and init = " + init);
+        // Debugger.log("var Visitor Primitive Type and init = " + init);
         VariableEnv v = new VariableEnv(TightRopeTransUtils.encodeName(varName),
             TightRopeTransUtils.encodeType(varType), init, true);
         v.setProgramType(init);
         v.setInit(init);
         Debugger.log("Adding v: " + v.toString());
-        classEnv.addVariable(v);
 
-        if (objectEnv.getVariables().isEmpty())
+//        if (classEnv.getAllMeths().isEmpty())
+//        {
+//          Debugger.log("adding to object");
+//          objectEnv.addVariable(v);
+//        }
+//        else
         {
-          objectEnv.addVariable(TightRopeString.Name.THIS, LATEX.CIRCREFTYPE +objectEnv.getName() + TightRopeString.Name.CLASS,
-              LATEX.CIRCNEW  + objectEnv.getName() + TightRopeString.Name.CLASS_BRACKETS, false);
+          Debugger.log("adding to class");
+          classEnv.addVariable(v);
+
+          if (objectEnv.getVariables().isEmpty())
+          {
+            objectEnv.addVariable(TightRopeString.Name.THIS, LATEX.CIRCREFTYPE
+                + objectEnv.getName() + TightRopeString.Name.CLASS, LATEX.CIRCNEW
+                + objectEnv.getName() + TightRopeString.Name.CLASS_BRACKETS, false);
+          }
         }
 
       }
@@ -677,16 +682,6 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
 
           String encodedName = TightRopeTransUtils.encodeName(varName);
           String varTypeString = varType.toString();
-
-//          if (GENERIC_PARADIGM_TYPES.contains(varTypeString))
-//          {
-//            // String varTypefromName =
-//            // WordUtils.capitalize(encodedName) + "ID";
-//          }
-//          else
-//          {
-//
-//          }
 
           if (addToEnv)
           {
@@ -708,12 +703,20 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
               VariableEnv v = new VariableEnv(encodedName, varTypeString, init, false);
               v.setProgramType(TightRopeTransUtils.encodeType(varType));
 
-              classEnv.addVariable(v);
-
-              if (objectEnv.getVariables().isEmpty())
+              if (classEnv.getAllMeths().isEmpty())
               {
-                objectEnv.addVariable("this", objectEnv.getName() + "Class", "\\circnew "
-                    + objectEnv.getName() + "Class()", false);
+                Debugger.log("adding to object");
+                objectEnv.addVariable(v);
+              }
+              else
+              {
+                classEnv.addVariable(v);
+
+                if (objectEnv.getVariables().isEmpty())
+                {
+                  objectEnv.addVariable("this", objectEnv.getName() + "Class",
+                      "\\circnew " + objectEnv.getName() + "Class()", false);
+                }
               }
             }
 
@@ -734,6 +737,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
             false);
       }
     }
+
     return returnMap;
   }
 

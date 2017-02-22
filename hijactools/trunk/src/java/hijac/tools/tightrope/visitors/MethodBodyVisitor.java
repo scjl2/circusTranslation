@@ -553,24 +553,26 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     if(visitingObject.getVariable(nodeName) != null)
     {
       Debugger.log("/// visiting object has this identifier as variable");
+      return nodeName.toString();
     }
     
-    if(visitingObject.hasClass() )
-    {
+//    if(visitingObject.hasClass() )
+//    {
        ClassEnv ce = visitingObject.getClassEnv();
        if(ce.getVariable(nodeName) != null)
        {
          Debugger.log("/// this identifier is a variable in the ClassEnv");
+         return "this~.~" + nodeName;
        }
-    }
-
+//    }
+    Debugger.log("/// node = " + node + " kind? = " + node.getKind());
     return callExprMacro(node, ctxt, "Identifier", nodeName);
-
   }
 
   @Override
   public String visitIf(IfTree node, MethodVisitorContext ctxt)
   {
+    Debugger.log("/// If node = " + node + " condition kind is: " + node.getCondition().getKind());
     return callStmtMacro(node, ctxt, "If", node.getCondition(), node.getThenStatement(),
         node.getElseStatement());
   }
@@ -1706,9 +1708,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       {
         // TODO SUPER HACKY! But I've now forgotten what it does.
         conditionTrans = conditionTrans.substring(1, conditionTrans.length() - 1);
-        // Debugger.log("/// conditionTrans sub = " +
-        // conditionTrans);
-
+        
         boolean negative = conditionTrans.startsWith("\\lnot");
 
         if (negative)

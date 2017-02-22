@@ -230,12 +230,12 @@
 <#----------------->
 
 <#macro Switch expression cases>
-  \circif ~ 
+  \circif ~
 <#list cases as case>
   ${TRANS(case, CTXT.enterExpression().setSwitch(NODE))}<#lt/>
   \\
 <#if case_has_next>
-  \circelse ~ ~ 
+  \circelse ~ ~
 </#if>
 </#list>
   \circfi

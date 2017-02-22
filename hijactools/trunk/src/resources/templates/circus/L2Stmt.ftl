@@ -39,9 +39,9 @@
 <#macro BooleanAssignment variable expression>
 <@compact>
   ${TRANS(variable, CTXT)} :=
-<@LogicToBoolean>
+
   ${TRANS(expression, CTXT.enterExpression())}
-</@LogicToBoolean>
+
 </@compact>
 </#macro>
 
