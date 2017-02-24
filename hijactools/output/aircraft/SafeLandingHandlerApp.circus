@@ -19,19 +19,6 @@ MainMissionMethChan
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  this : \circreftype SafeLandingHandlerClass\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  this' = \circnew SafeLandingHandlerClass()\\ 
-\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
@@ -44,7 +31,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (altitude < threshold) ~ \circthen ~
+              \circif ~ (altitude < this~.~threshold) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -58,7 +45,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (altitude < threshold) ~ \circthen ~
+  \circelse ~ \lnot (altitude < this~.~threshold) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -102,7 +89,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_aperiodic\_app~.~SafeLandingHandlerSID \then \Skip)
 \end{circusaction}
 

@@ -28,6 +28,7 @@
 
 \begin{schema}{State}
   this : \circreftype LandMissionClass\\ 
+  controllingMission : MainMission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -38,19 +39,17 @@
   State~' \\
 \where
   this' = \circnew LandMissionClass()\\ 
+  controllingMission' = \\ 
 \end{schema}
 
 \begin{circusaction}
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~LandMissionMID \then \\
-
-	register~!~GroundDistanceMonitorSID~!~LandMissionMID \then   \\
-	register~!~LandingGearHandlerLandSID~!~LandMissionMID \then   \\
-	register~!~InstrumentLandingSystemMonitorSID~!~LandMissionMID \then   \\
-	register~!~SafeLandingHandlerSID~!~LandMissionMID \then   \\
-
-
+	register~!~GroundDistanceMonitorSID~!~LandMissionMID \then \\
+	register~!~LandingGearHandlerLandSID~!~LandMissionMID \then \\
+	register~!~InstrumentLandingSystemMonitorSID~!~LandMissionMID \then \\
+	register~!~SafeLandingHandlerSID~!~LandMissionMID \then \\
   initializeRet~.~LandMissionMID \then \\
   \Skip
 \circblockclose
@@ -59,10 +58,26 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
-\circvar \boolean : ret @
+\circvar \boolean : ret @ \\
  cleanupMissionCall~.~LandMissionMID \then \\
+ 
+      \circblockopen
+            \Skip
+             \circseq \\ 
 
- cleanupMissionRet~.~LandMissionMID~!~\true \then \\
+
+
+              ret := \false
+
+            
+
+
+
+
+        \circblockclose
+
+ \\
+ cleanupMissionRet~.~LandMissionMID~!~ret \then \\
  \Skip
 \circblockclose
 \end{circusaction}
@@ -104,19 +119,6 @@ isLandingGearDeployedRet~.~LandMissionMID~.~caller~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}
-\begin{circusaction}
-cleanUpMeth \circdef
-\circvar ret : \boolean \circspot
-\\
-\circblockopen
-cleanUpCall~.~LandMissionMID
-\then \\
-ret := this~.~cleanUp()  \circseq  \\
-
-cleanUpRet~.~LandMissionMID~!~ret \then \\
-\Skip
-\circblockclose
-\end{circusaction}
 %
 %
 
@@ -133,8 +135,6 @@ Methods \circdef
 	stowLandingGearMeth \\ 
 \extchoice \\
 	isLandingGearDeployedMeth \\ 
-\extchoice \\
-	cleanUpMeth \\ 
 %
 %
 \circblockclose

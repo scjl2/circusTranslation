@@ -38,7 +38,7 @@
 
 
       \circblockopen
-              ret := airSpeed
+              ret := this~.~airSpeed
 
             
 
@@ -57,7 +57,7 @@
 
 
       \circblockopen
-              ret := altitude
+              ret := this~.~altitude
 
             
 
@@ -76,7 +76,7 @@
 
 
       \circblockopen
-              ret := cabinPressure
+              ret := this~.~cabinPressure
 
             
 
@@ -95,7 +95,7 @@
 
 
       \circblockopen
-              ret := emergencyOxygen
+              ret := this~.~emergencyOxygen
 
             
 
@@ -114,7 +114,7 @@
 
 
       \circblockopen
-              ret := fuelRemaining
+              ret := this~.~fuelRemaining
 
             
 
@@ -133,7 +133,7 @@
 
 
       \circblockopen
-              ret := heading
+              ret := this~.~heading
 
             
 

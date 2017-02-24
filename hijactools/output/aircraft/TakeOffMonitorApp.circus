@@ -24,7 +24,7 @@ MainMissionMethChan
 \end{circus}
 
 \begin{schema}{State}
-  this : TakeOffMonitorClass\\ 
+  takeoffMission : TakeOffMission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -34,7 +34,7 @@ MainMissionMethChan
 \begin{schema}{Init}
   State~' \\
 \where
-  this' = \circnew TakeOffMonitorClass()\\ 
+  takeoffMission' = \\ 
 \end{schema}
 
 \begin{circusaction}
@@ -53,7 +53,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
+              \circif ~ (altitude > this~.~takeOffAltitude) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -79,7 +79,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (altitude > takeOffAltitude) \circthen \Skip
+  \circelse ~ \lnot (altitude > this~.~takeOffAltitude) \circthen \Skip
   \\
   \circfi \\
 

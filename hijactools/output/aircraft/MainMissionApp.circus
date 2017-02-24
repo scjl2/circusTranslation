@@ -41,14 +41,11 @@
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~MainMissionMID \then \\
-
-	register~!~ACModeChanger2SID~!~MainMissionMID \then   \\
-	register~!~EnvironmentMonitorSID~!~MainMissionMID \then   \\
-	register~!~ControlHandlerSID~!~MainMissionMID \then   \\
-	register~!~FlightSensorsMonitorSID~!~MainMissionMID \then   \\
-	register~!~CommunicationsHandlerSID~!~MainMissionMID \then   \\
-
-
+	register~!~ACModeChanger2SID~!~MainMissionMID \then \\
+	register~!~EnvironmentMonitorSID~!~MainMissionMID \then \\
+	register~!~ControlHandlerSID~!~MainMissionMID \then \\
+	register~!~FlightSensorsMonitorSID~!~MainMissionMID \then \\
+	register~!~CommunicationsHandlerSID~!~MainMissionMID \then \\
   initializeRet~.~MainMissionMID \then \\
   \Skip
 \circblockclose
@@ -57,9 +54,7 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
-\circvar \boolean : ret @
  cleanupMissionCall~.~MainMissionMID \then \\
-
  cleanupMissionRet~.~MainMissionMID~!~\true \then \\
  \Skip
 \circblockclose

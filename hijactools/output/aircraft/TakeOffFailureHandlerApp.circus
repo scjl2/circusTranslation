@@ -24,19 +24,6 @@ TakeOffMissionMethChan
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  this : \circreftype TakeOffFailureHandlerClass\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  this' = \circnew TakeOffFailureHandlerClass()\\ 
-\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
@@ -49,7 +36,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (currentSpeed < threshold) ~ \circthen ~
+              \circif ~ (currentSpeed < this~.~threshold) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -75,7 +62,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (currentSpeed < threshold) ~ \circthen ~
+  \circelse ~ \lnot (currentSpeed < this~.~threshold) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -119,7 +106,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_aperiodic\_app~.~TakeOffFailureHandlerSID \then \Skip)
 \end{circusaction}
 

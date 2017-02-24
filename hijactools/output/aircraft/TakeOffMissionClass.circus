@@ -13,7 +13,6 @@
 \begin{schema}{\circstateignore State}
   SAFE\_AIRSPEED\_THRESHOLD : \power \arithmos\\ 
   TAKEOFF\_ALTITUDE : \power \arithmos\\ 
-  controllingMission : MainMission\\ 
   abort : \boolean\\ 
   landingGearDeployed : \boolean\\ 
 \end{schema}
@@ -68,31 +67,6 @@
 
 \end{circusaction}
 \begin{circusaction}
-\circpublic ~ cleanUp ~ \circdef
-\circvar ret : \boolean \circspot
-\\
-
-
-      \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
-              ret :=   (\lnot abort = \true)
-
-
-            
-
-
-
-
-        \circblockclose
-
- 
-
-\end{circusaction}
-\begin{circusaction}
 \circpublic ~ stowLandingGear ~ \circdef
 \\
 
@@ -117,7 +91,7 @@
 
 
       \circblockopen
-              ret := landingGearDeployed = \true
+              ret := this~.~landingGearDeployed
 
             
 

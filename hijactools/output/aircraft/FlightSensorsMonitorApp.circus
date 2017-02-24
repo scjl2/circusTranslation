@@ -18,7 +18,7 @@ MainMissionMethChan
 \end{circus}
 
 \begin{schema}{State}
-  this : FlightSensorsMonitorClass\\ 
+  controllingMission : MainMission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -28,7 +28,7 @@ MainMissionMethChan
 \begin{schema}{Init}
   State~' \\
 \where
-  this' = \circnew FlightSensorsMonitorClass()\\ 
+  controllingMission' = \\ 
 \end{schema}
 
 \begin{circusaction}

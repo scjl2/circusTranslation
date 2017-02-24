@@ -39,7 +39,7 @@ MissionIds
 
 
       \circblockopen
-              \circif ~ (\lnot returnedMission = \true) ~ \circthen ~
+              \circif ~ (\lnot returnedMission) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -60,7 +60,7 @@ MissionIds
 
 
   \\
-  \circelse ~ \lnot (\lnot returnedMission = \true) ~ \circthen ~
+  \circelse ~ \lnot (\lnot returnedMission) ~ \circthen ~
   \\
 \t1 
       \circblockopen

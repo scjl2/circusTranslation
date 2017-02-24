@@ -25,12 +25,9 @@
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~${ProcessID} \then \\
-
 <#list RegisteredSchedulables as SchedulableID >
-	register~!~${SchedulableID}~!~${ProcessID} \then   \\
+	register~!~${SchedulableID}~!~${ProcessID} \then \\
 </#list>
-
-
   initializeRet~.~${ProcessID} \then \\
   \Skip
 \circblockclose
@@ -39,9 +36,16 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
+<#if cleanupBody??>
 \circvar \boolean : ret @ \\
+</#if>
  cleanupMissionCall~.~${ProcessID} \then \\
+<#if cleanupBody??>
+ ${cleanupBody} \\
+ cleanupMissionRet~.~${ProcessID}~!~ret \then \\
+<#else>
  cleanupMissionRet~.~${ProcessID}~!~\true \then \\
+</#if>
  \Skip
 \circblockclose
 \end{circusaction}

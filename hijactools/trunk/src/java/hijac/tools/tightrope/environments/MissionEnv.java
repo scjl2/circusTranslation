@@ -1,5 +1,7 @@
 package hijac.tools.tightrope.environments;
 
+import hijac.tools.tightrope.utils.TightRopeString.LATEX;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,64 +10,76 @@ import javax.lang.model.element.Name;
 
 public class MissionEnv extends ParadigmEnv
 {
-	private ArrayList<Name> schedulables;
-	// TODO remove this stop-gap in favour of using the API
-	private final List<MethodEnv> MISSION_API_METHODS = new ArrayList<MethodEnv>();
+  private ArrayList<Name> schedulables;
+  private MethodEnv cleanUp;
 
-	public MissionEnv()
-	{
-		super();
+  // TODO remove this stop-gap in favour of using the API
+  private final List<MethodEnv> MISSION_API_METHODS = new ArrayList<MethodEnv>();
 
-		schedulables = new ArrayList<Name>();
+  public MissionEnv()
+  {
+    super();
 
-		MISSION_API_METHODS.add(new MethodEnv("getSequencer",
-				"MissionSequencer", true));
+    schedulables = new ArrayList<Name>();
 
-		MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean",
-				true));
-		MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean",
-				true));
+    MISSION_API_METHODS.add(new MethodEnv("getSequencer", "MissionSequencer", true));
 
-	}
+    MISSION_API_METHODS.add(new MethodEnv("requestTermination", "boolean", true));
+    MISSION_API_METHODS.add(new MethodEnv("terminationPending", "boolean", true));
 
-	@Override
-	public List<MethodEnv> getAllMeths()
-	{
-		List<MethodEnv> missionMeths = new ArrayList<MethodEnv>();
+  }
 
-		missionMeths.addAll(super.getAllMeths());
-		missionMeths.addAll(MISSION_API_METHODS);
+  @Override
+  public List<MethodEnv> getAllMeths()
+  {
+    List<MethodEnv> missionMeths = new ArrayList<MethodEnv>();
 
-		return missionMeths;
-	}
+    missionMeths.addAll(super.getAllMeths());
+    missionMeths.addAll(MISSION_API_METHODS);
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Map toMap()
-	{
-		Map map = super.toMap();
+    return missionMeths;
+  }
 
-		ArrayList<String> schedulableIds = new ArrayList<String>();
-		for(Name n : schedulables)
-		{
-			schedulableIds.add(n.toString() + "SID");
-		}
-		
-		map.put("RegisteredSchedulables", schedulableIds);
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  public Map toMap()
+  {
+    Map map = super.toMap();
 
-		return map;
-	}
+    ArrayList<String> schedulableIds = new ArrayList<String>();
+    for (Name n : schedulables)
+    {
+      schedulableIds.add(n.toString() + "SID");
+    }
+    map.put("RegisteredSchedulables", schedulableIds);
 
-	public void addSchedulable(Name schedulable)
-	{
-		schedulables.add(schedulable);
-	}
-	
-	@Override
-	public void setId(String name)
-	{
-		super.setId(name+hijac.tools.tightrope.utils.TightRopeString.Name.MID);
-		//TODO THis will need to be changed when I streamline the S+S sections
-//				setObjectId(name);
-	}
+    if (cleanUp != null)
+    {
+      map.put("cleanupBody", cleanUp.getBody());
+    }
+    else
+    {      
+      map.put("cleanupBody", null);
+    }
+
+    return map;
+  }
+
+  public void addSchedulable(Name schedulable)
+  {
+    schedulables.add(schedulable);
+  }
+
+  public void addCleanUp(MethodEnv cleanupMethod)
+  {
+    cleanUp = cleanupMethod;
+  }
+
+  @Override
+  public void setId(String name)
+  {
+    super.setId(name + hijac.tools.tightrope.utils.TightRopeString.Name.MID);
+    // TODO THis will need to be changed when I streamline the S+S sections
+    // setObjectId(name);
+  }
 
 }

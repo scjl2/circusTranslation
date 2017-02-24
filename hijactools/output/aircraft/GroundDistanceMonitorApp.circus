@@ -17,19 +17,6 @@ MainMissionMethChan
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  this : \circreftype GroundDistanceMonitorClass\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  this' = \circnew GroundDistanceMonitorClass()\\ 
-\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
@@ -47,7 +34,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (distance = readingOnGround) ~ \circthen ~
+              \circif ~ (distance = this~.~readingOnGround) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -67,7 +54,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (distance = readingOnGround) \circthen \Skip
+  \circelse ~ \lnot (distance = this~.~readingOnGround) \circthen \Skip
   \\
   \circfi \\
 
@@ -99,7 +86,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_periodic\_app~.~GroundDistanceMonitorSID \then \Skip)
 \end{circusaction}
 

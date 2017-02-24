@@ -34,7 +34,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ landingGearIsDeployed = \true ~ \circthen ~
+              \circif ~ landingGearIsDeployed ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -49,7 +49,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot landingGearIsDeployed = \true ~ \circthen ~
+  \circelse ~ \lnot landingGearIsDeployed ~ \circthen ~
   \\
 \t1 
       \circblockopen

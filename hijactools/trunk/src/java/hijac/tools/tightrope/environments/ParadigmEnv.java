@@ -20,9 +20,7 @@ public abstract class ParadigmEnv extends ObjectEnv
 
 	public ParadigmEnv()
 	{
-		super();
-
-		
+		super();		
 	}
 
 	private static void initGenericParadigmTypes()

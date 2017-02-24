@@ -26,6 +26,7 @@
 
 \begin{schema}{State}
   this : \circreftype CruiseMissionClass\\ 
+  controllingMission : MainMission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -36,17 +37,15 @@
   State~' \\
 \where
   this' = \circnew CruiseMissionClass()\\ 
+  controllingMission' = \\ 
 \end{schema}
 
 \begin{circusaction}
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~CruiseMissionMID \then \\
-
-	register~!~BeginLandingHandlerSID~!~CruiseMissionMID \then   \\
-	register~!~NavigationMonitorSID~!~CruiseMissionMID \then   \\
-
-
+	register~!~BeginLandingHandlerSID~!~CruiseMissionMID \then \\
+	register~!~NavigationMonitorSID~!~CruiseMissionMID \then \\
   initializeRet~.~CruiseMissionMID \then \\
   \Skip
 \circblockclose
@@ -55,9 +54,7 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef  \\
 \circblockopen
-\circvar \boolean : ret @
  cleanupMissionCall~.~CruiseMissionMID \then \\
-
  cleanupMissionRet~.~CruiseMissionMID~!~\true \then \\
  \Skip
 \circblockclose
