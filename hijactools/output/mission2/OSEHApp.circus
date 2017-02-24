@@ -1,0 +1,77 @@
+\begin{zsection}
+  \SECTION ~ OSEHApp ~ \parents ~ OneShotEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
+ \t1  
+
+\end{zsection}
+
+\begin{circus}
+\circprocess OSEHApp \circdef \\ \t1
+  controllingMission : MissionID
+
+\circspot
+  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : OSEHClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew OSEHClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~OSEHSID \then \\
+	
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+            requestTerminationCall~.~controllingMision~.~OSEHSID\then \\requestTerminationRet~.~controllingMision~.~OSEHSID~?~requestTermination\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~OSEHSID \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  \circinterrupt (end\_oneShot\_app~.~OSEHSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

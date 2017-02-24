@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.builders;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class SchedulableBuilder extends ParadigmBuilder
 
     ClassTree ct = analysis.TREES.getTree(paradigmTypeElement);
 
-    getVariables(paradigmTypeElement, schedulableEnv);
+    HashMap<Name, Tree> varMap = getVariables(paradigmTypeElement, schedulableEnv);
     
     if (schedulableEnv instanceof AperiodicEventHandlerEnv)
     {
@@ -78,7 +79,7 @@ public class SchedulableBuilder extends ParadigmBuilder
 
           final String schedulableEnvName = schedulableEnv.getName().toString();
           schedulableEnv.setObjectId(schedulableEnvName);
-          MethodEnv m = methodVisitor.visitMethod(mt, false);
+          MethodEnv m = methodVisitor.visitMethod(mt, false, varMap);
           schedulableEnv.getClassEnv().addSyncMeth(m);
         }
         else if ((mt.getName().contentEquals("<init>")))
@@ -90,16 +91,16 @@ public class SchedulableBuilder extends ParadigmBuilder
           if ((mt.getName().contentEquals("run")))
           {
             ((ManagedThreadEnv) schedulableEnv).addRunMethod(methodVisitor.visitMethod(
-                mt, false));
+                mt, false, varMap));
           }
           else if ((mt.getName().contentEquals("handleAsyncEvent")))
           {
             ((EventHandlerEnv) schedulableEnv).addHandleAsyncMethod(methodVisitor
-                .visitMethod(mt, false));
+                .visitMethod(mt, false, varMap));
           }
           else
           {
-            schedulableEnv.addMeth(methodVisitor.visitMethod(mt, false));
+            schedulableEnv.addMeth(methodVisitor.visitMethod(mt, false, varMap));
           }
         }
       }

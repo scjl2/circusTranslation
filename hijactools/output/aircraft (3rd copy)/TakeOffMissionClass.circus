@@ -1,0 +1,71 @@
+
+\begin{zsection}
+  \SECTION ~ TakeOffMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
+
+\end{zsection}
+
+\begin{circus}
+\circclass TakeOffMissionClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  SAFE\_AIRSPEED\_THRESHOLD : \power \arithmos\\ 
+  TAKEOFF\_ALTITUDE : \power \arithmos\\ 
+  abort : \boolean\\ 
+  landingGearDeployed : \boolean\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  SAFE\_AIRSPEED\_THRESHOLD' = 10.0\\ 
+  TAKEOFF\_ALTITUDE' = 10.0\\ 
+  abort' = false\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circpublic ~ takeOffAbort ~ \circdef
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ deployLandingGear ~ \circdef
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ stowLandingGear ~ \circdef
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ isLandingGearDeployed ~ \circdef
+\circvar ret : \boolean \circspot
+\\
+
+ 
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

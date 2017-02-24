@@ -1,0 +1,96 @@
+\begin{zsection}
+  \SECTION ~ MyPEH3App ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
+ \t1  
+
+\end{zsection}
+
+\begin{circus}
+\circprocess MyPEH3App \circdef \\ \t1
+  m : MissionID
+
+\circspot
+  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype MyPEH3Class\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew MyPEH3Class()\\ 
+\end{schema}
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~MyPEH3SID \then \\
+	
+      \circblockopen
+              this~.~count := this~.~count + 1
+
+
+             \circseq \\ 
+
+
+
+              \circif ~ (this~.~count = 10) ~ \circthen ~
+  \\
+\t1 
+      \circblockopen
+            requestTerminationCall~.~m~.~MyPEH3SID\then \\requestTerminationRet~.~m~.~MyPEH3SID~?~requestTermination\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
+
+
+  \\
+  \circelse ~ \lnot (this~.~count = 10) \circthen \Skip
+  \\
+  \circfi \\
+
+            
+
+
+
+
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~MyPEH3SID \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  \circinterrupt (end\_periodic\_app~.~MyPEH3SID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

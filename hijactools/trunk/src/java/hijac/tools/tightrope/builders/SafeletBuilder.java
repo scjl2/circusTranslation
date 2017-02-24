@@ -99,19 +99,19 @@ public class SafeletBuilder extends ParadigmBuilder
 				}
 				else if (mt.getName().contentEquals("initializeApplication"))
 				{
-					safeletEnv.addInitMethod(methodVisitor.visitMethod(mt, false));
+					safeletEnv.addInitMethod(methodVisitor.visitMethod(mt, false,varMap));
 				}
 				else if (isSyncMethod)
 				{
 					safeletEnv.setObjectId(safeletEnv.getName().toString());
-					MethodEnv m = methodVisitor.visitMethod(mt, false);
+					MethodEnv m = methodVisitor.visitMethod(mt, false, varMap);
 					setMethodAccess(m, mt);
 				
 					safeletEnv.getClassEnv().addSyncMeth(m);
 				}
 				else if (notIgnoredMethod)
 				{
-					MethodEnv m = methodVisitor.visitMethod(mt, false);
+					MethodEnv m = methodVisitor.visitMethod(mt, false, varMap);
 					setMethodAccess(m, mt);
 					safeletEnv.addMeth(m);
 				}

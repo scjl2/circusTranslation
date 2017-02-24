@@ -1,0 +1,54 @@
+\begin{zsection}
+  \SECTION ~ MT3App ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  , MethodCallBindingChannels 
+ \\
+  \t1 
+
+\end{zsection}
+%
+\begin{circus}
+\circprocess MT3App \circdef  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~MT3SID \then \\
+	
+      \circblockopen
+            \Skip
+            
+
+
+
+
+        \circblockclose
+
+ \circseq \\
+	runRet~.~MT3SID \then \\
+	\Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Run \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_managedThread\_app~.~MT3SID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

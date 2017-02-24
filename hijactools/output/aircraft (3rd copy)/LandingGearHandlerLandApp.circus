@@ -1,0 +1,52 @@
+\begin{zsection}
+  \SECTION ~ LandingGearHandlerLandApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
+ \t1  ,
+LandMissionMethChan
+
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess LandingGearHandlerLandApp \circdef \\ \t1
+  mission : MissionID
+
+\circspot
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~LandingGearHandlerLandSID \then \\
+	 \circseq \\
+    handleAsyncEventRet~.~LandingGearHandlerLandSID \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_aperiodic\_app~.~LandingGearHandlerLandSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

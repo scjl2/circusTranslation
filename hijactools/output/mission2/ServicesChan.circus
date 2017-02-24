@@ -1,0 +1,7 @@
+\begin{zsection}
+  \SECTION ~ ServicesChan ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, Priority, PriorityQueue
+\end{zsection}
+%
+\begin{circus}
+\circchannel ~ setCeilingPriority : MissionID \cross ObjectID \cross PriorityLevel \\
+\end{circus}

@@ -1,0 +1,63 @@
+\begin{zsection}
+  \SECTION ~ NestedMissionSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  , NestedMissionSequencerClass, MethodCallBindingChannels 
+
+  \t1 
+
+\end{zsection}
+
+%\begin{circus}
+%\circchannelset NestedMissionSequencerAppChanSet == NestedMissionSequencerSIDAppSync
+%\end{circus}
+
+\begin{circus}
+\circprocess NestedMissionSequencerApp \circdef  \circbegin\\
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype NestedMissionSequencerClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew NestedMissionSequencerClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+GetNextMission \circdef \circvar ret : MissionID \circspot \\
+\circblockopen
+    getNextMissionCall~.~NestedMissionSequencerSID \then \\
+	   ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~NestedMissionSequencerSID~!~ret  \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+%
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  %\circhide MissionSequencerAppStateSync
+\circinterrupt (end\_sequencer\_app~.~NestedMissionSequencerSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

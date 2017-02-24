@@ -1,0 +1,70 @@
+
+\begin{zsection}
+  \SECTION ~ BufferClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
+
+\end{zsection}
+
+\begin{circus}
+\circclass BufferClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  theBuffer : \num\\ 
+  testArray : int[]\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  theBuffer' = 0\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circpublic ~ bufferEmpty ~ \circdef
+\circvar ret : \boolean \circspot
+\\
+
+
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+              \circif ~ (theBuffer = 0) ~ \circthen ~
+  \\
+\t1 ret := \true
+  \\
+  \circelse ~ \lnot (theBuffer = 0) ~ \circthen ~
+  \\
+\t1 ret := \false
+  \\
+  \circfi
+
+            
+
+
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

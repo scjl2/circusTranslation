@@ -59,6 +59,23 @@ CleanupPhase \circdef  \\
 \circblockopen
 \circvar \boolean : ret @
  cleanupMissionCall~.~TakeOffMissionMID \then \\
+<<<<<<< Updated upstream
+=======
+ 
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+              ret :=   (\lnot abort)
+
+
+            
+
+
+
+>>>>>>> Stashed changes
 
  cleanupMissionRet~.~TakeOffMissionMID~!~\true \then \\
  \Skip

@@ -69,10 +69,10 @@ public class MissionSequencerBuilder extends ParadigmBuilder
 
 		varMap = getVariables(arg0, sequencerEnv);
 
-		for (Name n : varMap.keySet())
-		{
-			Debugger.log("+++ Variable " + n + " = " + varMap.get(n));
-		}
+//		for (Name n : varMap.keySet())
+//		{
+//			Debugger.log("+++ Variable " + n + " = " + varMap.get(n));
+//		}
 
 		ArrayList<Name> missions = new ArrayList<Name>();
 
@@ -82,7 +82,7 @@ public class MissionSequencerBuilder extends ParadigmBuilder
 		List<StatementTree> members = (List<StatementTree>) ct.getMembers();
 
 		Iterator<StatementTree> i = members.iterator();
-		assert(varMap != null);
+//		assert(varMap != null);
 		returnVisitor = new ReturnVisitor(varMap);
 		MethodEnv m;
 		while (i.hasNext())
@@ -140,7 +140,7 @@ public class MissionSequencerBuilder extends ParadigmBuilder
 							missions.addAll(getNextReturns);
 						}
 
-						m = methodVisitor.visitMethod(o, false);
+						m = methodVisitor.visitMethod(o, false, varMap);
 						setMethodAccess(m, o);
 
 						
@@ -150,7 +150,7 @@ public class MissionSequencerBuilder extends ParadigmBuilder
 					else
 					{// ADD METHOD TO MISSION ENV
 						sequencerEnv.setObjectId(sequencerEnv.getName().toString());
-						m = methodVisitor.visitMethod(o, false);
+						m = methodVisitor.visitMethod(o, false, varMap);
 						setMethodAccess(m, o);
 
 						final boolean isSyncMethod = o.getModifiers().getFlags()

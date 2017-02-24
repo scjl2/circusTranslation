@@ -1,0 +1,89 @@
+\begin{zsection}
+  \SECTION ~ ConsumerApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  , MethodCallBindingChannels 
+ \\
+  \t1 ,
+MissionMethChan
+, 
+
+BufferMethChan
+, 
+
+ObjectIds
+, 
+
+ThreadIds
+
+
+
+
+\end{zsection}
+%
+\begin{circus}
+\circprocess ConsumerApp \circdef \\ \t1
+  pcMission : MissionID
+
+\circspot
+ \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : ConsumerClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew ConsumerClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~ConsumerSID \then \\
+	
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+            \circmu X \circspot \\ \circblockopen binder\_terminationPendingCall~.~pcMission\then \\binder\_terminationPendingRet~.~pcMission~?~terminationPending\then \\ \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen \circvar result : \num \circspot result :=~999 \circseq \\ binder\_readCall~.~bufferID~.~ConsumerSID~.~ConsumerTID\then \\binder\_readRet~.~bufferID~.~ConsumerSID~.~ConsumerTID~?~read\then \\\Skip \circseq \\ \Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
+            
+
+
+
+
+        \circblockclose
+
+ \circseq \\
+	runRet~.~ConsumerSID \then \\
+	\Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Run \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  \circinterrupt (end\_managedThread\_app~.~ConsumerSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
