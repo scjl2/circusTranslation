@@ -1,0 +1,80 @@
+
+\begin{zsection}
+  \SECTION ~ PCMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
+
+\end{zsection}
+
+\begin{circus}
+\circclass PCMissionClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  buffer : Buffer\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  buffer' = Buffer\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circpublic ~ getBuffer ~ \circdef
+\circvar ret : Buffer \circspot
+\\
+
+
+      \circblockopen
+              ret := buffer
+
+            
+
+
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ cleanUp ~ \circdef
+\circvar ret : \boolean \circspot
+\\
+
+
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+              ret := \false
+
+            
+
+
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

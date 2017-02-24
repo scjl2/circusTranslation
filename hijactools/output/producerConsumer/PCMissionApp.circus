@@ -1,0 +1,115 @@
+\begin{zsection}
+  \SECTION ~ PCMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, PCMissionMethChan \\
+ , PCMissionClass, MethodCallBindingChannels 
+ 
+
+\end{zsection}
+
+
+%\begin{circus}
+%\circchannelset PCMissionAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~ProducerSID~.~PCMissionMID
+%    register~.~ConsumerSID~.~PCMissionMID
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess PCMissionApp \circdef  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype PCMissionClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew PCMissionClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~PCMissionMID \then \\
+
+	register~!~ProducerSID~!~PCMissionMID \then   \\
+	register~!~ConsumerSID~!~PCMissionMID \then   \\
+
+
+  initializeRet~.~PCMissionMID \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+\circvar \boolean : ret @
+ cleanupMissionCall~.~PCMissionMID \then \\
+
+ cleanupMissionRet~.~PCMissionMID~!~\true \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+getBufferMeth \circdef
+\circvar ret : Buffer \circspot
+\\
+\circblockopen
+getBufferCall~.~PCMissionMID
+\then \\
+ret := this~.~getBuffer()  \circseq  \\
+
+getBufferRet~.~PCMissionMID~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+cleanUpMeth \circdef
+\circvar ret : \boolean \circspot
+\\
+\circblockopen
+cleanUpCall~.~PCMissionMID
+\then \\
+ret := this~.~cleanUp()  \circseq  \\
+
+cleanUpRet~.~PCMissionMID~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+Methods \circdef
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+\extchoice \\
+	getBufferMeth \\ 
+\extchoice \\
+	cleanUpMeth \\ 
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~PCMissionMID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

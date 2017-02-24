@@ -1,0 +1,147 @@
+\begin{zsection}
+  \SECTION ~ TakeOffMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, TakeOffMissionMethChan \\
+ , TakeOffMissionClass, MethodCallBindingChannels 
+ 
+
+\end{zsection}
+
+
+%\begin{circus}
+%\circchannelset TakeOffMissionAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~LandingGearHandlerSID~.~TakeOffMissionMID
+%    register~.~TakeOffMonitorSID~.~TakeOffMissionMID
+%    register~.~TakeOffFailureHandlerSID~.~TakeOffMissionMID
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess TakeOffMissionApp \circdef \\ \t1
+  controllingMission : MissionID
+
+\circspot
+ \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype TakeOffMissionClass\\ 
+  controllingMission : MainMission\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew TakeOffMissionClass()\\ 
+  controllingMission' = \\ 
+\end{schema}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~TakeOffMissionMID \then \\
+	register~!~LandingGearHandlerSID~!~TakeOffMissionMID \then \\
+	register~!~TakeOffMonitorSID~!~TakeOffMissionMID \then \\
+	register~!~TakeOffFailureHandlerSID~!~TakeOffMissionMID \then \\
+  initializeRet~.~TakeOffMissionMID \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+\circvar \boolean : ret @ \\
+ cleanupMissionCall~.~TakeOffMissionMID \then \\
+  \\
+ cleanupMissionRet~.~TakeOffMissionMID~!~ret \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+takeOffAbortMeth \circdef
+\\
+\circblockopen
+takeOffAbortCall~.~TakeOffMissionMID ~?~caller
+\then \\
+this~.~takeOffAbort()  \circseq  \\
+
+takeOffAbortRet~.~TakeOffMissionMID~.~caller \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+deployLandingGearMeth \circdef
+\\
+\circblockopen
+deployLandingGearCall~.~TakeOffMissionMID ~?~caller
+\then \\
+this~.~deployLandingGear()  \circseq  \\
+
+deployLandingGearRet~.~TakeOffMissionMID~.~caller \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+stowLandingGearMeth \circdef
+\\
+\circblockopen
+stowLandingGearCall~.~TakeOffMissionMID ~?~caller
+\then \\
+this~.~stowLandingGear()  \circseq  \\
+
+stowLandingGearRet~.~TakeOffMissionMID~.~caller \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+isLandingGearDeployedMeth \circdef
+\circvar ret : \boolean \circspot
+\\
+\circblockopen
+isLandingGearDeployedCall~.~TakeOffMissionMID ~?~caller
+\then \\
+ret := this~.~isLandingGearDeployed()  \circseq  \\
+
+isLandingGearDeployedRet~.~TakeOffMissionMID~.~caller~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+Methods \circdef
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+\extchoice \\
+	takeOffAbortMeth \\ 
+\extchoice \\
+	deployLandingGearMeth \\ 
+\extchoice \\
+	stowLandingGearMeth \\ 
+\extchoice \\
+	isLandingGearDeployedMeth \\ 
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~TakeOffMissionMID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

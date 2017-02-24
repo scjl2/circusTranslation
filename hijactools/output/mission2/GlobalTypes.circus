@@ -1,0 +1,37 @@
+\begin{zsection}
+  \SECTION ~ GlobalTypes ~ \parents ~ scj\_prelude, SchedulableId
+\end{zsection}
+%
+\begin{zed}
+	[ThreadID]
+\end{zed}
+%
+\begin{axdef}
+	SafeletTId:ThreadID \\
+  nullThreadId : ThreadID
+\end{axdef}
+%
+\begin{zed}
+	[ObjectID] \\
+\end{zed}
+%
+\begin{zed}
+	[totalThreads]
+\end{zed}
+%
+\begin{zed}
+ThreadMap == ThreadID \pfun \nat_1
+\end{zed}
+%
+\begin{zed}
+ExceptionType ::= interruptedException | illegalMonitorStateException | illegalArgumentException | \\
+  \t1  illegalThreadStateException | illegalStateException | ceilingViolationException
+\end{zed}
+%
+\begin{zed}
+maxNanos == 999999
+\end{zed}
+%
+\begin{zed}
+	AperiodicType ::= aperiodic | aperiodicLong
+\end{zed}

@@ -1,0 +1,53 @@
+\begin{zsection}
+  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, ThreadIds
+\end{zsection}
+
+\begin{circus}
+
+\circchannel binder\_readCall :  blankID  \cross SchedulableID  \cross ThreadID  \\
+\circchannel binder\_readRet : blankID \cross SchedulableID  \cross ThreadID  \cross \num \\
+\end{circus}
+%
+\begin{zed}
+readLocs == \{ BufferID \}  \\
+readCallers == \{ ConsumerSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_terminationPendingCall :    \cross SchedulableID  \\
+\circchannel binder\_terminationPendingRet :  \cross SchedulableID  \cross boolean \\
+\end{circus}
+%
+\begin{zed}
+terminationPendingLocs == \{ PCMissionMID \}  \\
+terminationPendingCallers == \{ ProducerSID,ConsumerSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_writeCall :  blankID  \cross SchedulableID  \cross ThreadID   \cross
+\num
+
+\\
+\circchannel binder\_writeRet : blankID  \cross SchedulableID  \cross ThreadID   \\
+\end{circus}
+%
+\begin{zed}
+writeLocs == \{ BufferID \}  \\
+writeCallers == \{ ProducerSID \}
+\end{zed}
+%
+
+
+\begin{circus}
+\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, \\
+binder\_readCall, binder\_readRet
+,\\
+binder\_terminationPendingCall, binder\_terminationPendingRet
+,\\
+binder\_writeCall, binder\_writeRet
+
+\rchanset
+\end{circus}

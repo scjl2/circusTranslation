@@ -7,8 +7,10 @@ import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.utils.Debugger;
+import hijac.tools.tightrope.utils.MethodDestinationE;
 import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
+import hijac.tools.tightrope.visitors.MethodLocationVisitor;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.RegistersVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
@@ -63,7 +65,7 @@ public class MissionBuilder extends ParadigmBuilder
     Debugger.log("missionTypeElem=" + missionTypeElement.toString());
     ClassTree missionClassTree = trees.getTree(missionTypeElement);
 
-    getVariables(missionTypeElement, missionEnv);
+    HashMap<Name, Tree> varMap = getVariables(missionTypeElement, missionEnv);
 
     List<Tree> missionMembers = (List<Tree>) missionClassTree.getMembers();
     Iterator<Tree> missionMembersIterator = missionMembers.iterator();
@@ -108,18 +110,21 @@ public class MissionBuilder extends ParadigmBuilder
         }
         else if (currentMethodIsCleanup)
         {
-          buildMissionCleanup(missionMethodTree);
+          buildMissionCleanup(missionMethodTree, varMap);
         }
         else
         {
           // ADD METHOD TO MISSION ENV
-
+          
+//          MethodDestinationE methodDestination = new MethodLocationVisitor(varMap).visitMethod(missionMethodTree, null);
+                   
+            
           if (syncMethod)
           {
             final String missionName = missionEnv.getName().toString();
 
             missionEnv.setObjectId(missionName);
-            MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false);
+            MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false, varMap);
 
             setMethodAccess(missionMethodTree, m);
             missionEnv.addSyncMeth(m);
@@ -132,13 +137,13 @@ public class MissionBuilder extends ParadigmBuilder
           {
             if (notIgnoredMethod)
             {
-              MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false);
+              MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false, varMap);
 
               setMethodAccess(missionMethodTree, m);
 
               missionEnv.getClassEnv().addMeth(m);
 
-              MethodEnv m2 = methodVisitor.visitMethod(missionMethodTree, false);
+              MethodEnv m2 = methodVisitor.visitMethod(missionMethodTree, false,varMap);
 
               //
               StringBuilder body;
@@ -222,12 +227,12 @@ public class MissionBuilder extends ParadigmBuilder
     addDeferredParameters(methodStatements, varMap, missionEnv);
   }
 
-  private void buildMissionCleanup(MethodTree missionMethodTree)
+  private void buildMissionCleanup(MethodTree missionMethodTree, HashMap<Name, Tree> varMap)
   {
     MethodVisitor methodVisitor = new MethodVisitor(analysis, missionEnv,
         IDType.MissionID);
     
-    MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false);
+    MethodEnv m = methodVisitor.visitMethod(missionMethodTree, false, varMap);
     
     if(m.getBody() == null)
     {

@@ -1,0 +1,7 @@
+\begin{zsection}
+  \SECTION ~ ManagedThreadFWChan ~ \parents ~ SchedulableId
+\end{zsection}
+
+\begin{circus}
+\circchannel ~ end\_managedThread\_app : SchedulableID \\ 
+\end{circus}

@@ -1,0 +1,133 @@
+
+\begin{zsection}
+  \SECTION ~ MainMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
+
+\end{zsection}
+
+\begin{circus}
+\circclass MainMissionClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  ALTITUDE\_READING\_ON\_GROUND : \power \arithmos\\ 
+  cabinPressure : \power \arithmos\\ 
+  emergencyOxygen : \power \arithmos\\ 
+  fuelRemaining : \power \arithmos\\ 
+  altitude : \power \arithmos\\ 
+  airSpeed : \power \arithmos\\ 
+  heading : \power \arithmos\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  ALTITUDE\_READING\_ON\_GROUND' = 0.0\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circpublic ~ getAirSpeed ~ \circdef
+\circvar ret : \power \arithmos \circspot
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getAltitude ~ \circdef
+\circvar ret : \power \arithmos \circspot
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getCabinPressure ~ \circdef
+\circvar ret : \power \arithmos \circspot
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getEmergencyOxygen ~ \circdef
+\circvar ret : \power \arithmos \circspot
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getFuelRemaining ~ \circdef
+\circvar ret : \power \arithmos \circspot
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getHeading ~ \circdef
+\circvar ret : \power \arithmos \circspot
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setAirSpeed ~ \circdef
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setAltitude ~ \circdef
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setCabinPressure ~ \circdef
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setEmergencyOxygen ~ \circdef
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setFuelRemaining ~ \circdef
+\\
+
+ 
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setHeading ~ \circdef
+\\
+
+ 
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

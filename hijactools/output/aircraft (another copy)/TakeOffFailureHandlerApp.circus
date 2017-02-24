@@ -1,0 +1,86 @@
+\begin{zsection}
+  \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
+ \t1  ,
+MainMissionMethChan
+
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess TakeOffFailureHandlerApp \circdef \\ \t1
+  mainMission : MissionID
+,\\
+  takeoffMission : MissionID
+,\\
+  threshold : \power \arithmos
+
+\circspot
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~TakeOffFailureHandlerSID \then \\
+	
+      \circblockopen
+            binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then \\binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then \\\Skip\circvar currentSpeed : \power \arithmos \circspot currentSpeed :=~getAirSpeed
+             \circseq \\ 
+
+
+
+              \circif ~ (currentSpeed < threshold) ~ \circthen ~
+  \\
+\t1 
+  \Skip
+
+
+  \\
+  \circelse ~ \lnot (currentSpeed < threshold) ~ \circthen ~
+  \\
+\t1 
+  \Skip
+
+
+  \\
+  \circfi
+
+            
+
+
+
+
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~TakeOffFailureHandlerSID \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_aperiodic\_app~.~TakeOffFailureHandlerSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

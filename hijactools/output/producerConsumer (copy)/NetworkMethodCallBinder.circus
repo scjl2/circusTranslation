@@ -1,0 +1,67 @@
+\begin{zsection}
+	\SECTION ~ MethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels\\  ,BuffeMethChan ,PCMissionMethChan  
+\end{zsection}
+%
+\begin{circus}
+\circprocess  MethodCallBinder \circdef \circbegin \\
+\end{circus}
+%
+%
+\begin{circusaction}
+read\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_readCall~?~loc\prefixcolon(loc \in readLocs)~?~caller\prefixcolon(caller \in readCallers)~?~callingThread   \then \\
+	readCall~.~loc~.~caller~.~callingThread   \then \\
+	readRet~.~loc~.~caller~.~callingThread ~?~ret \then \\
+	binder\_readRet~.~loc~.~caller  ~.~callingThread ~ !~ret  \then \\
+	read\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+terminationPending\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_terminationPendingCall~?~loc\prefixcolon(loc \in terminationPendingLocs)~?~caller\prefixcolon(caller \in terminationPendingCallers)  \then \\
+	terminationPendingCall~.~loc~.~caller  \then \\
+	terminationPendingRet~.~loc~.~caller~?~ret \then \\
+	binder\_terminationPendingRet~.~loc~.~caller  ~ !~ret  \then \\
+	terminationPending\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+write\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_writeCall~?~loc\prefixcolon(loc \in writeLocs)~?~caller\prefixcolon(caller \in writeCallers)~?~callingThread  ~?~p1  \then \\
+	writeCall~.~loc~.~caller~.~callingThread  ~!~p1  \then \\
+	writeRet~.~loc~.~caller~.~callingThread  \then \\
+	binder\_writeRet~.~loc~.~caller  ~.~callingThread ~   \then \\
+	write\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+BinderActions \circdef \\
+\circblockopen 
+	read\_MethodBinder
+	\\ \interleave \\
+
+	terminationPending\_MethodBinder
+	\\ \interleave \\
+
+	write\_MethodBinder
+	
+\circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot BinderActions \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+\circend
+\end{circus}

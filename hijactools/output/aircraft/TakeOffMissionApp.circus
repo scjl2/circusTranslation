@@ -58,6 +58,11 @@ CleanupPhase \circdef  \\
 \circblockopen
 \circvar \boolean : ret @ \\
  cleanupMissionCall~.~TakeOffMissionMID \then \\
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> fixVars
  
       \circblockopen
             \Skip
@@ -65,13 +70,21 @@ CleanupPhase \circdef  \\
 
 
 
+<<<<<<< HEAD
               ret :=   (\lnot this~.~abort)
+=======
+              ret :=   (\lnot abort)
+>>>>>>> fixVars
 
 
             
 
 
 
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+>>>>>>> fixVars
 
         \circblockclose
 

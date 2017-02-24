@@ -1,0 +1,90 @@
+
+%+++ Program +++
+%
+\begin{zsection}
+  \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
+  \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
+  \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
+  \t1 AperiodicEventHandlerFW, ObjectFW, ThreadFW, \\
+  \t1 MyAppApp, mainSequencerApp,
+
+MissionAApp,
+
+MTApp
+	,
+OSEHApp
+	
+\\ \t1
+	
+	
+\end{zsection}
+%
+\begin{circus}
+\circprocess ControlTier \circdef \\
+\circblockopen
+SafeletFW \\
+\t1 \lpar ControlTierSync \rpar \\
+TopLevelMissionSequencerFW(mainSequencer)
+\circblockclose
+\end{circus}
+%
+
+
+\begin{circus}
+\circprocess Tier0 \circdef \\
+\circblockopen
+	MissionFW(MissionAID)\\
+		\t1 	\lpar MissionSync \rpar \\
+		\circblockopen
+
+
+			ManagedThreadFW(MTID)\\
+
+			\t1 \lpar SchedulablesSync \rpar\\
+
+
+			OneShotEventHandlerFW(OSEHID ,(time(60,0)) ,  (time(5,0),nullSchedulableId)   )\\
+
+		
+
+
+
+
+
+		\circblockclose
+\circblockclose
+\end{circus}
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Framework +++
+%
+\begin{circus}
+\circprocess Framework \circdef \\
+\circblockopen
+ControlTier \\
+\t1 \lpar TierSync \rpar \\
+ \circblockopen
+Tier0
+\circblockclose
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% APPLICATION
+%
+\begin{circus}
+\circprocess  Application \circdef \\
+\circblockopen
+MyAppApp\\
+\interleave\\
+mainSequencerApp\\
+\interleave \\
+		MissionAApp\\
+		\interleave \\
+			MTApp ( MissionAID  ) \\
+			\interleave \\
+			OSEHApp ( MissionAID  ) \\
+			
+		
+\circblockclose
+\end{circus}

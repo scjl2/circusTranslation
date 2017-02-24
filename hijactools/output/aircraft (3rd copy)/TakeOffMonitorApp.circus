@@ -1,0 +1,71 @@
+\begin{zsection}
+  \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
+ \t1  ,
+MainMissionMethChan
+
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess TakeOffMonitorApp \circdef \\ \t1
+  mainMission : MissionID
+,\\
+  takeOffMission : MissionID
+,\\
+  takeOffAltitude : \power \arithmos
+,\\
+  landingGearHandler : SchedulableID
+
+\circspot
+  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  takeoffMission : TakeOffMission\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  takeoffMission' = \\ 
+\end{schema}
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~TakeOffMonitorSID \then \\
+	 \circseq \\
+    handleAsyncEventRet~.~TakeOffMonitorSID \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  \circinterrupt (end\_periodic\_app~.~TakeOffMonitorSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

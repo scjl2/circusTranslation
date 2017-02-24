@@ -1,0 +1,7 @@
+\begin{zsection}
+  \SECTION ~ MissionChan ~ \parents ~ MissionFWChan, MissionMethChan, SchedulableMethChan
+\end{zsection}
+%
+\begin{circus}
+	\circchannelset ~ MissionAppSync ~ == \lchanset initializeCall, initializeRet, register, cleanupMissionCall, cleanupMissionRet, end\_mission\_app \rchanset \\
+\end{circus}

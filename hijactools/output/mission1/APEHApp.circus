@@ -1,0 +1,64 @@
+\begin{zsection}
+  \SECTION ~ APEHApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
+ \t1  
+
+\end{zsection}
+
+\begin{circus}
+\circprocess APEHApp \circdef \\ \t1
+  controllingMission : MissionID
+
+\circspot
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~APEHSID \then \\
+	
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+            requestTerminationCall~.~controllingMission~.~APEHSID\then \\requestTerminationRet~.~controllingMission~.~APEHSID~?~requestTermination\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~APEHSID \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_aperiodic\_app~.~APEHSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

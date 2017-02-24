@@ -1,0 +1,99 @@
+\begin{zsection}
+  \SECTION ~ MissionAApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionAMethChan \\
+ , MissionAClass, MethodCallBindingChannels 
+ 
+
+\end{zsection}
+
+
+%\begin{circus}
+%\circchannelset MissionAAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~OSEHSID~.~MissionAMID
+%    register~.~MTSID~.~MissionAMID
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess MissionAApp \circdef  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype MissionAClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew MissionAClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~MissionAMID \then \\
+
+	register~!~OSEHSID~!~MissionAMID \then   \\
+	register~!~MTSID~!~MissionAMID \then   \\
+
+
+  initializeRet~.~MissionAMID \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+\circvar \boolean : ret @
+ cleanupMissionCall~.~MissionAMID \then \\
+
+ cleanupMissionRet~.~MissionAMID~!~\true \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+systemActionMeth \circdef
+\\
+\circblockopen
+systemActionCall~.~MissionAMID ~?~caller
+\then \\
+this~.~systemAction()  \circseq  \\
+
+systemActionRet~.~MissionAMID~.~caller \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+Methods \circdef
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+\extchoice \\
+	systemActionMeth \\ 
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~MissionAMID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

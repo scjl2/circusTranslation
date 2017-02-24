@@ -1,0 +1,104 @@
+
+\begin{zsection}
+  \SECTION ~ mainSequencerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  ,
+MissionId
+, 
+
+MissionIds
+
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circclass mainSequencerClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  notReleased : \boolean\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  notReleased' = true\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circprotected ~ getNextMission ~ \circdef
+\circvar ret : MissionID \circspot
+\\
+
+
+      \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
+              \circif ~ notReleased = \true ~ \circthen ~
+  \\
+\t1 
+      \circblockopen
+            this~.~notReleased := \false
+
+             \circseq \\ 
+
+
+
+              ret := MyMissionMID
+
+            
+
+
+
+
+        \circblockclose
+
+
+  \\
+  \circelse ~ \lnot notReleased = \true ~ \circthen ~
+  \\
+\t1 
+      \circblockopen
+              ret := nullMissionId
+
+            
+
+
+
+
+        \circblockclose
+
+
+  \\
+  \circfi
+
+            
+
+
+
+
+        \circblockclose
+
+ 
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

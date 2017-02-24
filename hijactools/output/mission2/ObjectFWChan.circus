@@ -1,0 +1,33 @@
+\begin{zsection}
+  \SECTION ~ ObjectFWChan ~ \parents ~ GlobalTypes, Priority, PriorityQueue, JTime
+\end{zsection}
+%
+\begin{zed}
+	WaitType ::= wait | waitForObject
+\end{zed}
+%
+\begin{circus}
+	\circchannel unlock\_Monitor : ObjectID \cross ThreadID\\
+	\circchannel relock: ObjectID \cross ThreadID\\
+	\circchannel relock\_this : ObjectID \cross ThreadID \\
+	\circchannel startSyncMeth : ObjectID \cross ThreadID \\
+	\circchannel lockAcquired : ObjectID \cross ThreadID \\
+	\circchannel endSyncMeth : ObjectID \cross ThreadID\\
+	\circchannel cancel\_wait\_timer : ObjectID \cross ThreadID \\
+	\circchannel start\_timer : ObjectID \cross ThreadID \cross PriorityLevel \cross JTime\\
+	\circchannel lock\_request : ObjectID \cross ThreadID \\
+	\circchannel assignLock : ObjectID  \\
+	\circchannel add\_to\_wait : ObjectID \cross ThreadID \cross PriorityLevel \cross WaitType \\
+	\circchannel remove\_from\_wait : ObjectID \cross ThreadID \cross PriorityLevel \\
+	\circchannel remove\_most\_eligible\_from\_wait : ObjectID \\
+	\circchannel removed\_thread : ObjectID \cross ThreadID \cross WaitType \\
+	\circchannel get\_lockedBy : ObjectID \cross ThreadID \\
+	\circchannel get\_waitQueue : ObjectID \cross PriorityQueue \\
+	\circchannel reset\_lockedBy : ObjectID \\
+	\circchannel fully\_unlock : ObjectID \\
+	\circchannel increment\_locks : ObjectID \\
+	\circchannel decrement\_locks : ObjectID \cross \num \\
+	\circchannel get\_ceilingPriority : ObjectID \cross PriorityLevel \\ 
+	\circchannel start\_waitForObject\_timer : ObjectID \cross ThreadID  \cross PriorityLevel \cross JTime \\
+	\circchannel get\_waitForObjectThreads : ObjectID \cross \power ThreadID \\
+\end{circus}

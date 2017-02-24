@@ -20,6 +20,7 @@ import hijac.tools.tightrope.environments.StructureEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.Debugger;
+import hijac.tools.tightrope.utils.MethodDestinationE;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.utils.TightRopeString;
 import hijac.tools.tightrope.utils.TightRopeString.LATEX;
@@ -364,7 +365,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         ClassEnv cE = p.getClassEnv();
         if (cE != null)
         {
-          Debugger.log("AA" +  cE);
+          Debugger.log("AA" + cE);
           if (cE.getVariable(nodeVariableString) != null)
           {
             if (node.getExpression() instanceof LiteralTree)
@@ -504,7 +505,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   {
     /* Are those nodes permissible? Do a bit more investigation here. */
 
-    Debugger.log("Expression Statement, node = " + node + " kind = " + node.getKind() );
+    Debugger.log("Expression Statement, node = " + node + " kind = " + node.getKind());
 
     // TODO HACKERY!
     if (node.toString().contains("Console") || node.toString().contains("System"))
@@ -529,12 +530,12 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   public String visitIdentifier(IdentifierTree node, MethodVisitorContext ctxt)
   {
     Debugger.log("/// Identifier node = " + node);
-    
+
     Name nodeName = node.getName();
 
     StructureEnv framework = TightRope.getProgramEnv().getStructureEnv();
 
-    //Check if the Identifier is an ObjectEnv in the program
+    // Check if the Identifier is an ObjectEnv in the program
     ObjectEnv o = framework.getObjectEnv(nodeName.toString());
     String id = "";
     if (o != null)
@@ -549,39 +550,54 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     // {
     // methodAccessesVariable();
     // }
-    
-    if(visitingObject.getVariable(nodeName) != null)
+
+    if (visitingObject.getVariable(nodeName) != null)
     {
       Debugger.log("/// visiting object has this identifier as variable");
       return nodeName.toString();
     }
+
+    // if(visitingObject.hasClass() )
+    // {
     
-//    if(visitingObject.hasClass() )
-//    {
-       ClassEnv ce = visitingObject.getClassEnv();
-       if(ce.getVariable(nodeName) != null)
-       {
-         Debugger.log("/// this identifier is a variable in the ClassEnv");
-         //TODO Really hacky!
-         if(methodEnv != null)
-         {
-           if(methodEnv.getName().equals("getNextMission"))
-           {
-             //If this is the gNM method then it will be in the class, so don't add 'this'
-             return nodeName.toString();
-           }
-           else
-           {
-             return "this~.~" + nodeName;
-           }
-         
-         }
-         else
-         {
-           return "this~.~" + nodeName;
-         }
-       }
-//    }
+    
+    ClassEnv ce = visitingObject.getClassEnv();
+    if (ce.getVariable(nodeName) != null)
+    {
+      Debugger.log("/// this identifier is a variable in the ClassEnv");
+      // TODO Really hacky!
+      if (methodEnv != null)
+      {
+//        if (methodEnv.getName().equals("getNextMission"))
+//        {
+//          // If this is the gNM method then it will be in the class, so don't
+//          // add 'this'
+//          return nodeName.toString();
+//        }
+//        else
+//        {
+//          return "this~.~" + nodeName;
+//        }
+        
+        if(methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
+        {
+          return "this~.~" + nodeName;
+        }
+        else if(methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
+        {
+          return nodeName.toString();
+        }
+        else
+        {
+          return nodeName.toString();
+        } 
+      }
+      else
+      {
+        return "this~.~" + nodeName;
+      }
+    }
+    // }
     Debugger.log("/// node = " + node + " kind? = " + node.getKind());
     return callExprMacro(node, ctxt, "Identifier", nodeName);
   }
@@ -589,7 +605,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   @Override
   public String visitIf(IfTree node, MethodVisitorContext ctxt)
   {
-    Debugger.log("/// If node = " + node + " condition kind is: " + node.getCondition().getKind());
+    Debugger.log("/// If node = " + node + " condition kind is: "
+        + node.getCondition().getKind());
     return callStmtMacro(node, ctxt, "If", node.getCondition(), node.getThenStatement(),
         node.getElseStatement());
   }
@@ -605,8 +622,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   {
     /* Should we do the translation in a template macro here too? */
 
-     Debugger.log("/// Literal Tree = " + node + " kind = " + node.getKind());
-    
+    Debugger.log("/// Literal Tree = " + node + " kind = " + node.getKind());
+
     // This is supposed to cater for null id values, but is a bit hacky...
 
     if (methodEnv != null)
@@ -1550,8 +1567,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
   public String visitUnary(UnaryTree node, MethodVisitorContext ctxt)
   {
     /* What if the operand is boolean? Equality raises issues. */
-    Debugger.log("/// Unary node = " + node + " expression kind = " + node.getExpression().getKind());
-    
+    Debugger.log("/// Unary node = " + node + " expression kind = "
+        + node.getExpression().getKind());
+
     return callExprMacro(node, ctxt, "Unary", node.getExpression());
   }
 
@@ -1639,7 +1657,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
           return "\\circvar " + node.getName() + " : "
               + TightRopeTransUtils.encodeType(node.getType()) + " \\circspot "
               + node.getName() + " := this~.~" + initializer.toString();
-        }        
+        }
       }
       else if (visitingObject.containsVariable(initializer.toString()))
       {
@@ -1695,14 +1713,16 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     ExpressionTree condition = node.getCondition();
     Debugger.log("/// WHile Loop condition = " + condition.toString() + " kind = "
         + condition.getKind());
-//
-//    if(visitingObject.hasClass() && visitingObject.getClassEnv().containsMethod(condition.toString()))
-//    {
-//      return callStmtMacro(node, ctxt, "WhileLoop", condition, node.getStatement());
-//    }
-//    else
-//    //if(  )
-//    // TODO HACKY, just checks for a ( to get if it's a method invocation.
+    //
+    // if(visitingObject.hasClass() &&
+    // visitingObject.getClassEnv().containsMethod(condition.toString()))
+    // {
+    // return callStmtMacro(node, ctxt, "WhileLoop", condition,
+    // node.getStatement());
+    // }
+    // else
+    // //if( )
+    // // TODO HACKY, just checks for a ( to get if it's a method invocation.
     if (condition.toString().contains("("))
     {
       String conditionTrans = visit(condition, ctxt);
@@ -1725,7 +1745,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       {
         // TODO SUPER HACKY! But I've now forgotten what it does.
         conditionTrans = conditionTrans.substring(1, conditionTrans.length() - 1);
-        
+
         boolean negative = conditionTrans.startsWith("\\lnot");
 
         if (negative)
@@ -1747,11 +1767,12 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
       }
 
-      return callStmtMacro(node, ctxt, "WhileLoopMethCond", conditionString, node.getStatement());
+      return callStmtMacro(node, ctxt, "WhileLoopMethCond", conditionString,
+          node.getStatement());
     }
     else
     {
-      
+
       return callStmtMacro(node, ctxt, "WhileLoop", condition, node.getStatement());
     }
   }

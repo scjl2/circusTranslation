@@ -1,0 +1,37 @@
+
+\begin{zsection}
+  \SECTION ~ MyPEH1Class ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
+
+\end{zsection}
+
+\begin{circus}
+\circclass MyPEH1Class \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  count : \num\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  count' = 0\\ 
+\end{schema}
+
+
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

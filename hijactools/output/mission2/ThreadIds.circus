@@ -1,0 +1,13 @@
+\begin{zsection}
+  \SECTION ~ ThreadIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	SafeletTId  : ThreadID \\
+	nullThreadId  : ThreadID \\
+
+\where
+  distinct \langle SafeletTId, nullThreadId
+  \rangle
+\end{axdef}

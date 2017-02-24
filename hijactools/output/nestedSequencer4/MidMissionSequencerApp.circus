@@ -1,0 +1,63 @@
+\begin{zsection}
+  \SECTION ~ MidMissionSequencerApp ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  , MidMissionSequencerClass, MethodCallBindingChannels 
+
+  \t1 
+
+\end{zsection}
+
+%\begin{circus}
+%\circchannelset MidMissionSequencerAppChanSet == MidMissionSequencerSIDAppSync
+%\end{circus}
+
+\begin{circus}
+\circprocess MidMissionSequencerApp \circdef  \circbegin\\
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype MidMissionSequencerClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew MidMissionSequencerClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+GetNextMission \circdef \circvar ret : MissionID \circspot \\
+\circblockopen
+    getNextMissionCall~.~MidMissionSequencerSID \then \\
+	   ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~MidMissionSequencerSID~!~ret  \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+%
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  %\circhide MissionSequencerAppStateSync
+\circinterrupt (end\_sequencer\_app~.~MidMissionSequencerSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

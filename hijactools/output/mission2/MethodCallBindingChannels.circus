@@ -1,0 +1,24 @@
+\begin{zsection}
+  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, ThreadIds
+\end{zsection}
+
+\begin{circus}
+
+\circchannel binder\_systemActionCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_systemActionRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+systemActionLocs == \{ MissionAMID \}  \\
+systemActionCallers == \{ MTSID \}
+\end{zed}
+%
+
+
+\begin{circus}
+\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, \\
+binder\_systemActionCall, binder\_systemActionRet
+
+\rchanset
+\end{circus}

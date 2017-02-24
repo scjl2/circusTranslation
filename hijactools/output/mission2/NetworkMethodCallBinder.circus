@@ -1,0 +1,37 @@
+\begin{zsection}
+	\SECTION ~ MethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels\\  ,MissionAMethChan 
+\end{zsection}
+%
+\begin{circus}
+\circprocess  MethodCallBinder \circdef \circbegin \\
+\end{circus}
+%
+%
+\begin{circusaction}
+systemAction\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_systemActionCall~?~loc\prefixcolon(loc \in systemActionLocs)~?~caller\prefixcolon(caller \in systemActionCallers)  \then \\
+	systemActionCall~.~loc~.~caller  \then \\
+	systemActionRet~.~loc~.~caller \then \\
+	binder\_systemActionRet~.~loc~.~caller  ~   \then \\
+	systemAction\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+BinderActions \circdef \\
+\circblockopen 
+	systemAction\_MethodBinder
+	
+\circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot BinderActions \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+\circend
+\end{circus}

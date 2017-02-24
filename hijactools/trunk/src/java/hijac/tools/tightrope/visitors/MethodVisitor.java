@@ -11,6 +11,7 @@ import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.Debugger;
+import hijac.tools.tightrope.utils.MethodDestinationE;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import com.sun.source.tree.VariableTree;
 public class MethodVisitor
 {
 	private static NewSCJApplication application;
-	private static MethodBodyVisitor franksMethodVisitor;
+//	private static MethodBodyVisitor franksMethodVisitor;
 	
 	private ObjectEnv object;
 	private String idType;
@@ -49,7 +50,7 @@ public class MethodVisitor
 		// this.analysis = analysis;
 		this.object = object;
 		MethodVisitor.application = TightRope.getSCJApplication();
-		MethodVisitor.franksMethodVisitor = new MethodBodyVisitor(application, object);
+//		MethodVisitor.franksMethodVisitor = new MethodBodyVisitor(application, object);
 //		propagateNonPBuilder();
 		idType = "blankID";
 		
@@ -69,7 +70,7 @@ public class MethodVisitor
 		this.idType = idType.toString();
 	}
 
-	public MethodEnv visitMethod(MethodTree mt, Boolean isConstructor)
+	public MethodEnv visitMethod(MethodTree mt, Boolean isConstructor, HashMap<Name, Tree> varMap)
 	{
 		// get name
 		Name methodName = mt.getName();
@@ -99,26 +100,33 @@ public class MethodVisitor
 		}
 
 		Tree returnType = mt.getReturnType();
+		
+		MethodDestinationE methodDestination = new MethodLocationVisitor(varMap).visitMethod(mt, null);
+    
 
 		String body = null;
 
 		Debugger.log("*** Getting Body ***");
+		
+		m = new MethodEnv(methodName, TightRopeTransUtils.encodeType(returnType),
+        returnsValues, parameters, "");
+	  
+		m.setMethodDestination(methodDestination);
+		
+		MethodBodyVisitor methodBodyVisitor = new MethodBodyVisitor(application, object, m);
+		
+		
+		
 		if (returnType instanceof PrimitiveTypeTree)
 		{
-			body = mt.accept(franksMethodVisitor, new MethodVisitorContext());
+			body = mt.accept(methodBodyVisitor, new MethodVisitorContext());
 
-			m = new MethodEnv(methodName, TightRopeTransUtils.encodeType(returnType),
-					returnsValues, parameters, body);
+			m.setBody(body);
+			m.setReturnType(TightRopeTransUtils.encodeType(returnType));
 		}
 		else
 		{
-			m = new MethodEnv(methodName, TightRopeTransUtils.encodeType(returnType),
-					returnsValues, parameters, "");
-
-			franksMethodVisitor = new MethodBodyVisitor(application, object, m);
-//			propagateNonPBuilder();
-
-			body = mt.accept(franksMethodVisitor, new MethodVisitorContext());
+			body = mt.accept(methodBodyVisitor, new MethodVisitorContext());
 
 			m.setBody(body);
 		}

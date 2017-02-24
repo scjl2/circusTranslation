@@ -1,0 +1,63 @@
+\begin{zsection}
+  \SECTION ~ BottomMissionSequencerBApp ~ \parents ~ TopLevelMissionSequencerChan,\\
+  \t1 MissionId, MissionIds, SchedulableId, SchedulableIds  , BottomMissionSequencerBClass, MethodCallBindingChannels 
+
+  \t1 
+
+\end{zsection}
+
+%\begin{circus}
+%\circchannelset BottomMissionSequencerBAppChanSet == BottomMissionSequencerBSIDAppSync
+%\end{circus}
+
+\begin{circus}
+\circprocess BottomMissionSequencerBApp \circdef  \circbegin\\
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype BottomMissionSequencerBClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew BottomMissionSequencerBClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+GetNextMission \circdef \circvar ret : MissionID \circspot \\
+\circblockopen
+    getNextMissionCall~.~BottomMissionSequencerBSID \then \\
+	   ret := this~.~getNextMission() \circseq \\
+    getNextMissionRet~.~BottomMissionSequencerBSID~!~ret  \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef  \\
+\circblockopen
+	GetNextMission \\
+%
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+  %\circhide MissionSequencerAppStateSync
+\circinterrupt (end\_sequencer\_app~.~BottomMissionSequencerBSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

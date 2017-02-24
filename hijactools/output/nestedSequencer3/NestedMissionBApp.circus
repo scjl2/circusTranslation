@@ -1,0 +1,83 @@
+\begin{zsection}
+  \SECTION ~ NestedMissionBApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, NestedMissionBMethChan \\
+ , MethodCallBindingChannels 
+ 
+
+\end{zsection}
+
+
+%\begin{circus}
+%\circchannelset NestedMissionBAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~MT2SID~.~NestedMissionBMID
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess NestedMissionBApp \circdef  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype NestedMissionBClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew NestedMissionBClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~NestedMissionBMID \then \\
+
+	register~!~MT2SID~!~NestedMissionBMID \then   \\
+
+
+  initializeRet~.~NestedMissionBMID \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+\circvar \boolean : ret @
+ cleanupMissionCall~.~NestedMissionBMID \then \\
+
+ cleanupMissionRet~.~NestedMissionBMID~!~\true \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~NestedMissionBMID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

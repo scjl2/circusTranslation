@@ -1,0 +1,12 @@
+\begin{zsection}
+  \SECTION ~ ObjectIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+ 
+\where
+  distinct \langle 
+  \rangle
+\end{axdef}
+

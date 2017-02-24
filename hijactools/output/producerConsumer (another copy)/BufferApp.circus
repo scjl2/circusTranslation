@@ -1,0 +1,208 @@
+\begin{zsection}
+  \SECTION ~ BufferApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan\\
+  \t1 , BufferClass, MethodCallBindingChannels 
+
+  \t1 ,
+ObjectChan
+, 
+
+ObjectIds
+, 
+
+ThreadIds
+
+
+, ObjectFWChan, ObjectIds
+
+\end{zsection}
+
+%\begin{circus}
+%\circchannelset BufferChanSet \circdef \\
+%  \lchanset getSequencerCall, getSequencerRet,initializeApplicationCall, initializeApplicationRet, end\_safelet\_app \rchanset
+%\end{circus}
+
+\begin{axdef}
+	BufferID : NonParadigmID \\
+\end{axdef}
+
+\begin{circus}
+\circprocess BufferApp  \circdef  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype BufferClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew BufferClass()\\ 
+\end{schema}
+
+%
+\begin{circusaction}
+writeSyncMeth \circdef
+\\
+\circblockopen
+writeCall~.~BufferID~?~caller~?~thread
+~?~update
+ \then \\
+\circblockopen
+startSyncMeth~.~BufferOID~.~thread \then \\
+lockAcquired~.~BufferOID~.~thread \then \\
+
+      \circblockopen
+              \circvar bufferEmpty : \boolean \circspot bufferEmpty := bufferEmpty() ~
+
+             \circseq \\ 
+
+
+
+            \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot bufferEmpty = \true)\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen waitCall~.~BufferOID~.~thread \then \\waitRet~.~BufferOID~.~thread \then \\\Skip \circseq \\ bufferEmpty := bufferEmpty() ~ \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
+             \circseq \\ 
+
+
+
+
+
+
+
+            this~.~buffer :=update
+
+             \circseq \\ 
+
+
+
+            notify~.~BufferOID~!~thread \then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
+
+ \circseq  \\
+endSyncMeth~.~BufferOID~.~thread \then  \\
+
+writeRet~.~BufferID~.~caller~.~thread \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+readSyncMeth \circdef
+\circvar ret : \num \circspot
+\\
+\circblockopen
+readCall~.~BufferID~?~caller~?~thread
+ \then \\
+\circblockopen
+startSyncMeth~.~BufferOID~.~thread \then \\
+lockAcquired~.~BufferOID~.~thread \then \\
+
+      \circblockopen
+              \circvar bufferEmpty : \boolean \circspot bufferEmpty := bufferEmpty() ~
+
+             \circseq \\ 
+
+
+
+            \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~bufferEmpty\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
+             \circseq \\ 
+
+
+
+            
+      \circblockopen
+            waitCall~.~BufferOID~.~thread \then \\waitRet~.~BufferOID~.~thread \then \\\Skip
+
+             \circseq \\ 
+
+
+
+              bufferEmpty := bufferEmpty() ~
+
+
+            
+
+
+
+
+        \circblockclose
+
+
+             \circseq \\ 
+
+
+
+              \circvar out : \num \circspot out := buffer ~
+
+             \circseq \\ 
+
+
+
+
+
+
+
+            this~.~buffer :=0
+
+             \circseq \\ 
+
+
+
+            notify~.~BufferOID~!~thread \then \\\Skip
+
+             \circseq \\ 
+
+
+
+              ret := out
+
+            
+
+
+
+
+        \circblockclose
+
+ \circseq  \\
+endSyncMeth~.~BufferOID~.~thread \then  \\
+
+readRet~.~BufferID~.~caller~.~thread~!~ret \then \\
+\Skip
+\circblockclose
+\circblockclose
+\end{circusaction}
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	GetSequencer \\
+	\extchoice  \\
+	InitializeApplication  \\
+%
+%
+	\extchoice \\
+	writeSyncMeth \\	
+	\extchoice \\
+	readSyncMeth \\	
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_safelet\_app \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

@@ -99,7 +99,7 @@ public class NonParadigmBuilder extends ParadigmBuilder
         else if (isSyncMethod)
         {
           nonParaEnv.setObjectId(nonParaEnv.getName().toString());
-          MethodEnv m = methodVisitor.visitMethod(mt, false);
+          MethodEnv m = methodVisitor.visitMethod(mt, false, varMap);
           setMethodAccess(m, mt);
 
           nonParaEnv.addSyncMeth(m);
@@ -107,7 +107,7 @@ public class NonParadigmBuilder extends ParadigmBuilder
         else
         // if (notIgnoredMethod)
         {
-          MethodEnv m = methodVisitor.visitMethod(mt, false);
+          MethodEnv m = methodVisitor.visitMethod(mt, false, varMap);
           setMethodAccess(m, mt);
 //          methodVisitor.setNonPBuilder(this);
 

@@ -1,0 +1,217 @@
+\begin{zsection}
+	\SECTION ~ MethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels\\  ,MainMissionMethChan    ,LandMissionMethChan         
+\end{zsection}
+%
+\begin{circus}
+\circprocess  MethodCallBinder \circdef \circbegin \\
+\end{circus}
+%
+%
+\begin{circusaction}
+setCabinPressure\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_setCabinPressureCall~?~loc\prefixcolon(loc \in setCabinPressureLocs)~?~caller\prefixcolon(caller \in setCabinPressureCallers) ~?~p1  \then \\
+	setCabinPressureCall~.~loc~.~caller ~!~p1  \then \\
+	setCabinPressureRet~.~loc~.~caller \then \\
+	binder\_setCabinPressureRet~.~loc~.~caller  ~   \then \\
+	setCabinPressure\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+setFuelRemaining\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_setFuelRemainingCall~?~loc\prefixcolon(loc \in setFuelRemainingLocs)~?~caller\prefixcolon(caller \in setFuelRemainingCallers) ~?~p1  \then \\
+	setFuelRemainingCall~.~loc~.~caller ~!~p1  \then \\
+	setFuelRemainingRet~.~loc~.~caller \then \\
+	binder\_setFuelRemainingRet~.~loc~.~caller  ~   \then \\
+	setFuelRemaining\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+getAltitude\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_getAltitudeCall~?~loc\prefixcolon(loc \in getAltitudeLocs)~?~caller\prefixcolon(caller \in getAltitudeCallers)  \then \\
+	getAltitudeCall~.~loc~.~caller  \then \\
+	getAltitudeRet~.~loc~.~caller~?~ret \then \\
+	binder\_getAltitudeRet~.~loc~.~caller  ~ !~ret  \then \\
+	getAltitude\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+setHeading\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_setHeadingCall~?~loc\prefixcolon(loc \in setHeadingLocs)~?~caller\prefixcolon(caller \in setHeadingCallers) ~?~p1  \then \\
+	setHeadingCall~.~loc~.~caller ~!~p1  \then \\
+	setHeadingRet~.~loc~.~caller \then \\
+	binder\_setHeadingRet~.~loc~.~caller  ~   \then \\
+	setHeading\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+stowLandingGear\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_stowLandingGearCall~?~loc\prefixcolon(loc \in stowLandingGearLocs)~?~caller\prefixcolon(caller \in stowLandingGearCallers)  \then \\
+	stowLandingGearCall~.~loc~.~caller  \then \\
+	stowLandingGearRet~.~loc~.~caller \then \\
+	binder\_stowLandingGearRet~.~loc~.~caller  ~   \then \\
+	stowLandingGear\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+takeOffAbort\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_takeOffAbortCall~?~loc\prefixcolon(loc \in takeOffAbortLocs)~?~caller\prefixcolon(caller \in takeOffAbortCallers)  \then \\
+	takeOffAbortCall~.~loc~.~caller  \then \\
+	takeOffAbortRet~.~loc~.~caller \then \\
+	binder\_takeOffAbortRet~.~loc~.~caller  ~   \then \\
+	takeOffAbort\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+setAltitude\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_setAltitudeCall~?~loc\prefixcolon(loc \in setAltitudeLocs)~?~caller\prefixcolon(caller \in setAltitudeCallers) ~?~p1  \then \\
+	setAltitudeCall~.~loc~.~caller ~!~p1  \then \\
+	setAltitudeRet~.~loc~.~caller \then \\
+	binder\_setAltitudeRet~.~loc~.~caller  ~   \then \\
+	setAltitude\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+getHeading\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_getHeadingCall~?~loc\prefixcolon(loc \in getHeadingLocs)~?~caller\prefixcolon(caller \in getHeadingCallers)  \then \\
+	getHeadingCall~.~loc~.~caller  \then \\
+	getHeadingRet~.~loc~.~caller~?~ret \then \\
+	binder\_getHeadingRet~.~loc~.~caller  ~ !~ret  \then \\
+	getHeading\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+getAirSpeed\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_getAirSpeedCall~?~loc\prefixcolon(loc \in getAirSpeedLocs)~?~caller\prefixcolon(caller \in getAirSpeedCallers)  \then \\
+	getAirSpeedCall~.~loc~.~caller  \then \\
+	getAirSpeedRet~.~loc~.~caller~?~ret \then \\
+	binder\_getAirSpeedRet~.~loc~.~caller  ~ !~ret  \then \\
+	getAirSpeed\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+deployLandingGear\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_deployLandingGearCall~?~loc\prefixcolon(loc \in deployLandingGearLocs)~?~caller\prefixcolon(caller \in deployLandingGearCallers)  \then \\
+	deployLandingGearCall~.~loc~.~caller  \then \\
+	deployLandingGearRet~.~loc~.~caller \then \\
+	binder\_deployLandingGearRet~.~loc~.~caller  ~   \then \\
+	deployLandingGear\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+setEmergencyOxygen\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_setEmergencyOxygenCall~?~loc\prefixcolon(loc \in setEmergencyOxygenLocs)~?~caller\prefixcolon(caller \in setEmergencyOxygenCallers) ~?~p1  \then \\
+	setEmergencyOxygenCall~.~loc~.~caller ~!~p1  \then \\
+	setEmergencyOxygenRet~.~loc~.~caller \then \\
+	binder\_setEmergencyOxygenRet~.~loc~.~caller  ~   \then \\
+	setEmergencyOxygen\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+setAirSpeed\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_setAirSpeedCall~?~loc\prefixcolon(loc \in setAirSpeedLocs)~?~caller\prefixcolon(caller \in setAirSpeedCallers) ~?~p1  \then \\
+	setAirSpeedCall~.~loc~.~caller ~!~p1  \then \\
+	setAirSpeedRet~.~loc~.~caller \then \\
+	binder\_setAirSpeedRet~.~loc~.~caller  ~   \then \\
+	setAirSpeed\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+isLandingGearDeployed\_MethodBinder \circdef \\
+	\t1 \circblockopen
+	binder\_isLandingGearDeployedCall~?~loc\prefixcolon(loc \in isLandingGearDeployedLocs)~?~caller\prefixcolon(caller \in isLandingGearDeployedCallers)  \then \\
+	isLandingGearDeployedCall~.~loc~.~caller  \then \\
+	isLandingGearDeployedRet~.~loc~.~caller~?~ret \then \\
+	binder\_isLandingGearDeployedRet~.~loc~.~caller  ~ !~ret  \then \\
+	isLandingGearDeployed\_MethodBinder
+	\circblockclose
+\end{circusaction}
+%
+%
+\begin{circusaction}
+BinderActions \circdef \\
+\circblockopen 
+	setCabinPressure\_MethodBinder
+	\\ \interleave \\
+
+	setFuelRemaining\_MethodBinder
+	\\ \interleave \\
+
+	getAltitude\_MethodBinder
+	\\ \interleave \\
+
+	setHeading\_MethodBinder
+	\\ \interleave \\
+
+	stowLandingGear\_MethodBinder
+	\\ \interleave \\
+
+	takeOffAbort\_MethodBinder
+	\\ \interleave \\
+
+	setAltitude\_MethodBinder
+	\\ \interleave \\
+
+	getHeading\_MethodBinder
+	\\ \interleave \\
+
+	getAirSpeed\_MethodBinder
+	\\ \interleave \\
+
+	deployLandingGear\_MethodBinder
+	\\ \interleave \\
+
+	setEmergencyOxygen\_MethodBinder
+	\\ \interleave \\
+
+	setAirSpeed\_MethodBinder
+	\\ \interleave \\
+
+	isLandingGearDeployed\_MethodBinder
+	
+\circblockclose
+\end{circusaction}
+%
+\begin{circusaction}
+\circspot BinderActions \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\end{circusaction}
+%
+\begin{circus}
+\circend
+\end{circus}

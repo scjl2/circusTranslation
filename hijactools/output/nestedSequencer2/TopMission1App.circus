@@ -1,0 +1,86 @@
+\begin{zsection}
+  \SECTION ~ TopMission1App ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, TopMission1MethChan \\
+ , MethodCallBindingChannels 
+ 
+
+\end{zsection}
+
+
+%\begin{circus}
+%\circchannelset TopMission1AppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~FirstMissionSequencerSID~.~TopMission1MID
+%    register~.~SecondMissionSequencerSID~.~TopMission1MID
+%    register~.~ThirdMissionSequencerSID~.~TopMission1MID
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess TopMission1App \circdef  \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype TopMission1Class\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew TopMission1Class()\\ 
+\end{schema}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~TopMission1MID \then \\
+
+	register~!~FirstMissionSequencerSID~!~TopMission1MID \then   \\
+	register~!~SecondMissionSequencerSID~!~TopMission1MID \then   \\
+	register~!~ThirdMissionSequencerSID~!~TopMission1MID \then   \\
+
+
+  initializeRet~.~TopMission1MID \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+CleanupPhase \circdef  \\
+\circblockopen
+\circvar \boolean : ret @ \\
+ cleanupMissionCall~.~TopMission1MID \then \\
+ cleanupMissionRet~.~TopMission1MID~!~\true \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~TopMission1MID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
