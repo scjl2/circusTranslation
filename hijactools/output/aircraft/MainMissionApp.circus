@@ -143,9 +143,9 @@ setAirSpeedMeth \circdef
 \\
 \circblockopen
 setAirSpeedCall~.~MainMissionMID ~?~caller
-~?~airSpeed
+~?~airSpeed2
 \then \\
-this~.~setAirSpeed(airSpeed)  \circseq  \\
+this~.~setAirSpeed(airSpeed2)  \circseq  \\
 
 setAirSpeedRet~.~MainMissionMID~.~caller \then \\
 \Skip

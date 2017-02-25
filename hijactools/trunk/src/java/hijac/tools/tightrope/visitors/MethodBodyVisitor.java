@@ -559,44 +559,43 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
     // if(visitingObject.hasClass() )
     // {
-    
-    
-    ClassEnv ce = visitingObject.getClassEnv();
-    if (ce.getVariable(nodeName) != null)
-    {
-      Debugger.log("/// this identifier is a variable in the ClassEnv");
-      // TODO Really hacky!
-      if (methodEnv != null)
-      {
-//        if (methodEnv.getName().equals("getNextMission"))
+
+//    ClassEnv ce = visitingObject.getClassEnv();
+//    if (ce.getVariable(nodeName) != null)
+//    {
+//      Debugger.log("/// this identifier is a variable in the ClassEnv");
+//      // TODO Really hacky!
+//      if (methodEnv != null)
+//      // if (methodEnv.getName().equals("getNextMission"))
+//      {
+//        // {
+//        // // If this is the gNM method then it will be in the class, so don't
+//        // // add 'this'
+//        // return nodeName.toString();
+//        // }
+//        // else
+//        // {
+//        // return "this~.~" + nodeName;
+//        // }
+//
+//        if (methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
 //        {
-//          // If this is the gNM method then it will be in the class, so don't
-//          // add 'this'
 //          return nodeName.toString();
 //        }
-//        else
+//        else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
 //        {
 //          return "this~.~" + nodeName;
 //        }
-        
-        if(methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
-        {
-          return "this~.~" + nodeName;
-        }
-        else if(methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
-        {
-          return nodeName.toString();
-        }
-        else
-        {
-          return nodeName.toString();
-        } 
-      }
-      else
-      {
-        return "this~.~" + nodeName;
-      }
-    }
+//        else
+//        {
+//          return nodeName.toString();
+//        }
+//      }
+//      else
+//      {
+//        return "this~.~" + nodeName;
+//      }
+//    }
     // }
     Debugger.log("/// node = " + node + " kind? = " + node.getKind());
     return callExprMacro(node, ctxt, "Identifier", nodeName);

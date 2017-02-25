@@ -71,7 +71,7 @@
 
 
       \circblockopen
-              ret := this~.~landingGearDeployed
+              ret := landingGearDeployed
 
             
 

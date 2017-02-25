@@ -31,7 +31,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (altitude < this~.~threshold) ~ \circthen ~
+              \circif ~ (altitude < threshold) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -45,7 +45,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (altitude < this~.~threshold) ~ \circthen ~
+  \circelse ~ \lnot (altitude < threshold) ~ \circthen ~
   \\
 \t1 
       \circblockopen
