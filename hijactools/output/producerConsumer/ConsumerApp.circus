@@ -27,7 +27,7 @@ ThreadIds
 \end{circus}
 
 \begin{schema}{State}
-  this : ConsumerClass\\ 
+  buffer : Buffer\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -37,7 +37,7 @@ ThreadIds
 \begin{schema}{Init}
   State~' \\
 \where
-  this' = \circnew ConsumerClass()\\ 
+  buffer' = \\ 
 \end{schema}
 
 \begin{circusaction}

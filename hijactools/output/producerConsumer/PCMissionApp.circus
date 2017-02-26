@@ -22,6 +22,7 @@
 
 \begin{schema}{State}
   this : \circreftype PCMissionClass\\ 
+  buffer : Buffer\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -32,29 +33,43 @@
   State~' \\
 \where
   this' = \circnew PCMissionClass()\\ 
+  buffer' = \\ 
 \end{schema}
 
 \begin{circusaction}
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~PCMissionMID \then \\
-
-	register~!~ProducerSID~!~PCMissionMID \then   \\
-	register~!~ConsumerSID~!~PCMissionMID \then   \\
-
-
+	register~!~ProducerSID~!~PCMissionMID \then \\
+	register~!~ConsumerSID~!~PCMissionMID \then \\
   initializeRet~.~PCMissionMID \then \\
   \Skip
 \circblockclose
 \end{circusaction}
 
 \begin{circusaction}
-CleanupPhase \circdef  \\
+CleanupPhase \circdef
+\circvar \boolean : ret @ \\
 \circblockopen
-\circvar \boolean : ret @
  cleanupMissionCall~.~PCMissionMID \then \\
+ 
+      \circblockopen
+            \Skip
+             \circseq \\ 
 
- cleanupMissionRet~.~PCMissionMID~!~\true \then \\
+
+
+              ret := \false
+
+            
+
+
+
+
+        \circblockclose
+
+ \\
+ cleanupMissionRet~.~PCMissionMID~!~ret \then \\
  \Skip
 \circblockclose
 \end{circusaction}
@@ -72,19 +87,6 @@ getBufferRet~.~PCMissionMID~!~ret \then \\
 \Skip
 \circblockclose
 \end{circusaction}
-\begin{circusaction}
-cleanUpMeth \circdef
-\circvar ret : \boolean \circspot
-\\
-\circblockopen
-cleanUpCall~.~PCMissionMID
-\then \\
-ret := this~.~cleanUp()  \circseq  \\
-
-cleanUpRet~.~PCMissionMID~!~ret \then \\
-\Skip
-\circblockclose
-\end{circusaction}
 %
 %
 
@@ -97,8 +99,6 @@ Methods \circdef
 %
 \extchoice \\
 	getBufferMeth \\ 
-\extchoice \\
-	cleanUpMeth \\ 
 %
 %
 \circblockclose
