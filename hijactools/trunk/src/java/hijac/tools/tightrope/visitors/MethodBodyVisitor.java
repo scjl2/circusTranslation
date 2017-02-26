@@ -405,7 +405,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       {
         if (methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
         {
-          return "ABthis~.~" + nodeVariableString + LATEX.ASSIGN + expression;
+          return "this~.~" + nodeVariableString + LATEX.ASSIGN + expression;
         }
         else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
         {
@@ -602,27 +602,30 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     // // return "this~.~" + nodeName;
     // // }
     //
-    // if (methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
-    // {
-    // return nodeName.toString();
-    // }
-    // else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
-    // {
-    // return "this~.~" + nodeName;
+    //TODO Kinda hacky...methods might go in both
+     if (methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
+     {
+     return nodeName.toString();
+     }
+     else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
+     {
+     return "this~.~" + nodeName;
+     }
+     else
+     {
+     return nodeName.toString();
+     }
     // }
     // else
     // {
-    // return nodeName.toString();
-    // }
-    // }
-    // else
-    // {
     // return "this~.~" + nodeName;
     // }
     // }
     // }
-    Debugger.log("/// node = " + node + " kind? = " + node.getKind());
-    return callExprMacro(node, ctxt, "Identifier", nodeName);
+     
+     
+//    Debugger.log("/// node = " + node + " kind? = " + node.getKind());
+//    return callExprMacro(node, ctxt, "Identifier", nodeName);
   }
 
   @Override

@@ -34,12 +34,10 @@ MissionIds
 
 \begin{circusaction}
 \circprotected ~ getNextMission ~ \circdef
-\circvar ret : MissionID \circspot
 \\
 
-
       \circblockopen
-              \circif ~ (done = \false) ~ \circthen ~
+              \circif ~ (this~.~done = \false) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -60,7 +58,7 @@ MissionIds
 
 
   \\
-  \circelse ~ \lnot (done = \false) ~ \circthen ~
+  \circelse ~ \lnot (this~.~done = \false) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -84,7 +82,6 @@ MissionIds
 
         \circblockclose
 
- 
 
 \end{circusaction}
 %

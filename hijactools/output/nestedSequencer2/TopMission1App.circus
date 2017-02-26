@@ -39,21 +39,18 @@
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~TopMission1MID \then \\
-
-	register~!~FirstMissionSequencerSID~!~TopMission1MID \then   \\
-	register~!~SecondMissionSequencerSID~!~TopMission1MID \then   \\
-	register~!~ThirdMissionSequencerSID~!~TopMission1MID \then   \\
-
-
+	register~!~FirstMissionSequencerSID~!~TopMission1MID \then \\
+	register~!~SecondMissionSequencerSID~!~TopMission1MID \then \\
+	register~!~ThirdMissionSequencerSID~!~TopMission1MID \then \\
   initializeRet~.~TopMission1MID \then \\
   \Skip
 \circblockclose
 \end{circusaction}
 
 \begin{circusaction}
-CleanupPhase \circdef  \\
+CleanupPhase \circdef
+\\
 \circblockopen
-\circvar \boolean : ret @ \\
  cleanupMissionCall~.~TopMission1MID \then \\
  cleanupMissionRet~.~TopMission1MID~!~\true \then \\
  \Skip

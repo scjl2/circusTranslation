@@ -65,7 +65,7 @@ CleanupPhase \circdef
 
 
 
-              ret :=   (\lnot abort)
+              ret :=   (\lnot ABthis~.~abort)
 
 
             

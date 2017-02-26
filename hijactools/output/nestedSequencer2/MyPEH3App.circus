@@ -33,14 +33,14 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~MyPEH3SID \then \\
 	
       \circblockopen
-              count := count + 1
+              this~.~count := this~.~count + 1
 
 
              \circseq \\ 
 
 
 
-              \circif ~ (count = 10) ~ \circthen ~
+              \circif ~ (this~.~count = 10) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -55,7 +55,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (count = 10) \circthen \Skip
+  \circelse ~ \lnot (this~.~count = 10) \circthen \Skip
   \\
   \circfi \\
 
