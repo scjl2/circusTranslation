@@ -34,11 +34,13 @@ InitializePhase \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-CleanupPhase \circdef  \\
-\circblockopen
+CleanupPhase \circdef
 <#if cleanupBody??>
 \circvar \boolean : ret @ \\
+<#else>
+\\
 </#if>
+\circblockopen
  cleanupMissionCall~.~${ProcessID} \then \\
 <#if cleanupBody??>
  ${cleanupBody} \\

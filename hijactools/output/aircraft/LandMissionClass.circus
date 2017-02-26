@@ -32,7 +32,6 @@
 \circpublic ~ deployLandingGear ~ \circdef
 \\
 
-
       \circblockopen
             landingGearDeployed := \true
 
@@ -43,13 +42,11 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ stowLandingGear ~ \circdef
 \\
-
 
       \circblockopen
             landingGearDeployed := \false
@@ -61,14 +58,11 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ isLandingGearDeployed ~ \circdef
-\circvar ret : \boolean \circspot
 \\
-
 
       \circblockopen
               ret := landingGearDeployed
@@ -80,7 +74,6 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 %

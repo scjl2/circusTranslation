@@ -52,7 +52,8 @@ InitializePhase \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-CleanupPhase \circdef  \\
+CleanupPhase \circdef
+\\
 \circblockopen
  cleanupMissionCall~.~MainMissionMID \then \\
  cleanupMissionRet~.~MainMissionMID~!~\true \then \\
@@ -143,9 +144,9 @@ setAirSpeedMeth \circdef
 \\
 \circblockopen
 setAirSpeedCall~.~MainMissionMID ~?~caller
-~?~airSpeed2
+~?~newAirSpeed
 \then \\
-this~.~setAirSpeed(airSpeed2)  \circseq  \\
+this~.~setAirSpeed(newAirSpeed)  \circseq  \\
 
 setAirSpeedRet~.~MainMissionMID~.~caller \then \\
 \Skip
@@ -156,9 +157,9 @@ setAltitudeMeth \circdef
 \\
 \circblockopen
 setAltitudeCall~.~MainMissionMID ~?~caller
-~?~altitude
+~?~newAltitude
 \then \\
-this~.~setAltitude(altitude)  \circseq  \\
+this~.~setAltitude(newAltitude)  \circseq  \\
 
 setAltitudeRet~.~MainMissionMID~.~caller \then \\
 \Skip
@@ -169,9 +170,9 @@ setCabinPressureMeth \circdef
 \\
 \circblockopen
 setCabinPressureCall~.~MainMissionMID ~?~caller
-~?~cabinPressure
+~?~newCabinPressure
 \then \\
-this~.~setCabinPressure(cabinPressure)  \circseq  \\
+this~.~setCabinPressure(newCabinPressure)  \circseq  \\
 
 setCabinPressureRet~.~MainMissionMID~.~caller \then \\
 \Skip
@@ -182,9 +183,9 @@ setEmergencyOxygenMeth \circdef
 \\
 \circblockopen
 setEmergencyOxygenCall~.~MainMissionMID ~?~caller
-~?~emergencyOxygen
+~?~newEmergencyOxygen
 \then \\
-this~.~setEmergencyOxygen(emergencyOxygen)  \circseq  \\
+this~.~setEmergencyOxygen(newEmergencyOxygen)  \circseq  \\
 
 setEmergencyOxygenRet~.~MainMissionMID~.~caller \then \\
 \Skip
@@ -195,9 +196,9 @@ setFuelRemainingMeth \circdef
 \\
 \circblockopen
 setFuelRemainingCall~.~MainMissionMID ~?~caller
-~?~fuelRemaining
+~?~newFuelRemaining
 \then \\
-this~.~setFuelRemaining(fuelRemaining)  \circseq  \\
+this~.~setFuelRemaining(newFuelRemaining)  \circseq  \\
 
 setFuelRemainingRet~.~MainMissionMID~.~caller \then \\
 \Skip
@@ -208,9 +209,9 @@ setHeadingMeth \circdef
 \\
 \circblockopen
 setHeadingCall~.~MainMissionMID ~?~caller
-~?~heading
+~?~newHeading
 \then \\
-this~.~setHeading(heading)  \circseq  \\
+this~.~setHeading(newHeading)  \circseq  \\
 
 setHeadingRet~.~MainMissionMID~.~caller \then \\
 \Skip

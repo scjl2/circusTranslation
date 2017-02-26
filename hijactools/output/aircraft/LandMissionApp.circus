@@ -56,9 +56,9 @@ InitializePhase \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-CleanupPhase \circdef  \\
-\circblockopen
+CleanupPhase \circdef
 \circvar \boolean : ret @ \\
+\circblockopen
  cleanupMissionCall~.~LandMissionMID \then \\
  
       \circblockopen

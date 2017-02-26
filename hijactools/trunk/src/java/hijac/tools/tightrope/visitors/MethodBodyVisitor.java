@@ -295,7 +295,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
     // methodAccessesVariable();
 
-    final String nodeVariableString = node.getVariable().toString();
+    String nodeVariableString = node.getVariable().toString();
 
     if (node.getExpression() instanceof MethodInvocationTree)
     {
@@ -391,14 +391,38 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
       }
 
-      if (visitingObject.getVariable(nodeVariableString) == null)
+      // if (visitingObject.getVariable(nodeVariableString) == null)
+      // {
+      // return "ABthis~.~" + nodeVariableString + LATEX.ASSIGN + expression;
+      // }
+      // else
+      // {
+      // // return callStmtMacro(node, ctxt, "Assignment", node.getVariable(),
+      // expression);
+      // return nodeVariableString + LATEX.ASSIGN + expression;
+      // }
+      if (methodEnv != null)
       {
-        return "this~.~" + nodeVariableString + LATEX.ASSIGN + expression;
+        if (methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
+        {
+          return "ABthis~.~" + nodeVariableString + LATEX.ASSIGN + expression;
+        }
+        else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
+        {
+          if(nodeVariableString.startsWith("this."))
+          {
+            nodeVariableString = nodeVariableString.substring(5);
+            
+          }
+          
+          return nodeVariableString + LATEX.ASSIGN + expression;
+        }
+        else
+        {
+          return callStmtMacro(node, ctxt, "Assignment", node.getVariable(), expression);
+        }
       }
-      else
-      {
-        return callStmtMacro(node, ctxt, "Assignment", node.getVariable(), expression);
-      }
+      return callStmtMacro(node, ctxt, "Assignment", node.getVariable(), expression);
     }
   }
 
@@ -560,42 +584,42 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     // if(visitingObject.hasClass() )
     // {
 
-//    ClassEnv ce = visitingObject.getClassEnv();
-//    if (ce.getVariable(nodeName) != null)
-//    {
-//      Debugger.log("/// this identifier is a variable in the ClassEnv");
-//      // TODO Really hacky!
-//      if (methodEnv != null)
-//      // if (methodEnv.getName().equals("getNextMission"))
-//      {
-//        // {
-//        // // If this is the gNM method then it will be in the class, so don't
-//        // // add 'this'
-//        // return nodeName.toString();
-//        // }
-//        // else
-//        // {
-//        // return "this~.~" + nodeName;
-//        // }
-//
-//        if (methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
-//        {
-//          return nodeName.toString();
-//        }
-//        else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
-//        {
-//          return "this~.~" + nodeName;
-//        }
-//        else
-//        {
-//          return nodeName.toString();
-//        }
-//      }
-//      else
-//      {
-//        return "this~.~" + nodeName;
-//      }
-//    }
+    // ClassEnv ce = visitingObject.getClassEnv();
+    // if (ce.getVariable(nodeName) != null)
+    // {
+    // Debugger.log("/// this identifier is a variable in the ClassEnv");
+    // // TODO Really hacky!
+    // if (methodEnv != null)
+    // // if (methodEnv.getName().equals("getNextMission"))
+    // {
+    // // {
+    // // // If this is the gNM method then it will be in the class, so don't
+    // // // add 'this'
+    // // return nodeName.toString();
+    // // }
+    // // else
+    // // {
+    // // return "this~.~" + nodeName;
+    // // }
+    //
+    // if (methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
+    // {
+    // return nodeName.toString();
+    // }
+    // else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
+    // {
+    // return "this~.~" + nodeName;
+    // }
+    // else
+    // {
+    // return nodeName.toString();
+    // }
+    // }
+    // else
+    // {
+    // return "this~.~" + nodeName;
+    // }
+    // }
     // }
     Debugger.log("/// node = " + node + " kind? = " + node.getKind());
     return callExprMacro(node, ctxt, "Identifier", nodeName);

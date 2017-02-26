@@ -33,9 +33,7 @@
 
 \begin{circusaction}
 \circpublic ~ getAirSpeed ~ \circdef
-\circvar ret : \power \arithmos \circspot
 \\
-
 
       \circblockopen
               ret := airSpeed
@@ -47,14 +45,11 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getAltitude ~ \circdef
-\circvar ret : \power \arithmos \circspot
 \\
-
 
       \circblockopen
               ret := altitude
@@ -66,14 +61,11 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getCabinPressure ~ \circdef
-\circvar ret : \power \arithmos \circspot
 \\
-
 
       \circblockopen
               ret := cabinPressure
@@ -85,14 +77,11 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getEmergencyOxygen ~ \circdef
-\circvar ret : \power \arithmos \circspot
 \\
-
 
       \circblockopen
               ret := emergencyOxygen
@@ -104,14 +93,11 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getFuelRemaining ~ \circdef
-\circvar ret : \power \arithmos \circspot
 \\
-
 
       \circblockopen
               ret := fuelRemaining
@@ -123,14 +109,11 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ getHeading ~ \circdef
-\circvar ret : \power \arithmos \circspot
 \\
-
 
       \circblockopen
               ret := heading
@@ -142,16 +125,18 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ setAirSpeed ~ \circdef
+  \circvar
+    newAirSpeed : \power \arithmos
+    
+  \circspot \\
 \\
 
-
       \circblockopen
-            airSpeed := airSpeed2
+            airSpeed := newAirSpeed
 
             
 
@@ -160,16 +145,18 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ setAltitude ~ \circdef
+  \circvar
+    newAltitude : \power \arithmos
+    
+  \circspot \\
 \\
 
-
       \circblockopen
-            this~.~this.altitude := altitude
+            altitude := newAltitude
 
             
 
@@ -178,16 +165,18 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ setCabinPressure ~ \circdef
+  \circvar
+    newCabinPressure : \power \arithmos
+    
+  \circspot \\
 \\
 
-
       \circblockopen
-            this~.~this.cabinPressure := cabinPressure
+            cabinPressure := newCabinPressure
 
             
 
@@ -196,16 +185,18 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ setEmergencyOxygen ~ \circdef
+  \circvar
+    newEmergencyOxygen : \power \arithmos
+    
+  \circspot \\
 \\
 
-
       \circblockopen
-            this~.~this.emergencyOxygen := emergencyOxygen
+            emergencyOxygen := newEmergencyOxygen
 
             
 
@@ -214,16 +205,18 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ setFuelRemaining ~ \circdef
+  \circvar
+    newFuelRemaining : \power \arithmos
+    
+  \circspot \\
 \\
 
-
       \circblockopen
-            this~.~this.fuelRemaining := fuelRemaining
+            fuelRemaining := newFuelRemaining
 
             
 
@@ -232,16 +225,18 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 \begin{circusaction}
 \circpublic ~ setHeading ~ \circdef
+  \circvar
+    newHeading : \power \arithmos
+    
+  \circspot \\
 \\
 
-
       \circblockopen
-            this~.~this.heading := heading
+            heading := newHeading
 
             
 
@@ -250,7 +245,6 @@
 
         \circblockclose
 
- 
 
 \end{circusaction}
 %
