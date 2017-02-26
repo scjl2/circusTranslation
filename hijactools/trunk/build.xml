@@ -70,7 +70,7 @@
     <fetch-m2
       groupId="org.freemarker"
       artifactId="freemarker"
-      version="2.3.23"/>
+      version="2.3.25-incubating"/>
   </target>
 
   <!-- Target for installing third-party libraries. -->
