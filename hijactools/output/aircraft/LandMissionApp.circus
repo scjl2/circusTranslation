@@ -28,7 +28,6 @@
 
 \begin{schema}{State}
   this : \circreftype LandMissionClass\\ 
-  controllingMission : MainMission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -39,7 +38,6 @@
   State~' \\
 \where
   this' = \circnew LandMissionClass()\\ 
-  controllingMission' = \\ 
 \end{schema}
 
 \begin{circusaction}

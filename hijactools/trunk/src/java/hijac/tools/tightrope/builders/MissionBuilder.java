@@ -306,6 +306,11 @@ public class MissionBuilder extends ParadigmBuilder
       if (!ignoredParameter)
       {
         object.addProcParameter(parameter);
+        
+        if(object.getVariable(parameter.getName()) != null)
+        {
+          object.removeVariable(parameter.getName());
+        }
       }
 
     }

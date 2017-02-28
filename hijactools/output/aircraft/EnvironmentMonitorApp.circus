@@ -11,25 +11,12 @@ MainMissionMethChan
 
 \begin{circus}
 \circprocess EnvironmentMonitorApp \circdef \\ \t1
-  mainMission : MissionID
+  controllingMission : MissionID
 
 \circspot
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  controllingMission : MainMission\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  controllingMission' = \\ 
-\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
@@ -84,7 +71,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_periodic\_app~.~EnvironmentMonitorSID \then \Skip)
 \end{circusaction}
 

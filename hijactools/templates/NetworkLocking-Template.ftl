@@ -41,5 +41,5 @@ ObjectFW(${object}) \\
 %%%%%%%%%%%%%LOCKING
 %
 \begin{circus}
-\circprocess Locking \circdef Threads \lpar ThreadSync \rpar Objects
+\circprocess Locking \circdef (Threads \lpar ThreadSync \rpar Objects) \circinterrupt (done\_toplevel\_sequencer \then \Skip)
 \end{circus}

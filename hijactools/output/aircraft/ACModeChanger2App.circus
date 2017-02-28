@@ -18,19 +18,6 @@
  \circbegin\\
 \end{circus}
 
-\begin{schema}{State}
-  controllingMission : MainMission\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  controllingMission' = \\ 
-\end{schema}
 
 \begin{circusaction}
 GetNextMission \circdef \circvar ret : MissionID \circspot \\
@@ -57,7 +44,7 @@ Methods \circdef  \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   %\circhide MissionSequencerAppStateSync
 \circinterrupt (end\_sequencer\_app~.~ACModeChanger2SID \then \Skip)
 \end{circusaction}

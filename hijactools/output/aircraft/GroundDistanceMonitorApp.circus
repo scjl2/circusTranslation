@@ -34,7 +34,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (ABthis~.~distance = ABthis~.~readingOnGround) ~ \circthen ~
+              \circif ~ (this~.~distance = this~.~readingOnGround) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -54,7 +54,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (ABthis~.~distance = ABthis~.~readingOnGround) \circthen \Skip
+  \circelse ~ \lnot (this~.~distance = this~.~readingOnGround) \circthen \Skip
   \\
   \circfi \\
 

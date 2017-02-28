@@ -37,11 +37,11 @@ MissionIds
 \\
 
       \circblockopen
-              \circif ~ (ABthis~.~modesLeft = 3) ~ \circthen ~
+              \circif ~ (modesLeft = 3) ~ \circthen ~
   \\
 \t1 
       \circblockopen
-              ABthis~.~modesLeft := ABthis~.~modesLeft - 1
+              modesLeft := modesLeft - 1
 
 
              \circseq \\ 
@@ -59,13 +59,13 @@ MissionIds
 
 
   \\
-  \circelse ~ \lnot (ABthis~.~modesLeft = 3) ~ \circthen ~
+  \circelse ~ \lnot (modesLeft = 3) ~ \circthen ~
   \\
-\t1   \circif ~ (ABthis~.~modesLeft = 2) ~ \circthen ~
+\t1   \circif ~ (modesLeft = 2) ~ \circthen ~
   \\
 \t1 
       \circblockopen
-              ABthis~.~modesLeft := ABthis~.~modesLeft - 1
+              modesLeft := modesLeft - 1
 
 
              \circseq \\ 
@@ -83,13 +83,13 @@ MissionIds
 
 
   \\
-  \circelse ~ \lnot (ABthis~.~modesLeft = 2) ~ \circthen ~
+  \circelse ~ \lnot (modesLeft = 2) ~ \circthen ~
   \\
-\t1   \circif ~ (ABthis~.~modesLeft = 1) ~ \circthen ~
+\t1   \circif ~ (modesLeft = 1) ~ \circthen ~
   \\
 \t1 
       \circblockopen
-              ABthis~.~modesLeft := ABthis~.~modesLeft - 1
+              modesLeft := modesLeft - 1
 
 
              \circseq \\ 
@@ -107,7 +107,7 @@ MissionIds
 
 
   \\
-  \circelse ~ \lnot (ABthis~.~modesLeft = 1) ~ \circthen ~
+  \circelse ~ \lnot (modesLeft = 1) ~ \circthen ~
   \\
 \t1 
       \circblockopen

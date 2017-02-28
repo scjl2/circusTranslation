@@ -53,7 +53,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (ABthis~.~altitude > ABthis~.~takeOffAltitude) ~ \circthen ~
+              \circif ~ (this~.~altitude > this~.~takeOffAltitude) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -79,7 +79,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (ABthis~.~altitude > ABthis~.~takeOffAltitude) \circthen \Skip
+  \circelse ~ \lnot (this~.~altitude > this~.~takeOffAltitude) \circthen \Skip
   \\
   \circfi \\
 

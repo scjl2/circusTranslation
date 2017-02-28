@@ -590,13 +590,13 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     // Debugger.log("/// this identifier is a variable in the ClassEnv");
     // // TODO Really hacky!
     // if (methodEnv != null)
-    // // if (methodEnv.getName().equals("getNextMission"))
-    // {
+   if (methodEnv.getName().equals("getNextMission"))
+   {
     // // {
     // // // If this is the gNM method then it will be in the class, so don't
     // // // add 'this'
-    // // return nodeName.toString();
-    // // }
+    return nodeName.toString();
+    }
     // // else
     // // {
     // // return "this~.~" + nodeName;

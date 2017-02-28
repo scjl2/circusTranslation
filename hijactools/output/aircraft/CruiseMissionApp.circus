@@ -26,7 +26,6 @@
 
 \begin{schema}{State}
   this : \circreftype CruiseMissionClass\\ 
-  controllingMission : MainMission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -37,7 +36,6 @@
   State~' \\
 \where
   this' = \circnew CruiseMissionClass()\\ 
-  controllingMission' = \\ 
 \end{schema}
 
 \begin{circusaction}

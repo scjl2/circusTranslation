@@ -36,7 +36,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (ABthis~.~currentSpeed < ABthis~.~threshold) ~ \circthen ~
+              \circif ~ (this~.~currentSpeed < this~.~threshold) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -62,7 +62,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (ABthis~.~currentSpeed < ABthis~.~threshold) ~ \circthen ~
+  \circelse ~ \lnot (this~.~currentSpeed < this~.~threshold) ~ \circthen ~
   \\
 \t1 
       \circblockopen

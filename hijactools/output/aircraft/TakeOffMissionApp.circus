@@ -27,7 +27,6 @@
 
 \begin{schema}{State}
   this : \circreftype TakeOffMissionClass\\ 
-  controllingMission : MainMission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -38,7 +37,6 @@
   State~' \\
 \where
   this' = \circnew TakeOffMissionClass()\\ 
-  controllingMission' = \\ 
 \end{schema}
 
 \begin{circusaction}
@@ -65,7 +63,7 @@ CleanupPhase \circdef
 
 
 
-              ret :=   (\lnot ABthis~.~abort)
+              ret :=   (\lnot this~.~abort)
 
 
             
