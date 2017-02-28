@@ -17,6 +17,7 @@ import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.environments.StructureEnv;
+import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.generators.NewActionMethodModel;
 import hijac.tools.tightrope.generators.NewSCJApplication;
 import hijac.tools.tightrope.utils.Debugger;
@@ -91,6 +92,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
    * Used to store values for 'future' calls to methods of the visitor
    */
   private static final HashMap<String, Object> timeMachine = new HashMap<String, Object>();
+  private static final ArrayList<String> vars = new ArrayList<String>();
 
   private MethodEnv methodEnv = null;
   private LiteralTree trueLiteral = null;
@@ -409,12 +411,12 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         }
         else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
         {
-          if(nodeVariableString.startsWith("this."))
+          if (nodeVariableString.startsWith("this."))
           {
             nodeVariableString = nodeVariableString.substring(5);
-            
+
           }
-          
+
           return nodeVariableString + LATEX.ASSIGN + expression;
         }
         else
@@ -581,6 +583,25 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
       return nodeName.toString();
     }
 
+    Debugger.log("params = " + visitingObject.getProcParameters().toString());
+    
+    for (VariableEnv v : visitingObject.getProcParameters())
+    {
+      Debugger.log(v.getName());
+      if (v.getName().equals(nodeName.toString()))
+      {
+        Debugger.log("/// visiting object has this identifier as param");
+        return nodeName.toString();
+      }
+    }
+    Debugger.log("vars = " + vars);
+
+    if (vars.contains(node.toString()))
+    {
+      Debugger.log("!// this method has this identifier as a var");
+      return nodeName.toString();
+    }
+
     // if(visitingObject.hasClass() )
     // {
 
@@ -590,31 +611,31 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     // Debugger.log("/// this identifier is a variable in the ClassEnv");
     // // TODO Really hacky!
     // if (methodEnv != null)
-   if (methodEnv.getName().equals("getNextMission"))
-   {
-    // // {
-    // // // If this is the gNM method then it will be in the class, so don't
-    // // // add 'this'
-    return nodeName.toString();
+    if (methodEnv.getName().equals("getNextMission"))
+    {
+      // // {
+      // // // If this is the gNM method then it will be in the class, so don't
+      // // // add 'this'
+      return nodeName.toString();
     }
     // // else
     // // {
     // // return "this~.~" + nodeName;
     // // }
     //
-    //TODO Kinda hacky...methods might go in both
-     if (methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
-     {
-     return nodeName.toString();
-     }
-     else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
-     {
-     return "this~.~" + nodeName;
-     }
-     else
-     {
-     return nodeName.toString();
-     }
+    // TODO Kinda hacky...methods might go in both
+    if (methodEnv.getMethodDestination() == MethodDestinationE.CLASS)
+    {
+      return nodeName.toString();
+    }
+    else if (methodEnv.getMethodDestination() == MethodDestinationE.PROCESS)
+    {
+      return "this~.~" + nodeName;
+    }
+    else
+    {
+      return nodeName.toString();
+    }
     // }
     // else
     // {
@@ -622,10 +643,9 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     // }
     // }
     // }
-     
-     
-//    Debugger.log("/// node = " + node + " kind? = " + node.getKind());
-//    return callExprMacro(node, ctxt, "Identifier", nodeName);
+
+    // Debugger.log("/// node = " + node + " kind? = " + node.getKind());
+    // return callExprMacro(node, ctxt, "Identifier", nodeName);
   }
 
   @Override
@@ -1605,6 +1625,8 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     Debugger.log("/// VariableTree node = " + node + " and init kind is: "
         + node.getInitializer().getKind());
     ExpressionTree initializer = node.getInitializer();
+
+    vars.add(node.getName().toString());
 
     if (initializer instanceof MethodInvocationTree)
     {

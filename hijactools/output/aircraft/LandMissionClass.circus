@@ -12,6 +12,7 @@
 
 \begin{schema}{\circstateignore State}
   SAFE\_LANDING\_ALTITUDE : \power \arithmos\\ 
+  ALTITUDE\_READING\_ON\_GROUND : \power \arithmos\\ 
   abort : \boolean\\ 
   landingGearDeployed : \boolean\\ 
 \end{schema}
@@ -24,6 +25,7 @@
   State~'
 \where
   SAFE\_LANDING\_ALTITUDE' = 10.0\\ 
+  ALTITUDE\_READING\_ON\_GROUND' = 0.0\\ 
   abort' = false\\ 
 \end{schema}
 

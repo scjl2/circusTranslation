@@ -11,7 +11,6 @@
 \end{circus}
 
 \begin{schema}{\circstateignore State}
-  ALTITUDE\_READING\_ON\_GROUND : \power \arithmos\\ 
   cabinPressure : \power \arithmos\\ 
   emergencyOxygen : \power \arithmos\\ 
   fuelRemaining : \power \arithmos\\ 
@@ -27,7 +26,6 @@
 \begin{schema}{\circinitial Init}
   State~'
 \where
-  ALTITUDE\_READING\_ON\_GROUND' = 0.0\\ 
 \end{schema}
 
 

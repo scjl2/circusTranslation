@@ -23,19 +23,6 @@ MainMissionMethChan
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  takeoffMission : TakeOffMission\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  takeoffMission' = \\ 
-\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
@@ -53,7 +40,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (this~.~altitude > this~.~takeOffAltitude) ~ \circthen ~
+              \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -68,7 +55,7 @@ handleAsyncEvent \circdef \\
 
 
 
-            requestTerminationCall~.~takeoffMission~.~TakeOffMonitorSID\then \\requestTerminationRet~.~takeoffMission~.~TakeOffMonitorSID~?~requestTermination\then \\\Skip
+            requestTerminationCall~.~takeOffMission~.~TakeOffMonitorSID\then \\requestTerminationRet~.~takeOffMission~.~TakeOffMonitorSID~?~requestTermination\then \\\Skip
 
             
 
@@ -79,7 +66,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (this~.~altitude > this~.~takeOffAltitude) \circthen \Skip
+  \circelse ~ \lnot (altitude > takeOffAltitude) \circthen \Skip
   \\
   \circfi \\
 
@@ -111,7 +98,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_periodic\_app~.~TakeOffMonitorSID \then \Skip)
 \end{circusaction}
 

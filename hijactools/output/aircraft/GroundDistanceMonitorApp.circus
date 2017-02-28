@@ -12,6 +12,8 @@ MainMissionMethChan
 \begin{circus}
 \circprocess GroundDistanceMonitorApp \circdef \\ \t1
   mainMission : MissionID
+,\\
+  readingOnGround : \power \arithmos
 
 \circspot
   \circbegin
@@ -34,7 +36,7 @@ handleAsyncEvent \circdef \\
 
 
 
-              \circif ~ (this~.~distance = this~.~readingOnGround) ~ \circthen ~
+              \circif ~ (distance = readingOnGround) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -54,7 +56,7 @@ handleAsyncEvent \circdef \\
 
 
   \\
-  \circelse ~ \lnot (this~.~distance = this~.~readingOnGround) \circthen \Skip
+  \circelse ~ \lnot (distance = readingOnGround) \circthen \Skip
   \\
   \circfi \\
 

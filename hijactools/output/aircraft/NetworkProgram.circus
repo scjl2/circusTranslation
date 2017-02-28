@@ -254,7 +254,7 @@ MainMissionSequencerApp\\
 			\interleave \\
 			SafeLandingHandlerApp ( 10.0  ) \\
 			\interleave \\
-			GroundDistanceMonitorApp\\
+			GroundDistanceMonitorApp ( 0.0  ) \\
 			\interleave \\
 			InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
 			
