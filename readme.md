@@ -9,3 +9,5 @@ Updated hijactools/trunk/build.xml to download Freemarker v2.3.23
   - var = a().b().c(); -> tmp1 = c(); tmp2 = tmp2.b(); var = tmp2.a();
 * While loops must have the entire boolean statement inside the condition, not use a variable.
   - boolean var = a(); while (var) { ... } -> while (a()) { ... }
+* Constructor parameters that should become process parameters must have the same name as the variable they are stored in	
+

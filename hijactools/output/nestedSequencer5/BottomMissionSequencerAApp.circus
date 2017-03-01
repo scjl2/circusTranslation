@@ -11,11 +11,7 @@
 %\end{circus}
 
 \begin{circus}
-\circprocess BottomMissionSequencerAApp \circdef \\ \t1
-  name : String
-
-\circspot
- \circbegin\\
+\circprocess BottomMissionSequencerAApp \circdef  \circbegin\\
 \end{circus}
 
 \begin{schema}{State}

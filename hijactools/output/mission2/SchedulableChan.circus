@@ -1,3 +1,0 @@
-\begin{zsection}
-  \SECTION ~ SchedulableChan ~ \parents ~ MissionId, SchedulableId, SchedulableFWChan, SchedulableMethChan
-\end{zsection}

@@ -34,16 +34,15 @@ MissionIds
 
 \begin{circusaction}
 \circprotected ~ getNextMission ~ \circdef
-\circvar ret : MissionID \circspot
 \\
-
 
       \circblockopen
               \circif ~ (releases = 0) ~ \circthen ~
   \\
 \t1 
       \circblockopen
-            releases := releases + 1
+              releases := releases + 1
+
 
              \circseq \\ 
 
@@ -111,7 +110,6 @@ MissionIds
 
         \circblockclose
 
- 
 
 \end{circusaction}
 %

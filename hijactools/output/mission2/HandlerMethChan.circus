@@ -1,9 +1,0 @@
-\begin{zsection}
-  \SECTION ~ HandlerMethChan ~ \parents ~ scj\_prelude, SchedulableId, GlobalTypes
-\end{zsection}
-%
-\begin{circus}
-  \circchannel handleAsyncEventCall : SchedulableID  \\
-  \circchannel handleAsyncEventRet : SchedulableID  \\
-  \circchannel release : SchedulableID
-\end{circus}

@@ -1,7 +1,0 @@
-\begin{zsection}
-  \SECTION ~ PeriodicEventHandlerChan ~ \parents ~  HandlerChan, HandlerMethChan, PeriodicEventHandlerFWChan
-\end{zsection}
-
-\begin{circus}
-\circchannelset PEHAppSync == \lchanset handleAsyncEventCall,handleAsyncEventRet , end\_periodic\_app \rchanset \\
-\end{circus}

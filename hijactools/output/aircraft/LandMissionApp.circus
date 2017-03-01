@@ -60,11 +60,6 @@ CleanupPhase \circdef
  cleanupMissionCall~.~LandMissionMID \then \\
  
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
               ret := \false
 
             

@@ -13,19 +13,6 @@
   \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  this : OSEH2Class\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  this' = \circnew OSEH2Class()\\ 
-\end{schema}
 
 \begin{circusaction}
 handleAsyncEvent \circdef \\
@@ -33,11 +20,7 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~OSEH2SID \then \\
 	
       \circblockopen
-
-
-
-
-            requestTerminationCall~.~controllingMision~.~OSEH2SID\then \\requestTerminationRet~.~controllingMision~.~OSEH2SID~?~requestTermination\then \\\Skip
+            requestTerminationCall~.~controllingMission~.~OSEH2SID\then \\requestTerminationRet~.~controllingMission~.~OSEH2SID~?~requestTermination\then \\\Skip
 
             
 
@@ -67,7 +50,7 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
   \circinterrupt (end\_oneShot\_app~.~OSEH2SID \then \Skip)
 \end{circusaction}
 

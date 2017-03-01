@@ -24,11 +24,6 @@ Run \circdef \\
 	runCall~.~MTSID \then \\
 	
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             binder\_systemActionCall~.~controllingMission~.~MTSID\then \\binder\_systemActionRet~.~controllingMission~.~MTSID\then \\\Skip
 
             

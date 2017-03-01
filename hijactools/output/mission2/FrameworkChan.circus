@@ -1,8 +1,0 @@
-\begin{zsection}
-  \SECTION ~ FrameworkChan ~ \parents ~ GlobalTypes
-\end{zsection}
-%
-\begin{circus}
-	\circchannel ~ throw : ExceptionType \\
-	\circchannel ~ done\_toplevel\_sequencer \\
-\end{circus}

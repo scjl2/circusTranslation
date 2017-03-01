@@ -34,23 +34,13 @@ MissionIds
 
 \begin{circusaction}
 \circprotected ~ getNextMission ~ \circdef
-\circvar ret : MissionID \circspot
 \\
 
-
       \circblockopen
-
-
-
-
-              \circif ~ returnedMission = \true ~ \circthen ~
+              \circif ~ returnedMission ~ \circthen ~
   \\
 \t1 
       \circblockopen
-
-
-
-
               ret := nullMissionId
 
             
@@ -62,15 +52,11 @@ MissionIds
 
 
   \\
-  \circelse ~ \lnot returnedMission = \true ~ \circthen ~
+  \circelse ~ \lnot returnedMission ~ \circthen ~
   \\
 \t1 
       \circblockopen
-
-
-
-
-            this~.~returnedMission := \true
+            returnedMission := \true
 
              \circseq \\ 
 
@@ -96,7 +82,6 @@ MissionIds
 
         \circblockclose
 
- 
 
 \end{circusaction}
 %

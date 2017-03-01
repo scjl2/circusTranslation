@@ -16,12 +16,14 @@ import com.sun.source.tree.VariableTree;
 
 import hijac.tools.analysis.SCJAnalysis;
 import hijac.tools.tightrope.environments.AperiodicEventHandlerEnv;
+import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.EventHandlerEnv;
 import hijac.tools.tightrope.environments.ManagedThreadEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
+import hijac.tools.tightrope.utils.Debugger;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 
@@ -134,13 +136,29 @@ public class SchedulableBuilder extends ParadigmBuilder
       {
         object.addProcParameter(parameter);
         
+        Debugger.log("!! checking for "+ parameter.getName()+" var");
+        Debugger.log(object.getVariables());
         if(object.getVariable(parameter.getName()) != null)
         {
           object.removeVariable(parameter.getName());
+          
+          Debugger.log("!! removed "+ parameter.getName()+" from Object");          
+          
+        }
+        
+        Debugger.log(object.getClassEnv().getVariables());
+        ClassEnv classEnv = object.getClassEnv();
+        if(classEnv != null)
+        {            
+          Debugger.log("!! removed "+parameter.getName()+" from Class");
+          classEnv.removeVariable(parameter.getName());
+          
+          if(classEnv.isEmpty())
+          {
+            object.removeVariable("this");
+          }
         }
       }
-
     }
   }
-
 }

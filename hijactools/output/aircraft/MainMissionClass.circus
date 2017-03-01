@@ -130,7 +130,7 @@
   \circvar
     newAirSpeed : \power \arithmos
     
-  \circspot \\
+  \circspot
 \\
 
       \circblockopen
@@ -150,7 +150,7 @@
   \circvar
     newAltitude : \power \arithmos
     
-  \circspot \\
+  \circspot
 \\
 
       \circblockopen
@@ -170,7 +170,7 @@
   \circvar
     newCabinPressure : \power \arithmos
     
-  \circspot \\
+  \circspot
 \\
 
       \circblockopen
@@ -190,7 +190,7 @@
   \circvar
     newEmergencyOxygen : \power \arithmos
     
-  \circspot \\
+  \circspot
 \\
 
       \circblockopen
@@ -210,7 +210,7 @@
   \circvar
     newFuelRemaining : \power \arithmos
     
-  \circspot \\
+  \circspot
 \\
 
       \circblockopen
@@ -230,7 +230,7 @@
   \circvar
     newHeading : \power \arithmos
     
-  \circspot \\
+  \circspot
 \\
 
       \circblockopen

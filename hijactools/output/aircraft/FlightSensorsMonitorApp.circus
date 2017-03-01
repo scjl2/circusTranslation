@@ -37,11 +37,6 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~FlightSensorsMonitorSID \then \\
 	
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             binder\_setAirSpeedCall~.~controllingMission~.~FlightSensorsMonitorSID~!~0\then \\binder\_setAirSpeedRet~.~controllingMission~.~FlightSensorsMonitorSID\then \\\Skip
 
              \circseq \\ 

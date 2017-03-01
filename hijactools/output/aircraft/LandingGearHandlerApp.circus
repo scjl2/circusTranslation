@@ -24,11 +24,6 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~LandingGearHandlerSID \then \\
 	
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             binder\_isLandingGearDeployedCall~.~mission~.~LandingGearHandlerSID\then \\binder\_isLandingGearDeployedRet~.~mission~.~LandingGearHandlerSID~?~isLandingGearDeployed\then \\\Skip\circseq \circvar landingGearIsDeployed : \boolean \circspot landingGearIsDeployed :=~isLandingGearDeployed
              \circseq \\ 
 

@@ -34,9 +34,7 @@ MissionIds
 
 \begin{circusaction}
 \circprotected ~ getNextMission ~ \circdef
-\circvar ret : MissionID \circspot
 \\
-
 
       \circblockopen
               \circif ~ (releases = 0) ~ \circthen ~
@@ -112,7 +110,6 @@ MissionIds
 
         \circblockclose
 
- 
 
 \end{circusaction}
 %

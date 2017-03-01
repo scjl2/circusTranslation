@@ -14,7 +14,7 @@
 \end{circus}
 
 \begin{schema}{State}
-  this : OSEHClass\\ 
+  controllingMision : Mission\\ 
 \end{schema}
 % 
 \begin{circusaction}
@@ -24,7 +24,7 @@
 \begin{schema}{Init}
   State~' \\
 \where
-  this' = \circnew OSEHClass()\\ 
+  controllingMision' = \\ 
 \end{schema}
 
 \begin{circusaction}
@@ -33,7 +33,8 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~OSEHSID \then \\
 	
       \circblockopen
-
+            \Skip
+             \circseq \\ 
 
 
 

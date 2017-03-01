@@ -58,11 +58,6 @@ CleanupPhase \circdef
  cleanupMissionCall~.~TakeOffMissionMID \then \\
  
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
               ret :=   (\lnot this~.~abort)
 
 

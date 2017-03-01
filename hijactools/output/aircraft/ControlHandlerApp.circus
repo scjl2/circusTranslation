@@ -15,14 +15,7 @@ handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~ControlHandlerSID \then \\
 	
-      \circblockopen
-            \Skip
-            
-
-
-
-
-        \circblockclose
+  \Skip
 
  \circseq \\
     handleAsyncEventRet~.~ControlHandlerSID \then \\

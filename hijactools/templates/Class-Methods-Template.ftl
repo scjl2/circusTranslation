@@ -10,7 +10,7 @@
 <#if meth.ReturnType != 'null'>
  ret : ${meth.ReturnType}
 </#if>
-  \circspot \\
+  \circspot
 </#if>
 \\
 ${meth.Body}
@@ -29,7 +29,7 @@ ${meth.Body}
 <#if meth.ReturnType != 'null'>
  ret : ${meth.ReturnType}
 </#if>
-  \circspot \\
+  \circspot 
 </#if>
 \\
 ${meth.Body}

@@ -37,7 +37,7 @@ MissionIds
 \\
 
       \circblockopen
-              \circif ~ (this~.~done = \false) ~ \circthen ~
+              \circif ~ (done = \false) ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -58,7 +58,7 @@ MissionIds
 
 
   \\
-  \circelse ~ \lnot (this~.~done = \false) ~ \circthen ~
+  \circelse ~ \lnot (done = \false) ~ \circthen ~
   \\
 \t1 
       \circblockopen

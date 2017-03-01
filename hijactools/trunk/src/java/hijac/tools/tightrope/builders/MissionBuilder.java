@@ -1,16 +1,15 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
 import hijac.tools.tightrope.utils.Debugger;
-import hijac.tools.tightrope.utils.MethodDestinationE;
 import hijac.tools.tightrope.utils.TightRopeString.LATEX;
 import hijac.tools.tightrope.utils.TightRopeTransUtils;
-import hijac.tools.tightrope.visitors.MethodLocationVisitor;
 import hijac.tools.tightrope.visitors.MethodVisitor;
 import hijac.tools.tightrope.visitors.RegistersVisitor;
 import hijac.tools.tightrope.visitors.VariableVisitor;
@@ -181,7 +180,6 @@ public class MissionBuilder extends ParadigmBuilder
       }
     }
     return schedulables;
-
   }
 
   @SuppressWarnings("unchecked")
@@ -310,6 +308,19 @@ public class MissionBuilder extends ParadigmBuilder
         if(object.getVariable(parameter.getName()) != null)
         {
           object.removeVariable(parameter.getName());
+        }
+        
+        ClassEnv classEnv = object.getClassEnv();
+        if(classEnv != null)
+        {            
+          Debugger.log("!! removed "+parameter.getName()+" from Class");
+          classEnv.removeVariable(parameter.getName());
+          
+          Debugger.log(classEnv.getVariables());
+          if(classEnv.isEmpty())
+          {            
+            object.removeVariable("this");
+          }
         }
       }
 

@@ -116,7 +116,7 @@ lockAcquired~.~BufferOID~.~thread \then \\
 
 
 
-            ABthis~.~theBuffer := 0
+            this~.~theBuffer := 0
 
              \circseq \\ 
 

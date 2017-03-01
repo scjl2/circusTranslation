@@ -37,21 +37,17 @@
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~MissionBMID \then \\
-
-	register~!~MT2SID~!~MissionBMID \then   \\
-
-
+	register~!~MT2SID~!~MissionBMID \then \\
   initializeRet~.~MissionBMID \then \\
   \Skip
 \circblockclose
 \end{circusaction}
 
 \begin{circusaction}
-CleanupPhase \circdef  \\
+CleanupPhase \circdef
+\\
 \circblockopen
-\circvar \boolean : ret @
  cleanupMissionCall~.~MissionBMID \then \\
-
  cleanupMissionRet~.~MissionBMID~!~\true \then \\
  \Skip
 \circblockclose

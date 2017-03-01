@@ -37,21 +37,17 @@
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~NestedMissionMID \then \\
-
-	register~!~NestedOneShotEventHandlerSID~!~NestedMissionMID \then   \\
-
-
+	register~!~NestedOneShotEventHandlerSID~!~NestedMissionMID \then \\
   initializeRet~.~NestedMissionMID \then \\
   \Skip
 \circblockclose
 \end{circusaction}
 
 \begin{circusaction}
-CleanupPhase \circdef  \\
+CleanupPhase \circdef
+\\
 \circblockopen
-\circvar \boolean : ret @
  cleanupMissionCall~.~NestedMissionMID \then \\
-
  cleanupMissionRet~.~NestedMissionMID~!~\true \then \\
  \Skip
 \circblockclose

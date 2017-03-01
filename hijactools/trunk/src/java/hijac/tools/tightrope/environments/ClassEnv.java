@@ -106,6 +106,11 @@ public class ClassEnv // extends ParadigmEnv
     return objectEnv.getVariable(nodeVariableString);
   }
 
+  public void removeVariable(String name2)
+  {   
+     objectEnv.removeVariable(name2);
+  }
+  
   public void addSyncMeth(MethodEnv m)
   {
     objectEnv.addSyncMeth(m);
@@ -121,6 +126,12 @@ public class ClassEnv // extends ParadigmEnv
     objectEnv.addParent(missionId);
 
   }
+  
+  public List<VariableEnv> getVariables()
+  {
+    return objectEnv.getVariables();
+  }
+  
   public boolean containsMethod(String methodName)
   {
     for(MethodEnv me : getAllMeths())

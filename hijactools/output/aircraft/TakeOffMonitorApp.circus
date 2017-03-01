@@ -30,11 +30,6 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~TakeOffMonitorSID \then \\
 	
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then \\\Skip\circseq \circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
              \circseq \\ 
 
@@ -44,11 +39,6 @@ handleAsyncEvent \circdef \\
   \\
 \t1 
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             release~.~landingGearHandler\then \\\Skip
 
              \circseq \\ 

@@ -1,7 +1,0 @@
-\begin{zsection}
-  \SECTION ~ ManagedThreadChan ~ \parents ~ ManagedThreadFWChan, ManagedThreadMethChan, SchedulableChan
-\end{zsection}
-%
-\begin{circus}
-	\circchannelset MTAppSync == \lchanset runCall, runRet, end\_managedThread\_app \rchanset
-\end{circus}

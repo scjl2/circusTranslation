@@ -1,7 +1,5 @@
 package hijac.tools.tightrope.environments;
 
-import hijac.tools.tightrope.utils.TightRopeString.LATEX;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,8 +76,6 @@ public class MissionEnv extends ParadigmEnv
   public void setId(String name)
   {
     super.setId(name + hijac.tools.tightrope.utils.TightRopeString.Name.MID);
-    // TODO THis will need to be changed when I streamline the S+S sections
-    // setObjectId(name);
-  }
+   }
 
 }

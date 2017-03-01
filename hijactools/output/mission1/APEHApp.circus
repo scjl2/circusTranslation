@@ -20,11 +20,6 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~APEHSID \then \\
 	
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             requestTerminationCall~.~controllingMission~.~APEHSID\then \\requestTerminationRet~.~controllingMission~.~APEHSID~?~requestTermination\then \\\Skip
 
             

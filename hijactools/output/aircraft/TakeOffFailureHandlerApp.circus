@@ -40,11 +40,6 @@ handleAsyncEvent \circdef \\
   \\
 \t1 
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             binder\_takeOffAbortCall~.~takeoffMission~.~TakeOffFailureHandlerSID\then \\binder\_takeOffAbortRet~.~takeoffMission~.~TakeOffFailureHandlerSID\then \\\Skip
 
              \circseq \\ 
@@ -65,14 +60,7 @@ handleAsyncEvent \circdef \\
   \circelse ~ \lnot (currentSpeed < threshold) ~ \circthen ~
   \\
 \t1 
-      \circblockopen
-            \Skip
-            
-
-
-
-
-        \circblockclose
+  \Skip
 
 
   \\

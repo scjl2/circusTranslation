@@ -38,22 +38,18 @@
 InitializePhase \circdef \\
 \circblockopen
   initializeCall~.~MidMissionMID \then \\
-
-	register~!~BottomMissionSequencerASID~!~MidMissionMID \then   \\
-	register~!~BottomMissionSequencerBSID~!~MidMissionMID \then   \\
-
-
+	register~!~BottomMissionSequencerASID~!~MidMissionMID \then \\
+	register~!~BottomMissionSequencerBSID~!~MidMissionMID \then \\
   initializeRet~.~MidMissionMID \then \\
   \Skip
 \circblockclose
 \end{circusaction}
 
 \begin{circusaction}
-CleanupPhase \circdef  \\
+CleanupPhase \circdef
+\\
 \circblockopen
-\circvar \boolean : ret @
  cleanupMissionCall~.~MidMissionMID \then \\
-
  cleanupMissionRet~.~MidMissionMID~!~\true \then \\
  \Skip
 \circblockclose

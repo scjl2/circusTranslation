@@ -26,11 +26,6 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~GroundDistanceMonitorSID \then \\
 	
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             binder\_getAltitudeCall~.~mainMission~.~GroundDistanceMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~GroundDistanceMonitorSID~?~getAltitude\then \\\Skip\circseq \circvar distance : \power \arithmos \circspot distance :=~getAltitude
              \circseq \\ 
 
@@ -40,11 +35,6 @@ handleAsyncEvent \circdef \\
   \\
 \t1 
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             requestTerminationCall~.~mainMission~.~GroundDistanceMonitorSID\then \\requestTerminationRet~.~mainMission~.~GroundDistanceMonitorSID~?~requestTermination\then \\\Skip
 
             

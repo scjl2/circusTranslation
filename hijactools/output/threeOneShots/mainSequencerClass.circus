@@ -34,16 +34,14 @@ MissionIds
 
 \begin{circusaction}
 \circprotected ~ getNextMission ~ \circdef
-\circvar ret : MissionID \circspot
 \\
 
-
       \circblockopen
-              \circif ~ notReleased = \true ~ \circthen ~
+              \circif ~ notReleased ~ \circthen ~
   \\
 \t1 
       \circblockopen
-            this~.~notReleased := \false
+            notReleased := \false
 
              \circseq \\ 
 
@@ -60,7 +58,7 @@ MissionIds
 
 
   \\
-  \circelse ~ \lnot notReleased = \true ~ \circthen ~
+  \circelse ~ \lnot notReleased ~ \circthen ~
   \\
 \t1 
       \circblockopen
@@ -84,7 +82,6 @@ MissionIds
 
         \circblockclose
 
- 
 
 \end{circusaction}
 %

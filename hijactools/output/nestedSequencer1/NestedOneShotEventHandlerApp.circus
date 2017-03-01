@@ -15,13 +15,7 @@ handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~NestedOneShotEventHandlerSID \then \\
 	
-      \circblockopen
-
-
-
-
-
-        \circblockclose
+  \Skip
 
  \circseq \\
     handleAsyncEventRet~.~NestedOneShotEventHandlerSID \then \\

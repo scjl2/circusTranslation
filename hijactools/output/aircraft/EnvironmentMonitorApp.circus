@@ -24,11 +24,6 @@ handleAsyncEvent \circdef \\
 	handleAsyncEventCall~.~EnvironmentMonitorSID \then \\
 	
       \circblockopen
-            \Skip
-             \circseq \\ 
-
-
-
             binder\_setCabinPressureCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then \\binder\_setCabinPressureRet~.~controllingMission~.~EnvironmentMonitorSID\then \\\Skip
 
              \circseq \\ 
