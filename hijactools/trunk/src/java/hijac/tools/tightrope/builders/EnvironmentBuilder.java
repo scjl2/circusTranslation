@@ -427,23 +427,27 @@ public class EnvironmentBuilder
     tlmsClassEnv.setName(tlms);
     topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
 
-    // TODO Mirrored in VariableVisitor.visitVariable
-    if (!tlmsClassEnv.isEmpty())
-    {
-      topLevelMissionSequencer.addVariable(TightRopeString.Name.THIS, LATEX.CIRCREFTYPE
-          + tlms.toString() + TightRopeString.Name.CLASS, LATEX.CIRCNEW + tlms.toString()
-          + TightRopeString.Name.CLASS_BRACKETS, false);
-    }
+    
 
     
 
     ParadigmBuilder msl2Visitor = new MissionSequencerBuilder(programEnv,
         topLevelMissionSequencer, analysis, this);
+    
+    
 
     // msl2Visitor.setVarMap(getVariables(tlmsElement, tlmsClassEnv));
 
     Debugger.log("tlmselement=" + tlmsElement);
     ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
+    
+ // TODO Mirrored in VariableVisitor.visitVariable
+    if ((!tlmsClassEnv.isEmpty()) && (tlmsClassEnv.getVariable("this") != null ))
+    {
+      topLevelMissionSequencer.addVariable(TightRopeString.Name.THIS, LATEX.CIRCREFTYPE
+          + tlms.toString() + TightRopeString.Name.CLASS, LATEX.CIRCNEW + tlms.toString()
+          + TightRopeString.Name.CLASS_BRACKETS, false);
+    }
 
     assert (missions != null);
     if (missions.isEmpty())
@@ -488,16 +492,18 @@ public class EnvironmentBuilder
     // HashMap<Name, Tree> variables =
     // getVariables(missionTypeElem, missionClassEnv);
 
-    // TODO Mirrored in VariableVisitor.visitVariable
-    if (!missionClassEnv.isEmpty())
-    {
-      missionEnv.addVariable(TightRopeString.Name.THIS + "HABOOP",
-          LATEX.CIRCREFTYPE + n.toString() + TightRopeString.Name.CLASS, LATEX.CIRCNEW
-              + n.toString() + TightRopeString.Name.CLASS_BRACKETS, true);
-    }
+    
 
     ArrayList<Name> schedulables = new MissionBuilder(programEnv, missionEnv, analysis,
         this).build(missionTypeElem);
+    
+ // TODO Mirrored in VariableVisitor.visitVariable
+    if (!missionClassEnv.isEmpty())
+    {
+      missionEnv.addVariable(TightRopeString.Name.THIS ,
+          LATEX.CIRCREFTYPE + n.toString() + TightRopeString.Name.CLASS, LATEX.CIRCNEW
+              + n.toString() + TightRopeString.Name.CLASS_BRACKETS, true);
+    }
 
     assert (schedulables != null);
     if (schedulables.isEmpty())
