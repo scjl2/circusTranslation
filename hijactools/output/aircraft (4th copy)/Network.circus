@@ -1,0 +1,7 @@
+\begin{circus}
+\circprocess Bound\_Application \circdef  Application \lpar MethodCallBinderSync \rpar MethodCallBinder \\
+
+\circprocess Program \circdef \circblockopen Framework \lpar AppSync \rpar Bound\_Application \circblockclose \lpar LockingSync \rpar Locking
+\end{circus}
+%
+

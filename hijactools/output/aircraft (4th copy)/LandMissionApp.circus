@@ -1,0 +1,144 @@
+\begin{zsection}
+  \SECTION ~ LandMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, LandMissionMethChan \\
+ , LandMissionClass, MethodCallBindingChannels 
+ 
+
+\end{zsection}
+
+
+%\begin{circus}
+%\circchannelset LandMissionAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~GroundDistanceMonitorSID~.~LandMissionMID
+%    register~.~LandingGearHandlerLandSID~.~LandMissionMID
+%    register~.~InstrumentLandingSystemMonitorSID~.~LandMissionMID
+%    register~.~SafeLandingHandlerSID~.~LandMissionMID
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess LandMissionApp \circdef \\ \t1
+  controllingMission : MissionID
+
+\circspot
+ \circbegin
+\end{circus}
+
+\begin{schema}{State}
+  this : \circreftype LandMissionClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew LandMissionClass()\\ 
+\end{schema}
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~LandMissionMID \then \\
+	register~!~GroundDistanceMonitorSID~!~LandMissionMID \then \\
+	register~!~LandingGearHandlerLandSID~!~LandMissionMID \then \\
+	register~!~InstrumentLandingSystemMonitorSID~!~LandMissionMID \then \\
+	register~!~SafeLandingHandlerSID~!~LandMissionMID \then \\
+  initializeRet~.~LandMissionMID \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+CleanupPhase \circdef
+\circvar \boolean : ret @ \\
+\circblockopen
+ cleanupMissionCall~.~LandMissionMID \then \\
+ 
+      \circblockopen
+              ret := \false
+
+            
+
+
+
+
+        \circblockclose
+
+ \\
+ cleanupMissionRet~.~LandMissionMID~!~ret \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+deployLandingGearMeth \circdef
+\\
+\circblockopen
+deployLandingGearCall~.~LandMissionMID ~?~caller
+\then \\
+this~.~deployLandingGear()  \circseq  \\
+
+deployLandingGearRet~.~LandMissionMID~.~caller \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+stowLandingGearMeth \circdef
+\\
+\circblockopen
+stowLandingGearCall~.~LandMissionMID ~?~caller
+\then \\
+this~.~stowLandingGear()  \circseq  \\
+
+stowLandingGearRet~.~LandMissionMID~.~caller \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+\begin{circusaction}
+isLandingGearDeployedMeth \circdef
+\circvar ret : \boolean \circspot
+\\
+\circblockopen
+isLandingGearDeployedCall~.~LandMissionMID ~?~caller
+\then \\
+ret := this~.~isLandingGearDeployed()  \circseq  \\
+
+isLandingGearDeployedRet~.~LandMissionMID~.~caller~!~ret \then \\
+\Skip
+\circblockclose
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+Methods \circdef
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+\extchoice \\
+	deployLandingGearMeth \\ 
+\extchoice \\
+	stowLandingGearMeth \\ 
+\extchoice \\
+	isLandingGearDeployedMeth \\ 
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+ \circinterrupt (end\_mission\_app~.~LandMissionMID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

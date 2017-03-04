@@ -1,0 +1,96 @@
+
+\begin{zsection}
+  \SECTION ~ MainMissionSequencerClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  ,
+MissionId
+, 
+
+MissionIds
+
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circclass MainMissionSequencerClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  returnedMission : \boolean\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  returnedMission' = \false\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circprotected ~ getNextMission ~ \circdef
+\\
+
+      \circblockopen
+              \circif ~ (\lnot returnedMission) ~ \circthen ~
+  \\
+\t1 
+      \circblockopen
+            returnedMission := \true
+
+             \circseq \\ 
+
+
+
+              ret := MainMissionMID
+
+            
+
+
+
+
+        \circblockclose
+
+
+  \\
+  \circelse ~ \lnot (\lnot returnedMission) ~ \circthen ~
+  \\
+\t1 
+      \circblockopen
+              ret := nullMissionId
+
+            
+
+
+
+
+        \circblockclose
+
+
+  \\
+  \circfi
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

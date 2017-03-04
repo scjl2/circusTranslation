@@ -46,8 +46,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 
-
-public class EnvironmentBuilder 
+public class EnvironmentBuilder
 {
   public static SCJAnalysis analysis;
 
@@ -64,7 +63,7 @@ public class EnvironmentBuilder
       return "Origin: " + originClass + " Tree:" + tree;
     }
   }
-  
+
   private Set<TypeElement> type_elements;
   private Elements elems;
 
@@ -112,27 +111,32 @@ public class EnvironmentBuilder
       {
         TypeMirror superclass = elem.getSuperclass();
 
-        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.MANAGED_THREAD_QUALIFIED_NAME))
+        if (superclass.toString().contains(
+            TightRopeString.Name.MANAGED_THREAD_QUALIFIED_NAME))
         {
           return SchedulableTypeE.MT;
         }
 
-        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.MISSION_SEQUENCER_QUALIFIED_NAME))
+        if (superclass.toString().contains(
+            TightRopeString.Name.MISSION_SEQUENCER_QUALIFIED_NAME))
         {
           return SchedulableTypeE.SMS;
         }
 
-        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.PERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
+        if (superclass.toString().contains(
+            TightRopeString.Name.PERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
         {
           return SchedulableTypeE.PEH;
         }
 
-        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.APERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
+        if (superclass.toString().contains(
+            TightRopeString.Name.APERIODIC_EVENT_HANDLER_QUALIFIED_NAME))
         {
           return SchedulableTypeE.APEH;
         }
 
-        if (superclass.toString().contains(hijac.tools.tightrope.utils.TightRopeString.Name.ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME))
+        if (superclass.toString().contains(
+            TightRopeString.Name.ONE_SHOT_EVENT_HANDLER_QUALIFIED_NAME))
         {
           return SchedulableTypeE.OSEH;
         }
@@ -225,18 +229,17 @@ public class EnvironmentBuilder
   @SuppressWarnings("unchecked")
   private void buildNonParadigmObjects(List<TypeElement> grabNonParadigmObjects)
   {
-    
+
     // List<NonParadigmEnv> nonParadigmEnvs = new ArrayList<NonParadigmEnv>();
-    
 
     for (TypeElement te : grabNonParadigmObjects)
-    {     
-      //No Interfaces
-      if(!te.getKind().isInterface())
+    {
+      // No Interfaces
+      if (!te.getKind().isInterface())
       {
         new NonParadigmBuilder(analysis, programEnv, this).build(te);
       }
-          
+
     }
 
   }
@@ -419,12 +422,20 @@ public class EnvironmentBuilder
     TopLevelMissionSequencerEnv topLevelMissionSequencer = programEnv
         .getTopLevelMissionSequencer(tlms);
     
-    topLevelMissionSequencer.addVariable(hijac.tools.tightrope.utils.TightRopeString.Name.THIS, LATEX.CIRCREFTYPE + tlms.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS,
-        LATEX.CIRCNEW + tlms.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS_BRACKETS, false);
-
+    
     ClassEnv tlmsClassEnv = new ClassEnv();
     tlmsClassEnv.setName(tlms);
     topLevelMissionSequencer.addClassEnv(tlmsClassEnv);
+
+    // TODO Mirrored in VariableVisitor.visitVariable
+    if (!tlmsClassEnv.isEmpty())
+    {
+      topLevelMissionSequencer.addVariable(TightRopeString.Name.THIS, LATEX.CIRCREFTYPE
+          + tlms.toString() + TightRopeString.Name.CLASS, LATEX.CIRCNEW + tlms.toString()
+          + TightRopeString.Name.CLASS_BRACKETS, false);
+    }
+
+    
 
     ParadigmBuilder msl2Visitor = new MissionSequencerBuilder(programEnv,
         topLevelMissionSequencer, analysis, this);
@@ -434,7 +445,6 @@ public class EnvironmentBuilder
     Debugger.log("tlmselement=" + tlmsElement);
     ArrayList<Name> missions = msl2Visitor.build(tlmsElement);
 
-   
     assert (missions != null);
     if (missions.isEmpty())
     {
@@ -478,8 +488,13 @@ public class EnvironmentBuilder
     // HashMap<Name, Tree> variables =
     // getVariables(missionTypeElem, missionClassEnv);
 
-    missionEnv.addVariable(hijac.tools.tightrope.utils.TightRopeString.Name.THIS, LATEX.CIRCREFTYPE + n.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS,
-        LATEX.CIRCNEW + n.toString() + hijac.tools.tightrope.utils.TightRopeString.Name.CLASS_BRACKETS, true);
+    // TODO Mirrored in VariableVisitor.visitVariable
+    if (!missionClassEnv.isEmpty())
+    {
+      missionEnv.addVariable(TightRopeString.Name.THIS + "HABOOP",
+          LATEX.CIRCREFTYPE + n.toString() + TightRopeString.Name.CLASS, LATEX.CIRCNEW
+              + n.toString() + TightRopeString.Name.CLASS_BRACKETS, true);
+    }
 
     ArrayList<Name> schedulables = new MissionBuilder(programEnv, missionEnv, analysis,
         this).build(missionTypeElem);
@@ -952,5 +967,4 @@ public class EnvironmentBuilder
     return programName;
   }
 
-  
 }

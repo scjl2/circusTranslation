@@ -663,6 +663,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
           Debugger.log("adding to class");
           classEnv.addVariable(v);
 
+          //TODO Mirrored in EnvironmentBuilder.buildMission and buildTopLevelMissionSequencer
           if (objectEnv.getVariables().isEmpty())
           {
             objectEnv.addVariable(TightRopeString.Name.THIS, LATEX.CIRCREFTYPE
@@ -712,6 +713,7 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
               {
                 classEnv.addVariable(v);
 
+                //TODO Mirrored in EnvironmentBuilder.buildMission and buildTopLevelMissionSequencer
                 if (objectEnv.getVariables().isEmpty())
                 {
                   objectEnv.addVariable("this", objectEnv.getName() + "Class",

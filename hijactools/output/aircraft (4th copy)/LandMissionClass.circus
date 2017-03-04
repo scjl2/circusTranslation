@@ -1,0 +1,90 @@
+
+\begin{zsection}
+  \SECTION ~ LandMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
+
+\end{zsection}
+
+\begin{circus}
+\circclass LandMissionClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  SAFE\_LANDING\_ALTITUDE : \power \arithmos\\ 
+  ALTITUDE\_READING\_ON\_GROUND : \power \arithmos\\ 
+  abort : \boolean\\ 
+  landingGearDeployed : \boolean\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  SAFE\_LANDING\_ALTITUDE' = 10.0\\ 
+  ALTITUDE\_READING\_ON\_GROUND' = 0.0\\ 
+  abort' = false\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circpublic ~ deployLandingGear ~ \circdef
+\\
+
+      \circblockopen
+            landingGearDeployed := \true
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ stowLandingGear ~ \circdef
+\\
+
+      \circblockopen
+            landingGearDeployed := \false
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ isLandingGearDeployed ~ \circdef
+\\
+
+      \circblockopen
+              ret := landingGearDeployed
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

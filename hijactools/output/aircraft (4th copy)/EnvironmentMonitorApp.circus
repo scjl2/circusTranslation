@@ -1,0 +1,75 @@
+\begin{zsection}
+  \SECTION ~ EnvironmentMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+ \\
+ \t1  ,
+MainMissionMethChan
+
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circprocess EnvironmentMonitorApp \circdef \\ \t1
+  controllingMission : MissionID
+
+\circspot
+  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+handleAsyncEvent \circdef \\
+\circblockopen
+	handleAsyncEventCall~.~EnvironmentMonitorSID \then \\
+	
+      \circblockopen
+            binder\_setCabinPressureCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then \\binder\_setCabinPressureRet~.~controllingMission~.~EnvironmentMonitorSID\then \\\Skip
+
+             \circseq \\ 
+
+
+
+            binder\_setEmergencyOxygenCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then \\binder\_setEmergencyOxygenRet~.~controllingMission~.~EnvironmentMonitorSID\then \\\Skip
+
+             \circseq \\ 
+
+
+
+            binder\_setFuelRemainingCall~.~controllingMission~.~EnvironmentMonitorSID~!~0\then \\binder\_setFuelRemainingRet~.~controllingMission~.~EnvironmentMonitorSID\then \\\Skip
+
+            
+
+
+
+
+        \circblockclose
+
+ \circseq \\
+    handleAsyncEventRet~.~EnvironmentMonitorSID \then \\
+    \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	handleAsyncEvent \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+  \circinterrupt (end\_periodic\_app~.~EnvironmentMonitorSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
