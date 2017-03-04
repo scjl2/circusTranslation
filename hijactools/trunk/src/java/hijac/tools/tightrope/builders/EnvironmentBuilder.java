@@ -498,7 +498,7 @@ public class EnvironmentBuilder
         this).build(missionTypeElem);
     
  // TODO Mirrored in VariableVisitor.visitVariable
-    if (!missionClassEnv.isEmpty())
+    if ((!missionClassEnv.isEmpty()) && (missionClassEnv.getVariable("this") != null))
     {
       missionEnv.addVariable(TightRopeString.Name.THIS ,
           LATEX.CIRCREFTYPE + n.toString() + TightRopeString.Name.CLASS, LATEX.CIRCNEW
