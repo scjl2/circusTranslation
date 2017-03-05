@@ -1,0 +1,19 @@
+\begin{zsection}
+  \SECTION ~ ThreadIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	SafeletTId  : ThreadID \\
+	nullThreadId  : ThreadID \\
+	ProducerTID : ThreadID \\
+	ConsumerTID : ThreadID \\
+
+\where
+  distinct \langle SafeletTId, nullThreadId
+  , \\
+	ProducerTID
+	,
+	ConsumerTID
+  \rangle
+\end{axdef}

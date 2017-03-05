@@ -37,10 +37,20 @@ MissionIds
 \\
 
       \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
               \circif ~ (\lnot returnedMission) ~ \circthen ~
   \\
 \t1 
       \circblockopen
+            \Skip
+             \circseq \\ 
+
+
+
             returnedMission := \true
 
              \circseq \\ 

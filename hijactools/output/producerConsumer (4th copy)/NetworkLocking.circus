@@ -1,0 +1,35 @@
+\begin{zsection}
+  \SECTION ~ NetworkLocking ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, MissionIds, \\
+  \t1 ThreadIds, NetworkChannels, ObjectFW, ThreadFW, Priority
+\end{zsection}
+
+
+
+%%%%%%%%%%%%%%%%%%THREADS
+%
+\begin{circus}
+\circprocess Threads \circdef  \\
+\circblockopen
+ThreadFW(ProducerTID, 10) \\
+\interleave \\
+ThreadFW(ConsumerTID, 10) \\
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%%OBJECTS
+%
+\begin{circus}
+\circprocess Objects \circdef \\
+\circblockopen
+ObjectFW(BufferOID) \\
+
+
+\circblockclose
+\end{circus}
+%
+%%%%%%%%%%%%%LOCKING
+%
+\begin{circus}
+\circprocess Locking \circdef (Threads \lpar ThreadSync \rpar Objects) \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\end{circus}

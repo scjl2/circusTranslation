@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.builders;
 
 import hijac.tools.analysis.SCJAnalysis;
+import hijac.tools.application.TightRope;
 import hijac.tools.tightrope.environments.ClassEnv;
 import hijac.tools.tightrope.environments.MethodEnv;
 import hijac.tools.tightrope.environments.MissionEnv;
@@ -82,14 +83,24 @@ public class MissionBuilder extends ParadigmBuilder
 
       if (missionMemberTree instanceof MethodTree)
       {
+       
         // capture the method
         MethodTree missionMethodTree = (MethodTree) missionMemberTree;
+        
+        Tree returnType = missionMethodTree.getReturnType();
+        
+        if(returnType != null && programEnv.containsNonParadigmObject(returnType.toString()) )
+        {
+          continue;
+        }
 
         final boolean notIgnoredMethod = !(missionMethodTree.getName().contentEquals(
             "<init>") || missionMethodTree.getName().contentEquals("missionMemorySize"));
         final boolean syncMethod = missionMethodTree.getModifiers().getFlags()
             .contains(Modifier.SYNCHRONIZED);
 
+        
+        
         final boolean currentMethodIsInitialize = missionMethodTree.getName()
             .contentEquals("initialize");
 

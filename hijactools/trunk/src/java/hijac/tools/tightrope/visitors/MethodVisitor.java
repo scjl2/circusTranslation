@@ -114,9 +114,7 @@ public class MethodVisitor
 		m.setMethodDestination(methodDestination);
 		
 		MethodBodyVisitor methodBodyVisitor = new MethodBodyVisitor(application, object, m);
-		
-		
-		
+				
 		if (returnType instanceof PrimitiveTypeTree)
 		{
 			body = mt.accept(methodBodyVisitor, new MethodVisitorContext());
@@ -126,6 +124,8 @@ public class MethodVisitor
 		}
 		else
 		{
+		 
+		  
 			body = mt.accept(methodBodyVisitor, new MethodVisitorContext());
 
 			m.setBody(body);
@@ -141,6 +141,8 @@ public class MethodVisitor
 		m.setMethodLocation(object);
 			
 		TightRope.getProgramEnv().addGlobalMethod(m);
+		
+		
 
 		return m;
 	}
