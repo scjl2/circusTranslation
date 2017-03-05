@@ -1,0 +1,198 @@
+\begin{zsection}
+  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, ThreadIds
+\end{zsection}
+
+\begin{circus}
+
+\circchannel binder\_setCabinPressureCall :  MissionID  \cross SchedulableID   \cross
+\power \arithmos
+
+\\
+\circchannel binder\_setCabinPressureRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+setCabinPressureLocs == \{ MainMissionMID \}  \\
+setCabinPressureCallers == \{ EnvironmentMonitorSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_setFuelRemainingCall :  MissionID  \cross SchedulableID   \cross
+\power \arithmos
+
+\\
+\circchannel binder\_setFuelRemainingRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+setFuelRemainingLocs == \{ MainMissionMID \}  \\
+setFuelRemainingCallers == \{ EnvironmentMonitorSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_getAltitudeCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID  \cross \power \arithmos \\
+\end{circus}
+%
+\begin{zed}
+getAltitudeLocs == \{ MainMissionMID \}  \\
+getAltitudeCallers == \{ NavigationMonitorSID,TakeOffMonitorSID,GroundDistanceMonitorSID,SafeLandingHandlerSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_setHeadingCall :  MissionID  \cross SchedulableID   \cross
+\power \arithmos
+
+\\
+\circchannel binder\_setHeadingRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+setHeadingLocs == \{ MainMissionMID \}  \\
+setHeadingCallers == \{ FlightSensorsMonitorSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_stowLandingGearCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_stowLandingGearRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+stowLandingGearLocs == \{ TakeOffMissionMID,LandMissionMID \}  \\
+stowLandingGearCallers == \{ LandingGearHandlerSID,LandingGearHandlerLandSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_takeOffAbortCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_takeOffAbortRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+takeOffAbortLocs == \{ TakeOffMissionMID \}  \\
+takeOffAbortCallers == \{ TakeOffFailureHandlerSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_setAltitudeCall :  MissionID  \cross SchedulableID   \cross
+\power \arithmos
+
+\\
+\circchannel binder\_setAltitudeRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+setAltitudeLocs == \{ MainMissionMID \}  \\
+setAltitudeCallers == \{ FlightSensorsMonitorSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_getHeadingCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_getHeadingRet : MissionID \cross SchedulableID  \cross \power \arithmos \\
+\end{circus}
+%
+\begin{zed}
+getHeadingLocs == \{ MainMissionMID \}  \\
+getHeadingCallers == \{ NavigationMonitorSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_getAirSpeedCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_getAirSpeedRet : MissionID \cross SchedulableID  \cross \power \arithmos \\
+\end{circus}
+%
+\begin{zed}
+getAirSpeedLocs == \{ MainMissionMID \}  \\
+getAirSpeedCallers == \{ NavigationMonitorSID,TakeOffFailureHandlerSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_deployLandingGearCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_deployLandingGearRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+deployLandingGearLocs == \{ TakeOffMissionMID,LandMissionMID \}  \\
+deployLandingGearCallers == \{ LandingGearHandlerSID,LandingGearHandlerLandSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_setEmergencyOxygenCall :  MissionID  \cross SchedulableID   \cross
+\power \arithmos
+
+\\
+\circchannel binder\_setEmergencyOxygenRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+setEmergencyOxygenLocs == \{ MainMissionMID \}  \\
+setEmergencyOxygenCallers == \{ EnvironmentMonitorSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_setAirSpeedCall :  MissionID  \cross SchedulableID   \cross
+\power \arithmos
+
+\\
+\circchannel binder\_setAirSpeedRet : MissionID  \cross SchedulableID   \\
+\end{circus}
+%
+\begin{zed}
+setAirSpeedLocs == \{ MainMissionMID \}  \\
+setAirSpeedCallers == \{ FlightSensorsMonitorSID \}
+\end{zed}
+%
+\begin{circus}
+
+\circchannel binder\_isLandingGearDeployedCall :  MissionID  \cross SchedulableID  \\
+\circchannel binder\_isLandingGearDeployedRet : MissionID \cross SchedulableID  \cross \boolean \\
+\end{circus}
+%
+\begin{zed}
+isLandingGearDeployedLocs == \{ TakeOffMissionMID,LandMissionMID \}  \\
+isLandingGearDeployedCallers == \{ LandingGearHandlerSID,LandingGearHandlerLandSID \}
+\end{zed}
+%
+
+
+\begin{circus}
+\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, \\
+binder\_setCabinPressureCall, binder\_setCabinPressureRet
+,\\
+binder\_setFuelRemainingCall, binder\_setFuelRemainingRet
+,\\
+binder\_getAltitudeCall, binder\_getAltitudeRet
+,\\
+binder\_setHeadingCall, binder\_setHeadingRet
+,\\
+binder\_stowLandingGearCall, binder\_stowLandingGearRet
+,\\
+binder\_takeOffAbortCall, binder\_takeOffAbortRet
+,\\
+binder\_setAltitudeCall, binder\_setAltitudeRet
+,\\
+binder\_getHeadingCall, binder\_getHeadingRet
+,\\
+binder\_getAirSpeedCall, binder\_getAirSpeedRet
+,\\
+binder\_deployLandingGearCall, binder\_deployLandingGearRet
+,\\
+binder\_setEmergencyOxygenCall, binder\_setEmergencyOxygenRet
+,\\
+binder\_setAirSpeedCall, binder\_setAirSpeedRet
+,\\
+binder\_isLandingGearDeployedCall, binder\_isLandingGearDeployedRet
+
+\rchanset
+\end{circus}

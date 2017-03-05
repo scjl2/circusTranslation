@@ -954,17 +954,22 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
         String methodSelectExpr = ((MemberSelectTree) node.getMethodSelect())
             .getExpression().toString();
         
-        String firstLetter = methodSelectExpr.substring(0, 1);
         
-        methodSelectExpr = methodSelectExpr.substring(1);
-        firstLetter = firstLetter.toUpperCase();
-        Debugger.log("First Letter is: " + firstLetter);
         
-        methodSelectExpr = firstLetter + methodSelectExpr;
+       
         
         Debugger.log("MemberSelect Expression " + methodSelectExpr);
         if (TightRope.getProgramEnv().containsNonParadigmObject(methodSelectExpr))
         {
+          
+          String firstLetter = methodSelectExpr.substring(0, 1);
+          
+          methodSelectExpr = methodSelectExpr.substring(1);
+          firstLetter = firstLetter.toUpperCase();
+          Debugger.log("First Letter is: " + firstLetter);
+          
+          methodSelectExpr = firstLetter + methodSelectExpr;
+          
           sb.append(methodSelectExpr + "ID");
         }
         else

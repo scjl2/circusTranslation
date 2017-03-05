@@ -24,6 +24,19 @@
  \circbegin
 \end{circus}
 
+\begin{schema}{State}
+  this : \circreftype CruiseMissionClass\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{Init}
+  State~' \\
+\where
+  this' = \circnew CruiseMissionClass()\\ 
+\end{schema}
 
 \begin{circusaction}
 InitializePhase \circdef \\
@@ -63,7 +76,7 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
+\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
  \circinterrupt (end\_mission\_app~.~CruiseMissionMID \then \Skip)
 \end{circusaction}
 
