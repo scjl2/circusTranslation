@@ -1,6 +1,7 @@
 package hijac.tools.tightrope.visitors;
 
 import hijac.tools.tightrope.environments.ClassEnv;
+import hijac.tools.tightrope.environments.NonParadigmEnv;
 import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.ProgramEnv;
@@ -691,9 +692,18 @@ public class VariableVisitor implements TreeVisitor<Map<Name, Tree>, Boolean>
                 + objectEnv.getClass().getCanonicalName());
 
             boolean stillAddToEnv = true;
+            
             for (VariableEnv v : objectEnv.getProcParameters())
             {
               if (v.getName().equals(encodedName))
+              {
+                stillAddToEnv = false;
+              }
+            }
+            
+            for(NonParadigmEnv npe : programEnv.getNonParadigmObjectEnvs())
+            {
+              if(npe.getName().toString().equalsIgnoreCase(encodedName))
               {
                 stillAddToEnv = false;
               }
