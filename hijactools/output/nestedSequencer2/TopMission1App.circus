@@ -21,19 +21,6 @@
 \circprocess TopMission1App \circdef  \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  this : \circreftype TopMission1Class\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  this' = \circnew TopMission1Class()\\ 
-\end{schema}
 
 \begin{circusaction}
 InitializePhase \circdef \\
@@ -74,7 +61,7 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
  \circinterrupt (end\_mission\_app~.~TopMission1MID \then \Skip)
 \end{circusaction}
 

@@ -14,7 +14,6 @@ import hijac.tools.tightrope.environments.ObjectEnv;
 import hijac.tools.tightrope.environments.OneShotEventHandlerEnv;
 import hijac.tools.tightrope.environments.ParadigmEnv;
 import hijac.tools.tightrope.environments.PeriodicEventHandlerEnv;
-import hijac.tools.tightrope.environments.ProgramEnv;
 import hijac.tools.tightrope.environments.SafeletEnv;
 import hijac.tools.tightrope.environments.StructureEnv;
 import hijac.tools.tightrope.environments.VariableEnv;
@@ -584,7 +583,7 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
     }
 
     Debugger.log("params = " + visitingObject.getProcParameters().toString());
-    
+
     for (VariableEnv v : visitingObject.getProcParameters())
     {
       Debugger.log(v.getName());
@@ -1105,10 +1104,19 @@ public class MethodBodyVisitor extends SimpleTreeVisitor<String, MethodVisitorCo
 
             if (node.getMethodSelect().toString().contains(me.getName().toString()))
             {
-              return output
-                  + "this~.~"
-                  + callExprMacro(node, ctxt, "MethodInvocation", node.getMethodSelect(),
-                      arguments);
+
+              String methodExpression = callExprMacro(node, ctxt, "MethodInvocation",
+                  node.getMethodSelect(), arguments);
+
+              //TODO SUPER HACK JOB
+              if (methodExpression.contains("this"))
+              {
+                return output + methodExpression;
+              }
+              else
+              {
+                return output + "this~.~" + methodExpression;
+              }
             }
           }
         }

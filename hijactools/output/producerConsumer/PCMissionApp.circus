@@ -21,7 +21,6 @@
 \end{circus}
 
 \begin{schema}{State}
-  this : \circreftype PCMissionClass\\ 
   buffer : Buffer\\ 
 \end{schema}
 % 
@@ -32,7 +31,6 @@
 \begin{schema}{Init}
   State~' \\
 \where
-  this' = \circnew PCMissionClass()\\ 
   buffer' = \\ 
 \end{schema}
 

@@ -19,19 +19,6 @@
 \circprocess NestedMissionAApp \circdef  \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  this : \circreftype NestedMissionAClass\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  this' = \circnew NestedMissionAClass()\\ 
-\end{schema}
 
 \begin{circusaction}
 InitializePhase \circdef \\
@@ -70,7 +57,7 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
  \circinterrupt (end\_mission\_app~.~NestedMissionAMID \then \Skip)
 \end{circusaction}
 

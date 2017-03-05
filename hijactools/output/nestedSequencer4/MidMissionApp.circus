@@ -20,19 +20,6 @@
 \circprocess MidMissionApp \circdef  \circbegin
 \end{circus}
 
-\begin{schema}{State}
-  this : \circreftype MidMissionClass\\ 
-\end{schema}
-% 
-\begin{circusaction}
-\circstate State
-\end{circusaction}
-%
-\begin{schema}{Init}
-  State~' \\
-\where
-  this' = \circnew MidMissionClass()\\ 
-\end{schema}
 
 \begin{circusaction}
 InitializePhase \circdef \\
@@ -72,7 +59,7 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
+\circspot ( Methods) 
  \circinterrupt (end\_mission\_app~.~MidMissionMID \then \Skip)
 \end{circusaction}
 

@@ -56,12 +56,7 @@ startSyncMeth~.~BufferOID~.~thread \then \\
 lockAcquired~.~BufferOID~.~thread \then \\
 
       \circblockopen
-            \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot this~.~ this~.~bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen \Skip \circseq \\ waitCall~.~BufferOID~.~thread \then \\waitRet~.~BufferOID~.~thread \then \\\Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
-             \circseq \\ 
-
-
-
-            \Skip
+            \circmu X \circspot \\ \circblockopen \circvar loopVar : \boolean \circspot loopVar :=~(\lnot this~.~bufferEmpty() )\circseq \\ \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen waitCall~.~BufferOID~.~thread \then \\waitRet~.~BufferOID~.~thread \then \\\Skip \circblockclose \circseq X \\ \circelse ~ (loopVar = \false) \circthen \Skip \\ \circfi \circblockclose \\
              \circseq \\ 
 
 
@@ -107,11 +102,6 @@ lockAcquired~.~BufferOID~.~thread \then \\
 
 
             \circvar out : \num \circspot out := this~.~theBuffer
-             \circseq \\ 
-
-
-
-            \Skip
              \circseq \\ 
 
 
