@@ -4,10 +4,6 @@
   \t1 <#include "Parent-Template.ftl">
 \end{zsection}
 
-%\begin{circus}
-%\circchannelset ${ProcessName}AppChanSet == ${ProcessID}AppSync
-%\end{circus}
-
 \begin{circus}
 \circprocess ${ProcessName}App \circdef <#include "Params-Template.ftl"> \circbegin\\
 \end{circus}

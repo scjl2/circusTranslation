@@ -225,6 +225,8 @@ public class CircusGenerator
   @SuppressWarnings({ "unchecked", "rawtypes" })
   private void generateCustomChannels(Map chanMap, ObjectEnv objEnv)
   {
+    
+    //TODO Make sure that nonParadigm object's channels are generated and put in here.
     if (!objEnv.getAllMeths().isEmpty() && !objEnv.getSyncMeths().isEmpty())
     {
       objEnv.getAllMeths().remove("handleAsyncEvent");
@@ -255,6 +257,8 @@ public class CircusGenerator
     iDs = programEnv.getObjectIdsMap();
 
     generateCommon(iDs, OBJECT_IDS_TEMPLATE_FTL, OBJECT_IDS_CIRCUS);
+    
+    //TODO Output NonParadigmIds here
   }
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -279,6 +283,7 @@ public class CircusGenerator
 
     if (!((List) root.get("MethodCallBindings")).isEmpty())
     {
+      //TODO Make sure locType of nonParadigm objects is NonParadigmID!
       System.out.println("+++ Translating Method Call Binder +++");
       generateCommon(root, NETWORK_METHOD_CALL_BINDER_TEMPLATE_FTL,
           NETWORK_METHOD_CALL_BINDER);

@@ -5,15 +5,7 @@
 \end{zsection}
 
 
-%\begin{circus}
-%\circchannelset ${ProcessName}AppChanSet == \\
-% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
 
-<#list RegisteredSchedulables as SchedulableID >
-%    register~.~${SchedulableID}~.~${ProcessID}
-</#list>
-%\rchanset
-%\end{circus}
 
 \begin{circus}
 \circprocess ${ProcessName}App \circdef <#include "Params-Template.ftl"> \circbegin
@@ -36,14 +28,14 @@ InitializePhase \circdef \\
 \begin{circusaction}
 CleanupPhase \circdef
 <#if cleanupBody??>
-\circvar \boolean : ret @ \\
+\circvar ret : \boolean   \circspot \\
 <#else>
 \\
 </#if>
 \circblockopen
  cleanupMissionCall~.~${ProcessID} \then \\
 <#if cleanupBody??>
- ${cleanupBody} \\
+ ${cleanupBody} \circseq \\
  cleanupMissionRet~.~${ProcessID}~!~ret \then \\
 <#else>
  cleanupMissionRet~.~${ProcessID}~!~\true \then \\
