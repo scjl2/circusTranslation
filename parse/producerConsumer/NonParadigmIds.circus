@@ -1,0 +1,10 @@
+\begin{zsection}
+  \SECTION ~ NonParadigmIds ~ \parents ~ scj\_prelude, GlobalTypes
+\end{zsection}
+\extracircusvspace
+%
+\begin{axdef}
+	BufferID : NonParadigmID \\
+\where
+  distinct \langle BufferID \rangle
+\end{axdef}

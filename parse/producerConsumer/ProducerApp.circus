@@ -1,0 +1,89 @@
+\begin{zsection}
+  \SECTION ~ ProducerApp ~ \parents ~ ManagedThreadChan, SchedulableId, SchedulableIds  , MethodCallBindingChannels
+ \\
+  \t1 ,
+MissionMethChan
+,
+
+BufferMethChan
+,
+
+ObjectIds
+,
+
+ThreadIds
+
+
+
+
+\end{zsection}
+%
+\begin{circus}
+\circprocess ProducerApp \circdef \\ \t1
+  pcMission : MissionID
+
+\circspot
+ \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+Run \circdef \\
+\circblockopen
+	runCall~.~ProducerSID \then \\
+
+      \circblockopen
+            \circvar i : \num \circspot i :=~1
+             \circseq \\
+
+
+
+            \circmu X \circspot \\ \circblockopen terminationPendingCall~.~pcMission\then \\
+            terminationPendingRet~.~pcMission~?~terminationPending\then \\
+            \circvar loopVar : \boolean \circspot loopVar :=~ (\lnot terminationPending) \circseq \\
+            \circif ~ (loopVar = \true) ~ \circthen \\ \t1 \circblockopen binder\_writeCall~.~BufferID~.~ProducerSID~.~ProducerTID~!~i\then \\
+            binder\_writeRet~.~BufferID~.~ProducerSID~.~ProducerTID\then \\
+            \Skip \circseq \\ i := i + 1 \circseq \\
+            \circif ~ (i \geq 5) ~ \circthen ~ \\
+             \t1 \circblockopen requestTerminationCall~.~pcMission~.~ProducerSID\then \\
+             requestTerminationRet~.~pcMission~.~ProducerSID~?~requestTermination\then \\
+             \Skip \circblockclose \\ \circelse ~ \lnot (i \geq 5) \circthen \Skip \\
+              \circfi \\ \circblockclose \circseq X \\
+               \circelse ~ (loopVar = \false) \circthen \Skip \\
+               \circfi \circblockclose \\
+
+
+
+
+
+        \circblockclose
+
+ \circseq \\
+	runRet~.~ProducerSID \then \\
+	\Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef \\
+\circblockopen
+	Run \\
+%
+%
+%
+\circblockclose
+	 \circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods)
+  \circseq % \circinterrupt
+  (end\_managedThread\_app~.~ProducerSID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

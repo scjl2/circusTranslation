@@ -1,0 +1,13 @@
+\begin{zsection}
+  \SECTION ~ BufferMethChan ~ \parents ~  GlobalTypes, SchedulableId
+\end{zsection}
+%
+\begin{circus}
+\circchannel readCall :  NonParadigmID  \cross SchedulableID  \cross ThreadID  \\
+\circchannel readRet : NonParadigmID \cross SchedulableID  \cross ThreadID  \cross \num \\
+\end{circus}
+%
+\begin{circus}
+\circchannel writeCall :  NonParadigmID  \cross SchedulableID  \cross ThreadID   \cross \num \\
+\circchannel writeRet : NonParadigmID  \cross SchedulableID  \cross ThreadID   \\
+\end{circus}

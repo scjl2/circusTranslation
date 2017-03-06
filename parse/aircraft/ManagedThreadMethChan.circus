@@ -1,0 +1,8 @@
+\begin{zsection}
+  \SECTION ~ ManagedThreadMethChan ~ \parents ~ SchedulableId
+\end{zsection}
+%
+\begin{circus}
+    \circchannel ~ runCall : SchedulableID \\
+    \circchannel ~ runRet : SchedulableID
+\end{circus}

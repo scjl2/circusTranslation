@@ -1,0 +1,72 @@
+\begin{zsection}
+  \SECTION ~ CruiseMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, CruiseMissionMethChan \\
+ , MethodCallBindingChannels 
+ 
+
+\end{zsection}
+
+
+%\begin{circus}
+%\circchannelset CruiseMissionAppChanSet == \\
+% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
+
+%    register~.~BeginLandingHandlerSID~.~CruiseMissionMID
+%    register~.~NavigationMonitorSID~.~CruiseMissionMID
+%\rchanset
+%\end{circus}
+
+\begin{circus}
+\circprocess CruiseMissionApp \circdef \\ \t1
+  controllingMission : MissionID
+
+\circspot
+ \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~CruiseMissionMID \then \\
+	register~!~BeginLandingHandlerSID~!~CruiseMissionMID \then \\
+	register~!~NavigationMonitorSID~!~CruiseMissionMID \then \\
+  initializeRet~.~CruiseMissionMID \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+CleanupPhase \circdef
+\\
+\circblockopen
+ cleanupMissionCall~.~CruiseMissionMID \then \\
+ cleanupMissionRet~.~CruiseMissionMID~!~\true \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods) 
+ \circinterrupt (end\_mission\_app~.~CruiseMissionMID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

@@ -1,0 +1,27 @@
+\begin{zsection}
+  \SECTION ~ OneShotEventHandlerFWChan ~ \parents ~  HandlerChan, HandlerMethChan, JTime
+\end{zsection}
+%
+\begin{circus}
+\circchannel wait\_for\_start\_time : SchedulableID\\
+\circchannel end\_schedule : SchedulableID\\
+\circchannel reschedule\_handler: SchedulableID \cross JTime \\
+\circchannel deschedule\_handler: SchedulableID\\
+\end{circus}
+%
+\begin{circus}
+  \circchannel get\_fireCount :SchedulableID \cross \num \\
+  \circchannel increment\_fireCount : SchedulableID \\
+  \circchannel decrement\_fireCount : SchedulableID
+\end{circus}
+%
+\begin{circus}
+  \circchannel get\_startTime : SchedulableID \cross JTime\\
+  \circchannel set\_startTime : SchedulableID \cross JTime
+\end{circus}
+%
+
+%
+\begin{circus}
+  \circchannel end\_oneShot\_app : SchedulableID
+\end{circus}

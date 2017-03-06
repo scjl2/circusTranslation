@@ -1,0 +1,257 @@
+
+\begin{zsection}
+  \SECTION ~ MainMissionClass ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  
+
+\end{zsection}
+
+\begin{circus}
+\circclass MainMissionClass \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  cabinPressure : \power \arithmos\\ 
+  emergencyOxygen : \power \arithmos\\ 
+  fuelRemaining : \power \arithmos\\ 
+  altitude : \power \arithmos\\ 
+  airSpeed : \power \arithmos\\ 
+  heading : \power \arithmos\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+\end{schema}
+
+
+\begin{circusaction}
+\circpublic ~ getAirSpeed ~ \circdef
+\\
+
+      \circblockopen
+              ret := airSpeed
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getAltitude ~ \circdef
+\\
+
+      \circblockopen
+              ret := altitude
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getCabinPressure ~ \circdef
+\\
+
+      \circblockopen
+              ret := cabinPressure
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getEmergencyOxygen ~ \circdef
+\\
+
+      \circblockopen
+              ret := emergencyOxygen
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getFuelRemaining ~ \circdef
+\\
+
+      \circblockopen
+              ret := fuelRemaining
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ getHeading ~ \circdef
+\\
+
+      \circblockopen
+              ret := heading
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setAirSpeed ~ \circdef
+  \circvar
+    newAirSpeed : \power \arithmos
+    
+  \circspot
+\\
+
+      \circblockopen
+            airSpeed := newAirSpeed
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setAltitude ~ \circdef
+  \circvar
+    newAltitude : \power \arithmos
+    
+  \circspot
+\\
+
+      \circblockopen
+            altitude := newAltitude
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setCabinPressure ~ \circdef
+  \circvar
+    newCabinPressure : \power \arithmos
+    
+  \circspot
+\\
+
+      \circblockopen
+            cabinPressure := newCabinPressure
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setEmergencyOxygen ~ \circdef
+  \circvar
+    newEmergencyOxygen : \power \arithmos
+    
+  \circspot
+\\
+
+      \circblockopen
+            emergencyOxygen := newEmergencyOxygen
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setFuelRemaining ~ \circdef
+  \circvar
+    newFuelRemaining : \power \arithmos
+    
+  \circspot
+\\
+
+      \circblockopen
+            fuelRemaining := newFuelRemaining
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+\begin{circusaction}
+\circpublic ~ setHeading ~ \circdef
+  \circvar
+    newHeading : \power \arithmos
+    
+  \circspot
+\\
+
+      \circblockopen
+            heading := newHeading
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

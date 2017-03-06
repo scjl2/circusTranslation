@@ -1,0 +1,43 @@
+\begin{zsection}
+  \SECTION ~ MethodCallBindingChannels ~ \parents ~ scj\_prelude, GlobalTypes, FrameworkChan, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, ThreadIds, NonParadigmIds
+\end{zsection}
+
+\begin{circus}
+
+\circchannel binder\_readCall :  NonParadigmID  \cross SchedulableID  \cross ThreadID  \\
+\circchannel binder\_readRet : NonParadigmID \cross SchedulableID  \cross ThreadID  \cross \num \\
+\end{circus}
+%
+
+\begin{zed}
+readLocs == \{ BufferID \}  \\
+readCallers == \{ ConsumerSID \}
+\end{zed}
+
+%
+\begin{circus}
+
+\circchannel binder\_writeCall :  NonParadigmID  \cross SchedulableID  \cross ThreadID   \cross
+\num
+
+\\
+\circchannel binder\_writeRet : NonParadigmID  \cross SchedulableID  \cross ThreadID   \\
+\end{circus}
+%
+\begin{zed}
+writeLocs == \{ BufferID \}  \\
+writeCallers == \{ ProducerSID \}
+\end{zed}
+%
+
+
+\begin{circus}
+\circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, \\
+binder\_readCall, binder\_readRet
+,\\
+
+binder\_writeCall, binder\_writeRet
+
+\rchanset
+\end{circus}

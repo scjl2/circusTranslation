@@ -1,0 +1,68 @@
+\begin{zsection}
+  \SECTION ~ PCMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan \\
+ , MethodCallBindingChannels
+
+
+\end{zsection}
+
+
+
+
+\begin{circus}
+\circprocess PCMissionApp \circdef  \circbegin
+\end{circus}
+
+
+\begin{circusaction}
+InitializePhase \circdef \\
+\circblockopen
+  initializeCall~.~PCMissionMID \then \\
+	register~!~ProducerSID~!~PCMissionMID \then \\
+	register~!~ConsumerSID~!~PCMissionMID \then \\
+  initializeRet~.~PCMissionMID \then \\
+  \Skip
+\circblockclose
+\end{circusaction}
+
+\begin{circusaction}
+CleanupPhase \circdef
+\circvar ret : \boolean  \circspot \\
+\circblockopen
+ cleanupMissionCall~.~PCMissionMID \then \\
+
+      \circblockopen
+              ret := \false
+        \circblockclose \circseq
+
+ \\
+ cleanupMissionRet~.~PCMissionMID~!~ret \then \\
+ \Skip
+\circblockclose
+\end{circusaction}
+
+%
+%
+
+\begin{circusaction}
+Methods \circdef
+\circblockopen
+	InitializePhase \\
+	\extchoice \\
+	CleanupPhase \\
+%
+%
+%
+\circblockclose
+\circseq Methods
+\end{circusaction}
+
+\begin{circusaction}
+\circspot ( Methods)
+ \circseq % \circinterrupt
+ (end\_mission\_app~.~PCMissionMID \then \Skip)
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}

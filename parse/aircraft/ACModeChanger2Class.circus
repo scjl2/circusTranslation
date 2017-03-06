@@ -1,0 +1,151 @@
+
+\begin{zsection}
+  \SECTION ~ ACModeChanger2Class ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan \\
+  , MethodCallBindingChannels 
+  ,
+MissionId
+, 
+
+MissionIds
+
+
+
+
+\end{zsection}
+
+\begin{circus}
+\circclass ACModeChanger2Class \circdef \circbegin
+\end{circus}
+
+\begin{schema}{\circstateignore State}
+  modesLeft : \num\\ 
+\end{schema}
+% 
+\begin{circusaction}
+\circstate State
+\end{circusaction}
+%
+\begin{schema}{\circinitial Init}
+  State~'
+\where
+  modesLeft' = 3\\ 
+\end{schema}
+
+
+\begin{circusaction}
+\circprotected ~ getNextMission ~ \circdef
+\\
+
+      \circblockopen
+              \circif ~ (modesLeft = 3) ~ \circthen ~
+  \\
+\t1 
+      \circblockopen
+              modesLeft := modesLeft - 1
+
+
+             \circseq \\ 
+
+
+
+              ret := TakeOffMissionMID
+
+            
+
+
+
+
+        \circblockclose
+
+
+  \\
+  \circelse ~ \lnot (modesLeft = 3) ~ \circthen ~
+  \\
+\t1   \circif ~ (modesLeft = 2) ~ \circthen ~
+  \\
+\t1 
+      \circblockopen
+              modesLeft := modesLeft - 1
+
+
+             \circseq \\ 
+
+
+
+              ret := CruiseMissionMID
+
+            
+
+
+
+
+        \circblockclose
+
+
+  \\
+  \circelse ~ \lnot (modesLeft = 2) ~ \circthen ~
+  \\
+\t1   \circif ~ (modesLeft = 1) ~ \circthen ~
+  \\
+\t1 
+      \circblockopen
+              modesLeft := modesLeft - 1
+
+
+             \circseq \\ 
+
+
+
+              ret := LandMissionMID
+
+            
+
+
+
+
+        \circblockclose
+
+
+  \\
+  \circelse ~ \lnot (modesLeft = 1) ~ \circthen ~
+  \\
+\t1 
+      \circblockopen
+              ret := nullMissionId
+
+            
+
+
+
+
+        \circblockclose
+
+
+  \\
+  \circfi
+
+  \\
+  \circfi
+
+  \\
+  \circfi
+
+            
+
+
+
+
+        \circblockclose
+
+
+\end{circusaction}
+%
+%
+
+\begin{circusaction}
+\circspot ~ \Skip
+\end{circusaction}
+
+\begin{circus}
+  \circend
+\end{circus}
