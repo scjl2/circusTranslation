@@ -1,7 +1,7 @@
 \begin{zsection}
-  \SECTION ~ ACSafeletApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels 
+  \SECTION ~ ACSafeletApp ~ \parents ~ scj\_prelude, SchedulableId, SchedulableIds, SafeletChan  , MethodCallBindingChannels
 
-  \t1 
+  \t1
 
 \end{zsection}
 
@@ -20,7 +20,7 @@ InitializeApplication \circdef \\
 \circblockopen
      initializeApplicationCall \then \\
 
-	   
+
 
      initializeApplicationRet \then \\
      \Skip
@@ -53,8 +53,9 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
- \circinterrupt (end\_safelet\_app \then \Skip)
+\circspot ( Methods)
+\circseq % %\circinterrupt
+  (end\_safelet\_app \then \Skip)
 \end{circusaction}
 
 \begin{circus}

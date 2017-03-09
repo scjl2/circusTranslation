@@ -209,7 +209,7 @@ BinderActions \circdef \\
 \end{circusaction}
 %
 \begin{circusaction}
-\circspot BinderActions \circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\circspot BinderActions %\circinterrupt (done\_toplevel\_sequencer \then \Skip)
 \end{circusaction}
 %
 \begin{circus}

@@ -1,11 +1,9 @@
 \begin{zsection}
-  \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+  \SECTION ~ TakeOffFailureHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels
  \\
  \t1  ,
-MainMissionMethChan
-, 
+MainMissionMethChan, MissionMethChan
 
-TakeOffMissionMethChan
 
 
 
@@ -14,11 +12,9 @@ TakeOffMissionMethChan
 
 \begin{circus}
 \circprocess TakeOffFailureHandlerApp \circdef \\ \t1
-  mainMission : MissionID
-,\\
-  takeoffMission : MissionID
-,\\
-  threshold : \power \arithmos
+  mainMission : MissionID ; \\
+  takeoffMission : MissionID ; \\
+  threshold : \real
 
 \circspot
   \circbegin
@@ -29,48 +25,23 @@ TakeOffMissionMethChan
 handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~TakeOffFailureHandlerSID \then \\
-	
+
       \circblockopen
-            binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then \\binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then \\\Skip\circseq \circvar currentSpeed : \power \arithmos \circspot currentSpeed :=~getAirSpeed
-             \circseq \\ 
+            binder\_getAirSpeedCall~.~mainMission~.~TakeOffFailureHandlerSID\then \\
+            binder\_getAirSpeedRet~.~mainMission~.~TakeOffFailureHandlerSID~?~getAirSpeed\then \\
+            \circvar currentSpeed : \real \circspot currentSpeed :=~getAirSpeed \circseq \\
+          \circif ~ (currentSpeed < threshold) ~ \circthen ~  \\
+          \t1 \circblockopen
+            binder\_takeOffAbortCall~.~takeoffMission~.~TakeOffFailureHandlerSID \then \\
+            binder\_takeOffAbortRet~.~takeoffMission~.~TakeOffFailureHandlerSID\then \\
 
-
-
-              \circif ~ (currentSpeed < threshold) ~ \circthen ~
-  \\
-\t1 
-      \circblockopen
-            binder\_takeOffAbortCall~.~takeoffMission~.~TakeOffFailureHandlerSID\then \\binder\_takeOffAbortRet~.~takeoffMission~.~TakeOffFailureHandlerSID\then \\\Skip
-
-             \circseq \\ 
-
-
-
-            requestTerminationCall~.~takeoffMission~.~TakeOffFailureHandlerSID\then \\requestTerminationRet~.~takeoffMission~.~TakeOffFailureHandlerSID~?~requestTermination\then \\\Skip
-
-            
-
-
-
-
-        \circblockclose
-
-
-  \\
-  \circelse ~ \lnot (currentSpeed < threshold) ~ \circthen ~
-  \\
-\t1 
-  \Skip
-
-
-  \\
+            requestTerminationCall~.~takeoffMission~.~TakeOffFailureHandlerSID \then \\
+            requestTerminationRet~.~takeoffMission~.~TakeOffFailureHandlerSID~?~requestTermination\then \\
+            \Skip
+      \circblockclose  \\
+  \circelse ~ \lnot (currentSpeed < threshold) ~ \circthen ~   \\
+\t1  \Skip   \\
   \circfi
-
-            
-
-
-
-
         \circblockclose
 
  \circseq \\
@@ -94,8 +65,8 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~TakeOffFailureHandlerSID \then \Skip)
+\circspot ( Methods)
+  %\circinterrupt (end\_aperiodic\_app~.~TakeOffFailureHandlerSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

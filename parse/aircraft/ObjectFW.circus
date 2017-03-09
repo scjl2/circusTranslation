@@ -723,7 +723,7 @@ CeilingPriorityController \circdef \\
 \end{circusaction}
 %
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Execute)%\circinterrupt (done\_toplevel\_sequencer \then \Skip)
+\circspot ( \lschexpract Init \rschexpract \circseq Execute)%%\circinterrupt (done\_toplevel\_sequencer \then \Skip)
 \end{circusaction}
 %
 \begin{circus}

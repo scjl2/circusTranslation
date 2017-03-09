@@ -39,3 +39,9 @@ maxNanos == 999999
 \begin{zed}
 	AperiodicType ::= aperiodic | aperiodicLong
 \end{zed}
+%
+\begin{axdef}
+  \real : \power \arithmos
+\where
+  \num \subset \real
+\end{axdef}

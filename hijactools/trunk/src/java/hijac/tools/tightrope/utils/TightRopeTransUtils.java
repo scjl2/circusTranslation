@@ -69,15 +69,14 @@ public class TightRopeTransUtils extends TransUtils
 					case LONG:
 						returnString = "\\num";
 						break;
-
-					// TODO What do I do with these?
 					case FLOAT:
-						returnString = "float";
+						returnString = "\\real";
 						break;
 					case DOUBLE:
 						// returnString = "\\mathbb{R}";
-						returnString = "\\power \\arithmos";
+						returnString = " \\real";
 						break;
+						//TODO URM....
 					case CHAR:
 						returnString = "char";
 						break;

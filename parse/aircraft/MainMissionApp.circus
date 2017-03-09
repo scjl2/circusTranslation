@@ -1,32 +1,18 @@
 \begin{zsection}
-  \SECTION ~ MainMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \SECTION ~ MainMissionApp ~ \parents ~ scj\_prelude, GlobalTypes, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MainMissionMethChan \\
- , MainMissionClass, MethodCallBindingChannels 
- 
-
+ %, MainMissionClass
+ , MethodCallBindingChannels
 \end{zsection}
-
-
-%\begin{circus}
-%\circchannelset MainMissionAppChanSet == \\
-% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
-
-%    register~.~ACModeChanger2SID~.~MainMissionMID
-%    register~.~EnvironmentMonitorSID~.~MainMissionMID
-%    register~.~ControlHandlerSID~.~MainMissionMID
-%    register~.~FlightSensorsMonitorSID~.~MainMissionMID
-%    register~.~CommunicationsHandlerSID~.~MainMissionMID
-%\rchanset
-%\end{circus}
 
 \begin{circus}
 \circprocess MainMissionApp \circdef  \circbegin
 \end{circus}
 
 \begin{schema}{State}
-  this : \circreftype MainMissionClass\\ 
+  this : \num %\circreftype MainMissionClass\\
 \end{schema}
-% 
+%
 \begin{circusaction}
 \circstate State
 \end{circusaction}
@@ -34,7 +20,7 @@
 \begin{schema}{Init}
   State~' \\
 \where
-  this' = \circnew MainMissionClass()\\ 
+  this' =  0 %\circnew MainMissionClass()\\
 \end{schema}
 
 \begin{circusaction}
@@ -63,95 +49,102 @@ CleanupPhase \circdef
 
 \begin{circusaction}
 getAirSpeedMeth \circdef
-\circvar ret : \power \arithmos \circspot
+\circvar ret : \real \circspot
 \\
 \circblockopen
-getAirSpeedCall~.~MainMissionMID ~?~caller
-\then \\
-ret := this~.~getAirSpeed()  \circseq  \\
+getAirSpeedCall~.~MainMissionMID ~?~caller \then \\
+\circblockopen
+ret := 0 \circseq  %this~.~getAirSpeed()  \circseq  \\
 
 getAirSpeedRet~.~MainMissionMID~.~caller~!~ret \then \\
 \Skip
 \circblockclose
+\circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 getAltitudeMeth \circdef
-\circvar ret : \power \arithmos \circspot
+\circvar ret : \real \circspot
 \\
 \circblockopen
-getAltitudeCall~.~MainMissionMID ~?~caller
-\then \\
-ret := this~.~getAltitude()  \circseq  \\
+getAltitudeCall~.~MainMissionMID ~?~caller \then \\
+\circblockopen
+ret := 0 \circseq %this~.~getAltitude()  \circseq  \\
 
 getAltitudeRet~.~MainMissionMID~.~caller~!~ret \then \\
 \Skip
 \circblockclose
+\circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 getCabinPressureMeth \circdef
-\circvar ret : \power \arithmos \circspot
+\circvar ret : \real \circspot
 \\
 \circblockopen
-getCabinPressureCall~.~MainMissionMID
-\then \\
-ret := this~.~getCabinPressure()  \circseq  \\
+getCabinPressureCall~.~MainMissionMID \then \\
+\circblockopen
+ret := 0 \circseq%this~.~getCabinPressure()  \circseq  \\
 
 getCabinPressureRet~.~MainMissionMID~!~ret \then \\
 \Skip
 \circblockclose
+\circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 getEmergencyOxygenMeth \circdef
-\circvar ret : \power \arithmos \circspot
-\\
+\circvar ret : \real \circspot \\
 \circblockopen
-getEmergencyOxygenCall~.~MainMissionMID
-\then \\
-ret := this~.~getEmergencyOxygen()  \circseq  \\
+getEmergencyOxygenCall~.~MainMissionMID \then \\
+\circblockopen
+ret := 0 \circseq%this~.~getEmergencyOxygen()  \circseq  \\
 
 getEmergencyOxygenRet~.~MainMissionMID~!~ret \then \\
 \Skip
 \circblockclose
+\circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 getFuelRemainingMeth \circdef
-\circvar ret : \power \arithmos \circspot
-\\
+\circvar ret : \real \circspot \\
 \circblockopen
-getFuelRemainingCall~.~MainMissionMID
-\then \\
-ret := this~.~getFuelRemaining()  \circseq  \\
+getFuelRemainingCall~.~MainMissionMID \then \\
+\circblockopen
+ret := 0 \circseq%this~.~getFuelRemaining()  \circseq  \\
 
 getFuelRemainingRet~.~MainMissionMID~!~ret \then \\
 \Skip
 \circblockclose
+\circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 getHeadingMeth \circdef
-\circvar ret : \power \arithmos \circspot
-\\
+\circvar ret : \real \circspot \\
 \circblockopen
-getHeadingCall~.~MainMissionMID ~?~caller
-\then \\
-ret := this~.~getHeading()  \circseq  \\
+getHeadingCall~.~MainMissionMID ~?~caller \then \\
+\circblockopen
+ret := 0 \circseq %this~.~getHeading()  \circseq  \\
 
 getHeadingRet~.~MainMissionMID~.~caller~!~ret \then \\
 \Skip
 \circblockclose
+\circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 setAirSpeedMeth \circdef
 \\
 \circblockopen
-setAirSpeedCall~.~MainMissionMID ~?~caller
-~?~newAirSpeed
-\then \\
-this~.~setAirSpeed(newAirSpeed)  \circseq  \\
-
+setAirSpeedCall~.~MainMissionMID ~?~caller~?~newAirSpeed \then \\
+%this~.~setAirSpeed(newAirSpeed)  \circseq  \\
 setAirSpeedRet~.~MainMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 setAltitudeMeth \circdef
 \\
@@ -159,12 +152,13 @@ setAltitudeMeth \circdef
 setAltitudeCall~.~MainMissionMID ~?~caller
 ~?~newAltitude
 \then \\
-this~.~setAltitude(newAltitude)  \circseq  \\
+%this~.~setAltitude(newAltitude)  \circseq  \\
 
 setAltitudeRet~.~MainMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 setCabinPressureMeth \circdef
 \\
@@ -172,12 +166,13 @@ setCabinPressureMeth \circdef
 setCabinPressureCall~.~MainMissionMID ~?~caller
 ~?~newCabinPressure
 \then \\
-this~.~setCabinPressure(newCabinPressure)  \circseq  \\
+%this~.~setCabinPressure(newCabinPressure)  \circseq  \\
 
 setCabinPressureRet~.~MainMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 setEmergencyOxygenMeth \circdef
 \\
@@ -185,12 +180,13 @@ setEmergencyOxygenMeth \circdef
 setEmergencyOxygenCall~.~MainMissionMID ~?~caller
 ~?~newEmergencyOxygen
 \then \\
-this~.~setEmergencyOxygen(newEmergencyOxygen)  \circseq  \\
+%this~.~setEmergencyOxygen(newEmergencyOxygen)  \circseq  \\
 
 setEmergencyOxygenRet~.~MainMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 setFuelRemainingMeth \circdef
 \\
@@ -198,12 +194,13 @@ setFuelRemainingMeth \circdef
 setFuelRemainingCall~.~MainMissionMID ~?~caller
 ~?~newFuelRemaining
 \then \\
-this~.~setFuelRemaining(newFuelRemaining)  \circseq  \\
+%this~.~setFuelRemaining(newFuelRemaining)  \circseq  \\
 
 setFuelRemainingRet~.~MainMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 setHeadingMeth \circdef
 \\
@@ -211,7 +208,7 @@ setHeadingMeth \circdef
 setHeadingCall~.~MainMissionMID ~?~caller
 ~?~newHeading
 \then \\
-this~.~setHeading(newHeading)  \circseq  \\
+%this~.~setHeading(newHeading)  \circseq  \\
 
 setHeadingRet~.~MainMissionMID~.~caller \then \\
 \Skip
@@ -228,29 +225,29 @@ Methods \circdef
 	CleanupPhase \\
 %
 \extchoice \\
-	getAirSpeedMeth \\ 
+	getAirSpeedMeth \\
 \extchoice \\
-	getAltitudeMeth \\ 
+	getAltitudeMeth \\
 \extchoice \\
-	getCabinPressureMeth \\ 
+	getCabinPressureMeth \\
 \extchoice \\
-	getEmergencyOxygenMeth \\ 
+	getEmergencyOxygenMeth \\
 \extchoice \\
-	getFuelRemainingMeth \\ 
+	getFuelRemainingMeth \\
 \extchoice \\
-	getHeadingMeth \\ 
+	getHeadingMeth \\
 \extchoice \\
-	setAirSpeedMeth \\ 
+	setAirSpeedMeth \\
 \extchoice \\
-	setAltitudeMeth \\ 
+	setAltitudeMeth \\
 \extchoice \\
-	setCabinPressureMeth \\ 
+	setCabinPressureMeth \\
 \extchoice \\
-	setEmergencyOxygenMeth \\ 
+	setEmergencyOxygenMeth \\
 \extchoice \\
-	setFuelRemainingMeth \\ 
+	setFuelRemainingMeth \\
 \extchoice \\
-	setHeadingMeth \\ 
+	setHeadingMeth \\
 %
 %
 \circblockclose
@@ -258,8 +255,8 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
- \circinterrupt (end\_mission\_app~.~MainMissionMID \then \Skip)
+\circspot ( \lschexpract Init \rschexpract \circseq Methods)
+ %\circinterrupt (end\_mission\_app~.~MainMissionMID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

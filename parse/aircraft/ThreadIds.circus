@@ -4,9 +4,6 @@
 \extracircusvspace
 %
 \begin{axdef}
-	SafeletTId  : ThreadID \\
-	nullThreadId  : ThreadID \\
-
 \where
   distinct \langle SafeletTId, nullThreadId
   \rangle

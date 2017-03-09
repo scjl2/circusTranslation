@@ -1,19 +1,14 @@
 \begin{zsection}
-  \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+  \SECTION ~ SafeLandingHandlerApp ~ \parents ~ AperiodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels
  \\
  \t1  ,
 MainMissionMethChan
-
-
-
-
 \end{zsection}
 
 \begin{circus}
 \circprocess SafeLandingHandlerApp \circdef \\ \t1
-  mainMission : MissionID
-,\\
-  threshold : \power \arithmos
+  mainMission : MissionID ; \\
+  threshold : \real
 
 \circspot
   \circbegin
@@ -24,30 +19,28 @@ MainMissionMethChan
 handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~SafeLandingHandlerSID \then \\
-	
+
       \circblockopen
-            binder\_getAltitudeCall~.~mainMission~.~SafeLandingHandlerSID\then \\binder\_getAltitudeRet~.~mainMission~.~SafeLandingHandlerSID~?~getAltitude\then \\\Skip\circseq \circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
-             \circseq \\ 
-
-
-
+            binder\_getAltitudeCall~.~mainMission~.~SafeLandingHandlerSID\then \\
+            binder\_getAltitudeRet~.~mainMission~.~SafeLandingHandlerSID~?~getAltitude\then \\
+            \circvar altitude : \real \circspot altitude :=~getAltitude \circseq \\
               \circif ~ (altitude < threshold) ~ \circthen ~
   \\
-\t1 
+\t1
   \Skip
 
 
   \\
   \circelse ~ \lnot (altitude < threshold) ~ \circthen ~
   \\
-\t1 
+\t1
   \Skip
 
 
   \\
   \circfi
 
-            
+
 
 
 
@@ -75,8 +68,8 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~SafeLandingHandlerSID \then \Skip)
+\circspot ( Methods)
+  %\circinterrupt (end\_aperiodic\_app~.~SafeLandingHandlerSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

@@ -1,85 +1,55 @@
 \begin{zsection}
-  \SECTION ~ GroundDistanceMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
- \\
- \t1  ,
-MainMissionMethChan
-
-
-
-
+  \SECTION ~ GroundDistanceMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels, \\
+  \t1 MissionMethChan
 \end{zsection}
 
 \begin{circus}
 \circprocess GroundDistanceMonitorApp \circdef \\ \t1
-  mainMission : MissionID
-,\\
-  readingOnGround : \power \arithmos
+  mainMission : MissionID;\\
+  readingOnGround : \real
 
 \circspot
   \circbegin
 \end{circus}
 
-
 \begin{circusaction}
 handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~GroundDistanceMonitorSID \then \\
-	
+
       \circblockopen
-            binder\_getAltitudeCall~.~mainMission~.~GroundDistanceMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~GroundDistanceMonitorSID~?~getAltitude\then \\\Skip\circseq \circvar distance : \power \arithmos \circspot distance :=~getAltitude
-             \circseq \\ 
+            binder\_getAltitudeCall~.~mainMission~.~GroundDistanceMonitorSID\then \\
+            binder\_getAltitudeRet~.~mainMission~.~GroundDistanceMonitorSID~?~getAltitude\then \\
 
-
-
-              \circif ~ (distance = readingOnGround) ~ \circthen ~
-  \\
-\t1 
-      \circblockopen
-            requestTerminationCall~.~mainMission~.~GroundDistanceMonitorSID\then \\requestTerminationRet~.~mainMission~.~GroundDistanceMonitorSID~?~requestTermination\then \\\Skip
-
-            
-
-
-
-
-        \circblockclose
-
-
+           \circvar distance : \real \circspot distance :=~getAltitude \circseq \\
+            \circif ~ (distance = readingOnGround) ~ \circthen ~  \\
+            \t1 \circblockopen
+            requestTerminationCall~.~mainMission~.~GroundDistanceMonitorSID\then \\
+            requestTerminationRet~.~mainMission~.~GroundDistanceMonitorSID~?~requestTermination\then \\
+            \Skip
+            \circblockclose
   \\
   \circelse ~ \lnot (distance = readingOnGround) \circthen \Skip
   \\
   \circfi \\
-
-            
-
-
-
-
         \circblockclose
-
  \circseq \\
     handleAsyncEventRet~.~GroundDistanceMonitorSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
-
 %
-%
-
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
 	handleAsyncEvent \\
-%
-%
-%
 \circblockclose
 	 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~GroundDistanceMonitorSID \then \Skip)
+\circspot ( Methods)
+  %\circinterrupt (end\_periodic\_app~.~GroundDistanceMonitorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

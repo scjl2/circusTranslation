@@ -211,7 +211,7 @@ DeadlineClock \circdef \circval index : \nat \circspot \\
 
 
     \circblockclose  \\
-  \circinterrupt
+  %\circinterrupt
     \circblockopen
     		end\_releases~.~schedulable \then \\
     		periodic\_release\_complete~.~schedulable~?~index \then \\

@@ -39,7 +39,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_aperiodic\_app~.~ControlHandlerSID \then \Skip)
+  %\circinterrupt (end\_aperiodic\_app~.~ControlHandlerSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

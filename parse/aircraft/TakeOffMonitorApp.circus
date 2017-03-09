@@ -1,70 +1,41 @@
 \begin{zsection}
-  \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+  \SECTION ~ TakeOffMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels
  \\
  \t1  ,
-MainMissionMethChan
-
-
-
-
+MainMissionMethChan, MissionMethChan
 \end{zsection}
 
 \begin{circus}
 \circprocess TakeOffMonitorApp \circdef \\ \t1
-  mainMission : MissionID
-,\\
-  takeOffMission : MissionID
-,\\
-  takeOffAltitude : \power \arithmos
-,\\
+  mainMission : MissionID ;\\
+  takeOffMission : MissionID ;\\
+  takeOffAltitude : \real ;\\
   landingGearHandler : SchedulableID
 
 \circspot
   \circbegin
 \end{circus}
 
-
 \begin{circusaction}
 handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~TakeOffMonitorSID \then \\
-	
+
       \circblockopen
-            binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then \\\Skip\circseq \circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
-             \circseq \\ 
+            binder\_getAltitudeCall~.~mainMission~.~TakeOffMonitorSID\then \\
+            binder\_getAltitudeRet~.~mainMission~.~TakeOffMonitorSID~?~getAltitude\then \\
+            \circvar altitude : \real \circspot altitude :=~getAltitude \circseq \\
+            \circif ~ (altitude > takeOffAltitude) ~ \circthen ~  \\
+            \t1 \circblockopen
+            release~.~landingGearHandler\then \\
 
-
-
-              \circif ~ (altitude > takeOffAltitude) ~ \circthen ~
-  \\
-\t1 
-      \circblockopen
-            release~.~landingGearHandler\then \\\Skip
-
-             \circseq \\ 
-
-
-
-            requestTerminationCall~.~takeOffMission~.~TakeOffMonitorSID\then \\requestTerminationRet~.~takeOffMission~.~TakeOffMonitorSID~?~requestTermination\then \\\Skip
-
-            
-
-
-
-
-        \circblockclose
-
-
-  \\
+            requestTerminationCall~.~takeOffMission~.~TakeOffMonitorSID\then \\
+            requestTerminationRet~.~takeOffMission~.~TakeOffMonitorSID~?~requestTermination\then \\
+            \Skip
+        \circblockclose  \\
   \circelse ~ \lnot (altitude > takeOffAltitude) \circthen \Skip
   \\
   \circfi \\
-
-            
-
-
-
-
         \circblockclose
 
  \circseq \\
@@ -88,8 +59,8 @@ Methods \circdef \\
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~TakeOffMonitorSID \then \Skip)
+\circspot ( Methods)
+  %\circinterrupt (end\_periodic\_app~.~TakeOffMonitorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

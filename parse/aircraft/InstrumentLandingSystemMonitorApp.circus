@@ -43,7 +43,7 @@ Methods \circdef \\
 
 \begin{circusaction}
 \circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~InstrumentLandingSystemMonitorSID \then \Skip)
+  %\circinterrupt (end\_periodic\_app~.~InstrumentLandingSystemMonitorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

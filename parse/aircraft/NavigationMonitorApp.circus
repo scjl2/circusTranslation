@@ -1,5 +1,5 @@
 \begin{zsection}
-  \SECTION ~ NavigationMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels 
+  \SECTION ~ NavigationMonitorApp ~ \parents ~ PeriodicEventHandlerChan, SchedulableId, SchedulableIds , MethodCallBindingChannels
  \\
  \t1  ,
 MainMissionMethChan
@@ -22,49 +22,35 @@ MainMissionMethChan
 handleAsyncEvent \circdef \\
 \circblockopen
 	handleAsyncEventCall~.~NavigationMonitorSID \then \\
-	
+
       \circblockopen
-            binder\_getHeadingCall~.~mainMission~.~NavigationMonitorSID\then \\binder\_getHeadingRet~.~mainMission~.~NavigationMonitorSID~?~getHeading\then \\\Skip\circseq \circvar heading : \power \arithmos \circspot heading :=~getHeading
-             \circseq \\ 
-
-
-
-            binder\_getAirSpeedCall~.~mainMission~.~NavigationMonitorSID\then \\binder\_getAirSpeedRet~.~mainMission~.~NavigationMonitorSID~?~getAirSpeed\then \\\Skip\circseq \circvar airSpeed : \power \arithmos \circspot airSpeed :=~getAirSpeed
-             \circseq \\ 
-
-
-
-            binder\_getAltitudeCall~.~mainMission~.~NavigationMonitorSID\then \\binder\_getAltitudeRet~.~mainMission~.~NavigationMonitorSID~?~getAltitude\then \\\Skip\circseq \circvar altitude : \power \arithmos \circspot altitude :=~getAltitude
-            
-
-
-
-
+            binder\_getHeadingCall~.~mainMission~.~NavigationMonitorSID\then \\
+            binder\_getHeadingRet~.~mainMission~.~NavigationMonitorSID~?~getHeading \then \\
+            \circvar heading : \real \circspot heading :=~getHeading \circseq \\
+            binder\_getAirSpeedCall~.~mainMission~.~NavigationMonitorSID \then \\
+            binder\_getAirSpeedRet~.~mainMission~.~NavigationMonitorSID~?~getAirSpeed\then \\
+             \circvar airSpeed : \real \circspot airSpeed :=~getAirSpeed \circseq \\
+            binder\_getAltitudeCall~.~mainMission~.~NavigationMonitorSID\then \\
+            binder\_getAltitudeRet~.~mainMission~.~NavigationMonitorSID~?~getAltitude\then \\
+            \circvar altitude : \real \circspot altitude :=~getAltitude
         \circblockclose
-
  \circseq \\
     handleAsyncEventRet~.~NavigationMonitorSID \then \\
     \Skip
 \circblockclose
 \end{circusaction}
-
 %
-%
-
 \begin{circusaction}
 Methods \circdef \\
 \circblockopen
 	handleAsyncEvent \\
-%
-%
-%
 \circblockclose
 	 \circseq Methods
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
-  \circinterrupt (end\_periodic\_app~.~NavigationMonitorSID \then \Skip)
+\circspot ( Methods)
+  %\circinterrupt (end\_periodic\_app~.~NavigationMonitorSID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

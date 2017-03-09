@@ -152,7 +152,7 @@ DeadlineClock \circdef \\
 			\circblockclose
 		\circblockclose
 	\circblockclose
-    \circinterrupt
+    %\circinterrupt
     \circblockopen
     		end\_releases~.~schedulable \then \\
 	    	\Skip
@@ -169,7 +169,7 @@ Scheduled \circdef \\
 		handleAsyncEventCall~.~schedulable \then \\
 	 	NotScheduled
      \circblockclose \\
-  \circinterrupt \\
+  %\circinterrupt \\
   \circblockopen
      	\circblockopen
       		deschedule\_handler~.~schedulable \then \\

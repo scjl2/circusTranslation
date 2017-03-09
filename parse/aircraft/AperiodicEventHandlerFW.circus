@@ -123,7 +123,7 @@ DeadlineClock \circdef \\
 			\circblockclose
 		\circblockclose
 	\circblockclose
-    \circinterrupt
+    %\circinterrupt
     \circblockopen
     		end\_releases~.~schedulable \then \\
     		%release\_complete~.~schedulable \then \\

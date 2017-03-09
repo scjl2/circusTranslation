@@ -1,8 +1,8 @@
 \begin{zsection}
   \SECTION ~ CruiseMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, CruiseMissionMethChan \\
- , MethodCallBindingChannels 
- 
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan \\
+ , MethodCallBindingChannels
+
 
 \end{zsection}
 
@@ -63,8 +63,8 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
- \circinterrupt (end\_mission\_app~.~CruiseMissionMID \then \Skip)
+\circspot ( Methods)
+ %\circinterrupt (end\_mission\_app~.~CruiseMissionMID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

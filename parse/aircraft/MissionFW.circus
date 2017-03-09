@@ -171,7 +171,7 @@ SignalTermination \circdef \\
   schedulables\_stopped~.~mission \then \\
   \Skip\\
 \circblockclose
-\t1 \circinterrupt (schedulables\_stopped~.~mission \then \Skip)
+\t1 %\circinterrupt (schedulables\_stopped~.~mission \then \Skip)
 \end{circusaction}
 %
 \begin{circusaction}

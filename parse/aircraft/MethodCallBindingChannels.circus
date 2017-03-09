@@ -5,10 +5,7 @@
 
 \begin{circus}
 
-\circchannel binder\_setCabinPressureCall :  MissionID  \cross SchedulableID   \cross
-\power \arithmos
-
-\\
+\circchannel binder\_setCabinPressureCall :  MissionID  \cross SchedulableID   \cross \real \\
 \circchannel binder\_setCabinPressureRet : MissionID  \cross SchedulableID   \\
 \end{circus}
 %
@@ -19,10 +16,7 @@ setCabinPressureCallers == \{ EnvironmentMonitorSID \}
 %
 \begin{circus}
 
-\circchannel binder\_setFuelRemainingCall :  MissionID  \cross SchedulableID   \cross
-\power \arithmos
-
-\\
+\circchannel binder\_setFuelRemainingCall :  MissionID  \cross SchedulableID   \cross  \real \\
 \circchannel binder\_setFuelRemainingRet : MissionID  \cross SchedulableID   \\
 \end{circus}
 %
@@ -34,7 +28,7 @@ setFuelRemainingCallers == \{ EnvironmentMonitorSID \}
 \begin{circus}
 
 \circchannel binder\_getAltitudeCall :  MissionID  \cross SchedulableID  \\
-\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID  \cross \power \arithmos \\
+\circchannel binder\_getAltitudeRet : MissionID \cross SchedulableID  \cross  \real \\
 \end{circus}
 %
 \begin{zed}
@@ -44,10 +38,7 @@ getAltitudeCallers == \{ NavigationMonitorSID,TakeOffMonitorSID,GroundDistanceMo
 %
 \begin{circus}
 
-\circchannel binder\_setHeadingCall :  MissionID  \cross SchedulableID   \cross
-\power \arithmos
-
-\\
+\circchannel binder\_setHeadingCall :  MissionID  \cross SchedulableID   \cross \real \\
 \circchannel binder\_setHeadingRet : MissionID  \cross SchedulableID   \\
 \end{circus}
 %
@@ -80,10 +71,7 @@ takeOffAbortCallers == \{ TakeOffFailureHandlerSID \}
 %
 \begin{circus}
 
-\circchannel binder\_setAltitudeCall :  MissionID  \cross SchedulableID   \cross
-\power \arithmos
-
-\\
+\circchannel binder\_setAltitudeCall :  MissionID  \cross SchedulableID   \cross \real \\
 \circchannel binder\_setAltitudeRet : MissionID  \cross SchedulableID   \\
 \end{circus}
 %
@@ -95,7 +83,7 @@ setAltitudeCallers == \{ FlightSensorsMonitorSID \}
 \begin{circus}
 
 \circchannel binder\_getHeadingCall :  MissionID  \cross SchedulableID  \\
-\circchannel binder\_getHeadingRet : MissionID \cross SchedulableID  \cross \power \arithmos \\
+\circchannel binder\_getHeadingRet : MissionID \cross SchedulableID  \cross  \real \\
 \end{circus}
 %
 \begin{zed}
@@ -106,7 +94,7 @@ getHeadingCallers == \{ NavigationMonitorSID \}
 \begin{circus}
 
 \circchannel binder\_getAirSpeedCall :  MissionID  \cross SchedulableID  \\
-\circchannel binder\_getAirSpeedRet : MissionID \cross SchedulableID  \cross \power \arithmos \\
+\circchannel binder\_getAirSpeedRet : MissionID \cross SchedulableID  \cross  \real \\
 \end{circus}
 %
 \begin{zed}
@@ -127,10 +115,7 @@ deployLandingGearCallers == \{ LandingGearHandlerSID,LandingGearHandlerLandSID \
 %
 \begin{circus}
 
-\circchannel binder\_setEmergencyOxygenCall :  MissionID  \cross SchedulableID   \cross
-\power \arithmos
-
-\\
+\circchannel binder\_setEmergencyOxygenCall :  MissionID  \cross SchedulableID   \cross  \real \\
 \circchannel binder\_setEmergencyOxygenRet : MissionID  \cross SchedulableID   \\
 \end{circus}
 %
@@ -140,11 +125,7 @@ setEmergencyOxygenCallers == \{ EnvironmentMonitorSID \}
 \end{zed}
 %
 \begin{circus}
-
-\circchannel binder\_setAirSpeedCall :  MissionID  \cross SchedulableID   \cross
-\power \arithmos
-
-\\
+\circchannel binder\_setAirSpeedCall :  MissionID  \cross SchedulableID   \cross  \real \\
 \circchannel binder\_setAirSpeedRet : MissionID  \cross SchedulableID   \\
 \end{circus}
 %
@@ -164,8 +145,6 @@ isLandingGearDeployedLocs == \{ TakeOffMissionMID,LandMissionMID \}  \\
 isLandingGearDeployedCallers == \{ LandingGearHandlerSID,LandingGearHandlerLandSID \}
 \end{zed}
 %
-
-
 \begin{circus}
 \circchannelset MethodCallBinderSync == \lchanset done\_toplevel\_sequencer, \\
 binder\_setCabinPressureCall, binder\_setCabinPressureRet

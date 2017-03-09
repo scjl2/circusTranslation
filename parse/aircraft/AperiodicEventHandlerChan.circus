@@ -3,7 +3,7 @@
 \end{zsection}
 %
 \begin{circus}
-    \circchannel end\_aperiodic\_app : SchedulableID
+    \circchannel end\_aperiodicEventHandler\_app : SchedulableID
 \end{circus}
 %
 \begin{circus}
@@ -11,5 +11,5 @@
 \end{circus}
 %
 \begin{circus}
-  \circchannelset DeadlineClockSync ==  \lchanset end\_releases, deschedule\_handler, release\_complete \rchanset \\
+  \circchannelset DeadlineClockSync ==  \lchanset end\_releases, release\_complete \rchanset \\
 \end{circus}

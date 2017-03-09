@@ -1,21 +1,11 @@
 \begin{zsection}
   \SECTION ~ TakeOffMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, TakeOffMissionMethChan \\
- , TakeOffMissionClass, MethodCallBindingChannels 
- 
+ %, TakeOffMissionClass
+ , MethodCallBindingChannels, LandingGearMethChan
+
 
 \end{zsection}
-
-
-%\begin{circus}
-%\circchannelset TakeOffMissionAppChanSet == \\
-% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
-
-%    register~.~LandingGearHandlerSID~.~TakeOffMissionMID
-%    register~.~TakeOffMonitorSID~.~TakeOffMissionMID
-%    register~.~TakeOffFailureHandlerSID~.~TakeOffMissionMID
-%\rchanset
-%\end{circus}
 
 \begin{circus}
 \circprocess TakeOffMissionApp \circdef \\ \t1
@@ -26,9 +16,9 @@
 \end{circus}
 
 \begin{schema}{State}
-  this : \circreftype TakeOffMissionClass\\ 
+  this : \num %\circreftype TakeOffMissionClass\\
 \end{schema}
-% 
+%
 \begin{circusaction}
 \circstate State
 \end{circusaction}
@@ -36,7 +26,7 @@
 \begin{schema}{Init}
   State~' \\
 \where
-  this' = \circnew TakeOffMissionClass()\\ 
+  this' = 0 %\circnew TakeOffMissionClass()\\
 \end{schema}
 
 \begin{circusaction}
@@ -53,20 +43,13 @@ InitializePhase \circdef \\
 
 \begin{circusaction}
 CleanupPhase \circdef
-\circvar \boolean : ret @ \\
+\circvar ret : \boolean \circspot \\
 \circblockopen
  cleanupMissionCall~.~TakeOffMissionMID \then \\
- 
+
       \circblockopen
-              ret :=   (\lnot this~.~abort)
-
-
-            
-
-
-
-
-        \circblockclose
+              ret :=  \true % (\lnot this~.~abort)
+        \circblockclose \circseq
 
  \\
  cleanupMissionRet~.~TakeOffMissionMID~!~ret \then \\
@@ -80,36 +63,39 @@ takeOffAbortMeth \circdef
 \circblockopen
 takeOffAbortCall~.~TakeOffMissionMID ~?~caller
 \then \\
-this~.~takeOffAbort()  \circseq  \\
+%this~.~takeOffAbort()  \circseq  \\
 
 takeOffAbortRet~.~TakeOffMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 deployLandingGearMeth \circdef
 \\
 \circblockopen
 deployLandingGearCall~.~TakeOffMissionMID ~?~caller
 \then \\
-this~.~deployLandingGear()  \circseq  \\
+%this~.~deployLandingGear()  \circseq  \\
 
 deployLandingGearRet~.~TakeOffMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 stowLandingGearMeth \circdef
 \\
 \circblockopen
 stowLandingGearCall~.~TakeOffMissionMID ~?~caller
 \then \\
-this~.~stowLandingGear()  \circseq  \\
+%this~.~stowLandingGear()  \circseq  \\
 
 stowLandingGearRet~.~TakeOffMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 isLandingGearDeployedMeth \circdef
 \circvar ret : \boolean \circspot
@@ -117,10 +103,12 @@ isLandingGearDeployedMeth \circdef
 \circblockopen
 isLandingGearDeployedCall~.~TakeOffMissionMID ~?~caller
 \then \\
-ret := this~.~isLandingGearDeployed()  \circseq  \\
-
+\circblockopen
+ret := \true %this~.~isLandingGearDeployed()  \circseq  \\
+\circseq
 isLandingGearDeployedRet~.~TakeOffMissionMID~.~caller~!~ret \then \\
 \Skip
+\circblockclose
 \circblockclose
 \end{circusaction}
 %
@@ -134,13 +122,13 @@ Methods \circdef
 	CleanupPhase \\
 %
 \extchoice \\
-	takeOffAbortMeth \\ 
+	takeOffAbortMeth \\
 \extchoice \\
-	deployLandingGearMeth \\ 
+	deployLandingGearMeth \\
 \extchoice \\
-	stowLandingGearMeth \\ 
+	stowLandingGearMeth \\
 \extchoice \\
-	isLandingGearDeployedMeth \\ 
+	isLandingGearDeployedMeth \\
 %
 %
 \circblockclose
@@ -148,8 +136,8 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( \lschexpract Init \rschexpract \circseq Methods) 
- \circinterrupt (end\_mission\_app~.~TakeOffMissionMID \then \Skip)
+\circspot ( \lschexpract Init \rschexpract \circseq Methods)
+ %\circinterrupt (end\_mission\_app~.~TakeOffMissionMID \then \Skip)
 \end{circusaction}
 
 \begin{circus}

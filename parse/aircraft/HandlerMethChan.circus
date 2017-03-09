@@ -3,7 +3,7 @@
 \end{zsection}
 %
 \begin{circus}
-  \circchannel handleAsyncLongEventCall : SchedulableID  \\
-  \circchannel handleAsyncLongEventRet : SchedulableID  \\
+  \circchannel handleAsyncEventCall : SchedulableID \\
+  \circchannel handleAsyncEventRet : SchedulableID \\
   \circchannel release : SchedulableID
 \end{circus}

@@ -1,23 +1,12 @@
 \begin{zsection}
   \SECTION ~ LandMissionApp ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, LandMissionMethChan \\
- , LandMissionClass, MethodCallBindingChannels 
- 
+  \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, LandingGearMethChan \\
+ %, LandMissionClass
+ , MethodCallBindingChannels
+
 
 \end{zsection}
-
-
-%\begin{circus}
-%\circchannelset LandMissionAppChanSet == \\
-% \lchanset initializeCall, initializeRet, cleanupMissionCall, cleanupMissionRet,
-
-%    register~.~GroundDistanceMonitorSID~.~LandMissionMID
-%    register~.~LandingGearHandlerLandSID~.~LandMissionMID
-%    register~.~InstrumentLandingSystemMonitorSID~.~LandMissionMID
-%    register~.~SafeLandingHandlerSID~.~LandMissionMID
-%\rchanset
-%\end{circus}
-
+%
 \begin{circus}
 \circprocess LandMissionApp \circdef \\ \t1
   controllingMission : MissionID
@@ -42,19 +31,13 @@ InitializePhase \circdef \\
 
 \begin{circusaction}
 CleanupPhase \circdef
-\circvar \boolean : ret @ \\
+\circvar ret : \boolean \circspot \\
 \circblockopen
  cleanupMissionCall~.~LandMissionMID \then \\
- 
-      \circblockopen
-              ret := \false
-
-            
 
 
+              ret := \false \circseq
 
-
-        \circblockclose
 
  \\
  cleanupMissionRet~.~LandMissionMID~!~ret \then \\
@@ -68,7 +51,7 @@ deployLandingGearMeth \circdef
 \circblockopen
 deployLandingGearCall~.~LandMissionMID ~?~caller
 \then \\
-this~.~deployLandingGear()  \circseq  \\
+%this~.~deployLandingGear()  \circseq  \\
 
 deployLandingGearRet~.~LandMissionMID~.~caller \then \\
 \Skip
@@ -80,12 +63,13 @@ stowLandingGearMeth \circdef
 \circblockopen
 stowLandingGearCall~.~LandMissionMID ~?~caller
 \then \\
-this~.~stowLandingGear()  \circseq  \\
+%this~.~stowLandingGear()  \circseq  \\
 
 stowLandingGearRet~.~LandMissionMID~.~caller \then \\
 \Skip
 \circblockclose
 \end{circusaction}
+
 \begin{circusaction}
 isLandingGearDeployedMeth \circdef
 \circvar ret : \boolean \circspot
@@ -93,7 +77,7 @@ isLandingGearDeployedMeth \circdef
 \circblockopen
 isLandingGearDeployedCall~.~LandMissionMID ~?~caller
 \then \\
-ret := this~.~isLandingGearDeployed()  \circseq  \\
+%ret := this~.~isLandingGearDeployed()  \circseq  \\
 
 isLandingGearDeployedRet~.~LandMissionMID~.~caller~!~ret \then \\
 \Skip
@@ -110,11 +94,11 @@ Methods \circdef
 	CleanupPhase \\
 %
 \extchoice \\
-	deployLandingGearMeth \\ 
+	deployLandingGearMeth \\
 \extchoice \\
-	stowLandingGearMeth \\ 
+	stowLandingGearMeth \\
 \extchoice \\
-	isLandingGearDeployedMeth \\ 
+	isLandingGearDeployedMeth \\
 %
 %
 \circblockclose
@@ -122,8 +106,8 @@ Methods \circdef
 \end{circusaction}
 
 \begin{circusaction}
-\circspot ( Methods) 
- \circinterrupt (end\_mission\_app~.~LandMissionMID \then \Skip)
+\circspot ( Methods)
+ %\circinterrupt (end\_mission\_app~.~LandMissionMID \then \Skip)
 \end{circusaction}
 
 \begin{circus}
