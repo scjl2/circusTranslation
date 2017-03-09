@@ -2,7 +2,7 @@
 %+++ Program +++
 %
 \begin{zsection}
-  \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \SECTION ~ NetworkProgram ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\
@@ -21,9 +21,9 @@ CommunicationsHandlerApp
 EnvironmentMonitorApp
 	,
 FlightSensorsMonitorApp
-	
+
 \\ \t1
-	
+
 	,
 TakeOffMissionApp,
 
@@ -33,14 +33,14 @@ TakeOffFailureHandlerApp
 	,
 \\ \t1
 TakeOffMonitorApp
-	
+
 	,
 CruiseMissionApp,
 
 BeginLandingHandlerApp
 	,
 NavigationMonitorApp
-	
+
 \\ \t1
 	,
 LandMissionApp,
@@ -53,9 +53,9 @@ GroundDistanceMonitorApp
 	,
 \\ \t1
 InstrumentLandingSystemMonitorApp
-	
-	
-	
+
+
+
 \end{zsection}
 %
 \begin{circus}
@@ -99,7 +99,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 			PeriodicEventHandlerFW(FlightSensorsMonitorID ,(time(10,0),NULL,NULL,nullSchedulableId)   )\\
 
-		
+
 
 
 
@@ -129,7 +129,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 			PeriodicEventHandlerFW(TakeOffMonitorID ,(time(0,0),time(500,0),NULL,nullSchedulableId)   )\\
 
-		
+
 
 
 
@@ -151,7 +151,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 			PeriodicEventHandlerFW(NavigationMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
 
-		
+
 
 
 
@@ -183,7 +183,7 @@ TopLevelMissionSequencerFW(MainMissionSequencer)
 
 			PeriodicEventHandlerFW(InstrumentLandingSystemMonitorID ,(time(0,0),time(10,0),NULL,nullSchedulableId)   )\\
 
-		
+
 
 
 
@@ -229,8 +229,8 @@ MainMissionSequencerApp\\
 			EnvironmentMonitorApp ( MainMissionID  ) \\
 			\interleave \\
 			FlightSensorsMonitorApp ( MainMissionID  ) \\
-			
-		
+
+
 		\interleave \\
 		TakeOffMissionApp\\
 		\interleave \\
@@ -239,14 +239,14 @@ MainMissionSequencerApp\\
 			TakeOffFailureHandlerApp ( TakeOffMissionID ,  10.0  ) \\
 			\interleave \\
 			TakeOffMonitorApp ( TakeOffMissionID ,  10.0 ,  landingGearHandlerID  ) \\
-			
+
 		\interleave \\
 		CruiseMissionApp\\
 		\interleave \\
 			BeginLandingHandlerApp\\
 			\interleave \\
 			NavigationMonitorApp\\
-			
+
 		\interleave \\
 		LandMissionApp\\
 		\interleave \\
@@ -257,7 +257,7 @@ MainMissionSequencerApp\\
 			GroundDistanceMonitorApp ( 0.0  ) \\
 			\interleave \\
 			InstrumentLandingSystemMonitorApp ( LandMissionID  ) \\
-			
-		
+
+
 \circblockclose
 \end{circus}

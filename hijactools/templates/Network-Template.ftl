@@ -1,3 +1,7 @@
+\begin{zsection}
+  \SECTION ~ Network ~ \parents ~ NetworkProgram, MethodCallBindingChannels,  NetworkMethodCallBinder, NetworkChan, NetworkLocking
+\end{zsection}
+
 <#if MethodCallBindings?has_content>
 \begin{circus}
 \circprocess Bound\_Application \circdef  Application \lpar MethodCallBinderSync \rpar MethodCallBinder \\
@@ -10,4 +14,3 @@
 \end{circus}
 </#if>
 %
-

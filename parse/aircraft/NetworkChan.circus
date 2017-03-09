@@ -3,7 +3,7 @@
 % MAKE THIS PARSE
 
 \begin{zsection}
-	\SECTION ~ NetworkChannels ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+	\SECTION ~ NetworkChan ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
 		\t1 SchedulableId, SchedulableIds, MissionChan, TopLevelMissionSequencerFWChan,\\
 		\t1 FrameworkChan, SafeletChan, AperiodicEventHandlerChan, ManagedThreadChan, \\
 		\t1 OneShotEventHandlerChan, PeriodicEventHandlerChan, MissionSequencerMethChan
@@ -16,7 +16,7 @@
 \begin{circus}
 \circchannelset ~ ControlTierSync ==\\ \t1 \lchanset start\_toplevel\_sequencer, done\_toplevel\_sequencer, done\_safeletFW \rchanset
 \end{circus}
-% IDs wont type check again   Start Mission and Done Mission wont parse?
+%
 \begin{circus}
 \circchannelset ~ TierSync == \\ \t1 \lchanset start\_mission~.~MainMission, done\_mission~.~MainMission,\\
 	\t1 done\_safeletFW, done\_toplevel\_sequencer \rchanset
@@ -47,7 +47,7 @@
 %
 \begin{circus}
 \circchannelset MissionAppSync == \\
-	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset	
+	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
 \end{circus}
 %
 \begin{circus}

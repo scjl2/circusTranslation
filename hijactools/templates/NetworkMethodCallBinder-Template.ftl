@@ -1,5 +1,5 @@
 \begin{zsection}
-	\SECTION ~ MethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+	\SECTION ~ NetworkMethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
 		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels\\  <#list MethodCallBindings as mcb><#if mcb.LocParent?has_content>,</#if>${mcb.LocParent} </#list>
 \end{zsection}
 %

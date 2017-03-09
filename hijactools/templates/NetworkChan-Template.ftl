@@ -3,7 +3,7 @@
 % MAKE THIS PARSE
 
 \begin{zsection}
-	\SECTION ~ NetworkChannels ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+	\SECTION ~ NetworkChan ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
 		\t1 SchedulableId, SchedulableIds, MissionChan, TopLevelMissionSequencerFWChan,\\
 		\t1 FrameworkChan, SafeletChan, AperiodicEventHandlerChan, ManagedThreadChan, \\
 		\t1 OneShotEventHandlerChan, PeriodicEventHandlerChan, MissionSequencerMethChan
@@ -49,7 +49,7 @@
 %
 \begin{circus}
 \circchannelset MissionAppSync == \\
-	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset	
+	\lchanset initializeCall,register, initializeRet,cleanupMissionCall, cleanupMissionRet  \rchanset
 \end{circus}
 %
 \begin{circus}

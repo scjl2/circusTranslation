@@ -2,7 +2,7 @@
 %+++ Program +++
 %
 \begin{zsection}
-  \SECTION ~ Program ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+  \SECTION ~ NetworkProgram ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
   \t1 SchedulableId, SchedulableIds, MissionChan, SchedulableMethChan, MissionFW,\\
   \t1 SafeletFW, TopLevelMissionSequencerFW, NetworkChannels, ManagedThreadFW, \\
   \t1 SchedulableMissionSequencerFW, PeriodicEventHandlerFW, OneShotEventHandlerFW,\\

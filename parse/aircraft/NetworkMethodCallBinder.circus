@@ -1,6 +1,6 @@
 \begin{zsection}
-	\SECTION ~ MethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
-		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels\\  ,MainMissionMethChan    ,LandMissionMethChan         
+	\SECTION ~ NetworkMethodCallBinder ~ \parents ~ scj\_prelude, MissionId, MissionIds, \\
+		\t1 SchedulableId, SchedulableIds, MethodCallBindingChannels\\  ,MainMissionMethChan    ,LandMissionMethChan
 \end{zsection}
 %
 \begin{circus}
@@ -166,7 +166,7 @@ isLandingGearDeployed\_MethodBinder \circdef \\
 %
 \begin{circusaction}
 BinderActions \circdef \\
-\circblockopen 
+\circblockopen
 	setCabinPressure\_MethodBinder
 	\\ \interleave \\
 
@@ -204,7 +204,7 @@ BinderActions \circdef \\
 	\\ \interleave \\
 
 	isLandingGearDeployed\_MethodBinder
-	
+
 \circblockclose
 \end{circusaction}
 %
