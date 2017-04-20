@@ -11,5 +11,5 @@
 \end{circus}
 %
 \begin{circus}
-  \circchannelset DeadlineClockSync ==  \lchanset end\_releases, deschedule\_handler, release\_complete \rchanset \\
+  \circchannelset DeadlineClockSync ==  \lchanset end\_releases, release\_complete \rchanset \\
 \end{circus}

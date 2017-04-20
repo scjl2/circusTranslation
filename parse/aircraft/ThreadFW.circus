@@ -41,7 +41,7 @@ Execute \circdef \\
 			GetPriorityLevel \\
 		)
 	)
-	\circseq %%\circinterrupt \\
+	\circseq %\circinterrupt \\
 		(
 			done\_toplevel\_sequencer \then \\
 			\Skip 

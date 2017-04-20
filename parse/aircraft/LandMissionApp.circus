@@ -9,10 +9,7 @@
 %
 \begin{circus}
 \circprocess LandMissionApp \circdef \\ \t1
-  controllingMission : MissionID
-
-\circspot
- \circbegin
+  controllingMission : MissionID \circspot \circbegin
 \end{circus}
 
 

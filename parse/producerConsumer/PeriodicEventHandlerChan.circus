@@ -3,5 +3,9 @@
 \end{zsection}
 %
 \begin{circus}
-	\circchannelset PEHSync == \lchanset isAlive, runCall, runRet,  end_managedThread_app \rchanset \\
+  \circchannel end\_periodic\_app : SchedulableID
+\end{circus}
+
+\begin{circus}
+	\circchannelset PEHSync == \lchanset handleAsyncEventCall, handleAsyncEventRet,  end\_periodic\_app \rchanset \\
 \end{circus}

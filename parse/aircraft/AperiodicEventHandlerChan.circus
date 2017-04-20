@@ -3,7 +3,7 @@
 \end{zsection}
 %
 \begin{circus}
-    \circchannel end\_aperiodicEventHandler\_app : SchedulableID
+    \circchannel end\_aperiodic\_app : SchedulableID
 \end{circus}
 %
 \begin{circus}
